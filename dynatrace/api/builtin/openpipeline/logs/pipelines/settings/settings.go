@@ -23,18 +23,19 @@ import (
 )
 
 type Settings struct {
-	CostAllocation           *Stage `json:"costAllocation,omitempty"`           // Cost allocation stage
-	CustomID                 string `json:"customId"`                           // Custom pipeline id
-	DataExtraction           *Stage `json:"dataExtraction,omitempty"`           // Data extraction stage
-	Davis                    *Stage `json:"davis,omitempty"`                    // Davis event extraction stage
-	DisplayName              string `json:"displayName"`                        // Display name
-	MetricExtraction         *Stage `json:"metricExtraction,omitempty"`         // Metrics extraction stage
-	Processing               *Stage `json:"processing,omitempty"`               // Processing stage
-	ProductAllocation        *Stage `json:"productAllocation,omitempty"`        // Product allocation stage
-	SecurityContext          *Stage `json:"securityContext,omitempty"`          // Security context stage
-	SmartscapeEdgeExtraction *Stage `json:"smartscapeEdgeExtraction,omitempty"` // Smartscape edge extraction stage
-	SmartscapeNodeExtraction *Stage `json:"smartscapeNodeExtraction,omitempty"` // Smartscape node extraction stage
-	Storage                  *Stage `json:"storage,omitempty"`                  // Storage stage
+	CostAllocation           *Stage          `json:"costAllocation,omitempty"`           // Cost allocation stage
+	CustomID                 string          `json:"customId"`                           // Custom pipeline id
+	DataExtraction           *Stage          `json:"dataExtraction,omitempty"`           // Data extraction stage
+	Davis                    *Stage          `json:"davis,omitempty"`                    // Davis event extraction stage
+	DisplayName              string          `json:"displayName"`                        // Display name
+	MetadataList             MetadataEntries `json:"metadataList,omitempty"`             // Pipeline metadata list
+	MetricExtraction         *Stage          `json:"metricExtraction,omitempty"`         // Metrics extraction stage
+	Processing               *Stage          `json:"processing,omitempty"`               // Processing stage
+	ProductAllocation        *Stage          `json:"productAllocation,omitempty"`        // Product allocation stage
+	SecurityContext          *Stage          `json:"securityContext,omitempty"`          // Security context stage
+	SmartscapeEdgeExtraction *Stage          `json:"smartscapeEdgeExtraction,omitempty"` // Smartscape edge extraction stage
+	SmartscapeNodeExtraction *Stage          `json:"smartscapeNodeExtraction,omitempty"` // Smartscape node extraction stage
+	Storage                  *Stage          `json:"storage,omitempty"`                  // Storage stage
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -72,6 +73,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Display name",
 			Required:    true,
+		},
+		"metadata_list": {
+			Type:        schema.TypeList,
+			Description: "Pipeline metadata list",
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(MetadataEntries).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"metric_extraction": {
 			Type:        schema.TypeList,
@@ -139,6 +148,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"data_extraction":            me.DataExtraction,
 		"davis":                      me.Davis,
 		"display_name":               me.DisplayName,
+		"metadata_list":              me.MetadataList,
 		"metric_extraction":          me.MetricExtraction,
 		"processing":                 me.Processing,
 		"product_allocation":         me.ProductAllocation,
@@ -156,6 +166,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"data_extraction":            &me.DataExtraction,
 		"davis":                      &me.Davis,
 		"display_name":               &me.DisplayName,
+		"metadata_list":              &me.MetadataList,
 		"metric_extraction":          &me.MetricExtraction,
 		"processing":                 &me.Processing,
 		"product_allocation":         &me.ProductAllocation,
