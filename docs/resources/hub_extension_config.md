@@ -54,8 +54,11 @@ The full documentation of the export feature is available [here](https://dt-url.
 ```terraform
 resource "dynatrace_hub_extension_config" "com_dynatrace_extension_jmx-weblogic-cp" {
   name = "com.dynatrace.extension.jmx-weblogic-cp"
+  scope = "environment"
     value = jsonencode(
     {
+      "activationContext": "LOCAL",
+      "activationTags": [],
       "enabled" : true,
       "description" : "jj",
       "version" : "2.0.4",
@@ -83,6 +86,7 @@ resource "dynatrace_hub_extension_config" "com_dynatrace_extension_jmx-weblogic-
 - `host` (String) The ID of the host this monitoring configuration will be defined for
 - `host_group` (String) The ID of the host group this monitoring configuration will be defined for
 - `management_zone` (String) The name of the Management Zone this monitoring configuration will be defined for
+- `scope` (String) The scope this monitoring configuration will be defined for
 
 ### Read-Only
 
