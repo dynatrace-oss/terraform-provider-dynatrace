@@ -2,11 +2,20 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Determines whether security context or management zones rules have priority when assigning actual management zones. If true(default), security context information will be prioritized, otherwise management zone rules will be used to assign management zones. Learn more by visiting [our documentation](https://dt-url.net/vc034se)",
+	"constraints": [
+		{
+			"customMessage": "This setting is deprecated.",
+			"customValidatorId": "security-context-enablement-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Determines whether security context or management zones rules have priority when assigning actual management zones. If enabled, security context information will be prioritized, otherwise management zone rules will be used to assign management zones. Learn more by visiting [our documentation](https://dt-url.net/vc034se)",
 	"displayName": "Security context settings",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -27,5 +36,5 @@
 	],
 	"schemaId": "builtin:security-context",
 	"types": {},
-	"version": "1.0.3"
+	"version": "1.0.5"
 }
