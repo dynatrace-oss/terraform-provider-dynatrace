@@ -29,7 +29,7 @@ resource "azuread_application_password" "example" {
 
 # Create Azure connection
 resource "dynatrace_azure_connection" "example" {
-  name = "Example Azure Connector - Secret"
+  name = "#name#"
   type = "clientSecret"
   client_secret {
     client_secret  = azuread_application_password.example.value
