@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2025 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import (
 
 type AwsRoleBasedAuthenticationConfig struct {
 	RoleARN   string                                  `json:"roleArn"`   // The ARN of the AWS role that should be assumed
-	Consumers []ConsumersOfAwsRoleBasedAuthentication `json:"consumers"` // Deafult "SVC:com.dynatrace.da" Dynatrace integrations that can use this connection "type": "list", "minObjects": 0, v"maxObjects": 1,
+	Consumers []ConsumersOfAwsRoleBasedAuthentication `json:"consumers"` // Default "SVC:com.dynatrace.da" Dynatrace integrations that can use this connection. Possible Values: `APP:dynatrace.biz.carbon`, `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`
 }
 
 func (me *AwsRoleBasedAuthenticationConfig) Schema() map[string]*schema.Schema {
@@ -37,7 +37,7 @@ func (me *AwsRoleBasedAuthenticationConfig) Schema() map[string]*schema.Schema {
 		// },
 		"consumers": {
 			Type:        schema.TypeSet,
-			Description: "Dynatrace integrations that can use this connection. Possible values: `DA` (Data Acquisition Deprecated)`, `SVC:com.dynatrace.da` (Data Acquisition), `APP:dynatrace.biz.carbon` (Cost & Carbon Optimization) and `NONE`",
+			Description: "Dynatrace integrations that can use this connection. Possible Values: `APP:dynatrace.biz.carbon` (Cost & Carbon Optimization), `DA` (Data Acquisition Deprecated), `SVC:com.dynatrace.bo` (Business Observability), `SVC:com.dynatrace.da` (Data Acquisition), `SVC:com.dynatrace.openpipeline` (OpenPipeline) and `NONE`",
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			MinItems:    1,
 			MaxItems:    1,

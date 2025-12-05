@@ -33,7 +33,7 @@ import (
 )
 
 const SchemaID = "builtin:hyperscaler-authentication.connections.aws"
-const SchemaVersion = "0.0.15"
+const SchemaVersion = "0.0.21"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*role_arn.Settings] {
 	return &service{

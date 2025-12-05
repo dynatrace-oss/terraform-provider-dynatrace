@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2025 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -33,11 +33,15 @@ var ConsumersOfAwsRoleBasedAuthentications = struct {
 	DataAcquisitionDeprecated ConsumersOfAwsRoleBasedAuthentication
 	DataAcquisition           ConsumersOfAwsRoleBasedAuthentication
 	CostAndCarbonOptimization ConsumersOfAwsRoleBasedAuthentication
+	BusinessObservability     ConsumersOfAwsRoleBasedAuthentication
+	OpenPipeline              ConsumersOfAwsRoleBasedAuthentication
 	None                      ConsumersOfAwsRoleBasedAuthentication
 }{
 	"DA",
 	"SVC:com.dynatrace.da",
 	"APP:dynatrace.biz.carbon",
+	"SVC:com.dynatrace.bo",
+	"SVC:com.dynatrace.openpipeline",
 	"NONE",
 }
 

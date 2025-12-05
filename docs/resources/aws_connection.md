@@ -48,7 +48,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 
 ```terraform
 resource "dynatrace_aws_connection" "test-aws-connection" {
-  name = "#name#"
+  name = "AWS connection name"
   web_identity {
     consumers = ["APP:dynatrace.aws.connector"]
   }
@@ -63,7 +63,7 @@ resource "aws_iam_openid_connect_provider" "dynatrace-oidc-provider" {
 }
 
 resource "aws_iam_role" "example_role" {
-  name = "#name#"
+  name = "AWS-iam-role-name"
   assume_role_policy = jsonencode(
     {
         "Version": "2012-10-17",
@@ -116,7 +116,7 @@ resource "dynatrace_aws_connection_role_arn" "test-aws-connection-arn" {
 
 Optional:
 
-- `consumers` (Set of String) Dynatrace integrations that can use this connection. Possible values: `DA` (Data Acquisition Deprecated)`, `SVC:com.dynatrace.da` (Data Acquisition), `APP:dynatrace.biz.carbon` (Cost & Carbon Optimization) and `NONE`
+- `consumers` (Set of String) Dynatrace integrations that can use this connection. Possible Values: `APP:dynatrace.biz.carbon` (Cost & Carbon Optimization), `DA` (Data Acquisition Deprecated), `SVC:com.dynatrace.bo` (Business Observability), `SVC:com.dynatrace.da` (Data Acquisition), `SVC:com.dynatrace.openpipeline` (OpenPipeline) and `NONE`
 
 
 <a id="nestedblock--web_identity"></a>
