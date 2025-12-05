@@ -44,14 +44,171 @@ func (m *mockCRUDService) Get(ctx context.Context, id string, v *azure.Settings)
 func (m *mockCRUDService) Update(ctx context.Context, id string, v *azure.Settings) error {
 	return m.updateFunc(ctx, id, v)
 }
-func (m *mockCRUDService) List(_ context.Context) (api.Stubs, error) {
-	return api.Stubs{}, nil
+func (m *mockCRUDService) List(ctx context.Context) (api.Stubs, error) {
+	return m.listFunc(ctx)
 }
 func (m *mockCRUDService) Create(_ context.Context, _ *azure.Settings) (*api.Stub, error) {
 	return nil, nil
 }
 func (m *mockCRUDService) Delete(_ context.Context, _ string) error { return nil }
 func (m *mockCRUDService) SchemaID() string                         { return "" }
+
+func TestService_List(t *testing.T) {
+	t.Run("returns stubs only for federated identity credentials", func(t *testing.T) {
+
+		mockConn1 := &azure.Settings{
+			Type:                        azure.Types.Federatedidentitycredential,
+			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"DA"}},
+			Name:                        "Federated Identity Credential Connection 1",
+		}
+
+		mockConn2 := &azure.Settings{
+			Type:         azure.Types.Clientsecret,
+			ClientSecret: &azure.ClientSecretConfig{},
+			Name:         "Client Secret Connection",
+		}
+
+		mockConn3 := &azure.Settings{
+			Type:                        azure.Types.Federatedidentitycredential,
+			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"DA"}},
+			Name:                        "Federated Identity Credential Connection 2",
+		}
+
+		mock := &mockCRUDService{
+			listFunc: func(ctx context.Context) (api.Stubs, error) {
+				return api.Stubs{
+					{ID: "1", Name: mockConn1.Name},
+					{ID: "2", Name: mockConn2.Name},
+					{ID: "3", Name: mockConn3.Name},
+				}, nil
+			},
+			getFunc: func(ctx context.Context, id string, v *azure.Settings) error {
+				switch id {
+				case "1":
+					*v = *mockConn1
+				case "2":
+					*v = *mockConn2
+				case "3":
+					*v = *mockConn3
+				default:
+					return errors.New("not found")
+				}
+				return nil
+			},
+		}
+
+		svc := &service{connService: mock}
+		stubs, err := svc.List(context.Background())
+
+		assert.NoError(t, err)
+		assert.Len(t, stubs, 2)
+		assert.Equal(t, "1", stubs[0].ID)
+		assert.Equal(t, mockConn1.Name, stubs[0].Name)
+		assert.Equal(t, "3", stubs[1].ID)
+		assert.Equal(t, mockConn3.Name, stubs[1].Name)
+	})
+
+	t.Run("returns error if connService.List errors", func(t *testing.T) {
+		mock := &mockCRUDService{
+			listFunc: func(ctx context.Context) (api.Stubs, error) {
+				return nil, errors.New("list error")
+			},
+		}
+
+		svc := &service{connService: mock}
+		_, err := svc.List(context.Background())
+
+		assert.ErrorContains(t, err, "list error")
+	})
+
+	t.Run("returns error if connService.Get errors", func(t *testing.T) {
+		mock := &mockCRUDService{
+			listFunc: func(ctx context.Context) (api.Stubs, error) {
+				return api.Stubs{
+					{ID: "1", Name: "connection1"},
+					{ID: "2", Name: "connection2"},
+					{ID: "3", Name: "connection3"},
+				}, nil
+			},
+			getFunc: func(ctx context.Context, id string, v *azure.Settings) error {
+				return errors.New("get error")
+			},
+		}
+
+		svc := &service{connService: mock}
+		_, err := svc.List(context.Background())
+
+		assert.ErrorContains(t, err, "get error")
+	})
+}
+
+func TestService_Get(t *testing.T) {
+	connectionID := "id1"
+
+	t.Run("success if connection uses federated identity credentials", func(t *testing.T) {
+
+		mockConn := &azure.Settings{
+			Type:                        azure.Types.Federatedidentitycredential,
+			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"DA"}},
+			Name:                        "Federated Identity Credential Connection 2",
+		}
+
+		mock := &mockCRUDService{
+			getFunc: func(ctx context.Context, id string, v *azure.Settings) error {
+				assert.Equal(t, connectionID, id)
+				*v = *mockConn
+				return nil
+			},
+		}
+
+		svc := &service{connService: mock}
+		v := connectionauthentication_settings.Settings{}
+
+		err := svc.Get(context.Background(), connectionID, &v)
+
+		assert.NoError(t, err)
+		assert.Equal(t, mockConn.Name, v.Name)
+		assert.Equal(t, connectionID, v.AzureConnectionID)
+		assert.Equal(t, mockConn.FederatedIdentityCredential.ApplicationID, v.ApplicationID)
+		assert.Equal(t, mockConn.FederatedIdentityCredential.DirectoryID, v.DirectoryID)
+	})
+
+	t.Run("returns error if connection uses client secret", func(t *testing.T) {
+		mockConn := &azure.Settings{
+			Type:         azure.Types.Clientsecret,
+			ClientSecret: &azure.ClientSecretConfig{},
+			Name:         "client secret connection",
+		}
+
+		mock := &mockCRUDService{
+			getFunc: func(_ context.Context, id string, v *azure.Settings) error {
+				assert.Equal(t, connectionID, id)
+				*v = *mockConn
+				return nil
+			},
+		}
+
+		svc := &service{connService: mock}
+		v := connectionauthentication_settings.Settings{}
+		err := svc.Get(context.Background(), connectionID, &v)
+
+		assert.ErrorContains(t, err, "not configured for federated identity credential")
+	})
+
+	t.Run("returns error if connService.Get errors", func(t *testing.T) {
+		mock := &mockCRUDService{
+			getFunc: func(ctx context.Context, id string, v *azure.Settings) error {
+				return errors.New("get error")
+			},
+		}
+
+		svc := &service{connService: mock}
+		v := connectionauthentication_settings.Settings{}
+		err := svc.Get(context.Background(), connectionID, &v)
+
+		assert.ErrorContains(t, err, "get error")
+	})
+}
 
 // TestService_Create tests the Create method of the dynatrace_azure_connection_authentication resource service
 func TestService_Create(t *testing.T) {

@@ -41,7 +41,23 @@ type service struct {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.connService.List(ctx)
+	stubs, err := me.connService.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var filteredStubs api.Stubs
+	for _, stub := range stubs {
+		connValue := azureconnection_settings.Settings{}
+		if err := me.connService.Get(ctx, stub.ID, &connValue); err != nil {
+			return nil, err
+		}
+		if connValue.Type == azureconnection_settings.Types.Federatedidentitycredential {
+			filteredStubs = append(filteredStubs, stub)
+		}
+	}
+
+	return filteredStubs, nil
 }
 
 func (me *service) Get(ctx context.Context, id string, v *connectionauthentication_settings.Settings) error {
@@ -49,6 +65,11 @@ func (me *service) Get(ctx context.Context, id string, v *connectionauthenticati
 	if err := me.connService.Get(ctx, id, &connValue); err != nil {
 		return err
 	}
+
+	if connValue.Type != azureconnection_settings.Types.Federatedidentitycredential {
+		return errors.New("the associated Azure connection is not configured for federated identity credential authentication")
+	}
+
 	if connValue.FederatedIdentityCredential != nil {
 		v.ApplicationID = connValue.FederatedIdentityCredential.ApplicationID
 		v.DirectoryID = connValue.FederatedIdentityCredential.DirectoryID
