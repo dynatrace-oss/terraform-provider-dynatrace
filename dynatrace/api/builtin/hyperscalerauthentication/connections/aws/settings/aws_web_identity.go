@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2025 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import (
 
 type AWSWebIdentity struct {
 	RoleARN   string                      `json:"roleArn"`   // The ARN of the AWS role that should be assumed
-	Consumers []ConsumersOfAwsWebIdentity `json:"consumers"` // Dynatrace integrations that can use this connection
+	Consumers []ConsumersOfAwsWebIdentity `json:"consumers"` // Dynatrace integrations that can use this connection. Possible Values: `APP:dynatrace.aws.connector`, `APP:dynatrace.biz.carbon`
 }
 
 func (me *AWSWebIdentity) Schema() map[string]*schema.Schema {

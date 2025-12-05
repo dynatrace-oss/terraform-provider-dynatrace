@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2025 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import (
 )
 
 const SchemaID = "builtin:hyperscaler-authentication.connections.aws"
-const SchemaVersion = "0.0.15"
+const SchemaVersion = "0.0.21"
 
 // An update should only happen when the role ARN is added. Otherwise, all attributes and subresources
 // are flagged as "forceNew", meaning instead of an update, the resource is destroyed and created from scratch
