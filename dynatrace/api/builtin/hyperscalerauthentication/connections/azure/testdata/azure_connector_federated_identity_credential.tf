@@ -36,7 +36,7 @@ resource "azuread_application_registration" "example" {
 
 # Create basic Azure connection
 resource "dynatrace_azure_connection" "example" {
-  name = "Example Azure Connector"
+  name = "#name#"
   type = "federatedIdentityCredential"
   federated_identity_credential {
     consumers = [
