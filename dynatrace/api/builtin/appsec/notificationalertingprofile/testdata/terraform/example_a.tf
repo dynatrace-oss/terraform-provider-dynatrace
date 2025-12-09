@@ -1,5 +1,5 @@
 resource "dynatrace_management_zone_v2" "my-mgmz" {
-  name = "terraform-my-mgmz-001"
+  name = "terraform-my-mgmz-#name#"
   rules {
     rule {
       type            = "ME"
