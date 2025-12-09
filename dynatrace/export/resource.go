@@ -318,6 +318,11 @@ func (me *Resource) Download() error {
 	name := settings.Name(settngs, me.ID)
 	me.SetName(name)
 
+	if me.Module.Environment.HasManagementZoneFilter() && !me.Module.Environment.ResourceMatchesManagementZone(me, settngs) {
+		me.SetStatus(ResourceStati.Excluded)
+		return nil
+	}
+
 	legacyID := settings.GetLegacyID(settngs)
 	if legacyID != nil {
 		me.LegacyID = *legacyID

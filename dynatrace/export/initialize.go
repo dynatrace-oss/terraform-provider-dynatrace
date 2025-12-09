@@ -25,6 +25,7 @@ import (
 	"os"
 	"strings"
 
+	v2managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/managementzones"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
@@ -190,6 +191,14 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		return nil, err
 	}
 
+	var managementZoneID string
+	var managementZoneLegacyID string
+	if len(flags.ManagementZone) > 0 {
+		if managementZoneID, managementZoneLegacyID, err = resolveManagementZone(context.Background(), credentials, flags.ManagementZone); err != nil {
+			return nil, err
+		}
+	}
+
 	// If ONLY child resources are getting exported we
 	// don't treat them as such. Request from Omar Zaal
 	requestingOnlyChildResources := true
@@ -205,12 +214,15 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 	}
 
 	return &Environment{
-		OutputFolder:          targetFolder,
-		Credentials:           credentials,
-		Modules:               map[ResourceType]*Module{},
-		Flags:                 flags,
-		ResArgs:               resArgs,
-		ChildResourceOverride: requestingOnlyChildResources,
+		OutputFolder:           targetFolder,
+		Credentials:            credentials,
+		Modules:                map[ResourceType]*Module{},
+		Flags:                  flags,
+		ResArgs:                resArgs,
+		ChildResourceOverride:  requestingOnlyChildResources,
+		ManagementZoneName:     flags.ManagementZone,
+		ManagementZoneID:       managementZoneID,
+		ManagementZoneLegacyID: managementZoneLegacyID,
 	}, nil
 }
 
@@ -228,6 +240,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 	importState := flag.Bool("import-state", false, "automatically initialize the terraform module and import downloaded resources to the state")
 	exclude := flag.Bool("exclude", false, "exclude specified resources")
 	skipTerraformInit := flag.Bool("skip-terraform-init", false, "prevent the command line `terraform init` from getting executed after all the configuration files have been created")
+	managementZone := flag.String("management-zone", "", "export only resources scoped to the specified management zone name")
 
 	flag.Parse()
 
@@ -245,6 +258,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 		Exclude:             *exclude,
 		DataSources:         *dataSourceArg,
 		SkipTerraformInit:   *skipTerraformInit,
+		ManagementZone:      strings.TrimSpace(*managementZone),
 	}, flag.Args()
 }
 
@@ -299,4 +313,33 @@ type Flags struct {
 	DataSources         bool
 	SkipTerraformInit   bool
 	Include             bool
+	ManagementZone      string
+}
+
+func resolveManagementZone(ctx context.Context, credentials *rest.Credentials, name string) (string, string, error) {
+	name = strings.TrimSpace(name)
+	if len(name) == 0 {
+		return "", "", fmt.Errorf("management zone name must not be empty")
+	}
+
+	service := v2managementzones.Service(credentials)
+	stubs, err := service.List(ctx)
+	if err != nil {
+		return "", "", err
+	}
+
+	for _, stub := range stubs {
+		if stub == nil {
+			continue
+		}
+		if strings.EqualFold(stub.Name, name) {
+			legacy := ""
+			if stub.LegacyID != nil {
+				legacy = *stub.LegacyID
+			}
+			return stub.ID, legacy, nil
+		}
+	}
+
+	return "", "", fmt.Errorf("management zone %q not found", name)
 }

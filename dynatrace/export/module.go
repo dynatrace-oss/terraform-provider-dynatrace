@@ -1342,6 +1342,11 @@ func (me *Module) Discover() error {
 			fmt.Printf("Ignoring Resource - Type: %s - ID: %s\n", me.Type, stub.ID)
 			continue
 		}
+		if me.Environment.HasManagementZoneFilter() && (me.Type == ResourceTypes.ManagementZoneV2 || me.Type == ResourceTypes.ManagementZone) {
+			if !strings.EqualFold(stub.Name, me.Environment.ManagementZoneName) {
+				continue
+			}
+		}
 		if IsIgnoredResource(me.Type, stub.ID) {
 			fmt.Printf("Ignoring Resource - Type: %s - ID: %s\n", me.Type, stub.ID)
 			continue
