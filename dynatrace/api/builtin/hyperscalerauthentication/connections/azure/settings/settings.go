@@ -106,3 +106,12 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"type":                          &me.Type,
 	})
 }
+
+func (me *Settings) FillDemoValues() []string {
+	// connections using client secret authentication must be modified before use
+	if me.Type == Types.Clientsecret && me.ClientSecret != nil {
+		me.ClientSecret.ClientSecret = "#######"
+		return []string{"Please fill in the client secret"}
+	}
+	return []string{}
+}
