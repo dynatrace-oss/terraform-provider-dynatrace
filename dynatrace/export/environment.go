@@ -38,6 +38,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity"
 	entitysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
@@ -56,19 +57,22 @@ var JSON_DASHBOARD_BASE_PLUS = true
 const ENV_VAR_CUSTOM_PROVIDER_LOCATION = "DYNATRACE_CUSTOM_PROVIDER_LOCATION"
 
 type Environment struct {
-	mu                    sync.Mutex
-	OutputFolder          string
-	Credentials           *rest.Credentials
-	Modules               map[ResourceType]*Module
-	Flags                 Flags
-	ResArgs               map[string][]string
-	ChildResourceOverride bool
-	PrevStateMapCommon    *StateMap
-	PrevNamesByModule     map[string][]string
-	ImportStateMap        *StateMap
-	ChildParentGroups     map[ResourceType]ResourceType
-	IsParentMap           map[ResourceType]bool
-	HasDependenciesTo     map[ResourceType]bool
+	mu                     sync.Mutex
+	OutputFolder           string
+	Credentials            *rest.Credentials
+	Modules                map[ResourceType]*Module
+	Flags                  Flags
+	ResArgs                map[string][]string
+	ChildResourceOverride  bool
+	PrevStateMapCommon     *StateMap
+	PrevNamesByModule      map[string][]string
+	ImportStateMap         *StateMap
+	ChildParentGroups      map[ResourceType]ResourceType
+	IsParentMap            map[ResourceType]bool
+	HasDependenciesTo      map[ResourceType]bool
+	ManagementZoneName     string
+	ManagementZoneID       string
+	ManagementZoneLegacyID string
 }
 
 func (me *Environment) TenantID() string {
@@ -488,6 +492,49 @@ func (me *Environment) PostProcess() error {
 	}
 
 	return nil
+}
+
+func (me *Environment) HasManagementZoneFilter() bool {
+	return strings.TrimSpace(me.ManagementZoneName) != ""
+}
+
+func (me *Environment) managementZoneMatch(text string) bool {
+	if len(text) == 0 {
+		return false
+	}
+	if len(me.ManagementZoneID) > 0 && strings.Contains(text, me.ManagementZoneID) {
+		return true
+	}
+	if len(me.ManagementZoneLegacyID) > 0 && strings.Contains(text, me.ManagementZoneLegacyID) {
+		return true
+	}
+	if len(me.ManagementZoneName) > 0 && strings.Contains(text, me.ManagementZoneName) {
+		return true
+	}
+	return false
+}
+
+func (me *Environment) ResourceMatchesManagementZone(res *Resource, value settings.Settings) bool {
+	if !me.HasManagementZoneFilter() {
+		return true
+	}
+
+	if res != nil && (res.Type == ResourceTypes.ManagementZoneV2 || res.Type == ResourceTypes.ManagementZone) {
+		return strings.EqualFold(res.Name, me.ManagementZoneName)
+	}
+
+	if value != nil {
+		if me.managementZoneMatch(settings.GetScope(value)) {
+			return true
+		}
+		if payload, err := json.Marshal(value); err == nil {
+			if me.managementZoneMatch(string(payload)) {
+				return true
+			}
+		}
+	}
+
+	return false
 }
 
 func voidResource(resource *Resource) error {
