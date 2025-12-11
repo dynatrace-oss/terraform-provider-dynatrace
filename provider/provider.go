@@ -47,6 +47,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/hub/items"
 	ds_iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/groups"
 	ds_iam_policies "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/policies"
+	ds_iam_serviceusers "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/serviceusers"
 	ds_iam_users "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/users"
 	metricsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/metrics/calculated/service"
 	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
@@ -231,6 +232,7 @@ func Provider() *schema.Provider {
 			"dynatrace_entity":                       entity.DataSource(),
 			"dynatrace_entities":                     entities.DataSource(),
 			"dynatrace_iam_user":                     ds_iam_users.DataSource(),
+			"dynatrace_iam_service_user":             ds_iam_serviceusers.DataSource(),
 			"dynatrace_request_naming":               requestnaming.DataSource(),
 			"dynatrace_dashboard":                    dashboard.DataSource(),
 			"dynatrace_slo":                          slo.DataSource(),
@@ -349,6 +351,7 @@ func Provider() *schema.Provider {
 			"dynatrace_synthetic_location":                            resources.NewGeneric(export.ResourceTypes.SyntheticLocation).Resource(),
 			"dynatrace_network_zone":                                  resources.NewGeneric(export.ResourceTypes.NetworkZone).Resource(),
 			"dynatrace_iam_user":                                      resources.NewGeneric(export.ResourceTypes.IAMUser, resources.CredValIAM).Resource(),
+			"dynatrace_iam_service_user":                              resources.NewGeneric(export.ResourceTypes.IAMServiceUser, resources.CredValIAM).Resource(),
 			"dynatrace_iam_group":                                     resources.NewGeneric(export.ResourceTypes.IAMGroup, resources.CredValIAM).Resource(),
 			"dynatrace_iam_permission":                                resources.NewGeneric(export.ResourceTypes.IAMPermission, resources.CredValIAM).Resource(),
 			"dynatrace_iam_policy":                                    resources.NewGeneric(export.ResourceTypes.IAMPolicy, resources.CredValIAM).Resource(),

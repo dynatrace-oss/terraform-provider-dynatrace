@@ -1,0 +1,33 @@
+---
+layout: ""
+page_title: "dynatrace_iam_service_user Resource - terraform-provider-dynatrace"
+subcategory: "IAM"
+description: |-
+  The resource `dynatrace_iam_service_user` covers service user configuration via Account Management API for SaaS Accounts
+---
+
+# dynatrace_iam_service_user (Resource)
+
+-> **Dynatrace SaaS only**
+
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **Allow read access for identity resources (users and groups)** (`account-idm-read`) and **Allow write access for identity resources (users and groups)** (`account-idm-write`).
+
+-> This resource is excluded by default in the export utility, please explicitly specify the resource to retrieve existing configuration.
+
+## Dynatrace Documentation
+
+- Dynatrace IAM - https://www.dynatrace.com/support/help/how-to-use-dynatrace/user-management-and-sso/manage-groups-and-permissions
+
+- Settings API - https://www.dynatrace.com/support/help/how-to-use-dynatrace/user-management-and-sso/manage-groups-and-permissions/iam/iam-getting-started
+
+## Resource Example Usage
+
+```terraform
+resource "dynatrace_iam_service_user" "example" {
+  name        = "example-service-user"
+  description = "Service user for API automation"
+  groups      = [ data.dynatrace_iam_group.Restricted.id ]
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
