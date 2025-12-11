@@ -234,6 +234,7 @@ var ResourceTypes = struct {
 	AlertingProfile                         ResourceType
 	RequestNamings                          ResourceType
 	IAMUser                                 ResourceType
+	IAMServiceUser                          ResourceType
 	IAMGroup                                ResourceType
 	IAMPermission                           ResourceType
 	IAMPolicy                               ResourceType

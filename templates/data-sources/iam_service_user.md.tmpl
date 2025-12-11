@@ -1,0 +1,33 @@
+---
+layout: ""
+page_title: "dynatrace_iam_service_user Data Source - terraform-provider-dynatrace"
+subcategory: "IAM"
+description: |-
+  The data source `dynatrace_iam_service_user` covers queries for service user information via Account Management API
+---
+
+# dynatrace_iam_service_user (Data Source)
+
+-> **Dynatrace SaaS only**
+
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permission: **Allow read access for identity resources (users and groups)** (`account-idm-read`).
+
+This data source allows you to specify the UUID of the service user and produces the name and an ordered list of group IDs this service user is a member of
+
+## Example Usage
+
+```terraform
+data "dynatrace_iam_service_user" "example" {
+  uuid = "12345678-1234-1234-1234-123456789012"
+}
+
+output "service_user_name" {
+  value = data.dynatrace_iam_service_user.example.name
+}
+
+output "service_user_groups" {
+  value = data.dynatrace_iam_service_user.example.groups
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
