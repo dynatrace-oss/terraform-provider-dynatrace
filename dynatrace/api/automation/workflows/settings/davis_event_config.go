@@ -31,6 +31,7 @@ type DavisEventConfig struct {
 	OnProblemClose  bool                   `json:"onProblemClose" default:"false"` // If set to `true` closing a problem also is considered an event that triggers the execution
 	Types           []string               `json:"types" flags:"uniqueitems"`      // The types of davis events to trigger an execution
 	Names           DavisEventNames        `json:"names"`
+	CustomFilter    string                 `json:"customFilter,omitempty"`
 }
 
 func (me *DavisEventConfig) Schema(prefix string) map[string]*schema.Schema {
@@ -68,6 +69,11 @@ func (me *DavisEventConfig) Schema(prefix string) map[string]*schema.Schema {
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(DavisEventNames).Schema("names")},
 		},
+		"custom_filter": {
+			Type:        schema.TypeString,
+			Description: "Additional DQL matcher expression to further filter events to match",
+			Optional:    true,
+		},
 	}
 }
 
@@ -80,6 +86,7 @@ func (me *DavisEventConfig) MarshalHCL(properties hcl.Properties) error {
 		"on_problem_close":  me.OnProblemClose,
 		"types":             me.Types,
 		"names":             me.Names,
+		"custom_filter":     me.CustomFilter,
 	})
 }
 
@@ -92,6 +99,7 @@ func (me *DavisEventConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		"on_problem_close":  &me.OnProblemClose,
 		"types":             &me.Types,
 		"names":             &me.Names,
+		"custom_filter":     &me.CustomFilter,
 	})
 }
 
