@@ -109,6 +109,7 @@ resource "dynatrace_automation_workflow" "Sample_Worklow_TF" {
           }
           on_problem_close = false
           types            = ["CUSTOM_ANNOTATION"]
+          custom_filter = ""
         }
       }
     }
@@ -229,6 +230,7 @@ Optional:
 
 Optional:
 
+- `custom_filter` (String) Additional DQL matcher expression to further filter events to match
 - `entity_tags` (Map of String) key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Multiple values can be provided separated by whitespace (e.g. "val1 val2") and will be parsed as multiple tag values. Omit this attribute if all entities should match
 - `entity_tags_match` (String) Specifies whether all or just any of the configured entity tags need to match. Possible values: `all` and `any`. Omit this attribute if all entities should match
 - `names` (Block List, Max: 1) The Davis Events to match on (see [below for nested schema](#nestedblock--trigger--event--config--davis_event--names))
@@ -262,7 +264,7 @@ Required:
 
 Optional:
 
-- `custom_filter` (String)
+- `custom_filter` (String) Additional DQL matcher expression to further filter events to match
 - `entity_tags` (Map of String) key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Multiple values can be provided separated by whitespace (e.g. "val1 val2") and will be parsed as multiple tag values. Omit this attribute if all entities should match
 - `entity_tags_match` (String) Specifies whether all or just any of the configured entity tags need to match. Possible values: `all` and `any`. Omit this attribute if all entities should match
 - `on_problem_close` (Boolean) If set to `true` closing a problem also is considered an event that triggers the execution
