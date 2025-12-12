@@ -233,6 +233,7 @@ func Provider() *schema.Provider {
 			"dynatrace_entities":                     entities.DataSource(),
 			"dynatrace_iam_user":                     ds_iam_users.DataSource(),
 			"dynatrace_iam_service_user":             ds_iam_serviceusers.DataSource(),
+			"dynatrace_iam_service_users":            ds_iam_serviceusers.DataSourceMulti(),
 			"dynatrace_request_naming":               requestnaming.DataSource(),
 			"dynatrace_dashboard":                    dashboard.DataSource(),
 			"dynatrace_slo":                          slo.DataSource(),

@@ -22,13 +22,26 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	serviceusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/serviceusers/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/google/uuid"
 )
+
+// data sources MAY have cached a list of service user IDs
+// Updating the (publicly available) revision signals to them that either a CREATE or DELETE has happened since
+var revision = uuid.NewString()
+var revisionLock = sync.Mutex{}
+
+func GetRevision() string {
+	revisionLock.Lock()
+	defer revisionLock.Unlock()
+	return revision
+}
 
 type ServiceUserServiceClient struct {
 	clientID     string
@@ -71,8 +84,8 @@ func (me *ServiceUserServiceClient) SchemaID() string {
 }
 
 type CreateServiceUserRequest struct {
-	Name        string  `json:"name"`
-	Description *string `json:"description,omitempty"`
+	Name        string `json:"name"`
+	Description string `json:"description,omitempty"`
 }
 
 type CreateServiceUserResponse struct {
@@ -87,7 +100,7 @@ func (me *ServiceUserServiceClient) Create(ctx context.Context, serviceUser *ser
 
 	// Create the service user
 	request := CreateServiceUserRequest{
-		Name:        serviceUser.ServiceUserName,
+		Name:        serviceUser.Name,
 		Description: serviceUser.Description,
 	}
 
@@ -109,7 +122,12 @@ func (me *ServiceUserServiceClient) Create(ctx context.Context, serviceUser *ser
 		return nil, err
 	}
 
-	return &api.Stub{ID: response.ID, Name: serviceUser.ServiceUserName}, nil
+	// Update revision to invalidate cache
+	revisionLock.Lock()
+	revision = uuid.NewString()
+	revisionLock.Unlock()
+
+	return &api.Stub{ID: response.ID, Name: serviceUser.Name}, nil
 }
 
 type GroupStub struct {
@@ -120,7 +138,7 @@ type GroupStub struct {
 type GetServiceUserResponse struct {
 	ID          string       `json:"id"`
 	Name        string       `json:"name"`
-	Description *string      `json:"description,omitempty"`
+	Description string       `json:"description,omitempty"`
 	Groups      []*GroupStub `json:"groups,omitempty"`
 }
 
@@ -143,7 +161,7 @@ func (me *ServiceUserServiceClient) Get(ctx context.Context, id string, v *servi
 	}
 
 	v.ID = response.ID
-	v.ServiceUserName = response.Name
+	v.Name = response.Name
 	v.Description = response.Description
 	v.Groups = []string{}
 	for _, group := range response.Groups {
@@ -160,7 +178,7 @@ func (me *ServiceUserServiceClient) Update(ctx context.Context, id string, servi
 
 	// Update service user details
 	request := CreateServiceUserRequest{
-		Name:        serviceUser.ServiceUserName,
+		Name:        serviceUser.Name,
 		Description: serviceUser.Description,
 	}
 
@@ -213,6 +231,12 @@ func (me *ServiceUserServiceClient) Delete(ctx context.Context, id string) error
 	_, err := iam.NewIAMClient(me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id), 200, false)
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("Service user %s not found", id)) {
 		return nil
+	}
+	if err == nil {
+		// Update revision to invalidate cache
+		revisionLock.Lock()
+		revision = uuid.NewString()
+		revisionLock.Unlock()
 	}
 	return err
 }

@@ -24,14 +24,10 @@ import (
 )
 
 type ServiceUser struct {
-	ServiceUserName string   `json:"name"`
-	Description     *string  `json:"description,omitempty"`
-	Groups          []string `json:"-"`
-	ID              string   `json:"id,omitempty"`
-}
-
-func (me *ServiceUser) Name() string {
-	return me.ServiceUserName
+	ID          string   `json:"id,omitempty"`
+	Name        string   `json:"name"`
+	Description string   `json:"description,omitempty"`
+	Groups      []string `json:"-"`
 }
 
 func (me *ServiceUser) Schema() map[string]*schema.Schema {
@@ -58,7 +54,7 @@ func (me *ServiceUser) Schema() map[string]*schema.Schema {
 
 func (me *ServiceUser) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":        me.ServiceUserName,
+		"name":        me.Name,
 		"description": me.Description,
 		"groups":      me.Groups,
 	})
@@ -66,7 +62,7 @@ func (me *ServiceUser) MarshalHCL(properties hcl.Properties) error {
 
 func (me *ServiceUser) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":        &me.ServiceUserName,
+		"name":        &me.Name,
 		"description": &me.Description,
 		"groups":      &me.Groups,
 	})
