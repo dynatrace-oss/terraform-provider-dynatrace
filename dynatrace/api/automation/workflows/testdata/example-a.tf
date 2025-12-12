@@ -86,6 +86,7 @@ resource "dynatrace_automation_workflow" "Sample_Worklow_TF" {
           }
           on_problem_close = false
           types            = ["CUSTOM_ANNOTATION"]
+          custom_filter = "matchesPhrase(custom.event.type, \"DEPLOY\")"
         }
       }
     }
