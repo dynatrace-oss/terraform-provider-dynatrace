@@ -63,9 +63,8 @@ func (me *DavisProblemConfig) Schema(prefix string) map[string]*schema.Schema {
 		},
 		"custom_filter": {
 			Type:        schema.TypeString,
-			Description: "",
+			Description: "Additional DQL matcher expression to further filter events to match",
 			Optional:    true,
-			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 	}
 }
