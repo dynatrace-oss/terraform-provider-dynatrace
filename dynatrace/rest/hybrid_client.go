@@ -140,3 +140,7 @@ func (me *hybrid_request) SetHeader(name string, value string) {
 	}
 	me.headers[name] = value
 }
+
+func NewPreferOAuthContext(ctx context.Context) context.Context {
+	return context.WithValue(ctx, "DYNATRACE_HTTP_OAUTH_PREFERENCE", true)
+}

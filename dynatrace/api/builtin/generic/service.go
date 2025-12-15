@@ -33,6 +33,9 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 )
 
+const settingsObjectEndpoint = "/api/v2/settings/objects"
+const settingsSchemaEndpoint = "/api/v2/settings/schemas"
+
 func Service(credentials *rest.Credentials) settings.CRUDService[*generic.Settings] {
 	return &service{credentials: credentials}
 }
@@ -41,28 +44,20 @@ type service struct {
 	credentials *rest.Credentials
 }
 
-func (me *service) Client(ctx context.Context, schemaIDs string) *settings20.Client {
-	tokenClient, _ := rest.CreateClassicClient(me.credentials.URL, me.credentials.Token)
-	oauthClient := rest.CreateClassicOAuthBasedClient(ctx, me.credentials)
-	return settings20.NewClient(tokenClient, oauthClient, schemaIDs)
+func (me *service) Client() rest.Client {
+	return rest.HybridClient(me.credentials)
 }
 
 func (me *service) Get(ctx context.Context, id string, v *generic.Settings) error {
-	var err error
-	var response settings20.Response
-	var settingsObject SettingsObject
+	var settingsObject settings20.SettingsObject
+	client := me.Client()
 
-	response, err = me.Client(ctx, "").Get(ctx, id)
+	u, err := url.JoinPath(settingsObjectEndpoint, id)
 	if err != nil {
-		return err
+		return newSettingsURLJoinError(err)
 	}
-	if response.StatusCode != 200 {
-		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
-			return err
-		}
-		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
-	}
-	if err := json.Unmarshal(response.Data, &settingsObject); err != nil {
+	err = client.Get(ctx, u, 200).Finish(&settingsObject)
+	if err != nil {
 		return err
 	}
 
@@ -82,9 +77,9 @@ type schemataResponse struct {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	client := rest.HybridClient(me.credentials)
+	client := me.Client()
 	var schemata schemataResponse
-	err := client.Get(ctx, "/api/v2/settings/schemas", 200).Finish(&schemata)
+	err := client.Get(ctx, settingsSchemaEndpoint, 200).Finish(&schemata)
 	if err != nil {
 		return nil, err
 	}
@@ -102,22 +97,55 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	}
 	var stubs api.Stubs
 	for _, schemaID := range schemaIDs {
-		response, err := me.Client(ctx, schemaID).List(ctx)
+		newStubs, err := me.list(ctx, client, schemaID, "")
 		if err != nil {
 			return nil, err
 		}
 
-		if response.StatusCode != 200 {
-			if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
-				return nil, err
-			}
-			return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
-		}
+		stubs = append(stubs, newStubs...)
+	}
+	return stubs, nil
+}
 
-		for _, item := range response.Items {
-			stubs = append(stubs, &api.Stub{ID: item.ID, Name: item.ID})
+func (me *service) list(ctx context.Context, client rest.Client, schemaID string, nextPageKey string) (api.Stubs, error) {
+	var queryParams url.Values
+	if nextPageKey == "" {
+		queryParams = url.Values{
+			"schemaIds": []string{schemaID},
+			"fields":    []string{"objectId"},
+			"pageSize":  []string{"500"},
+		}
+	} else {
+		queryParams = url.Values{
+			"nextPageKey": []string{nextPageKey},
 		}
 	}
+
+	u := url.URL{
+		Path:     settingsObjectEndpoint,
+		RawQuery: queryParams.Encode(),
+	}
+
+	var objectsResponse settings20.SettingsObjectList
+	err := client.Get(ctx, u.String(), 200).Finish(&objectsResponse)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var stubs api.Stubs
+	for _, item := range objectsResponse.Items {
+		stubs = append(stubs, &api.Stub{ID: item.ObjectID, Name: item.ObjectID})
+	}
+
+	if objectsResponse.NextPageKey != nil && *objectsResponse.NextPageKey != "" {
+		newStubs, err := me.list(ctx, client, schemaID, *objectsResponse.NextPageKey)
+		if err != nil {
+			return nil, err
+		}
+		stubs = append(stubs, newStubs...)
+	}
+
 	return stubs, nil
 }
 
@@ -126,70 +154,78 @@ func (me *service) Validate(v *generic.Settings) error {
 }
 
 func (me *service) Create(ctx context.Context, v *generic.Settings) (*api.Stub, error) {
-	return me.create(ctx, v)
+	stubs, err := me.create(ctx, v)
+	if err == nil {
+		return stubs, nil
+	}
+	if rest.IsRequiresOAuthError(err) && me.credentials.ContainsOAuthOrPlatformToken() {
+		ctx := rest.NewPreferOAuthContext(ctx)
+		return me.create(ctx, v)
+	}
+	return nil, err
 }
-
-type Matcher interface {
-	Match(o any) bool
-}
-
-const errMsgOAuthRequired = "an OAuth Client is required for creating these settings. The configured credentials are currently based on API Tokens only. More information: https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/generic_setting"
 
 func (me *service) create(ctx context.Context, v *generic.Settings) (*api.Stub, error) {
 	scope := "environment"
 	if len(v.Scope) > 0 {
 		scope = v.Scope
 	}
+	obj := []settings20.SettingsObjectCreate{{
+		SchemaID: v.SchemaID,
+		Scope:    scope,
+		Value:    json.RawMessage(v.Value),
+	}}
 
-	response, err := me.Client(ctx, v.SchemaID).Create(ctx, scope, []byte(v.Value))
+	var response []settings20.SettingsObjectCreateResponse
+	err := me.Client().Post(ctx, settingsObjectEndpoint, obj).Finish(&response)
 	if err != nil {
 		return nil, err
 	}
 
-	if response.StatusCode != 200 {
-		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
-			return nil, err
-		}
-		if response.StatusCode == 0 {
-			return nil, errors.New(errMsgOAuthRequired)
-		}
-		return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
+	if len(response) == 0 {
+		return nil, errors.New("failed to create settings object: no ID returned")
 	}
 
-	stub := &api.Stub{ID: response.ID, Name: response.ID}
+	id := response[0].ObjectID
+	stub := &api.Stub{ID: id, Name: id}
 	return stub, nil
 }
 
 func (me *service) Update(ctx context.Context, id string, v *generic.Settings) error {
-	response, err := me.Client(ctx, "").Update(ctx, id, []byte(v.Value))
+	err := me.update(ctx, id, v)
+	if err == nil {
+		return nil
+	}
+	if rest.IsRequiresOAuthError(err) && me.credentials.ContainsOAuthOrPlatformToken() {
+		ctx := rest.NewPreferOAuthContext(ctx)
+		return me.update(ctx, id, v)
+	}
+	return err
+}
+
+func (me *service) update(ctx context.Context, id string, v *generic.Settings) error {
+	obj := settings20.SettingsObjectUpdate{
+		Value: json.RawMessage(v.Value),
+	}
+
+	u, err := url.JoinPath(settingsObjectEndpoint, id)
 	if err != nil {
-		return err
+		return newSettingsURLJoinError(err)
 	}
-
-	if response.StatusCode != 200 {
-		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
-			return err
-		}
-		if response.StatusCode == 0 {
-			return errors.New(errMsgOAuthRequired)
-		}
-		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
-	}
-
-	return nil
+	return me.Client().Put(ctx, u, obj).Finish(nil)
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	response, err := me.Client(ctx, "").Delete(ctx, id)
+	client := me.Client()
+
+	u, err := url.JoinPath(settingsObjectEndpoint, id)
 	if err != nil {
-		return err
+		return newSettingsURLJoinError(err)
 	}
 
-	if response.StatusCode != 204 {
-		if err = rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
-			return err
-		}
-		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 204, string(response.Data))
+	err = client.Delete(ctx, u).Finish(nil)
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -206,7 +242,7 @@ type QueryParams struct {
 }
 
 func (me *service) ListSpecific(ctx context.Context, query QueryParams) (api.Stubs, error) {
-	client := rest.HybridClient(me.credentials)
+	client := me.Client()
 
 	stubs := api.Stubs{}
 	nextPage := true
@@ -228,7 +264,7 @@ func (me *service) ListSpecific(ctx context.Context, query QueryParams) (api.Stu
 			}
 		}
 		u := url.URL{
-			Path:     "/api/v2/settings/objects",
+			Path:     settingsObjectEndpoint,
 			RawQuery: queryValues.Encode(),
 		}
 
@@ -258,4 +294,8 @@ func (me *service) ListSpecific(ctx context.Context, query QueryParams) (api.Stu
 	}
 
 	return stubs, nil
+}
+
+func newSettingsURLJoinError(err error) error {
+	return fmt.Errorf("failed to create settings object URL: %w", err)
 }

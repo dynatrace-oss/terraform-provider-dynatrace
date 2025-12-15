@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
@@ -281,6 +282,19 @@ func ContainsViolation(err error, message string) bool {
 		return restError.ContainsViolation(message)
 	}
 	return false
+}
+
+func IsRequiresOAuthError(err error) bool {
+	var restErr Error
+	if !errors.As(err, &restErr) {
+		return false
+	}
+
+	if restErr.Code != http.StatusBadRequest {
+		return false
+	}
+
+	return restErr.ContainsViolation("Could not do validation as request was not done using oAuth.") || restErr.Message == "No OAuth token provided"
 }
 
 func (me Error) ContainsViolation(message string) bool {
