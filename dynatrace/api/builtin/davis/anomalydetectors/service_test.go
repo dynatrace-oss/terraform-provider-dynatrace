@@ -21,10 +21,16 @@ package anomalydetectors_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccDavisAnomalyDetectors(t *testing.T) {
-	// Temporarily disabled - schema does not exist in test environment
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
+}
+
+// TestAccDavisAnomalyDetectorsWithPreferToken tests the token => OAuth fallback logic
+func TestAccDavisAnomalyDetectorsWithPreferToken(t *testing.T) {
+	t.Setenv("DYNATRACE_HTTP_OAUTH_PREFERENCE", "false")
+	api.TestAcc(t)
 }
