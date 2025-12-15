@@ -10,7 +10,8 @@ description: |-
 
 -> **Dynatrace SaaS only**
 
--> This resource requires an OAuth client configured with the permissions outlined in the [Davis Anomaly Detection](https://docs.dynatrace.com/docs/shortlink/davis-ai-anomaly-detection-app#expand--prerequisites--1) app documentation. Please set the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID`. 
+-> This resource requires an OAuth client or platform token configured with the permissions outlined in the [Davis Anomaly Detection](https://docs.dynatrace.com/docs/shortlink/davis-ai-anomaly-detection-app#expand--prerequisites--1) app documentation.
+Please set the environment variables `DT_CLIENT_ID` and `DT_CLIENT_SECRET`, or alternatively `DT_PLATFORM_TOKEN`.
 
 ## Dynatrace Documentation
 
@@ -29,4 +30,3 @@ The full documentation of the export feature is available [here](https://dt-url.
 {{ tffile "dynatrace/api/builtin/davis/anomalydetectors/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
- 

@@ -19,8 +19,6 @@ package anomalydetectors
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	anomalydetectors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/davis/anomalydetectors/settings"
@@ -33,61 +31,44 @@ const SchemaVersion = "1.0.10"
 const SchemaID = "builtin:davis.anomaly-detectors"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*anomalydetectors.Settings] {
-	return &service{credentials: credentials}
+	return &service{
+		credentials: credentials,
+		service:     settings20.Service[*anomalydetectors.Settings](credentials, SchemaID, SchemaVersion),
+	}
 }
 
 type service struct {
 	credentials *rest.Credentials
-}
-
-func (me *service) Client(ctx context.Context, schemaIDs string) *settings20.Client {
-	tokenClient, _ := rest.CreateClassicClient(me.credentials.URL, me.credentials.Token)
-	oauthClient := rest.CreateClassicOAuthBasedClient(ctx, me.credentials)
-	return settings20.NewClient(tokenClient, oauthClient, schemaIDs)
+	service     settings.CRUDService[*anomalydetectors.Settings]
 }
 
 func (me *service) Create(ctx context.Context, v *anomalydetectors.Settings) (*api.Stub, error) {
-	data, err := json.Marshal(v)
-	if err != nil {
-		return nil, err
+	stub, err := me.service.Create(ctx, v)
+	if err == nil {
+		return stub, nil
 	}
 
-	scope := "environment"
-	response, err := me.Client(ctx, SchemaID).Create(ctx, scope, data)
-	if err != nil {
-		return nil, err
+	// if the anomaly detector requires OAuth, try again with OAuth (without an API token)
+	if rest.IsRequiresOAuthError(err) && me.credentials.ContainsOAuthOrPlatformToken() {
+		ctx := rest.NewPreferOAuthContext(ctx)
+		return me.service.Create(ctx, v)
 	}
 
-	if response.StatusCode != 200 {
-		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
-			return nil, err
-		}
-		return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
-	}
-
-	stub := &api.Stub{ID: response.ID, Name: response.ID}
-	return stub, nil
+	return nil, err
 }
 
 func (me *service) Update(ctx context.Context, id string, v *anomalydetectors.Settings) error {
-	data, err := json.Marshal(v)
-	if err != nil {
-		return err
+	err := me.service.Update(ctx, id, v)
+	if err == nil {
+		return nil
 	}
 
-	response, err := me.Client(ctx, "").Update(ctx, id, data)
-	if err != nil {
-		return err
+	// if the anomaly detector requires OAuth, try again with OAuth (without an API token)
+	if rest.IsRequiresOAuthError(err) && me.credentials.ContainsOAuthOrPlatformToken() {
+		ctx := rest.NewPreferOAuthContext(ctx)
+		return me.service.Update(ctx, id, v)
 	}
-
-	if response.StatusCode != 200 {
-		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
-			return err
-		}
-		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
-	}
-
-	return nil
+	return err
 }
 
 func (me *service) Validate(v *anomalydetectors.Settings) error {
@@ -95,70 +76,15 @@ func (me *service) Validate(v *anomalydetectors.Settings) error {
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	response, err := me.Client(ctx, "").Delete(ctx, id)
-	if err != nil {
-		return err
-	}
-
-	if response.StatusCode != 204 {
-		if err = rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
-			return err
-		}
-		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 204, string(response.Data))
-	}
-
-	return nil
-}
-
-type SettingsObject struct {
-	SchemaVersion string          `json:"schemaVersion"`
-	SchemaID      string          `json:"schemaId"`
-	Scope         string          `json:"scope"`
-	Value         json.RawMessage `json:"value"`
+	return me.service.Delete(ctx, id)
 }
 
 func (me *service) Get(ctx context.Context, id string, v *anomalydetectors.Settings) error {
-	response, err := me.Client(ctx, "").Get(ctx, id)
-	if err != nil {
-		return err
-	}
-	if response.StatusCode != 200 {
-		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
-			return err
-		}
-		return fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
-	}
-
-	var settingsObject SettingsObject
-	if err := json.Unmarshal(response.Data, &settingsObject); err != nil {
-		return err
-	}
-	if err := json.Unmarshal(settingsObject.Value, &v); err != nil {
-		return err
-	}
-
-	return nil
+	return me.service.Get(ctx, id, v)
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	response, err := me.Client(ctx, SchemaID).List(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	if response.StatusCode != 200 {
-		if err := rest.Envelope(response.Data, response.Request.URL, response.Request.Method); err != nil {
-			return nil, err
-		}
-		return nil, fmt.Errorf("status code %d (expected: %d): %s", response.StatusCode, 200, string(response.Data))
-	}
-
-	var stubs api.Stubs
-	for _, item := range response.Items {
-		stubs = append(stubs, &api.Stub{ID: item.ID, Name: item.ID})
-
-	}
-	return stubs, nil
+	return me.service.List(ctx)
 }
 
 func (me *service) SchemaID() string {
