@@ -101,8 +101,8 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dlclark/regexp2 v1.11.5 h1:Q/sSnsKerHeCkc/jSTNq1oCm7KiVgUMZRDUoRu0JQZQ=
 github.com/dlclark/regexp2 v1.11.5/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
-github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20251009114407-8d3182906541 h1:babt3mYRkn4xBEiPlpFct0HAg1YdRXEX4M/X3yIfDhM=
-github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20251009114407-8d3182906541/go.mod h1:+kXJjh7X2dRgS+lIhcefUrytDHrceMryMzyh2I/SUFE=
+github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20251212150514-9e1640896702 h1:AVXMO2PVoL+xKaieQ+RfoXOsckYRFNsa6+26HoWrCcQ=
+github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20251212150514-9e1640896702/go.mod h1:iEjAyUFUxfIY9pJz/4jW7MJyiummvpaKoo01yXDl74c=
 github.com/emirpasic/gods v1.12.0/go.mod h1:YfzfFFoVP/catgzJb4IKIqXjX78Ha8FMSDh3ymbK86o=
 github.com/emirpasic/gods v1.18.1 h1:FXtiHYKDGKCW2KzwZKx0iC0PQmdlorYgdFG9jPXJ1Bc=
 github.com/emirpasic/gods v1.18.1/go.mod h1:8tpGGwCnJ5H4r6BWwaV6OrWmMoPhUl5jm/FMNAnJvWQ=
