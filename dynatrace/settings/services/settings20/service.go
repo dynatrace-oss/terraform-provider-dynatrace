@@ -359,14 +359,7 @@ type Matcher interface {
 }
 
 func (me *service[T]) skipRepairInput() bool {
-	if IsSkipRepairSchemaID(me.schemaID) {
-		return true
-	}
-	if NO_REPAIR_INPUT {
-		return true
-	}
-
-	return false
+	return NO_REPAIR_INPUT
 }
 
 var regexpNeighborWithKey = regexp.MustCompile(`Neighbor\swith\skey\s'[^']*'\snot\sfound\sfor\s'[^']*'`)
