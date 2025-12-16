@@ -60,6 +60,7 @@ func (me *DavisEventConfig) Schema(prefix string) map[string]*schema.Schema {
 			MinItems:    1,
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
+			Deprecated:  "This field has been deprecated",
 		},
 		"names": {
 			Type:        schema.TypeList,
