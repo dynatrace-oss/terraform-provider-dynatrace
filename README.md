@@ -6,6 +6,15 @@ The Dynatrace Terraform Provider is officially supported by Dynatrace.
 
 - [Terraform](https://www.terraform.io/downloads.html) 0.13.x+
 
+## Support for Terraform Provider
+
+The Dynatrace Terraform Provider is provided by Dynatrace Incorporated. \
+Support is provided by the Dynatrace Support team, as described on the [support page](https://support.dynatrace.com/).
+
+## Feature ideas
+
+Please use the [Dynatrace Community](https://community.dynatrace.com/) to let us know any Product Ideas, as well as for general discussion and questions.
+
 ## Using the provider
 
 Please check the documentation within the [Terraform Registry](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs) for how to use and configure this Provider as well as for currently supported resources and data sources.
