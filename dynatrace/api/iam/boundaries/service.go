@@ -75,7 +75,7 @@ func (me *BoundaryServiceClient) List(ctx context.Context) (api.Stubs, error) {
 
 	client := iam.NewIAMClient(me)
 
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
+	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries", me.endpointURL, me.AccountID()), 200, false); err != nil {
 		return nil, err
 	}
 
@@ -99,7 +99,7 @@ func (me *BoundaryServiceClient) Get(ctx context.Context, id string, v *boundari
 
 	client := iam.NewIAMClient(me)
 
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id), 200, false); err != nil {
+	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.AccountID(), id), 200, false); err != nil {
 		return err
 	}
 
@@ -121,7 +121,7 @@ func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.Polic
 
 	if responseBytes, err = client.POST(
 		ctx,
-		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")),
+		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries", me.endpointURL, me.AccountID()),
 		v,
 		201,
 		false,
@@ -148,7 +148,7 @@ func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *bound
 
 	if _, err = client.PUT_MULTI_RESPONSE(
 		ctx,
-		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id),
+		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.AccountID(), id),
 		v,
 		[]int{201, 204},
 		false,
@@ -167,7 +167,7 @@ func (me *BoundaryServiceClient) Delete(ctx context.Context, id string) error {
 
 	if _, err = client.DELETE(
 		ctx,
-		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id),
+		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.AccountID(), id),
 		204,
 		false,
 	); err != nil {
@@ -175,7 +175,7 @@ func (me *BoundaryServiceClient) Delete(ctx context.Context, id string) error {
 			clean.CleanUp.Register(func() {
 				client.DELETE(
 					ctx,
-					fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"), id),
+					fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.AccountID(), id),
 					204,
 					false,
 				)

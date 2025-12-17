@@ -246,17 +246,17 @@ func listForEnvironments(ctx context.Context, auth iam.Authenticator) (results c
 
 func listForAccount(ctx context.Context, auth iam.Authenticator) (results chan *api.Stub, err error) {
 	client := iam.NewIAMClient(auth)
-	accountID := strings.TrimPrefix(auth.AccountID(), "urn:dtaccount:")
+
 	results = make(chan *api.Stub)
 	go func() {
 		defer close(results)
 		var response ListPoliciesResponse
-		if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/policies", auth.EndpointURL(), accountID), 200, false, &response); err != nil {
+		if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/policies", auth.EndpointURL(), auth.AccountID()), 200, false, &response); err != nil {
 			return
 		}
 
 		for _, policy := range response.Policies {
-			results <- &api.Stub{ID: Join(policy.UUID, "account", accountID), Name: policy.Name}
+			results <- &api.Stub{ID: Join(policy.UUID, "account", auth.AccountID()), Name: policy.Name}
 		}
 	}()
 	return results, nil
