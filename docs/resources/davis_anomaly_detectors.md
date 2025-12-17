@@ -10,7 +10,8 @@ description: |-
 
 -> **Dynatrace SaaS only**
 
--> This resource requires an OAuth client configured with the permissions outlined in the [Davis Anomaly Detection](https://docs.dynatrace.com/docs/shortlink/davis-ai-anomaly-detection-app#expand--prerequisites--1) app documentation. Please set the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID`. 
+-> This resource requires an OAuth client or platform token configured with the permissions outlined in the [Davis Anomaly Detection](https://docs.dynatrace.com/docs/shortlink/davis-ai-anomaly-detection-app#expand--prerequisites--1) app documentation.
+Please set the environment variables `DT_CLIENT_ID` and `DT_CLIENT_SECRET`, or alternatively `DT_PLATFORM_TOKEN`.
 
 ## Dynatrace Documentation
 
@@ -168,4 +169,3 @@ Optional:
 
 - `actor` (String) UUID of a service user. Queries will be executed on behalf of the service user.
 - `query_offset` (Number) Minute offset of sliding evaluation window for metrics with latency
- 

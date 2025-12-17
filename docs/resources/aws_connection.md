@@ -48,7 +48,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 
 ```terraform
 resource "dynatrace_aws_connection" "test-aws-connection" {
-  name = "AWS connection name"
+  name = "#name#"
   web_identity {
     consumers = ["APP:dynatrace.aws.connector"]
   }
@@ -63,7 +63,7 @@ resource "aws_iam_openid_connect_provider" "dynatrace-oidc-provider" {
 }
 
 resource "aws_iam_role" "example_role" {
-  name = "AWS-iam-role-name"
+  name = "#name#"
   assume_role_policy = jsonencode(
     {
         "Version": "2012-10-17",

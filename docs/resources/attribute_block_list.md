@@ -27,7 +27,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 ```terraform
 resource "dynatrace_attribute_block_list" "#name#" {
   enabled = true
-  key = "attribute.example"
+  key = "attribute.#name#"
 }
 ```
 
