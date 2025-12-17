@@ -28,7 +28,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 resource "dynatrace_process_group_simple_detection" "#name#" {
   enabled             = false
   group_identifier    = "GroupIdentifierExample"
-  instance_identifier = "InstanceIdentifierExample"
+  instance_identifier = "InstanceIdentifierExample_#name#"
   process_type        = "PROCESS_TYPE_GO"
   rule_type           = "prop"
 }
