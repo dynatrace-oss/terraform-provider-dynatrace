@@ -183,7 +183,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var responseBytes []byte
 	client := iam.NewIAMClient(me)
 
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/env/v2/accounts/%s/environments", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
+	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/env/v2/accounts/%s/environments", me.endpointURL, me.AccountID()), 200, false); err != nil {
 		return nil, err
 	}
 
@@ -192,7 +192,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 		return nil, err
 	}
 
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/bindings", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false); err != nil {
+	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/bindings", me.endpointURL, me.AccountID()), 200, false); err != nil {
 		return nil, err
 	}
 

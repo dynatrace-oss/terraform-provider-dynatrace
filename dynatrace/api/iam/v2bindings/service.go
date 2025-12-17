@@ -259,7 +259,7 @@ func (me *BindingServiceClient) FetchAccountBindings(ctx context.Context) chan *
 		var response ListPolicyBindingsResponse
 		client := iam.NewIAMClient(me)
 
-		if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/bindings", me.endpointURL, strings.TrimPrefix(me.AccountID(), "urn:dtaccount:")), 200, false, &response); err != nil {
+		if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/bindings", me.endpointURL, me.AccountID()), 200, false, &response); err != nil {
 			return
 		}
 
@@ -268,7 +268,7 @@ func (me *BindingServiceClient) FetchAccountBindings(ctx context.Context) chan *
 		for _, policy := range response.PolicyBindings {
 			for _, group := range policy.Groups {
 				if _, exists := groupIds[group]; !exists {
-					id := fmt.Sprintf("%s#-#%s#-#%s", group, "account", strings.TrimPrefix(me.AccountID(), "urn:dtaccount:"))
+					id := fmt.Sprintf("%s#-#%s#-#%s", group, "account", me.AccountID())
 					stubs = append(stubs, &api.Stub{ID: id, Name: "PolicyV2Bindings-" + id})
 					groupIds[group] = true
 				}

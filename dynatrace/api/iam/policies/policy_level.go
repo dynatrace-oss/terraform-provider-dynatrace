@@ -98,12 +98,12 @@ func fetchPolicyLevel(ctx context.Context, auth iam.Authenticator, uuid string) 
 	if exists {
 		return "global", "global", name, nil
 	}
-	accountID := strings.TrimPrefix(auth.AccountID(), "urn:dtaccount:")
-	if exists, name, err = CheckPolicyExists(ctx, auth, "account", accountID, uuid); err != nil {
+
+	if exists, name, err = CheckPolicyExists(ctx, auth, "account", auth.AccountID(), uuid); err != nil {
 		return "", "", name, err
 	}
 	if exists {
-		return "account", accountID, name, nil
+		return "account", auth.AccountID(), name, nil
 	}
 
 	var environmentIDs []string
@@ -306,11 +306,11 @@ func fetchAllPolicyLevels(ctx context.Context, auth iam.Authenticator) (m map[st
 // The operation is NOT guarded by a mutex. See `GetEnvironmentIDs` for a guarded version
 func getEnvironmentIDs(ctx context.Context, auth iam.Authenticator) ([]string, error) {
 	client := iam.NewIAMClient(auth)
-	accountID := strings.TrimPrefix(auth.AccountID(), "urn:dtaccount:")
+
 	var err error
 
 	var envResponse ListEnvResponse
-	if err = iam.GET(client, ctx, fmt.Sprintf("%s/env/v2/accounts/%s/environments", auth.EndpointURL(), accountID), 200, false, &envResponse); err != nil {
+	if err = iam.GET(client, ctx, fmt.Sprintf("%s/env/v2/accounts/%s/environments", auth.EndpointURL(), auth.AccountID()), 200, false, &envResponse); err != nil {
 		return nil, err
 	}
 

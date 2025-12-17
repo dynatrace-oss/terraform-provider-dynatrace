@@ -241,6 +241,8 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	iam_account_id = streamlineOAuthCreds(iam_account_id, account_id)
 	iam_endpoint_url = streamlineOAuthCreds(iam_endpoint_url, oauth_endpoint_url, rest.ProdIAMEndpointURL)
 
+	iam_account_id = strings.TrimPrefix(iam_account_id, "urn:dtaccount:")
+
 	var diags diag.Diagnostics
 
 	pc := &ProviderConfiguration{
