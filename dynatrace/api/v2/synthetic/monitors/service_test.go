@@ -23,8 +23,40 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func TestAccNetworkAvailabilityMonitors(t *testing.T) {
 	api.TestAcc(t)
+}
+
+func TestConstraintRemoval(t *testing.T) {
+	if !api.AccEnvsGiven(t) {
+		return
+	}
+
+	configWithTwoConstraints, _ := api.ReadTfConfig(t, "testdata/create.tf")
+	configWithOneConstraint, _ := api.ReadTfConfig(t, "testdata/update.tf")
+
+	providerFactories := map[string]func() (*schema.Provider, error){
+		"dynatrace": func() (*schema.Provider, error) {
+			return provider.Provider(), nil
+		},
+	}
+
+	t.Run("Removal of constraints doesn't lead to empty Set item", func(t *testing.T) {
+		testCase := resource.TestCase{
+			ProviderFactories: providerFactories,
+			ExternalProviders: map[string]resource.ExternalProvider{
+				"time": {Source: "hashicorp/time"},
+			},
+			Steps: []resource.TestStep{
+				{Config: configWithTwoConstraints},
+				{Config: configWithOneConstraint}, // with an empty one, the API would reject it
+			},
+		}
+		resource.Test(t, testCase)
+	})
 }
