@@ -62,7 +62,7 @@ func (me *ClientSecretConfig) Schema() map[string]*schema.Schema {
 func (me *ClientSecretConfig) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"application_id": me.ApplicationID,
-		"client_secret":  me.ClientSecret,
+		"client_secret":  "${state.secret_value}",
 		"consumers":      me.Consumers,
 		"directory_id":   me.DirectoryID,
 	})
