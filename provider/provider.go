@@ -677,8 +677,8 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_usersessions_pipelines":        resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineUsersessionsPipelines).Resource(),
 			"dynatrace_openpipeline_v2_usersessions_routing":          resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.OpenpipelineUsersessionsRouting).Resource(),
 			"dynatrace_automation_approval":                           resources.NewGeneric(export.ResourceTypes.AutomationApproval).Resource(),
-			"dynatrace_azure_connection":                              resources.NewGeneric(export.ResourceTypes.AzureConnection).Resource(),
-			"dynatrace_azure_connection_authentication":               resources.NewGeneric(export.ResourceTypes.AzureConnectionAuthentication).Resource(),
+			//"dynatrace_azure_connection":                              resources.NewGeneric(export.ResourceTypes.AzureConnection).Resource(),
+			//"dynatrace_azure_connection_authentication":               resources.NewGeneric(export.ResourceTypes.AzureConnectionAuthentication).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
