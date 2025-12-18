@@ -45,6 +45,7 @@ import (
 	georegions "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/geographicregions/regions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/hub/items"
+	environments2 "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/environments"
 	ds_iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/groups"
 	ds_iam_policies "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/policies"
 	ds_iam_users "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/users"
@@ -231,6 +232,7 @@ func Provider() *schema.Provider {
 			"dynatrace_entity":                       entity.DataSource(),
 			"dynatrace_entities":                     entities.DataSource(),
 			"dynatrace_iam_user":                     ds_iam_users.DataSource(),
+			"dynatrace_iam_environments":             environments2.DataSource(),
 			"dynatrace_request_naming":               requestnaming.DataSource(),
 			"dynatrace_dashboard":                    dashboard.DataSource(),
 			"dynatrace_slo":                          slo.DataSource(),

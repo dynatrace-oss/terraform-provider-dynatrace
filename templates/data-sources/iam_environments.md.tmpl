@@ -1,0 +1,41 @@
+---
+layout: ""
+page_title: "dynatrace_iam_environments Data Source - terraform-provider-dynatrace"
+subcategory: "IAM"
+description: |-
+  The data source `dynatrace_iam_environments` covers queries for the environments in a Dynatrace account
+---
+
+# dynatrace_iam_environments (Data Source)
+
+-> **Dynatrace SaaS only**
+
+-> To utilize this data source, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, and `DT_ACCOUNT_ID` with an OAuth client including the following permission: **View environments** (`account-env-read`).
+
+This data source allows you to query the environments in a Dynatrace account and filter them by their active status, id, or name.
+
+## Example Usage
+
+### Query active environments
+```terraform
+data "dynatrace_iam_environments" "active_environments" {
+  active = true
+}
+
+output "active_environments" {
+  value = data.dynatrace_iam_environments.active_environments.environments[*].id
+}
+```
+
+### Query environment by name
+```terraform
+data "dynatrace_iam_environments" "by_name" {
+  name = "production"
+}
+
+output "environment_id" {
+  value = data.dynatrace_iam_environments.by_name.environments[0].id
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
