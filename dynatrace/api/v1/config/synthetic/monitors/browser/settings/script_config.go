@@ -39,6 +39,7 @@ type ScriptConfig struct {
 	JavascriptSettings *JavascriptSettings     `json:"javaScriptSettings,omitempty"` // Custom JavaScript Agent settings
 	DisableWebSecurity bool                    `json:"disableWebSecurity"`           // No documentation available
 	IgnoredErrorCodes  *IgnoredErrorCodes      `json:"ignoredErrorCodes"`            // Ignore specific status codes
+	UserCertificates   UserCertificates        `json:"userCertificates"`             // Client certificates that can only be configured for Linux-based locations
 }
 
 func (me *ScriptConfig) Schema() map[string]*schema.Schema {
@@ -112,6 +113,13 @@ func (me *ScriptConfig) Schema() map[string]*schema.Schema {
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(request.Cookies).Schema()},
 		},
+		"user_certificates": {
+			Type:        schema.TypeList,
+			Description: "Client certificates that can only be configured for Linux-based locations",
+			Optional:    true,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(UserCertificates).Schema()},
+		},
 	}
 }
 
@@ -153,6 +161,9 @@ func (me *ScriptConfig) MarshalHCL(properties hcl.Properties) error {
 		return err
 	}
 	if err := properties.Encode("cookies", me.Cookies); err != nil {
+		return err
+	}
+	if err := properties.Encode("user_certificates", me.UserCertificates); err != nil {
 		return err
 	}
 	return nil
@@ -200,6 +211,9 @@ func (me *ScriptConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	if err := decoder.Decode("cookies", &me.Cookies); err != nil {
+		return err
+	}
+	if err := decoder.Decode("user_certificates", &me.UserCertificates); err != nil {
 		return err
 	}
 	return nil
@@ -478,4 +492,63 @@ func (me *TimeoutSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type MonitorFrames struct {
 	Enabled bool `json:"enabled"`
+}
+
+type UserCertificates []*UserCertificate
+
+func (me *UserCertificates) Schema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"user_certificate": {
+			Type:        schema.TypeList,
+			Description: "A client certificate that can only be configured for Linux-based locations",
+			Required:    true,
+			MinItems:    1,
+			Elem:        &schema.Resource{Schema: new(UserCertificate).Schema()},
+		},
+	}
+}
+
+func (me UserCertificates) MarshalHCL(properties hcl.Properties) error {
+	if err := properties.EncodeSlice("user_certificate", me); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (me *UserCertificates) UnmarshalHCL(decoder hcl.Decoder) error {
+	return decoder.DecodeSlice("user_certificate", me)
+}
+
+type UserCertificate struct {
+	Domain string `json:"domain"`
+	ID     string `json:"id"`
+}
+
+func (me *UserCertificate) Schema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"domain": {
+			Type:        schema.TypeString,
+			Description: "The domain for which the certificate should be used. Use `*` as a wildcard to match multiple subdomains (e.g., `*.example.com` to match `sub.example.com`, `another.sub.example.com`, etc.)",
+			Required:    true,
+		},
+		"credential_id": {
+			Type:        schema.TypeString,
+			Description: "The ID of the certificate stored in the credential vault",
+			Required:    true,
+		},
+	}
+}
+
+func (me *UserCertificate) MarshalHCL(properties hcl.Properties) error {
+	return properties.EncodeAll(map[string]any{
+		"domain":        me.Domain,
+		"credential_id": me.ID,
+	})
+}
+
+func (me *UserCertificate) UnmarshalHCL(decoder hcl.Decoder) error {
+	return decoder.DecodeAll(map[string]any{
+		"domain":        &me.Domain,
+		"credential_id": &me.ID,
+	})
 }
