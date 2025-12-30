@@ -83,10 +83,23 @@ func (me *BaseComparisonInfo) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *BaseComparisonInfo) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
-		"type":     &me.Type,
-		"unknowns": &me.Unknowns,
-	})
+	if value, ok := decoder.GetOk("unknowns"); ok {
+		if err := json.Unmarshal([]byte(value.(string)), me); err != nil {
+			return err
+		}
+		if err := json.Unmarshal([]byte(value.(string)), &me.Unknowns); err != nil {
+			return err
+		}
+		delete(me.Unknowns, "type")
+		if len(me.Unknowns) == 0 {
+			me.Unknowns = nil
+		}
+	}
+	if value, ok := decoder.GetOk("type"); ok {
+		me.Type = Type(value.(string))
+	}
+
+	return nil
 }
 
 func (me *BaseComparisonInfo) MarshalJSON() ([]byte, error) {
