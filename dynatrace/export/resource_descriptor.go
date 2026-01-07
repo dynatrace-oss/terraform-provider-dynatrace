@@ -314,6 +314,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/boundaries"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/serviceusers"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/v2bindings"
 	platformbuckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/buckets"
@@ -902,6 +903,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.IAMUser: NewResourceDescriptor(
 		users.Service,
+		Dependencies.ID(ResourceTypes.IAMGroup),
+	),
+	ResourceTypes.IAMServiceUser: NewResourceDescriptor(
+		serviceusers.Service,
 		Dependencies.ID(ResourceTypes.IAMGroup),
 	),
 	ResourceTypes.IAMGroup: NewResourceDescriptor(

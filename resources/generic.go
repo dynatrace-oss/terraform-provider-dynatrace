@@ -260,10 +260,25 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 	// because of the current rate limitations of api.dynatrace.com we simply trust
 	// that the results on the remote side are correct
 	// and therefore avoid unnecessary GET calls
-	if me.Type == export.ResourceTypes.IAMGroup || me.Type == export.ResourceTypes.IAMPermission || me.Type == export.ResourceTypes.IAMPolicy || me.Type == export.ResourceTypes.IAMPolicyBindings || me.Type == export.ResourceTypes.IAMPolicyBindingsV2 || me.Type == export.ResourceTypes.IAMUser {
+	if isIAMResourceType(me.Type) {
 		return diag.Diagnostics{}
 	}
 	return me.Read(context.WithValue(ctx, settings.ContextKeyStateConfig, sttngs), d, m)
+}
+
+func isIAMResourceType(resourceType export.ResourceType) bool {
+	switch resourceType {
+	case export.ResourceTypes.IAMGroup,
+		export.ResourceTypes.IAMPermission,
+		export.ResourceTypes.IAMPolicy,
+		export.ResourceTypes.IAMPolicyBindings,
+		export.ResourceTypes.IAMPolicyBindingsV2,
+		export.ResourceTypes.IAMUser,
+		export.ResourceTypes.IAMServiceUser:
+		return true
+	default:
+		return false
+	}
 }
 
 func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
