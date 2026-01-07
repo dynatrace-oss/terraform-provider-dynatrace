@@ -351,6 +351,7 @@ func Provider() *schema.Provider {
 			"dynatrace_synthetic_location":                            resources.NewGeneric(export.ResourceTypes.SyntheticLocation).Resource(),
 			"dynatrace_network_zone":                                  resources.NewGeneric(export.ResourceTypes.NetworkZone).Resource(),
 			"dynatrace_iam_user":                                      resources.NewGeneric(export.ResourceTypes.IAMUser, resources.CredValIAM).Resource(),
+			"dynatrace_iam_service_user":                              resources.NewGeneric(export.ResourceTypes.IAMServiceUser, resources.CredValIAM).Resource(),
 			"dynatrace_iam_group":                                     resources.NewGeneric(export.ResourceTypes.IAMGroup, resources.CredValIAM).Resource(),
 			"dynatrace_iam_permission":                                resources.NewGeneric(export.ResourceTypes.IAMPermission, resources.CredValIAM).Resource(),
 			"dynatrace_iam_policy":                                    resources.NewGeneric(export.ResourceTypes.IAMPolicy, resources.CredValIAM).Resource(),
