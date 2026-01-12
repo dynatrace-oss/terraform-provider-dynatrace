@@ -33,6 +33,10 @@ type Settings struct {
 	MeasureAttribute *string  `json:"measureAttribute,omitempty"` // Attribute
 }
 
+func (me *Settings) Deprecated() string {
+	return "Classic bizevents processing rules have been deprecated in favor of OpenPipeline. Please migrate your OpenPipeline configurations and use `dynatrace_openpipeline_v2_*` instead."
+}
+
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"dimensions": {

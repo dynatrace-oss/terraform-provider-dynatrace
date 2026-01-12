@@ -1,12 +1,15 @@
 ---
 layout: ""
 page_title: "dynatrace_business_events_metrics Resource - terraform-provider-dynatrace"
-subcategory: "Business Events"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_business_events_metrics` covers configuration for business event metric extraction
 ---
 
 # dynatrace_business_events_metrics (Resource)
+
+~> **Warning** This resource has been deprecated in favor of OpenPipeline.
+Please migrate your OpenPipeline configurations and use `dynatrace_openpipeline_v2_*` instead.
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
@@ -27,4 +30,3 @@ The full documentation of the export feature is available [here](https://dt-url.
 {{ tffile "dynatrace/api/builtin/bizevents/processing/metrics/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
- 

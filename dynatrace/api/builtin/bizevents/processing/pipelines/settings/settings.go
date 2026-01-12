@@ -32,6 +32,10 @@ type Settings struct {
 	InsertAfter          string               `json:"-"`
 }
 
+func (me *Settings) Deprecated() string {
+	return "Classic bizevents processing rules have been deprecated in favor of OpenPipeline. Please migrate your OpenPipeline configurations and use `dynatrace_openpipeline_v2_*` instead."
+}
+
 func (me *Settings) Name() string {
 	return me.RuleName
 }
