@@ -2,6 +2,7 @@
 resource "dynatrace_disk_options" "#name#" {
   disable_nfs_disk_monitoring = false
   nfs_show_all = true
+  monitor_tmpfs = true
   scope        = "HOST-1234567890000000"
   exclusions {
     exclusion {

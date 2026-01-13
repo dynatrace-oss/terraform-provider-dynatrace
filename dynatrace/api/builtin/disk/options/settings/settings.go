@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2025 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 package options
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -25,7 +26,8 @@ import (
 type Settings struct {
 	DisableNfsDiskMonitoring bool          `json:"disableNfsDiskMonitoring"` // Deactivate NFS monitoring on all supported systems
 	Exclusions               DiskComplexes `json:"exclusions,omitempty"`     // OneAgent automatically detects and monitors all your mount points, however you can create exception rules to remove disks from the monitoring list.
-	NfsShowAll               bool          `json:"nfsShowAll"`               // When disabled OneAgent will try to deduplicate some of nfs disks. Disabled by default, applies only to Linux hosts. Requires OneAgent 1.209 or later
+	MonitorTmpfs             bool          `json:"monitorTmpfs"`             // Activate tmpfs monitoring on Linux systems
+	NfsShowAll               *bool         `json:"nfsShowAll,omitempty"`     // When disabled OneAgent will try to deduplicate some of nfs mount points. Disabled by default, applies only to Linux hosts.
 	Scope                    *string       `json:"-" scope:"scope"`          // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 }
 
@@ -48,9 +50,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"monitor_tmpfs": {
+			Type:        schema.TypeBool,
+			Description: "Activate tmpfs monitoring on Linux systems",
+			Optional:    true, // new required property. Default to false (default bool value)
+		},
 		"nfs_show_all": {
 			Type:        schema.TypeBool,
-			Description: "When disabled OneAgent will try to deduplicate some of nfs disks. Disabled by default, applies only to Linux hosts. Requires OneAgent 1.209 or later",
+			Description: "When disabled OneAgent will try to deduplicate some of nfs mount points. Disabled by default, applies only to Linux hosts.",
 			Optional:    true, // precondition
 		},
 		"scope": {
@@ -66,15 +73,24 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"disable_nfs_disk_monitoring": me.DisableNfsDiskMonitoring,
 		"exclusions":                  me.Exclusions,
+		"monitor_tmpfs":               me.MonitorTmpfs,
 		"nfs_show_all":                me.NfsShowAll,
 		"scope":                       me.Scope,
 	})
+}
+
+func (me *Settings) HandlePreconditions() error {
+	if (me.NfsShowAll == nil) && (!me.DisableNfsDiskMonitoring) {
+		me.NfsShowAll = opt.NewBool(false)
+	}
+	return nil
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"disable_nfs_disk_monitoring": &me.DisableNfsDiskMonitoring,
 		"exclusions":                  &me.Exclusions,
+		"monitor_tmpfs":               &me.MonitorTmpfs,
 		"nfs_show_all":                &me.NfsShowAll,
 		"scope":                       &me.Scope,
 	})
