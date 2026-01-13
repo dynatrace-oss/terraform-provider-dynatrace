@@ -128,7 +128,12 @@ func (me *service) Validate(v *monitors.Settings) error {
 }
 
 func (me *service) Update(ctx context.Context, id string, v *monitors.Settings) error {
-	return rest.APITokenClient(me.credentials).Put(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), v, 200).Finish()
+	err := rest.APITokenClient(me.credentials).Put(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), v, 200).Finish()
+	if err != nil {
+		return err
+	}
+	time.Sleep(3 * time.Second) // GET after update is eventually consistent
+	return nil
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
