@@ -80,7 +80,7 @@
 		}
 	},
 	"maturity": "EARLY_ADOPTER",
-	"maxObjects": 100,
+	"maxObjects": 500,
 	"metadata": {
 		"$ref": "#/types/Metadata"
 	},
@@ -337,5 +337,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.10"
+	"version": "0.0.11"
 }
