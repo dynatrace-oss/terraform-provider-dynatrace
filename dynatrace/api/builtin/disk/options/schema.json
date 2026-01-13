@@ -50,6 +50,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -84,11 +85,24 @@
 			"nullable": false,
 			"type": "list"
 		},
+		"monitorTmpfs": {
+			"default": false,
+			"description": "Activate tmpfs monitoring on Linux systems",
+			"displayName": "Enable tmpfs disk monitoring",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.331"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"nfsShowAll": {
 			"default": false,
-			"description": "When disabled OneAgent will try to deduplicate some of nfs disks. Disabled by default, applies only to Linux hosts. Requires OneAgent 1.209 or later",
-			"displayName": "Show all NFS disks",
-			"documentation": "",
+			"description": "When disabled OneAgent will try to deduplicate some of nfs mount points. Disabled by default, applies only to Linux hosts.",
+			"displayName": "Show all NFS mount points",
+			"documentation": "Applies only to Linux hosts",
 			"maxObjects": 1,
 			"metadata": {
 				"minAgentVersion": "1.209"
@@ -164,5 +178,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2.11"
+	"version": "1.2.14"
 }
