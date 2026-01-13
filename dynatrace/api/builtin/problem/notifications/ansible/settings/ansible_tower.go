@@ -52,12 +52,12 @@ func (me *AnsibleTower) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
 			Type:        schema.TypeString,
-			Description: "The display name within the Dynatrace WebUI.",
+			Description: "The name of the notification configuration.",
 			Required:    true,
 		},
 		"active": {
 			Type:        schema.TypeBool,
-			Description: "The notification is active (`true`) or inactive (`false`). Default is `false`.",
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Optional:    true,
 		},
 		"profile": {
@@ -67,28 +67,28 @@ func (me *AnsibleTower) Schema() map[string]*schema.Schema {
 		},
 		"insecure": {
 			Type:        schema.TypeBool,
-			Description: "Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates. Default is `false`.",
 			Optional:    true,
+			Description: "Accept any SSL certificate (including self-signed and invalid certificates)",
 		},
 		"custom_message": {
 			Type:        schema.TypeString,
-			Description: "The custom message of the notification. This message will be displayed in the extra variables **Message** field of your job template. You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas",
+			Description: "This message will be displayed in the Extra Variables **Message** field of your job template. Type '{' for placeholder suggestions.. #### Available placeholders\n**{ImpactedEntities}**: Details about the entities impacted by the problem in form of a json array.\n\n**{ImpactedEntity}**: A short description of the problem and impacted entity (or multiple impacted entities).\n\n**{ImpactedEntityNames}**: The entity impacted by the problem.\n\n**{NamesOfImpactedEntities}**: The names of all entities that are impacted by the problem.\n\n**{PID}**: Unique system identifier of the reported problem.\n\n**{ProblemDetailsText}**: All problem event details including root cause as a text-formatted string.\n\n**{ProblemID}**: Display number of the reported problem.\n\n**{ProblemImpact}**: Impact level of the problem. Possible values are APPLICATION, SERVICE, or INFRASTRUCTURE.\n\n**{ProblemSeverity}**: Severity level of the problem. Possible values are AVAILABILITY, ERROR, PERFORMANCE, RESOURCE_CONTENTION, or CUSTOM_ALERT.\n\n**{ProblemTitle}**: Short description of the problem.\n\n**{ProblemURL}**: URL of the problem within Dynatrace.\n\n**{State}**: Problem state. Possible values are OPEN or RESOLVED.\n\n**{Tags}**: Comma separated list of tags that are defined for all impacted entities. To refer to the value of a specific tag, specify the tag's key in square brackets: **{Tags[key]}**. If the tag does not have any assigned value, the placeholder will be replaced by an empty string. The placeholder will not be replaced if the tag key does not exist.",
 			Required:    true,
 		},
 		"job_template_url": {
 			Type:        schema.TypeString,
-			Description: "The URL of the target Ansible Tower job template",
+			Description: "The URL of the target job template.\n\nFor example, https://<Ansible server name>/#/templates/job_template/<JobTemplateID>\n\n**Note:** Be sure to select the **Prompt on Launch** option in the Extra Variables section of your job template configuration.",
 			Required:    true,
 		},
 		"password": {
 			Type:        schema.TypeString,
+			Description: "Account password.",
 			Sensitive:   true,
-			Description: "The password for the Ansible Tower account",
 			Optional:    true,
 		},
 		"username": {
 			Type:        schema.TypeString,
-			Description: "The username of the Ansible Tower account",
+			Description: "Account username.",
 			Required:    true,
 		},
 		"legacy_id": {

@@ -143,21 +143,21 @@ func (me *Header) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
 			Type:        schema.TypeString,
-			Description: "The name of the HTTP header",
+			Description: "The name of the HTTP header.",
 			Required:    true,
 			ForceNew:    ForceNewOnHeaders,
 		},
 		"secret_value": {
 			Type:        schema.TypeString,
-			Description: "The value of the HTTP header as a sensitive property. May contain an empty value. `secret_value` and `value` are mutually exclusive. Only one of those two is allowed to be specified.",
+			Description: "The secret value of the HTTP header. May contain an empty value.",
+			Optional:    true, // precondition
 			Sensitive:   true,
-			Optional:    true,
 			ForceNew:    ForceNewOnHeaders,
 		},
 		"value": {
 			Type:        schema.TypeString,
-			Description: "The value of the HTTP header. May contain an empty value. `secret_value` and `value` are mutually exclusive. Only one of those two is allowed to be specified.",
-			Optional:    true,
+			Description: "The value of the HTTP header. May contain an empty value.",
+			Optional:    true, // precondition
 			ForceNew:    ForceNewOnHeaders,
 		},
 	}

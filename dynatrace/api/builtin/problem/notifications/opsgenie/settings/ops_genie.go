@@ -57,7 +57,7 @@ func (me *OpsGenie) Schema() map[string]*schema.Schema {
 		},
 		"active": {
 			Type:        schema.TypeBool,
-			Description: "The configuration is enabled (`true`) or disabled (`false`)",
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
 		"profile": {
@@ -68,18 +68,18 @@ func (me *OpsGenie) Schema() map[string]*schema.Schema {
 
 		"api_key": {
 			Type:        schema.TypeString,
-			Description: "The API key to access OpsGenie",
-			Sensitive:   true,
+			Description: "The API key to access OpsGenie.\n\nGo to OpsGenie-Integrations and create a new Dynatrace integration. Copy the newly created API key.",
 			Optional:    true,
+			Sensitive:   true,
 		},
 		"domain": {
 			Type:        schema.TypeString,
-			Description: "The region domain of the OpsGenie",
+			Description: "The region domain of the OpsGenie.\n\nFor example, **api.opsgenie.com** for US or **api.eu.opsgenie.com** for EU.",
 			Required:    true,
 		},
 		"message": {
 			Type:        schema.TypeString,
-			Description: "The content of the message.  You can use the following placeholders:  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem",
+			Description: "The content of the message. Type '{' for placeholder suggestions.. #### Available placeholders\n**{ProblemID}**: Display number of the reported problem.\n\n**{ProblemImpact}**: Impact level of the problem. Possible values are APPLICATION, SERVICE, or INFRASTRUCTURE.\n\n**{ProblemSeverity}**: Severity level of the problem. Possible values are AVAILABILITY, ERROR, PERFORMANCE, RESOURCE_CONTENTION, or CUSTOM_ALERT.\n\n**{ProblemTitle}**: Short description of the problem.\n\n**{ImpactedEntityNames}**: The entity impacted by the problem (or multiple impacted entities).",
 			Required:    true,
 		},
 		"legacy_id": {

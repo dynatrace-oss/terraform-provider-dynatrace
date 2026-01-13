@@ -54,12 +54,12 @@ func (me *Trello) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
 			Type:        schema.TypeString,
-			Description: "The name of the notification configuration",
+			Description: "The name of the notification configuration.",
 			Required:    true,
 		},
 		"active": {
 			Type:        schema.TypeBool,
-			Description: "The configuration is enabled (`true`) or disabled (`false`)",
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
 		"profile": {
@@ -68,40 +68,40 @@ func (me *Trello) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 
-		"resolved_list_id": {
-			Type:        schema.TypeString,
-			Description: "The Trello list to which the card of the resolved problem should be assigned",
-			Required:    true,
-		},
-		"text": {
-			Type:        schema.TypeString,
-			Description: "The text of the generated Trello card.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsMarkdown}`: All problem event details, including root cause, as a [Markdown-formatted](https://www.markdownguide.org/cheat-sheet/) string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas",
-			Required:    true,
-		},
 		"application_key": {
 			Type:        schema.TypeString,
-			Description: "The application key for the Trello account",
+			Description: "The application key for the Trello account.\n\nYou must be logged into Trello to have Trello automatically generate an application key for you. [Get application key](https://trello.com/app-key)",
 			Required:    true,
 		},
 		"authorization_token": {
 			Type:        schema.TypeString,
-			Description: "The application token for the Trello account",
-			Optional:    true,
+			Description: "The authorization token for the Trello account.",
+			Required:    true,
 			Sensitive:   true,
 		},
 		"board_id": {
 			Type:        schema.TypeString,
-			Description: "The Trello board to which the card should be assigned",
+			Description: "Trello board ID problem cards should be assigned to",
 			Required:    true,
 		},
 		"description": {
 			Type:        schema.TypeString,
-			Description: "The description of the Trello card.   You can use same placeholders as in card text",
+			Description: "The description of the Trello card. Type '{' for placeholder suggestions.. #### Available placeholders\n**{ImpactedEntity}**: A short description of the problem and impacted entity (or multiple impacted entities).\n\n**{ImpactedEntityNames}**: The entity impacted by the problem.\n\n**{NamesOfImpactedEntities}**: The names of all entities that are impacted by the problem.\n\n**{PID}**: Unique system identifier of the reported problem.\n\n**{ProblemDetailsMarkdown}**: All problem event details including root cause as a Markdown-formatted string.\n\n**{ProblemID}**: Display number of the reported problem.\n\n**{ProblemImpact}**: Impact level of the problem. Possible values are APPLICATION, SERVICE, or INFRASTRUCTURE.\n\n**{ProblemSeverity}**: Severity level of the problem. Possible values are AVAILABILITY, ERROR, PERFORMANCE, RESOURCE_CONTENTION, or CUSTOM_ALERT.\n\n**{ProblemTitle}**: Short description of the problem.\n\n**{ProblemURL}**: URL of the problem within Dynatrace.\n\n**{State}**: Problem state. Possible values are OPEN or RESOLVED.\n\n**{Tags}**: Comma separated list of tags that are defined for all impacted entities. To refer to the value of a specific tag, specify the tag's key in square brackets: **{Tags[key]}**. If the tag does not have any assigned value, the placeholder will be replaced by an empty string. The placeholder will not be replaced if the tag key does not exist.",
 			Required:    true,
 		},
 		"list_id": {
 			Type:        schema.TypeString,
-			Description: "The Trello list to which the card should be assigned",
+			Description: "Trello list ID new problem cards should be assigned to",
+			Required:    true,
+		},
+		"resolved_list_id": {
+			Type:        schema.TypeString,
+			Description: "Trello list ID resolved problem cards should be assigned to",
+			Required:    true,
+		},
+		"text": {
+			Type:        schema.TypeString,
+			Description: "The card text and problem placeholders to appear on new problem cards. Type '{' for placeholder suggestions.. #### Available placeholders\n**{ImpactedEntity}**: A short description of the problem and impacted entity (or multiple impacted entities).\n\n**{ImpactedEntityNames}**: The entity impacted by the problem.\n\n**{NamesOfImpactedEntities}**: The names of all entities that are impacted by the problem.\n\n**{PID}**: Unique system identifier of the reported problem.\n\n**{ProblemID}**: Display number of the reported problem.\n\n**{ProblemImpact}**: Impact level of the problem. Possible values are APPLICATION, SERVICE, or INFRASTRUCTURE.\n\n**{ProblemSeverity}**: Severity level of the problem. Possible values are AVAILABILITY, ERROR, PERFORMANCE, RESOURCE_CONTENTION, or CUSTOM_ALERT.\n\n**{ProblemTitle}**: Short description of the problem.\n\n**{ProblemURL}**: URL of the problem within Dynatrace.\n\n**{State}**: Problem state. Possible values are OPEN or RESOLVED.\n\n**{Tags}**: Comma separated list of tags that are defined for all impacted entities. To refer to the value of a specific tag, specify the tag's key in square brackets: **{Tags[key]}**. If the tag does not have any assigned value, the placeholder will be replaced by an empty string. The placeholder will not be replaced if the tag key does not exist.",
 			Required:    true,
 		},
 		"legacy_id": {
