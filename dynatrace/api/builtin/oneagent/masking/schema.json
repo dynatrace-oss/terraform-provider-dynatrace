@@ -1,13 +1,18 @@
 {
 	"allowedScopes": [
 		"PROCESS_GROUP",
+		"CLOUD_APPLICATION",
+		"CLOUD_APPLICATION_NAMESPACE",
+		"KUBERNETES_CLUSTER",
+		"HOST_GROUP",
 		"environment"
 	],
-	"description": "Use the settings on this page to exclude sensitive data from URLs captured directly by OneAgent, so it never leaves your environment. The settings below are executed directly on the OneAgent and will exclude the data points from being sent to Dynatrace servers. These data points will no longer be available to you in Dynatrace.\n\nNote: The RUM JavaScript is **not** affected by these settings!",
+	"description": "Use the settings on this page to exclude sensitive data from exceptions and URLs captured directly by OneAgent, so it never leaves your environment. The settings below are executed directly on the OneAgent and will exclude the data points from being sent to Dynatrace servers. These data points will no longer be available to you in Dynatrace.\n\nNote: The RUM JavaScript is **not** affected by these settings!\n\nA detailed reference and change log can be found [here](https://dt-url.net/kd039dm).",
 	"displayName": "OneAgent side masking",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"metadata": {
 		"minAgentVersion": "1.277"
@@ -16,9 +21,9 @@
 	"properties": {
 		"isEmailMaskingEnabled": {
 			"default": false,
-			"description": "Exclude email addresses from URLs",
+			"description": "Exclude email addresses from URLs and exceptions",
 			"displayName": "Email addresses",
-			"documentation": "Enables masking of emails and user information in URLs.\n\nExamples: https://the-internet.com/mail/admin@the-internet.com/newItems\n-\u003e [https://the-internet.com/mail/\u003cmasked\u003e/newItems]()\n\nftp://user:hunter2@domain.com -\u003e [ftp://\u003cmasked\u003e@domain.com]() (Domain is not masked, as it's recognised as part of the authority.)\n\n\n",
+			"documentation": "Enables masking of emails and user information in URLs and exceptions.\n\nExamples: https://the-internet.com/mail/admin@the-internet.com/newItems\n-\u003e [https://the-internet.com/mail/\u003cmasked\u003e/newItems]()\n\nftp://user:hunter2@domain.com -\u003e [ftp://\u003cmasked\u003e@domain.com]() (Domain is not masked, as it's recognised as part of the authority.)\n\n\n",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -26,7 +31,7 @@
 		},
 		"isFinancialMaskingEnabled": {
 			"default": false,
-			"description": "Exclude IBANs and payment card numbers from URLs",
+			"description": "Exclude IBANs and payment card numbers from URLs and exceptions",
 			"displayName": "Financial and payment card numbers",
 			"documentation": "Enables masking of IBAN- and payment card-like strings (numbers).\n\nExample: [https://the-internet.com/CC/1234 4321 5678 8756/test]() -\u003e\n[https://the-internet.com/CC/\u003cmasked\u003e/test]()\n",
 			"maxObjects": 1,
@@ -36,7 +41,7 @@
 		},
 		"isNumbersMaskingEnabled": {
 			"default": false,
-			"description": "Exclude hexadecimal IDs and consecutive numbers above 5 digits from URLs",
+			"description": "Exclude hexadecimal IDs and consecutive numbers above 5 digits from URLs and exceptions",
 			"displayName": "IDs and numbers",
 			"documentation": "Numbers can contain symbols **-**, **.**, **:**, ' '(whitespace) between digits, these are not counted. Maximum value is 255.\n\nExample: https://the-internet.com/IP/123:12:32:65 -\u003e [https://the-internet.com/IP/\u003cmasked\u003e]()",
 			"maxObjects": 1,
@@ -61,5 +66,5 @@
 	],
 	"schemaId": "builtin:oneagent.side.masking.settings",
 	"types": {},
-	"version": "1"
+	"version": "1.0.1"
 }
