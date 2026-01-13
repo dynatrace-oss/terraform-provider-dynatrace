@@ -15,6 +15,12 @@
 			"customValidatorId": "rumAppCaptureCustomPropertiesCaseInsensitiveValidator",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Field names must not contain the prefix 'event_properties.' or 'session_properties.'",
+			"customValidatorId": "rumAppCaptureCustomPropertiesPrefixValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
 	"description": "Define specific properties to restrict event/session capturing, with options to allow by property name or allow all properties.",
@@ -43,6 +49,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "EARLY_ADOPTER",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -147,5 +154,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.3"
+	"version": "0.4"
 }
