@@ -16,7 +16,7 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
-	"description": "Alerting profiles enable you to set up fine-grained alert-filtering rules that are based on the severity, customer impact, associated tags, and/or duration of detected problems. Alerting profiles enable you to control exactly which conditions result in problem notifications and which don't. This includes all problem-push notifications that are sent via the Dynatrace mobile app and displayed in the Dynatrace web UI. Alerting profiles can also be used to set up filtered problem-notification integrations with 3rd party messaging systems like Slack, Splunk On-Call, and PagerDuty.",
+	"description": "Alerting profiles enable you to set up fine-grained alert-filtering rules that are based on the severity, customer impact, associated tags, and/or duration of detected problems. They enable you to control exactly which conditions result in problem notifications and which don't. Alerting profiles can also be used to set up filtered problem-notification integrations with 3rd party messaging systems like Slack, Splunk On-Call, and PagerDuty.",
 	"displayName": "Problem alerting profiles",
 	"documentation": "",
 	"dynatrace": "1",
@@ -422,6 +422,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add alerting profile"
@@ -993,5 +994,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "8.6.2"
+	"version": "8.6.3"
 }
