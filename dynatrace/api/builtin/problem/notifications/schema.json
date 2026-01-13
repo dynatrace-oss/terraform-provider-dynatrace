@@ -29,9 +29,9 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
-	"description": "Although the Dynatrace mobile app is the preferred method for receiving real-time notifications related to problems in your environment, if your organization uses email or a different ticket/incident management system for alerting, click Add notification to configure integration with Dynatrace.",
+	"description": "Integrate Dynatrace problem notifications with your organization's existing incident-management system or team-collaboration channel. Alerting profiles are used within problem integrations to filter the total number of alerts to a subset that is relevant for your team.",
 	"displayName": "Problem notifications",
-	"documentation": "Integrate Dynatrace problem notifications with your organization's existing incident-management system or team-collaboration channel. Alerting profiles are used within problem integrations to filter the total number of alerts to a subset that is relevant for your team.\n\nFor details see [Third-party integrations](https://dt-url.net/j803tgc).",
+	"documentation": "\n\nFor details see [Third-party integrations](https://dt-url.net/j803tgc).",
 	"dynatrace": "1",
 	"enums": {
 		"NotificationType": {
@@ -98,6 +98,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add notification"
@@ -1963,5 +1964,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.7.2"
+	"version": "1.7.3"
 }

@@ -55,7 +55,7 @@ func (me *PagerDuty) Schema() map[string]*schema.Schema {
 		},
 		"active": {
 			Type:        schema.TypeBool,
-			Description: "The configuration is enabled (`true`) or disabled (`false`)",
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
 		"profile": {
@@ -66,18 +66,18 @@ func (me *PagerDuty) Schema() map[string]*schema.Schema {
 
 		"account": {
 			Type:        schema.TypeString,
-			Description: "The name of the PagerDuty account",
+			Description: "The name of the PagerDuty account.",
 			Required:    true,
 		},
 		"api_key": {
 			Type:        schema.TypeString,
-			Sensitive:   true,
-			Description: "The API key to access PagerDuty",
+			Description: "The Events API key to access PagerDuty.",
 			Optional:    true,
+			Sensitive:   true,
 		},
 		"service": {
 			Type:        schema.TypeString,
-			Description: "The name of the PagerDuty Service",
+			Description: "The name of the service.",
 			Required:    true,
 		},
 		"legacy_id": {
