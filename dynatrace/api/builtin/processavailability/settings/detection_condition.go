@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2025 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package processavailability
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"golang.org/x/exp/slices"
 )
 
 type DetectionConditions []*DetectionCondition
@@ -49,9 +49,9 @@ func (me *DetectionConditions) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type DetectionCondition struct {
 	Condition             *string                `json:"condition,omitempty"`             // - $contains(svc) – Matches if svc appears anywhere in the process property value.\n- $eq(svc.exe) – Matches if svc.exe matches the process property value exactly.\n- $prefix(svc) – Matches if app matches the prefix of the process property value.\n- $suffix(svc.py) – Matches if svc.py matches the suffix of the process property value.\n\nFor example, $suffix(svc.py) would detect processes named loyaltysvc.py and paymentssvc.py.\n\nFor more details, see [Process availability](https://dt-url.net/v923x37).
-	HostMetadataCondition *HostMetadataCondition `json:"hostMetadataCondition,omitempty"` // Host custom metadata refers to user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).
-	Property              *ProcessItem           `json:"property,omitempty"`              // Possible Values: `CommandLine`, `Executable`, `ExecutablePath`, `User`
-	RuleType              RuleType               `json:"ruleType"`                        // Possible Values: `RuleTypeHost`, `RuleTypeProcess`
+	HostMetadataCondition *HostMetadataCondition `json:"hostMetadataCondition,omitempty"` // Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).\n\nNote: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata.
+	Property              *ProcessItem           `json:"property,omitempty"`              // Select process property. Possible Values: `commandLine`, `executable`, `executablePath`, `user`
+	RuleType              RuleType               `json:"ruleType"`                        // Rule scope. Possible Values: `RuleTypeHost`, `RuleTypeProcess`
 }
 
 func (me *DetectionCondition) Schema() map[string]*schema.Schema {
@@ -63,7 +63,7 @@ func (me *DetectionCondition) Schema() map[string]*schema.Schema {
 		},
 		"host_metadata_condition": {
 			Type:        schema.TypeList,
-			Description: "Host custom metadata refers to user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).",
+			Description: "Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).\n\nNote: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata.",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(HostMetadataCondition).Schema()},
 			MinItems:    1,
@@ -71,12 +71,12 @@ func (me *DetectionCondition) Schema() map[string]*schema.Schema {
 		},
 		"property": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `CommandLine`, `Executable`, `ExecutablePath`, `User`",
+			Description: "Select process property. Possible Values: `commandLine`, `executable`, `executablePath`, `user`",
 			Optional:    true, // precondition
 		},
 		"rule_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `RuleTypeHost`, `RuleTypeProcess`",
+			Description: "Rule scope. Possible Values: `RuleTypeHost`, `RuleTypeProcess`",
 			Optional:    true,
 			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
 				// rule_type was introduced in v286 as a required field, added code below to have successful results for old/new tenants.
