@@ -78,6 +78,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 400,
 	"metadata": {
 		"addItemButton": "Add monitoring rule",
@@ -129,7 +130,7 @@
 			"default": 1,
 			"description": "",
 			"displayName": "Minimum number of matching processes",
-			"documentation": "Specify a minimum number of processes matching the monitoring rule. If it's not satisfied, an alert will open.",
+			"documentation": "Specify a minimum number of processes matching the monitoring rule. An alert is triggered if any host falls below this threshold.",
 			"maxObjects": 1,
 			"metadata": {
 				"minAgentVersion": "1.287"
@@ -472,5 +473,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.16"
+	"version": "1.0.17"
 }
