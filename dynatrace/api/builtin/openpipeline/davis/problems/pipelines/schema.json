@@ -21,7 +21,7 @@
 		}
 	],
 	"description": "Contains configuration of pipelines",
-	"displayName": "Ingest pipelines configuration",
+	"displayName": "Ingest pipelines configuration (davis.problems)",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
@@ -2350,6 +2350,11 @@
 							"type": "PATTERN"
 						},
 						{
+							"customMessage": "Must not start with 'dt.' or 'dynatrace.'",
+							"pattern": "^(?i)(?!dt\\.|dynatrace\\.).*$",
+							"type": "PATTERN"
+						},
+						{
 							"maxLength": 500,
 							"minLength": 1,
 							"type": "LENGTH"
@@ -2465,6 +2470,46 @@
 						{
 							"maxLength": 32,
 							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not be 'name'",
+							"pattern": "^(?i)(?!name$).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'lifetime'",
+							"pattern": "^(?i)(?!lifetime$).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'type'",
+							"pattern": "^(?i)(?!type$).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'id'",
+							"pattern": "^(?i)(?!id$).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'tags'",
+							"pattern": "^(?i)(?!tags$).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'dt.security_context'",
+							"pattern": "^(?i)(?!dt\\.security_context$).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not start with 'dt.system.'",
+							"pattern": "^(?i)(?!dt\\.system\\.).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not start with 'dt.smartscape.'",
+							"pattern": "^(?i)(?!dt\\.smartscape\\.).*$",
+							"type": "PATTERN"
 						}
 					],
 					"default": "",
@@ -2602,8 +2647,7 @@
 						{
 							"type": "UNIQUE",
 							"uniqueProperties": [
-								"idComponent",
-								"referencedFieldName"
+								"idComponent"
 							]
 						}
 					],
@@ -2667,6 +2711,11 @@
 							"type": "PATTERN"
 						},
 						{
+							"customMessage": "Must not be 'CUSTOM_DEVICE'",
+							"pattern": "^(?!CUSTOM_DEVICE$).*$",
+							"type": "PATTERN"
+						},
+						{
 							"maxLength": 500,
 							"minLength": 1,
 							"type": "LENGTH"
@@ -2720,6 +2769,11 @@
 						{
 							"customMessage": "Edge type must match the pattern [a-z][a-z0-9._]{0,31}",
 							"pattern": "^[a-z][a-z0-9._]{0,31}$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not start with 'dt.' or 'dynatrace.'",
+							"pattern": "^(?i)(?!dt\\.|dynatrace\\.).*$",
 							"type": "PATTERN"
 						},
 						{
@@ -3031,5 +3085,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.26.1"
+	"version": "1.34.1"
 }
