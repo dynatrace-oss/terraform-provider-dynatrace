@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2025 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -45,9 +45,9 @@ func (me *CustomProperties) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type CustomProperty struct {
-	CaseInsensitiveNamingEnabled bool          `json:"caseInsensitiveNamingEnabled,omitempty"` // Field name validation should be case-insensitive
-	FieldDataType                FieldDataType `json:"fieldDataType"`                          // Possible Values: `BOOLEAN`, `NUMBER`, `STRING`
-	FieldName                    string        `json:"fieldName"`                              // Field name
+	CaseInsensitiveNamingEnabled bool          `json:"caseInsensitiveNamingEnabled"` // Field name validation should be case-insensitive
+	FieldDataType                FieldDataType `json:"fieldDataType"`                // Datatype. Possible Values: `BOOLEAN`, `NUMBER`, `STRING`
+	FieldName                    string        `json:"fieldName"`                    // Field name
 }
 
 func (me *CustomProperty) Schema() map[string]*schema.Schema {
@@ -59,7 +59,7 @@ func (me *CustomProperty) Schema() map[string]*schema.Schema {
 		},
 		"field_data_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `BOOLEAN`, `NUMBER`, `STRING`",
+			Description: "Datatype. Possible Values: `BOOLEAN`, `NUMBER`, `STRING`",
 			Required:    true,
 		},
 		"field_name": {
