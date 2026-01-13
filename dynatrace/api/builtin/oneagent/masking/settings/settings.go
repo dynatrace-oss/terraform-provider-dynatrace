@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package masking
+package settings
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -23,11 +23,11 @@ import (
 )
 
 type Settings struct {
-	IsEmailMaskingEnabled     bool    `json:"isEmailMaskingEnabled"`     // Exclude email addresses from URLs
-	IsFinancialMaskingEnabled bool    `json:"isFinancialMaskingEnabled"` // Exclude IBANs and payment card numbers from URLs
-	IsNumbersMaskingEnabled   bool    `json:"isNumbersMaskingEnabled"`   // Exclude hexadecimal IDs and consecutive numbers above 5 digits from URLs
+	IsEmailMaskingEnabled     bool    `json:"isEmailMaskingEnabled"`     // Exclude email addresses from URLs and exceptions
+	IsFinancialMaskingEnabled bool    `json:"isFinancialMaskingEnabled"` // Exclude IBANs and payment card numbers from URLs and exceptions
+	IsNumbersMaskingEnabled   bool    `json:"isNumbersMaskingEnabled"`   // Exclude hexadecimal IDs and consecutive numbers above 5 digits from URLs and exceptions
 	IsQueryMaskingEnabled     bool    `json:"isQueryMaskingEnabled"`     // Exclude query parameters from URLs and web requests
-	ProcessGroupID            *string `json:"-" scope:"processGroupId"`  // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+	ProcessGroupID            *string `json:"-" scope:"processGroupId"`  // The scope of this setting (PROCESS_GROUP, CLOUD_APPLICATION, CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 }
 
 func (me *Settings) Name() string {
@@ -41,17 +41,17 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"is_email_masking_enabled": {
 			Type:        schema.TypeBool,
-			Description: "Exclude email addresses from URLs",
+			Description: "Exclude email addresses from URLs and exceptions",
 			Required:    true,
 		},
 		"is_financial_masking_enabled": {
 			Type:        schema.TypeBool,
-			Description: "Exclude IBANs and payment card numbers from URLs",
+			Description: "Exclude IBANs and payment card numbers from URLs and exceptions",
 			Required:    true,
 		},
 		"is_numbers_masking_enabled": {
 			Type:        schema.TypeBool,
-			Description: "Exclude hexadecimal IDs and consecutive numbers above 5 digits from URLs",
+			Description: "Exclude hexadecimal IDs and consecutive numbers above 5 digits from URLs and exceptions",
 			Required:    true,
 		},
 		"is_query_masking_enabled": {
@@ -61,7 +61,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"process_group_id": {
 			Type:        schema.TypeString,
-			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
+			Description: "The scope of this setting (PROCESS_GROUP, CLOUD_APPLICATION, CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.",
 			Optional:    true,
 			Default:     "environment",
 		},
