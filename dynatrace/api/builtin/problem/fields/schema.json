@@ -7,6 +7,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "EARLY_ADOPTER",
 	"maxObjects": 40,
 	"multiObject": true,
 	"ordered": false,
@@ -80,12 +81,14 @@
 	},
 	"schemaConstraints": [
 		{
-			"customValidatorId": "problem-fields-duplicate-problem-field-validator",
-			"skipAsyncValidation": false,
-			"type": "CUSTOM_VALIDATOR_REF"
+			"flattenCollections": false,
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"problemField"
+			]
 		}
 	],
 	"schemaId": "builtin:problem.fields",
 	"types": {},
-	"version": "1.8"
+	"version": "1.9"
 }
