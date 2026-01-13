@@ -10,7 +10,7 @@
 		}
 	],
 	"description": "Contains configuration of routing",
-	"displayName": "Ingest routing configuration",
+	"displayName": "Ingest routing configuration (logs)",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
@@ -182,5 +182,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.26.1"
+	"version": "1.34.1"
 }
