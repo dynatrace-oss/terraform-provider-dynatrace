@@ -163,6 +163,16 @@ func (me *Header) Schema() map[string]*schema.Schema {
 	}
 }
 
+func (me *Header) HandlePreconditions() error {
+	if (me.SecretValue == nil) && (me.Secret) {
+		me.SecretValue = opt.NewString("")
+	}
+	if (me.Value == nil) && (!me.Secret) {
+		me.Value = opt.NewString("")
+	}
+	return nil
+}
+
 func (me *Header) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("name", me.Name); err != nil {
 		return err

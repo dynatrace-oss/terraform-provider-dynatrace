@@ -196,6 +196,9 @@ func (me *WebHook) HandlePreconditions() error {
 	if (me.SecretUrl == nil) && (me.UrlContainsSecret != nil && *me.UrlContainsSecret) {
 		return fmt.Errorf("'secret_url' must be specified if 'url_contains_secret' is set to '%v'", me.UrlContainsSecret)
 	}
+	if (me.SecretUrl != nil) && (me.UrlContainsSecret != nil && !*me.UrlContainsSecret) {
+		return fmt.Errorf("'secret_url' must not be specified if 'url_contains_secret' is set to '%v'", me.UrlContainsSecret)
+	}
 	return nil
 }
 
