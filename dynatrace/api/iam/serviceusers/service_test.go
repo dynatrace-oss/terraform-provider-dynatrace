@@ -362,6 +362,193 @@ func TestService_Get(t *testing.T) {
 	})
 }
 
+func TestService_GetAll(t *testing.T) {
+	t.Run("successful get all without pagination", func(t *testing.T) {
+		mockClient := &mockIAMClient{
+			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
+				assert.Equal(t, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users", testEndpointURL, testAccountID), url)
+				return []byte(`{
+					"count": 2,
+					"results": [
+						{"uid": "uid-1", "email": "user1@example.com", "name": "User 1", "description": "Desc 1"},
+						{"uid": "uid-2", "email": "user2@example.com", "name": "User 2", "description": "Desc 2"}
+					]
+				}`), nil
+			},
+		}
+
+		client := createTestServiceUserServiceClient(mockClient)
+		stubs, err := client.GetAll(t.Context())
+		assert.NoError(t, err)
+		assert.Len(t, stubs, 2)
+		assert.Equal(t, "uid-1", stubs[0].UID)
+		assert.Equal(t, "user1@example.com", stubs[0].Email)
+		assert.Equal(t, "User 1", stubs[0].Name)
+		assert.Equal(t, "Desc 1", stubs[0].Description)
+		assert.Equal(t, "uid-2", stubs[1].UID)
+		assert.Equal(t, "user2@example.com", stubs[1].Email)
+		assert.Equal(t, "User 2", stubs[1].Name)
+		assert.Equal(t, "Desc 2", stubs[1].Description)
+	})
+
+	t.Run("successful get all with pagination", func(t *testing.T) {
+		callCount := 0
+		mockClient := &mockIAMClient{
+			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
+				callCount++
+				if callCount == 1 {
+					assert.Equal(t, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users", testEndpointURL, testAccountID), url)
+					return []byte(`{
+						"count": 2,
+						"results": [
+							{"uid": "uid-1", "email": "user1@example.com", "name": "User 1", "description": "Desc 1"}
+						],
+						"nextPageKey": "page2"
+					}`), nil
+				}
+				if callCount == 2 {
+					assert.Equal(t, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users?nextPageKey=page2", testEndpointURL, testAccountID), url)
+					return []byte(`{
+						"count": 2,
+						"results": [
+							{"uid": "uid-2", "email": "user2@example.com", "name": "User 2", "description": "Desc 2"}
+						]
+					}`), nil
+				}
+				assert.FailNow(t, "unexpected call to GET")
+				return nil, errors.New("unexpected call to GET")
+			},
+		}
+
+		client := createTestServiceUserServiceClient(mockClient)
+		stubs, err := client.GetAll(t.Context())
+		assert.NoError(t, err)
+		assert.Equal(t, 2, callCount)
+		assert.Len(t, stubs, 2)
+		assert.Equal(t, "uid-1", stubs[0].UID)
+		assert.Equal(t, "uid-2", stubs[1].UID)
+	})
+
+	t.Run("successful get all with multiple pagination pages", func(t *testing.T) {
+		callCount := 0
+		mockClient := &mockIAMClient{
+			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
+				callCount++
+				if callCount == 1 {
+					return []byte(`{
+						"count": 3,
+						"results": [{"uid": "uid-1", "email": "user1@example.com", "name": "User 1", "description": ""}],
+						"nextPageKey": "page2"
+					}`), nil
+				}
+				if callCount == 2 {
+					return []byte(`{
+						"count": 3,
+						"results": [{"uid": "uid-2", "email": "user2@example.com", "name": "User 2", "description": ""}],
+						"nextPageKey": "page3"
+					}`), nil
+				}
+				if callCount == 3 {
+					return []byte(`{
+						"count": 3,
+						"results": [{"uid": "uid-3", "email": "user3@example.com", "name": "User 3", "description": ""}]
+					}`), nil
+				}
+				assert.FailNow(t, "unexpected call to GET")
+				return nil, errors.New("unexpected call to GET")
+			},
+		}
+
+		client := createTestServiceUserServiceClient(mockClient)
+		stubs, err := client.GetAll(t.Context())
+		assert.NoError(t, err)
+		assert.Equal(t, 3, callCount)
+		assert.Len(t, stubs, 3)
+	})
+
+	t.Run("get all fails", func(t *testing.T) {
+		mockClient := &mockIAMClient{
+			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
+				return nil, errors.New("GET failed")
+			},
+		}
+
+		client := createTestServiceUserServiceClient(mockClient)
+		_, err := client.GetAll(t.Context())
+		assert.EqualError(t, err, "GET failed")
+	})
+
+	t.Run("get all fails on second page", func(t *testing.T) {
+		callCount := 0
+		mockClient := &mockIAMClient{
+			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
+				callCount++
+				if callCount == 1 {
+					return []byte(`{
+						"count": 2,
+						"results": [{"uid": "uid-1", "email": "user1@example.com", "name": "User 1", "description": ""}],
+						"nextPageKey": "page2"
+					}`), nil
+				}
+				return nil, errors.New("pagination failed")
+			},
+		}
+
+		client := createTestServiceUserServiceClient(mockClient)
+		_, err := client.GetAll(t.Context())
+		assert.EqualError(t, err, "pagination failed")
+	})
+
+	t.Run("get all empty", func(t *testing.T) {
+		mockClient := &mockIAMClient{
+			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
+				return []byte(`{
+					"count": 0,
+					"results": []
+				}`), nil
+			},
+		}
+
+		client := createTestServiceUserServiceClient(mockClient)
+		stubs, err := client.GetAll(t.Context())
+		assert.NoError(t, err)
+		assert.Empty(t, stubs)
+	})
+
+	t.Run("get all fails on invalid JSON response", func(t *testing.T) {
+		mockClient := &mockIAMClient{
+			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
+				return []byte(`{invalid json`), nil
+			},
+		}
+
+		client := createTestServiceUserServiceClient(mockClient)
+		_, err := client.GetAll(t.Context())
+		assert.ErrorContains(t, err, "invalid character")
+	})
+
+	t.Run("get all fails on invalid JSON response on second page", func(t *testing.T) {
+		callCount := 0
+		mockClient := &mockIAMClient{
+			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
+				callCount++
+				if callCount == 1 {
+					return []byte(`{
+						"count": 2,
+						"results": [{"uid": "uid-1", "email": "user1@example.com", "name": "User 1", "description": ""}],
+						"nextPageKey": "page2"
+					}`), nil
+				}
+				return []byte(`{invalid json`), nil
+			},
+		}
+
+		client := createTestServiceUserServiceClient(mockClient)
+		_, err := client.GetAll(t.Context())
+		assert.ErrorContains(t, err, "invalid character")
+	})
+}
+
 func TestService_List(t *testing.T) {
 	t.Run("successful list without pagination", func(t *testing.T) {
 		mockClient := &mockIAMClient{
