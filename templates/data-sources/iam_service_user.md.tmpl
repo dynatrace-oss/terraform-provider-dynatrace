@@ -1,0 +1,64 @@
+---
+layout: ""
+page_title: "dynatrace_iam_service_user Data Source - terraform-provider-dynatrace"
+subcategory: "IAM"
+description: |-
+  The data source `dynatrace_iam_service_user` covers queries for a service user.
+---
+
+# dynatrace_iam_service_user (Data Source)
+
+-> **Dynatrace SaaS only**
+
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permission: **Allow read access for identity resources (users and groups)** (`account-idm-read`).
+
+This data source allows you to specify the email address of the user and produces an ordered list of group IDs this user is a member of
+
+## Example Usage
+Query a service user by name:
+```terraform
+data "dynatrace_iam_service_user" "test_service_user" {
+  name = "test"
+} 
+
+output "test_service_user" {
+    value = data.dynatrace_iam_service_user.test_service_user
+}
+```
+
+Query a service user by ID:
+```terraform
+data "dynatrace_iam_service_user" "test_service_user" {
+  id = "12345678-90ab-cdef-1234-567890abcdef"
+} 
+
+output "test_service_user" {
+  value = data.dynatrace_iam_service_user.test_service_user
+}
+```
+
+Query a service user by email:
+```terraform
+data "dynatrace_iam_service_user" "test_service_user" {
+  email = "12345678-90ab-cdef-1234-567890abcdef@service.sso.dynatrace.com"
+} 
+
+output "test_service_user" {
+  value = data.dynatrace_iam_service_user.test_service_user
+}
+```
+
+## Example Output
+```
+test_service_user = {
+  "description" = "Test service user"
+  "email" = "12345678-90ab-cdef-1234-567890abcdef@service.sso.dynatrace.com"
+  "groups" = tolist([
+    "abcdef12-3456-7890-abcd-ef1234567890",
+  ])
+  "id" = "12345678-90ab-cdef-1234-567890abcdef"
+  "name" = "test"
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}

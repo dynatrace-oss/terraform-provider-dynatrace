@@ -48,6 +48,7 @@ import (
 	environments2 "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/environments"
 	ds_iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/groups"
 	ds_iam_policies "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/policies"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/serviceusers"
 	ds_iam_users "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/users"
 	metricsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/metrics/calculated/service"
 	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
@@ -233,6 +234,7 @@ func Provider() *schema.Provider {
 			"dynatrace_entities":                     entities.DataSource(),
 			"dynatrace_iam_user":                     ds_iam_users.DataSource(),
 			"dynatrace_iam_environments":             environments2.DataSource(),
+			"dynatrace_iam_service_user":             serviceusers.DataSource(),
 			"dynatrace_request_naming":               requestnaming.DataSource(),
 			"dynatrace_dashboard":                    dashboard.DataSource(),
 			"dynatrace_slo":                          slo.DataSource(),

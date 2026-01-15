@@ -3,7 +3,7 @@ layout: ""
 page_title: "dynatrace_iam_user Data Source - terraform-provider-dynatrace"
 subcategory: "IAM"
 description: |-
-  The data source `dynatrace_iam_user` covers queries for the groups a user is a member of
+  The data source `dynatrace_iam_user` covers queries for the groups a user is a member of.
 ---
 
 # dynatrace_iam_user (Data Source)
@@ -12,7 +12,7 @@ description: |-
 
 -> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permission: **Allow read access for identity resources (users and groups)** (`account-idm-read`).
 
-This data source allows you to specify the email address of the user and produces an ordered list of group IDs this user is a member of
+This data source allows you to specify the email address of the user and produces an ordered list of group IDs this user is a member of.
 
 ## Example Usage
 
