@@ -29,6 +29,11 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
+type ServiceUserService interface {
+	settings.CRUDService[*serviceusers.ServiceUser]
+	GetAll(ctx context.Context) ([]ServiceUserStub, error)
+}
+
 type iamClientGetter interface {
 	New() iam.IAMClient
 }
@@ -71,7 +76,7 @@ type serviceUserServiceClient struct {
 	endpointURL     string
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*serviceusers.ServiceUser] {
+func NewService(credentials *rest.Credentials) ServiceUserService {
 	return &serviceUserServiceClient{
 		iamClientGetter: &iamClientGetterImp{
 			clientID:     credentials.IAM.ClientID,
@@ -83,6 +88,10 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*serviceusers.S
 		accountID:   credentials.IAM.AccountID,
 		endpointURL: credentials.IAM.EndpointURL,
 	}
+}
+
+func Service(credentials *rest.Credentials) settings.CRUDService[*serviceusers.ServiceUser] {
+	return NewService(credentials)
 }
 
 func (me *serviceUserServiceClient) SchemaID() string {
@@ -198,24 +207,25 @@ func (me *serviceUserServiceClient) updateGroupAssignments(ctx context.Context, 
 	return err
 }
 
-// serviceUserStub represents a service user in the list response
-type serviceUserStub struct {
-	UID   string `json:"uid"`
-	Email string `json:"email"`
-	Name  string `json:"name"`
+// ServiceUserStub represents a service user in the list response
+type ServiceUserStub struct {
+	UID         string `json:"uid"`
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 // listServiceUsersResponse represents the paginated response from listing service users
 type listServiceUsersResponse struct {
-	Count    int                `json:"count"`
-	Items    []*serviceUserStub `json:"results"`
-	NextPage string             `json:"nextPageKey,omitempty"`
+	Count    int               `json:"count"`
+	Items    []ServiceUserStub `json:"results"`
+	NextPage string            `json:"nextPageKey,omitempty"`
 }
 
-func (me *serviceUserServiceClient) List(ctx context.Context) (api.Stubs, error) {
+func (me *serviceUserServiceClient) GetAll(ctx context.Context) ([]ServiceUserStub, error) {
 	client := me.iamClientGetter.New()
 
-	var stubs api.Stubs
+	var stubs []ServiceUserStub
 	url := fmt.Sprintf("%s/iam/v1/accounts/%s/service-users", me.endpointURL, me.accountID)
 
 	for {
@@ -229,15 +239,30 @@ func (me *serviceUserServiceClient) List(ctx context.Context) (api.Stubs, error)
 			return nil, err
 		}
 
-		for _, item := range response.Items {
-			stubs = append(stubs, &api.Stub{ID: item.UID, Name: item.Name})
-		}
+		stubs = append(stubs, response.Items...)
 
 		// Handle pagination
 		if response.NextPage == "" {
 			break
 		}
 		url = fmt.Sprintf("%s/iam/v1/accounts/%s/service-users?nextPageKey=%s", me.endpointURL, me.accountID, response.NextPage)
+	}
+
+	return stubs, nil
+}
+
+func (me *serviceUserServiceClient) List(ctx context.Context) (api.Stubs, error) {
+	var stubs api.Stubs
+	serviceUserStubs, err := me.GetAll(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, serviceUserStub := range serviceUserStubs {
+		stubs = append(stubs, &api.Stub{
+			ID:   serviceUserStub.UID,
+			Name: serviceUserStub.Name,
+		})
 	}
 
 	return stubs, nil
