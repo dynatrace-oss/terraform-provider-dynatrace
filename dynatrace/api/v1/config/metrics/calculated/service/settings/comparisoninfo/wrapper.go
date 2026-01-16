@@ -152,6 +152,14 @@ func (me *Wrapper) Schema() map[string]*schema.Schema {
 			Description: "Comparison for `STRING_REQUEST_ATTRIBUTE` attributes",
 			Elem:        &schema.Resource{Schema: new(StringRequestAttribute).Schema()},
 		},
+		"string_one_agent_attribute": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			MaxItems:    1,
+			MinItems:    1,
+			Description: "Comparison for `STRING_ONE_AGENT_ATTRIBUTE` attributes",
+			Elem:        &schema.Resource{Schema: new(StringOneAgentAttribute).Schema()},
+		},
 		"tag": {
 			Type:        schema.TypeList,
 			Optional:    true,
@@ -247,6 +255,11 @@ func (me *Wrapper) MarshalHCL(properties hcl.Properties) error {
 			return nil
 		}
 		return nil
+	case *StringOneAgentAttribute:
+		if err := properties.Encode("string_one_agent_attribute", cmp); err != nil {
+			return nil
+		}
+		return nil
 	case *String:
 		if err := properties.Encode("string", cmp); err != nil {
 			return nil
@@ -279,23 +292,24 @@ func (me *Wrapper) UnmarshalHCL(decoder hcl.Decoder) error {
 	var err error
 	var cmp any
 	if cmp, err = decoder.DecodeAny(map[string]any{
-		"boolean":                  new(Boolean),
-		"esb_input_node_type":      new(ESBInputNodeType),
-		"failed_state":             new(FailedState),
-		"failure_reason":           new(FailureReason),
-		"fast_string":              new(FastString),
-		"flaw_state":               new(FlawState),
-		"http_method":              new(HTTPMethod),
-		"http_status_class":        new(HTTPStatusClass),
-		"iib_input_node_type":      new(IIBInputNodeType),
-		"number":                   new(Number),
-		"number_request_attribute": new(NumberRequestAttribute),
-		"service_type":             new(ServiceType),
-		"string":                   new(String),
-		"string_request_attribute": new(StringRequestAttribute),
-		"tag":                      new(Tag),
-		"zos_call_type":            new(ZOSCallType),
-		"generic":                  new(BaseComparisonInfo)}); err != nil {
+		"boolean":                    new(Boolean),
+		"esb_input_node_type":        new(ESBInputNodeType),
+		"failed_state":               new(FailedState),
+		"failure_reason":             new(FailureReason),
+		"fast_string":                new(FastString),
+		"flaw_state":                 new(FlawState),
+		"http_method":                new(HTTPMethod),
+		"http_status_class":          new(HTTPStatusClass),
+		"iib_input_node_type":        new(IIBInputNodeType),
+		"number":                     new(Number),
+		"number_request_attribute":   new(NumberRequestAttribute),
+		"service_type":               new(ServiceType),
+		"string":                     new(String),
+		"string_request_attribute":   new(StringRequestAttribute),
+		"string_one_agent_attribute": new(StringOneAgentAttribute),
+		"tag":                        new(Tag),
+		"zos_call_type":              new(ZOSCallType),
+		"generic":                    new(BaseComparisonInfo)}); err != nil {
 		return err
 	}
 	if cmp != nil {
@@ -348,6 +362,13 @@ func (me *Wrapper) UnmarshalJSON(data []byte) error {
 		me.Comparison = cfg
 	case "STRING_REQUEST_ATTRIBUTE":
 		cfg := new(StringRequestAttribute)
+		if err := json.Unmarshal(data, &cfg); err != nil {
+			return err
+		}
+		cfg.Negate = me.Negate
+		me.Comparison = cfg
+	case "STRING_ONE_AGENT_ATTRIBUTE":
+		cfg := new(StringOneAgentAttribute)
 		if err := json.Unmarshal(data, &cfg); err != nil {
 			return err
 		}
