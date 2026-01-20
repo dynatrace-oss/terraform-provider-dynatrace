@@ -44,15 +44,28 @@ resource "dynatrace_alerting" "Default" {
 
 ### Required
 
-- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- `domain` (String) The region domain of the OpsGenie
-- `message` (String) The content of the message.  You can use the following placeholders:  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem
+- `active` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+- `domain` (String) The region domain of the OpsGenie.
+
+For example, **api.opsgenie.com** for US or **api.eu.opsgenie.com** for EU.
+- `message` (String) The content of the message. Type '{' for placeholder suggestions.. #### Available placeholders
+**{ProblemID}**: Display number of the reported problem.
+
+**{ProblemImpact}**: Impact level of the problem. Possible values are APPLICATION, SERVICE, or INFRASTRUCTURE.
+
+**{ProblemSeverity}**: Severity level of the problem. Possible values are AVAILABILITY, ERROR, PERFORMANCE, RESOURCE_CONTENTION, or CUSTOM_ALERT.
+
+**{ProblemTitle}**: Short description of the problem.
+
+**{ImpactedEntityNames}**: The entity impacted by the problem (or multiple impacted entities).
 - `name` (String) The name of the notification configuration
 - `profile` (String) The ID of the associated alerting profile
 
 ### Optional
 
-- `api_key` (String, Sensitive) The API key to access OpsGenie
+- `api_key` (String, Sensitive) The API key to access OpsGenie.
+
+Go to OpsGenie-Integrations and create a new Dynatrace integration. Copy the newly created API key.
 - `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 
 ### Read-Only

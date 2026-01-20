@@ -78,23 +78,56 @@ resource "dynatrace_alerting" "Default" {
 
 ### Required
 
-- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- `name` (String) The name of the notification configuration
-- `payload` (String) The content of the notification message. You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsHTML}`: All problem event details, including root cause, as an HTML-formatted string.  * `{ProblemDetailsJSON}`: All problem event details, including root cause, as a JSON object.  * `{ProblemDetailsMarkdown}`: All problem event details, including root cause, as a [Markdown-formatted](https://www.markdownguide.org/cheat-sheet/) string.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
+- `active` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+- `name` (String) The name of the notification configuration.
+- `payload` (String) The content of the notification message. Type '{' for placeholder suggestions.. #### Available placeholders
+**{ImpactedEntities}**: Details about the entities impacted by the problem in form of a json array.
+
+**{ImpactedEntity}**: A short description of the problem and impacted entity (or multiple impacted entities).
+
+**{ImpactedEntityNames}**: The entity impacted by the problem.
+
+**{NamesOfImpactedEntities}**: The names of all entities that are impacted by the problem.
+
+**{PID}**: Unique system identifier of the reported problem.
+
+**{ProblemDetailsHTML}**: All problem event details including root cause as an HTML-formatted string.
+
+**{ProblemDetailsJSONv2}**: Problem as json object following the structure from the [Dynatrace Problems V2 API](https://dt-url.net/7a03ti2). The optional fields evidenceDetails and impactAnalysis are included, but recentComments is not.
+
+**{ProblemDetailsJSON}**: Problem as json object following the structure from the [Dynatrace Problems V1 API](https://dt-url.net/qn23tk2).
+
+**{ProblemDetailsMarkdown}**: All problem event details including root cause as a Markdown-formatted string.
+
+**{ProblemDetailsText}**: All problem event details including root cause as a text-formatted string.
+
+**{ProblemID}**: Display number of the reported problem.
+
+**{ProblemImpact}**: Impact level of the problem. Possible values are APPLICATION, SERVICE, or INFRASTRUCTURE.
+
+**{ProblemSeverity}**: Severity level of the problem. Possible values are AVAILABILITY, ERROR, PERFORMANCE, RESOURCE_CONTENTION, or CUSTOM_ALERT.
+
+**{ProblemTitle}**: Short description of the problem.
+
+**{ProblemURL}**: URL of the problem within Dynatrace.
+
+**{State}**: Problem state. Possible values are OPEN or RESOLVED.
+
+**{Tags}**: Comma separated list of tags that are defined for all impacted entities. To refer to the value of a specific tag, specify the tag's key in square brackets: **{Tags[key]}**. If the tag does not have any assigned value, the placeholder will be replaced by an empty string. The placeholder will not be replaced if the tag key does not exist.
 - `profile` (String) The ID of the associated alerting profile
 
 ### Optional
 
-- `headers` (Block List, Max: 1) A list of the additional HTTP headers (see [below for nested schema](#nestedblock--headers))
-- `insecure` (Boolean) Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates
+- `headers` (Block List, Max: 1) A list of the additional HTTP headers. (see [below for nested schema](#nestedblock--headers))
+- `insecure` (Boolean) Accept any SSL certificate (including self-signed and invalid certificates)
 - `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
-- `notify_closed_problems` (Boolean) Send email if problem is closed
+- `notify_closed_problems` (Boolean) Call webhook if problem is closed
 - `notify_event_merges` (Boolean) Call webhook if new events merge into existing problems
 - `oauth_2_credentials` (Block List, Max: 1) To authenticate your integration, the OAuth 2.0 *Client Credentials* Flow (Grant Type) is used. For details see [Client Credentials Flow](https://dt-url.net/ym22wsm)).
 
 The obtained Access Token is subsequently provided in the *Authorization* header of the request carrying the notification payload. (see [below for nested schema](#nestedblock--oauth_2_credentials))
 - `secret_url` (String, Sensitive) The secret URL of the webhook endpoint.
-- `url` (String) The URL of the WebHook endpoint
+- `url` (String) The URL of the webhook endpoint.
 - `url_contains_secret` (Boolean) Secret webhook URL
 - `use_oauth_2` (Boolean) Use OAuth 2.0 for authentication
 
@@ -114,12 +147,12 @@ Required:
 
 Required:
 
-- `name` (String) The name of the HTTP header
+- `name` (String) The name of the HTTP header.
 
 Optional:
 
-- `secret_value` (String, Sensitive) The value of the HTTP header as a sensitive property. May contain an empty value. `secret_value` and `value` are mutually exclusive. Only one of those two is allowed to be specified.
-- `value` (String) The value of the HTTP header. May contain an empty value. `secret_value` and `value` are mutually exclusive. Only one of those two is allowed to be specified.
+- `secret_value` (String, Sensitive) The secret value of the HTTP header. May contain an empty value.
+- `value` (String) The value of the HTTP header. May contain an empty value.
 
 
 

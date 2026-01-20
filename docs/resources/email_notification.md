@@ -47,17 +47,71 @@ resource "dynatrace_alerting" "Default" {
 
 ### Required
 
-- `body` (String) The template of the email notification.  You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsHTML}`: All problem event details, including root cause, as an HTML-formatted string.  * `{ProblemDetailsJSON}`: All problem event details, including root cause, as a JSON object.  * `{ProblemDetailsMarkdown}`: All problem event details, including root cause, as a [Markdown-formatted](https://www.markdownguide.org/cheat-sheet/) string.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
-- `name` (String) The name of the notification configuration
+- `body` (String) The template of the email notifications. Type '{' for placeholder suggestions.. #### Available placeholders
+**{ImpactedEntities}**: Details about the entities impacted by the problem in form of a json array.
+
+**{ImpactedEntity}**: A short description of the problem and impacted entity (or multiple impacted entities).
+
+**{ImpactedEntityNames}**: The entity impacted by the problem.
+
+**{NamesOfImpactedEntities}**: The names of all entities that are impacted by the problem.
+
+**{PID}**: Unique system identifier of the reported problem.
+
+**{ProblemDetailsHTML}**: All problem event details including root cause as an HTML-formatted string.
+
+**{ProblemDetailsJSONv2}**: Problem as json object following the structure from the [Dynatrace Problems V2 API](https://dt-url.net/7a03ti2). The optional fields evidenceDetails and impactAnalysis are included, but recentComments is not.
+
+**{ProblemDetailsJSON}**: Problem as json object following the structure from the [Dynatrace Problems V1 API](https://dt-url.net/qn23tk2).
+
+**{ProblemDetailsMarkdown}**: All problem event details including root cause as a Markdown-formatted string.
+
+**{ProblemDetailsText}**: All problem event details including root cause as a text-formatted string.
+
+**{ProblemID}**: Display number of the reported problem.
+
+**{ProblemImpact}**: Impact level of the problem. Possible values are APPLICATION, SERVICE, or INFRASTRUCTURE.
+
+**{ProblemSeverity}**: Severity level of the problem. Possible values are AVAILABILITY, ERROR, PERFORMANCE, RESOURCE_CONTENTION, or CUSTOM_ALERT.
+
+**{ProblemTitle}**: Short description of the problem.
+
+**{ProblemURL}**: URL of the problem within Dynatrace.
+
+**{State}**: Problem state. Possible values are OPEN or RESOLVED.
+
+**{Tags}**: Comma separated list of tags that are defined for all impacted entities. To refer to the value of a specific tag, specify the tag's key in square brackets: **{Tags[key]}**. If the tag does not have any assigned value, the placeholder will be replaced by an empty string. The placeholder will not be replaced if the tag key does not exist.
+- `name` (String) The name of the notification configuration.
 - `profile` (String) The ID of the associated alerting profile
-- `subject` (String) The subject of the email notifications
-- `to` (Set of String) The list of the email recipients
+- `subject` (String) The subject of the email notifications. Type '{' for placeholder suggestions.. #### Available placeholders
+**{ImpactedEntity}**: A short description of the problem and impacted entity (or multiple impacted entities).
+
+**{ImpactedEntityNames}**: The entity impacted by the problem.
+
+**{NamesOfImpactedEntities}**: The names of all entities that are impacted by the problem.
+
+**{PID}**: Unique system identifier of the reported problem.
+
+**{ProblemID}**: Display number of the reported problem.
+
+**{ProblemImpact}**: Impact level of the problem. Possible values are APPLICATION, SERVICE, or INFRASTRUCTURE.
+
+**{ProblemSeverity}**: Severity level of the problem. Possible values are AVAILABILITY, ERROR, PERFORMANCE, RESOURCE_CONTENTION, or CUSTOM_ALERT.
+
+**{ProblemTitle}**: Short description of the problem.
+
+**{ProblemURL}**: URL of the problem within Dynatrace.
+
+**{State}**: Problem state. Possible values are OPEN or RESOLVED.
+
+**{Tags}**: Comma separated list of tags that are defined for all impacted entities. To refer to the value of a specific tag, specify the tag's key in square brackets: **{Tags[key]}**. If the tag does not have any assigned value, the placeholder will be replaced by an empty string. The placeholder will not be replaced if the tag key does not exist.
+- `to` (Set of String) To
 
 ### Optional
 
-- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- `bcc` (Set of String) The list of the email BCC-recipients
-- `cc` (Set of String) The list of the email CC-recipients
+- `active` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+- `bcc` (Set of String) BCC
+- `cc` (Set of String) CC
 - `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 - `notify_closed_problems` (Boolean) Send email if problem is closed
 
