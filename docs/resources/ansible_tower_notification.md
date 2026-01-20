@@ -46,18 +46,47 @@ resource "dynatrace_alerting" "Default" {
 
 ### Required
 
-- `custom_message` (String) The custom message of the notification. This message will be displayed in the extra variables **Message** field of your job template. You can use the following placeholders:  * `{ImpactedEntities}`: Details about the entities impacted by the problem in form of a JSON array.  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
-- `job_template_url` (String) The URL of the target Ansible Tower job template
-- `name` (String) The display name within the Dynatrace WebUI.
+- `custom_message` (String) This message will be displayed in the Extra Variables **Message** field of your job template. Type '{' for placeholder suggestions.. #### Available placeholders
+**{ImpactedEntities}**: Details about the entities impacted by the problem in form of a json array.
+
+**{ImpactedEntity}**: A short description of the problem and impacted entity (or multiple impacted entities).
+
+**{ImpactedEntityNames}**: The entity impacted by the problem.
+
+**{NamesOfImpactedEntities}**: The names of all entities that are impacted by the problem.
+
+**{PID}**: Unique system identifier of the reported problem.
+
+**{ProblemDetailsText}**: All problem event details including root cause as a text-formatted string.
+
+**{ProblemID}**: Display number of the reported problem.
+
+**{ProblemImpact}**: Impact level of the problem. Possible values are APPLICATION, SERVICE, or INFRASTRUCTURE.
+
+**{ProblemSeverity}**: Severity level of the problem. Possible values are AVAILABILITY, ERROR, PERFORMANCE, RESOURCE_CONTENTION, or CUSTOM_ALERT.
+
+**{ProblemTitle}**: Short description of the problem.
+
+**{ProblemURL}**: URL of the problem within Dynatrace.
+
+**{State}**: Problem state. Possible values are OPEN or RESOLVED.
+
+**{Tags}**: Comma separated list of tags that are defined for all impacted entities. To refer to the value of a specific tag, specify the tag's key in square brackets: **{Tags[key]}**. If the tag does not have any assigned value, the placeholder will be replaced by an empty string. The placeholder will not be replaced if the tag key does not exist.
+- `job_template_url` (String) The URL of the target job template.
+
+For example, https://<Ansible server name>/#/templates/job_template/<JobTemplateID>
+
+**Note:** Be sure to select the **Prompt on Launch** option in the Extra Variables section of your job template configuration.
+- `name` (String) The name of the notification configuration.
 - `profile` (String) The ID of the associated alerting profile.
-- `username` (String) The username of the Ansible Tower account
+- `username` (String) Account username.
 
 ### Optional
 
-- `active` (Boolean) The notification is active (`true`) or inactive (`false`). Default is `false`.
-- `insecure` (Boolean) Accept any, including self-signed and invalid, SSL certificate (`true`) or only trusted (`false`) certificates. Default is `false`.
+- `active` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+- `insecure` (Boolean) Accept any SSL certificate (including self-signed and invalid certificates)
 - `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
-- `password` (String, Sensitive) The password for the Ansible Tower account
+- `password` (String, Sensitive) Account password.
 
 ### Read-Only
 

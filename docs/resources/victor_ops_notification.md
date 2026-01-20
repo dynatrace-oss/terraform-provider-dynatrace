@@ -44,15 +44,36 @@ resource "dynatrace_alerting" "Default" {
 
 ### Required
 
-- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- `message` (String) The content of the message.  You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{ProblemDetailsText}`: All problem event details, including root cause, as a text-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`
-- `name` (String) The name of the notification configuration
+- `active` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+- `message` (String) The content of the message. Type '{' for placeholder suggestions.. #### Available placeholders
+**{ImpactedEntity}**: A short description of the problem and impacted entity (or multiple impacted entities).
+
+**{ImpactedEntityNames}**: The entity impacted by the problem.
+
+**{NamesOfImpactedEntities}**: The names of all entities that are impacted by the problem.
+
+**{ProblemDetailsText}**: All problem event details including root cause as a text-formatted string.
+
+**{ProblemID}**: Display number of the reported problem.
+
+**{ProblemImpact}**: Impact level of the problem. Possible values are APPLICATION, SERVICE, or INFRASTRUCTURE.
+
+**{ProblemSeverity}**: Severity level of the problem. Possible values are AVAILABILITY, ERROR, PERFORMANCE, RESOURCE_CONTENTION, or CUSTOM_ALERT.
+
+**{ProblemTitle}**: Short description of the problem.
+
+**{ProblemURL}**: URL of the problem within Dynatrace.
+
+**{State}**: Problem state. Possible values are OPEN or RESOLVED.
+- `name` (String) The name of the notification configuration.
 - `profile` (String) The ID of the associated alerting profile
-- `routing_key` (String) The routing key, defining the group to be notified
+- `routing_key` (String) The routing key, defining the group to be notified.
 
 ### Optional
 
-- `api_key` (String, Sensitive) The API key for the target Splunk On-Call account
+- `api_key` (String, Sensitive) The API key for the target Splunk On-Call account.
+
+Receive your Splunk On-Call API key by navigating to: Settings -> Integrations -> Rest Endpoint -> Dynatrace.
 - `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 
 ### Read-Only

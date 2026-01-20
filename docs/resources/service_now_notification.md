@@ -47,21 +47,50 @@ resource "dynatrace_alerting" "Default" {
 
 ### Required
 
-- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
-- `incidents` (Boolean) Send incidents into ServiceNow ITSM
-- `message` (String) The content of the ServiceNow description. You can use the following placeholders:  * `{ImpactedEntity}`: The entity impacted by the problem or *X* impacted entities.  * `{PID}`: The ID of the reported problem.  * `{ProblemDetailsHTML}`: All problem event details, including root cause, as an HTML-formatted string.  * `{ProblemID}`: The display number of the reported problem.  * `{ProblemImpact}`: The [impact level](https://www.dynatrace.com/support/help/shortlink/impact-analysis) of the problem. Possible values are `APPLICATION`, `SERVICE`, and `INFRASTRUCTURE`.  * `{ProblemSeverity}`: The [severity level](https://www.dynatrace.com/support/help/shortlink/event-types) of the problem. Possible values are `AVAILABILITY`, `ERROR`, `PERFORMANCE`, `RESOURCE_CONTENTION`, and `CUSTOM_ALERT`.  * `{ProblemTitle}`: A short description of the problem.  * `{ProblemURL}`: The URL of the problem within Dynatrace.  * `{State}`: The state of the problem. Possible values are `OPEN` and `RESOLVED`.  * `{Tags}`: The list of tags that are defined for all impacted entities, separated by commas
+- `active` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+- `incidents` (Boolean) Send incidents into ServiceNow ITSM.
+- `message` (String) The content of the ServiceNow description. Type '{' for placeholder suggestions.. #### Available placeholders
+**{ImpactedEntity}**: A short description of the problem and impacted entity (or multiple impacted entities).
+
+**{ImpactedEntityNames}**: The entity impacted by the problem.
+
+**{NamesOfImpactedEntities}**: The names of all entities that are impacted by the problem.
+
+**{PID}**: Unique system identifier of the reported problem.
+
+**{ProblemDetailsHTML}**: All problem event details including root cause as an HTML-formatted string.
+
+**{ProblemDetailsText}**: All problem event details including root cause as a text-formatted string.
+
+**{ProblemID}**: Display number of the reported problem.
+
+**{ProblemImpact}**: Impact level of the problem. Possible values are APPLICATION, SERVICE, or INFRASTRUCTURE.
+
+**{ProblemSeverity}**: Severity level of the problem. Possible values are AVAILABILITY, ERROR, PERFORMANCE, RESOURCE_CONTENTION, or CUSTOM_ALERT.
+
+**{ProblemTitle}**: Short description of the problem.
+
+**{State}**: Problem state. Possible values are OPEN or RESOLVED.
+
+**{Tags}**: Comma separated list of tags that are defined for all impacted entities. To refer to the value of a specific tag, specify the tag's key in square brackets: **{Tags[key]}**. If the tag does not have any assigned value, the placeholder will be replaced by an empty string. The placeholder will not be replaced if the tag key does not exist.
 - `name` (String) The name of the notification configuration
 - `profile` (String) The ID of the associated alerting profile
-- `username` (String) The username of the ServiceNow account.   Make sure that your user account has the `rest_service`, `web_request_admin`, and `x_dynat_ruxit.Integration` roles
+- `username` (String) The username of the ServiceNow account. 
+
+ Make sure that your user account has the `web_service_admin` and `x_dynat_ruxit.Integration` roles.
 
 ### Optional
 
-- `events` (Boolean) Send events into ServiceNow ITOM
+- `events` (Boolean) Send events into ServiceNow ITOM.
 - `format_problem_details_as_text` (Boolean) Use text format for problem details instead of HTML.
-- `instance` (String) The ServiceNow instance identifier. It refers to the first part of your own ServiceNow URL. This field is mutually exclusive with the **url** field. You can only use one of them
+- `instance` (String) The ServiceNow instance identifier. It refers to the first part of your own ServiceNow URL. 
+
+ This field is mutually exclusive with the **url** field. You can only use one of them.
 - `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
-- `password` (String, Sensitive) The password to the ServiceNow account
-- `url` (String) The URL of the on-premise ServiceNow installation. This field is mutually exclusive with the **instance** field. You can only use one of them
+- `password` (String, Sensitive) The password to the ServiceNow account.
+- `url` (String) The URL of the on-premise ServiceNow installation. 
+
+ This field is mutually exclusive with the **instanceName** field. You can only use one of them.
 
 ### Read-Only
 
