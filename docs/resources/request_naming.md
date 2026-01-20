@@ -84,6 +84,7 @@ Optional:
 - `number_request_attribute` (Block List, Max: 1) Comparison for `NUMBER_REQUEST_ATTRIBUTE` attributes (see [below for nested schema](#nestedblock--conditions--condition--comparison--number_request_attribute))
 - `service_type` (Block List, Max: 1) Comparison for `SERVICE_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--comparison--service_type))
 - `string` (Block List, Max: 1) Comparison for `STRING` attributes (see [below for nested schema](#nestedblock--conditions--condition--comparison--string))
+- `string_one_agent_attribute` (Block List, Max: 1) Comparison for `STRING_ONE_AGENT_ATTRIBUTE` attributes (see [below for nested schema](#nestedblock--conditions--condition--comparison--string_one_agent_attribute))
 - `string_request_attribute` (Block List, Max: 1) Comparison for `STRING_REQUEST_ATTRIBUTE` attributes (see [below for nested schema](#nestedblock--conditions--condition--comparison--string_request_attribute))
 - `tag` (Block List, Max: 1) Comparison for `TAG` attributes (see [below for nested schema](#nestedblock--conditions--condition--comparison--tag))
 - `zos_call_type` (Block List, Max: 1) Comparison for `ZOS_CALL_TYPE` attributes (see [below for nested schema](#nestedblock--conditions--condition--comparison--zos_call_type))
@@ -283,6 +284,21 @@ Optional:
 - `case_sensitive` (Boolean) The comparison is case-sensitive (`true`) or not case-sensitive (`false`)
 - `operator` (String) Operator of the comparison. You can reverse it by setting `negate` to `true`. Possible values are `BEGINS_WITH`, `BEGINS_WITH_ANY_OF`, `CONTAINS`, `ENDS_WITH`, `ENDS_WITH_ANY_OF`, `EQUALS`, `EQUALS_ANY_OF`, `EXISTS` and `REGEX_MATCHES`
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
+- `value` (String) The value to compare to
+- `values` (Set of String) The values to compare to
+
+
+<a id="nestedblock--conditions--condition--comparison--string_one_agent_attribute"></a>
+### Nested Schema for `conditions.condition.comparison.string_one_agent_attribute`
+
+Required:
+
+- `one_agent_attribute_key` (String) The OneAgent attribute to extract from
+
+Optional:
+
+- `case_sensitive` (Boolean) The comparison is case-sensitive (`true`) or not case-sensitive (`false`)
+- `operator` (String) Operator of the comparison. You can reverse it by setting `negate` to `true`. Possible values are `BEGINS_WITH`, `BEGINS_WITH_ANY_OF`, `CONTAINS`, `ENDS_WITH`, `ENDS_WITH_ANY_OF`, `EQUALS`, `EQUALS_ANY_OF`, `EXISTS` and `REGEX_MATCHES`
 - `value` (String) The value to compare to
 - `values` (Set of String) The values to compare to
 

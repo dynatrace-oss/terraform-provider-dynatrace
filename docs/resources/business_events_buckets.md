@@ -1,12 +1,15 @@
 ---
 layout: ""
 page_title: "dynatrace_business_events_buckets Resource - terraform-provider-dynatrace"
-subcategory: "Business Events"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_business_events_buckets` covers configuration for business event bucket assignment
 ---
 
 # dynatrace_business_events_buckets (Resource)
+
+~> **Warning** This resource has been deprecated in favor of OpenPipeline.
+Please migrate your OpenPipeline configurations and use `dynatrace_openpipeline_v2_*` instead.
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
@@ -50,4 +53,3 @@ resource "dynatrace_business_events_buckets" "#name#" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
- 

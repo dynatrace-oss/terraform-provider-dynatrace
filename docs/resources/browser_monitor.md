@@ -304,6 +304,7 @@ If not set, then the Desktop preconfigured device is used (see [below for nested
 - `javascript_setttings` (Block List, Max: 1) Custom JavaScript Agent settings (see [below for nested schema](#nestedblock--script--configuration--javascript_setttings))
 - `monitor_frames` (Boolean) Capture performance metrics for pages loaded in frames
 - `user_agent` (String) The user agent of the request
+- `user_certificates` (Block List, Max: 1) Client certificates that can only be configured for Linux-based locations (see [below for nested schema](#nestedblock--script--configuration--user_certificates))
 
 <a id="nestedblock--script--configuration--bandwidth"></a>
 ### Nested Schema for `script.configuration.bandwidth`
@@ -424,6 +425,23 @@ Optional:
 
 - `excluded_elements` (List of String) Query CSS selectors to specify mutation nodes (elements that change) to ignore in Visually complete and Speed index calculation
 - `excluded_urls` (List of String) Parameters for Visually complete and Speed index calculation
+
+
+
+<a id="nestedblock--script--configuration--user_certificates"></a>
+### Nested Schema for `script.configuration.user_certificates`
+
+Required:
+
+- `user_certificate` (Block List, Min: 1) A client certificate that can only be configured for Linux-based locations (see [below for nested schema](#nestedblock--script--configuration--user_certificates--user_certificate))
+
+<a id="nestedblock--script--configuration--user_certificates--user_certificate"></a>
+### Nested Schema for `script.configuration.user_certificates.user_certificate`
+
+Required:
+
+- `credential_id` (String) The ID of the certificate stored in the credential vault
+- `domain` (String) The domain for which the certificate should be used. Use `*` as a wildcard to match multiple subdomains (e.g., `*.example.com` to match `sub.example.com`, `another.sub.example.com`, etc.)
 
 
 

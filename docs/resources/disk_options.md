@@ -29,6 +29,7 @@ The full documentation of the export feature is available [here](https://dt-url.
 resource "dynatrace_disk_options" "#name#" {
   disable_nfs_disk_monitoring = false
   nfs_show_all = true
+  monitor_tmpfs = true
   scope        = "HOST-1234567890000000"
   exclusions {
     exclusion {
@@ -47,7 +48,8 @@ resource "dynatrace_disk_options" "#name#" {
 
 - `disable_nfs_disk_monitoring` (Boolean) Deactivate NFS monitoring on all supported systems
 - `exclusions` (Block List, Max: 1) OneAgent automatically detects and monitors all your mount points, however you can create exception rules to remove disks from the monitoring list. (see [below for nested schema](#nestedblock--exclusions))
-- `nfs_show_all` (Boolean) When disabled OneAgent will try to deduplicate some of nfs disks. Disabled by default, applies only to Linux hosts. Requires OneAgent 1.209 or later
+- `monitor_tmpfs` (Boolean) Activate tmpfs monitoring on Linux systems
+- `nfs_show_all` (Boolean) When disabled OneAgent will try to deduplicate some of nfs mount points. Disabled by default, applies only to Linux hosts.
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
 ### Read-Only
@@ -66,7 +68,7 @@ Required:
 
 Required:
 
-- `os` (String) Possible Values: `OS_TYPE_AIX`, `OS_TYPE_DARWIN`, `OS_TYPE_HPUX`, `OS_TYPE_LINUX`, `OS_TYPE_SOLARIS`, `OS_TYPE_UNKNOWN`, `OS_TYPE_WINDOWS`, `OS_TYPE_ZOS`
+- `os` (String) Operating system. Possible Values: `OS_TYPE_AIX`, `OS_TYPE_DARWIN`, `OS_TYPE_HPUX`, `OS_TYPE_LINUX`, `OS_TYPE_SOLARIS`, `OS_TYPE_UNKNOWN`, `OS_TYPE_WINDOWS`, `OS_TYPE_ZOS`
 
 Optional:
 
@@ -93,4 +95,6 @@ The wildcard in the last example means to exclude matching file systems such as 
 The wildcard in **/staff/*** means to exclude every child folder of /staff.
 
 The wildcard in **/disk*** means to exclude every mount point starting with /disk, for example /disk1, /disk99,  /diskabc
+
+ ⚠️ Filtering is done before resolving symbolic links.
  

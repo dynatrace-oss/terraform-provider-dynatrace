@@ -36,9 +36,9 @@ resource "dynatrace_disk_analytics" "#name#" {
 
 ### Required
 
-- `enabled` (Boolean) The Disk Analytics feature requires an extension to be added to your environment. The Disk Analytics extension consumes custom metrics and [Davis data units](https://www.dynatrace.com/support/help/shortlink/metric-cost-calculation).
+- `enabled` (Boolean) The Disk Analytics feature requires an extension to be added to your environment. You can add the Disk Analytics extension to your environment from [Dynatrace Hub](/ui/hub/ext/com.dynatrace.extension.disk-devices#information). The Disk Analytics extension consumes custom metrics and [Davis data units](https://www.dynatrace.com/support/help/shortlink/metric-cost-calculation).
 
-After you have installed the Disk Analytics extension, you can enable the Data Collection in host or host-group level settings. If you enable the Data Collection without adding the extension the data is only visible in the data explorer.
+After you have added the Disk Analytics extension, you can enable the Data Collection in host or host-group level settings. If you enable the Data Collection without adding the extension the data is only visible in the data explorer.
 
 For details, see [Disk Analytics extension documentation](https://dt-url.net/3a03v9v).
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP)

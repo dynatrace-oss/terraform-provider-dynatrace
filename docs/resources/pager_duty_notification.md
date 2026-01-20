@@ -44,15 +44,15 @@ resource "dynatrace_alerting" "Default" {
 
 ### Required
 
-- `account` (String) The name of the PagerDuty account
-- `active` (Boolean) The configuration is enabled (`true`) or disabled (`false`)
+- `account` (String) The name of the PagerDuty account.
+- `active` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `name` (String) The name of the notification configuration
 - `profile` (String) The ID of the associated alerting profile
-- `service` (String) The name of the PagerDuty Service
+- `service` (String) The name of the service.
 
 ### Optional
 
-- `api_key` (String, Sensitive) The API key to access PagerDuty
+- `api_key` (String, Sensitive) The Events API key to access PagerDuty.
 - `legacy_id` (String) The ID of these settings when referred to from resources requiring the REST API V1 keys
 
 ### Read-Only

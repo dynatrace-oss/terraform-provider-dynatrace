@@ -1,12 +1,15 @@
 ---
 layout: ""
 page_title: "dynatrace_business_events_processing Resource - terraform-provider-dynatrace"
-subcategory: "Business Events"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_business_events_processing` covers configuration for business event processing
 ---
 
 # dynatrace_business_events_processing (Resource)
+
+~> **Warning** This resource has been deprecated in favor of OpenPipeline.
+Please migrate your OpenPipeline configurations and use `dynatrace_openpipeline_v2_*` instead.
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
@@ -103,4 +106,3 @@ Required:
 - `optional` (Boolean) no documentation available
 - `readonly` (Boolean) Read-only
 - `type` (String) Possible Values: `BOOLEAN`, `DOUBLE`, `DURATION`, `INT`, `IPADDR`, `LONG`, `STRING`, `TIMESTAMP`
- 
