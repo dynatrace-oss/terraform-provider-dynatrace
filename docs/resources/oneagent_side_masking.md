@@ -39,14 +39,14 @@ resource "dynatrace_oneagent_side_masking" "#name#" {
 
 ### Required
 
-- `is_email_masking_enabled` (Boolean) Exclude email addresses from URLs
-- `is_financial_masking_enabled` (Boolean) Exclude IBANs and payment card numbers from URLs
-- `is_numbers_masking_enabled` (Boolean) Exclude hexadecimal IDs and consecutive numbers above 5 digits from URLs
+- `is_email_masking_enabled` (Boolean) Exclude email addresses from URLs and exceptions
+- `is_financial_masking_enabled` (Boolean) Exclude IBANs and payment card numbers from URLs and exceptions
+- `is_numbers_masking_enabled` (Boolean) Exclude hexadecimal IDs and consecutive numbers above 5 digits from URLs and exceptions
 - `is_query_masking_enabled` (Boolean) Exclude query parameters from URLs and web requests
 
 ### Optional
 
-- `process_group_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+- `process_group_id` (String) The scope of this setting (PROCESS_GROUP, CLOUD_APPLICATION, CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
 ### Read-Only
 

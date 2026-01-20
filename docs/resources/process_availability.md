@@ -55,8 +55,8 @@ resource "dynatrace_process_availability" "#name#" {
 
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `metadata` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+). (see [below for nested schema](#nestedblock--metadata))
-- `minimum_processes` (Number) Specify a minimum number of processes matching the monitoring rule. If it's not satisfied, an alert will open.
-- `operating_system` (Set of String) Select the operating systems on which the monitoring rule should be applied.
+- `minimum_processes` (Number) Specify a minimum number of processes matching the monitoring rule. An alert is triggered if any host falls below this threshold.
+- `operating_system` (Set of String) Select the operating systems on which the monitoring rule should be applied. Possible Values: `AIX`, `LINUX`, `WINDOWS`
 - `rules` (Block List, Max: 1) Define process detection rules by selecting a process property and a condition. Each monitoring rule can have multiple detection rules associated with it. (see [below for nested schema](#nestedblock--rules))
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
@@ -101,13 +101,15 @@ Optional:
 For example, $suffix(svc.py) would detect processes named loyaltysvc.py and paymentssvc.py.
 
 For more details, see [Process availability](https://dt-url.net/v923x37).
-- `host_metadata_condition` (Block List, Max: 1) Host custom metadata refers to user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.
+- `host_metadata_condition` (Block List, Max: 1) Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.
 
 By defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.
 
-See [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw). (see [below for nested schema](#nestedblock--rules--rule--host_metadata_condition))
-- `property` (String) Possible Values: `CommandLine`, `Executable`, `ExecutablePath`, `User`
-- `rule_type` (String) Possible Values: `RuleTypeHost`, `RuleTypeProcess`
+See [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).
+
+Note: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata. (see [below for nested schema](#nestedblock--rules--rule--host_metadata_condition))
+- `property` (String) Select process property. Possible Values: `commandLine`, `executable`, `executablePath`, `user`
+- `rule_type` (String) Rule scope. Possible Values: `RuleTypeHost`, `RuleTypeProcess`
 
 <a id="nestedblock--rules--rule--host_metadata_condition"></a>
 ### Nested Schema for `rules.rule.host_metadata_condition`
@@ -116,6 +118,7 @@ Required:
 
 - `metadata_condition` (String) This string has to match a required format.
 
+- `$match(ver*_1.2.?)` – Matches string with wildcards: `*` any number (including zero) of characters and `?` exactly one character.
 - `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.
 - `$eq(production)` – Matches if `production` matches the host metadata value exactly.
 - `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.
@@ -131,5 +134,5 @@ Brackets **(** and **)** that are part of the matched property **must be escaped
 
 Optional:
 
-- `key_must_exist` (Boolean) When enabled, the condition requires a metadata key to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.
+- `key_must_exist` (Boolean) When enabled, the condition requires a resource attribute to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.
  

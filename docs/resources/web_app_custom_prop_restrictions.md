@@ -72,7 +72,7 @@ Required:
 
 Required:
 
-- `field_data_type` (String) Possible Values: `BOOLEAN`, `NUMBER`, `STRING`
+- `field_data_type` (String) Datatype. Possible Values: `BOOLEAN`, `NUMBER`, `STRING`
 - `field_name` (String) Field name
 
 Optional:
@@ -93,7 +93,7 @@ Required:
 
 Required:
 
-- `field_data_type` (String) Possible Values: `BOOLEAN`, `NUMBER`, `STRING`
+- `field_data_type` (String) Datatype. Possible Values: `BOOLEAN`, `NUMBER`, `STRING`
 - `field_name` (String) Field name
 
 Optional:
