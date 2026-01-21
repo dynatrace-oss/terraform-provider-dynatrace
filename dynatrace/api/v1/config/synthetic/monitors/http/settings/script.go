@@ -24,8 +24,9 @@ import (
 )
 
 type Script struct {
-	Version  string   `json:"version"`  // Script version—use the `1.0` value here
-	Requests Requests `json:"requests"` // A list of HTTP requests to be performed by the monitor.\n\nThe requests are executed in the order in which they appear in the script
+	Version          string           `json:"version"`  // Script version—use the `1.0` value here
+	Requests         Requests         `json:"requests"` // A list of HTTP requests to be performed by the monitor.\n\nThe requests are executed in the order in which they appear in the script
+	CustomProperties CustomProperties `json:"customProperties,omitempty"`
 }
 
 func (me *Script) GetVersion() string {
@@ -41,6 +42,14 @@ func (me *Script) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			Elem:        &schema.Resource{Schema: new(Request).Schema()},
 		},
+		"custom_properties": {
+			Type:        schema.TypeList,
+			Description: "[Preview only](https://docs.dynatrace.com/docs/whats-new/preview-releases). A set of custom properties assigned to the monitor. More information can be found [here](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-monitoring/http-monitors-classic/advanced-http-monitor-settings-classic).",
+			Optional:    true,
+			Elem: &schema.Resource{
+				Schema: new(CustomProperties).Schema(),
+			},
+		},
 	}
 }
 
@@ -48,11 +57,17 @@ func (me *Script) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("request", me.Requests); err != nil {
 		return err
 	}
+	if err := properties.Encode("custom_properties", me.CustomProperties); err != nil {
+		return err
+	}
 	return nil
 }
 
 func (me *Script) UnmarshalHCL(decoder hcl.Decoder) error {
 	me.Version = me.GetVersion()
+	if err := decoder.Decode("custom_properties", &me.CustomProperties); err != nil {
+		return err
+	}
 	if result, ok := decoder.GetOk("request.#"); ok {
 		me.Requests = Requests{}
 		for idx := 0; idx < result.(int); idx++ {
