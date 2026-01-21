@@ -93,7 +93,7 @@ resource "dynatrace_iam_policy_bindings" "bindings" {
 
 ### Required
 
-- `group` (String) The name of the policy
+- `group` (String) The UUID of the group to which the policy applies
 - `policies` (Set of String) A list of IDs referring to policies bound to that group. It's not possible to mix policies here that are defined for different scopes (different accounts or environments) than specified via attributes `account` or `environment`.
 
 ### Optional
