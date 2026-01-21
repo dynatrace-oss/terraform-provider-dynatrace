@@ -109,7 +109,7 @@ resource "dynatrace_iam_policy_bindings" "bindings" {
 
 ### Required
 
-- `group` (String) The name of the policy
+- `group` (String) The UUID of the group to which the policy applies
 
 ### Optional
 
