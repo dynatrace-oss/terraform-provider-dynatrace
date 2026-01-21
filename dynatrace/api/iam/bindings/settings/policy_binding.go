@@ -39,7 +39,7 @@ func (me *PolicyBinding) Schema() map[string]*schema.Schema {
 		"group": {
 			Type:        schema.TypeString,
 			Required:    true,
-			Description: "The name of the policy",
+			Description: "The UUID of the group to which the policy applies",
 			ForceNew:    true,
 		},
 		"account": {
