@@ -22,6 +22,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -29,7 +30,7 @@ import (
 )
 
 func TestIAMClientID(t *testing.T) {
-	if len(os.Getenv("TF_ACC")) > 0 {
+	if envutil.GetBoolEnv(envutil.EnvTFAcc, false) {
 		return
 	}
 	assert := Assert{t}
@@ -59,7 +60,7 @@ func TestIAMClientID(t *testing.T) {
 }
 
 func TestIAMClientSecret(t *testing.T) {
-	if len(os.Getenv("TF_ACC")) > 0 {
+	if envutil.GetBoolEnv(envutil.EnvTFAcc, false) {
 		return
 	}
 	assert := Assert{t}
@@ -88,7 +89,7 @@ func TestIAMClientSecret(t *testing.T) {
 	}
 }
 func TestSSOTokenURL(t *testing.T) {
-	if len(os.Getenv("TF_ACC")) > 0 {
+	if envutil.GetBoolEnv(envutil.EnvTFAcc, false) {
 		return
 	}
 	assert := Assert{t}

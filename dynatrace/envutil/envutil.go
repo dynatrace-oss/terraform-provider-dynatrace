@@ -74,9 +74,18 @@ const (
 	EnvDebugGetOk         = "DT_DEBUG_GET_OK"
 	EnvGoldenStateEnabled = "DYNATRACE_GOLDEN_STATE_ENABLED"
 	EnvTerraformImport    = "DT_TERRAFORM_IMPORT"
+	EnvVerboseTestLogging = "DYNATRACE_VERBOSE_TEST_LOGGING"
 
 	// Provider/Logging environment variables
 	EnvDebug = "DYNATRACE_DEBUG"
+
+	// Migration?
+	EnvMigration            = "MIGRATION"
+	EnvMigrationCacheFolder = "DYNATRACE_MIGRATION_CACHE_FOLDER"
+
+	// Other environment variables
+	EnvTFAcc          = "TF_ACC"
+	EnvDashboardTests = "DYNATRACE_DASHBOARD_TESTS"
 )
 
 // GetBoolEnv reads a boolean environment variable with a default value.

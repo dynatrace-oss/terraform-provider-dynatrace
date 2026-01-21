@@ -21,9 +21,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"os"
-"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"strings"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
@@ -336,7 +336,7 @@ func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, 
 	}
 	marshalled := hcl.Properties{}
 	err = sttngs.MarshalHCL(marshalled)
-	if os.Getenv("DT_TERRAFORM_IMPORT") != "true" {
+	if !envutil.GetBoolEnv(envutil.EnvTerraformImport, false) {
 		stateAttributes := NewAttributes(d.State().Attributes)
 
 		// Replacing Algorithm A

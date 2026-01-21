@@ -22,9 +22,10 @@ import (
 	"fmt"
 	"log"
 	"os"
-"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 	"strings"
 	"sync"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
