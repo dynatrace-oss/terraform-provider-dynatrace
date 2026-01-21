@@ -33,6 +33,7 @@ We recommend using platform credentials to ensure a correct setup.
 In case an API token is needed, we recommend setting `DYNATRACE_HTTP_OAUTH_PREFERENCE=true`.
 
 ## Dynatrace Documentation
+- [Set up Microsoft Azure Connector](https://dt-url.net/gs034de)
 
 - Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:hyperscaler-authentication.connections.azure`)
 
