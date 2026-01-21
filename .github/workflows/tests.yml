@@ -84,8 +84,8 @@ jobs:
           - { name: "platform", path: "./dynatrace/api/platform/..." }
           - { name: "service", path: "./dynatrace/api/service/..." }
           - { name: "slo", path: "./dynatrace/api/slo/..." }
-          - { name: "v1 (a-d)", path: "$(go list ./dynatrace/api/v1/... | grep -E '^.+/dynatrace/api/v1/[a-d][^/]*/?')" }
-          - { name: "v1 (e-z)", path: "$(go list ./dynatrace/api/v1/... | grep -E '^.+/dynatrace/api/v1/[e-z][^/]*/?')" }
+          - { name: "v1 (a-d)", path: "$(go list ./dynatrace/api/v1/config/... | grep -E '^.+/dynatrace/api/v1/config/[a-d][^/]*/?')" }
+          - { name: "v1 (e-z)", path: "$(go list ./dynatrace/api/v1/config/... | grep -E '^.+/dynatrace/api/v1/config/[e-z][^/]*/?')" }
           - { name: "v2", path: "./dynatrace/api/v2/..." }
           - { name: "builtin (a-b)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[a-b][^/]*/?')" }
           - { name: "builtin (c-e)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[c-e][^/]*/?')" }
