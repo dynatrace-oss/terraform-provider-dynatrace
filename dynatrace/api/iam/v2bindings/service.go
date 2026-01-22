@@ -208,6 +208,12 @@ func (me *BindingServiceClient) resolvePolicies(ctx context.Context, uuid string
 	return results, nil
 }
 
+type bindingPayload = struct {
+	Parameters map[string]string `json:"parameters"`
+	Metadata   map[string]string `json:"metadata"`
+	Boundaries []string          `json:"boundaries"`
+}
+
 func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindings.PolicyBinding) error {
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
@@ -216,35 +222,51 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindin
 
 	client := iam.NewIAMClient(me)
 
-	policiesList := append([]*bindings.Policy{}, v.Policies...)
-
-	policyBindings, err := me.getGroupPolicyBindingIDs(ctx, id)
+	deployedBindings, err := me.getGroupPolicyBindingIDs(ctx, id)
 	if err != nil {
 		return err
 	}
-	for _, policyID := range policyBindings {
-		policyUUID, _, _, _ := policies.SplitID(policyID, levelType, levelID)
-		if _, err = client.DELETE_MULTI_RESPONSE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyUUID, groupID), []int{204, 400, 404}, false); err != nil {
-			return err
+	existingPolicyBindings := map[string]struct{}{}
+	for _, desiredPolicy := range deployedBindings {
+		existingPolicyBindings[desiredPolicy] = struct{}{}
+	}
+	desiredPolicyBindings := map[string]*bindings.Policy{}
+	for _, desiredPolicy := range v.Policies {
+		policyUUID, _, _, _ := policies.SplitID(desiredPolicy.ID, levelType, levelID)
+		desiredPolicyBindings[policyUUID] = desiredPolicy
+	}
+
+	// update/delete
+	for existingPolicyID := range existingPolicyBindings {
+		if desiredPolicy, ok := desiredPolicyBindings[existingPolicyID]; ok {
+			// policy found that matches desired - update
+			payload := bindingPayload{
+				Parameters: desiredPolicy.Parameters,
+				Metadata:   desiredPolicy.Metadata,
+				Boundaries: desiredPolicy.Boundaries,
+			}
+			if _, err = client.PUT(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, existingPolicyID, groupID), payload, 204, false); err != nil {
+				return err
+			}
+		} else {
+			// There is an existing policy binding that is not desired anymore - delete
+			if _, err = client.DELETE_MULTI_RESPONSE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, existingPolicyID, groupID), []int{204, 400, 404}, false); err != nil {
+				return err
+			}
 		}
 	}
-	for _, policy := range policiesList {
-		policyUUID, _, _, _ := policies.SplitID(policy.ID, levelType, levelID)
-		payload := struct {
-			Parameters map[string]string `json:"parameters"`
-			Metadata   map[string]string `json:"metadata"`
-			Boundaries []string          `json:"boundaries"`
-		}{
-			Parameters: policy.Parameters,
-			Metadata:   policy.Metadata,
-			Boundaries: policy.Boundaries,
-		}
-		retries := 0
-		for retries < 10 {
+
+	// If not found in existing bindings, create
+	for policyUUID, desiredPolicy := range desiredPolicyBindings {
+		if _, ok := existingPolicyBindings[policyUUID]; !ok {
+			payload := bindingPayload{
+				Parameters: desiredPolicy.Parameters,
+				Metadata:   desiredPolicy.Metadata,
+				Boundaries: desiredPolicy.Boundaries,
+			}
 			if _, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyUUID, groupID), payload, 204, false); err != nil {
 				return err
 			}
-			break
 		}
 	}
 
@@ -380,13 +402,10 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	var binding bindings.PolicyBinding
-	if err = me.Get(ctx, id, &binding); err != nil {
-		return err
-	}
+	policyIDs, err := me.getGroupPolicyBindingIDs(ctx, id)
 	policyUUIDs := map[string]string{}
-	for _, policy := range binding.Policies {
-		policyUUID, _, _, err := policies.SplitID(policy.ID, levelType, levelID)
+	for _, policy := range policyIDs {
+		policyUUID, _, _, err := policies.SplitID(policy, levelType, levelID)
 		if err != nil {
 			return err
 		}
