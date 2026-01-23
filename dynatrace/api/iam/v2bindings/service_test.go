@@ -33,7 +33,12 @@ func TestAccV2Bindings(t *testing.T) {
 		return
 	}
 
-	t.Setenv("TF_VAR_ACCOUNT_ID", os.Getenv("DT_ACCOUNT_ID"))
+	accountID := os.Getenv("DT_ACCOUNT_ID")
+	//fallback to DYNATRACE_ACCOUNT_ID
+	if accountID == "" {
+		accountID = os.Getenv("DYNATRACE_ACCOUNT_ID")
+	}
+	t.Setenv("TF_VAR_ACCOUNT_ID", accountID)
 	configCreate, _ := api.ReadTfConfig(t, "testdata/create.tf")
 	configUpdate, _ := api.ReadTfConfig(t, "testdata/update.tf")
 
