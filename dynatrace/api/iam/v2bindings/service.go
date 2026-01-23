@@ -120,7 +120,7 @@ type BindingsResponse struct {
 	} `json:"policyBindings"`
 }
 
-func (me *BindingServiceClient) getGroupPolicyBindingIDs(ctx context.Context, id string) ([]string, error) {
+func (me *BindingServiceClient) getGroupPolicyBindingUUIDs(ctx context.Context, id string) ([]string, error) {
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return nil, err
@@ -145,7 +145,7 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 	}
 	client := iam.NewIAMClient(me)
 
-	policyIDs, err := me.getGroupPolicyBindingIDs(ctx, id)
+	policyIDs, err := me.getGroupPolicyBindingUUIDs(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -222,7 +222,7 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindin
 
 	client := iam.NewIAMClient(me)
 
-	deployedBindings, err := me.getGroupPolicyBindingIDs(ctx, id)
+	deployedBindings, err := me.getGroupPolicyBindingUUIDs(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -402,7 +402,7 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	policyIDs, err := me.getGroupPolicyBindingIDs(ctx, id)
+	policyIDs, err := me.getGroupPolicyBindingUUIDs(ctx, id)
 	policyUUIDs := map[string]string{}
 	for _, policy := range policyIDs {
 		policyUUID, _, _, err := policies.SplitID(policy, levelType, levelID)
