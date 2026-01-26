@@ -32,8 +32,8 @@ import (
 const SchemaID = "v2:synthetic:monitors:network"
 const BasePath = "/api/v2/synthetic/monitors"
 
-var defaultCreateConfirm = 8
-var createConfirm = settings.GetIntEnv("DYNATRACE_CREATE_CONFIRM_SYNTHETIC_MONITORS_V2", defaultCreateConfirm, 1, 50)
+// TimeForUpdateConsistency Time to wait after create/update operations to allow for consistency in subsequent GET operations
+var TimeForUpdateConsistency = 5 * time.Second
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*monitors.Settings] {
 	return &service{credentials: credentials}
@@ -54,41 +54,7 @@ func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub,
 		return nil, err
 	}
 
-	// The code below validates that the resource is fully created and available
-	// First loop: There could be a small delay until the API returns a successful GET after create
-	// Second loop: Tag configuration takes a while to propagate across the cluster
-	successes := 0
-	for {
-		if err = client.Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(resp.EntityId)), 200).Finish(); err == nil {
-			successes = successes + 1
-			if successes >= createConfirm {
-				break
-			}
-			time.Sleep(time.Millisecond * 100)
-		} else {
-			successes = 0
-			time.Sleep(time.Millisecond * 500)
-		}
-	}
-
-	if len(v.Tags) > 0 {
-		successes = 0
-		for {
-			validateMonitor := monitors.Settings{}
-			if err = client.Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(resp.EntityId)), 200).Finish(&validateMonitor); err == nil {
-				if len(v.Tags) == len(validateMonitor.Tags) {
-					successes = successes + 1
-					if successes >= createConfirm {
-						break
-					}
-				} else {
-					successes = 0
-				}
-				time.Sleep(time.Millisecond * 100)
-			}
-		}
-	}
-
+	time.Sleep(TimeForUpdateConsistency)
 	return &api.Stub{ID: resp.EntityId, Name: v.Name}, nil
 }
 
@@ -132,7 +98,7 @@ func (me *service) Update(ctx context.Context, id string, v *monitors.Settings) 
 	if err != nil {
 		return err
 	}
-	time.Sleep(3 * time.Second) // GET after update is eventually consistent
+	time.Sleep(TimeForUpdateConsistency)
 	return nil
 }
 

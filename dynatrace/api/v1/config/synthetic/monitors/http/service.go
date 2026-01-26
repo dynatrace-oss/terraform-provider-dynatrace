@@ -19,8 +19,10 @@ package http
 
 import (
 	"context"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	monitors2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/synthetic/monitors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -59,7 +61,12 @@ func (me *service) Create(ctx context.Context, v *http.SyntheticMonitor) (*api.S
 	if v.NoScript != nil && *v.NoScript && v.Script == nil {
 		v.Script = GetTempScript()
 	}
-	return me.service.Create(ctx, v)
+	stub, err := me.service.Create(ctx, v)
+	if err != nil {
+		return nil, err
+	}
+	time.Sleep(monitors2.TimeForUpdateConsistency)
+	return stub, nil
 }
 
 func (me *service) Update(ctx context.Context, id string, v *http.SyntheticMonitor) error {
@@ -70,7 +77,11 @@ func (me *service) Update(ctx context.Context, id string, v *http.SyntheticMonit
 		}
 		v.Script = monitorSettings.Script
 	}
-	return me.service.Update(ctx, id, v)
+	if err := me.service.Update(ctx, id, v); err != nil {
+		return err
+	}
+	time.Sleep(monitors2.TimeForUpdateConsistency)
+	return nil
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
