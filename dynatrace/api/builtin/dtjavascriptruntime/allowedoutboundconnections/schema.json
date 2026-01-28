@@ -7,6 +7,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -55,7 +56,7 @@
 								"type": "LENGTH"
 							},
 							{
-								"customValidatorId": "functionproxy.functionproxy.svc.cluster.local/internal/settings-validation/v0.1/validate-property/allowed-hostname",
+								"customValidatorId": "functionproxy.functionproxy.svc.cluster.local:8080/internal/settings-validation/v0.1/validate-property/allowed-hostname",
 								"skipAsyncValidation": false,
 								"type": "CUSTOM_VALIDATOR_REF"
 							}
@@ -83,5 +84,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }

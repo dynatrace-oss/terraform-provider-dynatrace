@@ -18,15 +18,15 @@
 package allowedoutboundconnections
 
 import (
-	allowedoutboundconnections "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/allowedoutboundconnections/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/allowedoutboundconnections/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.3"
+const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:dt-javascript-runtime.allowed-outbound-connections"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*allowedoutboundconnections.Settings] {
-	return settings20.Service[*allowedoutboundconnections.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }
