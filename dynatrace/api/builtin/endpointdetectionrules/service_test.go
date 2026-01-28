@@ -17,7 +17,7 @@
 * limitations under the License.
  */
 
-package ednpointdetectionrules_test
+package endpointdetectionrules_test
 
 import (
 	"testing"

@@ -28,7 +28,7 @@ type Rule struct {
 	Condition            *string         `json:"condition,omitempty"` // Limits the scope of the endpoint detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on span and resource attributes.. A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\nIf empty, the condition will always match.
 	Description          *string         `json:"description,omitempty"`
 	EndpointNameTemplate *string         `json:"endpointNameTemplate,omitempty"` // Specify attribute placeholders in curly braces, e.g. {http.route} or {rpc.method}.. Attribute value placeholders should be specified in curly braces, e.g. {http.route}, {rpc.method}. All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\nIf the resolved endpoint name on a given span is empty, the request will be ignored.
-	IfConditionMatches   ActionToPerform `json:"ifConditionMatches"`             // Possible Values: `DETECT_REQUEST_ON_ENDPOINT`, `SUPPRESS_REQUEST`
+	IfConditionMatches   ActionToPerform `json:"ifConditionMatches"`             // If condition matches. Possible Values: `DETECT_REQUEST_ON_ENDPOINT`, `SUPPRESS_REQUEST`
 	RuleName             string          `json:"ruleName"`                       // Rule name
 }
 
@@ -51,7 +51,7 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 		},
 		"if_condition_matches": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `DETECT_REQUEST_ON_ENDPOINT`, `SUPPRESS_REQUEST`",
+			Description: "If condition matches. Possible Values: `DETECT_REQUEST_ON_ENDPOINT`, `SUPPRESS_REQUEST`",
 			Required:    true,
 		},
 		"rule_name": {
@@ -75,6 +75,9 @@ func (me *Rule) MarshalHCL(properties hcl.Properties) error {
 func (me *Rule) HandlePreconditions() error {
 	if (me.EndpointNameTemplate == nil) && (string(me.IfConditionMatches) == "DETECT_REQUEST_ON_ENDPOINT") {
 		return fmt.Errorf("'endpoint_name_template' must be specified if 'if_condition_matches' is set to '%v'", me.IfConditionMatches)
+	}
+	if (me.EndpointNameTemplate != nil) && (string(me.IfConditionMatches) != "DETECT_REQUEST_ON_ENDPOINT") {
+		return fmt.Errorf("'endpoint_name_template' must not be specified if 'if_condition_matches' is set to '%v'", me.IfConditionMatches)
 	}
 	return nil
 }

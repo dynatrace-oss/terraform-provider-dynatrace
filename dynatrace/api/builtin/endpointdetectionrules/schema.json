@@ -27,6 +27,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add rule",
@@ -216,5 +217,5 @@
 			]
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }
