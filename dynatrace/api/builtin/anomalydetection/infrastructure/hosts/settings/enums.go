@@ -23,8 +23,8 @@ var ConnectionLostDetectionSensitivities = struct {
 	AlertOnGracefulShutdown     ConnectionLostDetectionSensitivity
 	DontAlertOnGracefulShutdown ConnectionLostDetectionSensitivity
 }{
-	ConnectionLostDetectionSensitivity("ALERT_ON_GRACEFUL_SHUTDOWN"),
-	ConnectionLostDetectionSensitivity("DONT_ALERT_ON_GRACEFUL_SHUTDOWN"),
+	"ALERT_ON_GRACEFUL_SHUTDOWN",
+	"DONT_ALERT_ON_GRACEFUL_SHUTDOWN",
 }
 
 type DetectionMode string
@@ -33,6 +33,6 @@ var DetectionModes = struct {
 	Auto   DetectionMode
 	Custom DetectionMode
 }{
-	DetectionMode("auto"),
-	DetectionMode("custom"),
+	"auto",
+	"custom",
 }

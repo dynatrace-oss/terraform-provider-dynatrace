@@ -24,7 +24,7 @@ import (
 
 type HighSystemLoadDetectionThresholds struct {
 	EventThresholds *EventThresholds `json:"eventThresholds"`
-	SystemLoad      float64          `json:"systemLoad"` // Alert if the System Load / Logical cpu core is higher than this threshold for the defined amount of samples
+	SystemLoad      float64          `json:"systemLoad"` // Alert if the System Load divided by the number of logical CPU cores is higher than this threshold for the defined amount of samples.
 }
 
 func (me *HighSystemLoadDetectionThresholds) Schema() map[string]*schema.Schema {
@@ -33,14 +33,13 @@ func (me *HighSystemLoadDetectionThresholds) Schema() map[string]*schema.Schema 
 			Type:        schema.TypeList,
 			Description: "no documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(EventThresholds).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(EventThresholds).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"system_load": {
 			Type:        schema.TypeFloat,
-			Description: "Alert if the System Load / Logical cpu core is higher than this threshold for the defined amount of samples",
+			Description: "Alert if the System Load divided by the number of logical CPU cores is higher than this threshold for the defined amount of samples.",
 			Required:    true,
 		},
 	}

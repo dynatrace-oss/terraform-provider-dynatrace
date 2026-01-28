@@ -18,26 +18,28 @@
 package hosts
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type ConnectionLostDetection struct {
-	Enabled             bool                                `json:"enabled"`                       // Detect host or monitoring connection lost problems
-	OnGracefulShutdowns *ConnectionLostDetectionSensitivity `json:"onGracefulShutdowns,omitempty"` // Graceful host shutdowns
+	Enabled             bool                                `json:"enabled"`                       // This setting is enabled (`true`) or disabled (`false`)
+	OnGracefulShutdowns *ConnectionLostDetectionSensitivity `json:"onGracefulShutdowns,omitempty"` // Graceful host shutdowns. Possible Values: `ALERT_ON_GRACEFUL_SHUTDOWN`, `DONT_ALERT_ON_GRACEFUL_SHUTDOWN`
 }
 
 func (me *ConnectionLostDetection) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "Detect host or monitoring connection lost problems",
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
 		"on_graceful_shutdowns": {
 			Type:        schema.TypeString,
-			Description: "Graceful host shutdowns. Possible values: `DONT_ALERT_ON_GRACEFUL_SHUTDOWN`, `ALERT_ON_GRACEFUL_SHUTDOWN`",
-			Optional:    true,
+			Description: "Graceful host shutdowns. Possible Values: `ALERT_ON_GRACEFUL_SHUTDOWN`, `DONT_ALERT_ON_GRACEFUL_SHUTDOWN`",
+			Optional:    true, // precondition
 		},
 	}
 }
@@ -47,6 +49,16 @@ func (me *ConnectionLostDetection) MarshalHCL(properties hcl.Properties) error {
 		"enabled":               me.Enabled,
 		"on_graceful_shutdowns": me.OnGracefulShutdowns,
 	})
+}
+
+func (me *ConnectionLostDetection) HandlePreconditions() error {
+	if (me.OnGracefulShutdowns == nil) && (me.Enabled) {
+		return fmt.Errorf("'on_graceful_shutdowns' must be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	if (me.OnGracefulShutdowns != nil) && (!me.Enabled) {
+		return fmt.Errorf("'on_graceful_shutdowns' must not be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	return nil
 }
 
 func (me *ConnectionLostDetection) UnmarshalHCL(decoder hcl.Decoder) error {

@@ -42,6 +42,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -951,7 +952,7 @@
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
-					"nullable": false,
+					"nullable": true,
 					"type": {
 						"$ref": "#/types/highGcActivityDetection"
 					}
@@ -2011,5 +2012,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2.9"
+	"version": "1.3"
 }
