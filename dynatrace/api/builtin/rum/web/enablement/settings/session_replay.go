@@ -23,15 +23,15 @@ import (
 )
 
 type SessionReplay struct {
-	CostAndTrafficControl int  `json:"costAndTrafficControl"` // (Field has overlap with `dynatrace_web_application`) [Percentage of user sessions recorded with Session Replay](https://dt-url.net/sr-cost-traffic-control). For example, if you have 50% for RUM and 50% for Session Replay, it results in 25% of sessions recorded with Session Replay.
-	Enabled               bool `json:"enabled"`               // (Field has overlap with `dynatrace_web_application`) This setting is enabled (`true`) or disabled (`false`)
+	CostAndTrafficControl int  `json:"costAndTrafficControl"` // [Percentage of user sessions recorded with Session Replay Classic](https://dt-url.net/sr-cost-traffic-control). For example, if you have 50% for RUM and 50% for Session Replay Classic, it results in 25% of sessions recorded with Session Replay Classic.
+	Enabled               bool `json:"enabled"`               // This setting is enabled (`true`) or disabled (`false`)
 }
 
 func (me *SessionReplay) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"cost_and_traffic_control": {
 			Type:        schema.TypeInt,
-			Description: "(Field has overlap with `dynatrace_web_application`) [Percentage of user sessions recorded with Session Replay](https://dt-url.net/sr-cost-traffic-control). For example, if you have 50% for RUM and 50% for Session Replay, it results in 25% of sessions recorded with Session Replay.",
+			Description: "(Field has overlap with `dynatrace_web_application`) [Percentage of user sessions recorded with Session Replay Classic](https://dt-url.net/sr-cost-traffic-control). For example, if you have 50% for RUM and 50% for Session Replay Classic, it results in 25% of sessions recorded with Session Replay Classic.",
 			Required:    true,
 		},
 		"enabled": {

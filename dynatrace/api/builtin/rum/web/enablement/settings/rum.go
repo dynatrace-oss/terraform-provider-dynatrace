@@ -24,9 +24,9 @@ import (
 )
 
 type Rum struct {
-	CostAndTrafficControl int   `json:"costAndTrafficControl"`    // (Field has overlap with `dynatrace_web_application`) Percentage of user sessions captured and analyzed
-	Enabled               bool  `json:"enabled"`                  // (Field has overlap with `dynatrace_web_application`) This setting is enabled (`true`) or disabled (`false`)
-	EnabledOnGrail        *bool `json:"enabledOnGrail,omitempty"` // Enable Real User Monitoring powered by Grail
+	CostAndTrafficControl int   `json:"costAndTrafficControl"`    // Percentage of user sessions captured and analyzed
+	Enabled               bool  `json:"enabled"`                  // This setting is enabled (`true`) or disabled (`false`)
+	EnabledOnGrail        *bool `json:"enabledOnGrail,omitempty"` // Enable New Real User Monitoring Experience
 }
 
 func (me *Rum) Schema() map[string]*schema.Schema {
