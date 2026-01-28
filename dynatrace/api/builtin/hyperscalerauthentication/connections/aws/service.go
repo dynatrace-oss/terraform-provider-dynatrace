@@ -24,8 +24,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
+const SchemaVersion = "0.0.23"
 const SchemaID = "builtin:hyperscaler-authentication.connections.aws"
-const SchemaVersion = "0.0.21"
 
 // An update should only happen when the role ARN is added. Otherwise, all attributes and subresources
 // are flagged as "forceNew", meaning instead of an update, the resource is destroyed and created from scratch
