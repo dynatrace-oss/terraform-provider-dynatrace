@@ -27,9 +27,10 @@ func (me *Settings) Name() string {
 }
 
 type Settings struct {
-	ApplicationID *string        `json:"-" scope:"applicationId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
-	Rum           *Rum           `json:"rum"`                     // (Field has overlap with `dynatrace_mobile_application`) Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience.
-	SessionReplay *SessionReplay `json:"sessionReplay"`           // (Field has overlap with `dynatrace_mobile_application`) [Session Replay on crashes](https://dt-url.net/session-replay) gives you additional context for crash analysis in the form of video-like screen recordings that replay user actions immediately preceding a detected crash, while providing [best-in-class security and data protection](https://dt-url.net/b303zxj).
+	ApplicationID       *string              `json:"-" scope:"applicationId"`       // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+	ExperienceAnalytics *ExperienceAnalytics `json:"experienceAnalytics,omitempty"` // User Interactions
+	Rum                 *Rum                 `json:"rum"`                           // Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience.
+	SessionReplay       *SessionReplay       `json:"sessionReplay"`                 // [Session Replay](https://dt-url.net/session-replay) captures all user interactions within your application and replays them in a movie-like experience while providing [best-in-class security and data protection](https://dt-url.net/b303zxj).
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -41,6 +42,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Default:     "environment",
 			ForceNew:    true,
 		},
+		"experience_analytics": {
+			Type:        schema.TypeList,
+			Description: "User Interactions",
+			Optional:    true, // nullable
+			Elem:        &schema.Resource{Schema: new(ExperienceAnalytics).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"rum": {
 			Type:        schema.TypeList,
 			Description: "(Field has overlap with `dynatrace_mobile_application`) Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience.",
@@ -51,7 +60,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"session_replay": {
 			Type:        schema.TypeList,
-			Description: "(Field has overlap with `dynatrace_mobile_application`) [Session Replay on crashes](https://dt-url.net/session-replay) gives you additional context for crash analysis in the form of video-like screen recordings that replay user actions immediately preceding a detected crash, while providing [best-in-class security and data protection](https://dt-url.net/b303zxj).",
+			Description: "(Field has overlap with `dynatrace_mobile_application`) [Session Replay](https://dt-url.net/session-replay) captures all user interactions within your application and replays them in a movie-like experience while providing [best-in-class security and data protection](https://dt-url.net/b303zxj).",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(SessionReplay).Schema()},
 			MinItems:    1,
@@ -62,16 +71,18 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"application_id": me.ApplicationID,
-		"rum":            me.Rum,
-		"session_replay": me.SessionReplay,
+		"application_id":       me.ApplicationID,
+		"experience_analytics": me.ExperienceAnalytics,
+		"rum":                  me.Rum,
+		"session_replay":       me.SessionReplay,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"application_id": &me.ApplicationID,
-		"rum":            &me.Rum,
-		"session_replay": &me.SessionReplay,
+		"application_id":       &me.ApplicationID,
+		"experience_analytics": &me.ExperienceAnalytics,
+		"rum":                  &me.Rum,
+		"session_replay":       &me.SessionReplay,
 	})
 }
