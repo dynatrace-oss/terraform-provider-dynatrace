@@ -22,22 +22,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// AllowedHostsList. Specifies allowed hosts and if the allow list should be enforced.
+// AllowedHostsList. Specifies allowed hosts and if the allowlist should be enforced.
 type AllowedHostsList struct {
-	Enforced bool     `json:"enforced"`           // If enabled, the Dynatrace JavaScript runtime will only be able to connect to the specified hosts.
-	HostList []string `json:"hostList,omitempty"` // The Dynatrace JavaScript runtime will only be to connect to these hosts.
+	Enforced bool     `json:"enforced"`           // If enabled, the Dynatrace JavaScript Runtime will only be able to connect to the specified hosts.
+	HostList []string `json:"hostList,omitempty"` // A host that app backends should be able to connect to.
 }
 
 func (me *AllowedHostsList) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"enforced": {
 			Type:        schema.TypeBool,
-			Description: "If enabled, the Dynatrace JavaScript runtime will only be able to connect to the specified hosts.",
+			Description: "If enabled, the Dynatrace JavaScript Runtime will only be able to connect to the specified hosts.",
 			Required:    true,
 		},
 		"host_list": {
 			Type:        schema.TypeSet,
-			Description: "The Dynatrace JavaScript runtime will only be to connect to these hosts.",
+			Description: "A host that app backends should be able to connect to.",
 			Optional:    true, // precondition & minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
