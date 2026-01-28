@@ -18,6 +18,9 @@
 package relation
 
 import (
+	"fmt"
+	"slices"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -48,7 +51,7 @@ func (me *SourceFilters) UnmarshalHCL(decoder hcl.Decoder) error {
 type SourceFilter struct {
 	Condition    *string          `json:"condition,omitempty"`    // Specify a filter that needs to match in order for the extraction to happen.. Two different filters are supported: `$eq(value)` will ensure that the source matches exactly 'value', while `$prefix(value)` will ensure that the source begins with exactly 'value'.\nIf your value contains the characters '(', ')' or '\\~', you need to escape them by adding a '\\~' in front of them.
 	MappingRules MappingRules     `json:"mappingRules,omitempty"` // Specify all properties which should be compared. If all mapping rules match a relationship between entities will be created.
-	SourceType   IngestDataSource `json:"sourceType"`             // Possible Values: `BusinessEvents`, `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`
+	SourceType   IngestDataSource `json:"sourceType"`             // Specify the source type of the filter to identify which data source should be evaluated.. Possible Values: `Business Events`, `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`
 }
 
 func (me *SourceFilter) Schema() map[string]*schema.Schema {
@@ -56,20 +59,19 @@ func (me *SourceFilter) Schema() map[string]*schema.Schema {
 		"condition": {
 			Type:        schema.TypeString,
 			Description: "Specify a filter that needs to match in order for the extraction to happen.. Two different filters are supported: `$eq(value)` will ensure that the source matches exactly 'value', while `$prefix(value)` will ensure that the source begins with exactly 'value'.\nIf your value contains the characters '(', ')' or '\\~', you need to escape them by adding a '\\~' in front of them.",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 		"mapping_rules": {
 			Type:        schema.TypeList,
 			Description: "Specify all properties which should be compared. If all mapping rules match a relationship between entities will be created.",
-			Optional:    true,
-
-			Elem:     &schema.Resource{Schema: new(MappingRules).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(MappingRules).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"source_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `BusinessEvents`, `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`",
+			Description: "Specify the source type of the filter to identify which data source should be evaluated.. Possible Values: `Business Events`, `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`",
 			Required:    true,
 		},
 	}
@@ -81,6 +83,17 @@ func (me *SourceFilter) MarshalHCL(properties hcl.Properties) error {
 		"mapping_rules": me.MappingRules,
 		"source_type":   me.SourceType,
 	})
+}
+
+func (me *SourceFilter) HandlePreconditions() error {
+	if (me.Condition == nil) && (!slices.Contains([]string{"Logs", "Spans", "Entities", "Topology", "Business Events"}, string(me.SourceType))) {
+		return fmt.Errorf("'condition' must be specified if 'source_type' is set to '%v'", me.SourceType)
+	}
+	if (me.Condition != nil) && (slices.Contains([]string{"Logs", "Spans", "Entities", "Topology", "Business Events"}, string(me.SourceType))) {
+		return fmt.Errorf("'condition' must not be specified if 'source_type' is set to '%v'", me.SourceType)
+	}
+	// ---- MappingRules MappingRules -> {"expectedValues":["Entities"],"property":"sourceType","type":"IN"}
+	return nil
 }
 
 func (me *SourceFilter) UnmarshalHCL(decoder hcl.Decoder) error {

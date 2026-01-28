@@ -44,9 +44,9 @@ var Normalizations = struct {
 	Tolowercase   Normalization
 	Touppercase   Normalization
 }{
-	"Leavetextas_is",
-	"Tolowercase",
-	"Touppercase",
+	"Leave text as-is",
+	"To lower case",
+	"To upper case",
 }
 
 type RelationType string
