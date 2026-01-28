@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.34.1"
+const SchemaVersion = "1.43"
 const SchemaID = "builtin:openpipeline.logs.pipelines"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {

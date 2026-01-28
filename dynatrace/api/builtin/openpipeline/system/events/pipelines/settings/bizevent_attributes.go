@@ -23,9 +23,9 @@ import (
 )
 
 type BizeventAttributes struct {
-	EventProvider   *GenericValueAssignment `json:"eventProvider"`       // Event provider
-	EventType       *GenericValueAssignment `json:"eventType,omitempty"` // Event type
-	FieldExtraction *FieldExtraction        `json:"fieldExtraction"`     // Field extraction
+	EventProvider   *GenericValueAssignment `json:"eventProvider"`   // Event provider
+	EventType       *GenericValueAssignment `json:"eventType"`       // Event type
+	FieldExtraction *FieldExtraction        `json:"fieldExtraction"` // Field extraction
 }
 
 func (me *BizeventAttributes) Schema() map[string]*schema.Schema {
@@ -41,7 +41,7 @@ func (me *BizeventAttributes) Schema() map[string]*schema.Schema {
 		"event_type": {
 			Type:        schema.TypeList,
 			Description: "Event type",
-			Optional:    true, // nullable
+			Required:    true,
 			Elem:        &schema.Resource{Schema: new(GenericValueAssignment).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
