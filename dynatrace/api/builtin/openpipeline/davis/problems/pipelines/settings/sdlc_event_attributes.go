@@ -23,11 +23,11 @@ import (
 )
 
 type SdlcEventAttributes struct {
-	EventCategory   *GenericValueAssignment `json:"eventCategory"`       // Event category
-	EventProvider   *GenericValueAssignment `json:"eventProvider"`       // Event provider
-	EventStatus     *GenericValueAssignment `json:"eventStatus"`         // Event status
-	EventType       *GenericValueAssignment `json:"eventType,omitempty"` // Event type
-	FieldExtraction *FieldExtraction        `json:"fieldExtraction"`     // Field extraction
+	EventCategory   *GenericValueAssignment `json:"eventCategory"`   // Event category
+	EventProvider   *GenericValueAssignment `json:"eventProvider"`   // Event provider
+	EventStatus     *GenericValueAssignment `json:"eventStatus"`     // Event status
+	EventType       *GenericValueAssignment `json:"eventType"`       // Event type
+	FieldExtraction *FieldExtraction        `json:"fieldExtraction"` // Field extraction
 }
 
 func (me *SdlcEventAttributes) Schema() map[string]*schema.Schema {
@@ -59,7 +59,7 @@ func (me *SdlcEventAttributes) Schema() map[string]*schema.Schema {
 		"event_type": {
 			Type:        schema.TypeList,
 			Description: "Event type",
-			Optional:    true, // nullable
+			Required:    true,
 			Elem:        &schema.Resource{Schema: new(GenericValueAssignment).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
