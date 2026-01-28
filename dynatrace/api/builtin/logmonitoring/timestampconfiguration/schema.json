@@ -461,11 +461,6 @@
 					"displayName": "Entry boundary",
 					"id": "entryBoundary",
 					"propertyRef": "entry-boundary/pattern"
-				},
-				{
-					"displayName": "JSON Configuration",
-					"id": "jsonConf",
-					"propertyRef": "json-configuration/formatDetection"
 				}
 			],
 			"emptyState": {
@@ -473,5 +468,5 @@
 			}
 		}
 	},
-	"version": "1.0.18"
+	"version": "1.0.19"
 }
