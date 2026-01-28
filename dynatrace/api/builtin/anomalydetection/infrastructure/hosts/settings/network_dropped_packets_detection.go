@@ -18,14 +18,16 @@
 package hosts
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type NetworkDroppedPacketsDetection struct {
 	CustomThresholds *NetworkDroppedPacketsDetectionThresholds `json:"customThresholds,omitempty"` // Alert if the dropped packet percentage is higher than the specified threshold **and** the total packets rate is higher than the defined threshold for the defined amount of samples
-	DetectionMode    *DetectionMode                            `json:"detectionMode,omitempty"`    // Detection mode for high number of dropped packets
-	Enabled          bool                                      `json:"enabled"`                    // Detect high number of dropped packets
+	DetectionMode    *DetectionMode                            `json:"detectionMode,omitempty"`    // Detection mode for high number of dropped packets. Possible Values: `auto`, `custom`
+	Enabled          bool                                      `json:"enabled"`                    // This setting is enabled (`true`) or disabled (`false`)
 }
 
 func (me *NetworkDroppedPacketsDetection) Schema() map[string]*schema.Schema {
@@ -33,19 +35,19 @@ func (me *NetworkDroppedPacketsDetection) Schema() map[string]*schema.Schema {
 		"custom_thresholds": {
 			Type:        schema.TypeList,
 			Description: "Alert if the dropped packet percentage is higher than the specified threshold **and** the total packets rate is higher than the defined threshold for the defined amount of samples",
-			Optional:    true,
+			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(NetworkDroppedPacketsDetectionThresholds).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
 		"detection_mode": {
 			Type:        schema.TypeString,
-			Description: "Detection mode for high number of dropped packets",
-			Optional:    true,
+			Description: "Detection mode for high number of dropped packets. Possible Values: `auto`, `custom`",
+			Optional:    true, // precondition
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "Detect high number of dropped packets",
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
 	}
@@ -57,6 +59,22 @@ func (me *NetworkDroppedPacketsDetection) MarshalHCL(properties hcl.Properties) 
 		"detection_mode":    me.DetectionMode,
 		"enabled":           me.Enabled,
 	})
+}
+
+func (me *NetworkDroppedPacketsDetection) HandlePreconditions() error {
+	if (me.CustomThresholds == nil) && (me.Enabled && (me.DetectionMode != nil && (string(*me.DetectionMode) == "custom"))) {
+		return fmt.Errorf("'custom_thresholds' must be specified if 'enabled' is set to '%v' and 'detection_mode' is set to '%v'", me.Enabled, me.DetectionMode)
+	}
+	if (me.CustomThresholds != nil) && (!me.Enabled || (me.DetectionMode == nil || (me.DetectionMode != nil && string(*me.DetectionMode) != "custom"))) {
+		return fmt.Errorf("'custom_thresholds' must not be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	if (me.DetectionMode == nil) && (me.Enabled) {
+		return fmt.Errorf("'detection_mode' must be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	if (me.DetectionMode != nil) && (!me.Enabled) {
+		return fmt.Errorf("'detection_mode' must not be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	return nil
 }
 
 func (me *NetworkDroppedPacketsDetection) UnmarshalHCL(decoder hcl.Decoder) error {

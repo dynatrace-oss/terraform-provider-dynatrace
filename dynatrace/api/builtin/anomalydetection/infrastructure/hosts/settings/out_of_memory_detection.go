@@ -18,14 +18,16 @@
 package hosts
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type OutOfMemoryDetection struct {
 	CustomThresholds *OutOfMemoryDetectionThresholds `json:"customThresholds,omitempty"`
-	DetectionMode    *DetectionMode                  `json:"detectionMode,omitempty"` // Detection mode for Java out of memory problem
-	Enabled          bool                            `json:"enabled"`                 // Detect Java out of memory problem
+	DetectionMode    *DetectionMode                  `json:"detectionMode,omitempty"` // Detection mode for Java out of memory problem. Possible Values: `auto`, `custom`
+	Enabled          bool                            `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
 }
 
 func (me *OutOfMemoryDetection) Schema() map[string]*schema.Schema {
@@ -33,19 +35,19 @@ func (me *OutOfMemoryDetection) Schema() map[string]*schema.Schema {
 		"custom_thresholds": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Optional:    true,
+			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(OutOfMemoryDetectionThresholds).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
 		"detection_mode": {
 			Type:        schema.TypeString,
-			Description: "Detection mode for Java out of memory problem",
-			Optional:    true,
+			Description: "Detection mode for Java out of memory problem. Possible Values: `auto`, `custom`",
+			Optional:    true, // precondition
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "Detect Java out of memory problem",
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
 	}
@@ -57,6 +59,22 @@ func (me *OutOfMemoryDetection) MarshalHCL(properties hcl.Properties) error {
 		"detection_mode":    me.DetectionMode,
 		"enabled":           me.Enabled,
 	})
+}
+
+func (me *OutOfMemoryDetection) HandlePreconditions() error {
+	if (me.CustomThresholds == nil) && (me.Enabled && (me.DetectionMode != nil && (string(*me.DetectionMode) == "custom"))) {
+		return fmt.Errorf("'custom_thresholds' must be specified if 'enabled' is set to '%v' and 'detection_mode' is set to '%v'", me.Enabled, me.DetectionMode)
+	}
+	if (me.CustomThresholds != nil) && (!me.Enabled || (me.DetectionMode == nil || (me.DetectionMode != nil && string(*me.DetectionMode) != "custom"))) {
+		return fmt.Errorf("'custom_thresholds' must not be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	if (me.DetectionMode == nil) && (me.Enabled) {
+		return fmt.Errorf("'detection_mode' must be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	if (me.DetectionMode != nil) && (!me.Enabled) {
+		return fmt.Errorf("'detection_mode' must not be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	return nil
 }
 
 func (me *OutOfMemoryDetection) UnmarshalHCL(decoder hcl.Decoder) error {

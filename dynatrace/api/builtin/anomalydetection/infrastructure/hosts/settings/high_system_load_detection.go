@@ -18,13 +18,15 @@
 package hosts
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type HighSystemLoadDetection struct {
 	CustomThresholds *HighSystemLoadDetectionThresholds `json:"customThresholds,omitempty"`
-	DetectionMode    *DetectionMode                     `json:"detectionMode,omitempty"` // Possible Values: `Auto`, `Custom`
+	DetectionMode    *DetectionMode                     `json:"detectionMode,omitempty"` // Detection mode for High System Load. Possible Values: `auto`, `custom`
 	Enabled          bool                               `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
 }
 
@@ -33,16 +35,15 @@ func (me *HighSystemLoadDetection) Schema() map[string]*schema.Schema {
 		"custom_thresholds": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Optional:    true,
-
-			Elem:     &schema.Resource{Schema: new(HighSystemLoadDetectionThresholds).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(HighSystemLoadDetectionThresholds).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"detection_mode": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Auto`, `Custom`",
-			Optional:    true,
+			Description: "Detection mode for High System Load. Possible Values: `auto`, `custom`",
+			Optional:    true, // precondition
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
@@ -58,6 +59,22 @@ func (me *HighSystemLoadDetection) MarshalHCL(properties hcl.Properties) error {
 		"detection_mode":    me.DetectionMode,
 		"enabled":           me.Enabled,
 	})
+}
+
+func (me *HighSystemLoadDetection) HandlePreconditions() error {
+	if (me.CustomThresholds == nil) && (me.Enabled && (me.DetectionMode != nil && (string(*me.DetectionMode) == "custom"))) {
+		return fmt.Errorf("'custom_thresholds' must be specified if 'enabled' is set to '%v' and 'detection_mode' is set to '%v'", me.Enabled, me.DetectionMode)
+	}
+	if (me.CustomThresholds != nil) && (!me.Enabled || (me.DetectionMode == nil || (me.DetectionMode != nil && string(*me.DetectionMode) != "custom"))) {
+		return fmt.Errorf("'custom_thresholds' must not be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	if (me.DetectionMode == nil) && (me.Enabled) {
+		return fmt.Errorf("'detection_mode' must be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	if (me.DetectionMode != nil) && (!me.Enabled) {
+		return fmt.Errorf("'detection_mode' must not be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	return nil
 }
 
 func (me *HighSystemLoadDetection) UnmarshalHCL(decoder hcl.Decoder) error {

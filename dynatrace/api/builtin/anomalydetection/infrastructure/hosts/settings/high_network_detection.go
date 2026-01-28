@@ -18,14 +18,16 @@
 package hosts
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type HighNetworkDetection struct {
 	CustomThresholds *HighNetworkDetectionThresholds `json:"customThresholds,omitempty"`
-	DetectionMode    *DetectionMode                  `json:"detectionMode,omitempty"` // Detection mode for high network utilization
-	Enabled          bool                            `json:"enabled"`                 // Detect high network utilization
+	DetectionMode    *DetectionMode                  `json:"detectionMode,omitempty"` // Detection mode for high network utilization. Possible Values: `auto`, `custom`
+	Enabled          bool                            `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
 }
 
 func (me *HighNetworkDetection) Schema() map[string]*schema.Schema {
@@ -33,19 +35,19 @@ func (me *HighNetworkDetection) Schema() map[string]*schema.Schema {
 		"custom_thresholds": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Optional:    true,
+			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(HighNetworkDetectionThresholds).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
 		"detection_mode": {
 			Type:        schema.TypeString,
-			Description: "Detection mode for high network utilization",
-			Optional:    true,
+			Description: "Detection mode for high network utilization. Possible Values: `auto`, `custom`",
+			Optional:    true, // precondition
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
-			Description: "Detect high network utilization",
+			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
 	}
@@ -57,6 +59,22 @@ func (me *HighNetworkDetection) MarshalHCL(properties hcl.Properties) error {
 		"detection_mode":    me.DetectionMode,
 		"enabled":           me.Enabled,
 	})
+}
+
+func (me *HighNetworkDetection) HandlePreconditions() error {
+	if (me.CustomThresholds == nil) && (me.Enabled && (me.DetectionMode != nil && (string(*me.DetectionMode) == "custom"))) {
+		return fmt.Errorf("'custom_thresholds' must be specified if 'enabled' is set to '%v' and 'detection_mode' is set to '%v'", me.Enabled, me.DetectionMode)
+	}
+	if (me.CustomThresholds != nil) && (!me.Enabled || (me.DetectionMode == nil || (me.DetectionMode != nil && string(*me.DetectionMode) != "custom"))) {
+		return fmt.Errorf("'custom_thresholds' must not be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	if (me.DetectionMode == nil) && (me.Enabled) {
+		return fmt.Errorf("'detection_mode' must be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	if (me.DetectionMode != nil) && (!me.Enabled) {
+		return fmt.Errorf("'detection_mode' must not be specified if 'enabled' is set to '%v'", me.Enabled)
+	}
+	return nil
 }
 
 func (me *HighNetworkDetection) UnmarshalHCL(decoder hcl.Decoder) error {

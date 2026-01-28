@@ -25,7 +25,7 @@ import (
 type Host struct {
 	ConnectionLostDetection    *ConnectionLostDetection    `json:"connectionLostDetection"`
 	HighCpuSaturationDetection *HighCpuSaturationDetection `json:"highCpuSaturationDetection"`
-	HighGcActivityDetection    *HighGcActivityDetection    `json:"highGcActivityDetection"`
+	HighGcActivityDetection    *HighGcActivityDetection    `json:"highGcActivityDetection,omitempty"`
 	HighMemoryDetection        *HighMemoryDetection        `json:"highMemoryDetection"`
 	HighSystemLoadDetection    *HighSystemLoadDetection    `json:"highSystemLoadDetection"`
 	OutOfMemoryDetection       *OutOfMemoryDetection       `json:"outOfMemoryDetection"`
@@ -53,7 +53,7 @@ func (me *Host) Schema() map[string]*schema.Schema {
 		"high_gc_activity_detection": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    true,
+			Optional:    true, // nullable
 			Elem:        &schema.Resource{Schema: new(HighGcActivityDetection).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
