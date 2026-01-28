@@ -28,9 +28,25 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
+		"experienceAnalytics": {
+			"description": "",
+			"displayName": "User Interactions",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"featureFlag": "com.compuware.mrumff.experience-analytics.feature",
+				"maturity": "EARLY_ADOPTER"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": {
+				"$ref": "#/types/experienceAnalytics"
+			}
+		},
 		"rum": {
 			"description": "Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience.",
 			"displayName": "Real User Monitoring",
@@ -67,12 +83,12 @@
 			"properties": {
 				"enabled": {
 					"default": false,
-					"description": "As part of the new RUM experience preview, Experience Analytics captures all interactions within your application. Check our documentation for more details: https://docs.dynatrace.com/docs/whats-new/preview-releases",
-					"displayName": "Enable Experience Analytics",
+					"description": "As part of the new RUM experience preview, User Interactions capture all interactions within your application.",
+					"displayName": "Enable User Interactions",
 					"documentation": "",
 					"maxObjects": 1,
 					"metadata": {
-						"maturity": "PREVIEW"
+						"maturity": "EARLY_ADOPTER"
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -135,10 +151,6 @@
 					"displayName": "Enable New Real User Monitoring Experience",
 					"documentation": "",
 					"maxObjects": 1,
-					"metadata": {
-						"featureFlag": "com.compuware.apm.webuiff.rum-settings-show-enable-monitoring-on-3rd-gen-switch.resemo3g.feature",
-						"maturity": "PREVIEW"
-					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
 					"precondition": {
@@ -211,5 +223,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.4.4"
+	"version": "2.6"
 }
