@@ -27,7 +27,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	directshares "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/directshares/settings"
-	httplog "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/auth"
 	directshare "github.com/dynatrace-oss/terraform-provider-dynatrace/monaco/pkg/client/document/directshares"
 )
@@ -41,7 +40,7 @@ type service struct {
 }
 
 func (me *service) client(ctx context.Context) *directshare.Client {
-	httplog.InstallRoundTripper()
+	rest.PreRequest()
 	httpClient := auth.NewOAuthClient(ctx, auth.OauthCredentials{
 		ClientID:     me.credentials.OAuth.ClientID,
 		ClientSecret: me.credentials.OAuth.ClientSecret,
