@@ -42,8 +42,6 @@ var eligiblePlatformRequests = map[string]string{
 
 type platform_request request
 
-var platformClientCache = map[string]*rest.Client{}
-
 var platformClientCacheMutex sync.Mutex
 var NoPlatformCredentialsErr = errors.New("neither oauth credentials nor platform token present")
 
@@ -92,9 +90,6 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 	platformClientCacheMutex.Lock()
 	defer platformClientCacheMutex.Unlock()
 
-	if client, found := platformClientCache[platformURL]; found {
-		return client, nil
-	}
 	PreRequest()
 
 	var client *rest.Client
@@ -109,7 +104,6 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 	if err != nil {
 		return nil, err
 	}
-	platformClientCache[platformURL] = client
 
 	return client, err
 }
