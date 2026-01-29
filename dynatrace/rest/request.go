@@ -28,13 +28,14 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"sync"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/google/uuid"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
+var preRequestMutex sync.Mutex
 var DYNATRACE_HTTP_LEGACY = (os.Getenv("DYNATRACE_HTTP_LEGACY") == "true")
 var DYNATRACE_HTTP_OAUTH_PREFERENCE = (os.Getenv("DYNATRACE_HTTP_OAUTH_PREFERENCE") == "true")
 
@@ -70,7 +71,15 @@ func (me request) evalClassicURL() string {
 }
 
 func PreRequest() {
-	logging.InstallRoundTripper()
+	preRequestMutex.Lock()
+	defer preRequestMutex.Unlock()
+	if _, ok := http.DefaultClient.Transport.(*RoundTripper); !ok {
+		if http.DefaultClient.Transport == nil {
+			http.DefaultClient.Transport = &RoundTripper{RoundTripper: http.DefaultTransport}
+		} else {
+			http.DefaultClient.Transport = &RoundTripper{RoundTripper: http.DefaultClient.Transport}
+		}
+	}
 	if strings.TrimSpace(os.Getenv("DYNATRACE_HTTP_INSECURE")) == "true" {
 		if transport, ok := http.DefaultTransport.(*http.Transport); ok {
 			transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}

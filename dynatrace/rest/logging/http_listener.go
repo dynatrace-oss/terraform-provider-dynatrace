@@ -27,8 +27,9 @@ import (
 	"strings"
 	"sync"
 
-	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/google/uuid"
+
+	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 var DYNATRACE_HTTP_OAUTH = (os.Getenv("DYNATRACE_HTTP_OAUTH") == "true")
@@ -95,20 +96,6 @@ func HTTPListener(prefix string) *crest.HTTPListener {
 			logRequest(ctx, response.ID, response.Request)
 			logResponse(ctx, response.ID, response.Response)
 		},
-	}
-}
-
-var lock sync.Mutex
-
-func InstallRoundTripper() {
-	lock.Lock()
-	defer lock.Unlock()
-	if _, ok := http.DefaultClient.Transport.(*RoundTripper); !ok {
-		if http.DefaultClient.Transport == nil {
-			http.DefaultClient.Transport = &RoundTripper{RoundTripper: http.DefaultTransport}
-		} else {
-			http.DefaultClient.Transport = &RoundTripper{RoundTripper: http.DefaultClient.Transport}
-		}
 	}
 }
 

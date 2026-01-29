@@ -25,7 +25,6 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
-	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
@@ -42,7 +41,6 @@ var eligiblePlatformRequests = map[string]string{
 
 type platform_request request
 
-var platformClientCacheMutex sync.Mutex
 var NoPlatformCredentialsErr = errors.New("neither oauth credentials nor platform token present")
 
 func configureCommonRestClient(restClient *rest.Client) (*rest.Client, error) {
@@ -87,9 +85,6 @@ func CreatePlatformTokenClient(u string, credentials *Credentials) (*rest.Client
 }
 
 func CreatePlatformClient(ctx context.Context, platformURL string, credentials *Credentials) (*rest.Client, error) {
-	platformClientCacheMutex.Lock()
-	defer platformClientCacheMutex.Unlock()
-
 	PreRequest()
 
 	var client *rest.Client
