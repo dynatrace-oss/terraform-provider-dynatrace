@@ -167,22 +167,25 @@ Required:
 
 - `connection_lost_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--connection_lost_detection))
 - `high_cpu_saturation_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_cpu_saturation_detection))
-- `high_gc_activity_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_gc_activity_detection))
 - `high_memory_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_memory_detection))
 - `high_system_load_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_system_load_detection))
 - `out_of_memory_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--out_of_memory_detection))
 - `out_of_threads_detection` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--out_of_threads_detection))
+
+Optional:
+
+- `high_gc_activity_detection` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_gc_activity_detection))
 
 <a id="nestedblock--host--connection_lost_detection"></a>
 ### Nested Schema for `host.connection_lost_detection`
 
 Required:
 
-- `enabled` (Boolean) Detect host or monitoring connection lost problems
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 Optional:
 
-- `on_graceful_shutdowns` (String) Graceful host shutdowns. Possible values: `DONT_ALERT_ON_GRACEFUL_SHUTDOWN`, `ALERT_ON_GRACEFUL_SHUTDOWN`
+- `on_graceful_shutdowns` (String) Graceful host shutdowns. Possible Values: `ALERT_ON_GRACEFUL_SHUTDOWN`, `DONT_ALERT_ON_GRACEFUL_SHUTDOWN`
 
 
 <a id="nestedblock--host--high_cpu_saturation_detection"></a>
@@ -190,12 +193,12 @@ Optional:
 
 Required:
 
-- `enabled` (Boolean) Detect CPU saturation on host
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 Optional:
 
 - `custom_thresholds` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_cpu_saturation_detection--custom_thresholds))
-- `detection_mode` (String) Detection mode for CPU saturation
+- `detection_mode` (String) Detection mode for CPU saturation. Possible Values: `auto`, `custom`
 
 <a id="nestedblock--host--high_cpu_saturation_detection--custom_thresholds"></a>
 ### Nested Schema for `host.high_cpu_saturation_detection.custom_thresholds`
@@ -211,41 +214,7 @@ Required:
 Required:
 
 - `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
-- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
-- `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
-- `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
-
-
-
-
-<a id="nestedblock--host--high_gc_activity_detection"></a>
-### Nested Schema for `host.high_gc_activity_detection`
-
-Required:
-
-- `enabled` (Boolean) You may also configure high GC activity alerting for .NET processes on [extensions events page](/#settings/anomalydetection/extensionevents).
-
-Optional:
-
-- `custom_thresholds` (Block List, Max: 1) Alert if the GC time **or** the GC suspension is exceeded (see [below for nested schema](#nestedblock--host--high_gc_activity_detection--custom_thresholds))
-- `detection_mode` (String) Detection mode for high GC activity
-
-<a id="nestedblock--host--high_gc_activity_detection--custom_thresholds"></a>
-### Nested Schema for `host.high_gc_activity_detection.custom_thresholds`
-
-Required:
-
-- `event_thresholds` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_gc_activity_detection--custom_thresholds--event_thresholds))
-- `gc_suspension_percentage` (Number) Alert if the GC suspension is higher than this threshold
-- `gc_time_percentage` (Number) Alert if GC time is higher than this threshold
-
-<a id="nestedblock--host--high_gc_activity_detection--custom_thresholds--event_thresholds"></a>
-### Nested Schema for `host.high_gc_activity_detection.custom_thresholds.event_thresholds`
-
-Required:
-
-- `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
-- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
+- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event
 - `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
 - `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
 
@@ -257,12 +226,12 @@ Required:
 
 Required:
 
-- `enabled` (Boolean) Detect high memory usage on host
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 Optional:
 
 - `custom_thresholds` (Block List, Max: 1) Alert if **both** the memory usage and the memory page fault rate thresholds are exceeded on Windows or on Unix systems (see [below for nested schema](#nestedblock--host--high_memory_detection--custom_thresholds))
-- `detection_mode` (String) Detection mode for high memory usage
+- `detection_mode` (String) Detection mode for high memory usage. Possible Values: `auto`, `custom`
 
 <a id="nestedblock--host--high_memory_detection--custom_thresholds"></a>
 ### Nested Schema for `host.high_memory_detection.custom_thresholds`
@@ -281,7 +250,7 @@ Required:
 Required:
 
 - `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
-- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
+- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event
 - `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
 - `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
 
@@ -298,7 +267,7 @@ Required:
 Optional:
 
 - `custom_thresholds` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_system_load_detection--custom_thresholds))
-- `detection_mode` (String) Possible Values: `Auto`, `Custom`
+- `detection_mode` (String) Detection mode for High System Load. Possible Values: `auto`, `custom`
 
 <a id="nestedblock--host--high_system_load_detection--custom_thresholds"></a>
 ### Nested Schema for `host.high_system_load_detection.custom_thresholds`
@@ -306,7 +275,7 @@ Optional:
 Required:
 
 - `event_thresholds` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_system_load_detection--custom_thresholds--event_thresholds))
-- `system_load` (Number) Alert if the System Load / Logical cpu core is higher than this threshold for the defined amount of samples
+- `system_load` (Number) Alert if the System Load divided by the number of logical CPU cores is higher than this threshold for the defined amount of samples.
 
 <a id="nestedblock--host--high_system_load_detection--custom_thresholds--event_thresholds"></a>
 ### Nested Schema for `host.high_system_load_detection.custom_thresholds.event_thresholds`
@@ -314,7 +283,7 @@ Required:
 Required:
 
 - `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
-- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
+- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event
 - `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
 - `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
 
@@ -326,12 +295,12 @@ Required:
 
 Required:
 
-- `enabled` (Boolean) Detect Java out of memory problem
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 Optional:
 
 - `custom_thresholds` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--out_of_memory_detection--custom_thresholds))
-- `detection_mode` (String) Detection mode for Java out of memory problem
+- `detection_mode` (String) Detection mode for Java out of memory problem. Possible Values: `auto`, `custom`
 
 <a id="nestedblock--host--out_of_memory_detection--custom_thresholds"></a>
 ### Nested Schema for `host.out_of_memory_detection.custom_thresholds`
@@ -347,7 +316,7 @@ Required:
 Required:
 
 - `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
-- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
+- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event
 - `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
 - `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
 
@@ -359,12 +328,12 @@ Required:
 
 Required:
 
-- `enabled` (Boolean) Detect Java out of threads problem
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 Optional:
 
 - `custom_thresholds` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--out_of_threads_detection--custom_thresholds))
-- `detection_mode` (String) Detection mode for Java out of threads problem
+- `detection_mode` (String) Detection mode for Java out of threads problem. Possible Values: `auto`, `custom`
 
 <a id="nestedblock--host--out_of_threads_detection--custom_thresholds"></a>
 ### Nested Schema for `host.out_of_threads_detection.custom_thresholds`
@@ -380,7 +349,41 @@ Required:
 Required:
 
 - `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
-- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
+- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event
+- `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
+- `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
+
+
+
+
+<a id="nestedblock--host--high_gc_activity_detection"></a>
+### Nested Schema for `host.high_gc_activity_detection`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
+
+Optional:
+
+- `custom_thresholds` (Block List, Max: 1) Alert if the GC time **or** the GC suspension is exceeded (see [below for nested schema](#nestedblock--host--high_gc_activity_detection--custom_thresholds))
+- `detection_mode` (String) Detection mode for high GC activity. Possible Values: `auto`, `custom`
+
+<a id="nestedblock--host--high_gc_activity_detection--custom_thresholds"></a>
+### Nested Schema for `host.high_gc_activity_detection.custom_thresholds`
+
+Required:
+
+- `event_thresholds` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host--high_gc_activity_detection--custom_thresholds--event_thresholds))
+- `gc_suspension_percentage` (Number) Alert if the GC suspension is higher than this threshold
+- `gc_time_percentage` (Number) Alert if GC time is higher than this threshold
+
+<a id="nestedblock--host--high_gc_activity_detection--custom_thresholds--event_thresholds"></a>
+### Nested Schema for `host.high_gc_activity_detection.custom_thresholds.event_thresholds`
+
+Required:
+
+- `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
+- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event
 - `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
 - `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
 
@@ -404,12 +407,12 @@ Required:
 
 Required:
 
-- `enabled` (Boolean) Detect high network utilization
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 Optional:
 
 - `custom_thresholds` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--network--high_network_detection--custom_thresholds))
-- `detection_mode` (String) Detection mode for high network utilization
+- `detection_mode` (String) Detection mode for high network utilization. Possible Values: `auto`, `custom`
 
 <a id="nestedblock--network--high_network_detection--custom_thresholds"></a>
 ### Nested Schema for `network.high_network_detection.custom_thresholds`
@@ -425,7 +428,7 @@ Required:
 Required:
 
 - `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
-- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
+- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event
 - `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
 - `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
 
@@ -437,12 +440,12 @@ Required:
 
 Required:
 
-- `enabled` (Boolean) Detect high number of dropped packets
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 Optional:
 
 - `custom_thresholds` (Block List, Max: 1) Alert if the dropped packet percentage is higher than the specified threshold **and** the total packets rate is higher than the defined threshold for the defined amount of samples (see [below for nested schema](#nestedblock--network--network_dropped_packets_detection--custom_thresholds))
-- `detection_mode` (String) Detection mode for high number of dropped packets
+- `detection_mode` (String) Detection mode for high number of dropped packets. Possible Values: `auto`, `custom`
 
 <a id="nestedblock--network--network_dropped_packets_detection--custom_thresholds"></a>
 ### Nested Schema for `network.network_dropped_packets_detection.custom_thresholds`
@@ -459,7 +462,7 @@ Required:
 Required:
 
 - `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
-- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
+- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event
 - `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
 - `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
 
@@ -471,12 +474,12 @@ Required:
 
 Required:
 
-- `enabled` (Boolean) Detect high number of network errors
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 Optional:
 
 - `custom_thresholds` (Block List, Max: 1) Alert if the receive/transmit error packet percentage is higher than the specified threshold **and** the total packets rate is higher than the defined threshold for the defined amount of samples (see [below for nested schema](#nestedblock--network--network_errors_detection--custom_thresholds))
-- `detection_mode` (String) Detection mode for high number of network errors
+- `detection_mode` (String) Detection mode for high number of network errors. Possible Values: `auto`, `custom`
 
 <a id="nestedblock--network--network_errors_detection--custom_thresholds"></a>
 ### Nested Schema for `network.network_errors_detection.custom_thresholds`
@@ -493,7 +496,7 @@ Required:
 Required:
 
 - `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
-- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
+- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event
 - `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
 - `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
 
@@ -505,12 +508,12 @@ Required:
 
 Required:
 
-- `enabled` (Boolean) Detect high retransmission rate
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 Optional:
 
 - `custom_thresholds` (Block List, Max: 1) Alert if the retransmission rate is higher than the specified threshold **and** the number of retransmitted packets is higher than the defined threshold for the defined amount of samples (see [below for nested schema](#nestedblock--network--network_high_retransmission_detection--custom_thresholds))
-- `detection_mode` (String) Detection mode for high retransmission rate
+- `detection_mode` (String) Detection mode for high retransmission rate. Possible Values: `auto`, `custom`
 
 <a id="nestedblock--network--network_high_retransmission_detection--custom_thresholds"></a>
 ### Nested Schema for `network.network_high_retransmission_detection.custom_thresholds`
@@ -527,7 +530,7 @@ Required:
 Required:
 
 - `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
-- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
+- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event
 - `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
 - `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
 
@@ -539,12 +542,12 @@ Required:
 
 Required:
 
-- `enabled` (Boolean) Detect TCP connectivity problems for process
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 
 Optional:
 
 - `custom_thresholds` (Block List, Max: 1) Alert if the percentage of new connection failures is higher than the specified threshold **and** the number of failed connections is higher than the defined threshold for the defined amount of samples (see [below for nested schema](#nestedblock--network--network_tcp_problems_detection--custom_thresholds))
-- `detection_mode` (String) Detection mode for TCP connectivity problems
+- `detection_mode` (String) Detection mode for TCP connectivity problems. Possible Values: `auto`, `custom`
 
 <a id="nestedblock--network--network_tcp_problems_detection--custom_thresholds"></a>
 ### Nested Schema for `network.network_tcp_problems_detection.custom_thresholds`
@@ -561,7 +564,7 @@ Required:
 Required:
 
 - `dealerting_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window for dealerting.
-- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower the threshold to close an event
+- `dealerting_samples` (Number) The number of **10-second samples** within the evaluation window that must be lower than the threshold to close an event
 - `violating_evaluation_window` (Number) The number of **10-second samples** that form the sliding evaluation window to detect violating samples.
 - `violating_samples` (Number) The number of **10-second samples** within the evaluation window that must exceed the threshold to trigger an event
  

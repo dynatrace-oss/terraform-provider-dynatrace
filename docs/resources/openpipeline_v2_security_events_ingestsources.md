@@ -266,11 +266,8 @@ Optional:
 Required:
 
 - `event_provider` (Block List, Min: 1, Max: 1) Event provider (see [below for nested schema](#nestedblock--processing--processors--processor--bizevent--event_provider))
+- `event_type` (Block List, Min: 1, Max: 1) Event type (see [below for nested schema](#nestedblock--processing--processors--processor--bizevent--event_type))
 - `field_extraction` (Block List, Min: 1, Max: 1) Field extraction (see [below for nested schema](#nestedblock--processing--processors--processor--bizevent--field_extraction))
-
-Optional:
-
-- `event_type` (Block List, Max: 1) Event type (see [below for nested schema](#nestedblock--processing--processors--processor--bizevent--event_type))
 
 <a id="nestedblock--processing--processors--processor--bizevent--event_provider"></a>
 ### Nested Schema for `processing.processors.processor.bizevent.event_provider`
@@ -287,6 +284,32 @@ Optional:
 
 <a id="nestedblock--processing--processors--processor--bizevent--event_provider--field"></a>
 ### Nested Schema for `processing.processors.processor.bizevent.event_provider.field`
+
+Required:
+
+- `source_field_name` (String) Source field name
+
+Optional:
+
+- `default_value` (String) Default value
+
+
+
+<a id="nestedblock--processing--processors--processor--bizevent--event_type"></a>
+### Nested Schema for `processing.processors.processor.bizevent.event_type`
+
+Required:
+
+- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+
+Optional:
+
+- `constant` (String) Constant value
+- `field` (Block List, Max: 1) Value from field (see [below for nested schema](#nestedblock--processing--processors--processor--bizevent--event_type--field))
+- `multi_value_constant` (List of String) Constant multi value
+
+<a id="nestedblock--processing--processors--processor--bizevent--event_type--field"></a>
+### Nested Schema for `processing.processors.processor.bizevent.event_type.field`
 
 Required:
 
@@ -329,32 +352,6 @@ Optional:
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
 
-
-
-
-<a id="nestedblock--processing--processors--processor--bizevent--event_type"></a>
-### Nested Schema for `processing.processors.processor.bizevent.event_type`
-
-Required:
-
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
-
-Optional:
-
-- `constant` (String) Constant value
-- `field` (Block List, Max: 1) Value from field (see [below for nested schema](#nestedblock--processing--processors--processor--bizevent--event_type--field))
-- `multi_value_constant` (List of String) Constant multi value
-
-<a id="nestedblock--processing--processors--processor--bizevent--event_type--field"></a>
-### Nested Schema for `processing.processors.processor.bizevent.event_type.field`
-
-Required:
-
-- `source_field_name` (String) Source field name
-
-Optional:
-
-- `default_value` (String) Default value
 
 
 
@@ -713,11 +710,8 @@ Required:
 - `event_category` (Block List, Min: 1, Max: 1) Event category (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_category))
 - `event_provider` (Block List, Min: 1, Max: 1) Event provider (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_provider))
 - `event_status` (Block List, Min: 1, Max: 1) Event status (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_status))
+- `event_type` (Block List, Min: 1, Max: 1) Event type (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_type))
 - `field_extraction` (Block List, Min: 1, Max: 1) Field extraction (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--field_extraction))
-
-Optional:
-
-- `event_type` (Block List, Max: 1) Event type (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_type))
 
 <a id="nestedblock--processing--processors--processor--sdlc_event--event_category"></a>
 ### Nested Schema for `processing.processors.processor.sdlc_event.event_category`
@@ -797,6 +791,32 @@ Optional:
 
 
 
+<a id="nestedblock--processing--processors--processor--sdlc_event--event_type"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.event_type`
+
+Required:
+
+- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+
+Optional:
+
+- `constant` (String) Constant value
+- `field` (Block List, Max: 1) Value from field (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_type--field))
+- `multi_value_constant` (List of String) Constant multi value
+
+<a id="nestedblock--processing--processors--processor--sdlc_event--event_type--field"></a>
+### Nested Schema for `processing.processors.processor.sdlc_event.event_type.field`
+
+Required:
+
+- `source_field_name` (String) Source field name
+
+Optional:
+
+- `default_value` (String) Default value
+
+
+
 <a id="nestedblock--processing--processors--processor--sdlc_event--field_extraction"></a>
 ### Nested Schema for `processing.processors.processor.sdlc_event.field_extraction`
 
@@ -828,32 +848,6 @@ Optional:
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
 
-
-
-
-<a id="nestedblock--processing--processors--processor--sdlc_event--event_type"></a>
-### Nested Schema for `processing.processors.processor.sdlc_event.event_type`
-
-Required:
-
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
-
-Optional:
-
-- `constant` (String) Constant value
-- `field` (Block List, Max: 1) Value from field (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event--event_type--field))
-- `multi_value_constant` (List of String) Constant multi value
-
-<a id="nestedblock--processing--processors--processor--sdlc_event--event_type--field"></a>
-### Nested Schema for `processing.processors.processor.sdlc_event.event_type.field`
-
-Required:
-
-- `source_field_name` (String) Source field name
-
-Optional:
-
-- `default_value` (String) Default value
 
 
 

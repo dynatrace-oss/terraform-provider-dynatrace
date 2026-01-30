@@ -44,11 +44,12 @@ resource "dynatrace_mobile_app_enablement" "#name#" {
 ### Required
 
 - `rum` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_mobile_application`) Capture and analyze all user actions within your application. Enable [Real User Monitoring (RUM)](https://dt-url.net/1n2b0prq) to monitor and improve your application's performance, identify errors, and gain insight into your user's behavior and experience. (see [below for nested schema](#nestedblock--rum))
-- `session_replay` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_mobile_application`) [Session Replay on crashes](https://dt-url.net/session-replay) gives you additional context for crash analysis in the form of video-like screen recordings that replay user actions immediately preceding a detected crash, while providing [best-in-class security and data protection](https://dt-url.net/b303zxj). (see [below for nested schema](#nestedblock--session_replay))
+- `session_replay` (Block List, Min: 1, Max: 1) (Field has overlap with `dynatrace_mobile_application`) [Session Replay](https://dt-url.net/session-replay) captures all user interactions within your application and replays them in a movie-like experience while providing [best-in-class security and data protection](https://dt-url.net/b303zxj). (see [below for nested schema](#nestedblock--session_replay))
 
 ### Optional
 
 - `application_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+- `experience_analytics` (Block List, Max: 1) User Interactions (see [below for nested schema](#nestedblock--experience_analytics))
 
 ### Read-Only
 
@@ -64,7 +65,7 @@ Required:
 
 Optional:
 
-- `enabled_on_grail` (Boolean) Please be aware that only mobile agents with version **8.303 or higher** can ingest Grail events
+- `enabled_on_grail` (Boolean) Please be aware that only mobile agents with version **8.309 or higher** can ingest Grail events
 
 
 <a id="nestedblock--session_replay"></a>
@@ -78,4 +79,12 @@ Optional:
 
 - `cost_and_traffic_control` (Number) Percentage of user sessions recorded with Session Replay. For example, if you have 50% for RUM and 50% for Session Replay, it results in 25% of sessions recorded with Session Replay.
 - `full_session_replay` (Boolean) Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).
+
+
+<a id="nestedblock--experience_analytics"></a>
+### Nested Schema for `experience_analytics`
+
+Required:
+
+- `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
  

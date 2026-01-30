@@ -52,7 +52,7 @@ resource "dynatrace_generic_relationships" "#name#" {
 - `from_type` (String) Define an entity type as the source of the relationship.
 - `sources` (Block List, Min: 1, Max: 1) Specify all sources which should be evaluated for this relationship rule. The relationship is only created when any of the filters match. (see [below for nested schema](#nestedblock--sources))
 - `to_type` (String) Define an entity type as the destination of the relationship. You can choose the same type as the source type. In this case you also may assign different roles for source and destination for having directed relationships.
-- `type_of_relation` (String) Possible Values: `CALLS`, `CHILD_OF`, `INSTANCE_OF`, `PART_OF`, `RUNS_ON`, `SAME_AS`
+- `type_of_relation` (String) Type of the relationship between the Source Type and the Destination Type. Possible Values: `CALLS`, `CHILD_OF`, `INSTANCE_OF`, `PART_OF`, `RUNS_ON`, `SAME_AS`
 
 ### Optional
 
@@ -75,7 +75,7 @@ Required:
 
 Required:
 
-- `source_type` (String) Possible Values: `BusinessEvents`, `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`
+- `source_type` (String) Specify the source type of the filter to identify which data source should be evaluated.. Possible Values: `Business Events`, `Entities`, `Events`, `Logs`, `Metrics`, `Spans`, `Topology`
 
 Optional:
 
@@ -96,7 +96,7 @@ Required:
 Required:
 
 - `destination_property` (String) The case-sensitive name of a property of the destination type.
-- `destination_transformation` (String) Possible Values: `Leavetextas_is`, `Tolowercase`, `Touppercase`
+- `destination_transformation` (String) Normalize text or leave it as-is?. Possible Values: `Leave text as-is`, `To lower case`, `To upper case`
 - `source_property` (String) The case-sensitive name of a property of the source type.
-- `source_transformation` (String) Possible Values: `Leavetextas_is`, `Tolowercase`, `Touppercase`
+- `source_transformation` (String) Normalize text or leave it as-is?. Possible Values: `Leave text as-is`, `To lower case`, `To upper case`
  

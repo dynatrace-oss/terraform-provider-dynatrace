@@ -49,9 +49,9 @@ resource "dynatrace_limit_outbound_connections" "#name#" {
 
 Required:
 
-- `enforced` (Boolean) If enabled, the Dynatrace JavaScript runtime will only be able to connect to the specified hosts.
+- `enforced` (Boolean) If enabled, the Dynatrace JavaScript Runtime will only be able to connect to the specified hosts.
 
 Optional:
 
-- `host_list` (Set of String) The Dynatrace JavaScript runtime will only be to connect to these hosts.
+- `host_list` (Set of String) A host that app backends should be able to connect to.
  
