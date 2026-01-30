@@ -145,13 +145,11 @@ resource "dynatrace_opentelemetry_metrics" "#name#" {
 
 **Notes:**
 
-* Modifying this setting (renaming, disabling or removing attributes) will cause the metric to change. This may have an impact on existing dashboards, events and alerts that make use of these dimensions. In this case, they will need to be updated manually.
+- Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.
 
-* Dynatrace does not recommend changing/removing the attributes starting with "dt.". Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics). (see [below for nested schema](#nestedblock--additional_attributes))
-- `additional_attributes_to_dimension_enabled` (Boolean) Add the resource and scope attributes configured below as dimensions
+- Dynatrace does not recommend changing/removing the attributes starting with "dt.". Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics). (see [below for nested schema](#nestedblock--additional_attributes))
+- `additional_attributes_to_dimension_enabled` (Boolean) Add the resource and scope attributes configured below as dimensions (Metrics Classic)
 - `meter_name_to_dimension_enabled` (Boolean) When enabled, the Meter name (also referred to as InstrumentationScope or InstrumentationLibrary in OpenTelemetry SDKs) and version will be added as dimensions (`otel.scope.name` and `otel.scope.version`) to ingested OTLP metrics.
-
-**Note:** Modifying this setting will cause the metric to change. This may have an impact on existing dashboards, events and alerts that make use of these dimensions. In this case, they will need to be updated manually
 - `mode` (String) Specifies whether the given attributes to enable (`additional_attributes`) and the attributes to drop (`to_drop_attributes`) will get applied explicitly (`EXPLICIT`) or additive (`ADDITIVE`).
 
 Default behavior is `EXPLICIT` - in which case it is recommended to have just ONE instance of this resource
@@ -162,13 +160,13 @@ With mode `ADDITIVE` you're able to have multiple instances of this resource wit
 - `scope` (String) The scope of this setting (environment-default). Omit this property if you want to cover the whole environment.
 - `to_drop_attributes` (Block List, Max: 1) The attributes defined in the list below will be dropped from all ingested OTLP metrics.
 
-Upon ingest, the *Allow list: resource and scope attributes* above is applied first. Then, the *Deny list: all attributes* below is applied. The deny list therefore applies to all attributes from all sources (data points, scope and resource).
-
 **Notes:**
 
-* Modifying this setting (adding, renaming, disabling or removing attributes) will cause the metric to change. This may have an impact on existing dashboards, events and alerts that make use of these dimensions. In this case, they will need to be updated manually.
+- Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.
 
-* Dynatrace does not recommend including attributes starting with "dt." to the deny list. Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics). (see [below for nested schema](#nestedblock--to_drop_attributes))
+- Wildcards are only supported in Metrics powered by Grail.
+
+- Dynatrace does not recommend including attributes starting with "dt." to the deny list. Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics). (see [below for nested schema](#nestedblock--to_drop_attributes))
 
 ### Read-Only
 

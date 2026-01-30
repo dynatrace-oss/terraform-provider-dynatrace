@@ -50,7 +50,7 @@ resource "dynatrace_web_app_enablement" "#name#" {
 ### Optional
 
 - `application_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
-- `experience_analytics` (Block List, Max: 1) Experience Analytics (see [below for nested schema](#nestedblock--experience_analytics))
+- `experience_analytics` (Block List, Max: 1) User Interactions (see [below for nested schema](#nestedblock--experience_analytics))
 
 ### Read-Only
 
@@ -74,7 +74,7 @@ Optional:
 
 Required:
 
-- `cost_and_traffic_control` (Number) (Field has overlap with `dynatrace_web_application`) [Percentage of user sessions recorded with Session Replay](https://dt-url.net/sr-cost-traffic-control). For example, if you have 50% for RUM and 50% for Session Replay, it results in 25% of sessions recorded with Session Replay.
+- `cost_and_traffic_control` (Number) (Field has overlap with `dynatrace_web_application`) [Percentage of user sessions recorded with Session Replay Classic](https://dt-url.net/sr-cost-traffic-control). For example, if you have 50% for RUM and 50% for Session Replay Classic, it results in 25% of sessions recorded with Session Replay Classic.
 - `enabled` (Boolean) (Field has overlap with `dynatrace_web_application`) This setting is enabled (`true`) or disabled (`false`)
 
 

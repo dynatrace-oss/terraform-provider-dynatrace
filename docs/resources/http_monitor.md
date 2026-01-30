@@ -558,6 +558,10 @@ Required:
 
 - `request` (Block List, Min: 1) A HTTP request to be performed by the monitor. (see [below for nested schema](#nestedblock--script--request))
 
+Optional:
+
+- `custom_properties` (Block List) [Preview only](https://docs.dynatrace.com/docs/whats-new/preview-releases). A set of custom properties assigned to the monitor. More information can be found [here](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-monitoring/http-monitors-classic/advanced-http-monitor-settings-classic). (see [below for nested schema](#nestedblock--script--custom_properties))
+
 <a id="nestedblock--script--request"></a>
 ### Nested Schema for `script.request`
 
@@ -644,6 +648,23 @@ Optional:
 
 - `pass_if_found` (Boolean) The validation condition. `true` means validation succeeds if the specified content/element is found. `false` means validation fails if the specified content/element is found. Always specify `false` for `certificateExpiryDateConstraint` to fail the monitor if SSL certificate expiry is within the specified number of days
 
+
+
+
+<a id="nestedblock--script--custom_properties"></a>
+### Nested Schema for `script.custom_properties`
+
+Required:
+
+- `custom_property` (Block Set, Min: 1) Custom properties for the monitor (see [below for nested schema](#nestedblock--script--custom_properties--custom_property))
+
+<a id="nestedblock--script--custom_properties--custom_property"></a>
+### Nested Schema for `script.custom_properties.custom_property`
+
+Required:
+
+- `name` (String) The name of the custom property. Possible values: `hmRequestTimeoutInMs`, `hmConnectTimeoutInMs`, `hmMaxHeaderSizeInBytes`, `hmMonitorExecutionTimeoutInMs`, `hmScriptExecutionTimeoutInMs`, `hmMaxRequestBodySizeInBytes`, `hmMaxCustomScriptSizeInBytes`, `hmMaxResponseBodySizeInBytes`, `hmMaxResponseBodySizeToCustomScriptInBytes`, `hmDnsQueryTimeoutInMs`
+- `value` (String) The value of the custom property
 
 
 

@@ -65,7 +65,7 @@ resource "dynatrace_endpoint_detection_rules" "second-instance" {
 
 Required:
 
-- `if_condition_matches` (String) Possible Values: `DETECT_REQUEST_ON_ENDPOINT`, `SUPPRESS_REQUEST`
+- `if_condition_matches` (String) If condition matches. Possible Values: `DETECT_REQUEST_ON_ENDPOINT`, `SUPPRESS_REQUEST`
 - `rule_name` (String) Rule name
 
 Optional:
