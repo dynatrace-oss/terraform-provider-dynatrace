@@ -1,12 +1,5 @@
-resource "dynatrace_synthetic_location" "location" {
-  name                                  = "#name#"
-  city                                  = "San Francisco de Asis"
-  country_code                          = "VE"
-  region_code                           = "04"
-  deployment_type                       = "STANDARD"
-  latitude                              = 10.0756
-  location_node_outage_delay_in_minutes = 3
-  longitude                             = -67.5442
+data "dynatrace_synthetic_location" "location" {
+  name = "Location"
 }
 
 resource "dynatrace_credentials" "credentials_vault" {
@@ -17,16 +10,10 @@ resource "dynatrace_credentials" "credentials_vault" {
   password = "password"
 }
 
-resource "time_sleep" "wait_5_seconds" {
-  depends_on = [dynatrace_synthetic_location.location]
-  create_duration = "5s"
-}
-
 resource "dynatrace_http_monitor" "monitor" {
-  depends_on = [time_sleep.wait_5_seconds]
   name = "#name#"
   frequency = 1
-  locations = [dynatrace_synthetic_location.location.id]
+  locations = [data.dynatrace_synthetic_location.location.id]
   anomaly_detection {
     loading_time_thresholds {
     }

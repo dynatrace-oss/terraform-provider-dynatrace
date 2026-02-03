@@ -1,7 +1,7 @@
-resource "dynatrace_calculated_web_metric" "#name#" {
+resource "dynatrace_calculated_web_metric" "user_action_properties" {
   name           = "#name#"
   enabled        = true
-  app_identifier = "APPLICATION-EA7C4B59F27D43EB"
+  app_identifier = dynatrace_web_application.application.id
   metric_key     = "calc:apps.web.#name#"
   dimensions {
     dimension {
@@ -14,7 +14,7 @@ resource "dynatrace_calculated_web_metric" "#name#" {
     metric = "VisuallyComplete"
   }
   user_action_filter {
-    continent                         = "GEOLOCATION-970B6D0A98F55995"
+    continent                         = data.dynatrace_synthetic_location.location.geo_location_id
     target_view_group_name_match_type = "Equals"
     target_view_name_match_type       = "Equals"
     user_action_properties {
