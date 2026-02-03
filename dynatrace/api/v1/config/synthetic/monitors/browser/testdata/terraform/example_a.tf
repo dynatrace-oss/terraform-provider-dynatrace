@@ -1,8 +1,95 @@
-resource "dynatrace_browser_monitor" "#name#" {
+resource "dynatrace_synthetic_location" "location" {
+  name                                  = "#name#"
+  city                                  = "San Francisco de Asis"
+  country_code                          = "VE"
+  region_code                           = "04"
+  deployment_type                       = "STANDARD"
+  latitude                              = 10.0756
+  location_node_outage_delay_in_minutes = 3
+  longitude                             = -67.5442
+}
+
+resource "dynatrace_web_application" "application" {
+  name                                 = "#name#"
+  type                                 = "AUTO_INJECTED"
+  cost_control_user_session_percentage = 100
+  load_action_key_performance_metric   = "VISUALLY_COMPLETE"
+  real_user_monitoring_enabled         = true
+  xhr_action_key_performance_metric    = "VISUALLY_COMPLETE"
+  custom_action_apdex_settings {
+    frustrating_fallback_threshold = 12000
+    frustrating_threshold          = 12000
+    tolerated_fallback_threshold   = 3000
+    tolerated_threshold            = 3000
+  }
+  load_action_apdex_settings {
+    frustrating_fallback_threshold = 12000
+    frustrating_threshold          = 12000
+    tolerated_fallback_threshold   = 3000
+    tolerated_threshold            = 3000
+  }
+  monitoring_settings {
+    add_cross_origin_anonymous_attribute = true
+    cache_control_header_optimizations   = true
+    injection_mode = "JAVASCRIPT_TAG"
+    script_tag_cache_duration_in_hours = 1
+    advanced_javascript_tag_settings {
+      max_action_name_length = 100
+      max_errors_to_capture  = 10
+      additional_event_handlers {
+        max_dom_nodes = 5000
+      }
+    }
+    content_capture {
+      resource_timing_settings {
+        instrumentation_delay    = 53
+        non_w3c_resource_timings = true
+        w3c_resource_timings     = true
+      }
+      timeout_settings {
+        temporary_action_limit         = 3
+        temporary_action_total_timeout = 100
+        timed_action_support           = true
+      }
+    }
+  }
+  user_action_naming_settings {}
+  waterfall_settings {
+    resource_browser_caching_threshold            = 50
+    resources_threshold                           = 100000
+    slow_cnd_resources_threshold                  = 200000
+    slow_first_party_resources_threshold          = 200000
+    slow_third_party_resources_threshold          = 200000
+    speed_index_visually_complete_ratio_threshold = 50
+    uncompressed_resources_threshold              = 860
+  }
+  xhr_action_apdex_settings {
+    frustrating_fallback_threshold = 12000
+    frustrating_threshold          = 12000
+    tolerated_fallback_threshold   = 3000
+    tolerated_threshold            = 3000
+  }
+}
+
+resource "dynatrace_credentials" "credentials_vault" {
+  name        = "#name#"
+  description = "my credentials vault"
+  scopes      = ["SYNTHETIC"]
+  username = "username"
+  password = "password"
+}
+
+resource "time_sleep" "wait_5_seconds" {
+  depends_on = [dynatrace_synthetic_location.location, dynatrace_web_application.application, dynatrace_credentials.credentials_vault]
+  create_duration = "5s"
+}
+
+resource "dynatrace_browser_monitor" "monitor" {
+  depends_on = [time_sleep.wait_5_seconds]
   name                   = "#name#"
   frequency              = 15
-  locations              = ["GEOLOCATION-B4B9167CAAA88F6A", "GEOLOCATION-03E96F97A389F96A"]
-  manually_assigned_apps = ["APPLICATION-EA7C4B59F27D43EB"]
+  locations              = [dynatrace_synthetic_location.location.id]
+  manually_assigned_apps = [dynatrace_web_application.application.id]
   anomaly_detection {
     loading_time_thresholds {
       enabled = true
@@ -54,12 +141,12 @@ resource "dynatrace_browser_monitor" "#name#" {
     }
     events {
       event {
-        description = "Loading of \"https://www.orf.at\""
+        description = "Loading of \"https://example.com\""
         navigate {
-          url = "https://www.orf.at"
+          url = "https://example.com"
           authentication {
             type  = "http_authentication"
-            creds = "CREDENTIALS_VAULT-26F62024BC3ABBCF"
+            creds = dynatrace_credentials.credentials_vault.id
           }
           wait {
             wait_for = "page_complete"
@@ -69,10 +156,10 @@ resource "dynatrace_browser_monitor" "#name#" {
       event {
         description = "jhjhjh"
         navigate {
-          url = "https://www.orf.at"
+          url = "https://example.com"
           authentication {
             type  = "http_authentication"
-            creds = "CREDENTIALS_VAULT-26F62024BC3ABBCF"
+            creds = dynatrace_credentials.credentials_vault.id
           }
           validate {
             validation {
