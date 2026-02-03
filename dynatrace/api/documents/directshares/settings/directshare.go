@@ -77,7 +77,7 @@ func (me *DirectShare) Schema() map[string]*schema.Schema {
 			Type:             schema.TypeString,
 			Description:      "Document ID",
 			Required:         true,
-			ValidateDiagFunc: Validate(ValidateUUID, ValidateMaxLength(200)),
+			ValidateDiagFunc: Validate(ValidateMaxLength(200)),
 		},
 		"access": {
 			Type:             schema.TypeString,
