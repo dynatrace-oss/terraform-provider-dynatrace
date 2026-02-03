@@ -1,4 +1,9 @@
-resource "dynatrace_process_group_rum" "#name#" {
+variable "PROCESS_GROUP_ID" {
+  type = string
+}
+
+
+resource "dynatrace_process_group_rum" "rum" {
   enable           = false
-  process_group_id = "PROCESS_GROUP-1234567890000000"
+  process_group_id = var.PROCESS_GROUP_ID
 }
