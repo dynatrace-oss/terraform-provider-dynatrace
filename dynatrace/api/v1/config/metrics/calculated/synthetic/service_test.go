@@ -26,5 +26,5 @@ import (
 )
 
 func TestAccCalculatedSyntheticMetrics(t *testing.T) {
-	api.TestAcc(t)
+	api.TestAccParallel(t)
 }
