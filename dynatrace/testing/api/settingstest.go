@@ -34,6 +34,7 @@ import (
 
 type TestAccOptions struct {
 	ExpectNonEmptyPlan bool
+	ExternalProviders  map[string]resource.ExternalProvider
 }
 
 func AccEnvsGiven(t *testing.T) bool {
@@ -124,6 +125,7 @@ func TestAcc(t *testing.T, opts ...TestAccOptions) {
 
 			testCase := resource.TestCase{
 				ProviderFactories: providerFactories,
+				ExternalProviders: options.ExternalProviders,
 				Steps:             []resource.TestStep{{Config: config, ExpectNonEmptyPlan: options.ExpectNonEmptyPlan}},
 			}
 			resource.Test(t, testCase)
