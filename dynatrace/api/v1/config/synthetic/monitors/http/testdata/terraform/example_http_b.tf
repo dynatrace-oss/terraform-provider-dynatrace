@@ -1,7 +1,32 @@
-resource "dynatrace_http_monitor" "#name#" {
+resource "dynatrace_synthetic_location" "location" {
+  name                                  = "#name#"
+  city                                  = "San Francisco de Asis"
+  country_code                          = "VE"
+  region_code                           = "04"
+  deployment_type                       = "STANDARD"
+  latitude                              = 10.0756
+  location_node_outage_delay_in_minutes = 3
+  longitude                             = -67.5442
+}
+
+resource "dynatrace_credentials" "credentials_vault" {
+  name        = "#name#"
+  description = "my credentials vault"
+  scopes      = ["SYNTHETIC"]
+  username = "username"
+  password = "password"
+}
+
+resource "time_sleep" "wait_5_seconds" {
+  depends_on = [dynatrace_synthetic_location.location]
+  create_duration = "5s"
+}
+
+resource "dynatrace_http_monitor" "monitor" {
+  depends_on = [time_sleep.wait_5_seconds]
   name = "#name#"
   frequency = 1
-  locations = ["GEOLOCATION-03E96F97A389F96A","GEOLOCATION-9999453BE4BDB3CD","GEOLOCATION-2FD31C834DE4D601","GEOLOCATION-924D253001531722","GEOLOCATION-7F39AED31559436D","GEOLOCATION-DDAA176627F5667A"]
+  locations = [dynatrace_synthetic_location.location.id]
   anomaly_detection {
     loading_time_thresholds {
     }
@@ -22,7 +47,7 @@ resource "dynatrace_http_monitor" "#name#" {
       }
       authentication {
         type = "KERBEROS"
-        credentials = "CREDENTIALS_VAULT-4DFB50E5F50A21A4"
+        credentials = dynatrace_credentials.credentials_vault.id
         realm_name = "ABCDE"
         kdc_ip = "10.0.0.1"
       }
