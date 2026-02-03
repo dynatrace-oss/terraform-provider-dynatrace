@@ -26,5 +26,5 @@ import (
 )
 
 func TestAccCalculatedWebMetrics(t *testing.T) {
-	api.TestAcc(t)
+	api.TestAccParallel(t)
 }

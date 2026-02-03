@@ -1,7 +1,11 @@
+data "dynatrace_synthetic_location" "location" {
+  name = "Location"
+}
+
 resource "dynatrace_http_monitor" "advanced" {
   name      = "#name#"
   frequency = 1
-  locations = ["GEOLOCATION-F3E06A526BE3B4C4"]
+  locations = [data.dynatrace_synthetic_location.location.id]
   anomaly_detection {
     loading_time_thresholds {
     }
