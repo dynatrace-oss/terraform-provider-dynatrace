@@ -1,7 +1,8 @@
-resource "dynatrace_calculated_service_metric" "#name#" {
+resource "dynatrace_calculated_service_metric" "metric_l" {
+  depends_on = [time_sleep.wait_for_request_attributes]
   name             = "#name#"
   enabled          = true
-  management_zones = ["AAAA"]
+  management_zones = [dynatrace_management_zone_v2.mzone.name]
   metric_key       = "calc:service.#name#"
   unit             = "MILLI_SECOND_PER_MINUTE"
   conditions {
@@ -13,7 +14,7 @@ resource "dynatrace_calculated_service_metric" "#name#" {
           case_sensitive       = true
           match_on_child_calls = false
           operator             = "BEGINS_WITH"
-          request_attribute    = "BehaviorClass"
+          request_attribute    = dynatrace_request_attribute.behavior_class.name
           value                = "\"kk"
         }
       }
@@ -34,16 +35,16 @@ resource "dynatrace_calculated_service_metric" "#name#" {
         end_delimiter        = "l"
         kind                 = "BETWEEN_DELIMITER"
         normalization        = "TO_UPPER_CASE"
-        request_attribute    = "Accept-Ranges"
+        request_attribute    = dynatrace_request_attribute.accept_ranges.name
         use_from_child_calls = true
         source {
-          management_zone = "AAAA"
+          management_zone = dynatrace_management_zone_v2.mzone.name
         }
       }
     }
   }
   metric_definition {
     metric            = "REQUEST_ATTRIBUTE"
-    request_attribute = "foo"
+    request_attribute = dynatrace_request_attribute.attribute.name
   }
 }
