@@ -225,19 +225,19 @@ func (me *DataSource) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("iib_node_type", me.IIBNodeType); err != nil {
 		return err
 	}
-	if err := properties.Encode("cics_transaction_call_type", me.IIBNodeType); err != nil {
+	if err := properties.Encode("cics_transaction_call_type", me.CICSTransactionCallType); err != nil {
 		return err
 	}
-	if err := properties.Encode("iib_node_type_condition", me.IIBNodeType); err != nil {
+	if err := properties.Encode("iib_node_type_condition", me.IIBNodeTypeCondition); err != nil {
 		return err
 	}
-	if err := properties.Encode("ims_transaction_call_type", me.IIBNodeType); err != nil {
+	if err := properties.Encode("ims_transaction_call_type", me.IMSTransactionCallType); err != nil {
 		return err
 	}
-	if err := properties.Encode("server_variable_technology", me.IIBNodeType); err != nil {
+	if err := properties.Encode("server_variable_technology", me.ServerVariableTechnology); err != nil {
 		return err
 	}
-	if err := properties.Encode("span_attribute_key", me.IIBNodeType); err != nil {
+	if err := properties.Encode("span_attribute_key", me.SpanAttributeKey); err != nil {
 		return err
 	}
 	return nil
@@ -396,19 +396,19 @@ func (me *DataSource) MarshalJSON() ([]byte, error) {
 	if err := m.Marshal("iibNodeType", me.IIBNodeType); err != nil {
 		return nil, err
 	}
-	if err := m.Marshal("cics_transaction_call_type", me.CICSTransactionCallType); err != nil {
+	if err := m.Marshal("cicsTransactionCallType", me.CICSTransactionCallType); err != nil {
 		return nil, err
 	}
-	if err := m.Marshal("iib_node_type_condition", me.IIBMethodNodeCondition); err != nil {
+	if err := m.Marshal("iibNodeTypeCondition", me.IIBMethodNodeCondition); err != nil {
 		return nil, err
 	}
-	if err := m.Marshal("ims_transaction_call_type", me.IMSTransactionCallType); err != nil {
+	if err := m.Marshal("imsTransactionCallType", me.IMSTransactionCallType); err != nil {
 		return nil, err
 	}
-	if err := m.Marshal("server_variable_technology", me.ServerVariableTechnology); err != nil {
+	if err := m.Marshal("serverVariableTechnology", me.ServerVariableTechnology); err != nil {
 		return nil, err
 	}
-	if err := m.Marshal("span_attribute_key", me.SpanAttributeKey); err != nil {
+	if err := m.Marshal("spanAttributeKey", me.SpanAttributeKey); err != nil {
 		return nil, err
 	}
 	return json.Marshal(m)
@@ -458,19 +458,19 @@ func (me *DataSource) UnmarshalJSON(data []byte) error {
 	if err := m.Unmarshal("iibNodeType", &me.IIBNodeType); err != nil {
 		return err
 	}
-	if err := m.Unmarshal("cics_transaction_call_type", &me.CICSTransactionCallType); err != nil {
+	if err := m.Unmarshal("cicsTransactionCallType", &me.CICSTransactionCallType); err != nil {
 		return err
 	}
-	if err := m.Unmarshal("iib_node_type_condition", &me.IIBMethodNodeCondition); err != nil {
+	if err := m.Unmarshal("iibNodeTypeCondition", &me.IIBMethodNodeCondition); err != nil {
 		return err
 	}
-	if err := m.Unmarshal("ims_transaction_call_type", &me.IMSTransactionCallType); err != nil {
+	if err := m.Unmarshal("imsTransactionCallType", &me.IMSTransactionCallType); err != nil {
 		return err
 	}
-	if err := m.Unmarshal("server_variable_technology", &me.ServerVariableTechnology); err != nil {
+	if err := m.Unmarshal("serverVariableTechnology", &me.ServerVariableTechnology); err != nil {
 		return err
 	}
-	if err := m.Unmarshal("span_attribute_key", &me.SpanAttributeKey); err != nil {
+	if err := m.Unmarshal("spanAttributeKey", &me.SpanAttributeKey); err != nil {
 		return err
 	}
 
