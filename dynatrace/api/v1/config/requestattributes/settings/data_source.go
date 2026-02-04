@@ -399,7 +399,7 @@ func (me *DataSource) MarshalJSON() ([]byte, error) {
 	if err := m.Marshal("cicsTransactionCallType", me.CICSTransactionCallType); err != nil {
 		return nil, err
 	}
-	if err := m.Marshal("iibNodeTypeCondition", me.IIBMethodNodeCondition); err != nil {
+	if err := m.Marshal("iibNodeTypeCondition", me.IIBNodeTypeCondition); err != nil {
 		return nil, err
 	}
 	if err := m.Marshal("imsTransactionCallType", me.IMSTransactionCallType); err != nil {
@@ -461,7 +461,7 @@ func (me *DataSource) UnmarshalJSON(data []byte) error {
 	if err := m.Unmarshal("cicsTransactionCallType", &me.CICSTransactionCallType); err != nil {
 		return err
 	}
-	if err := m.Unmarshal("iibNodeTypeCondition", &me.IIBMethodNodeCondition); err != nil {
+	if err := m.Unmarshal("iibNodeTypeCondition", &me.IIBNodeTypeCondition); err != nil {
 		return err
 	}
 	if err := m.Unmarshal("imsTransactionCallType", &me.IMSTransactionCallType); err != nil {
