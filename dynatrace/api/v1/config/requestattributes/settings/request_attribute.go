@@ -72,6 +72,7 @@ func (me *RequestAttribute) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The data type of the request attribute",
 			Required:    true,
+			ForceNew:    true,
 		},
 		"normalization": {
 			Type:        schema.TypeString,
