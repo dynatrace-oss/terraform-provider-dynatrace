@@ -57,38 +57,6 @@ func (rt ResourceType) IsPotentialCircularDependencyTo(referringResourceID strin
 	return rt == ResourceTypes.JSONDashboard && referredToResourceType == ResourceTypes.JSONDashboardBase && referringResourceID != referredToResourceID
 }
 
-func (rt ResourceType) VoidResource(resource *Resource, contents []byte) ([]byte, bool) {
-	if !rt.CanGetVoidedIfNotReferenced() {
-		return contents, false
-	}
-	dashboardBaseReference := fmt.Sprintf(`${dynatrace_json_dashboard_base.%s.id}`, resource.UniqueName)
-	dashboardReference := fmt.Sprintf(`${dynatrace_json_dashboard.%s.id}`, resource.UniqueName)
-	var results string
-	lastLineWasSpace := false
-	for _, line := range strings.Split(string(contents), "\n") {
-		if strings.Contains(line, "link_id") && strings.Contains(line, dashboardBaseReference) {
-			continue
-		} else if strings.Contains(line, "dashboard_id") && strings.Contains(line, dashboardBaseReference) {
-			line = strings.Replace(line, dashboardBaseReference, dashboardReference, 1)
-		}
-		curLineIsSpace := len(strings.TrimSpace(line)) == 0
-		if curLineIsSpace {
-			if lastLineWasSpace {
-				continue
-			}
-		}
-		lastLineWasSpace = curLineIsSpace
-		results = results + "\n" + line
-	}
-	// Here we assume (see ResourceType.Less) that the resource block `dynatrace_json_dashboard_base`
-	// is located at the very end of the file. The resource block is expected to be empty.
-	// Therefore we can expect that the } before the last one signals the end of the
-	// resource blocks that are allowed to remain. Everything past that will get cut off
-	results = results[:strings.LastIndex(results, "}")]
-	results = results[:strings.LastIndex(results, "}")+1]
-	return []byte(results), true
-}
-
 func (rt ResourceType) CanGetVoidedIfNotReferenced() bool {
 	return rt == ResourceTypes.JSONDashboardBase
 }
