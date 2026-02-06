@@ -50,9 +50,6 @@ var NO_REFRESH_ON_IMPORT = os.Getenv("DYNATRACE_NO_REFRESH_ON_IMPORT") == "true"
 var QUICK_INIT = os.Getenv("DYNATRACE_QUICK_INIT") == "true"
 var ULTRA_PARALLEL = os.Getenv("DYNATRACE_ULTRA_PARALLEL") == "true"
 
-// var JSON_DASHBOARD_BASE_PLUS = os.Getenv("DYNATRACE_JSON_DASHBOARD_BASE_PLUS") == "true"
-var JSON_DASHBOARD_BASE_PLUS = true
-
 const ENV_VAR_CUSTOM_PROVIDER_LOCATION = "DYNATRACE_CUSTOM_PROVIDER_LOCATION"
 
 type Environment struct {
@@ -475,38 +472,6 @@ func (me *Environment) PostProcess() error {
 		}
 	}
 
-	if JSON_DASHBOARD_BASE_PLUS {
-		// pass
-	} else {
-		for _, resourcesByIDToVoid := range resourcesToVoid {
-			for _, resourceToVoid := range resourcesByIDToVoid {
-				if err := voidResource(resourceToVoid); err != nil {
-					logging.Debug.Warn.Printf("[POSTPROCESS] [%s][%s] Unable to remove resource: %s", resourceToVoid.Type, resourceToVoid.ID, err.Error())
-				}
-			}
-		}
-	}
-
-	return nil
-}
-
-func voidResource(resource *Resource) error {
-	if resource == nil {
-		return nil
-	}
-	var err error
-	var resourceBytes []byte
-	var changed bool
-	if resourceBytes, err = resource.ReadFile(); err != nil {
-		return err
-	}
-	if resourceBytes, changed = resource.Type.VoidResource(resource, resourceBytes); changed {
-		var resourceFile *os.File
-		if resourceFile, err = resource.CreateFile(); err == nil {
-			defer resourceFile.Close()
-			resourceFile.Write(resourceBytes)
-		}
-	}
 	return nil
 }
 
