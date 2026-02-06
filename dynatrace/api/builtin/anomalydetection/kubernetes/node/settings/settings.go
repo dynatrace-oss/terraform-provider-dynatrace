@@ -18,7 +18,7 @@
 package node
 
 import (
-	"os"
+"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/envutil"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -36,6 +36,8 @@ type Settings struct {
 func (me *Settings) Name() string {
 	return *me.Scope
 }
+
+var isBackwardsCompatibleNode = envutil.GetBoolEnv(envutil.EnvBackwardsCompatibility, false)
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
@@ -58,8 +60,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"node_problematic_condition": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") != "true",
-			Optional:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") == "true",
+			Required:    !isBackwardsCompatibleNode,
+			Optional:    isBackwardsCompatibleNode,
 			Elem:        &schema.Resource{Schema: new(NodeProblematicCondition).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
