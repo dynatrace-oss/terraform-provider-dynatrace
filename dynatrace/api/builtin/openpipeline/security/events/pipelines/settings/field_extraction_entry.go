@@ -18,6 +18,9 @@
 package pipelines
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -47,8 +50,9 @@ func (me *FieldExtractionEntries) UnmarshalHCL(decoder hcl.Decoder) error {
 	// https://github.com/hashicorp/terraform-plugin-sdk/issues/895
 	// Only known workaround is to ignore these blocks
 	newEntries := FieldExtractionEntries{}
+	var emptyItem FieldExtractionEntry
 	for _, entry := range *me {
-		if entry.SourceFieldName != "" || entry.DestinationFieldName != nil || entry.DefaultValue != nil {
+		if *entry != emptyItem {
 			newEntries = append(newEntries, entry)
 		}
 	}
@@ -57,43 +61,87 @@ func (me *FieldExtractionEntries) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type FieldExtractionEntry struct {
-	DefaultValue         *string `json:"defaultValue,omitempty"`         // Default value
-	DestinationFieldName *string `json:"destinationFieldName,omitempty"` // Destination field name
-	SourceFieldName      string  `json:"sourceFieldName"`                // Source field name
+	ConstantFieldName    *string                  `json:"constantFieldName,omitempty"`    // Destination field name
+	ConstantValue        *string                  `json:"constantValue,omitempty"`        // Constant value to be assigned to field
+	DefaultValue         *string                  `json:"defaultValue,omitempty"`         // Default value
+	DestinationFieldName *string                  `json:"destinationFieldName,omitempty"` // Destination field name
+	ExtractionType       FieldValueExtractionType `json:"extractionType"`                 // Field value extraction type. Possible values: `constant`, `field`
+	SourceFieldName      *string                  `json:"sourceFieldName,omitempty"`      // Source field name
 }
 
 func (me *FieldExtractionEntry) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"constant_field_name": {
+			Type:        schema.TypeString,
+			Description: "Destination field name",
+			Optional:    true, // precondition
+		},
+		"constant_value": {
+			Type:        schema.TypeString,
+			Description: "Constant value to be assigned to field",
+			Optional:    true, // precondition
+		},
 		"default_value": {
 			Type:        schema.TypeString,
 			Description: "Default value",
-			Optional:    true, // nullable
+			Optional:    true, // nullable & precondition
 		},
 		"destination_field_name": {
 			Type:        schema.TypeString,
 			Description: "Destination field name",
-			Optional:    true, // nullable
+			Optional:    true, // nullable & precondition
+		},
+		"extraction_type": {
+			Type:        schema.TypeString,
+			Description: "Field value extraction type. Possible values: `constant`, `field`",
+			Optional:    true,
+			Default:     "field", // new required attribute. Fallback to "field"
 		},
 		"source_field_name": {
 			Type:        schema.TypeString,
 			Description: "Source field name",
-			Required:    true,
+			Optional:    true, // precondition
 		},
 	}
 }
 
 func (me *FieldExtractionEntry) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
+		"constant_field_name":    me.ConstantFieldName,
+		"constant_value":         me.ConstantValue,
 		"default_value":          me.DefaultValue,
 		"destination_field_name": me.DestinationFieldName,
+		"extraction_type":        me.ExtractionType,
 		"source_field_name":      me.SourceFieldName,
 	})
 }
 
+func (me *FieldExtractionEntry) HandlePreconditions() error {
+	if (me.ConstantFieldName == nil) && (string(me.ExtractionType) == "constant") {
+		me.ConstantFieldName = opt.NewString("")
+	}
+	if (me.ConstantValue == nil) && (string(me.ExtractionType) == "constant") {
+		me.ConstantValue = opt.NewString("")
+	}
+	if (me.SourceFieldName == nil) && (string(me.ExtractionType) == "field") {
+		me.SourceFieldName = opt.NewString("")
+	}
+	if (me.DefaultValue != nil) && (string(me.ExtractionType) != "field") {
+		return fmt.Errorf("'default_value' must not be specified if 'extraction_type' is set to '%v'", me.ExtractionType)
+	}
+	if (me.DestinationFieldName != nil) && (string(me.ExtractionType) != "field") {
+		return fmt.Errorf("'destination_field_name' must not be specified if 'extraction_type' is set to '%v'", me.ExtractionType)
+	}
+	return nil
+}
+
 func (me *FieldExtractionEntry) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
+		"constant_field_name":    &me.ConstantFieldName,
+		"constant_value":         &me.ConstantValue,
 		"default_value":          &me.DefaultValue,
 		"destination_field_name": &me.DestinationFieldName,
+		"extraction_type":        &me.ExtractionType,
 		"source_field_name":      &me.SourceFieldName,
 	})
 }
