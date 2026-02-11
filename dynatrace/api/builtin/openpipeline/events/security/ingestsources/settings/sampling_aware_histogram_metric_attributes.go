@@ -26,20 +26,20 @@ import (
 )
 
 type SamplingAwareHistogramMetricAttributes struct {
-	Aggregation  *Aggregation           `json:"aggregation,omitempty"`  // Possible Values: `disabled`, `enabled`
+	Aggregation  *Aggregation           `json:"aggregation,omitempty"`  // Possible values: `disabled`, `enabled`
 	DefaultValue *string                `json:"defaultValue,omitempty"` // Default value with metric value
 	Dimensions   FieldExtractionEntries `json:"dimensions,omitempty"`   // List of dimensions
 	Field        *string                `json:"field,omitempty"`        // Field with metric value
-	Measurement  Measurement            `json:"measurement"`            // Possible Values: `duration`, `field`
+	Measurement  Measurement            `json:"measurement"`            // Possible values: `duration`, `field`
 	MetricKey    string                 `json:"metricKey"`              // Metric key
-	Sampling     *Sampling              `json:"sampling,omitempty"`     // Possible Values: `disabled`, `enabled`
+	Sampling     *Sampling              `json:"sampling,omitempty"`     // Possible values: `disabled`, `enabled`
 }
 
 func (me *SamplingAwareHistogramMetricAttributes) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"aggregation": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `disabled`, `enabled`",
+			Description: "Possible values: `disabled`, `enabled`",
 			Optional:    true, // nullable
 		},
 		"default_value": {
@@ -62,7 +62,7 @@ func (me *SamplingAwareHistogramMetricAttributes) Schema() map[string]*schema.Sc
 		},
 		"measurement": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `duration`, `field`",
+			Description: "Possible values: `duration`, `field`",
 			Required:    true,
 		},
 		"metric_key": {
@@ -72,7 +72,7 @@ func (me *SamplingAwareHistogramMetricAttributes) Schema() map[string]*schema.Sc
 		},
 		"sampling": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `disabled`, `enabled`",
+			Description: "Possible values: `disabled`, `enabled`",
 			Optional:    true, // nullable
 		},
 	}
