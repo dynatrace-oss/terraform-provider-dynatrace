@@ -4,8 +4,9 @@
 	],
 	"constraints": [
 		{
-			"customValidatorId": "ppx-management-service.ppx-management-service:8080/internal/settings-validation/v0.1/validate-container/routing-container-validator",
+			"customValidatorId": "routing-container-validator",
 			"skipAsyncValidation": false,
+			"timeout": 10,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -182,5 +183,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.43"
+	"version": "1.51"
 }
