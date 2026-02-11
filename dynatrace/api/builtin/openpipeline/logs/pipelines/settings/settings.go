@@ -28,12 +28,12 @@ type Settings struct {
 	DataExtraction           *Stage          `json:"dataExtraction,omitempty"`           // Data extraction stage
 	Davis                    *Stage          `json:"davis,omitempty"`                    // Davis event extraction stage
 	DisplayName              string          `json:"displayName"`                        // Display name
-	GroupRole                *GroupRole      `json:"groupRole,omitempty"`                // Group role. Possible Values: `compositionPipeline`, `memberPipeline`
+	GroupRole                *GroupRole      `json:"groupRole,omitempty"`                // Group role. Possible values: `compositionPipeline`, `memberPipeline`
 	MetadataList             MetadataEntries `json:"metadataList,omitempty"`             // Pipeline metadata list
 	MetricExtraction         *Stage          `json:"metricExtraction,omitempty"`         // Metrics extraction stage
 	Processing               *Stage          `json:"processing,omitempty"`               // Processing stage
 	ProductAllocation        *Stage          `json:"productAllocation,omitempty"`        // Product allocation stage
-	Routing                  *Routing        `json:"routing,omitempty"`                  // Routing. Possible Values: `notRoutable`, `routable`
+	Routing                  *Routing        `json:"routing,omitempty"`                  // Routing. Possible values: `notRoutable`, `routable`
 	SecurityContext          *Stage          `json:"securityContext,omitempty"`          // Security context stage
 	SmartscapeEdgeExtraction *Stage          `json:"smartscapeEdgeExtraction,omitempty"` // Smartscape edge extraction stage
 	SmartscapeNodeExtraction *Stage          `json:"smartscapeNodeExtraction,omitempty"` // Smartscape node extraction stage
@@ -78,7 +78,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"group_role": {
 			Type:        schema.TypeString,
-			Description: "Group role. Possible Values: `compositionPipeline`, `memberPipeline`",
+			Description: "Group role. Possible values: `compositionPipeline`, `memberPipeline`",
 			Optional:    true, // nullable
 		},
 		"metadata_list": {
@@ -115,7 +115,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"routing": {
 			Type:        schema.TypeString,
-			Description: "Routing. Possible Values: `notRoutable`, `routable`",
+			Description: "Routing. Possible values: `notRoutable`, `routable`",
 			Optional:    true, // nullable
 		},
 		"security_context": {
