@@ -32,33 +32,24 @@ func TestOpenPipelineBizeventsPipelinesUnmarshal(t *testing.T) {
 	entries := new(pipelines.FieldExtractionEntries)
 	validEntries := []*pipelines.FieldExtractionEntry{
 		{
-			DefaultValue:         testing2.ToPointer("value"),
-			DestinationFieldName: nil,
-			SourceFieldName:      "",
+			DefaultValue: testing2.ToPointer("value"),
 		},
 		{
-			DefaultValue:         nil,
 			DestinationFieldName: testing2.ToPointer("value"),
-			SourceFieldName:      "",
 		},
 		{
-			DefaultValue:         nil,
-			DestinationFieldName: nil,
-			SourceFieldName:      "value",
+			SourceFieldName: testing2.ToPointer("value"),
 		},
 		{
 			DefaultValue:         testing2.ToPointer("value1"),
 			DestinationFieldName: testing2.ToPointer("value2"),
-			SourceFieldName:      "value3",
+			SourceFieldName:      testing2.ToPointer("value3"),
 		},
-	}
-	validWithEmpty := pipelines.FieldExtractionEntries{
 		{
-			DefaultValue:         nil,
-			DestinationFieldName: nil,
-			SourceFieldName:      "",
+			ExtractionType: "field",
 		},
 	}
+	validWithEmpty := pipelines.FieldExtractionEntries{{}}
 	validWithEmpty = append(validWithEmpty, validEntries...)
 	err := entries.UnmarshalHCL(testing2.MockDecoder{Elements: map[string]any{"dimension": validWithEmpty}})
 	require.NoError(t, err)
