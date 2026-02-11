@@ -51,6 +51,26 @@ var FieldExtractionTypes = struct {
 	"includeAll",
 }
 
+type FieldValueExtractionType string
+
+var FieldValueExtractionTypes = struct {
+	Constant FieldValueExtractionType
+	Field    FieldValueExtractionType
+}{
+	"constant",
+	"field",
+}
+
+type GroupRole string
+
+var GroupRoles = struct {
+	Compositionpipeline GroupRole
+	Memberpipeline      GroupRole
+}{
+	"compositionPipeline",
+	"memberPipeline",
+}
+
 type Measurement string
 
 var Measurements = struct {
@@ -113,6 +133,16 @@ var ProcessorTypes = struct {
 	"smartscapeNode",
 	"technology",
 	"valueMetric",
+}
+
+type Routing string
+
+var Routings = struct {
+	Notroutable Routing
+	Routable    Routing
+}{
+	"notRoutable",
+	"routable",
 }
 
 type Sampling string
