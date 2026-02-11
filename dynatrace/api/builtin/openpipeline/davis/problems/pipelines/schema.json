@@ -4,7 +4,7 @@
 	],
 	"constraints": [
 		{
-			"customValidatorId": "ppx-management-service.ppx-management-service:8080/internal/settings-validation/v0.1/validate-container/pipeline-container-validator",
+			"customValidatorId": "pipeline-container-validator",
 			"skipAsyncValidation": false,
 			"timeout": 10,
 			"type": "CUSTOM_VALIDATOR_REF"
@@ -77,6 +77,22 @@
 				{
 					"displayName": "Include all fields of the source record",
 					"value": "includeAll"
+				}
+			],
+			"type": "enum"
+		},
+		"FieldValueExtractionType": {
+			"description": "",
+			"displayName": "Field value extraction type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Constant literal will be assigned to destination field.",
+					"value": "constant"
+				},
+				{
+					"displayName": "Dynamic value from field or default will be assigned to destination field.",
+					"value": "field"
 				}
 			],
 			"type": "enum"
@@ -339,7 +355,7 @@
 			"displayName": "Group role",
 			"documentation": "",
 			"maxObjects": 1,
-			"modificationPolicy": "DEFAULT",
+			"modificationPolicy": "NEVER",
 			"nullable": true,
 			"type": {
 				"$ref": "#/enums/GroupRole"
@@ -409,7 +425,7 @@
 			"displayName": "Routing",
 			"documentation": "",
 			"maxObjects": 1,
-			"modificationPolicy": "DEFAULT",
+			"modificationPolicy": "NEVER",
 			"nullable": true,
 			"type": {
 				"$ref": "#/enums/Routing"
@@ -884,10 +900,55 @@
 			"displayName": "FieldExtractionEntry",
 			"documentation": "",
 			"properties": {
+				"constantFieldName": {
+					"constraints": [
+						{
+							"maxLength": 350,
+							"type": "LENGTH"
+						},
+						{
+							"type": "NOT_BLANK"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Destination field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "constant",
+						"property": "extractionType",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"constantValue": {
+					"constraints": [
+						{
+							"maxLength": 512,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Constant value to be assigned to field",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "constant",
+						"property": "extractionType",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
 				"defaultValue": {
 					"constraints": [
 						{
-							"maxLength": 500,
+							"maxLength": 512,
 							"minLength": 1,
 							"type": "LENGTH"
 						}
@@ -898,14 +959,22 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
+					"precondition": {
+						"expectedValue": "field",
+						"property": "extractionType",
+						"type": "EQUALS"
+					},
 					"type": "text"
 				},
 				"destinationFieldName": {
 					"constraints": [
 						{
-							"maxLength": 500,
+							"maxLength": 350,
 							"minLength": 1,
 							"type": "LENGTH"
+						},
+						{
+							"type": "NOT_BLANK"
 						}
 					],
 					"description": "",
@@ -914,13 +983,33 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
+					"precondition": {
+						"expectedValue": "field",
+						"property": "extractionType",
+						"type": "EQUALS"
+					},
 					"type": "text"
+				},
+				"extractionType": {
+					"default": "field",
+					"description": "",
+					"displayName": "Field value extraction type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/FieldValueExtractionType"
+					}
 				},
 				"sourceFieldName": {
 					"constraints": [
 						{
 							"maxLength": 256,
 							"type": "LENGTH"
+						},
+						{
+							"type": "NOT_BLANK"
 						}
 					],
 					"default": "",
@@ -930,10 +1019,15 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"precondition": {
+						"expectedValue": "field",
+						"property": "extractionType",
+						"type": "EQUALS"
+					},
 					"type": "text"
 				}
 			},
-			"summaryPattern": "{sourceFieldName} - {destinationFieldName} - {defaultValue}",
+			"summaryPattern": "{extractionType} - {sourceFieldName} - {destinationFieldName} - {defaultValue} - {constantFieldName} - {constantValue}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -3144,5 +3238,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.43"
+	"version": "1.51"
 }
