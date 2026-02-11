@@ -33,7 +33,7 @@ type Settings struct {
 	PathSegment   *string          `json:"pathSegment,omitempty"`   // Endpoint segment
 	Processing    *Stage           `json:"processing,omitempty"`    // Processing stage
 	Source        *string          `json:"source,omitempty"`        // Source
-	SourceType    IngestSourceType `json:"sourceType"`              // Source Type. Possible Values: `extension`, `http`
+	SourceType    IngestSourceType `json:"sourceType"`              // Source Type. Possible values: `extension`, `http`
 	StaticRouting *StaticRouting   `json:"staticRouting,omitempty"` // Static routing of endpoint
 }
 
@@ -82,7 +82,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"source_type": {
 			Type:        schema.TypeString,
-			Description: "Source Type. Possible Values: `extension`, `http`",
+			Description: "Source Type. Possible values: `extension`, `http`",
 			Optional:    true,
 			Default:     "http",
 		},
