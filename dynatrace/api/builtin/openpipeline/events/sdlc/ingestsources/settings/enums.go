@@ -51,6 +51,16 @@ var FieldExtractionTypes = struct {
 	"includeAll",
 }
 
+type FieldValueExtractionType string
+
+var FieldValueExtractionTypes = struct {
+	Constant FieldValueExtractionType
+	Field    FieldValueExtractionType
+}{
+	"constant",
+	"field",
+}
+
 type IngestSourceType string
 
 var IngestSourceTypes = struct {
