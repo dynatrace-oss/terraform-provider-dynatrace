@@ -154,7 +154,8 @@
 					{
 						"customValidatorId": "builtin:universal-tag-validator",
 						"skipAsyncValidation": false,
-						"type": "CUSTOM_VALIDATOR_REF"
+						"type": "CUSTOM_VALIDATOR_REF",
+						"validatorUrl": "builtin:universal-tag-validator"
 					},
 					{
 						"maxLength": 500,
@@ -373,6 +374,27 @@
 					"subType": "code",
 					"type": "text"
 				},
+				"links": {
+					"description": "Fields for adding relevant links to this objective.",
+					"displayName": "Links",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/ObjectiveLink"
+						}
+					},
+					"maxObjects": 5,
+					"metadata": {
+						"addItemButton": "Add link"
+					},
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				},
 				"name": {
 					"constraints": [
 						{
@@ -462,6 +484,64 @@
 				}
 			},
 			"summaryPattern": "{name}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ObjectiveLink": {
+			"description": "",
+			"displayName": "Objective Link",
+			"documentation": "",
+			"properties": {
+				"label": {
+					"constraints": [
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "Short description for the link.",
+					"displayName": "Display text",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"url": {
+					"constraints": [
+						{
+							"maxLength": 4096,
+							"type": "LENGTH"
+						},
+						{
+							"pattern": "^https://.*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Not a valid URI",
+							"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Not a valid http(s) URL",
+							"pattern": "^https?://.*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "HTTPS link associated with this objective.",
+					"displayName": "URL",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "url",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{label}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -613,5 +693,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.8"
+	"version": "1.9"
 }
