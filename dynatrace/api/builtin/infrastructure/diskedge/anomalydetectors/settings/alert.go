@@ -55,7 +55,7 @@ type Alert struct {
 	ThresholdMilliseconds            *float64                          `json:"thresholdMilliseconds,omitempty"`
 	ThresholdNumber                  *float64                          `json:"thresholdNumber,omitempty"`
 	ThresholdPercent                 *float64                          `json:"thresholdPercent,omitempty"`
-	Trigger                          Trigger                           `json:"trigger"` // Possible Values: `AVAILABLE_DISK_SPACE_MEBIBYTES_BELOW`, `AVAILABLE_DISK_SPACE_PERCENT_BELOW`, `AVAILABLE_INODES_NUMBER_BELOW`, `AVAILABLE_INODES_PERCENT_BELOW`, `READ_ONLY_FILE_SYSTEM`, `READ_TIME_EXCEEDING`, `WRITE_TIME_EXCEEDING`
+	Trigger                          Trigger                           `json:"trigger"` // Possible values: `AVAILABLE_DISK_SPACE_MEBIBYTES_BELOW`, `AVAILABLE_DISK_SPACE_PERCENT_BELOW`, `AVAILABLE_INODES_NUMBER_BELOW`, `AVAILABLE_INODES_PERCENT_BELOW`, `READ_ONLY_FILE_SYSTEM`, `READ_TIME_EXCEEDING`, `WRITE_TIME_EXCEEDING`
 }
 
 func (me *Alert) Schema() map[string]*schema.Schema {
@@ -98,7 +98,7 @@ func (me *Alert) Schema() map[string]*schema.Schema {
 		},
 		"trigger": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `AVAILABLE_DISK_SPACE_MEBIBYTES_BELOW`, `AVAILABLE_DISK_SPACE_PERCENT_BELOW`, `AVAILABLE_INODES_NUMBER_BELOW`, `AVAILABLE_INODES_PERCENT_BELOW`, `READ_ONLY_FILE_SYSTEM`, `READ_TIME_EXCEEDING`, `WRITE_TIME_EXCEEDING`",
+			Description: "Possible values: `AVAILABLE_DISK_SPACE_MEBIBYTES_BELOW`, `AVAILABLE_DISK_SPACE_PERCENT_BELOW`, `AVAILABLE_INODES_NUMBER_BELOW`, `AVAILABLE_INODES_PERCENT_BELOW`, `READ_ONLY_FILE_SYSTEM`, `READ_TIME_EXCEEDING`, `WRITE_TIME_EXCEEDING`",
 			Required:    true,
 		},
 	}

@@ -27,8 +27,8 @@ type Settings struct {
 	DiskNameFilters        []string                   `json:"diskNameFilters,omitempty"`        // Disk will be included in this policy if **any** of the filters match
 	Enabled                bool                       `json:"enabled"`                          // This setting is enabled (`true`) or disabled (`false`)
 	EventProperties        MetadataItems              `json:"eventProperties,omitempty"`        // Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+)
-	HostMetadataConditions HostMetadataConditionTypes `json:"hostMetadataConditions,omitempty"` // The policy will be enabled if **all** conditions are met
-	OperatingSystem        []EoperatingSystem         `json:"operatingSystem,omitempty"`        // Select the operating systems on which policy should be applied
+	HostMetadataConditions HostMetadataConditionTypes `json:"hostMetadataConditions,omitempty"` // Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\n  By defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\n  See [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).\n\n  Note: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata.
+	OperatingSystem        []EoperatingSystem         `json:"operatingSystem,omitempty"`        // Select the operating systems on which policy should be applied. Possible values: `AIX`, `LINUX`, `WINDOWS`
 	PolicyName             string                     `json:"policyName"`                       // Policy name
 	Scope                  *string                    `json:"-" scope:"scope"`                  // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 	InsertAfter            string                     `json:"-"`
@@ -72,7 +72,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"host_metadata_conditions": {
 			Type:        schema.TypeList,
-			Description: "The policy will be enabled if **all** conditions are met",
+			Description: "Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\n  By defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\n  See [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).\n\n  Note: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata.",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(HostMetadataConditionTypes).Schema()},
 			MinItems:    1,
@@ -80,7 +80,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"operating_system": {
 			Type:        schema.TypeSet,
-			Description: "Select the operating systems on which policy should be applied",
+			Description: "Select the operating systems on which policy should be applied. Possible values: `AIX`, `LINUX`, `WINDOWS`",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
