@@ -49,12 +49,12 @@ func (me *Objectives) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type Objective struct {
 	AutoAdaptiveThresholdEnabled *bool              `json:"autoAdaptiveThresholdEnabled,omitempty"` // Enable auto adaptive threshold
-	ComparisonOperator           ComparisonOperator `json:"comparisonOperator"`                     // Possible Values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`
+	ComparisonOperator           ComparisonOperator `json:"comparisonOperator"`                     // Comparison operator. Possible values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`
 	Description                  *string            `json:"description,omitempty"`
 	DisplayUnit                  *DisplayUnit       `json:"displayUnit,omitempty"`  // Display Unit
 	DqlQuery                     *string            `json:"dqlQuery,omitempty"`     // DQL query
 	Name                         string             `json:"name"`                   // Objective name
-	ObjectiveType                ObjectiveType      `json:"objectiveType"`          // Possible Values: `DQL`, `REFERENCE_SLO`
+	ObjectiveType                ObjectiveType      `json:"objectiveType"`          // Objective type. Possible values: `DQL`, `REFERENCE_SLO`
 	ReferenceSlo                 *string            `json:"referenceSlo,omitempty"` // Please enter the metric key of your desired SLO. SLO metric keys have to start with 'func:slo.'
 	Segments                     Segments           `json:"segments,omitempty"`
 	Target                       *float64           `json:"target,omitempty"`
@@ -70,7 +70,7 @@ func (me *Objective) Schema() map[string]*schema.Schema {
 		},
 		"comparison_operator": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`",
+			Description: "Comparison operator. Possible values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`",
 			Required:    true,
 		},
 		"description": {
@@ -98,7 +98,7 @@ func (me *Objective) Schema() map[string]*schema.Schema {
 		},
 		"objective_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `DQL`, `REFERENCE_SLO`",
+			Description: "Objective type. Possible values: `DQL`, `REFERENCE_SLO`",
 			Required:    true,
 		},
 		"reference_slo": {
