@@ -24,7 +24,7 @@ import (
 
 type Settings struct {
 	Description *string    `json:"description,omitempty"` // Description
-	EventKind   *EventKind `json:"eventKind,omitempty"`   // If set to null/'BIZ_EVENT' validation events stored as bizevents in Grail. If set to 'SDLC_EVENT' validation events stored as SDLC events
+	EventKind   *EventKind `json:"eventKind,omitempty"`   // If set to null/'BIZ_EVENT' validation events stored as bizevents in Grail. If set to 'SDLC_EVENT' validation events stored as SDLC events. Possible values: `BIZ_EVENT`, `SDLC_EVENT`
 	Name        string     `json:"name"`                  // Name
 	Objectives  Objectives `json:"objectives"`            // Objectives
 	Tags        []string   `json:"tags,omitempty"`        // Define key/value pairs that further describe this guardian.
@@ -40,7 +40,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"event_kind": {
 			Type:        schema.TypeString,
-			Description: "If set to null/'BIZ_EVENT' validation events stored as bizevents in Grail. If set to 'SDLC_EVENT' validation events stored as SDLC events",
+			Description: "If set to null/'BIZ_EVENT' validation events stored as bizevents in Grail. If set to 'SDLC_EVENT' validation events stored as SDLC events. Possible values: `BIZ_EVENT`, `SDLC_EVENT`",
 			Optional:    true, // nullable
 		},
 		"name": {
