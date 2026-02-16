@@ -53,6 +53,7 @@ type Objective struct {
 	Description                  *string            `json:"description,omitempty"`
 	DisplayUnit                  *DisplayUnit       `json:"displayUnit,omitempty"`  // Display Unit
 	DqlQuery                     *string            `json:"dqlQuery,omitempty"`     // DQL query
+	Links                        ObjectiveLinks     `json:"links,omitempty"`        // Fields for adding relevant links to this objective.
 	Name                         string             `json:"name"`                   // Objective name
 	ObjectiveType                ObjectiveType      `json:"objectiveType"`          // Objective type. Possible values: `DQL`, `REFERENCE_SLO`
 	ReferenceSlo                 *string            `json:"referenceSlo,omitempty"` // Please enter the metric key of your desired SLO. SLO metric keys have to start with 'func:slo.'
@@ -90,6 +91,14 @@ func (me *Objective) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "DQL query",
 			Optional:    true, // precondition
+		},
+		"links": {
+			Type:        schema.TypeList,
+			Description: "Fields for adding relevant links to this objective.",
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(ObjectiveLinks).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"name": {
 			Type:        schema.TypeString,
@@ -134,6 +143,7 @@ func (me *Objective) MarshalHCL(properties hcl.Properties) error {
 		"description":                     me.Description,
 		"display_unit":                    me.DisplayUnit,
 		"dql_query":                       me.DqlQuery,
+		"links":                           me.Links,
 		"name":                            me.Name,
 		"objective_type":                  me.ObjectiveType,
 		"reference_slo":                   me.ReferenceSlo,
@@ -147,11 +157,20 @@ func (me *Objective) HandlePreconditions() error {
 	if (me.AutoAdaptiveThresholdEnabled == nil) && (string(me.ObjectiveType) == "DQL") {
 		me.AutoAdaptiveThresholdEnabled = opt.NewBool(false)
 	}
+	if (me.DisplayUnit != nil) && (string(me.ObjectiveType) != "DQL") {
+		return fmt.Errorf("'display_unit' must not be specified if 'objective_type' is set to '%v'", me.ObjectiveType)
+	}
 	if (me.DqlQuery == nil) && (string(me.ObjectiveType) == "DQL") {
 		return fmt.Errorf("'dql_query' must be specified if 'objective_type' is set to '%v'", me.ObjectiveType)
 	}
+	if (me.DqlQuery != nil) && (string(me.ObjectiveType) != "DQL") {
+		return fmt.Errorf("'dql_query' must not be specified if 'objective_type' is set to '%v'", me.ObjectiveType)
+	}
 	if (me.ReferenceSlo == nil) && (string(me.ObjectiveType) == "REFERENCE_SLO") {
 		return fmt.Errorf("'reference_slo' must be specified if 'objective_type' is set to '%v'", me.ObjectiveType)
+	}
+	if (me.ReferenceSlo != nil) && (string(me.ObjectiveType) != "REFERENCE_SLO") {
+		return fmt.Errorf("'reference_slo' must not be specified if 'objective_type' is set to '%v'", me.ObjectiveType)
 	}
 	return nil
 }
@@ -163,6 +182,7 @@ func (me *Objective) UnmarshalHCL(decoder hcl.Decoder) error {
 		"description":                     &me.Description,
 		"display_unit":                    &me.DisplayUnit,
 		"dql_query":                       &me.DqlQuery,
+		"links":                           &me.Links,
 		"name":                            &me.Name,
 		"objective_type":                  &me.ObjectiveType,
 		"reference_slo":                   &me.ReferenceSlo,
