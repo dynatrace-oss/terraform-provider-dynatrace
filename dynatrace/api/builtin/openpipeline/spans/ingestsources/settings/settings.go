@@ -65,6 +65,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"path_segment": {
 			Type:        schema.TypeString,
 			Description: "Endpoint segment",
+			ForceNew:    true,
 			Optional:    true, // precondition
 		},
 		"processing": {

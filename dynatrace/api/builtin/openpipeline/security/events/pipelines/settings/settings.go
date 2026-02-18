@@ -53,6 +53,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"custom_id": {
 			Type:        schema.TypeString,
 			Description: "Custom pipeline id",
+			ForceNew:    true,
 			Required:    true,
 		},
 		"data_extraction": {
@@ -79,6 +80,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"group_role": {
 			Type:        schema.TypeString,
 			Description: "Group role. Possible values: `compositionPipeline`, `memberPipeline`",
+			ForceNew:    true,
 			Optional:    true, // nullable
 		},
 		"metadata_list": {
@@ -116,6 +118,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"routing": {
 			Type:        schema.TypeString,
 			Description: "Routing. Possible values: `notRoutable`, `routable`",
+			ForceNew:    true,
 			Optional:    true, // nullable
 		},
 		"security_context": {
