@@ -30,7 +30,6 @@ func (me *ObjectiveLinks) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Required:    true,
 			MinItems:    1,
-			MaxItems:    5,
 			Description: "",
 			Elem:        &schema.Resource{Schema: new(ObjectiveLink).Schema()},
 		},

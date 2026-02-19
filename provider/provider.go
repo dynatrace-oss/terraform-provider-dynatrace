@@ -554,7 +554,7 @@ func Provider() *schema.Provider {
 			"dynatrace_crashdump_analytics":                           resources.NewGeneric(export.ResourceTypes.CrashdumpAnalytics).Resource(),
 			"dynatrace_app_monitoring":                                resources.NewGeneric(export.ResourceTypes.AppMonitoring).Resource(),
 			"dynatrace_grail_security_context":                        resources.NewGeneric(export.ResourceTypes.GrailSecurityContext).Resource(),
-			"dynatrace_site_reliability_guardian":                     resources.NewGeneric(export.ResourceTypes.SiteReliabilityGuardian).Resource(),
+			"dynatrace_site_reliability_guardian":                     resources.NewGenericWithAlwaysPrintingViolationPath(export.ResourceTypes.SiteReliabilityGuardian).Resource(),
 			"dynatrace_automation_workflow_jira":                      resources.NewGeneric(export.ResourceTypes.JiraForWorkflows).Resource(),
 			"dynatrace_automation_workflow_slack":                     resources.NewGeneric(export.ResourceTypes.SlackForWorkflows).Resource(),
 			"dynatrace_kubernetes_app":                                resources.NewGeneric(export.ResourceTypes.KubernetesApp).Resource(),
