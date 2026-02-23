@@ -23,17 +23,16 @@ import (
 )
 
 type CustomSli struct {
-	Indicator      string         `json:"indicator" minlength:"1" maxlength:"2000"`
+	Indicator      string         `json:"indicator"`
 	FilterSegments FilterSegments `json:"filterSegments,omitempty"`
 }
 
 func (me *CustomSli) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"indicator": {
-			Type:             schema.TypeString,
-			Description:      "Indicator of the custom SLI. Example: `timeseries sli=avg(dt.host.cpu.idle)`",
-			Required:         true,
-			ValidateDiagFunc: Validate(ValidateMinLength(1), ValidateMaxLength(2000)),
+			Type:        schema.TypeString,
+			Description: "Indicator of the custom SLI. Example: `timeseries sli=avg(dt.host.cpu.idle)`",
+			Required:    true,
 		},
 		"filter_segments": {
 			Type:        schema.TypeList,

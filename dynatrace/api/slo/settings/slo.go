@@ -25,8 +25,8 @@ import (
 const SchemaVersion = "1.0.4"
 
 type SLO struct {
-	Name         string        `json:"name" minlength:"1" maxlength:"200"`
-	Description  *string       `json:"description,omitempty" minlength:"1" maxlength:"250"`
+	Name         string        `json:"name"`
+	Description  *string       `json:"description,omitempty"`
 	SliReference *SliReference `json:"sliReference,omitempty"`
 	CustomSli    *CustomSli    `json:"customSli,omitempty"`
 	Criteria     Criteria      `json:"criteria"`
@@ -36,16 +36,14 @@ type SLO struct {
 func (me *SLO) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
-			Type:             schema.TypeString,
-			Description:      "Name of the SLO",
-			Required:         true,
-			ValidateDiagFunc: Validate(ValidateMinLength(1), ValidateMaxLength(200)),
+			Type:        schema.TypeString,
+			Description: "Name of the SLO",
+			Required:    true,
 		},
 		"description": {
-			Type:             schema.TypeString,
-			Description:      "Description of the SLO",
-			Optional:         true,
-			ValidateDiagFunc: Validate(ValidateMinLength(1), ValidateMaxLength(250)),
+			Type:        schema.TypeString,
+			Description: "Description of the SLO",
+			Optional:    true,
 		},
 		"sli_reference": {
 			Type:        schema.TypeList,

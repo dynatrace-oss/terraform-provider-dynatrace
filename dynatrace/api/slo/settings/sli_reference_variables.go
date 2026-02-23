@@ -45,23 +45,21 @@ func (me *SliReferenceVariables) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type SliReferenceVariable struct {
-	Name  string `json:"name" maxlength:"60"`
-	Value string `json:"value" maxlength:"1000"`
+	Name  string `json:"name"`
+	Value string `json:"value"`
 }
 
 func (me *SliReferenceVariable) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
-			Type:             schema.TypeString,
-			Description:      "Name of the SLI reference variable. Example: `hostIds`",
-			Required:         true,
-			ValidateDiagFunc: ValidateMaxLength(60),
+			Type:        schema.TypeString,
+			Description: "Name of the SLI reference variable. Example: `hostIds`",
+			Required:    true,
 		},
 		"value": {
-			Type:             schema.TypeString,
-			Description:      "Value of the SLI reference variable. Example: `HOST-123456789ABCDEFG`",
-			Required:         true,
-			ValidateDiagFunc: ValidateMaxLength(1000),
+			Type:        schema.TypeString,
+			Description: "Value of the SLI reference variable. Example: `HOST-123456789ABCDEFG`",
+			Required:    true,
 		},
 	}
 }
