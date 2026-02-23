@@ -45,8 +45,8 @@ func (me *Criteria) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type CriteriaDetail struct {
-	TimeframeFrom string   `json:"timeframeFrom" minlength:"3" maxlength:"30"`
-	TimeframeTo   *string  `json:"timeframeTo,omitempty" minlength:"3" maxlength:"30"`
+	TimeframeFrom string   `json:"timeframeFrom"`
+	TimeframeTo   *string  `json:"timeframeTo,omitempty"`
 	Target        float64  `json:"target"`
 	Warning       *float64 `json:"warning,omitempty"`
 }
@@ -54,16 +54,14 @@ type CriteriaDetail struct {
 func (me *CriteriaDetail) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"timeframe_from": {
-			Type:             schema.TypeString,
-			Description:      "Timeframe from, example: `now-7d`",
-			Required:         true,
-			ValidateDiagFunc: Validate(ValidateMinLength(3), ValidateMaxLength(30)),
+			Type:        schema.TypeString,
+			Description: "Timeframe from, example: `now-7d`",
+			Required:    true,
 		},
 		"timeframe_to": {
-			Type:             schema.TypeString,
-			Description:      "Timeframe to, example: `now`",
-			Optional:         true,
-			ValidateDiagFunc: Validate(ValidateMinLength(3), ValidateMaxLength(30)),
+			Type:        schema.TypeString,
+			Description: "Timeframe to, example: `now`",
+			Optional:    true,
 		},
 		"target": {
 			Type:        schema.TypeFloat,

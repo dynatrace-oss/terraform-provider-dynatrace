@@ -23,17 +23,16 @@ import (
 )
 
 type SliReference struct {
-	TemplateId string                `json:"templateId" minlength:"1" maxlength:"800"`
+	TemplateId string                `json:"templateId"`
 	Variables  SliReferenceVariables `json:"variables"`
 }
 
 func (me *SliReference) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"template_id": {
-			Type:             schema.TypeString,
-			Description:      "Template ID of the SLI reference",
-			Required:         true,
-			ValidateDiagFunc: Validate(ValidateMinLength(1), ValidateMaxLength(800)),
+			Type:        schema.TypeString,
+			Description: "Template ID of the SLI reference",
+			Required:    true,
 		},
 		"variables": {
 			Type:        schema.TypeList,
