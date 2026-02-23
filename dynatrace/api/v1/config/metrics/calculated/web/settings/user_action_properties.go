@@ -40,7 +40,20 @@ func (me UserActionProperties) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *UserActionProperties) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("property", me)
+	if err := decoder.DecodeSlice("property", me); err != nil {
+		return err
+	}
+	// https://github.com/hashicorp/terraform-plugin-sdk/issues/895
+	// Only known workaround is to ignore these blocks
+	newEntries := UserActionProperties{}
+	emptyItem := UserActionProperty{}
+	for _, entry := range *me {
+		if *entry != emptyItem {
+			newEntries = append(newEntries, entry)
+		}
+	}
+	*me = newEntries
+	return nil
 }
 
 type UserActionProperty struct {
