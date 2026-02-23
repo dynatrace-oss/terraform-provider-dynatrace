@@ -24,43 +24,43 @@ import (
 
 // User action filter of a calculated web metric.
 type UserActionFilter struct {
-	ActionDurationFromMilliseconds *int                  `json:"actionDurationFromMilliseconds,omitempty"` // Only actions with a duration more than or equal to this value (in milliseconds) are included in the metric calculation.
-	ActionDurationToMilliseconds   *int                  `json:"actionDurationToMilliseconds,omitempty"`   // Only actions with a duration less than or equal to this value (in milliseconds) are included in the metric calculation.
-	LoadAction                     *bool                 `json:"loadAction,omitempty"`                     // The status of load actions in the metric calculation: `true` or `false`
-	XHRAction                      *bool                 `json:"xhrAction,omitempty"`                      // The status of xhr actions in the metric calculation: `true` or `false`
-	XHRRouteChangeAction           *bool                 `json:"xhrRouteChangeAction,omitempty"`           // The status of route actions in the metric calculation: `true` or `false`
-	CustomAction                   *bool                 `json:"customAction,omitempty"`                   // The status of custom actions in the metric calculation: `true` or `false`
-	Apdex                          *string               `json:"apdex,omitempty"`                          // Only actions with the specified Apdex score are included in the metric calculation. Possible values: [ Frustrated, Satisfied, Tolerating, Unknown ]
-	Domain                         *string               `json:"domain,omitempty"`                         // Only user actions coming from the specified domain are included in the metric calculation.
-	UserActionName                 *string               `json:"userActionName,omitempty"`                 // Only actions with this name are included in the metric calculation.
-	RealUser                       *bool                 `json:"realUser,omitempty"`                       // The status of actions coming from real users in the metric calculation: `true` or `false`
-	Robot                          *bool                 `json:"robot,omitempty"`                          // The status of actions coming from robots in the metric calculation: `true` or `false`
-	Synthetic                      *bool                 `json:"synthetic,omitempty"`                      // The status of actions coming from synthetic monitors in the metric calculation: `true` or `false`
-	BrowserFamily                  *string               `json:"browserFamily,omitempty"`                  // Only user actions coming from the specified browser family are included in the metric calculation.
-	BrowserType                    *string               `json:"browserType,omitempty"`                    // Only user actions coming from the specified browser type are included in the metric calculation.
-	BrowserVersion                 *string               `json:"browserVersion,omitempty"`                 // Only user actions coming from the specified browser version are included in the metric calculation.
-	HasCustomErrors                *bool                 `json:"hasCustomErrors,omitempty"`                // The custom error status of the actions to be included in the metric calculation: `true` or `false`
-	HasAnyError                    *bool                 `json:"hasAnyError,omitempty"`                    // The error status of the actions to be included in the metric calculation: `true` or `false`
-	HasHttpErrors                  *bool                 `json:"hasHttpErrors,omitempty"`                  // The request error status of the actions to be included in the metric calculation: `true` or `false`
-	HasJavascriptErrors            *bool                 `json:"hasJavascriptErrors,omitempty"`            // The JavaScript error status of the actions to be included in the metric calculation: `true` or `false`
-	City                           *string               `json:"city,omitempty"`                           // Only actions of users from this city are included in the metric calculation. Specify geolocation ID here.
-	Continent                      *string               `json:"continent,omitempty"`                      // Only actions of users from this continent are included in the metric calculation. Specify geolocation ID here.
-	Country                        *string               `json:"country,omitempty"`                        // Only actions of users from this country are included in the metric calculation. Specify geolocation ID here.
-	Region                         *string               `json:"region,omitempty"`                         // Only actions of users from this region are included in the metric calculation. Specify geolocation ID here.
-	IP                             *string               `json:"ip,omitempty"`                             // Only actions coming from this IP address are included in the metric calculation.
-	IPV6Traffic                    *bool                 `json:"ipV6Traffic,omitempty"`                    // The IPv6 status of the actions to be included in the metric calculation: `true` or `false`
-	OSFamily                       *string               `json:"osFamily,omitempty"`                       // Only actions coming from this OS family are included in the metric calculation.
-	OSVersion                      *string               `json:"osVersion,omitempty"`                      // Only actions coming from this OS version are included in the metric calculation.
-	HTTPErrorCode                  *int                  `json:"httpErrorCode,omitempty"`                  // The HTTP error status code of the actions to be included in the metric calculation.
-	HTTPErrorCodeTo                *int                  `json:"httpErrorCodeTo,omitempty"`                // Can be used in combination with httpErrorCode to define a range of error codes that will be included in the metric calculation.
-	HTTPPath                       *string               `json:"httpPath,omitempty"`                       // The request path that has been determined to be the origin of an HTTP error of the actions to be included in the metric calculation.
-	CustomErrorType                *string               `json:"customErrorType,omitempty"`                // The custom error type of the actions to be included in the metric calculation.
-	CustomErrorName                *string               `json:"customErrorName,omitempty"`                // The custom error name of the actions to be included in the metric calculation.
-	UserActionProperties           *UserActionProperties `json:"userActionProperties,omitempty"`           // Only actions with the specified properties are included in the metric calculation.
-	TargetViewName                 *string               `json:"targetViewName,omitempty"`                 // Only actions on the specified view are included in the metric calculation.
-	TargetViewNameMatchType        *string               `json:"targetViewNameMatchType,omitempty"`        // Specifies the match type of the view name filter, e.g. using Contains or Equals. Defaults to Equals.
-	TargetViewGroup                *string               `json:"targetViewGroup,omitempty"`                // Only actions on the specified group of views are included in the metric calculation.
-	TargetViewGroupNameMatchType   *string               `json:"targetViewGroupNameMatchType,omitempty"`   // Specifies the match type of the view group filter, e.g. using Contains or Equals. Defaults to Equals.
+	ActionDurationFromMilliseconds *int                 `json:"actionDurationFromMilliseconds,omitempty"` // Only actions with a duration more than or equal to this value (in milliseconds) are included in the metric calculation.
+	ActionDurationToMilliseconds   *int                 `json:"actionDurationToMilliseconds,omitempty"`   // Only actions with a duration less than or equal to this value (in milliseconds) are included in the metric calculation.
+	LoadAction                     *bool                `json:"loadAction,omitempty"`                     // The status of load actions in the metric calculation: `true` or `false`
+	XHRAction                      *bool                `json:"xhrAction,omitempty"`                      // The status of xhr actions in the metric calculation: `true` or `false`
+	XHRRouteChangeAction           *bool                `json:"xhrRouteChangeAction,omitempty"`           // The status of route actions in the metric calculation: `true` or `false`
+	CustomAction                   *bool                `json:"customAction,omitempty"`                   // The status of custom actions in the metric calculation: `true` or `false`
+	Apdex                          *string              `json:"apdex,omitempty"`                          // Only actions with the specified Apdex score are included in the metric calculation. Possible values: [ Frustrated, Satisfied, Tolerating, Unknown ]
+	Domain                         *string              `json:"domain,omitempty"`                         // Only user actions coming from the specified domain are included in the metric calculation.
+	UserActionName                 *string              `json:"userActionName,omitempty"`                 // Only actions with this name are included in the metric calculation.
+	RealUser                       *bool                `json:"realUser,omitempty"`                       // The status of actions coming from real users in the metric calculation: `true` or `false`
+	Robot                          *bool                `json:"robot,omitempty"`                          // The status of actions coming from robots in the metric calculation: `true` or `false`
+	Synthetic                      *bool                `json:"synthetic,omitempty"`                      // The status of actions coming from synthetic monitors in the metric calculation: `true` or `false`
+	BrowserFamily                  *string              `json:"browserFamily,omitempty"`                  // Only user actions coming from the specified browser family are included in the metric calculation.
+	BrowserType                    *string              `json:"browserType,omitempty"`                    // Only user actions coming from the specified browser type are included in the metric calculation.
+	BrowserVersion                 *string              `json:"browserVersion,omitempty"`                 // Only user actions coming from the specified browser version are included in the metric calculation.
+	HasCustomErrors                *bool                `json:"hasCustomErrors,omitempty"`                // The custom error status of the actions to be included in the metric calculation: `true` or `false`
+	HasAnyError                    *bool                `json:"hasAnyError,omitempty"`                    // The error status of the actions to be included in the metric calculation: `true` or `false`
+	HasHttpErrors                  *bool                `json:"hasHttpErrors,omitempty"`                  // The request error status of the actions to be included in the metric calculation: `true` or `false`
+	HasJavascriptErrors            *bool                `json:"hasJavascriptErrors,omitempty"`            // The JavaScript error status of the actions to be included in the metric calculation: `true` or `false`
+	City                           *string              `json:"city,omitempty"`                           // Only actions of users from this city are included in the metric calculation. Specify geolocation ID here.
+	Continent                      *string              `json:"continent,omitempty"`                      // Only actions of users from this continent are included in the metric calculation. Specify geolocation ID here.
+	Country                        *string              `json:"country,omitempty"`                        // Only actions of users from this country are included in the metric calculation. Specify geolocation ID here.
+	Region                         *string              `json:"region,omitempty"`                         // Only actions of users from this region are included in the metric calculation. Specify geolocation ID here.
+	IP                             *string              `json:"ip,omitempty"`                             // Only actions coming from this IP address are included in the metric calculation.
+	IPV6Traffic                    *bool                `json:"ipV6Traffic,omitempty"`                    // The IPv6 status of the actions to be included in the metric calculation: `true` or `false`
+	OSFamily                       *string              `json:"osFamily,omitempty"`                       // Only actions coming from this OS family are included in the metric calculation.
+	OSVersion                      *string              `json:"osVersion,omitempty"`                      // Only actions coming from this OS version are included in the metric calculation.
+	HTTPErrorCode                  *int                 `json:"httpErrorCode,omitempty"`                  // The HTTP error status code of the actions to be included in the metric calculation.
+	HTTPErrorCodeTo                *int                 `json:"httpErrorCodeTo,omitempty"`                // Can be used in combination with httpErrorCode to define a range of error codes that will be included in the metric calculation.
+	HTTPPath                       *string              `json:"httpPath,omitempty"`                       // The request path that has been determined to be the origin of an HTTP error of the actions to be included in the metric calculation.
+	CustomErrorType                *string              `json:"customErrorType,omitempty"`                // The custom error type of the actions to be included in the metric calculation.
+	CustomErrorName                *string              `json:"customErrorName,omitempty"`                // The custom error name of the actions to be included in the metric calculation.
+	UserActionProperties           UserActionProperties `json:"userActionProperties,omitempty"`           // Only actions with the specified properties are included in the metric calculation.
+	TargetViewName                 *string              `json:"targetViewName,omitempty"`                 // Only actions on the specified view are included in the metric calculation.
+	TargetViewNameMatchType        *string              `json:"targetViewNameMatchType,omitempty"`        // Specifies the match type of the view name filter, e.g. using Contains or Equals. Defaults to Equals.
+	TargetViewGroup                *string              `json:"targetViewGroup,omitempty"`                // Only actions on the specified group of views are included in the metric calculation.
+	TargetViewGroupNameMatchType   *string              `json:"targetViewGroupNameMatchType,omitempty"`   // Specifies the match type of the view group filter, e.g. using Contains or Equals. Defaults to Equals.
 }
 
 func (me *UserActionFilter) Schema() map[string]*schema.Schema {
@@ -226,7 +226,7 @@ func (me *UserActionFilter) Schema() map[string]*schema.Schema {
 			Description: "The custom error name of the actions to be included in the metric calculation.",
 		},
 		"user_action_properties": {
-			Type:        schema.TypeSet,
+			Type:        schema.TypeList,
 			Optional:    true,
 			Description: "The definition of a calculated web metric.",
 			Elem:        &schema.Resource{Schema: new(UserActionProperties).Schema()},
