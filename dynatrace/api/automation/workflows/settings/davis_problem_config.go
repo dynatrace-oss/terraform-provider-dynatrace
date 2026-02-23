@@ -31,6 +31,7 @@ type DavisProblemConfig struct {
 	OnProblemClose  bool                    `json:"onProblemClose" default:"false"` //
 	Categories      *DavisProblemCategories `json:"categories"`                     //
 	CustomFilter    string                  `json:"customFilter,omitempty"`         //
+	AnalysisReady   bool                    `json:"analysisReady" default:"false"`  // If set to `true`, the workflow will only be triggered after the initial root cause analysis run is completed
 }
 
 func (me *DavisProblemConfig) Schema(prefix string) map[string]*schema.Schema {
@@ -66,6 +67,12 @@ func (me *DavisProblemConfig) Schema(prefix string) map[string]*schema.Schema {
 			Description: "Additional DQL matcher expression to further filter events to match",
 			Optional:    true,
 		},
+		"analysis_ready": {
+			Type:        schema.TypeBool,
+			Description: "If set to `true`, the workflow will only be triggered after the initial root cause analysis run is completed",
+			Optional:    true,
+			Default:     false,
+		},
 	}
 }
 
@@ -78,6 +85,7 @@ func (me *DavisProblemConfig) MarshalHCL(properties hcl.Properties) error {
 		"on_problem_close":  me.OnProblemClose,
 		"categories":        me.Categories,
 		"custom_filter":     me.CustomFilter,
+		"analysis_ready":    me.AnalysisReady,
 	})
 }
 
@@ -90,6 +98,7 @@ func (me *DavisProblemConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		"on_problem_close":  &me.OnProblemClose,
 		"categories":        &me.Categories,
 		"custom_filter":     &me.CustomFilter,
+		"analysis_ready":    &me.AnalysisReady,
 	})
 }
 
