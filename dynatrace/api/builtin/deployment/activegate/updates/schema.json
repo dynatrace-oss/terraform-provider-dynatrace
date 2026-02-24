@@ -7,7 +7,29 @@
 	"displayName": "ActiveGate updates",
 	"documentation": "",
 	"dynatrace": "1",
-	"enums": {},
+	"enums": {
+		"UpdateMode": {
+			"description": "",
+			"displayName": "UpdateMode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Automatic (earliest convenience)",
+					"value": "AUTOMATIC"
+				},
+				{
+					"displayName": "Automatic (during update window)",
+					"value": "AUTOMATIC_DURING_MW"
+				},
+				{
+					"displayName": "No automatic updates",
+					"value": "MANUAL"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -26,6 +48,33 @@
 		"group:updates"
 	],
 	"schemaId": "builtin:deployment.activegate.updates",
-	"types": {},
-	"version": "1"
+	"types": {
+		"maintenanceWindow": {
+			"description": "",
+			"displayName": "maintenanceWindow",
+			"documentation": "",
+			"properties": {
+				"maintenanceWindow": {
+					"default": "00000000-0000-0000-0000-000000000000",
+					"description": "Select an [update window for ActiveGate updates](/ui/settings/builtin:deployment.management.update-windows)",
+					"displayName": "Update window",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"uiDefaultValue": "",
+						"useCombobox": "enabled"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"referencedType": "builtin:deployment.management.update-windows",
+					"type": "setting"
+				}
+			},
+			"summaryPattern": "{maintenanceWindow}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
 }
