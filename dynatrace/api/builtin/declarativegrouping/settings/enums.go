@@ -24,9 +24,9 @@ var ProcessItems = struct {
 	Executable     ProcessItem
 	Executablepath ProcessItem
 }{
-	"CommandLine",
-	"Executable",
-	"ExecutablePath",
+	"commandLine",
+	"executable",
+	"executablePath",
 }
 
 type ReportItem string

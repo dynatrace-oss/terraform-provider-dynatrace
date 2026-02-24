@@ -45,9 +45,9 @@ func (me *ProcessDefinitions) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type ProcessDefinition struct {
-	ID               string              `json:"id"`               // Process group identifier
-	ProcessGroupName string              `json:"processGroupName"` // This identifier is used by Dynatrace to recognize this process group.
-	Report           ReportItem          `json:"report"`           // Possible Values: `never`, `always`, `highResourceUsage`
+	ID               string              `json:"id"`               // This identifier is used by Dynatrace to recognize this process group.
+	ProcessGroupName string              `json:"processGroupName"` // Process group display name
+	Report           ReportItem          `json:"report"`           // This property tells OneAgent a condition for reporting the created Process group to Dynatrace. Possible values: `always`, `highResourceUsage`, `never`
 	Rules            DetectionConditions `json:"rules"`            // Define process detection rules by selecting a process property and a condition. Each process group can have multiple detection rules associated with it.
 }
 
@@ -55,17 +55,17 @@ func (me *ProcessDefinition) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"id": {
 			Type:        schema.TypeString,
-			Description: "Process group identifier",
+			Description: "This identifier is used by Dynatrace to recognize this process group.",
 			Required:    true,
 		},
 		"process_group_name": {
 			Type:        schema.TypeString,
-			Description: "This identifier is used by Dynatrace to recognize this process group.",
+			Description: "Process group display name",
 			Required:    true,
 		},
 		"report": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `never`, `always`, `highResourceUsage`",
+			Description: "This property tells OneAgent a condition for reporting the created Process group to Dynatrace. Possible values: `always`, `highResourceUsage`, `never`",
 			Required:    true,
 		},
 		"rules": {

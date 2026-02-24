@@ -25,8 +25,8 @@ import (
 type Settings struct {
 	Detection   ProcessDefinitions `json:"detection"`       // Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group.
 	Enabled     bool               `json:"enabled"`         // This setting is enabled (`true`) or disabled (`false`)
-	Name        string             `json:"name"`            // Monitored technology name
-	Scope       *string            `json:"-" scope:"scope"` // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	Name        string             `json:"name"`            // Note: Reported only in full-stack, infrastructure and discovery modes.
+	Scope       *string            `json:"-" scope:"scope"` // The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 	InsertAfter string             `json:"-"`
 }
 
@@ -47,12 +47,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"name": {
 			Type:        schema.TypeString,
-			Description: "Monitored technology name",
+			Description: "Note: Reported only in full-stack, infrastructure and discovery modes.",
 			Required:    true,
 		},
 		"scope": {
 			Type:        schema.TypeString,
-			Description: "The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.",
+			Description: "The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.",
 			Optional:    true,
 			Default:     "environment",
 			ForceNew:    true,
