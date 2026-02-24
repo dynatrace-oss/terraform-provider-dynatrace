@@ -37,7 +37,7 @@ func (me *AwsRoleBasedAuthenticationConfig) Schema() map[string]*schema.Schema {
 		// },
 		"consumers": {
 			Type:        schema.TypeSet,
-			Description: "Dynatrace integrations that can use this connection. Possible Values: `APP:dynatrace.biz.carbon` (Cost & Carbon Optimization), `DA` (Data Acquisition Deprecated), `SVC:com.dynatrace.bo` (Business Observability), `SVC:com.dynatrace.da` (Data Acquisition), `SVC:com.dynatrace.openpipeline` (OpenPipeline) and `NONE`",
+			Description: "Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.biz.carbon`, `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`",
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			MinItems:    1,
 			MaxItems:    1,
