@@ -215,7 +215,7 @@ func (me *Config) UnmarshalHCL(decoder hcl.Decoder) error {
 	} else if me.RoleID != nil {
 		me.SourceAuthMethod = SourceAuthMethods.HashicorpVaultAppRole
 	} else if me.Certificate != nil {
-		me.SourceAuthMethod = SourceAuthMethods.HashicoprVaultCertificate
+		me.SourceAuthMethod = SourceAuthMethods.HashicorpVaultCertificate
 	}
 	return nil
 }
