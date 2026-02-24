@@ -14,6 +14,7 @@
 	"dynatrace": "1",
 	"enums": {},
 	"keyProperty": "ipaddress",
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 500,
 	"metadata": {
 		"addItemButton": "Connect new instance"
@@ -44,7 +45,7 @@
 				},
 				{
 					"customMessage": "Should have one of the following formats: $prefix(parameter), $eq(parameter), $suffix(parameter), $contains(parameter)",
-					"pattern": "^\\$(eq|prefix|suffix|contains)\\(((?:[^()$,~]|~[()])*?)\\)$",
+					"pattern": "^\\$(eq|prefix|suffix|contains)\\(((?:[^()$,~]|~[()])+?)\\)$",
 					"type": "PATTERN"
 				}
 			],
@@ -188,5 +189,5 @@
 	],
 	"schemaId": "builtin:virtualization.vmware",
 	"types": {},
-	"version": "1.0.5"
+	"version": "1.0.6"
 }
