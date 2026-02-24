@@ -33,9 +33,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
 			Type:        schema.TypeString,
-			Description: "Name",
+			Description: "The name of the connection",
 			Required:    true,
-			ForceNew:    true,
 		},
 		"web_identity": {
 			Type:         schema.TypeList,

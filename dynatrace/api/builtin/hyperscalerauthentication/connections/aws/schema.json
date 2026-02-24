@@ -138,7 +138,7 @@
 			"displayName": "Name",
 			"documentation": "",
 			"maxObjects": 1,
-			"modificationPolicy": "NEVER",
+			"modificationPolicy": "ALWAYS",
 			"nullable": false,
 			"type": "text"
 		},
@@ -276,5 +276,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.23"
+	"version": "0.0.24"
 }

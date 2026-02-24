@@ -18,17 +18,56 @@
 package aws
 
 import (
+	"context"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	awsconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/aws/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.23"
+const SchemaVersion = "0.0.24"
 const SchemaID = "builtin:hyperscaler-authentication.connections.aws"
 
-// An update should only happen when the role ARN is added. Otherwise, all attributes and subresources
+type service struct {
+	service settings.CRUDService[*awsconnection.Settings]
+}
+
+// An update should only happen when the role ARN is added or the name is modified. Otherwise, all attributes and subresources
 // are flagged as "forceNew", meaning instead of an update, the resource is destroyed and created from scratch
 func Service(credentials *rest.Credentials) settings.CRUDService[*awsconnection.Settings] {
-	return settings20.Service[*awsconnection.Settings](credentials, SchemaID, SchemaVersion)
+	return &service{service: settings20.Service[*awsconnection.Settings](credentials, SchemaID, SchemaVersion)}
+}
+
+func (me *service) SchemaID() string {
+	return me.service.SchemaID()
+}
+
+func (me *service) Get(ctx context.Context, id string, v *awsconnection.Settings) error {
+	return me.service.Get(ctx, id, v)
+}
+
+func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	return me.service.List(ctx)
+}
+
+func (me *service) Create(ctx context.Context, v *awsconnection.Settings) (*api.Stub, error) {
+	return me.service.Create(ctx, v)
+}
+
+// Update is only used to update the name of the connection
+// role_arn is not modifiable set in a different resource, and it's not in the state of this resource.
+// Therefore, we need to fetch the current state and assign the values manually instead of overriding the role_arn with empty/null
+func (me *service) Update(ctx context.Context, id string, v *awsconnection.Settings) error {
+	var current awsconnection.Settings
+	if err := me.Get(ctx, id, &current); err != nil {
+		return err
+	}
+	current.Name = v.Name
+	return me.service.Update(ctx, id, &current)
+}
+
+func (me *service) Delete(ctx context.Context, id string) error {
+	return me.service.Delete(ctx, id)
 }
