@@ -7,6 +7,34 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
+		"comparisonType": {
+			"description": "Choose how to match the variable name.",
+			"displayName": "Comparison Type",
+			"documentation": "",
+			"items": [
+				{
+					"description": "Match variables with names that are exactly the same as the input (e.g., 'foo' matches only 'foo').",
+					"displayName": "Equals",
+					"value": "EQUALS"
+				},
+				{
+					"description": "Match variables with names that include the input string (e.g., 'foo' matches 'myfoobar' or 'foo123').",
+					"displayName": "Contains",
+					"value": "CONTAINS"
+				},
+				{
+					"description": "Match variables with names that begin with the input string (e.g., 'foo' matches 'foobar' or 'foo123').",
+					"displayName": "Starts with",
+					"value": "STARTS_WITH"
+				},
+				{
+					"description": "Match variables with names that end with the input string (e.g., 'foo' matches 'myfoo' or 'barfoo').",
+					"displayName": "Ends with",
+					"value": "ENDS_WITH"
+				}
+			],
+			"type": "enum"
+		},
 		"replacementType": {
 			"description": "",
 			"displayName": "Data Replacement",
@@ -36,7 +64,7 @@
 					"value": "VAR_NAME"
 				},
 				{
-					"description": "Redact any values that match the regex you supply here",
+					"description": "Redact any values that match the regex you supply here.",
 					"displayName": "Redact by regex",
 					"value": "REGEX"
 				}
@@ -44,6 +72,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"addItemButton": "Add rule",
@@ -53,6 +82,27 @@
 	"multiObject": true,
 	"ordered": true,
 	"properties": {
+		"comparisonType": {
+			"default": "EQUALS",
+			"description": "Select how the variable name should be matched.",
+			"displayName": "Comparison Type",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.329"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "VAR_NAME",
+				"property": "ruleType",
+				"type": "EQUALS"
+			},
+			"subType": "select",
+			"type": {
+				"$ref": "#/enums/comparisonType"
+			}
+		},
 		"enabled": {
 			"default": true,
 			"description": "",
@@ -76,7 +126,7 @@
 			],
 			"default": "***",
 			"description": "",
-			"displayName": "",
+			"displayName": "Replacement Pattern",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -90,13 +140,13 @@
 		},
 		"replacementType": {
 			"default": "STRING",
-			"description": "",
+			"description": "Choose how the sensitive data should be replaced.",
 			"displayName": "Data Replacement",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
-			"subType": "radio",
+			"subType": "select",
 			"type": {
 				"$ref": "#/enums/replacementType"
 			}
@@ -113,7 +163,7 @@
 					"type": "TRIMMED"
 				}
 			],
-			"default": "",
+			"default": "New Rule",
 			"description": "",
 			"displayName": "Rule Name",
 			"documentation": "",
@@ -140,7 +190,7 @@
 			],
 			"default": "",
 			"description": "",
-			"displayName": "",
+			"displayName": "Regex Pattern",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -154,13 +204,13 @@
 		},
 		"ruleType": {
 			"default": "VAR_NAME",
-			"description": "",
+			"description": "Choose whether to redact by variable name or regex.",
 			"displayName": "Rule Type",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
-			"subType": "radio",
+			"subType": "select",
 			"type": {
 				"$ref": "#/enums/ruleType"
 			}
@@ -178,7 +228,7 @@
 			],
 			"default": "",
 			"description": "",
-			"displayName": "",
+			"displayName": "Variable Name",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -214,5 +264,5 @@
 			}
 		}
 	},
-	"version": "0.4"
+	"version": "0.5.2"
 }

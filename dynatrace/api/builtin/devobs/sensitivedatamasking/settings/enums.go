@@ -17,6 +17,20 @@
 
 package sensitivedatamasking
 
+type ComparisonType string
+
+var ComparisonTypes = struct {
+	Contains   ComparisonType
+	EndsWith   ComparisonType
+	Equals     ComparisonType
+	StartsWith ComparisonType
+}{
+	"CONTAINS",
+	"ENDS_WITH",
+	"EQUALS",
+	"STARTS_WITH",
+}
+
 type ReplacementType string
 
 var ReplacementTypes = struct {
