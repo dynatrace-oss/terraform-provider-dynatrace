@@ -17,7 +17,7 @@
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
-			"customMessage": "New Real User Monitoring Experience is required to enable Experience Analytics.",
+			"customMessage": "New Real User Monitoring Experience is required to enable user interactions.",
 			"customValidatorId": "mrum-experience-analytics",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
@@ -83,7 +83,7 @@
 			"properties": {
 				"enabled": {
 					"default": false,
-					"description": "As part of the new RUM experience preview, User Interactions capture all interactions within your application.",
+					"description": "Capture user interactions within your frontend, including all clicks and taps. During the Early Access period, there’s no cost associated with this feature.",
 					"displayName": "Enable User Interactions",
 					"documentation": "",
 					"maxObjects": 1,
@@ -223,5 +223,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.6"
+	"version": "2.6.1"
 }
