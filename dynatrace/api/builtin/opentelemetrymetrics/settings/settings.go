@@ -24,11 +24,12 @@ import (
 )
 
 type Settings struct {
-	AdditionalAttributes                   AdditionalAttributeItems `json:"additionalAttributes,omitempty"`         // When enabled, the attributes defined in the list below will be added as dimensions to ingested OTLP metrics if they are present in the OpenTelemetry resource or in the instrumentation scope.\n\n**Notes:**\n\n- Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.\n\n- Dynatrace does not recommend changing/removing the attributes starting with \"dt.\". Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics).
+	AdditionalAttributes                   AdditionalAttributeItems `json:"additionalAttributes,omitempty"`         // When enabled, the attributes defined in the list below will be added as dimensions to ingested OTLP metrics if they are present in the OpenTelemetry resource or in the instrumentation scope.\n\n  **Notes:**\n\n  - Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.\n\n  - Dynatrace does not recommend changing/removing the attributes starting with \"dt.\". Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics).
 	AdditionalAttributesToDimensionEnabled *bool                    `json:"additionalAttributesToDimensionEnabled"` // Add the resource and scope attributes configured below as dimensions (Metrics Classic)
+	EnableMintV2Ingest                     *bool                    `json:"enableMintV2Ingest,omitempty"`           // Enable advanced OpenTelemetry metric capabilities with Grail, including primary field enrichment, flexible dimensions, enhanced routing, cost allocation, and support for high-cardinality queries. For more details, please see [this post](https://dt-url.net/otlp-metrics-advanced).
 	MeterNameToDimensionEnabled            *bool                    `json:"meterNameToDimensionEnabled"`            // When enabled, the Meter name (also referred to as InstrumentationScope or InstrumentationLibrary in OpenTelemetry SDKs) and version will be added as dimensions (`otel.scope.name` and `otel.scope.version`) to ingested OTLP metrics.
 	Scope                                  *string                  `json:"-" scope:"scope"`                        // The scope of this setting (environment-default). Omit this property if you want to cover the whole environment.
-	ToDropAttributes                       DropAttributeItems       `json:"toDropAttributes,omitempty"`             // The attributes defined in the list below will be dropped from all ingested OTLP metrics.\n\n**Notes:**\n\n- Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.\n\n- Wildcards are only supported in Metrics powered by Grail.\n\n- Dynatrace does not recommend including attributes starting with \"dt.\" to the deny list. Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics).
+	ToDropAttributes                       DropAttributeItems       `json:"toDropAttributes,omitempty"`             // The attributes defined in the list below will be dropped from all ingested OTLP metrics.\n\n  **Notes:**\n\n  - Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.\n\n  - Wildcards are only supported in Metrics powered by Grail.\n\n  - Dynatrace does not recommend including attributes starting with \"dt.\" to the deny list. Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics).
 	Mode                                   Mode                     `json:"-"`
 }
 
@@ -44,7 +45,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"additional_attributes": {
 			Type:        schema.TypeList,
-			Description: "When enabled, the attributes defined in the list below will be added as dimensions to ingested OTLP metrics if they are present in the OpenTelemetry resource or in the instrumentation scope.\n\n**Notes:**\n\n- Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.\n\n- Dynatrace does not recommend changing/removing the attributes starting with \"dt.\". Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics).",
+			Description: "When enabled, the attributes defined in the list below will be added as dimensions to ingested OTLP metrics if they are present in the OpenTelemetry resource or in the instrumentation scope.\n\n  **Notes:**\n\n  - Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.\n\n  - Dynatrace does not recommend changing/removing the attributes starting with \"dt.\". Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics).",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(AdditionalAttributeItems).Schema()},
 			MinItems:    1,
@@ -55,6 +56,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Add the resource and scope attributes configured below as dimensions (Metrics Classic)",
 			Optional:    true,
 			Computed:    true,
+		},
+		"enable_mint_v_2_ingest": {
+			Type:        schema.TypeBool,
+			Description: "Enable advanced OpenTelemetry metric capabilities with Grail, including primary field enrichment, flexible dimensions, enhanced routing, cost allocation, and support for high-cardinality queries. For more details, please see [this post](https://dt-url.net/otlp-metrics-advanced).",
+			Optional:    true, // nullable
 		},
 		"meter_name_to_dimension_enabled": {
 			Type:        schema.TypeBool,
@@ -79,7 +85,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"to_drop_attributes": {
 			Type:        schema.TypeList,
-			Description: "The attributes defined in the list below will be dropped from all ingested OTLP metrics.\n\n**Notes:**\n\n- Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.\n\n- Wildcards are only supported in Metrics powered by Grail.\n\n- Dynatrace does not recommend including attributes starting with \"dt.\" to the deny list. Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics).",
+			Description: "The attributes defined in the list below will be dropped from all ingested OTLP metrics.\n\n  **Notes:**\n\n  - Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.\n\n  - Wildcards are only supported in Metrics powered by Grail.\n\n  - Dynatrace does not recommend including attributes starting with \"dt.\" to the deny list. Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics).",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(DropAttributeItems).Schema()},
 			MinItems:    1,
@@ -92,6 +98,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"additional_attributes":                      me.AdditionalAttributes,
 		"additional_attributes_to_dimension_enabled": me.AdditionalAttributesToDimensionEnabled,
+		"enable_mint_v_2_ingest":                     me.EnableMintV2Ingest,
 		"meter_name_to_dimension_enabled":            me.MeterNameToDimensionEnabled,
 		"scope":                                      me.Scope,
 		"to_drop_attributes":                         me.ToDropAttributes,
@@ -103,6 +110,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"additional_attributes":                      &me.AdditionalAttributes,
 		"additional_attributes_to_dimension_enabled": &me.AdditionalAttributesToDimensionEnabled,
+		"enable_mint_v_2_ingest":                     &me.EnableMintV2Ingest,
 		"meter_name_to_dimension_enabled":            &me.MeterNameToDimensionEnabled,
 		"scope":                                      &me.Scope,
 		"to_drop_attributes":                         &me.ToDropAttributes,

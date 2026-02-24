@@ -2,6 +2,7 @@ resource "dynatrace_opentelemetry_metrics" "#name#" {
   additional_attributes_to_dimension_enabled = true
   meter_name_to_dimension_enabled            = true
   scope                                      = "environment"
+  enable_mint_v_2_ingest = true
   additional_attributes {
     additional_attribute {
       enabled       = true

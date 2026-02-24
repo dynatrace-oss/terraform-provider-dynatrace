@@ -49,6 +49,19 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"enableMintV2Ingest": {
+			"description": "Enable advanced OpenTelemetry metric capabilities with Grail, including primary field enrichment, flexible dimensions, enhanced routing, cost allocation, and support for high-cardinality queries. For more details, please see [this post](https://dt-url.net/otlp-metrics-advanced).",
+			"displayName": "Advanced OTLP metric dimensions",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"featureFlag": "com.compuware.otlp-mintv2-ingest-enabled.feature",
+				"maturity": "IN_DEVELOPMENT"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "boolean"
+		},
 		"meterNameToDimensionEnabled": {
 			"default": true,
 			"description": "When enabled, the Meter name (also referred to as InstrumentationScope or InstrumentationLibrary in OpenTelemetry SDKs) and version will be added as dimensions (`otel.scope.name` and `otel.scope.version`) to ingested OTLP metrics.",
@@ -202,5 +215,5 @@
 			]
 		}
 	},
-	"version": "1.6"
+	"version": "1.6.1"
 }
