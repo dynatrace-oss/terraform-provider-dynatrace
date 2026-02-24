@@ -27,7 +27,7 @@ type Settings struct {
 	Metadata         MetadataItems       `json:"metadata,omitempty"` // Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+).
 	MinimumProcesses int                 `json:"minimumProcesses"`   // Specify a minimum number of processes matching the monitoring rule. An alert is triggered if any host falls below this threshold.
 	Name             string              `json:"name"`               // Monitoring rule name
-	OperatingSystem  []OperatingSystem   `json:"operatingSystem"`    // Select the operating systems on which the monitoring rule should be applied. Possible Values: `AIX`, `LINUX`, `WINDOWS`
+	OperatingSystem  []OperatingSystem   `json:"operatingSystem"`    // Select the operating systems on which the monitoring rule should be applied. Possible values: `AIX`, `LINUX`, `WINDOWS`
 	Rules            DetectionConditions `json:"rules,omitempty"`    // Define process detection rules by selecting a process property and a condition. Each monitoring rule can have multiple detection rules associated with it.
 	Scope            *string             `json:"-" scope:"scope"`    // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 	InsertAfter      string              `json:"-"`
@@ -65,7 +65,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"operating_system": {
 			Type:        schema.TypeSet,
-			Description: "Select the operating systems on which the monitoring rule should be applied. Possible Values: `AIX`, `LINUX`, `WINDOWS`",
+			Description: "Select the operating systems on which the monitoring rule should be applied. Possible values: `AIX`, `LINUX`, `WINDOWS`",
 			Optional:    true,
 			DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
 				// operating_system was introduced in v286 as a required field, added code below to have successful results for old/new tenants.

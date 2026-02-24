@@ -32,14 +32,16 @@ var OperatingSystems = struct {
 type ProcessItem string
 
 var ProcessItems = struct {
-	Commandline    ProcessItem
-	Executable     ProcessItem
-	Executablepath ProcessItem
-	User           ProcessItem
+	Commandline     ProcessItem
+	Executable      ProcessItem
+	Executablepath  ProcessItem
+	Fullcommandline ProcessItem
+	User            ProcessItem
 }{
 	"commandLine",
 	"executable",
 	"executablePath",
+	"fullCommandLine",
 	"user",
 }
 
