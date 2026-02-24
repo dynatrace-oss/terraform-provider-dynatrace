@@ -28,6 +28,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"appName": "Microsoft 365"
@@ -94,7 +95,7 @@
 				},
 				{
 					"customMessage": "Please provide a valid from email address. Example: service.user@company.com",
-					"pattern": "^\\S+@\\S+$",
+					"pattern": "^[^\\s@]+@[^\\s@]+$",
 					"type": "PATTERN"
 				},
 				{
@@ -184,5 +185,5 @@
 	],
 	"schemaId": "app:dynatrace.microsoft365.connector:mail.connection",
 	"types": {},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

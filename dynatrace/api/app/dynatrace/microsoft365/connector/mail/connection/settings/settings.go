@@ -31,7 +31,7 @@ type Settings struct {
 	From_address  string  `json:"from_address"`            // The email address from which the messages will be sent
 	Name          string  `json:"name"`                    // A unique name for the Microsoft 365 email connection
 	Tenant_id     string  `json:"tenant_id"`               // Directory (tenant) ID of your Azure Active Directory
-	Type          Type    `json:"type"`                    // Possible Values: `client_secret`
+	Type          Type    `json:"type"`                    // Type of authentication method that should be used. Possible values: `client_secret`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -64,7 +64,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `client_secret`",
+			Description: "Type of authentication method that should be used. Possible values: `client_secret`",
 			Required:    true,
 		},
 	}
@@ -84,6 +84,9 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 func (me *Settings) HandlePreconditions() error {
 	if (me.Client_secret == nil) && (string(me.Type) == "client_secret") {
 		return fmt.Errorf("'client_secret' must be specified if 'type' is set to '%v'", me.Type)
+	}
+	if (me.Client_secret != nil) && (string(me.Type) != "client_secret") {
+		return fmt.Errorf("'client_secret' must not be specified if 'type' is set to '%v'", me.Type)
 	}
 	return nil
 }
