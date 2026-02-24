@@ -23,7 +23,7 @@ import (
 )
 
 type Settings struct {
-	DefaultMode DefaultMode `json:"defaultMode"` // Possible Values: `DISCOVERY`, `FULL_STACK`, `INFRASTRUCTURE`
+	DefaultMode DefaultMode `json:"defaultMode"` // OneAgent default monitoring mode. Possible values: `DISCOVERY`, `FULL_STACK`, `INFRASTRUCTURE`
 }
 
 func (me *Settings) Name() string {
@@ -34,7 +34,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"default_mode": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `DISCOVERY`, `FULL_STACK`, `INFRASTRUCTURE`",
+			Description: "OneAgent default monitoring mode. Possible values: `DISCOVERY`, `FULL_STACK`, `INFRASTRUCTURE`",
 			Required:    true,
 		},
 	}
