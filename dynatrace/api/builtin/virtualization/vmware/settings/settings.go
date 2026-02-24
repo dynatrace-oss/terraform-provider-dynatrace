@@ -25,7 +25,7 @@ import (
 
 type Settings struct {
 	Enabled   bool    `json:"enabled"`          // This setting is enabled (`true`) or disabled (`false`)
-	Filter    *string `json:"filter,omitempty"` // This string should have one of the following formats:\n- $prefix(parameter) - property value starting with 'parameter'\n- $eq(parameter) - property value exactly matching 'parameter'\n- $suffix(parameter) - property value ends with 'parameter'\n- $contains(parameter) - property value contains 'parameter'
+	Filter    *string `json:"filter,omitempty"` // This string should have one of the following formats:\n - $prefix(parameter) - property value starting with 'parameter'\n - $eq(parameter) - property value exactly matching 'parameter'\n - $suffix(parameter) - property value ends with 'parameter'\n - $contains(parameter) - property value contains 'parameter'
 	Ipaddress string  `json:"ipaddress"`        // Specify the IP address or name of the vCenter or standalone ESXi host:
 	Label     string  `json:"label"`            // Name this connection
 	Password  string  `json:"password"`
@@ -41,12 +41,13 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"filter": {
 			Type:        schema.TypeString,
-			Description: "This string should have one of the following formats:\n- $prefix(parameter) - property value starting with 'parameter'\n- $eq(parameter) - property value exactly matching 'parameter'\n- $suffix(parameter) - property value ends with 'parameter'\n- $contains(parameter) - property value contains 'parameter'",
+			Description: "This string should have one of the following formats:\n - $prefix(parameter) - property value starting with 'parameter'\n - $eq(parameter) - property value exactly matching 'parameter'\n - $suffix(parameter) - property value ends with 'parameter'\n - $contains(parameter) - property value contains 'parameter'",
 			Optional:    true, // nullable
 		},
 		"ipaddress": {
 			Type:        schema.TypeString,
 			Description: "Specify the IP address or name of the vCenter or standalone ESXi host:",
+			ForceNew:    true,
 			Required:    true,
 		},
 		"label": {
