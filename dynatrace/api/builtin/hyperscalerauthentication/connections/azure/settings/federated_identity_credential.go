@@ -24,7 +24,7 @@ import (
 
 type FederatedIdentityCredential struct {
 	ApplicationID *string                                  `json:"applicationId,omitempty"` // Application (client) ID of your app registered in Microsoft Azure App registrations
-	Consumers     []ConsumersOfFederatedIdentityCredential `json:"consumers,omitempty"`     // Consumers that can use the connection. Possible Values: `APP:dynatrace.microsoft.azure.connector`, `DA`, `NONE`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`
+	Consumers     []ConsumersOfFederatedIdentityCredential `json:"consumers,omitempty"`     // Consumers that can use the connection. Possible values: `APP:dynatrace.microsoft.azure.connector`, `DA`, `NONE`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`
 	DirectoryID   *string                                  `json:"directoryId,omitempty"`   // Directory (tenant) ID of Microsoft Entra ID
 }
 
@@ -32,7 +32,7 @@ func (me *FederatedIdentityCredential) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"consumers": {
 			Type:        schema.TypeList,
-			Description: "Consumers that can use the connection. Possible Values: `APP:dynatrace.microsoft.azure.connector`, `DA`, `NONE`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`",
+			Description: "Consumers that can use the connection. Possible values: `APP:dynatrace.microsoft.azure.connector`, `DA`, `NONE`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			ForceNew:    true,
