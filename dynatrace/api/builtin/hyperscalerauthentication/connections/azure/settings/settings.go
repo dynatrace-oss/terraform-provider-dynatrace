@@ -29,7 +29,7 @@ type Settings struct {
 	ClientSecret                *ClientSecretConfig          `json:"clientSecret,omitempty"`
 	FederatedIdentityCredential *FederatedIdentityCredential `json:"federatedIdentityCredential,omitempty"`
 	Name                        string                       `json:"name"` // The name of the connection
-	Type                        Type                         `json:"type"` // Azure Authentication mechanism to be used by the connection. Possible Values: `clientSecret`, `federatedIdentityCredential`
+	Type                        Type                         `json:"type"` // Azure Authentication mechanism to be used by the connection. Possible values: `clientSecret`, `federatedIdentityCredential`
 }
 
 const DefaultTimeout = 2 * time.Minute
@@ -56,11 +56,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The name of the connection",
 			Required:    true,
-			ForceNew:    true,
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Azure Authentication mechanism to be used by the connection. Possible Values: `clientSecret`, `federatedIdentityCredential`",
+			Description: "Azure Authentication mechanism to be used by the connection. Possible values: `clientSecret`, `federatedIdentityCredential`",
+			ForceNew:    true,
 			Required:    true,
 		},
 	}
