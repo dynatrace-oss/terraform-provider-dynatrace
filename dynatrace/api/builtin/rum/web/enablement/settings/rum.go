@@ -43,7 +43,7 @@ func (me *Rum) Schema() map[string]*schema.Schema {
 		},
 		"enabled_on_grail": {
 			Type:        schema.TypeBool,
-			Description: "Enable Real User Monitoring powered by Grail",
+			Description: "Enable New Real User Monitoring Experience",
 			Optional:    true, // nullable & precondition
 		},
 	}
