@@ -22,7 +22,7 @@ type SourceAuthMethod string
 var SourceAuthMethods = struct {
 	AzureKeyVaultClientSecret SourceAuthMethod
 	HashicorpVaultAppRole     SourceAuthMethod
-	HashicoprVaultCertificate SourceAuthMethod
+	HashicorpVaultCertificate SourceAuthMethod
 }{
 	SourceAuthMethod("AZURE_KEY_VAULT_CLIENT_SECRET"),
 	SourceAuthMethod("HASHICORP_VAULT_APPROLE"),
