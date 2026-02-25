@@ -2,16 +2,16 @@
 layout: ""
 page_title: "Provider: Dynatrace"
 description: |-
-  The Dynatrace Terraform Provider provides resources to interact with the Dynatrace REST API.
+  The Dynatrace Terraform provider provides resources to interact with the Dynatrace API.
 ---
 
 # Dynatrace Terraform Provider
 
-The Dynatrace Terraform Provider is used to interact with the resources supported by the Dynatrace REST API. The provider needs to be configured with the proper credentials before it can be used.
+The Dynatrace Terraform provider is used to interact with the resources supported by the Dynatrace API. The provider needs to be configured with the proper credentials before it can be used.
 
 Use the navigation to the left to learn about the available resources and data sources. For additional information, refer to the official Dynatrace documentation on Terraform available [here](https://dt-url.net/3s63qyj).
 
-The Dynatrace Terraform Provider is officially supported by Dynatrace.
+The Dynatrace Terraform provider is officially supported by Dynatrace.
 
 ## Example
 
@@ -30,8 +30,8 @@ terraform {
 The recommended approach is to configure the provider via environment variables.
 
 Define `DYNATRACE_ENV_URL` for the Dynatrace environment URL.
-* SaaS Environments: `https://########.live.dynatrace.com`
-* Managed Enviroments: `https://<dynatrace-host>/e/#####################`
+* SaaS environments: `https://########.live.dynatrace.com`
+* Managed environments: `https://<dynatrace-host>/e/#####################`
 
 To create an API token with full access to all resources, define `DYNATRACE_API_TOKEN` as an [access token](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/access-tokens) with the following permissions. 
  * **Read settings** (`settings.read`)
@@ -101,9 +101,9 @@ Define `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` based off of the crea
 
 ### Authenticating with OAuth Credentials
 
-The Terraform Provider supports using OAuth credentials for authentication with endpoints that allow both API Token and OAuth-based access.
+The Dynatrace Terraform provider supports using OAuth credentials for authentication with endpoints that allow both API token and OAuth-based access.
 
-> **Note:** Not all resources currently support OAuth. For example, the `dynatrace_json_dashboard` resource can only be configured using API Tokens.
+> **Note:** Not all resources support OAuth. For example, the `dynatrace_json_dashboard` resource can only be configured using API tokens.
 
 To enable OAuth-based authentication, set the environment variable:
 
@@ -113,13 +113,13 @@ DYNATRACE_HTTP_OAUTH_PREFERENCE=true
 
 When this variable is set and OAuth credentials (e.g., `DT_CLIENT_ID` and `DT_CLIENT_SECRET`) are provided, the provider will prioritize using REST endpoints that support OAuth.
 
-If `DYNATRACE_HTTP_OAUTH_PREFERENCE` is not set or is not `true`, the provider will default to using an API Token for authentication.
+If `DYNATRACE_HTTP_OAUTH_PREFERENCE` is not set or is not `true`, the provider will default to using an API token for authentication.
 
 ---
 
-### Authenticating with Platform Tokens
+### Authenticating with platform tokens
 
-You can authenticate using a Platform Token by setting the environment variable:
+You can authenticate using a platform token by setting the environment variable:
 
 ```
 DYNATRACE_PLATFORM_TOKEN=<<PLATFORM_TOKEN>>
@@ -129,8 +129,8 @@ Alternatively, you can use the `platform_token` attribute in the provider config
 
 If `DYNATRACE_PLATFORM_TOKEN` is not defined, the provider will use the configured OAuth credentials (`DT_CLIENT_ID` and `DT_CLIENT_SECRET`) to obtain a Bearer token.
 
-Platform Token authentication follows the same selection rules as OAuth credentials:  
-When the environment variable `DYNATRACE_HTTP_OAUTH_PREFERENCE` is set to `true`, the provider will favor Platform or OAuth tokens over API Tokens.
+Platform token authentication follows the same selection rules as OAuth credentials:
+When the environment variable `DYNATRACE_HTTP_OAUTH_PREFERENCE` is set to `true`, the provider will favor platform or OAuth tokens over API tokens.
 
 
 ## Exporting existing configuration from a Dynatrace environment
