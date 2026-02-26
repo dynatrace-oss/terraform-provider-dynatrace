@@ -61,7 +61,7 @@ resource "dynatrace_ms365_email_connection" "#name#"{
 - `from_address` (String) The email address from which the messages will be sent
 - `name` (String) A unique name for the Microsoft 365 email connection
 - `tenant_id` (String) Directory (tenant) ID of your Azure Active Directory
-- `type` (String) Possible Values: `client_secret`
+- `type` (String) Type of authentication method that should be used. Possible values: `client_secret`
 
 ### Optional
 

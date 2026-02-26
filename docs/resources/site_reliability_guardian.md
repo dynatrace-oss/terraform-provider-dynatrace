@@ -71,7 +71,7 @@ resource "dynatrace_site_reliability_guardian" "#name#" {
 ### Optional
 
 - `description` (String) Description
-- `event_kind` (String) If set to null/'BIZ_EVENT' validation events stored as bizevents in Grail. If set to 'SDLC_EVENT' validation events stored as SDLC events
+- `event_kind` (String) If set to null/'BIZ_EVENT' validation events stored as bizevents in Grail. If set to 'SDLC_EVENT' validation events stored as SDLC events. Possible values: `BIZ_EVENT`, `SDLC_EVENT`
 - `tags` (Set of String) Define key/value pairs that further describe this guardian.
 - `variables` (Block List, Max: 1) Define variables for dynamically defining DQL queries (see [below for nested schema](#nestedblock--variables))
 
@@ -91,9 +91,9 @@ Required:
 
 Required:
 
-- `comparison_operator` (String) Possible Values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`
+- `comparison_operator` (String) Comparison operator. Possible values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`
 - `name` (String) Objective name
-- `objective_type` (String) Possible Values: `DQL`, `REFERENCE_SLO`
+- `objective_type` (String) Objective type. Possible values: `DQL`, `REFERENCE_SLO`
 
 Optional:
 
@@ -101,6 +101,7 @@ Optional:
 - `description` (String) no documentation available
 - `display_unit` (Block List, Max: 1) Display Unit (see [below for nested schema](#nestedblock--objectives--objective--display_unit))
 - `dql_query` (String) DQL query
+- `links` (Block List, Max: 1) Fields for adding relevant links to this objective. (see [below for nested schema](#nestedblock--objectives--objective--links))
 - `reference_slo` (String) Please enter the metric key of your desired SLO. SLO metric keys have to start with 'func:slo.'
 - `segments` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--objectives--objective--segments))
 - `target` (Number) no documentation available
@@ -114,6 +115,26 @@ Required:
 - `base` (String) Base Unit
 - `decimals` (Number) Decimals
 - `display` (String) display as unit
+
+
+<a id="nestedblock--objectives--objective--links"></a>
+### Nested Schema for `objectives.objective.links`
+
+Required:
+
+- `link` (Block List, Min: 1) (see [below for nested schema](#nestedblock--objectives--objective--links--link))
+
+<a id="nestedblock--objectives--objective--links--link"></a>
+### Nested Schema for `objectives.objective.links.link`
+
+Required:
+
+- `url` (String) HTTPS link associated with this objective.
+
+Optional:
+
+- `label` (String) Short description for the link.
+
 
 
 <a id="nestedblock--objectives--objective--segments"></a>

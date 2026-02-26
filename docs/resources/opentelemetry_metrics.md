@@ -29,6 +29,7 @@ resource "dynatrace_opentelemetry_metrics" "#name#" {
   additional_attributes_to_dimension_enabled = true
   meter_name_to_dimension_enabled            = true
   scope                                      = "environment"
+  enable_mint_v_2_ingest = true
   additional_attributes {
     additional_attribute {
       enabled       = true
@@ -143,12 +144,13 @@ resource "dynatrace_opentelemetry_metrics" "#name#" {
 
 - `additional_attributes` (Block List, Max: 1) When enabled, the attributes defined in the list below will be added as dimensions to ingested OTLP metrics if they are present in the OpenTelemetry resource or in the instrumentation scope.
 
-**Notes:**
+  **Notes:**
 
-- Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.
+  - Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.
 
-- Dynatrace does not recommend changing/removing the attributes starting with "dt.". Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics). (see [below for nested schema](#nestedblock--additional_attributes))
+  - Dynatrace does not recommend changing/removing the attributes starting with "dt.". Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics). (see [below for nested schema](#nestedblock--additional_attributes))
 - `additional_attributes_to_dimension_enabled` (Boolean) Add the resource and scope attributes configured below as dimensions (Metrics Classic)
+- `enable_mint_v_2_ingest` (Boolean) Enable advanced OpenTelemetry metric capabilities with Grail, including primary field enrichment, flexible dimensions, enhanced routing, cost allocation, and support for high-cardinality queries. For more details, please see [this post](https://dt-url.net/otlp-metrics-advanced).
 - `meter_name_to_dimension_enabled` (Boolean) When enabled, the Meter name (also referred to as InstrumentationScope or InstrumentationLibrary in OpenTelemetry SDKs) and version will be added as dimensions (`otel.scope.name` and `otel.scope.version`) to ingested OTLP metrics.
 - `mode` (String) Specifies whether the given attributes to enable (`additional_attributes`) and the attributes to drop (`to_drop_attributes`) will get applied explicitly (`EXPLICIT`) or additive (`ADDITIVE`).
 
@@ -160,13 +162,13 @@ With mode `ADDITIVE` you're able to have multiple instances of this resource wit
 - `scope` (String) The scope of this setting (environment-default). Omit this property if you want to cover the whole environment.
 - `to_drop_attributes` (Block List, Max: 1) The attributes defined in the list below will be dropped from all ingested OTLP metrics.
 
-**Notes:**
+  **Notes:**
 
-- Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.
+  - Attributes **must** be added in their **original format**, as exported to Dynatrace by the telemetry source. For example, if the attribute is in `PascalCase`, the same case must be used when adding the attribute to the list.
 
-- Wildcards are only supported in Metrics powered by Grail.
+  - Wildcards are only supported in Metrics powered by Grail.
 
-- Dynatrace does not recommend including attributes starting with "dt." to the deny list. Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics). (see [below for nested schema](#nestedblock--to_drop_attributes))
+  - Dynatrace does not recommend including attributes starting with "dt." to the deny list. Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics). (see [below for nested schema](#nestedblock--to_drop_attributes))
 
 ### Read-Only
 

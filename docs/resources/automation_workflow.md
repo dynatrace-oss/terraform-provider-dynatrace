@@ -263,6 +263,7 @@ Required:
 
 Optional:
 
+- `analysis_ready` (Boolean) If set to `true`, the workflow will only be triggered after the initial root cause analysis run is completed
 - `custom_filter` (String) Additional DQL matcher expression to further filter events to match
 - `entity_tags` (Map of String) key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Multiple values can be provided separated by whitespace (e.g. "val1 val2") and will be parsed as multiple tag values. Omit this attribute if all entities should match
 - `entity_tags_match` (String) Specifies whether all or just any of the configured entity tags need to match. Possible values: `all` and `any`. Omit this attribute if all entities should match

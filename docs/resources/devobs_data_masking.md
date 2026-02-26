@@ -41,16 +41,17 @@ resource "dynatrace_devobs_data_masking" "#name#" {
 ### Required
 
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `replacement_type` (String) Possible Values: `SHA256`, `STRING`
+- `replacement_type` (String) Choose how the sensitive data should be replaced. Possible values: `SHA256`, `STRING`
 - `rule_name` (String) Rule Name
-- `rule_type` (String) Possible Values: `REGEX`, `VAR_NAME`
+- `rule_type` (String) Choose whether to redact by variable name or regex. Possible values: `REGEX`, `VAR_NAME`
 
 ### Optional
 
+- `comparison_type` (String) Select how the variable name should be matched. Possible values: `CONTAINS`, `ENDS_WITH`, `EQUALS`, `STARTS_WITH`
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
-- `replacement_pattern` (String) no documentation available
-- `rule_regex` (String) no documentation available
-- `rule_var_name` (String) no documentation available
+- `replacement_pattern` (String) Replacement Pattern
+- `rule_regex` (String) Regex Pattern
+- `rule_var_name` (String) Variable Name
 
 ### Read-Only
 

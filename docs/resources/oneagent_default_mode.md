@@ -35,7 +35,7 @@ resource "dynatrace_oneagent_default_mode" "#name#" {
 
 ### Required
 
-- `default_mode` (String) Possible Values: `DISCOVERY`, `FULL_STACK`, `INFRASTRUCTURE`
+- `default_mode` (String) OneAgent default monitoring mode. Possible values: `DISCOVERY`, `FULL_STACK`, `INFRASTRUCTURE`
 
 ### Read-Only
 
