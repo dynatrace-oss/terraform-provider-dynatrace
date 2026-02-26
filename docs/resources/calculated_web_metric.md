@@ -141,7 +141,7 @@ Optional:
 - `target_view_name` (String) Only actions on the specified view are included in the metric calculation.
 - `target_view_name_match_type` (String) Specifies the match type of the view name filter, e.g. using Contains or Equals. Defaults to Equals.
 - `user_action_name` (String) Only actions with this name are included in the metric calculation.
-- `user_action_properties` (Block Set) The definition of a calculated web metric. (see [below for nested schema](#nestedblock--user_action_filter--user_action_properties))
+- `user_action_properties` (Block List) The definition of a calculated web metric. (see [below for nested schema](#nestedblock--user_action_filter--user_action_properties))
 - `xhr_action` (Boolean) The status of xhr actions in the metric calculation: `true` or `false`
 - `xhr_route_change_action` (Boolean) The status of route actions in the metric calculation: `true` or `false`
 

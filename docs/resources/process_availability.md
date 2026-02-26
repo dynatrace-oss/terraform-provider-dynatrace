@@ -56,7 +56,7 @@ resource "dynatrace_process_availability" "#name#" {
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `metadata` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+). (see [below for nested schema](#nestedblock--metadata))
 - `minimum_processes` (Number) Specify a minimum number of processes matching the monitoring rule. An alert is triggered if any host falls below this threshold.
-- `operating_system` (Set of String) Select the operating systems on which the monitoring rule should be applied. Possible Values: `AIX`, `LINUX`, `WINDOWS`
+- `operating_system` (Set of String) Select the operating systems on which the monitoring rule should be applied. Possible values: `AIX`, `LINUX`, `WINDOWS`
 - `rules` (Block List, Max: 1) Define process detection rules by selecting a process property and a condition. Each monitoring rule can have multiple detection rules associated with it. (see [below for nested schema](#nestedblock--rules))
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
@@ -94,21 +94,21 @@ Required:
 Optional:
 
 - `condition` (String) - $contains(svc) – Matches if svc appears anywhere in the process property value.
-- $eq(svc.exe) – Matches if svc.exe matches the process property value exactly.
-- $prefix(svc) – Matches if app matches the prefix of the process property value.
-- $suffix(svc.py) – Matches if svc.py matches the suffix of the process property value.
+ - $eq(svc.exe) – Matches if svc.exe matches the process property value exactly.
+ - $prefix(svc) – Matches if app matches the prefix of the process property value.
+ - $suffix(svc.py) – Matches if svc.py matches the suffix of the process property value.
 
-For example, $suffix(svc.py) would detect processes named loyaltysvc.py and paymentssvc.py.
+  For example, $suffix(svc.py) would detect processes named loyaltysvc.py and paymentssvc.py.
 
-For more details, see [Process availability](https://dt-url.net/v923x37).
+  For more details, see [Process availability](https://dt-url.net/v923x37).
 - `host_metadata_condition` (Block List, Max: 1) Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.
 
-By defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.
+  By defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.
 
-See [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).
+  See [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).
 
-Note: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata. (see [below for nested schema](#nestedblock--rules--rule--host_metadata_condition))
-- `property` (String) Select process property. Possible Values: `commandLine`, `executable`, `executablePath`, `user`
+  Note: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata. (see [below for nested schema](#nestedblock--rules--rule--host_metadata_condition))
+- `property` (String) Select process property. Possible values: `commandLine`, `executable`, `executablePath`, `fullCommandLine`, `user`
 - `rule_type` (String) Rule scope. Possible Values: `RuleTypeHost`, `RuleTypeProcess`
 
 <a id="nestedblock--rules--rule--host_metadata_condition"></a>
@@ -118,18 +118,18 @@ Required:
 
 - `metadata_condition` (String) This string has to match a required format.
 
-- `$match(ver*_1.2.?)` – Matches string with wildcards: `*` any number (including zero) of characters and `?` exactly one character.
-- `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.
-- `$eq(production)` – Matches if `production` matches the host metadata value exactly.
-- `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.
-- `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.
+  - `$match(ver*_1.2.?)` – Matches string with wildcards: `*` any number (including zero) of characters and `?` exactly one character.
+ - `$contains(production)` – Matches if `production` appears anywhere in the host metadata value.
+ - `$eq(production)` – Matches if `production` matches the host metadata value exactly.
+ - `$prefix(production)` – Matches if `production` matches the prefix of the host metadata value.
+ - `$suffix(production)` – Matches if `production` matches the suffix of the host metadata value.
 
-Available logic operations:
-- `$not($eq(production))` – Matches if the host metadata value is different from `production`.
-- `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.
-- `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.
+  Available logic operations:
+ - `$not($eq(production))` – Matches if the host metadata value is different from `production`.
+ - `$and($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` and ends with `main`.
+ - `$or($prefix(production),$suffix(main))` – Matches if host metadata value starts with `production` or ends with `main`.
 
-Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
+  Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
 - `metadata_key` (String) Key
 
 Optional:

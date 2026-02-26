@@ -49,10 +49,10 @@ resource "dynatrace_vmware" "#name#" {
 ### Optional
 
 - `filter` (String) This string should have one of the following formats:
-- $prefix(parameter) - property value starting with 'parameter'
-- $eq(parameter) - property value exactly matching 'parameter'
-- $suffix(parameter) - property value ends with 'parameter'
-- $contains(parameter) - property value contains 'parameter'
+ - $prefix(parameter) - property value starting with 'parameter'
+ - $eq(parameter) - property value exactly matching 'parameter'
+ - $suffix(parameter) - property value ends with 'parameter'
+ - $contains(parameter) - property value contains 'parameter'
 
 ### Read-Only
 

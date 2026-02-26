@@ -100,7 +100,7 @@ resource "dynatrace_aws_connection_role_arn" "test-aws-connection-arn" {
 
 ### Required
 
-- `name` (String) Name
+- `name` (String) The name of the connection
 
 ### Optional
 
@@ -116,7 +116,7 @@ resource "dynatrace_aws_connection_role_arn" "test-aws-connection-arn" {
 
 Optional:
 
-- `consumers` (Set of String) Dynatrace integrations that can use this connection. Possible Values: `APP:dynatrace.biz.carbon` (Cost & Carbon Optimization), `DA` (Data Acquisition Deprecated), `SVC:com.dynatrace.bo` (Business Observability), `SVC:com.dynatrace.da` (Data Acquisition), `SVC:com.dynatrace.openpipeline` (OpenPipeline) and `NONE`
+- `consumers` (Set of String) Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.biz.carbon`, `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`
 
 
 <a id="nestedblock--web_identity"></a>
@@ -124,4 +124,4 @@ Optional:
 
 Required:
 
-- `consumers` (Set of String) Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.aws.connector` (AWS Connector) and `APP:dynatrace.biz.carbon` (Cost & Carbon Optimization)
+- `consumers` (Set of String) Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.aws.connector`, `APP:dynatrace.biz.carbon`

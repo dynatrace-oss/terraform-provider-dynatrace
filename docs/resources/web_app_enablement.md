@@ -66,7 +66,7 @@ Required:
 
 Optional:
 
-- `enabled_on_grail` (Boolean) Enable Real User Monitoring powered by Grail
+- `enabled_on_grail` (Boolean) Enable New Real User Monitoring Experience
 
 
 <a id="nestedblock--session_replay"></a>

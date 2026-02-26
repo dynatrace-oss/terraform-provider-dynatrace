@@ -163,7 +163,7 @@ resource "dynatrace_azure_connection_authentication" "example" {
 ### Required
 
 - `name` (String) The name of the connection
-- `type` (String) Azure Authentication mechanism to be used by the connection. Possible Values: `clientSecret`, `federatedIdentityCredential`
+- `type` (String) Azure Authentication mechanism to be used by the connection. Possible values: `clientSecret`, `federatedIdentityCredential`
 
 ### Optional
 
@@ -186,7 +186,7 @@ Required:
 
 Optional:
 
-- `consumers` (List of String) Dynatrace integrations that can use this connection. Possible Values: `DA`, `NONE`, `SVC:com.dynatrace.da`
+- `consumers` (List of String) Dynatrace integrations that can use this connection. Possible values: `DA`, `NONE`, `SVC:com.dynatrace.da`
 
 
 <a id="nestedblock--federated_identity_credential"></a>
@@ -194,7 +194,7 @@ Optional:
 
 Optional:
 
-- `consumers` (List of String) Consumers that can use the connection. Possible Values: `APP:dynatrace.microsoft.azure.connector`, `DA`, `NONE`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`
+- `consumers` (List of String) Consumers that can use the connection. Possible values: `APP:dynatrace.microsoft.azure.connector`, `DA`, `NONE`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`
 
 
 <a id="nestedblock--timeouts"></a>

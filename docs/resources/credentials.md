@@ -20,6 +20,8 @@ If any monitors remain associated after destroy, you must manually remove those 
 
 - Credential vault API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/credential-vault
 
+- External vault integration for Azure Key Vault, HashiCorp Vault, and CyberArk Vault - https://docs.dynatrace.com/docs/shortlink/external-vault-integration
+
 ## Export Example Usage
 
 - `terraform-provider-dynatrace -export dynatrace_credentials` downloads all existing credentials
@@ -28,20 +30,94 @@ The full documentation of the export feature is available [here](https://dt-url.
 
 ## Resource Example Usage
 
-```
-resource "dynatrace_credentials" "name" {
-  name     = "name"
-  scopes    = ["SYNTHETIC"]
-  username = "username"
-  password = "password"
+```terraform
+resource "dynatrace_credentials" "username_password_credentials" {
+  name              = "#name#"
+  username          = "username"
+  password          = "password"
+  owner_access_only = true
+  scopes            = ["SYNTHETIC"]
 }
+```
 
+```terraform
 resource "dynatrace_credentials" "root_certificate" {
   name        = "Root Certificate"
   description = "Root certificate for validating Extension 2.0 signatures"
   certificate = base64encode(file("certificate.pem"))
   format      = "PEM"
   public      = true
+}
+```
+
+### CyberArk Vault with username and password
+
+```terraform
+variable "credentials_username" {
+  sensitive = true
+}
+
+variable "credentials_password" {
+  sensitive = true
+}
+
+resource "dynatrace_credentials" "username_password_credentials" {
+  name              = "#name#"
+  username          = var.credentials_username
+  password          = var.credentials_password
+  owner_access_only = true
+  scopes            = ["SYNTHETIC"]
+}
+
+resource "dynatrace_credentials" "cyberark_username_password" {
+  name              = "#name#"
+  owner_access_only = true
+  external {
+    vault_url                 = "https://example.com"
+    application_id            = "my-application-id"
+    safe_name                 = "my-safe-name"
+    folder_name               = "my-folder-name"
+    account_name              = "my-account-name"
+    username_password_for_cpm = dynatrace_credentials.username_password_credentials.id
+  }
+  scopes = ["SYNTHETIC"]
+}
+```
+
+
+### CyberArk Vault with allowed location
+
+```terraform
+# certificate encoded in base64
+variable "certificate" {
+  sensitive = true
+}
+
+variable "certificate_password" {
+  sensitive = true
+}
+
+resource "dynatrace_credentials" "certificate_credentials" {
+  name              = "#name#"
+  certificate       = var.certificate
+  format            = "PKCS12"
+  owner_access_only = true
+  password          = var.certificate_password
+  scopes            = ["SYNTHETIC"]
+}
+
+resource "dynatrace_credentials" "cyberark_allowed_location" {
+  name              = "#name#"
+  owner_access_only = true
+  external {
+    vault_url      = "https://example.com"
+    application_id = "my-application-id"
+    safe_name      = "my-safe-name"
+    folder_name    = "my-folder-name"
+    account_name   = "my-account-name"
+    certificate    = dynatrace_credentials.certificate_credentials.id
+  }
+  scopes = ["SYNTHETIC"]
 }
 ```
 
@@ -104,17 +180,21 @@ Required:
 
 Optional:
 
-- `certificate` (String) Required for Hashicorp Certificate. The ID of Credentials within the Certificate Vault holding the certificate
+- `account_name` (String) The name of the object that stores the username and password to retrieve and synchronize with the Dynatrace credential vault; this is not the name of the account logged into CyberArk Central Credential Provider.
+- `application_id` (String) The application ID defined in CyberArk Vault
+- `certificate` (String) Required for Hashicorp Certificate, CyberArk username and password authentication, and CyberArk host-based authentication. The ID of Credentials within the Credentials Vault holding the certificate.
 - `client_secret` (String) Required for Azure Client Secret. No further documentation available
 - `clientid` (String) Required for Azure Client Secret. No further documentation available
 - `credentials_used_for_external_synchronization` (Set of String) No documentation available
+- `folder_name` (String) The name of the folder where the credentials are stored in CyberArk Vault; the default folder name is `Root`.
 - `password_secret_name` (String) No documentation available
 - `path_to_credentials` (String) Required for Hashicorp App Role or Hashicorp Certificate. No further documentation available
 - `roleid` (String) Required for Hashicorp App Role. No further documentation available
+- `safe_name` (String) Safe name connected to CyberArk Vault
 - `secretid` (String) Required for Hashicorp App Role. The ID of Credentials within the Certificate Vault holding the secret id
 - `tenantid` (String) Required for Azure Client Secret. No further documentation available
 - `token_secret_name` (String) No documentation available
+- `username_password_for_cpm` (String) Dynatrace credential ID of the username-password pair used for authentication to the CyberArk Central Credential Provider
 - `username_secret_name` (String) No documentation available
 - `vault_namespace` (String) Required for Hashicorp App Role. No further documentation available
 - `vault_url` (String) No documentation available
- 

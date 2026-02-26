@@ -56,12 +56,12 @@ resource "dynatrace_declarative_grouping" "#name#" {
 
 - `detection` (Block List, Min: 1, Max: 1) Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group. (see [below for nested schema](#nestedblock--detection))
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `name` (String) Monitored technology name
+- `name` (String) Note: Reported only in full-stack, infrastructure and discovery modes.
 
 ### Optional
 
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
-- `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
+- `scope` (String) The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
 ### Read-Only
 
@@ -79,9 +79,9 @@ Required:
 
 Required:
 
-- `id` (String) Process group identifier
-- `process_group_name` (String) This identifier is used by Dynatrace to recognize this process group.
-- `report` (String) Possible Values: `never`, `always`, `highResourceUsage`
+- `id` (String) This identifier is used by Dynatrace to recognize this process group.
+- `process_group_name` (String) Process group display name
+- `report` (String) This property tells OneAgent a condition for reporting the created Process group to Dynatrace. Possible values: `always`, `highResourceUsage`, `never`
 - `rules` (Block List, Min: 1, Max: 1) Define process detection rules by selecting a process property and a condition. Each process group can have multiple detection rules associated with it. (see [below for nested schema](#nestedblock--detection--process_definition--rules))
 
 <a id="nestedblock--detection--process_definition--rules"></a>
@@ -97,12 +97,12 @@ Required:
 Required:
 
 - `condition` (String) - $contains(svc) – Matches if svc appears anywhere in the process property value.
-- $eq(svc.exe) – Matches if svc.exe matches the process property value exactly.
-- $prefix(svc) – Matches if app matches the prefix of the process property value.
-- $suffix(svc.py) – Matches if svc.py matches the suffix of the process property value.
+ - $eq(svc.exe) – Matches if svc.exe matches the process property value exactly.
+ - $prefix(svc) – Matches if app matches the prefix of the process property value.
+ - $suffix(svc.py) – Matches if svc.py matches the suffix of the process property value.
 
-For example, $suffix(svc.py) would detect processes named loyaltysvc.py and paymentssvc.py.
+  For example, $suffix(svc.py) would detect processes named loyaltysvc.py and paymentssvc.py.
 
-For more details, see [Declarative process grouping](https://dt-url.net/j142w57).
-- `property` (String) Possible Values: `Executable`, `ExecutablePath`, `CommandLine`
+  For more details, see [Declarative process grouping](https://dt-url.net/j142w57).
+- `property` (String) Select process property. Possible values: `commandLine`, `executable`, `executablePath`
  

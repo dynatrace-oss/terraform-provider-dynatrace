@@ -291,12 +291,12 @@ resource "dynatrace_openpipeline_v2_logs_pipelines" "max-pipeline" {
 - `cost_allocation` (Block List, Max: 1) Cost allocation stage (see [below for nested schema](#nestedblock--cost_allocation))
 - `data_extraction` (Block List, Max: 1) Data extraction stage (see [below for nested schema](#nestedblock--data_extraction))
 - `davis` (Block List, Max: 1) Davis event extraction stage (see [below for nested schema](#nestedblock--davis))
-- `group_role` (String) Group role. Possible Values: `compositionPipeline`, `memberPipeline`
+- `group_role` (String) Group role. Possible values: `compositionPipeline`, `memberPipeline`
 - `metadata_list` (Block List, Max: 1) Pipeline metadata list (see [below for nested schema](#nestedblock--metadata_list))
 - `metric_extraction` (Block List, Max: 1) Metrics extraction stage (see [below for nested schema](#nestedblock--metric_extraction))
 - `processing` (Block List, Max: 1) Processing stage (see [below for nested schema](#nestedblock--processing))
 - `product_allocation` (Block List, Max: 1) Product allocation stage (see [below for nested schema](#nestedblock--product_allocation))
-- `routing` (String) Routing. Possible Values: `notRoutable`, `routable`
+- `routing` (String) Routing. Possible values: `notRoutable`, `routable`
 - `security_context` (Block List, Max: 1) Security context stage (see [below for nested schema](#nestedblock--security_context))
 - `smartscape_edge_extraction` (Block List, Max: 1) Smartscape edge extraction stage (see [below for nested schema](#nestedblock--smartscape_edge_extraction))
 - `smartscape_node_extraction` (Block List, Max: 1) Smartscape node extraction stage (see [below for nested schema](#nestedblock--smartscape_node_extraction))
@@ -328,7 +328,7 @@ Required:
 - `description` (String) no documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -370,7 +370,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -387,14 +387,14 @@ Required:
 <a id="nestedblock--cost_allocation--processors--processor--azure_log_forwarding--field_extraction--include--dimension"></a>
 ### Nested Schema for `cost_allocation.processors.processor.azure_log_forwarding.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -414,7 +414,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -440,7 +440,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -466,7 +466,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -483,14 +483,14 @@ Required:
 <a id="nestedblock--cost_allocation--processors--processor--bizevent--field_extraction--include--dimension"></a>
 ### Nested Schema for `cost_allocation.processors.processor.bizevent.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -516,7 +516,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -559,14 +559,14 @@ Required:
 <a id="nestedblock--cost_allocation--processors--processor--counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `cost_allocation.processors.processor.counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -685,14 +685,14 @@ Required:
 <a id="nestedblock--cost_allocation--processors--processor--histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `cost_allocation.processors.processor.histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -709,7 +709,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -740,9 +740,9 @@ Required:
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--sampling_aware_counter_metric--dimensions))
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--cost_allocation--processors--processor--sampling_aware_counter_metric--dimensions"></a>
 ### Nested Schema for `cost_allocation.processors.processor.sampling_aware_counter_metric.dimensions`
@@ -754,14 +754,14 @@ Required:
 <a id="nestedblock--cost_allocation--processors--processor--sampling_aware_counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `cost_allocation.processors.processor.sampling_aware_counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -771,16 +771,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--sampling_aware_histogram_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--cost_allocation--processors--processor--sampling_aware_histogram_metric--dimensions"></a>
 ### Nested Schema for `cost_allocation.processors.processor.sampling_aware_histogram_metric.dimensions`
@@ -792,14 +792,14 @@ Required:
 <a id="nestedblock--cost_allocation--processors--processor--sampling_aware_histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `cost_allocation.processors.processor.sampling_aware_histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -809,16 +809,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--sampling_aware_value_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--cost_allocation--processors--processor--sampling_aware_value_metric--dimensions"></a>
 ### Nested Schema for `cost_allocation.processors.processor.sampling_aware_value_metric.dimensions`
@@ -830,14 +830,14 @@ Required:
 <a id="nestedblock--cost_allocation--processors--processor--sampling_aware_value_metric--dimensions--dimension"></a>
 ### Nested Schema for `cost_allocation.processors.processor.sampling_aware_value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -858,7 +858,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -884,7 +884,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -910,7 +910,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -936,7 +936,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -962,7 +962,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -979,14 +979,14 @@ Required:
 <a id="nestedblock--cost_allocation--processors--processor--sdlc_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `cost_allocation.processors.processor.sdlc_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -1004,7 +1004,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -1038,7 +1038,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -1055,14 +1055,14 @@ Required:
 <a id="nestedblock--cost_allocation--processors--processor--security_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `cost_allocation.processors.processor.security_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -1135,7 +1135,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -1210,14 +1210,14 @@ Required:
 <a id="nestedblock--cost_allocation--processors--processor--value_metric--dimensions--dimension"></a>
 ### Nested Schema for `cost_allocation.processors.processor.value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -1247,7 +1247,7 @@ Required:
 - `description` (String) no documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -1289,7 +1289,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -1306,14 +1306,14 @@ Required:
 <a id="nestedblock--data_extraction--processors--processor--azure_log_forwarding--field_extraction--include--dimension"></a>
 ### Nested Schema for `data_extraction.processors.processor.azure_log_forwarding.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -1333,7 +1333,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -1359,7 +1359,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -1385,7 +1385,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -1402,14 +1402,14 @@ Required:
 <a id="nestedblock--data_extraction--processors--processor--bizevent--field_extraction--include--dimension"></a>
 ### Nested Schema for `data_extraction.processors.processor.bizevent.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -1435,7 +1435,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -1478,14 +1478,14 @@ Required:
 <a id="nestedblock--data_extraction--processors--processor--counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `data_extraction.processors.processor.counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -1604,14 +1604,14 @@ Required:
 <a id="nestedblock--data_extraction--processors--processor--histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `data_extraction.processors.processor.histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -1628,7 +1628,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -1659,9 +1659,9 @@ Required:
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--data_extraction--processors--processor--sampling_aware_counter_metric--dimensions))
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--data_extraction--processors--processor--sampling_aware_counter_metric--dimensions"></a>
 ### Nested Schema for `data_extraction.processors.processor.sampling_aware_counter_metric.dimensions`
@@ -1673,14 +1673,14 @@ Required:
 <a id="nestedblock--data_extraction--processors--processor--sampling_aware_counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `data_extraction.processors.processor.sampling_aware_counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -1690,16 +1690,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--data_extraction--processors--processor--sampling_aware_histogram_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--data_extraction--processors--processor--sampling_aware_histogram_metric--dimensions"></a>
 ### Nested Schema for `data_extraction.processors.processor.sampling_aware_histogram_metric.dimensions`
@@ -1711,14 +1711,14 @@ Required:
 <a id="nestedblock--data_extraction--processors--processor--sampling_aware_histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `data_extraction.processors.processor.sampling_aware_histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -1728,16 +1728,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--data_extraction--processors--processor--sampling_aware_value_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--data_extraction--processors--processor--sampling_aware_value_metric--dimensions"></a>
 ### Nested Schema for `data_extraction.processors.processor.sampling_aware_value_metric.dimensions`
@@ -1749,14 +1749,14 @@ Required:
 <a id="nestedblock--data_extraction--processors--processor--sampling_aware_value_metric--dimensions--dimension"></a>
 ### Nested Schema for `data_extraction.processors.processor.sampling_aware_value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -1777,7 +1777,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -1803,7 +1803,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -1829,7 +1829,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -1855,7 +1855,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -1881,7 +1881,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -1898,14 +1898,14 @@ Required:
 <a id="nestedblock--data_extraction--processors--processor--sdlc_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `data_extraction.processors.processor.sdlc_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -1923,7 +1923,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -1957,7 +1957,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -1974,14 +1974,14 @@ Required:
 <a id="nestedblock--data_extraction--processors--processor--security_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `data_extraction.processors.processor.security_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -2054,7 +2054,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -2129,14 +2129,14 @@ Required:
 <a id="nestedblock--data_extraction--processors--processor--value_metric--dimensions--dimension"></a>
 ### Nested Schema for `data_extraction.processors.processor.value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -2166,7 +2166,7 @@ Required:
 - `description` (String) no documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -2208,7 +2208,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -2225,14 +2225,14 @@ Required:
 <a id="nestedblock--davis--processors--processor--azure_log_forwarding--field_extraction--include--dimension"></a>
 ### Nested Schema for `davis.processors.processor.azure_log_forwarding.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -2252,7 +2252,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -2278,7 +2278,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -2304,7 +2304,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -2321,14 +2321,14 @@ Required:
 <a id="nestedblock--davis--processors--processor--bizevent--field_extraction--include--dimension"></a>
 ### Nested Schema for `davis.processors.processor.bizevent.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -2354,7 +2354,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -2397,14 +2397,14 @@ Required:
 <a id="nestedblock--davis--processors--processor--counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `davis.processors.processor.counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -2523,14 +2523,14 @@ Required:
 <a id="nestedblock--davis--processors--processor--histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `davis.processors.processor.histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -2547,7 +2547,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -2578,9 +2578,9 @@ Required:
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--davis--processors--processor--sampling_aware_counter_metric--dimensions))
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--davis--processors--processor--sampling_aware_counter_metric--dimensions"></a>
 ### Nested Schema for `davis.processors.processor.sampling_aware_counter_metric.dimensions`
@@ -2592,14 +2592,14 @@ Required:
 <a id="nestedblock--davis--processors--processor--sampling_aware_counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `davis.processors.processor.sampling_aware_counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -2609,16 +2609,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--davis--processors--processor--sampling_aware_histogram_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--davis--processors--processor--sampling_aware_histogram_metric--dimensions"></a>
 ### Nested Schema for `davis.processors.processor.sampling_aware_histogram_metric.dimensions`
@@ -2630,14 +2630,14 @@ Required:
 <a id="nestedblock--davis--processors--processor--sampling_aware_histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `davis.processors.processor.sampling_aware_histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -2647,16 +2647,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--davis--processors--processor--sampling_aware_value_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--davis--processors--processor--sampling_aware_value_metric--dimensions"></a>
 ### Nested Schema for `davis.processors.processor.sampling_aware_value_metric.dimensions`
@@ -2668,14 +2668,14 @@ Required:
 <a id="nestedblock--davis--processors--processor--sampling_aware_value_metric--dimensions--dimension"></a>
 ### Nested Schema for `davis.processors.processor.sampling_aware_value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -2696,7 +2696,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -2722,7 +2722,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -2748,7 +2748,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -2774,7 +2774,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -2800,7 +2800,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -2817,14 +2817,14 @@ Required:
 <a id="nestedblock--davis--processors--processor--sdlc_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `davis.processors.processor.sdlc_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -2842,7 +2842,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -2876,7 +2876,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -2893,14 +2893,14 @@ Required:
 <a id="nestedblock--davis--processors--processor--security_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `davis.processors.processor.security_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -2973,7 +2973,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -3048,14 +3048,14 @@ Required:
 <a id="nestedblock--davis--processors--processor--value_metric--dimensions--dimension"></a>
 ### Nested Schema for `davis.processors.processor.value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -3105,7 +3105,7 @@ Required:
 - `description` (String) no documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -3147,7 +3147,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -3164,14 +3164,14 @@ Required:
 <a id="nestedblock--metric_extraction--processors--processor--azure_log_forwarding--field_extraction--include--dimension"></a>
 ### Nested Schema for `metric_extraction.processors.processor.azure_log_forwarding.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -3191,7 +3191,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -3217,7 +3217,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -3243,7 +3243,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -3260,14 +3260,14 @@ Required:
 <a id="nestedblock--metric_extraction--processors--processor--bizevent--field_extraction--include--dimension"></a>
 ### Nested Schema for `metric_extraction.processors.processor.bizevent.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -3293,7 +3293,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -3336,14 +3336,14 @@ Required:
 <a id="nestedblock--metric_extraction--processors--processor--counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `metric_extraction.processors.processor.counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -3462,14 +3462,14 @@ Required:
 <a id="nestedblock--metric_extraction--processors--processor--histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `metric_extraction.processors.processor.histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -3486,7 +3486,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -3517,9 +3517,9 @@ Required:
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--sampling_aware_counter_metric--dimensions))
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--metric_extraction--processors--processor--sampling_aware_counter_metric--dimensions"></a>
 ### Nested Schema for `metric_extraction.processors.processor.sampling_aware_counter_metric.dimensions`
@@ -3531,14 +3531,14 @@ Required:
 <a id="nestedblock--metric_extraction--processors--processor--sampling_aware_counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `metric_extraction.processors.processor.sampling_aware_counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -3548,16 +3548,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--sampling_aware_histogram_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--metric_extraction--processors--processor--sampling_aware_histogram_metric--dimensions"></a>
 ### Nested Schema for `metric_extraction.processors.processor.sampling_aware_histogram_metric.dimensions`
@@ -3569,14 +3569,14 @@ Required:
 <a id="nestedblock--metric_extraction--processors--processor--sampling_aware_histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `metric_extraction.processors.processor.sampling_aware_histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -3586,16 +3586,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--sampling_aware_value_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--metric_extraction--processors--processor--sampling_aware_value_metric--dimensions"></a>
 ### Nested Schema for `metric_extraction.processors.processor.sampling_aware_value_metric.dimensions`
@@ -3607,14 +3607,14 @@ Required:
 <a id="nestedblock--metric_extraction--processors--processor--sampling_aware_value_metric--dimensions--dimension"></a>
 ### Nested Schema for `metric_extraction.processors.processor.sampling_aware_value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -3635,7 +3635,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -3661,7 +3661,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -3687,7 +3687,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -3713,7 +3713,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -3739,7 +3739,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -3756,14 +3756,14 @@ Required:
 <a id="nestedblock--metric_extraction--processors--processor--sdlc_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `metric_extraction.processors.processor.sdlc_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -3781,7 +3781,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -3815,7 +3815,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -3832,14 +3832,14 @@ Required:
 <a id="nestedblock--metric_extraction--processors--processor--security_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `metric_extraction.processors.processor.security_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -3912,7 +3912,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -3987,14 +3987,14 @@ Required:
 <a id="nestedblock--metric_extraction--processors--processor--value_metric--dimensions--dimension"></a>
 ### Nested Schema for `metric_extraction.processors.processor.value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -4024,7 +4024,7 @@ Required:
 - `description` (String) no documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -4066,7 +4066,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -4083,14 +4083,14 @@ Required:
 <a id="nestedblock--processing--processors--processor--azure_log_forwarding--field_extraction--include--dimension"></a>
 ### Nested Schema for `processing.processors.processor.azure_log_forwarding.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -4110,7 +4110,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -4136,7 +4136,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -4162,7 +4162,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -4179,14 +4179,14 @@ Required:
 <a id="nestedblock--processing--processors--processor--bizevent--field_extraction--include--dimension"></a>
 ### Nested Schema for `processing.processors.processor.bizevent.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -4212,7 +4212,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -4255,14 +4255,14 @@ Required:
 <a id="nestedblock--processing--processors--processor--counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `processing.processors.processor.counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -4381,14 +4381,14 @@ Required:
 <a id="nestedblock--processing--processors--processor--histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `processing.processors.processor.histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -4405,7 +4405,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -4436,9 +4436,9 @@ Required:
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--processing--processors--processor--sampling_aware_counter_metric--dimensions))
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--processing--processors--processor--sampling_aware_counter_metric--dimensions"></a>
 ### Nested Schema for `processing.processors.processor.sampling_aware_counter_metric.dimensions`
@@ -4450,14 +4450,14 @@ Required:
 <a id="nestedblock--processing--processors--processor--sampling_aware_counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `processing.processors.processor.sampling_aware_counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -4467,16 +4467,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--processing--processors--processor--sampling_aware_histogram_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--processing--processors--processor--sampling_aware_histogram_metric--dimensions"></a>
 ### Nested Schema for `processing.processors.processor.sampling_aware_histogram_metric.dimensions`
@@ -4488,14 +4488,14 @@ Required:
 <a id="nestedblock--processing--processors--processor--sampling_aware_histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `processing.processors.processor.sampling_aware_histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -4505,16 +4505,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--processing--processors--processor--sampling_aware_value_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--processing--processors--processor--sampling_aware_value_metric--dimensions"></a>
 ### Nested Schema for `processing.processors.processor.sampling_aware_value_metric.dimensions`
@@ -4526,14 +4526,14 @@ Required:
 <a id="nestedblock--processing--processors--processor--sampling_aware_value_metric--dimensions--dimension"></a>
 ### Nested Schema for `processing.processors.processor.sampling_aware_value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -4554,7 +4554,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -4580,7 +4580,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -4606,7 +4606,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -4632,7 +4632,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -4658,7 +4658,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -4675,14 +4675,14 @@ Required:
 <a id="nestedblock--processing--processors--processor--sdlc_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `processing.processors.processor.sdlc_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -4700,7 +4700,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -4734,7 +4734,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -4751,14 +4751,14 @@ Required:
 <a id="nestedblock--processing--processors--processor--security_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `processing.processors.processor.security_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -4831,7 +4831,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -4906,14 +4906,14 @@ Required:
 <a id="nestedblock--processing--processors--processor--value_metric--dimensions--dimension"></a>
 ### Nested Schema for `processing.processors.processor.value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -4943,7 +4943,7 @@ Required:
 - `description` (String) no documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -4985,7 +4985,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -5002,14 +5002,14 @@ Required:
 <a id="nestedblock--product_allocation--processors--processor--azure_log_forwarding--field_extraction--include--dimension"></a>
 ### Nested Schema for `product_allocation.processors.processor.azure_log_forwarding.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -5029,7 +5029,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -5055,7 +5055,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -5081,7 +5081,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -5098,14 +5098,14 @@ Required:
 <a id="nestedblock--product_allocation--processors--processor--bizevent--field_extraction--include--dimension"></a>
 ### Nested Schema for `product_allocation.processors.processor.bizevent.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -5131,7 +5131,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -5174,14 +5174,14 @@ Required:
 <a id="nestedblock--product_allocation--processors--processor--counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `product_allocation.processors.processor.counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -5300,14 +5300,14 @@ Required:
 <a id="nestedblock--product_allocation--processors--processor--histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `product_allocation.processors.processor.histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -5324,7 +5324,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -5355,9 +5355,9 @@ Required:
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--product_allocation--processors--processor--sampling_aware_counter_metric--dimensions))
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--product_allocation--processors--processor--sampling_aware_counter_metric--dimensions"></a>
 ### Nested Schema for `product_allocation.processors.processor.sampling_aware_counter_metric.dimensions`
@@ -5369,14 +5369,14 @@ Required:
 <a id="nestedblock--product_allocation--processors--processor--sampling_aware_counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `product_allocation.processors.processor.sampling_aware_counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -5386,16 +5386,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--product_allocation--processors--processor--sampling_aware_histogram_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--product_allocation--processors--processor--sampling_aware_histogram_metric--dimensions"></a>
 ### Nested Schema for `product_allocation.processors.processor.sampling_aware_histogram_metric.dimensions`
@@ -5407,14 +5407,14 @@ Required:
 <a id="nestedblock--product_allocation--processors--processor--sampling_aware_histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `product_allocation.processors.processor.sampling_aware_histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -5424,16 +5424,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--product_allocation--processors--processor--sampling_aware_value_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--product_allocation--processors--processor--sampling_aware_value_metric--dimensions"></a>
 ### Nested Schema for `product_allocation.processors.processor.sampling_aware_value_metric.dimensions`
@@ -5445,14 +5445,14 @@ Required:
 <a id="nestedblock--product_allocation--processors--processor--sampling_aware_value_metric--dimensions--dimension"></a>
 ### Nested Schema for `product_allocation.processors.processor.sampling_aware_value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -5473,7 +5473,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -5499,7 +5499,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -5525,7 +5525,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -5551,7 +5551,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -5577,7 +5577,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -5594,14 +5594,14 @@ Required:
 <a id="nestedblock--product_allocation--processors--processor--sdlc_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `product_allocation.processors.processor.sdlc_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -5619,7 +5619,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -5653,7 +5653,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -5670,14 +5670,14 @@ Required:
 <a id="nestedblock--product_allocation--processors--processor--security_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `product_allocation.processors.processor.security_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -5750,7 +5750,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -5825,14 +5825,14 @@ Required:
 <a id="nestedblock--product_allocation--processors--processor--value_metric--dimensions--dimension"></a>
 ### Nested Schema for `product_allocation.processors.processor.value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -5862,7 +5862,7 @@ Required:
 - `description` (String) no documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -5904,7 +5904,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -5921,14 +5921,14 @@ Required:
 <a id="nestedblock--security_context--processors--processor--azure_log_forwarding--field_extraction--include--dimension"></a>
 ### Nested Schema for `security_context.processors.processor.azure_log_forwarding.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -5948,7 +5948,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -5974,7 +5974,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -6000,7 +6000,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -6017,14 +6017,14 @@ Required:
 <a id="nestedblock--security_context--processors--processor--bizevent--field_extraction--include--dimension"></a>
 ### Nested Schema for `security_context.processors.processor.bizevent.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -6050,7 +6050,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -6093,14 +6093,14 @@ Required:
 <a id="nestedblock--security_context--processors--processor--counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `security_context.processors.processor.counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -6219,14 +6219,14 @@ Required:
 <a id="nestedblock--security_context--processors--processor--histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `security_context.processors.processor.histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -6243,7 +6243,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -6274,9 +6274,9 @@ Required:
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--security_context--processors--processor--sampling_aware_counter_metric--dimensions))
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--security_context--processors--processor--sampling_aware_counter_metric--dimensions"></a>
 ### Nested Schema for `security_context.processors.processor.sampling_aware_counter_metric.dimensions`
@@ -6288,14 +6288,14 @@ Required:
 <a id="nestedblock--security_context--processors--processor--sampling_aware_counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `security_context.processors.processor.sampling_aware_counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -6305,16 +6305,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--security_context--processors--processor--sampling_aware_histogram_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--security_context--processors--processor--sampling_aware_histogram_metric--dimensions"></a>
 ### Nested Schema for `security_context.processors.processor.sampling_aware_histogram_metric.dimensions`
@@ -6326,14 +6326,14 @@ Required:
 <a id="nestedblock--security_context--processors--processor--sampling_aware_histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `security_context.processors.processor.sampling_aware_histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -6343,16 +6343,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--security_context--processors--processor--sampling_aware_value_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--security_context--processors--processor--sampling_aware_value_metric--dimensions"></a>
 ### Nested Schema for `security_context.processors.processor.sampling_aware_value_metric.dimensions`
@@ -6364,14 +6364,14 @@ Required:
 <a id="nestedblock--security_context--processors--processor--sampling_aware_value_metric--dimensions--dimension"></a>
 ### Nested Schema for `security_context.processors.processor.sampling_aware_value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -6392,7 +6392,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -6418,7 +6418,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -6444,7 +6444,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -6470,7 +6470,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -6496,7 +6496,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -6513,14 +6513,14 @@ Required:
 <a id="nestedblock--security_context--processors--processor--sdlc_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `security_context.processors.processor.sdlc_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -6538,7 +6538,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -6572,7 +6572,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -6589,14 +6589,14 @@ Required:
 <a id="nestedblock--security_context--processors--processor--security_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `security_context.processors.processor.security_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -6669,7 +6669,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -6744,14 +6744,14 @@ Required:
 <a id="nestedblock--security_context--processors--processor--value_metric--dimensions--dimension"></a>
 ### Nested Schema for `security_context.processors.processor.value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -6781,7 +6781,7 @@ Required:
 - `description` (String) no documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -6823,7 +6823,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -6840,14 +6840,14 @@ Required:
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--azure_log_forwarding--field_extraction--include--dimension"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.azure_log_forwarding.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -6867,7 +6867,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -6893,7 +6893,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -6919,7 +6919,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -6936,14 +6936,14 @@ Required:
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--bizevent--field_extraction--include--dimension"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.bizevent.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -6969,7 +6969,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -7012,14 +7012,14 @@ Required:
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -7138,14 +7138,14 @@ Required:
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -7162,7 +7162,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -7193,9 +7193,9 @@ Required:
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--sampling_aware_counter_metric--dimensions))
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--sampling_aware_counter_metric--dimensions"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.sampling_aware_counter_metric.dimensions`
@@ -7207,14 +7207,14 @@ Required:
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--sampling_aware_counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.sampling_aware_counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -7224,16 +7224,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--sampling_aware_histogram_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--sampling_aware_histogram_metric--dimensions"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.sampling_aware_histogram_metric.dimensions`
@@ -7245,14 +7245,14 @@ Required:
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--sampling_aware_histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.sampling_aware_histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -7262,16 +7262,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--sampling_aware_value_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--sampling_aware_value_metric--dimensions"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.sampling_aware_value_metric.dimensions`
@@ -7283,14 +7283,14 @@ Required:
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--sampling_aware_value_metric--dimensions--dimension"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.sampling_aware_value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -7311,7 +7311,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -7337,7 +7337,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -7363,7 +7363,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -7389,7 +7389,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -7415,7 +7415,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -7432,14 +7432,14 @@ Required:
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--sdlc_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.sdlc_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -7457,7 +7457,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -7491,7 +7491,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -7508,14 +7508,14 @@ Required:
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--security_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.security_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -7588,7 +7588,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -7663,14 +7663,14 @@ Required:
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--value_metric--dimensions--dimension"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -7700,7 +7700,7 @@ Required:
 - `description` (String) no documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -7742,7 +7742,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -7759,14 +7759,14 @@ Required:
 <a id="nestedblock--smartscape_node_extraction--processors--processor--azure_log_forwarding--field_extraction--include--dimension"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.azure_log_forwarding.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -7786,7 +7786,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -7812,7 +7812,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -7838,7 +7838,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -7855,14 +7855,14 @@ Required:
 <a id="nestedblock--smartscape_node_extraction--processors--processor--bizevent--field_extraction--include--dimension"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.bizevent.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -7888,7 +7888,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -7931,14 +7931,14 @@ Required:
 <a id="nestedblock--smartscape_node_extraction--processors--processor--counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -8057,14 +8057,14 @@ Required:
 <a id="nestedblock--smartscape_node_extraction--processors--processor--histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -8081,7 +8081,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -8112,9 +8112,9 @@ Required:
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--sampling_aware_counter_metric--dimensions))
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--smartscape_node_extraction--processors--processor--sampling_aware_counter_metric--dimensions"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.sampling_aware_counter_metric.dimensions`
@@ -8126,14 +8126,14 @@ Required:
 <a id="nestedblock--smartscape_node_extraction--processors--processor--sampling_aware_counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.sampling_aware_counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -8143,16 +8143,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--sampling_aware_histogram_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--smartscape_node_extraction--processors--processor--sampling_aware_histogram_metric--dimensions"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.sampling_aware_histogram_metric.dimensions`
@@ -8164,14 +8164,14 @@ Required:
 <a id="nestedblock--smartscape_node_extraction--processors--processor--sampling_aware_histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.sampling_aware_histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -8181,16 +8181,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--sampling_aware_value_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--smartscape_node_extraction--processors--processor--sampling_aware_value_metric--dimensions"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.sampling_aware_value_metric.dimensions`
@@ -8202,14 +8202,14 @@ Required:
 <a id="nestedblock--smartscape_node_extraction--processors--processor--sampling_aware_value_metric--dimensions--dimension"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.sampling_aware_value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -8230,7 +8230,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -8256,7 +8256,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -8282,7 +8282,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -8308,7 +8308,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -8334,7 +8334,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -8351,14 +8351,14 @@ Required:
 <a id="nestedblock--smartscape_node_extraction--processors--processor--sdlc_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.sdlc_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -8376,7 +8376,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -8410,7 +8410,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -8427,14 +8427,14 @@ Required:
 <a id="nestedblock--smartscape_node_extraction--processors--processor--security_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.security_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -8507,7 +8507,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -8582,14 +8582,14 @@ Required:
 <a id="nestedblock--smartscape_node_extraction--processors--processor--value_metric--dimensions--dimension"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -8619,7 +8619,7 @@ Required:
 - `description` (String) no documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible Values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -8661,7 +8661,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -8678,14 +8678,14 @@ Required:
 <a id="nestedblock--storage--processors--processor--azure_log_forwarding--field_extraction--include--dimension"></a>
 ### Nested Schema for `storage.processors.processor.azure_log_forwarding.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -8705,7 +8705,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -8731,7 +8731,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -8757,7 +8757,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -8774,14 +8774,14 @@ Required:
 <a id="nestedblock--storage--processors--processor--bizevent--field_extraction--include--dimension"></a>
 ### Nested Schema for `storage.processors.processor.bizevent.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -8807,7 +8807,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -8850,14 +8850,14 @@ Required:
 <a id="nestedblock--storage--processors--processor--counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `storage.processors.processor.counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -8976,14 +8976,14 @@ Required:
 <a id="nestedblock--storage--processors--processor--histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `storage.processors.processor.histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -9000,7 +9000,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -9031,9 +9031,9 @@ Required:
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--storage--processors--processor--sampling_aware_counter_metric--dimensions))
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--storage--processors--processor--sampling_aware_counter_metric--dimensions"></a>
 ### Nested Schema for `storage.processors.processor.sampling_aware_counter_metric.dimensions`
@@ -9045,14 +9045,14 @@ Required:
 <a id="nestedblock--storage--processors--processor--sampling_aware_counter_metric--dimensions--dimension"></a>
 ### Nested Schema for `storage.processors.processor.sampling_aware_counter_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -9062,16 +9062,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--storage--processors--processor--sampling_aware_histogram_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--storage--processors--processor--sampling_aware_histogram_metric--dimensions"></a>
 ### Nested Schema for `storage.processors.processor.sampling_aware_histogram_metric.dimensions`
@@ -9083,14 +9083,14 @@ Required:
 <a id="nestedblock--storage--processors--processor--sampling_aware_histogram_metric--dimensions--dimension"></a>
 ### Nested Schema for `storage.processors.processor.sampling_aware_histogram_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -9100,16 +9100,16 @@ Optional:
 
 Required:
 
-- `measurement` (String) Possible Values: `duration`, `field`
+- `measurement` (String) Possible values: `duration`, `field`
 - `metric_key` (String) Metric key
 
 Optional:
 
-- `aggregation` (String) Possible Values: `disabled`, `enabled`
+- `aggregation` (String) Possible values: `disabled`, `enabled`
 - `default_value` (String) Default value with metric value
 - `dimensions` (Block List, Max: 1) List of dimensions (see [below for nested schema](#nestedblock--storage--processors--processor--sampling_aware_value_metric--dimensions))
 - `field` (String) Field with metric value
-- `sampling` (String) Possible Values: `disabled`, `enabled`
+- `sampling` (String) Possible values: `disabled`, `enabled`
 
 <a id="nestedblock--storage--processors--processor--sampling_aware_value_metric--dimensions"></a>
 ### Nested Schema for `storage.processors.processor.sampling_aware_value_metric.dimensions`
@@ -9121,14 +9121,14 @@ Required:
 <a id="nestedblock--storage--processors--processor--sampling_aware_value_metric--dimensions--dimension"></a>
 ### Nested Schema for `storage.processors.processor.sampling_aware_value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -9149,7 +9149,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -9175,7 +9175,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -9201,7 +9201,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -9227,7 +9227,7 @@ Optional:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -9253,7 +9253,7 @@ Optional:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -9270,14 +9270,14 @@ Required:
 <a id="nestedblock--storage--processors--processor--sdlc_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `storage.processors.processor.sdlc_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -9295,7 +9295,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -9329,7 +9329,7 @@ Required:
 
 Required:
 
-- `type` (String) Fields Extraction type. Possible Values: `exclude`, `include`, `includeAll`
+- `type` (String) Fields Extraction type. Possible values: `exclude`, `include`, `includeAll`
 
 Optional:
 
@@ -9346,14 +9346,14 @@ Required:
 <a id="nestedblock--storage--processors--processor--security_event--field_extraction--include--dimension"></a>
 ### Nested Schema for `storage.processors.processor.security_event.field_extraction.include.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
 
 
 
@@ -9426,7 +9426,7 @@ Required:
 
 Required:
 
-- `type` (String) Type of value assignment. Possible Values: `constant`, `field`, `multiValueConstant`
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
 
 Optional:
 
@@ -9501,11 +9501,11 @@ Required:
 <a id="nestedblock--storage--processors--processor--value_metric--dimensions--dimension"></a>
 ### Nested Schema for `storage.processors.processor.value_metric.dimensions.dimension`
 
-Required:
-
-- `source_field_name` (String) Source field name
-
 Optional:
 
+- `constant_field_name` (String) Destination field name
+- `constant_value` (String) Constant value to be assigned to field
 - `default_value` (String) Default value
 - `destination_field_name` (String) Destination field name
+- `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
+- `source_field_name` (String) Source field name
