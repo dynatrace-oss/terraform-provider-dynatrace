@@ -26,5 +26,5 @@ import (
 )
 
 func TestAccCredentials(t *testing.T) {
-	api.TestAcc(t, api.TestAccOptions{ExpectNonEmptyPlan: true})
+	api.TestAcc(t)
 }
