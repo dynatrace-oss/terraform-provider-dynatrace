@@ -1,6 +1,6 @@
-resource "dynatrace_msentraid_connection" "#name#"{
+resource "dynatrace_msentraid_connection" "connection" {
   name    = "#name#"
-  directory_id = "123e4567-e89b-12d3-a456-426614174000"
-  application_id = "123e4567-e89b-12d3-a456-426614174000"
+  directory_id = "00000000-0000-0000-0000-000000000000"
+  application_id = "00000000-0000-0000-0000-000000000000"
   client_secret = "#######"
 }

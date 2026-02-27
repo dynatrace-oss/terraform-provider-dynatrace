@@ -1,8 +1,8 @@
-resource "dynatrace_ms365_email_connection" "#name#"{
+resource "dynatrace_ms365_email_connection" "connection" {
   name     = "#name#"
   type     = "client_secret"
-  tenant_id     = "123e4567-e89b-12d3-a456-426614174000"
-  client_id     = "123e4567-e89b-12d3-a456-426614174000"
+  tenant_id     = "00000000-0000-0000-0000-000000000000"
+  client_id     = "00000000-0000-0000-0000-000000000000"
   client_secret   = "######"
   from_address    = "random.email@terraform.com"
 }
