@@ -1,7 +1,10 @@
-resource "dynatrace_automation_workflow" "#name#" {
+resource "dynatrace_iam_service_user" "wf_user" {
+  name = "#name#"
+}
+
+resource "dynatrace_automation_workflow" "workflow_with_davis_problem_trigger" {
   description = "#name#"
-  actor       = "703d65c0-4aff-45d9-8b34-2c6f5f17bb8e"
-  owner       = "703d65c0-4aff-45d9-8b34-2c6f5f17bb8e"
+  actor       = dynatrace_iam_service_user.wf_user.id
   private     = true
   title       = "#name#"
   tasks {
@@ -18,7 +21,7 @@ resource "dynatrace_automation_workflow" "#name#" {
   }
   trigger {
     event {
-      # active = false
+      active = true
       config {
         davis_problem {
           categories {
