@@ -1,6 +1,6 @@
-resource "dynatrace_automation_controller_connections" "#name#"{
+resource "dynatrace_automation_controller_connections" "connection" {
   name    = "#name#"
-  url     = "https://www.google.com"
+  url     = "https://www.example.com"
   type    = "api-token"
   token   = "#######"
-  }
+}
