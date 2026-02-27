@@ -21,10 +21,10 @@ package gitonprem_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccDevObsGitOnPrem(t *testing.T) {
-	// Temporarily disabled - not available on test tenant
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

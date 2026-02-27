@@ -21,10 +21,10 @@ package connection_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccK8sAutomationConnections(t *testing.T) {
-	// Temporarily disabled - not available on test tenant
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }
