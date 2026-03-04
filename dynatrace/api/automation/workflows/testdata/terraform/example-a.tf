@@ -23,6 +23,11 @@ resource "dynatrace_automation_workflow" "workflow_with_davis_event_trigger" {
         x = 0
         y = 1
       }
+      retry {
+        count = "3"
+        delay = "1000"
+        failed_loop_iterations_only = false
+      }
     }
     task {
       name        = "http_request_2"
