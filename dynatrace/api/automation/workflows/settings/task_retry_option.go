@@ -23,9 +23,9 @@ import (
 )
 
 type TaskRetryOption struct {
-	Count                    VarInt  `json:"count" minimum:"0" maximum:"99"`                    // Specifies a maximum number of times that a task can be repeated in case it fails on execution
-	Delay                    *VarInt `json:"delay,omitempty" minimum:"0" maximum:"3600"`        // Specifies a delay in seconds between subsequent task retries
-	FailedLoopIterationsOnly *bool   `json:"failedLoopIterationsOnly,omitempty" default:"true"` // Specifies whether retrying the failed iterations or the whole loop. Default: True
+	Count                    VarInt  `json:"count" minimum:"0" maximum:"99"`             // Specifies a maximum number of times that a task can be repeated in case it fails on execution
+	Delay                    *VarInt `json:"delay,omitempty" minimum:"0" maximum:"3600"` // Specifies a delay in seconds between subsequent task retries
+	FailedLoopIterationsOnly bool    `json:"failedLoopIterationsOnly"`                   // Specifies whether retrying the failed iterations or the whole loop. Default: True
 }
 
 func (me *TaskRetryOption) Schema(prefix string) map[string]*schema.Schema {
