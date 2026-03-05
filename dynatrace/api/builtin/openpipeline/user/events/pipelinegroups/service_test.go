@@ -25,6 +25,5 @@ import (
 )
 
 func TestAccUserEventsPipelineGroups(t *testing.T) {
-	t.Skip("temporarily skipping until the API is fixed")
 	api.TestAcc(t)
 }
