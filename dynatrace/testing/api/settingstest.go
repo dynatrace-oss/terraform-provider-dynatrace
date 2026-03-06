@@ -34,6 +34,7 @@ import (
 
 type TestAccOptions struct {
 	ExpectNonEmptyPlan bool
+	ExternalProviders  map[string]resource.ExternalProvider
 }
 
 func AccEnvsGiven(t *testing.T) bool {
@@ -96,10 +97,6 @@ func readTestData(t *testing.T) []string {
 }
 
 func TestAcc(t *testing.T, opts ...TestAccOptions) {
-	var options TestAccOptions
-	if len(opts) > 0 {
-		options = opts[0]
-	}
 	t.Helper()
 
 	if !AccEnvsGiven(t) {
@@ -107,12 +104,6 @@ func TestAcc(t *testing.T, opts ...TestAccOptions) {
 	}
 
 	allFiles := readTestData(t)
-
-	providerFactories := map[string]func() (*schema.Provider, error){
-		"dynatrace": func() (*schema.Provider, error) {
-			return provider.Provider(), nil
-		},
-	}
 
 	for _, file := range allFiles {
 		subTestName := strings.TrimPrefix(file, "testdata/")
@@ -122,11 +113,50 @@ func TestAcc(t *testing.T, opts ...TestAccOptions) {
 
 			config, _ := ReadTfConfig(t, file)
 
-			testCase := resource.TestCase{
-				ProviderFactories: providerFactories,
-				Steps:             []resource.TestStep{{Config: config, ExpectNonEmptyPlan: options.ExpectNonEmptyPlan}},
-			}
+			testCase := createTestCaseWithOptions(t, config, opts)
 			resource.Test(t, testCase)
 		})
+	}
+}
+
+// TestAccParallel runs all tests in parallel by concatenating all configs into one and running them together.
+// Make sure that the tests do not interfere with each other, e.g. by using unique names for resources.
+func TestAccParallel(t *testing.T, opts ...TestAccOptions) {
+	t.Helper()
+
+	if !AccEnvsGiven(t) {
+		return
+	}
+
+	allFiles := readTestData(t)
+
+	// concatenate all configs into one, so that they can be run in parallel
+	var configs strings.Builder
+	for _, file := range allFiles {
+		config, _ := ReadTfConfig(t, file)
+		configs.WriteString(config)
+		configs.WriteByte('\n')
+	}
+
+	testCase := createTestCaseWithOptions(t, configs.String(), opts)
+	resource.Test(t, testCase)
+}
+
+func createTestCaseWithOptions(t *testing.T, config string, opts []TestAccOptions) resource.TestCase {
+	t.Helper()
+	providerFactories := map[string]func() (*schema.Provider, error){
+		"dynatrace": func() (*schema.Provider, error) {
+			return provider.Provider(), nil
+		},
+	}
+	var options TestAccOptions
+	if len(opts) > 0 {
+		options = opts[0]
+	}
+
+	return resource.TestCase{
+		ProviderFactories: providerFactories,
+		ExternalProviders: options.ExternalProviders,
+		Steps:             []resource.TestStep{{Config: config, ExpectNonEmptyPlan: options.ExpectNonEmptyPlan}},
 	}
 }

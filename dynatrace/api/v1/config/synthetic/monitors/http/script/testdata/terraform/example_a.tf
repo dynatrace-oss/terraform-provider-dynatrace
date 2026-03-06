@@ -1,29 +1,11 @@
-resource "dynatrace_http_monitor_script" "#name#" {
-  http_id = "${dynatrace_http_monitor.monitor.id}"
-  script {
-    request {
-      description     = "request1"
-      method          = "GET"
-      url             = "http://httpstat.us/200"
-      configuration {
-        accept_any_certificate = true
-      }
-    }
-    request {
-      description     = "request2"
-      method          = "GET"
-      url             = "http://httpstat.us/400"
-      configuration {
-        accept_any_certificate = true
-      }
-    }
-  }
+data "dynatrace_synthetic_location" "location" {
+  name = "Location"
 }
 
 resource "dynatrace_http_monitor" "monitor" {
   name      = "#name#"
   frequency = 1
-  locations = ["GEOLOCATION-F3E06A526BE3B4C4"]
+  locations = [data.dynatrace_synthetic_location.location.id]
   anomaly_detection {
     loading_time_thresholds {
     }
@@ -35,4 +17,26 @@ resource "dynatrace_http_monitor" "monitor" {
     }
   }
   no_script = true
+}
+
+resource "dynatrace_http_monitor_script" "script" {
+  http_id = dynatrace_http_monitor.monitor.id
+  script {
+    request {
+      description     = "request1"
+      method          = "GET"
+      url             = "https://example.com"
+      configuration {
+        accept_any_certificate = true
+      }
+    }
+    request {
+      description     = "request2"
+      method          = "GET"
+      url             = "https://example.com"
+      configuration {
+        accept_any_certificate = true
+      }
+    }
+  }
 }

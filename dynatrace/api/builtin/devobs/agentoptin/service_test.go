@@ -21,10 +21,10 @@ package agentoptin_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccDevObsAgentOptin(t *testing.T) {
-	// Temporarily disabled - not licensed and enabled on test tenant
-	// api.TestAcc(t)
-	t.Skip()
+	api.TestAcc(t)
 }

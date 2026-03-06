@@ -1,10 +1,9 @@
-# ID calc:synthetic.browser.easytravelbooknow.domcompletesplitbygeolocation
-resource "dynatrace_calculated_synthetic_metric" "#name#" {
+resource "dynatrace_calculated_synthetic_metric" "metric_e" {
   name               = "#name#"
   enabled            = true
   metric             = "DOMComplete"
   metric_key         = "calc:synthetic.browser.#name#"
-  monitor_identifier = "SYNTHETIC_TEST-147CFF44DDB25C05"
+  monitor_identifier = dynatrace_browser_monitor.monitor.id
   dimensions {
     dimension {
       dimension = "Location"

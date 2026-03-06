@@ -1,7 +1,7 @@
-resource "dynatrace_calculated_service_metric" "#name#" {
+resource "dynatrace_calculated_service_metric" "metric_n" {
   name = "#name#"
   enabled = true
-  management_zones = ["AAAA"]
+  management_zones = [dynatrace_management_zone_v2.mzone.name]
   metric_key = "calc:service.#name#"
   unit = "MICRO_SECOND"
   conditions {

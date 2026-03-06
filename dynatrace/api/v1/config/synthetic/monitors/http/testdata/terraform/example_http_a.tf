@@ -1,7 +1,18 @@
-resource "dynatrace_http_monitor" "#name#" {
+data "dynatrace_synthetic_location" "location" {
+  name = "Location"
+}
+
+resource "dynatrace_credentials" "credentials_vault" {
+  name        = "#name#"
+  description = "my credentials vault"
+  scopes      = ["SYNTHETIC"]
+  token = "my-token"
+}
+
+resource "dynatrace_http_monitor" "monitor" {
   name      = "#name#"
   frequency = 1
-  locations = ["GEOLOCATION-F3E06A526BE3B4C4"]
+  locations = [data.dynatrace_synthetic_location.location.id]
   anomaly_detection {
     loading_time_thresholds {
     }
@@ -71,7 +82,7 @@ resource "dynatrace_http_monitor" "#name#" {
         headers {
           header {
             name  = "Authorization"
-            value = "Bearer {CREDENTIALS_VAULT-93C49382ACCA047B|token}"
+            value = "Bearer {${dynatrace_credentials.credentials_vault.id}|token}"
           }
           header {
             name  = "Accept"
@@ -134,7 +145,7 @@ resource "dynatrace_http_monitor" "#name#" {
         headers {
           header {
             name  = "Authorization"
-            value = "Bearer {CREDENTIALS_VAULT-93C49382ACCA047B|token}"
+            value = "Bearer {${dynatrace_credentials.credentials_vault.id}|token}"
           }
         }
       }
@@ -192,7 +203,7 @@ resource "dynatrace_http_monitor" "#name#" {
         headers {
           header {
             name  = "Authorization"
-            value = "Bearer {CREDENTIALS_VAULT-93C49382ACCA047B|token}"
+            value = "Bearer {${dynatrace_credentials.credentials_vault.id}|token}"
           }
         }
       }
@@ -252,7 +263,7 @@ resource "dynatrace_http_monitor" "#name#" {
         headers {
           header {
             name  = "Authorization"
-            value = "Bearer {CREDENTIALS_VAULT-93C49382ACCA047B|token}"
+            value = "Bearer {${dynatrace_credentials.credentials_vault.id}|token}"
           }
         }
       }
@@ -312,7 +323,7 @@ resource "dynatrace_http_monitor" "#name#" {
         headers {
           header {
             name  = "Authorization"
-            value = "Bearer {CREDENTIALS_VAULT-93C49382ACCA047B|token}"
+            value = "Bearer {${dynatrace_credentials.credentials_vault.id}|token}"
           }
         }
       }
@@ -354,14 +365,14 @@ resource "dynatrace_http_monitor" "#name#" {
         });
         api.setValue("service_status", payload);
       EOT
-      url             = "https://manage.office.com/api/v1.0/{CREDENTIALS_VAULT-1A8E917381883F54|token}/ServiceComms/CurrentStatus"
+      url             = "https://manage.office.com/api/v1.0/{${dynatrace_credentials.credentials_vault.id}|token}/ServiceComms/CurrentStatus"
       configuration {
         accept_any_certificate = true
         follow_redirects       = true
         headers {
           header {
             name  = "Authorization"
-            value = "Bearer {CREDENTIALS_VAULT-CE4EA27BA94C9061|token}"
+            value = "Bearer {${dynatrace_credentials.credentials_vault.id}|token}"
           }
           header {
             name  = "Accept"
@@ -408,7 +419,7 @@ resource "dynatrace_http_monitor" "#name#" {
           }
           header {
             name  = "Authorization"
-            value = "Api-Token {CREDENTIALS_VAULT-55F1E51535993619|token}"
+            value = "Api-Token {${dynatrace_credentials.credentials_vault.id}|token}"
           }
         }
       }
@@ -420,4 +431,9 @@ resource "dynatrace_http_monitor" "#name#" {
       }
     }
   }
+}
+
+resource "time_sleep" "wait_to_be_consistent" {
+  depends_on = [dynatrace_http_monitor.monitor]
+  create_duration = "10s"
 }

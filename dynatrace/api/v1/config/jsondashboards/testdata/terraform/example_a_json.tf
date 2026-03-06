@@ -1,529 +1,476 @@
-resource "dynatrace_json_dashboard" "#name#" {
+resource "dynatrace_json_dashboard" "name" {
   contents = jsonencode(
     {
-      "dashboardMetadata" : {
-        "name" : "Azure Cognitive Services",
-        "shared" : true,
-        "owner" : "Dynatrace",
-        "tags" : [
-          "Azure"
+      "dashboardMetadata": {
+        "name": "Performance overview",
+        "shared": true,
+        "owner": "Dynatrace",
+        "tags": [
+          "performance"
         ],
-        "preset" : true
+        "preset": true,
+        "hasConsistentColors": false
       },
-      "tiles" : [
+      "tiles": [
         {
-          "name" : "Custom chart",
-          "tileType" : "CUSTOM_CHARTING",
-          "configured" : true,
-          "bounds" : {
-            "top" : 342,
-            "left" : 38,
-            "width" : 342,
-            "height" : 304
+          "name": "Performance",
+          "tileType": "HEADER",
+          "configured": true,
+          "bounds": {
+            "top": 0,
+            "left": 38,
+            "width": 1026,
+            "height": 38
           },
-          "filterConfig" : {
-            "type" : "MIXED",
-            "customName" : "Successful calls by service instance",
-            "defaultName" : "Custom chart",
-            "chartConfig" : {
-              "legendShown" : true,
-              "type" : "TOP_LIST",
-              "series" : [
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.successfulcalls",
-                  "aggregation" : "SUM",
-                  "type" : "LINE",
-                  "entityType" : "IOT",
-                  "dimensions" : [
-                    {
-                      "id" : "0",
-                      "name" : "dt.entity.custom_device",
-                      "entityDimension" : true
-                    }
-                  ],
-                  "sortColumn" : true,
-                  "aggregationRate" : "TOTAL"
-                }
-              ]
-            }
-          }
+          "tileFilter": {},
+          "isAutoRefreshDisabled": true
         },
         {
-          "name" : "Custom chart",
-          "tileType" : "CUSTOM_CHARTING",
-          "configured" : true,
-          "bounds" : {
-            "top" : 342,
-            "left" : 722,
-            "width" : 342,
-            "height" : 304
+          "name": "Failure rate by service",
+          "tileType": "DATA_EXPLORER",
+          "configured": true,
+          "bounds": {
+            "top": 342,
+            "left": 38,
+            "width": 342,
+            "height": 304
           },
-          "filterConfig" : {
-            "type" : "MIXED",
-            "customName" : "Latency by service instance",
-            "defaultName" : "Custom chart",
-            "chartConfig" : {
-              "legendShown" : true,
-              "type" : "TOP_LIST",
-              "series" : [
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.latency",
-                  "aggregation" : "AVG",
-                  "type" : "LINE",
-                  "entityType" : "IOT",
-                  "dimensions" : [
-                    {
-                      "id" : "0",
-                      "name" : "dt.entity.custom_device",
-                      "values" : [],
-                      "entityDimension" : true
-                    }
-                  ],
-                  "sortColumn" : true,
-                  "aggregationRate" : "TOTAL"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name" : "Custom chart",
-          "tileType" : "CUSTOM_CHARTING",
-          "configured" : true,
-          "bounds" : {
-            "top" : 38,
-            "left" : 380,
-            "width" : 342,
-            "height" : 304
-          },
-          "filterConfig" : {
-            "type" : "MIXED",
-            "customName" : "Total errors",
-            "defaultName" : "Custom chart",
-            "chartConfig" : {
-              "legendShown" : true,
-              "type" : "TIMESERIES",
-              "series" : [
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.totalerrors",
-                  "aggregation" : "SUM",
-                  "type" : "BAR",
-                  "entityType" : "IOT",
-                  "dimensions" : [
-                    {
-                      "id" : "0",
-                      "name" : "dt.entity.custom_device",
-                      "values" : [],
-                      "entityDimension" : true
-                    }
-                  ],
-                  "sortColumn" : true,
-                  "aggregationRate" : "TOTAL"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name" : "Custom chart",
-          "tileType" : "CUSTOM_CHARTING",
-          "configured" : true,
-          "bounds" : {
-            "top" : 38,
-            "left" : 38,
-            "width" : 342,
-            "height" : 304
-          },
-          "filterConfig" : {
-            "type" : "MIXED",
-            "customName" : "Total calls",
-            "defaultName" : "Custom chart",
-            "chartConfig" : {
-              "legendShown" : true,
-              "type" : "TIMESERIES",
-              "series" : [
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.blockedcalls",
-                  "aggregation" : "SUM",
-                  "type" : "BAR",
-                  "entityType" : "IOT",
-                  "dimensions" : [],
-                  "aggregationRate" : "TOTAL"
-                },
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.successfulcalls",
-                  "aggregation" : "SUM",
-                  "type" : "BAR",
-                  "entityType" : "IOT",
-                  "dimensions" : [],
-                  "sortColumn" : true,
-                  "aggregationRate" : "TOTAL"
-                }
+          "tileFilter": {},
+          "isAutoRefreshDisabled": true,
+          "customName": "Successful calls by service instance",
+          "queries": [
+            {
+              "id": "A",
+              "metric": "builtin:service.errors.total.rate",
+              "spaceAggregation": "AUTO",
+              "timeAggregation": "DEFAULT",
+              "splitBy": [
+                "dt.entity.service"
               ],
-              "resultMetadata" : {
-                "nullext:cloud.azure.microsoft_cognitiveservices.accounts.blockedcalls|SUM|TOTAL|BAR|IOT" : {
-                  "lastModified" : 1595493591071,
-                  "customColor" : "#FF0000"
+              "sortBy": "DESC",
+              "sortByDimension": "",
+              "filterBy": {
+                "nestedFilters": [],
+                "criteria": []
+              },
+              "limit": 20,
+              "rate": "NONE",
+              "enabled": true
+            }
+          ],
+          "visualConfig": {
+            "type": "TOP_LIST",
+            "global": {
+              "hideLegend": false
+            },
+            "rules": [
+              {
+                "matcher": "A:",
+                "properties": {
+                  "color": "DEFAULT"
                 },
-                "nullext:cloud.azure.microsoft_cognitiveservices.accounts.totalerrors|SUM|TOTAL|LINE|IOT" : {
-                  "lastModified" : 1595343403084,
-                  "customColor" : "#4fd5e0"
-                },
-                "nullext:cloud.azure.microsoft_cognitiveservices.accounts.successfulcalls|SUM|TOTAL|BAR|IOT" : {
-                  "lastModified" : 1595493603433,
-                  "customColor" : "#4fd5e0"
-                }
+                "seriesOverrides": []
               }
+            ],
+            "axes": {
+              "xAxis": {
+                "visible": true
+              },
+              "yAxes": []
+            },
+            "heatmapSettings": {
+              "yAxis": "VALUE"
+            },
+            "singleValueSettings": {
+              "showSparkLine": true
+            },
+            "thresholds": [
+              {
+                "axisTarget": "LEFT",
+                "rules": [
+                  {
+                    "color": "#7dc540"
+                  },
+                  {
+                    "color": "#f5d30f"
+                  },
+                  {
+                    "color": "#dc172a"
+                  }
+                ],
+                "visible": true
+              }
+            ],
+            "tableSettings": {
+              "hiddenColumns": []
+            },
+            "graphChartSettings": {
+              "connectNulls": false
+            },
+            "honeycombSettings": {
+              "showHive": true,
+              "showLegend": true,
+              "showLabels": false
             }
-          }
+          },
+          "queriesSettings": {
+            "resolution": ""
+          },
+          "metricExpressions": [
+            "resolution=Inf&(builtin:service.errors.total.rate:splitBy(\"dt.entity.service\"):sort(value(auto,descending)):limit(20)):limit(100):names"
+          ]
         },
         {
-          "name" : "Custom chart",
-          "tileType" : "CUSTOM_CHARTING",
-          "configured" : true,
-          "bounds" : {
-            "top" : 38,
-            "left" : 722,
-            "width" : 342,
-            "height" : 304
+          "name": "Total calls",
+          "tileType": "DATA_EXPLORER",
+          "configured": true,
+          "bounds": {
+            "top": 38,
+            "left": 38,
+            "width": 342,
+            "height": 304
           },
-          "filterConfig" : {
-            "type" : "MIXED",
-            "customName" : "Client & server errors by operation",
-            "defaultName" : "Custom chart",
-            "chartConfig" : {
-              "legendShown" : true,
-              "type" : "TOP_LIST",
-              "series" : [
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.clienterrors",
-                  "aggregation" : "SUM",
-                  "type" : "BAR",
-                  "entityType" : "IOT",
-                  "dimensions" : [
-                    {
-                      "id" : "2",
-                      "name" : "Operation name",
-                      "values" : []
-                    }
-                  ],
-                  "sortColumn" : true,
-                  "aggregationRate" : "TOTAL"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name" : "Custom chart",
-          "tileType" : "CUSTOM_CHARTING",
-          "configured" : true,
-          "bounds" : {
-            "top" : 646,
-            "left" : 38,
-            "width" : 342,
-            "height" : 304
-          },
-          "filterConfig" : {
-            "type" : "MIXED",
-            "customName" : "Successful calls by operation",
-            "defaultName" : "Custom chart",
-            "chartConfig" : {
-              "legendShown" : true,
-              "type" : "TOP_LIST",
-              "series" : [
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.successfulcalls",
-                  "aggregation" : "SUM",
-                  "type" : "LINE",
-                  "entityType" : "IOT",
-                  "dimensions" : [
-                    {
-                      "id" : "2",
-                      "name" : "Operation name",
-                      "values" : []
-                    }
-                  ],
-                  "sortColumn" : true,
-                  "aggregationRate" : "TOTAL"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name" : "Custom chart",
-          "tileType" : "CUSTOM_CHARTING",
-          "configured" : true,
-          "bounds" : {
-            "top" : 646,
-            "left" : 380,
-            "width" : 342,
-            "height" : 304
-          },
-          "filterConfig" : {
-            "type" : "MIXED",
-            "customName" : "Blocked calls by operation",
-            "defaultName" : "Custom chart",
-            "chartConfig" : {
-              "legendShown" : true,
-              "type" : "TOP_LIST",
-              "series" : [
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.blockedcalls",
-                  "aggregation" : "SUM",
-                  "type" : "LINE",
-                  "entityType" : "IOT",
-                  "dimensions" : [
-                    {
-                      "id" : "2",
-                      "name" : "Operation name",
-                      "values" : []
-                    }
-                  ],
-                  "sortColumn" : true,
-                  "aggregationRate" : "TOTAL"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name" : "Custom chart",
-          "tileType" : "CUSTOM_CHARTING",
-          "configured" : true,
-          "bounds" : {
-            "top" : 646,
-            "left" : 722,
-            "width" : 342,
-            "height" : 304
-          },
-          "filterConfig" : {
-            "type" : "MIXED",
-            "customName" : "Latency by operation",
-            "defaultName" : "Custom chart",
-            "chartConfig" : {
-              "legendShown" : true,
-              "type" : "TOP_LIST",
-              "series" : [
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.latency",
-                  "aggregation" : "AVG",
-                  "type" : "LINE",
-                  "entityType" : "IOT",
-                  "dimensions" : [
-                    {
-                      "id" : "2",
-                      "name" : "Operation name",
-                      "values" : []
-                    }
-                  ],
-                  "sortColumn" : true,
-                  "aggregationRate" : "TOTAL"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name" : "Custom chart",
-          "tileType" : "CUSTOM_CHARTING",
-          "configured" : true,
-          "bounds" : {
-            "top" : 38,
-            "left" : 1064,
-            "width" : 342,
-            "height" : 304
-          },
-          "filterConfig" : {
-            "type" : "MIXED",
-            "customName" : "Data IN/OUT",
-            "defaultName" : "Custom chart",
-            "chartConfig" : {
-              "legendShown" : true,
-              "type" : "TIMESERIES",
-              "series" : [
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.datain",
-                  "aggregation" : "SUM",
-                  "type" : "BAR",
-                  "entityType" : "IOT",
-                  "dimensions" : [],
-                  "aggregationRate" : "TOTAL"
-                },
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.dataout",
-                  "aggregation" : "SUM",
-                  "type" : "BAR",
-                  "entityType" : "IOT",
-                  "dimensions" : [],
-                  "sortColumn" : true,
-                  "aggregationRate" : "TOTAL"
-                }
+          "tileFilter": {},
+          "isAutoRefreshDisabled": true,
+          "customName": "Total calls",
+          "queries": [
+            {
+              "id": "A",
+              "metric": "builtin:service.errors.total.successCount",
+              "spaceAggregation": "SUM",
+              "timeAggregation": "DEFAULT",
+              "splitBy": [
+                "dt.entity.service"
               ],
-              "resultMetadata" : {
-                "nullext:cloud.azure.microsoft_cognitiveservices.accounts.dataout|SUM|TOTAL|BAR|IOT" : {
-                  "lastModified" : 1595495569439,
-                  "customColor" : "#008cdb"
-                },
-                "nullext:cloud.azure.microsoft_cognitiveservices.accounts.datain|SUM|TOTAL|BAR|IOT" : {
-                  "lastModified" : 1595495567476,
-                  "customColor" : "#aeebf0"
-                },
-                "nullext:cloud.azure.microsoft_cognitiveservices.accounts.datain|SUM|TOTAL|BAR|IOT|IOT" : {
-                  "lastModified" : 1595494661543,
-                  "customColor" : "#008cdb"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name" : "Custom chart",
-          "tileType" : "CUSTOM_CHARTING",
-          "configured" : true,
-          "bounds" : {
-            "top" : 342,
-            "left" : 1064,
-            "width" : 342,
-            "height" : 304
-          },
-          "filterConfig" : {
-            "type" : "MIXED",
-            "customName" : "Data IN by operation",
-            "defaultName" : "Custom chart",
-            "chartConfig" : {
-              "legendShown" : true,
-              "type" : "TOP_LIST",
-              "series" : [
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.datain",
-                  "aggregation" : "SUM",
-                  "type" : "LINE",
-                  "entityType" : "IOT",
-                  "dimensions" : [
-                    {
-                      "id" : "2",
-                      "name" : "Operation name",
-                      "values" : []
-                    }
-                  ],
-                  "sortColumn" : true,
-                  "aggregationRate" : "TOTAL"
-                }
+              "sortBy": "DESC",
+              "sortByDimension": "",
+              "filterBy": {
+                "nestedFilters": [],
+                "criteria": []
+              },
+              "limit": 20,
+              "rate": "NONE",
+              "enabled": true
+            },
+            {
+              "id": "B",
+              "metric": "builtin:service.errors.fourxx.successCount",
+              "spaceAggregation": "SUM",
+              "timeAggregation": "DEFAULT",
+              "splitBy": [
+                "dt.entity.service"
               ],
-              "resultMetadata" : {
-                "nullext:cloud.azure.microsoft_cognitiveservices.accounts.dataout|SUM|TOTAL|LINE|IOT" : {
-                  "lastModified" : 1595344576968,
-                  "customColor" : "#ef651f"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name" : "Custom chart",
-          "tileType" : "CUSTOM_CHARTING",
-          "configured" : true,
-          "bounds" : {
-            "top" : 646,
-            "left" : 1064,
-            "width" : 342,
-            "height" : 304
-          },
-          "filterConfig" : {
-            "type" : "MIXED",
-            "customName" : "Data OUT by operation",
-            "defaultName" : "Custom chart",
-            "chartConfig" : {
-              "legendShown" : true,
-              "type" : "TOP_LIST",
-              "series" : [
-                {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.dataout",
-                  "aggregation" : "SUM",
-                  "type" : "LINE",
-                  "entityType" : "IOT",
-                  "dimensions" : [
-                    {
-                      "id" : "2",
-                      "name" : "Operation name",
-                      "values" : []
-                    }
-                  ],
-                  "sortColumn" : true,
-                  "aggregationRate" : "TOTAL"
-                }
+              "sortBy": "DESC",
+              "sortByDimension": "",
+              "filterBy": {
+                "nestedFilters": [],
+                "criteria": []
+              },
+              "limit": 20,
+              "rate": "NONE",
+              "enabled": true
+            },
+            {
+              "id": "C",
+              "metric": "builtin:service.errors.fivexx.successCount",
+              "spaceAggregation": "SUM",
+              "timeAggregation": "DEFAULT",
+              "splitBy": [
+                "dt.entity.service"
               ],
-              "resultMetadata" : {
-                "nullÂ¦Operation nameÂ»ReadÂ»falseext:cloud.azure.microsoft_cognitiveservices.accounts.dataout|SUM|TOTAL|LINE|IOT" : {
-                  "lastModified" : 1595344576968,
-                  "customColor" : "#ef651f"
-                }
-              }
+              "sortBy": "DESC",
+              "sortByDimension": "",
+              "filterBy": {
+                "nestedFilters": [],
+                "criteria": []
+              },
+              "limit": 20,
+              "rate": "NONE",
+              "enabled": true
             }
-          }
-        },
-        {
-          "name" : "Custom chart",
-          "tileType" : "CUSTOM_CHARTING",
-          "configured" : true,
-          "bounds" : {
-            "top" : 342,
-            "left" : 380,
-            "width" : 342,
-            "height" : 304
-          },
-          "filterConfig" : {
-            "type" : "MIXED",
-            "customName" : "Blocked calls by service instance",
-            "defaultName" : "Custom chart",
-            "chartConfig" : {
-              "legendShown" : true,
-              "type" : "TOP_LIST",
-              "series" : [
+          ],
+          "visualConfig": {
+            "type": "STACKED_AREA",
+            "global": {
+              "hideLegend": false
+            },
+            "rules": [
+              {
+                "matcher": "A:",
+                "properties": {
+                  "color": "DEFAULT"
+                },
+                "seriesOverrides": []
+              },
+              {
+                "matcher": "B:",
+                "properties": {
+                  "color": "DEFAULT"
+                },
+                "seriesOverrides": []
+              },
+              {
+                "matcher": "C:",
+                "properties": {
+                  "color": "DEFAULT"
+                },
+                "seriesOverrides": []
+              }
+            ],
+            "axes": {
+              "xAxis": {
+                "displayName": "",
+                "visible": true
+              },
+              "yAxes": [
                 {
-                  "metric" : "ext:cloud.azure.microsoft_cognitiveservices.accounts.blockedcalls",
-                  "aggregation" : "SUM",
-                  "type" : "LINE",
-                  "entityType" : "IOT",
-                  "dimensions" : [
-                    {
-                      "id" : "0",
-                      "name" : "dt.entity.custom_device",
-                      "values" : [],
-                      "entityDimension" : true
-                    }
+                  "displayName": "",
+                  "visible": true,
+                  "min": "AUTO",
+                  "max": "AUTO",
+                  "position": "LEFT",
+                  "queryIds": [
+                    "A",
+                    "B",
+                    "C"
                   ],
-                  "sortColumn" : true,
-                  "aggregationRate" : "TOTAL"
+                  "defaultAxis": true
                 }
               ]
+            },
+            "heatmapSettings": {
+              "yAxis": "VALUE"
+            },
+            "singleValueSettings": {
+              "showSparkLine": true
+            },
+            "thresholds": [
+              {
+                "axisTarget": "LEFT",
+                "rules": [
+                  {
+                    "color": "#7dc540"
+                  },
+                  {
+                    "color": "#f5d30f"
+                  },
+                  {
+                    "color": "#dc172a"
+                  }
+                ],
+                "visible": true
+              }
+            ],
+            "tableSettings": {
+              "hiddenColumns": []
+            },
+            "graphChartSettings": {
+              "connectNulls": false
+            },
+            "honeycombSettings": {
+              "showHive": true,
+              "showLegend": true,
+              "showLabels": false
             }
-          }
+          },
+          "queriesSettings": {
+            "resolution": ""
+          },
+          "metricExpressions": [
+            "resolution=null&(builtin:service.errors.total.successCount:splitBy(\"dt.entity.service\"):sum:sort(value(sum,descending)):limit(20)):limit(100):names,(builtin:service.errors.fourxx.successCount:splitBy(\"dt.entity.service\"):sum:sort(value(sum,descending)):limit(20)):limit(100):names,(builtin:service.errors.fivexx.successCount:splitBy(\"dt.entity.service\"):sum:sort(value(sum,descending)):limit(20)):limit(100):names"
+          ]
         },
         {
-          "name" : "Performance ",
-          "tileType" : "HEADER",
-          "configured" : true,
-          "bounds" : {
-            "top" : 0,
-            "left" : 38,
-            "width" : 1026,
-            "height" : 38
-          }
+          "name": "Total errors",
+          "tileType": "DATA_EXPLORER",
+          "configured": true,
+          "bounds": {
+            "top": 38,
+            "left": 380,
+            "width": 342,
+            "height": 304
+          },
+          "tileFilter": {},
+          "isAutoRefreshDisabled": true,
+          "customName": "Total errors",
+          "queries": [
+            {
+              "id": "A",
+              "metric": "builtin:service.errors.total.count",
+              "spaceAggregation": "SUM",
+              "timeAggregation": "DEFAULT",
+              "splitBy": [],
+              "sortBy": "DESC",
+              "sortByDimension": "",
+              "filterBy": {
+                "nestedFilters": [],
+                "criteria": []
+              },
+              "limit": 20,
+              "rate": "NONE",
+              "enabled": true
+            }
+          ],
+          "visualConfig": {
+            "type": "SINGLE_VALUE",
+            "global": {
+              "hideLegend": false
+            },
+            "rules": [
+              {
+                "matcher": "A:",
+                "properties": {
+                  "color": "DEFAULT"
+                },
+                "seriesOverrides": []
+              }
+            ],
+            "axes": {
+              "xAxis": {
+                "visible": true
+              },
+              "yAxes": []
+            },
+            "heatmapSettings": {
+              "yAxis": "VALUE"
+            },
+            "singleValueSettings": {
+              "showTrend": false,
+              "showSparkLine": true,
+              "linkTileColorToThreshold": false
+            },
+            "thresholds": [
+              {
+                "axisTarget": "LEFT",
+                "rules": [
+                  {
+                    "color": "#7dc540"
+                  },
+                  {
+                    "color": "#f5d30f"
+                  },
+                  {
+                    "color": "#dc172a"
+                  }
+                ],
+                "visible": true
+              }
+            ],
+            "tableSettings": {
+              "hiddenColumns": []
+            },
+            "graphChartSettings": {
+              "connectNulls": false
+            },
+            "honeycombSettings": {
+              "showHive": true,
+              "showLegend": true,
+              "showLabels": false
+            }
+          },
+          "queriesSettings": {
+            "resolution": ""
+          },
+          "metricExpressions": [
+            "resolution=Inf&(builtin:service.errors.total.count:splitBy():sum:sort(value(sum,descending)):limit(20)):limit(100):names",
+            "resolution=null&(builtin:service.errors.total.count:splitBy():sum:sort(value(sum,descending)):limit(20))"
+          ]
         },
         {
-          "name" : "Data volume",
-          "tileType" : "HEADER",
-          "configured" : true,
-          "bounds" : {
-            "top" : 0,
-            "left" : 1064,
-            "width" : 342,
-            "height" : 38
-          }
+          "name": "Client side errors",
+          "tileType": "DATA_EXPLORER",
+          "configured": true,
+          "bounds": {
+            "top": 38,
+            "left": 722,
+            "width": 342,
+            "height": 304
+          },
+          "tileFilter": {},
+          "isAutoRefreshDisabled": true,
+          "customName": "Client & server errors by operation",
+          "queries": [
+            {
+              "id": "A",
+              "metric": "builtin:service.errors.client.count",
+              "spaceAggregation": "SUM",
+              "timeAggregation": "DEFAULT",
+              "splitBy": [],
+              "sortBy": "DESC",
+              "sortByDimension": "",
+              "filterBy": {
+                "nestedFilters": [],
+                "criteria": []
+              },
+              "limit": 20,
+              "rate": "NONE",
+              "enabled": true
+            }
+          ],
+          "visualConfig": {
+            "type": "SINGLE_VALUE",
+            "global": {
+              "hideLegend": false
+            },
+            "rules": [
+              {
+                "matcher": "A:",
+                "properties": {
+                  "color": "DEFAULT"
+                },
+                "seriesOverrides": []
+              }
+            ],
+            "axes": {
+              "xAxis": {
+                "visible": true
+              },
+              "yAxes": []
+            },
+            "heatmapSettings": {
+              "yAxis": "VALUE"
+            },
+            "singleValueSettings": {
+              "showSparkLine": true
+            },
+            "thresholds": [
+              {
+                "axisTarget": "LEFT",
+                "rules": [
+                  {
+                    "color": "#7dc540"
+                  },
+                  {
+                    "color": "#f5d30f"
+                  },
+                  {
+                    "color": "#dc172a"
+                  }
+                ],
+                "visible": true
+              }
+            ],
+            "tableSettings": {
+              "hiddenColumns": []
+            },
+            "graphChartSettings": {
+              "connectNulls": false
+            },
+            "honeycombSettings": {
+              "showHive": true,
+              "showLegend": true,
+              "showLabels": false
+            }
+          },
+          "queriesSettings": {
+            "resolution": ""
+          },
+          "metricExpressions": [
+            "resolution=Inf&(builtin:service.errors.client.count:splitBy():sum:sort(value(sum,descending)):limit(20)):limit(100):names",
+            "resolution=null&(builtin:service.errors.client.count:splitBy():sum:sort(value(sum,descending)):limit(20))"
+          ]
         }
       ]
-  })
+    }
+  )
 }

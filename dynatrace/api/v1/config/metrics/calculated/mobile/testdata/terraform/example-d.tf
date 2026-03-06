@@ -1,7 +1,11 @@
-resource "dynatrace_calculated_mobile_metric" "#name#" {
+data "dynatrace_mobile_application" "application" {
+  name = "Application"
+}
+
+resource "dynatrace_calculated_mobile_metric" "metric" {
   name           = "#name#"
   enabled        = true
-  app_identifier = "MOBILE_APPLICATION-7F6AE72450E14F11"
+  app_identifier = data.dynatrace_mobile_application.application.id
   metric_key     = "calc:apps.mobile.#name#"
   metric_type    = "USER_ACTION_DURATION"
   dimensions {

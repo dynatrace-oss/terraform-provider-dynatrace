@@ -1,6 +1,17 @@
-resource "dynatrace_report" "#name#" {
+resource "dynatrace_dashboard" "dashboard" {
+  dashboard_metadata {
+    name   = "#name#"
+    owner  = "Dynatrace"
+  }
+  tile {
+    name      = "my tile"
+    tile_type = "HOST"
+  }
+}
+
+resource "dynatrace_report" "report" {
   type                = "DASHBOARD"
-  dashboard_id        = "41eae96d-4930-4f44-bbd8-3699f21a8bbf"
+  dashboard_id        = dynatrace_dashboard.dashboard.id
   email_notifications = true
   subscriptions {
     month = ["terraform1@dynatrace.com", "terraform2@dynatrace.com"]

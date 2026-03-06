@@ -1,5 +1,9 @@
-resource "dynatrace_mobile_app_crash_rate" "#name#" {
-  application_id = "MOBILE_APPLICATION-1234567890000000"
+data "dynatrace_mobile_application" "application" {
+  name = "Application"
+}
+
+resource "dynatrace_mobile_app_crash_rate" "crash_rate" {
+  application_id = data.dynatrace_mobile_application.application.id
   crash_rate_increase {
     enabled        = true
     detection_mode = "fixed"

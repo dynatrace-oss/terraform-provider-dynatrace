@@ -1,7 +1,7 @@
-resource "dynatrace_calculated_web_metric" "#name#" {
+resource "dynatrace_calculated_web_metric" "application_cache" {
   name           = "#name#"
   enabled        = true
-  app_identifier = "APPLICATION-EA7C4B59F27D43EB"
+  app_identifier = dynatrace_web_application.application.id
   metric_key     = "calc:apps.web.#name#"
   metric_definition {
     metric = "ApplicationCache"
