@@ -33,3 +33,6 @@ test.log
 .DS_Store
 *.env
 __debug_bin*
+
+# generated files
+schemaSupport.json
