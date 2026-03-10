@@ -41,3 +41,19 @@ func (s *StringArray) UnmarshalJSON(data []byte) error {
 	}
 	return fmt.Errorf("StringArray: cannot unmarshal %s", string(data))
 }
+
+func stringifyMap(m map[string]any) (*string, error) {
+	if m == nil {
+		return nil, nil
+	}
+	if len(m) == 0 {
+		empty := "{}"
+		return &empty, nil
+	}
+	data, err := json.Marshal(m)
+	if err != nil {
+		return nil, err
+	}
+	str := string(data)
+	return &str, nil
+}

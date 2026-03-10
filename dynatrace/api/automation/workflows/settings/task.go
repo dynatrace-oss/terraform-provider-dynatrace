@@ -22,7 +22,6 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -32,11 +31,6 @@ type Tasks []*Task
 func (me Tasks) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	for _, task := range me {
-		// Because of a bug in Terraform regarding Sets of Resources
-		// These extra entries may occur
-		if len(task.Name) == 0 {
-			continue
-		}
 		data, err := json.Marshal(task)
 		if err != nil {
 			return nil, err
@@ -91,7 +85,19 @@ func (me Tasks) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Tasks) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("task", me)
+	if err := decoder.DecodeSlice("task", me); err != nil {
+		return err
+	}
+	// https://github.com/hashicorp/terraform-plugin-sdk/issues/895
+	// Only known workaround is to ignore these blocks
+	newEntries := Tasks{}
+	for _, entry := range *me {
+		if entry.Name != "" {
+			newEntries = append(newEntries, entry)
+		}
+	}
+	*me = newEntries
+	return nil
 }
 
 type Task struct {
@@ -133,6 +139,7 @@ func (me *Task) Schema(prefix string) map[string]*schema.Schema {
 			Description:      "Parameters and values for this task as JSON code. Contents depend on the kind of task - determined by the attribute `action`",
 			Optional:         true,
 			DiffSuppressFunc: hcl.SuppressJSONorEOT,
+			Default:          "{}",
 			Elem:             &schema.Schema{Type: schema.TypeString},
 		},
 		"active": {
@@ -194,15 +201,9 @@ func (me *Task) Schema(prefix string) map[string]*schema.Schema {
 }
 
 func (me *Task) MarshalHCL(properties hcl.Properties) error {
-	var inputJSON *string
-	var err error
-	if len(me.Input) > 0 {
-		var data []byte
-		data, err = json.Marshal(me.Input)
-		if err != nil {
-			return err
-		}
-		inputJSON = opt.NewString(string(data))
+	inputJSON, err := stringifyMap(me.Input)
+	if err != nil {
+		return err
 	}
 	// Fix for #579. The REST API apparently now produces an empty `conditions` property
 	// That leads to non-empty plans

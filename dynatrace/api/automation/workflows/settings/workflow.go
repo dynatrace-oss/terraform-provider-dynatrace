@@ -20,13 +20,12 @@ package workflows
 import (
 	"encoding/json"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-const SchemaVersion = 3
+const SchemaVersion = 4
 
 type Workflow struct {
 	Title       string `json:"title" maxlength:"200"` // The title / name of the workflow
@@ -34,12 +33,12 @@ type Workflow struct {
 
 	Actor                string         `json:"actor,omitempty" maxlength:"36" format:"uuid"` // The user context the executions of the workflow will happen with
 	Owner                string         `json:"owner,omitempty" format:"uuid"`                // The ID of the owner of this workflow
-	OwnerType            string         `json:"ownerType,omitempty"`                          // The type of the owner. Possible values: `USER` and `GROUP`
-	Private              *bool          `json:"isPrivate" default:"true"`                     // Defines whether this workflow is private to the owner or not. Default is `true`
-	IsDeployed           *bool          `json:"isDeployed" default:"true"`                    // Defines whether this workflow is deployed or kept as a draft. Default is `true`
+	OwnerType            string         `json:"ownerType"`                                    // The type of the owner. Possible values: `USER` and `GROUP`
+	Private              bool           `json:"isPrivate"`                                    // Defines whether this workflow is private to the owner or not. Default is `true`
+	IsDeployed           bool           `json:"isDeployed"`                                   // Defines whether this workflow is deployed or kept as a draft. Default is `true`
 	SchemaVersion        int            `json:"schemaVersion,omitempty"`                      //
 	Trigger              *Trigger       `json:"trigger,omitempty"`                            // Configures how executions of the workflows are getting triggered. If no trigger is specified it means the workflow is getting manually triggered
-	Tasks                Tasks          `json:"tasks,omitempty"`                              // The tasks to run for every execution of this workflow
+	Tasks                Tasks          `json:"tasks"`                                        // The tasks to run for every execution of this workflow
 	Type                 string         `json:"type"`
 	HourlyExecutionLimit *int           `json:"hourlyExecutionLimit,omitempty"` // Maximum number of executions per hour, default is 1000
 	Input                map[string]any `json:"input,omitempty"`                // Workflow-level input parameters
@@ -81,11 +80,11 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 			ValidateDiagFunc: ValidateUUID,
 		},
 		"owner_type": {
-			Type:             schema.TypeString,
-			Description:      "The type of the owner. Possible values are `USER` and `GROUP`",
-			Optional:         true,
-			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool { return new == "" },
-			ValidateFunc:     validation.StringInSlice([]string{"USER", "GROUP"}, false),
+			Type:         schema.TypeString,
+			Description:  "The type of the owner. Possible values are `USER` and `GROUP`",
+			Optional:     true,
+			Default:      "USER",
+			ValidateFunc: validation.StringInSlice([]string{"USER", "GROUP"}, false),
 		},
 		"private": {
 			Type:        schema.TypeBool,
@@ -132,18 +131,19 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 			Description:      "Workflow-level input parameters as JSON. These parameters are available to all tasks in the workflow",
 			Optional:         true,
 			DiffSuppressFunc: hcl.SuppressJSONorEOT,
+			Default:          "{}",
 		},
 		"task_defaults": {
 			Type:             schema.TypeString,
 			Description:      "Default task settings as JSON. These defaults are applied to all tasks in the workflow",
 			Optional:         true,
 			DiffSuppressFunc: hcl.SuppressJSONorEOT,
+			Default:          "{}",
 		},
 		"guide": {
-			Type:             schema.TypeString,
-			Description:      "Informational guide text for the workflow",
-			Optional:         true,
-			ValidateDiagFunc: ValidateMaxLength(10000),
+			Type:        schema.TypeString,
+			Description: "Informational guide text for the workflow",
+			Optional:    true,
 		},
 		"result": {
 			Type:        schema.TypeString,
@@ -154,40 +154,25 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 }
 
 func (me *Workflow) MarshalHCL(properties hcl.Properties) error {
-	if me.Private == nil {
-		me.Private = opt.NewBool(true)
+	inputJSON, err := stringifyMap(me.Input)
+	if err != nil {
+		return err
 	}
-	if me.IsDeployed == nil {
-		me.IsDeployed = opt.NewBool(true)
+
+	taskDefaultsJSON, err := stringifyMap(me.TaskDefaults)
+	if err != nil {
+		return err
 	}
-	if len(me.Tasks) > 0 {
-		fixedTasks := Tasks{}
-		for _, task := range me.Tasks {
-			if len(task.Name) == 0 || len(task.Action) == 0 {
-				continue
-			}
-			fixedTasks = append(fixedTasks, task)
-		}
-		me.Tasks = fixedTasks
+
+	if len(me.Tasks) == 0 {
+		// Emit an empty tasks block so Terraform can match `tasks {}` in config
+		// and avoid a perpetual non-empty plan. properties.Encode would nil-out
+		// the key for a nil/empty slice, losing the block entirely.
+		properties["tasks"] = []any{map[string]any{}}
+	} else if err := properties.Encode("tasks", me.Tasks); err != nil {
+		return err
 	}
-	var inputJSON *string
-	if len(me.Input) > 0 {
-		data, err := json.Marshal(me.Input)
-		if err != nil {
-			return err
-		}
-		s := string(data)
-		inputJSON = &s
-	}
-	var taskDefaultsJSON *string
-	if len(me.TaskDefaults) > 0 {
-		data, err := json.Marshal(me.TaskDefaults)
-		if err != nil {
-			return err
-		}
-		s := string(data)
-		taskDefaultsJSON = &s
-	}
+
 	return properties.EncodeAll(map[string]any{
 		"title":       me.Title,
 		"description": me.Description,
@@ -198,7 +183,6 @@ func (me *Workflow) MarshalHCL(properties hcl.Properties) error {
 		"private":                me.Private,
 		"is_deployed":            me.IsDeployed,
 		"trigger":                me.Trigger,
-		"tasks":                  me.Tasks,
 		"type":                   me.Type,
 		"hourly_execution_limit": me.HourlyExecutionLimit,
 		"input":                  inputJSON,
@@ -215,11 +199,11 @@ func (me *Workflow) UnmarshalHCL(decoder hcl.Decoder) error {
 		"title":       &me.Title,
 		"description": &me.Description,
 
-		"actor":      &me.Actor,
-		"owner":      &me.Owner,
-		"owner_type": &me.OwnerType,
-		// "private": &me.Private,
-		// "is_deployed": &me.IsDeployed,
+		"actor":                  &me.Actor,
+		"owner":                  &me.Owner,
+		"owner_type":             &me.OwnerType,
+		"private":                &me.Private,
+		"is_deployed":            &me.IsDeployed,
 		"trigger":                &me.Trigger,
 		"tasks":                  &me.Tasks,
 		"type":                   &me.Type,
@@ -243,81 +227,13 @@ func (me *Workflow) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 
-	if len(me.Tasks) > 0 {
-		fixedTasks := Tasks{}
-		for _, task := range me.Tasks {
-			if len(task.Name) == 0 || len(task.Action) == 0 {
-				continue
-			}
-			fixedTasks = append(fixedTasks, task)
-		}
-		me.Tasks = fixedTasks
-	}
-
-	// Because `private` has a default value of `true` we need to check
-	// with `GetOkExists`
-	// This is a shortcoming of the TF Plugin SDK. They've struggled
-	// with providing proper "found" return values when calling `GetOk`.
-	// `GetOkExists` SHOULD meanwhile produce the correct value.
-	isPrivate, isPrivateExists := decoder.GetOkExists("private")
-	if !isPrivateExists {
-		me.Private = opt.NewBool(true)
-	} else {
-		me.Private = opt.NewBool(isPrivate.(bool))
-	}
-
-	// Same pattern as `private` — `isDeployed` defaults to `true`
-	isDeployed, isDeployedExists := decoder.GetOkExists("is_deployed")
-	if !isDeployedExists {
-		me.IsDeployed = opt.NewBool(true)
-	} else {
-		me.IsDeployed = opt.NewBool(isDeployed.(bool))
-	}
 	return nil
 }
 
 func (me *Workflow) MarshalJSON() ([]byte, error) {
-	if me.Private == nil {
-		me.Private = opt.NewBool(true)
-	}
-	if me.IsDeployed == nil {
-		me.IsDeployed = opt.NewBool(true)
-	}
-	wf := struct {
-		Title       string `json:"title"`
-		Description string `json:"description,omitempty"`
-
-		Actor                string         `json:"actor,omitempty"`
-		Owner                string         `json:"owner,omitempty"`
-		OwnerType            string         `json:"ownerType,omitempty"`
-		Private              *bool          `json:"isPrivate"`
-		IsDeployed           *bool          `json:"isDeployed"`
-		SchemaVersion        int            `json:"schemaVersion,omitempty"`
-		Trigger              *Trigger       `json:"trigger,omitempty"`
-		Tasks                Tasks          `json:"tasks,omitempty"`
-		Type                 string         `json:"type,omitempty"`
-		HourlyExecutionLimit *int           `json:"hourlyExecutionLimit,omitempty"`
-		Input                map[string]any `json:"input,omitempty"`
-		TaskDefaults         map[string]any `json:"taskDefaults,omitempty"`
-		Guide                string         `json:"guide,omitempty"`
-		Result               string         `json:"result,omitempty"`
-	}{
-		SchemaVersion:        SchemaVersion, // adding the Schema Version is the purpose of this custome `MarshalJSON` function
-		Title:                me.Title,
-		Description:          me.Description,
-		Actor:                me.Actor,
-		Owner:                me.Owner,
-		OwnerType:            me.OwnerType,
-		Private:              me.Private,
-		IsDeployed:           me.IsDeployed,
-		Trigger:              me.Trigger,
-		Tasks:                me.Tasks,
-		Type:                 me.Type,
-		HourlyExecutionLimit: me.HourlyExecutionLimit,
-		Input:                me.Input,
-		TaskDefaults:         me.TaskDefaults,
-		Guide:                me.Guide,
-		Result:               me.Result,
-	}
-	return json.Marshal(wf)
+	// prevent recursion with a custom type, else we would end up in an infinite loop calling MarshalJSON over and over again
+	type plain Workflow
+	meData := plain(*me)
+	meData.SchemaVersion = SchemaVersion
+	return json.Marshal(meData)
 }
