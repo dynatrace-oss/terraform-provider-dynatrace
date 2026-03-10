@@ -109,7 +109,13 @@ func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
 	} else if strValP, ok := me.Value.(*string); ok && strValP != nil && isJSON(*strValP) {
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(toJSONencode(*strValP, indent))}})
 	} else if strVal, ok := me.Value.(string); ok && !preventHeredoc && strings.Contains(strVal, "\n") {
-		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(strVal, indent) + "\n" + indent + "EOT"
+		var eotIndent string
+		// If we always add a newline before the EOT end, then we end up with an extra blank line at the end of the string if the string already ends with a newline.
+		// This would cause a non-empty terraform plan
+		if !strings.HasSuffix(strVal, "\n") {
+			eotIndent = "\n" + indent
+		}
+		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(strVal, indent) + eotIndent + "EOT"
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
 	} else if strVal, ok := me.Value.(string); ok && !preventHeredoc && strings.Count(strVal, "\"") > 3 {
 		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(strVal, indent) + "\n" + indent + "EOT"
