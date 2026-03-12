@@ -18,8 +18,6 @@
 package workflows
 
 import (
-	"regexp"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -42,11 +40,11 @@ type ScheduleTrigger struct {
 func (me *ScheduleTrigger) Schema(prefix string) map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"time": {
-			Type:             schema.TypeString,
-			Description:      "Specifies a fixed time the schedule will trigger at in 24h format (e.g. `14:23:59`). Conflicts with `cron`, `interval_minutes`, `between_start` and `between_end`",
-			Optional:         true,
-			ValidateDiagFunc: ValidateRegex(regexp.MustCompile("^([0-1]{1}[0-9]|2[0-3]):[0-5][0-9]$"), "Example: 14:23:59"),
-			ConflictsWith:    []string{prefix + ".0.cron", prefix + ".0.interval_minutes", prefix + ".0.between_start", prefix + ".0.between_end"},
+			Type:          schema.TypeString,
+			Description:   "Specifies a fixed time the schedule will trigger at in 24h format (e.g. `14:23`). Conflicts with `cron`, `interval_minutes`, `between_start` and `between_end`",
+			Optional:      true,
+			ConflictsWith: []string{prefix + ".0.cron", prefix + ".0.interval_minutes", prefix + ".0.between_start", prefix + ".0.between_end"},
+			// Regex: ^([0-1]\d|2[0-3]):[0-5]\d$
 		},
 		"cron": {
 			Type:          schema.TypeString,
@@ -62,13 +60,13 @@ func (me *ScheduleTrigger) Schema(prefix string) map[string]*schema.Schema {
 		},
 		"between_start": {
 			Type:          schema.TypeString,
-			Description:   "Triggers the schedule every n minutes within a given time frame - specifying the start time on any valid day in 24h format (e.g. 13:22:44). Conflicts with `cron` and `time`. Required with `interval_minutes` and `between_end`",
+			Description:   "Triggers the schedule every n minutes within a given time frame - specifying the start time on any valid day in 24h format (e.g. 13:22). Conflicts with `cron` and `time`. Required with `interval_minutes` and `between_end`",
 			Optional:      true,
 			ConflictsWith: []string{prefix + ".0.time", prefix + ".0.cron"},
 		},
 		"between_end": {
 			Type:          schema.TypeString,
-			Description:   "Triggers the schedule every n minutes within a given time frame - specifying the end time on any valid day in 24h format (e.g. 14:22:44). Conflicts with `cron` and `time`. Required with `interval_minutes` and `between_start`",
+			Description:   "Triggers the schedule every n minutes within a given time frame - specifying the end time on any valid day in 24h format (e.g. 14:22). Conflicts with `cron` and `time`. Required with `interval_minutes` and `between_start`",
 			Optional:      true,
 			ConflictsWith: []string{prefix + ".0.time", prefix + ".0.cron"},
 		},
