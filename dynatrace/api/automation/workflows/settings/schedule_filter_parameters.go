@@ -40,13 +40,13 @@ func (me *ScheduleFilterParameters) Schema(prefix string) map[string]*schema.Sch
 		},
 		"earliest_start": {
 			Type:        schema.TypeString,
-			Description: "If specified, the schedule won't trigger executions before the given date",
+			Description: "If specified, the schedule won't trigger executions before the given date. Format: `yyyy-MM-dd`",
 			Optional:    true,
 			// TODO: ValidateDiag 2023-07-01
 		},
 		"earliest_start_time": {
 			Type:        schema.TypeString,
-			Description: "If specified, the schedule won't trigger executions before the given time",
+			Description: "If specified, the schedule won't trigger executions before the given time. Format: `HH:mm`",
 			Optional:    true,
 			// TODO: ValidateDiag 22:32:22
 		},
@@ -58,7 +58,7 @@ func (me *ScheduleFilterParameters) Schema(prefix string) map[string]*schema.Sch
 		},
 		"include_dates": {
 			Type:        schema.TypeSet,
-			Description: "If specified, the schedule will trigger executions on the given dates, even if the main configuration prohibits it",
+			Description: "If specified, the schedule will trigger executions on the given dates, even if the main configuration prohibits it. Format: `yyyy-MM-dd`",
 			Optional:    true,
 			MinItems:    1,
 			Elem:        &schema.Schema{Type: schema.TypeString},
@@ -66,7 +66,7 @@ func (me *ScheduleFilterParameters) Schema(prefix string) map[string]*schema.Sch
 		},
 		"exclude_dates": {
 			Type:        schema.TypeSet,
-			Description: "If specified, the schedule won't trigger exeuctions on the given dates",
+			Description: "If specified, the schedule won't trigger exeuctions on the given dates. Format: `yyyy-MM-dd`",
 			Optional:    true,
 			MinItems:    1,
 			Elem:        &schema.Schema{Type: schema.TypeString},
