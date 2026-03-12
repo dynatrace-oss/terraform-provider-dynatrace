@@ -3,7 +3,6 @@ resource "dynatrace_automation_workflow" "workflow_with_empty_json_encode" {
   private     = true
   title       = "#name#"
   input = jsonencode({})
-  task_defaults = jsonencode({})
   tasks {
     task {
       name = "test_1"

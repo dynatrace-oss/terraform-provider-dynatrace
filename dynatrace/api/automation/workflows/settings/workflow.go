@@ -42,7 +42,6 @@ type Workflow struct {
 	Type                 string         `json:"type"`
 	HourlyExecutionLimit *int           `json:"hourlyExecutionLimit,omitempty"` // Maximum number of executions per hour, default is 1000
 	Input                map[string]any `json:"input,omitempty"`                // Workflow-level input parameters
-	TaskDefaults         map[string]any `json:"taskDefaults,omitempty"`         // Default settings applied to all tasks
 	Guide                string         `json:"guide,omitempty"`                // Informational guide text for the workflow
 	Result               string         `json:"result,omitempty"`               // The result of the workflow
 }
@@ -133,13 +132,6 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 			DiffSuppressFunc: hcl.SuppressJSONorEOT,
 			Default:          "{}",
 		},
-		"task_defaults": {
-			Type:             schema.TypeString,
-			Description:      "Default task settings as JSON. These defaults are applied to all tasks in the workflow",
-			Optional:         true,
-			DiffSuppressFunc: hcl.SuppressJSONorEOT,
-			Default:          "{}",
-		},
 		"guide": {
 			Type:        schema.TypeString,
 			Description: "Informational guide text for the workflow",
@@ -155,11 +147,6 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 
 func (me *Workflow) MarshalHCL(properties hcl.Properties) error {
 	inputJSON, err := stringifyMap(me.Input)
-	if err != nil {
-		return err
-	}
-
-	taskDefaultsJSON, err := stringifyMap(me.TaskDefaults)
 	if err != nil {
 		return err
 	}
@@ -186,7 +173,6 @@ func (me *Workflow) MarshalHCL(properties hcl.Properties) error {
 		"type":                   me.Type,
 		"hourly_execution_limit": me.HourlyExecutionLimit,
 		"input":                  inputJSON,
-		"task_defaults":          taskDefaultsJSON,
 		"guide":                  me.Guide,
 		"result":                 me.Result,
 	})
@@ -194,7 +180,6 @@ func (me *Workflow) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Workflow) UnmarshalHCL(decoder hcl.Decoder) error {
 	var inputStr string
-	var taskDefaultsStr string
 	if err := decoder.DecodeAll(map[string]any{
 		"title":       &me.Title,
 		"description": &me.Description,
@@ -209,7 +194,6 @@ func (me *Workflow) UnmarshalHCL(decoder hcl.Decoder) error {
 		"type":                   &me.Type,
 		"hourly_execution_limit": &me.HourlyExecutionLimit,
 		"input":                  &inputStr,
-		"task_defaults":          &taskDefaultsStr,
 		"guide":                  &me.Guide,
 		"result":                 &me.Result,
 	}); err != nil {
@@ -218,11 +202,6 @@ func (me *Workflow) UnmarshalHCL(decoder hcl.Decoder) error {
 
 	if len(inputStr) > 0 {
 		if err := json.Unmarshal([]byte(inputStr), &me.Input); err != nil {
-			return err
-		}
-	}
-	if len(taskDefaultsStr) > 0 {
-		if err := json.Unmarshal([]byte(taskDefaultsStr), &me.TaskDefaults); err != nil {
 			return err
 		}
 	}

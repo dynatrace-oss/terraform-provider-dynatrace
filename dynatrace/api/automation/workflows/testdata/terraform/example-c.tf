@@ -1,5 +1,5 @@
 # Exercises the new fields: hourly_execution_limit, analysis_ready,
-# is_deployed, owner_type, input, task_defaults, guide, and result
+# is_deployed, owner_type, input, guide, and result
 
 resource "dynatrace_iam_group" "group" {
   name = "#name#"
@@ -17,9 +17,6 @@ resource "dynatrace_automation_workflow" "with_group_owner" {
   input = jsonencode({
     "environment" : "production",
     "threshold" : 42
-  })
-  task_defaults = jsonencode({
-    "timeout" : 3600
   })
   guide = "##My Guide"
   result = "deployment_status"
