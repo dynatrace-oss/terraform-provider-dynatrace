@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,57 +18,15 @@
 package directshares
 
 import (
-	"encoding/json"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-const SchemaVersion = 3
-
-type Recipient struct {
-	Id   string `json:"id"`
-	Type string `json:"type"`
-}
-
-type Recipients []*Recipient
-
-func (me *Recipient) Schema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"id": {
-			Type:             schema.TypeString,
-			Required:         true,
-			Description:      "Identifier of the recipient",
-			ValidateDiagFunc: Validate(ValidateUUID, ValidateMaxLength(200)),
-		},
-		"type": {
-			Type:             schema.TypeString,
-			Optional:         true,
-			Description:      "Type of the recipient. Possible values are `group' and `user'",
-			ValidateDiagFunc: ValidateTypePossibleValues([]string{"group", "user"}),
-		},
-	}
-}
-
-func (me *Recipients) Schema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"recipient": {
-			Type:        schema.TypeSet,
-			Optional:    true,
-			MinItems:    1,
-			MaxItems:    1000,
-			Description: "Recipient of the direct share",
-			Elem:        &schema.Resource{Schema: new(Recipient).Schema()},
-		},
-	}
-}
-
 type DirectShare struct {
-	ID            string     `json:"id"`
-	DocumentId    string     `json:"document_id"`
-	Access        string     `json:"access"`
-	Recipients    Recipients `json:"recipients"`
-	SchemaVersion int        `json:"schemaVersion,omitempty"`
+	ID         string
+	DocumentId string
+	Access     string
+	Recipients Recipients
 }
 
 func (me *DirectShare) Schema() map[string]*schema.Schema {
@@ -78,6 +36,7 @@ func (me *DirectShare) Schema() map[string]*schema.Schema {
 			Description:      "Document ID",
 			Required:         true,
 			ValidateDiagFunc: Validate(ValidateMaxLength(200)),
+			ForceNew:         true,
 		},
 		"access": {
 			Type:             schema.TypeString,
@@ -89,7 +48,7 @@ func (me *DirectShare) Schema() map[string]*schema.Schema {
 		},
 		"recipients": {
 			Type:        schema.TypeList,
-			Required:    true,
+			Optional:    true,
 			MinItems:    1,
 			MaxItems:    1,
 			Description: "Recipients of the direct share",
@@ -116,18 +75,19 @@ func (me *DirectShare) UnmarshalHCL(decoder hcl.Decoder) error {
 	})
 }
 
-func (me *Recipient) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]any{
-		"id":   me.Id,
-		"type": me.Type,
-	})
-}
+type Recipients []*Recipient
 
-func (me *Recipient) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]any{
-		"id":   &me.Id,
-		"type": &me.Type,
-	})
+func (me *Recipients) Schema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"recipient": {
+			Type:        schema.TypeSet,
+			Optional:    true,
+			MinItems:    1,
+			MaxItems:    1000,
+			Description: "Recipient of the direct share",
+			Elem:        &schema.Resource{Schema: new(Recipient).Schema()},
+		},
+	}
 }
 
 func (me Recipients) MarshalHCL(properties hcl.Properties) error {
@@ -138,17 +98,38 @@ func (me *Recipients) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeSlice("recipient", me)
 }
 
-func (me *DirectShare) MarshalJSON() ([]byte, error) {
-	ds := struct {
-		DocumentId    string     `json:"documentId"`
-		Access        string     `json:"access"`
-		Recipients    Recipients `json:"recipients"`
-		SchemaVersion int        `json:"schemaVersion,omitempty"`
-	}{
-		DocumentId:    me.DocumentId,
-		Access:        me.Access,
-		Recipients:    me.Recipients,
-		SchemaVersion: SchemaVersion,
+type Recipient struct {
+	ID   string
+	Type string
+}
+
+func (me *Recipient) Schema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"id": {
+			Type:             schema.TypeString,
+			Required:         true,
+			Description:      "Identifier of the recipient",
+			ValidateDiagFunc: Validate(ValidateUUID, ValidateMaxLength(200)),
+		},
+		"type": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			Description:      "Type of the recipient. Possible values are `group' and `user'",
+			ValidateDiagFunc: ValidateTypePossibleValues([]string{"group", "user"}),
+		},
 	}
-	return json.Marshal(ds)
+}
+
+func (me *Recipient) MarshalHCL(properties hcl.Properties) error {
+	return properties.EncodeAll(map[string]any{
+		"id":   me.ID,
+		"type": me.Type,
+	})
+}
+
+func (me *Recipient) UnmarshalHCL(decoder hcl.Decoder) error {
+	return decoder.DecodeAll(map[string]any{
+		"id":   &me.ID,
+		"type": &me.Type,
+	})
 }
