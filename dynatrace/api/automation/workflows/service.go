@@ -23,7 +23,6 @@ import (
 	"errors"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
 	workflows "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows/settings"
 	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -57,13 +56,6 @@ func (me *service) Get(ctx context.Context, id string, v *workflows.Workflow) er
 	var response cacapi.Response
 	if response, err = client.Get(ctx, apiClient.Workflows, id); err != nil {
 		return err
-	}
-	if response.StatusCode != 200 {
-		var e automationerr.ErrorEnvelope
-		if e.Unmarshal(response.Data) {
-			return e.Err.ToRESTError()
-		}
-		return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
 	}
 
 	return json.Unmarshal(response.Data, &v)
@@ -120,18 +112,12 @@ func (me *service) Create(ctx context.Context, v *workflows.Workflow) (stub *api
 	if response, err = client.Create(ctx, apiClient.Workflows, data); err != nil {
 		return nil, err
 	}
-	if response.StatusCode == 201 {
-		var workflowStub WorkflowStub
-		if err := json.Unmarshal(response.Data, &workflowStub); err != nil {
-			return nil, err
-		}
-		return &api.Stub{Name: v.Title, ID: workflowStub.ID}, nil
+
+	var workflowStub WorkflowStub
+	if err := json.Unmarshal(response.Data, &workflowStub); err != nil {
+		return nil, err
 	}
-	var e automationerr.ErrorEnvelope
-	if e.Unmarshal(response.Data) {
-		return nil, e.Err.ToRESTError()
-	}
-	return nil, tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
+	return &api.Stub{Name: v.Title, ID: workflowStub.ID}, nil
 }
 
 func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow) (err error) {
@@ -143,18 +129,8 @@ func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow)
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
-	var response cacapi.Response
-	if response, err = client.Update(ctx, apiClient.Workflows, id, data); err != nil {
-		return err
-	}
-	if response.StatusCode == 200 {
-		return nil
-	}
-	var e automationerr.ErrorEnvelope
-	if e.Unmarshal(response.Data) {
-		return e.Err.ToRESTError()
-	}
-	return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
+	_, err = client.Update(ctx, apiClient.Workflows, id, data)
+	return err
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
@@ -162,14 +138,11 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	response, err := client.Delete(ctx, apiClient.Workflows, id)
-	if response.StatusCode == 204 || response.StatusCode == 404 {
-		return nil
+	if _, err = client.Delete(ctx, apiClient.Workflows, id); err != nil && !cacapi.IsNotFoundError(err) {
+		return err
 	}
-	if response.StatusCode != 0 {
-		return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
-	}
-	return err
+
+	return nil
 }
 
 func (me *service) New() *workflows.Workflow {
