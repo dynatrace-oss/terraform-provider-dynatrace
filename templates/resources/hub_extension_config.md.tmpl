@@ -37,6 +37,9 @@ for `management_zone` and `active_gate_group` you are required to specify the **
 
 The `value` attribute differs depending on the Extension you want to configure. The expected format is JSON. We recommend to navigate via WebUI to the Dynatrace Hub and configure such an Extension there - the WebUI provides you with the correct JSON code to use.
 
+-> **Note:** Some extensions may reference IDs of other Dynatrace API resources (e.g. credentials, alerting profiles, management zones) within the `value` attribute. We are not aware of all external dependencies an extension may use.
+Because of this, such cross-resource references are **not automatically resolved or tracked** by this provider, and we are **unable to provide guidance on how to fully configure this resource together with its dependencies** in Terraform.
+
 For defining which version of a specific Extension should currently be active you can use the resource `dynatrace_hub_extension_active_version`.
 
 ## Dynatrace Documentation
@@ -54,4 +57,3 @@ The full documentation of the export feature is available [here](https://dt-url.
 {{ tffile "dynatrace/api/v2/hub/extension/config/testdata/terraform/withscope.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
- 
