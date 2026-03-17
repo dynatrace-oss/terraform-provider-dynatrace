@@ -23,7 +23,6 @@ import (
 	"errors"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	automationerr "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation"
 	business_calendars "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars/settings"
 	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -56,13 +55,6 @@ func (me *service) Get(ctx context.Context, id string, v *business_calendars.Set
 	var response cacapi.Response
 	if response, err = client.Get(ctx, automation.BusinessCalendars, id); err != nil {
 		return err
-	}
-	if response.StatusCode != 200 {
-		var e automationerr.ErrorEnvelope
-		if e.Unmarshal(response.Data) {
-			return e.Err.ToRESTError()
-		}
-		return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
 	}
 	return json.Unmarshal(response.Data, &v)
 }
@@ -119,18 +111,11 @@ func (me *service) Create(ctx context.Context, v *business_calendars.Settings) (
 	if response, err = client.Create(ctx, automation.BusinessCalendars, data); err != nil {
 		return nil, err
 	}
-	if response.StatusCode == 201 {
-		var stub BusinessCalendarStub
-		if err := json.Unmarshal(response.Data, &stub); err != nil {
-			return nil, err
-		}
-		return &api.Stub{Name: v.Title, ID: stub.ID}, nil
+	var bStub BusinessCalendarStub
+	if err := json.Unmarshal(response.Data, &bStub); err != nil {
+		return nil, err
 	}
-	var e automationerr.ErrorEnvelope
-	if e.Unmarshal(response.Data) {
-		return nil, e.Err.ToRESTError()
-	}
-	return nil, tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
+	return &api.Stub{Name: v.Title, ID: bStub.ID}, nil
 }
 
 func (me *service) Update(ctx context.Context, id string, v *business_calendars.Settings) (err error) {
@@ -142,18 +127,9 @@ func (me *service) Update(ctx context.Context, id string, v *business_calendars.
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
-	var response cacapi.Response
-	if response, err = client.Update(ctx, automation.BusinessCalendars, id, data); err != nil {
-		return err
-	}
-	if response.StatusCode == 200 {
-		return nil
-	}
-	var e automationerr.ErrorEnvelope
-	if e.Unmarshal(response.Data) {
-		return e.Err.ToRESTError()
-	}
-	return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
+
+	_, err = client.Update(ctx, automation.BusinessCalendars, id, data)
+	return err
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
@@ -161,14 +137,10 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	response, err := client.Delete(ctx, automation.BusinessCalendars, id)
-	if response.StatusCode == 204 || response.StatusCode == 404 {
-		return nil
+	if _, err = client.Delete(ctx, automation.BusinessCalendars, id); err != nil && !cacapi.IsNotFoundError(err) {
+		return err
 	}
-	if response.StatusCode != 0 {
-		return tfrest.Error{Code: response.StatusCode, Message: string(response.Data)}
-	}
-	return err
+	return nil
 }
 
 func (me *service) New() *business_calendars.Settings {
