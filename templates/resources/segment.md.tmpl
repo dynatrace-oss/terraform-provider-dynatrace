@@ -12,6 +12,8 @@ description: |-
 
 -> To utilize this resource with access to all segments, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **View Filter-Segments** (`storage:filter-segments:read`), **Create and Update Filter-Segments** (`storage:filter-segments:write`), **Share Filter-Segments** (`storage:filter-segments:share`), **Delete Filter-Segments** (`storage:filter-segments:delete`) and **Maintain all Filter-Segments on the environment** (`storage:filter-segments:admin`).
 
+-> Depending on the segment configuration, additional **storage permissions** may be required for DQL-related access (e.g. `storage:bizevents:read`, `storage:logs:read`, `storage:entities:read`).
+
 -> This resource is excluded by default in the export utility, please explicitly specify the resource to retrieve existing configuration.
 
 -> The `includes.items[X].filter` attribute, which is a JSON string, is unfriendly for configuration as code. The structure of that attribute is not publicly documented and therefore subject to change without warning. The resource schema has been created to match our REST API, but we will be reaching out to product management on further enhancement of this endpoint. In the meantime, please use the export utility to create configurations more efficiently.
