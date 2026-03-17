@@ -13,6 +13,8 @@ description: |-
 -> This resource requires an OAuth client or platform token configured with the permissions outlined in the [Davis Anomaly Detection](https://docs.dynatrace.com/docs/shortlink/davis-ai-anomaly-detection-app#expand--prerequisites--1) app documentation.
 Please set the environment variables `DT_CLIENT_ID` and `DT_CLIENT_SECRET`, or alternatively `DT_PLATFORM_TOKEN`.
 
+-> Depending on the anomaly detector configuration, additional **storage permissions** may be required for DQL-related access (e.g. `storage:bizevents:read`, `storage:logs:read`, `storage:entities:read`).
+
 ## Dynatrace Documentation
 
 - Davis Anomaly Detection App - https://docs.dynatrace.com/docs/platform/davis-ai/anomaly-detection/anomaly-detection-app
