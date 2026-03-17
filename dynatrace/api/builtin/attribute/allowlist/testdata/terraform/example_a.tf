@@ -1,4 +1,4 @@
-resource "dynatrace_attribute_allow_list" "#name#" {
+resource "dynatrace_attribute_allow_list" "list" {
   enabled = true
-  key = "attribute.example"
+  key = "attribute.#name#"
 }
