@@ -33,6 +33,7 @@ func (me *ExecutionSettings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "UUID of a service user. Queries will be executed on behalf of the service user.",
 			Optional:    true, // nullable
+			Computed:    true, // set automatically if empty
 		},
 		"query_offset": {
 			Type:        schema.TypeInt,
