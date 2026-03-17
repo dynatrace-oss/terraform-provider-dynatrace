@@ -20,10 +20,8 @@ package directshares
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"strings"
 
-	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	coredirectshares "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/directshares"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -81,10 +79,6 @@ func (me *service) Get(ctx context.Context, id string, v *serviceSettings.Direct
 
 	result, err := client.Get(ctx, id)
 	if err != nil {
-		apiErr := coreapi.APIError{}
-		if errors.As(err, &apiErr) {
-			return rest.Error{Code: apiErr.StatusCode, Message: apiErr.Error()}
-		}
 		return err
 	}
 
@@ -99,10 +93,6 @@ func (me *service) Get(ctx context.Context, id string, v *serviceSettings.Direct
 
 	recipients, err := me.getRecipients(ctx, client, id)
 	if err != nil {
-		apiErr := coreapi.APIError{}
-		if errors.As(err, &apiErr) {
-			return rest.Error{Code: apiErr.StatusCode, Message: apiErr.Error()}
-		}
 		return err
 	}
 
@@ -172,10 +162,6 @@ func (me *service) Create(ctx context.Context, v *serviceSettings.DirectShare) (
 
 	result, err := client.Create(ctx, data)
 	if err != nil {
-		apiErr := coreapi.APIError{}
-		if errors.As(err, &apiErr) {
-			return nil, rest.Error{Code: apiErr.StatusCode, Message: string(apiErr.Body)}
-		}
 		return nil, err
 	}
 
@@ -196,10 +182,6 @@ func (me *service) Update(ctx context.Context, id string, v *serviceSettings.Dir
 
 	remoteRecipients, err := me.getRecipients(ctx, client, id)
 	if err != nil {
-		apiErr := coreapi.APIError{}
-		if errors.As(err, &apiErr) {
-			return rest.Error{Code: apiErr.StatusCode, Message: string(apiErr.Body)}
-		}
 		return err
 	}
 
@@ -234,14 +216,7 @@ func (me *service) addRecipients(ctx context.Context, client *coredirectshares.C
 		return err
 	}
 
-	if err := client.AddRecipients(ctx, id, data); err != nil {
-		apiErr := coreapi.APIError{}
-		if errors.As(err, &apiErr) {
-			return rest.Error{Code: apiErr.StatusCode, Message: string(apiErr.Body)}
-		}
-		return err
-	}
-	return nil
+	return client.AddRecipients(ctx, id, data)
 }
 
 func (me *service) removeRecipients(ctx context.Context, client *coredirectshares.Client, id string, recipients serviceSettings.Recipients, remoteRecipients serviceSettings.Recipients) error {
@@ -261,14 +236,7 @@ func (me *service) removeRecipients(ctx context.Context, client *coredirectshare
 		return err
 	}
 
-	if err := client.RemoveRecipients(ctx, id, data); err != nil {
-		apiErr := coreapi.APIError{}
-		if errors.As(err, &apiErr) {
-			return rest.Error{Code: apiErr.StatusCode, Message: string(apiErr.Body)}
-		}
-		return err
-	}
-	return nil
+	return client.RemoveRecipients(ctx, id, data)
 }
 
 func containsRecipient(recipients serviceSettings.Recipients, target *serviceSettings.Recipient) bool {
@@ -285,14 +253,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	if err := client.Delete(ctx, id); err != nil {
-		apiErr := coreapi.APIError{}
-		if errors.As(err, &apiErr) {
-			return rest.Error{Code: apiErr.StatusCode, Message: string(apiErr.Body)}
-		}
-		return err
-	}
-	return nil
+	return client.Delete(ctx, id)
 }
 
 func (me *service) New() *serviceSettings.DirectShare {
