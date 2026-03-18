@@ -45,20 +45,20 @@ func (me *EventProperties) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type EventProperty struct {
-	Key   string `json:"key"`
-	Value string `json:"value"`
+	Key   string `json:"key"`   // Property key
+	Value string `json:"value"` // Property value. Supports substitution of placeholders placed in curly braces {}.
 }
 
 func (me *EventProperty) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"key": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "Property key",
 			Required:    true,
 		},
 		"value": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "Property value. Supports substitution of placeholders placed in curly braces {}.",
 			Required:    true,
 		},
 	}

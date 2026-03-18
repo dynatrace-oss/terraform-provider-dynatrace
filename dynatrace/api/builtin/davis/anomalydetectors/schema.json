@@ -14,6 +14,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add anomaly detector"
@@ -372,17 +373,34 @@
 							"type": "LENGTH"
 						}
 					],
+					"default": "",
 					"description": "UUID of a service user. Queries will be executed on behalf of the service user.",
 					"displayName": "Actor",
 					"documentation": "",
 					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"delay": {
+					"constraints": [
+						{
+							"maximum": 3600,
+							"minimum": 60,
+							"type": "RANGE"
+						}
+					],
+					"description": "Fixed delay between executions (in seconds)",
+					"displayName": "Execution delay",
+					"documentation": "",
+					"maxObjects": 1,
 					"metadata": {
-						"featureFlag": "com.compuware.alerting.enableServiceUserImpersonation.feature",
+						"featureFlag": "com.compuware.alerting.enableCustomExecutionDelay.feature",
 						"maturity": "IN_DEVELOPMENT"
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
-					"type": "text"
+					"type": "integer"
 				},
 				"queryOffset": {
 					"constraints": [
@@ -407,5 +425,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.10"
+	"version": "1.0.12"
 }
