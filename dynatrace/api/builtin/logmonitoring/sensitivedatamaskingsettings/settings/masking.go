@@ -25,8 +25,8 @@ import (
 
 type Masking struct {
 	Expression  string      `json:"expression"` // Maximum one capture group is allowed. If none was given, the whole expression will be treated as a capture group.
-	Replacement *string     `json:"replacement"`
-	Type        MaskingType `json:"type"` // Possible Values: `SHA1`, `STRING`
+	Replacement *string     `json:"replacement,omitempty"`
+	Type        MaskingType `json:"type"` // Masking type. Possible values: `SHA1`, `SHA256`, `STRING`
 }
 
 func (me *Masking) Schema() map[string]*schema.Schema {
@@ -38,12 +38,12 @@ func (me *Masking) Schema() map[string]*schema.Schema {
 		},
 		"replacement": {
 			Type:        schema.TypeString,
-			Description: "The string to replace the masked expression with. Irrelevant if `type` is `SHA1`.",
-			Optional:    true,
+			Description: "no documentation available",
+			Optional:    true, // precondition
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `SHA1`, `STRING`",
+			Description: "Masking type. Possible values: `SHA1`, `SHA256`, `STRING`",
 			Required:    true,
 		},
 	}
@@ -58,7 +58,7 @@ func (me *Masking) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Masking) HandlePreconditions() error {
-	if me.Replacement == nil && string(me.Type) == "STRING" {
+	if (me.Replacement == nil) && (string(me.Type) == "STRING") {
 		me.Replacement = opt.NewString("")
 	}
 	return nil
