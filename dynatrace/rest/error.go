@@ -25,6 +25,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	api2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 )
 
 type errorEnvelope struct {
@@ -45,6 +47,13 @@ type Error struct {
 	ConstraintViolations []ConstraintViolation `json:"constraintViolations,omitempty"`
 	URL                  string                `json:"-"`
 	Method               string                `json:"-"`
+}
+
+// IsNotFoundError checks if an error is a 404 error
+// api_token_client client, hybrid_client, etc. are using Error while core clients like automation use api2.APIError
+func IsNotFoundError(err error) bool {
+	var restErr Error
+	return errors.As(err, &restErr) && restErr.Code == http.StatusNotFound || api2.IsNotFoundError(err)
 }
 
 func ConstraintViolations(err error) []ConstraintViolation {

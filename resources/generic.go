@@ -473,22 +473,12 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 				ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, tfConfig)
 			}
 			err = service.Get(ctx, d.Id(), sttngs)
-		} else {
-			if restError, ok := err.(rest.Error); ok {
-				if restError.Code == 404 {
-					d.SetId("")
-					return diag.Diagnostics{}
-				}
-			}
-			return diag.FromErr(err)
 		}
 	}
 	if err != nil {
-		if restError, ok := err.(rest.Error); ok {
-			if restError.Code == 404 {
-				d.SetId("")
-				return diag.Diagnostics{}
-			}
+		if rest.IsNotFoundError(err) {
+			d.SetId("")
+			return diag.Diagnostics{}
 		}
 		return diag.FromErr(err)
 	}
@@ -539,11 +529,9 @@ func (me *Generic) Delete(ctx context.Context, d *schema.ResourceData, m any) di
 		if restWarning, ok := err.(rest.Warning); ok {
 			return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: restWarning.Message}}
 		}
-		if restError, ok := err.(rest.Error); ok {
-			if restError.Code == 404 {
-				d.SetId("")
-				return diag.Diagnostics{}
-			}
+		if rest.IsNotFoundError(err) {
+			d.SetId("")
+			return diag.Diagnostics{}
 		}
 		return diag.FromErr(err)
 	}
