@@ -46,7 +46,7 @@ func (me *DataminingBlocklistEntries) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type DataminingBlocklistEntry struct {
 	Name string                  `json:"name"`
-	Type DataminingBlocklistType `json:"type"` // Possible Values: `BUCKET`, `TABLE`
+	Type DataminingBlocklistType `json:"type"` // Possible values: `BUCKET`, `TABLE`
 }
 
 func (me *DataminingBlocklistEntry) Schema() map[string]*schema.Schema {
@@ -58,7 +58,7 @@ func (me *DataminingBlocklistEntry) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `BUCKET`, `TABLE`",
+			Description: "Possible values: `BUCKET`, `TABLE`",
 			Required:    true,
 		},
 	}
