@@ -52,7 +52,8 @@
 			"type": "enum"
 		}
 	},
-	"maxObjects": 100,
+	"maturity": "GENERAL_AVAILABILITY",
+	"maxObjects": 500,
 	"metadata": {
 		"addItemButton": "Add type definition",
 		"itemDisplayName": "New type"
@@ -593,5 +594,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.1"
+	"version": "1.2"
 }
