@@ -23,10 +23,11 @@ import (
 )
 
 type Settings struct {
-	JournaldLogDetector     *bool   `json:"JournaldLogDetector,omitempty"` // Enable OneAgent to collect logs from Journald on Linux systems. \nThis setting enables:\n* Detection and to have logs ingested matching ingest rule is required.
-	NewContainerLogDetector bool    `json:"NewContainerLogDetector"`       // Enable OneAgent to collect all container logs in Kubernetes environments. \nThis setting enables:\n* Detection and collection of logs from short-lived containers and processes in Kubernetes.\n* Detection and collection of logs from any processes in containers in Kubernetes. Up until now only processes detected by OneAgent are covered with the Log module.\n* Log events decoration according to semantic dictionary.\n **Note:** The matcher \"Deployment name\" in the log sources configuration will be ignored and needs to be replaced with \"Workload name\", requires **Dynatrace Operator 1.4.2+**.\n\n For more details, check our [documentation](https://dt-url.net/jn02ey0).
-	Scope                   *string `json:"-" scope:"scope"`               // The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
-	UserAndEventData        *bool   `json:"UserAndEventData,omitempty"`    // Enable OneAgent to collect data from Event Logs in the User Data and Event Data sections.
+	JournaldLogDetector           bool    `json:"JournaldLogDetector"`           // Enable OneAgent to collect logs from Journald on Linux systems. \n This setting enables:\n * Detection and to have logs ingested matching ingest rule is required.
+	NewContainerLogDetector       bool    `json:"NewContainerLogDetector"`       // Enable OneAgent to collect all container logs in Kubernetes environments. \n This setting enables:\n * Detection and collection of logs from short-lived containers and processes in Kubernetes.\n * Detection and collection of logs from any processes in containers in Kubernetes. Up until now only processes detected by OneAgent are covered with the Log module.\n * Log events decoration according to semantic dictionary.\n  **Note:** The matcher \"Deployment name\" in the log sources configuration will be ignored and needs to be replaced with \"Workload name\", requires **Dynatrace Operator 1.4.2+**.\n\n   For more details, check our [documentation](https://dt-url.net/jn02ey0).
+	PlainIISConfigurationDetector bool    `json:"PlainIISConfigurationDetector"` // Enabling OneAgent to unambiguously assign logs to the appropriate IIS application pools
+	Scope                         *string `json:"-" scope:"scope"`               // The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	UserAndEventData              bool    `json:"UserAndEventData"`              // Enable OneAgent to collect data from Event Logs in the User Data and Event Data sections.
 }
 
 func (me *Settings) Name() string {
@@ -37,13 +38,18 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"journald_log_detector": {
 			Type:        schema.TypeBool,
-			Description: "Enable OneAgent to collect logs from Journald on Linux systems. \nThis setting enables:\n* Detection and to have logs ingested matching ingest rule is required.",
-			Optional:    true,
+			Description: "Enable OneAgent to collect logs from Journald on Linux systems. \n This setting enables:\n * Detection and to have logs ingested matching ingest rule is required.",
+			Optional:    true, // new required property. Default to false
 		},
 		"new_container_log_detector": {
 			Type:        schema.TypeBool,
-			Description: "Enable OneAgent to collect all container logs in Kubernetes environments. \nThis setting enables:\n* Detection and collection of logs from short-lived containers and processes in Kubernetes.\n* Detection and collection of logs from any processes in containers in Kubernetes. Up until now only processes detected by OneAgent are covered with the Log module.\n* Log events decoration according to semantic dictionary.\n **Note:** The matcher \"Deployment name\" in the log sources configuration will be ignored and needs to be replaced with \"Workload name\", requires **Dynatrace Operator 1.4.2+**.\n\n For more details, check our [documentation](https://dt-url.net/jn02ey0).",
+			Description: "Enable OneAgent to collect all container logs in Kubernetes environments. \n This setting enables:\n * Detection and collection of logs from short-lived containers and processes in Kubernetes.\n * Detection and collection of logs from any processes in containers in Kubernetes. Up until now only processes detected by OneAgent are covered with the Log module.\n * Log events decoration according to semantic dictionary.\n  **Note:** The matcher \"Deployment name\" in the log sources configuration will be ignored and needs to be replaced with \"Workload name\", requires **Dynatrace Operator 1.4.2+**.\n\n   For more details, check our [documentation](https://dt-url.net/jn02ey0).",
 			Required:    true,
+		},
+		"plain_iisconfiguration_detector": {
+			Type:        schema.TypeBool,
+			Description: "Enabling OneAgent to unambiguously assign logs to the appropriate IIS application pools",
+			Optional:    true, // new required property. Default to false
 		},
 		"scope": {
 			Type:        schema.TypeString,
@@ -54,25 +60,27 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"user_and_event_data": {
 			Type:        schema.TypeBool,
 			Description: "Enable OneAgent to collect data from Event Logs in the User Data and Event Data sections.",
-			Optional:    true,
+			Optional:    true, // new required property. Default to false
 		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"journald_log_detector":      me.JournaldLogDetector,
-		"new_container_log_detector": me.NewContainerLogDetector,
-		"scope":                      me.Scope,
-		"user_and_event_data":        me.UserAndEventData,
+		"journald_log_detector":           me.JournaldLogDetector,
+		"new_container_log_detector":      me.NewContainerLogDetector,
+		"plain_iisconfiguration_detector": me.PlainIISConfigurationDetector,
+		"scope":                           me.Scope,
+		"user_and_event_data":             me.UserAndEventData,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"journald_log_detector":      &me.JournaldLogDetector,
-		"new_container_log_detector": &me.NewContainerLogDetector,
-		"scope":                      &me.Scope,
-		"user_and_event_data":        &me.UserAndEventData,
+		"journald_log_detector":           &me.JournaldLogDetector,
+		"new_container_log_detector":      &me.NewContainerLogDetector,
+		"plain_iisconfiguration_detector": &me.PlainIISConfigurationDetector,
+		"scope":                           &me.Scope,
+		"user_and_event_data":             &me.UserAndEventData,
 	})
 }

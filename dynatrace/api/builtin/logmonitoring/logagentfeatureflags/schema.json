@@ -10,6 +10,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -39,6 +40,19 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"PlainIISConfigurationDetector": {
+			"default": false,
+			"description": "Enabling OneAgent to unambiguously assign logs to the appropriate IIS application pools",
+			"displayName": "Detection of a plain IIS configuration",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.331"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"UserAndEventData": {
 			"default": false,
 			"description": "Enable OneAgent to collect data from Event Logs in the User Data and Event Data sections.",
@@ -59,5 +73,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-agent-feature-flags",
 	"types": {},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }
