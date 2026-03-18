@@ -23,12 +23,12 @@ import (
 )
 
 type Settings struct {
-	Analyzer          *AnalyzerInput      `json:"analyzer"`          // Analyzer input
+	Analyzer          *AnalyzerInput      `json:"analyzer"`          // Analyzer input to initialize the analyzer
 	Description       string              `json:"description"`       // The description of the anomaly detector
 	Enabled           bool                `json:"enabled"`           // This setting is enabled (`true`) or disabled (`false`)
-	EventTemplate     *DavisEventTemplate `json:"eventTemplate"`     // Event template
-	ExecutionSettings *ExecutionSettings  `json:"executionSettings"` // Execution settings
-	Source            string              `json:"source"`            // Source
+	EventTemplate     *DavisEventTemplate `json:"eventTemplate"`     // Defines additional fields on the davis events triggered by the anomaly detector
+	ExecutionSettings *ExecutionSettings  `json:"executionSettings"` // Defines the configuration parameters that influence how and under what context a query or evaluation is executed.
+	Source            string              `json:"source"`            // The source which created the anomaly detector
 	Title             string              `json:"title"`             // The title of the anomaly detector
 }
 
@@ -40,7 +40,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"analyzer": {
 			Type:        schema.TypeList,
-			Description: "Analyzer input",
+			Description: "Analyzer input to initialize the analyzer",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(AnalyzerInput).Schema()},
 			MinItems:    1,
@@ -58,7 +58,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"event_template": {
 			Type:        schema.TypeList,
-			Description: "Event template",
+			Description: "Defines additional fields on the davis events triggered by the anomaly detector",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(DavisEventTemplate).Schema()},
 			MinItems:    1,
@@ -66,7 +66,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"execution_settings": {
 			Type:        schema.TypeList,
-			Description: "Execution settings",
+			Description: "Defines the configuration parameters that influence how and under what context a query or evaluation is executed.",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(ExecutionSettings).Schema()},
 			MinItems:    1,
@@ -74,7 +74,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"source": {
 			Type:        schema.TypeString,
-			Description: "Source",
+			Description: "The source which created the anomaly detector",
 			Required:    true,
 		},
 		"title": {

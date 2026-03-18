@@ -45,20 +45,20 @@ func (me *AnalyzerInputFields) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type AnalyzerInputField struct {
-	Key   string `json:"key"`
-	Value string `json:"value"`
+	Key   string `json:"key"`   // Analyzer input field key
+	Value string `json:"value"` // Analyzer input field value
 }
 
 func (me *AnalyzerInputField) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"key": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "Analyzer input field key",
 			Required:    true,
 		},
 		"value": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "Analyzer input field value",
 			Required:    true,
 		},
 	}

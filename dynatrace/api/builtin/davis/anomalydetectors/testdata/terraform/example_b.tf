@@ -70,5 +70,6 @@ resource "dynatrace_davis_anomaly_detectors" "anomaly" {
   }
   execution_settings {
     query_offset = 3
+    delay = 60
   }
 }

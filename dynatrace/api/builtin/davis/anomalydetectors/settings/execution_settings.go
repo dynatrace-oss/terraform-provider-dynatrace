@@ -24,6 +24,7 @@ import (
 
 type ExecutionSettings struct {
 	Actor       *string `json:"actor,omitempty"`       // UUID of a service user. Queries will be executed on behalf of the service user.
+	Delay       *int    `json:"delay,omitempty"`       // Fixed delay between executions (in seconds)
 	QueryOffset *int    `json:"queryOffset,omitempty"` // Minute offset of sliding evaluation window for metrics with latency
 }
 
@@ -32,8 +33,13 @@ func (me *ExecutionSettings) Schema() map[string]*schema.Schema {
 		"actor": {
 			Type:        schema.TypeString,
 			Description: "UUID of a service user. Queries will be executed on behalf of the service user.",
+			Optional:    true, // diverts from schema. It's actually set automatically if not provided
+			Computed:    true,
+		},
+		"delay": {
+			Type:        schema.TypeInt,
+			Description: "Fixed delay between executions (in seconds)",
 			Optional:    true, // nullable
-			Computed:    true, // set automatically if empty
 		},
 		"query_offset": {
 			Type:        schema.TypeInt,
@@ -46,6 +52,7 @@ func (me *ExecutionSettings) Schema() map[string]*schema.Schema {
 func (me *ExecutionSettings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"actor":        me.Actor,
+		"delay":        me.Delay,
 		"query_offset": me.QueryOffset,
 	})
 }
@@ -53,6 +60,7 @@ func (me *ExecutionSettings) MarshalHCL(properties hcl.Properties) error {
 func (me *ExecutionSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"actor":        &me.Actor,
+		"delay":        &me.Delay,
 		"query_offset": &me.QueryOffset,
 	})
 }
