@@ -50,13 +50,13 @@
 			"type": "boolean"
 		},
 		"enableMintV2Ingest": {
-			"description": "Enable advanced OpenTelemetry metric capabilities with Grail, including primary field enrichment, flexible dimensions, enhanced routing, cost allocation, and support for high-cardinality queries. For more details, please see [this post](https://dt-url.net/otlp-metrics-advanced).",
+			"description": "Enable advanced OpenTelemetry metric capabilities with Grail, including primary field enrichment, flexible dimensions, enhanced routing, cost allocation, and support for high-cardinality queries. For more details about this and its effect on enrichment with the `dt.entity.service` dimension, please see [this post](https://dt-url.net/otlp-metrics-advanced).",
 			"displayName": "Advanced OTLP metric dimensions",
 			"documentation": "",
 			"maxObjects": 1,
 			"metadata": {
 				"featureFlag": "com.compuware.otlp-mintv2-ingest-enabled.feature",
-				"maturity": "IN_DEVELOPMENT"
+				"maturity": "GENERAL_AVAILABILITY"
 			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": true,
@@ -215,5 +215,5 @@
 			]
 		}
 	},
-	"version": "1.6.1"
+	"version": "1.6.2"
 }
