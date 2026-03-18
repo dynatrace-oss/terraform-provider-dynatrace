@@ -139,7 +139,7 @@
 				"referencedType": "builtin:openpipeline.usersessions.pipelines",
 				"type": "setting"
 			},
-			"maxObjects": 100,
+			"maxObjects": 1000,
 			"minObjects": 0,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -300,5 +300,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.51"
+	"version": "1.54"
 }

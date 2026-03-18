@@ -2645,11 +2645,6 @@
 							"type": "PATTERN"
 						},
 						{
-							"customMessage": "Must not be 'dt.security_context'",
-							"pattern": "^(?![Dd][Tt]\\.[Ss][Ee][Cc][Uu][Rr][Ii][Tt][Yy]_[Cc][Oo][Nn][Tt][Ee][Xx][Tt]$).*$",
-							"type": "PATTERN"
-						},
-						{
 							"customMessage": "Must not start with 'dt.system.'",
 							"pattern": "^(?![Dd][Tt]\\.[Ss][Yy][Ss][Tt][Ee][Mm]\\.).*$",
 							"type": "PATTERN"
@@ -3238,5 +3233,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.51"
+	"version": "1.54"
 }
