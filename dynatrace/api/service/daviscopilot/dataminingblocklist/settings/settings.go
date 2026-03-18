@@ -25,9 +25,10 @@ import (
 
 type Settings struct {
 	BlocklistEntries            DataminingBlocklistEntries `json:"blocklistEntries,omitempty"`            // You can exclude specific data buckets and tables from the semantic index. Learn more about [configuring data access](https://dt-url.net/lc62i1q \"Dynatrace Generative AI data access\").
-	EnableCopilot               bool                       `json:"enableCopilot"`                         // Please note that once enabled, you still need to [assign permissions](https://dt-url.net/rh22idn \"Dynatrace Generative AI permissions\") to the relevant user groups.
-	EnableDocumentSuggestion    *bool                      `json:"enableDocumentSuggestion,omitempty"`    // By enabling document suggestions, Dynatrace AI can find similarities between Problems and existing Notebooks and Dashboards in order to suggest relevant troubleshooting guides. Learn more about [document suggestions](https://dt-url.net/xy02gpo \"Dynatrace AI document suggestions\").
-	EnableTenantAwareDataMining *bool                      `json:"enableTenantAwareDataMining,omitempty"` // You can enrich Dynatrace Generative AI with your environment data. This lets you generate more accurate queries that identify and reference relevant entities, events, spans, logs, and metrics from your environment. Once enabled, Dynatrace AI periodically scans your Grail data to create its own semantic index. Please note, it can take up to 24 hours to reflect changes. Learn more about [environment-aware queries](https://dt-url.net/4g42iu7 \"Dynatrace Generative AI environment aware queries\").
+	EnableAgenticAi             *bool                      `json:"enableAgenticAi,omitempty"`             // Please note that once agentic AI is enabled, the Dynatrace Assist interface is allowed to call tools and run Grail queries. You still need to [assign permissions](https://dt-url.net/agentic-ai \"Dynatrace Agentic AI permissions\") to the relevant user groups.
+	EnableCopilot               bool                       `json:"enableCopilot"`                         // Please note that once generative AI is enabled, you still need to [assign permissions](https://dt-url.net/rh22idn \"Dynatrace Generative AI permissions\") to the relevant user groups.
+	EnableDocumentSuggestion    *bool                      `json:"enableDocumentSuggestion,omitempty"`    // By enabling document suggestions, Dynatrace Intelligence can find similarities between Problems and existing Notebooks and Dashboards in order to suggest relevant troubleshooting guides. Learn more about [document suggestions](https://dt-url.net/xy02gpo \"Dynatrace AI document suggestions\").
+	EnableTenantAwareDataMining *bool                      `json:"enableTenantAwareDataMining,omitempty"` // You can enrich Dynatrace generative and agentic AI with your environment data. This lets you generate more accurate queries that identify and reference relevant entities, events, spans, logs, and metrics from your environment. Once enabled, Dynatrace Intelligence periodically scans your Grail data to create its own semantic index. Please note, it can take up to 24 hours to reflect changes. Learn more about [environment-aware queries](https://dt-url.net/4g42iu7 \"Dynatrace Generative AI environment aware queries\").
 }
 
 func (me *Settings) Name() string {
@@ -44,19 +45,24 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"enable_agentic_ai": {
+			Type:        schema.TypeBool,
+			Description: "Please note that once agentic AI is enabled, the Dynatrace Assist interface is allowed to call tools and run Grail queries. You still need to [assign permissions](https://dt-url.net/agentic-ai \"Dynatrace Agentic AI permissions\") to the relevant user groups.",
+			Optional:    true, // precondition
+		},
 		"enable_copilot": {
 			Type:        schema.TypeBool,
-			Description: "Please note that once enabled, you still need to [assign permissions](https://dt-url.net/rh22idn \"Dynatrace Generative AI permissions\") to the relevant user groups.",
+			Description: "Please note that once generative AI is enabled, you still need to [assign permissions](https://dt-url.net/rh22idn \"Dynatrace Generative AI permissions\") to the relevant user groups.",
 			Required:    true,
 		},
 		"enable_document_suggestion": {
 			Type:        schema.TypeBool,
-			Description: "By enabling document suggestions, Dynatrace AI can find similarities between Problems and existing Notebooks and Dashboards in order to suggest relevant troubleshooting guides. Learn more about [document suggestions](https://dt-url.net/xy02gpo \"Dynatrace AI document suggestions\").",
+			Description: "By enabling document suggestions, Dynatrace Intelligence can find similarities between Problems and existing Notebooks and Dashboards in order to suggest relevant troubleshooting guides. Learn more about [document suggestions](https://dt-url.net/xy02gpo \"Dynatrace AI document suggestions\").",
 			Optional:    true, // precondition
 		},
 		"enable_tenant_aware_data_mining": {
 			Type:        schema.TypeBool,
-			Description: "You can enrich Dynatrace Generative AI with your environment data. This lets you generate more accurate queries that identify and reference relevant entities, events, spans, logs, and metrics from your environment. Once enabled, Dynatrace AI periodically scans your Grail data to create its own semantic index. Please note, it can take up to 24 hours to reflect changes. Learn more about [environment-aware queries](https://dt-url.net/4g42iu7 \"Dynatrace Generative AI environment aware queries\").",
+			Description: "You can enrich Dynatrace generative and agentic AI with your environment data. This lets you generate more accurate queries that identify and reference relevant entities, events, spans, logs, and metrics from your environment. Once enabled, Dynatrace Intelligence periodically scans your Grail data to create its own semantic index. Please note, it can take up to 24 hours to reflect changes. Learn more about [environment-aware queries](https://dt-url.net/4g42iu7 \"Dynatrace Generative AI environment aware queries\").",
 			Optional:    true, // precondition
 		},
 	}
@@ -65,6 +71,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"blocklist_entries":               me.BlocklistEntries,
+		"enable_agentic_ai":               me.EnableAgenticAi,
 		"enable_copilot":                  me.EnableCopilot,
 		"enable_document_suggestion":      me.EnableDocumentSuggestion,
 		"enable_tenant_aware_data_mining": me.EnableTenantAwareDataMining,
@@ -72,6 +79,9 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Settings) HandlePreconditions() error {
+	if (me.EnableAgenticAi == nil) && (me.EnableCopilot) {
+		me.EnableAgenticAi = opt.NewBool(false)
+	}
 	if (me.EnableDocumentSuggestion == nil) && (me.EnableCopilot) {
 		me.EnableDocumentSuggestion = opt.NewBool(false)
 	}
@@ -85,6 +95,7 @@ func (me *Settings) HandlePreconditions() error {
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"blocklist_entries":               &me.BlocklistEntries,
+		"enable_agentic_ai":               &me.EnableAgenticAi,
 		"enable_copilot":                  &me.EnableCopilot,
 		"enable_document_suggestion":      &me.EnableDocumentSuggestion,
 		"enable_tenant_aware_data_mining": &me.EnableTenantAwareDataMining,
