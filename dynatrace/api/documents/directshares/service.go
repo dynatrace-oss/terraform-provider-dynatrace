@@ -127,8 +127,27 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
+	client, err := me.client(ctx)
+	if err != nil {
+		return nil, err
+	}
+	listResponse, err := client.List(ctx)
+	if err != nil {
+		return nil, err
+	}
 	var stubs api.Stubs
-	return stubs, nil // not implemented
+
+	for _, r := range listResponse.All() {
+
+		var directShare directShareDTO
+		if err := json.Unmarshal(r, &directShare); err != nil {
+			return nil, err
+		}
+
+		stubs = append(stubs, &api.Stub{ID: directShare.ID, Name: directShare.DocumentId})
+	}
+
+	return stubs, nil
 }
 
 func (me *service) Validate(v *serviceSettings.DirectShare) error {

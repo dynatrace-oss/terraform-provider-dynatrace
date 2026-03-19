@@ -596,7 +596,7 @@ var ResourceTypes = struct {
 	"dynatrace_dashboard",
 	"dynatrace_json_dashboard",
 	"dynatrace_document",
-	"dynatrace_direct_share",
+	"dynatrace_direct_shares",
 	"dynatrace_json_dashboard_base",
 	"dynatrace_calculated_service_metric",
 	"dynatrace_calculated_web_metric",

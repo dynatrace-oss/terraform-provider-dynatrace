@@ -59,6 +59,10 @@ func (me *DirectShare) Schema() map[string]*schema.Schema {
 	}
 }
 
+func (me *DirectShare) Name() string {
+	return "direct_shares"
+}
+
 func (me *DirectShare) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"document_id": me.DocumentId,
