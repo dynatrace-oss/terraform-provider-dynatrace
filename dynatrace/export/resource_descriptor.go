@@ -679,7 +679,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		documents.Service,
 	),
 	ResourceTypes.DirectShares: NewResourceDescriptor(
-		directshares.Service,
+		directshares.Service, Dependencies.ID(ResourceTypes.Documents), Dependencies.ID(ResourceTypes.IAMUser), Dependencies.ID(ResourceTypes.IAMServiceUser), Dependencies.ID(ResourceTypes.IAMGroup),
 	),
 	ResourceTypes.OpenPipelineLogs: NewResourceDescriptor(
 		openpipeline.LogsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
@@ -1980,6 +1980,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.AutomationSchedulingRule, ""},
 			{ResourceTypes.AutomationWorkflow, ""},
 			{ResourceTypes.Documents, ""},
+			{ResourceTypes.DirectShares, ""},
 			{ResourceTypes.PlatformBucket, ""},
 			{ResourceTypes.Segments, ""},
 			{ResourceTypes.PlatformSLO, ""},

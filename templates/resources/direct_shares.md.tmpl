@@ -12,11 +12,15 @@ description: |-
 
 -> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **Read direct-shares** (`document:direct-shares:read`), **Write direct-shares** (`document:direct-shares:write`), and **Delete direct-shares** (`document:direct-shares:delete`).
 
--> This resource is currently not covered by the export utility.
+-> This resource is excluded by default in the export utility, please explicitly specify the resource to retrieve existing configuration.
 
 ## Dynatrace Documentation
 
 - Dynatrace Documents - https://########.apps.dynatrace.com/platform/swagger-ui/index.html?urls.primaryName=Document%20Service
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_direct_shares` downloads all existing direct shares configurations for documents.
 
 ## Resource Example Usage
 
