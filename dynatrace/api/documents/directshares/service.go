@@ -22,6 +22,7 @@ import (
 	"encoding/json"
 	"strings"
 
+	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	coredirectshares "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/directshares"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -31,11 +32,27 @@ import (
 )
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*serviceSettings.DirectShare] {
-	return &service{credentials}
+	return &service{clientGetter: createCoreClient, credentials: credentials}
+}
+
+func ServiceWithClientGetter(clientGetter func(ctx context.Context, credentials *rest.Credentials) (directSharesClient, error), credentials *rest.Credentials) settings.CRUDService[*serviceSettings.DirectShare] {
+	return &service{clientGetter: clientGetter, credentials: credentials}
+}
+
+type directSharesClient interface {
+	List(ctx context.Context) (coreapi.PagedListResponse, error)
+	Get(ctx context.Context, id string) (coreapi.Response, error)
+	Create(ctx context.Context, data []byte) (coreapi.Response, error)
+	Delete(ctx context.Context, id string) error
+
+	GetRecipients(ctx context.Context, id string) (coreapi.PagedListResponse, error)
+	AddRecipients(ctx context.Context, id string, data []byte) error
+	RemoveRecipients(ctx context.Context, id string, data []byte) error
 }
 
 type service struct {
-	credentials *rest.Credentials
+	clientGetter func(ctx context.Context, credentials *rest.Credentials) (directSharesClient, error)
+	credentials  *rest.Credentials
 }
 
 type directShareDTO struct {
@@ -63,8 +80,8 @@ type removeDirectShareRecipientsDTO struct {
 	Ids []string `json:"ids"`
 }
 
-func (me *service) client(ctx context.Context) (*coredirectshares.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.OAuth.EnvironmentURL, me.credentials)
+func createCoreClient(ctx context.Context, credentials *rest.Credentials) (directSharesClient, error) {
+	platformClient, err := rest.CreatePlatformClient(ctx, credentials.OAuth.EnvironmentURL, credentials)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +89,7 @@ func (me *service) client(ctx context.Context) (*coredirectshares.Client, error)
 }
 
 func (me *service) Get(ctx context.Context, id string, v *serviceSettings.DirectShare) (err error) {
-	client, err := me.client(ctx)
+	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return err
 	}
@@ -100,7 +117,7 @@ func (me *service) Get(ctx context.Context, id string, v *serviceSettings.Direct
 	return nil
 }
 
-func (me *service) getRecipients(ctx context.Context, client *coredirectshares.Client, id string) (serviceSettings.Recipients, error) {
+func (me *service) getRecipients(ctx context.Context, client directSharesClient, id string) (serviceSettings.Recipients, error) {
 	recipientsResp, err := client.GetRecipients(ctx, id)
 	if err != nil {
 		return nil, err
@@ -127,7 +144,7 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	client, err := me.client(ctx)
+	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +172,7 @@ func (me *service) Validate(v *serviceSettings.DirectShare) error {
 }
 
 func (me *service) Create(ctx context.Context, v *serviceSettings.DirectShare) (stub *api.Stub, err error) {
-	client, err := me.client(ctx)
+	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return nil, err
 	}
@@ -194,7 +211,7 @@ func (me *service) Create(ctx context.Context, v *serviceSettings.DirectShare) (
 }
 
 func (me *service) Update(ctx context.Context, id string, v *serviceSettings.DirectShare) (err error) {
-	client, err := me.client(ctx)
+	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return err
 	}
@@ -215,7 +232,7 @@ func (me *service) Update(ctx context.Context, id string, v *serviceSettings.Dir
 	return nil
 }
 
-func (me *service) addRecipients(ctx context.Context, client *coredirectshares.Client, id string, recipients serviceSettings.Recipients, remoteRecipients serviceSettings.Recipients) error {
+func (me *service) addRecipients(ctx context.Context, client directSharesClient, id string, recipients serviceSettings.Recipients, remoteRecipients serviceSettings.Recipients) error {
 	var add addDirectShareRecipientsDTO
 	for _, desired := range recipients {
 		if !containsRecipient(remoteRecipients, desired) {
@@ -238,7 +255,7 @@ func (me *service) addRecipients(ctx context.Context, client *coredirectshares.C
 	return client.AddRecipients(ctx, id, data)
 }
 
-func (me *service) removeRecipients(ctx context.Context, client *coredirectshares.Client, id string, recipients serviceSettings.Recipients, remoteRecipients serviceSettings.Recipients) error {
+func (me *service) removeRecipients(ctx context.Context, client directSharesClient, id string, recipients serviceSettings.Recipients, remoteRecipients serviceSettings.Recipients) error {
 	var remove removeDirectShareRecipientsDTO
 	for _, remote := range remoteRecipients {
 		if !containsRecipient(recipients, remote) {
@@ -268,7 +285,7 @@ func containsRecipient(recipients serviceSettings.Recipients, target *serviceSet
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	client, err := me.client(ctx)
+	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return err
 	}
