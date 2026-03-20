@@ -125,6 +125,7 @@ func (me *MonitoringSettings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The location to send monitoring data from the JavaScript tag.\n\n Specify either a relative or an absolute URL. If you use an absolute URL, data will be sent using CORS. \n\n **Required** for auto-injected applications, optional for agentless applications. Maximum 512 characters.",
 			Optional:    true,
+			Computed:    true,
 		},
 		"custom_configuration_properties": {
 			Type:        schema.TypeString,
