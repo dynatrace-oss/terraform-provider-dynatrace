@@ -25,7 +25,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
-	segmentsapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	segmentsclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/segments"
 
 	segments "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments/settings"
@@ -54,9 +53,6 @@ func (me *service) Get(ctx context.Context, id string, v *segments.Segment) (err
 	}
 	response, err := client.Get(ctx, id)
 	if err != nil {
-		if apiError, ok := err.(segmentsapi.APIError); ok {
-			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
-		}
 		return err
 	}
 
@@ -80,9 +76,6 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	}
 	listResponse, err := client.List(ctx)
 	if err != nil {
-		if apiError, ok := err.(segmentsapi.APIError); ok {
-			return nil, rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
-		}
 		return nil, err
 	}
 	var segments []SegmentStub
@@ -116,9 +109,6 @@ func (me *service) Create(ctx context.Context, v *segments.Segment) (stub *api.S
 	}
 	response, err := client.Create(ctx, data)
 	if err != nil {
-		if apiError, ok := err.(segmentsapi.APIError); ok {
-			return nil, rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
-		}
 		return nil, err
 	}
 
@@ -142,9 +132,6 @@ func (me *service) Update(ctx context.Context, id string, v *segments.Segment) (
 
 	_, err = client.Update(ctx, id, data)
 	if err != nil {
-		if apiError, ok := err.(segmentsapi.APIError); ok {
-			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
-		}
 		return err
 	}
 
@@ -158,9 +145,6 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	}
 	_, err = client.Delete(ctx, id)
 	if err != nil {
-		if apiError, ok := err.(segmentsapi.APIError); ok {
-			return rest.Error{Code: apiError.StatusCode, Message: apiError.Error()}
-		}
 		return err
 	}
 
