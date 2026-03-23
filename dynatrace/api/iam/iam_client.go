@@ -25,11 +25,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"slices"
-	"strconv"
-	"strings"
-	"sync"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -41,16 +37,6 @@ import (
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
-
-type IAMError struct {
-	BError  bool   `json:"error"`
-	Payload string `json:"payload"`
-	Message string `json:"message"`
-}
-
-func (me IAMError) Error() string {
-	return me.Message
-}
 
 type IAMClient interface {
 	POST(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
@@ -114,65 +100,7 @@ func (me *iamClient) DELETE_MULTI_RESPONSE(ctx context.Context, url string, expe
 	return me.request(ctx, url, http.MethodDelete, expectedResponseCodes, forceNewBearer, 0, nil, nil)
 }
 
-type RateLimiter struct {
-	lastCall time.Time
-	mutex    sync.Mutex
-}
-
-func NewRateLimiter() *RateLimiter {
-	return &RateLimiter{}
-}
-
-var DISABLE_RATE_LIMITER = (os.Getenv("DYNATRACE_DISABLE_IAM_RATE_LIMITER") == "true")
-
-const MAX_RATE_LIMITER_RATE = int64(5000)
-const DEFAULT_RATE_LIMITER_RATE = int64(1000)
-
-var rateLimiterRate = evalRateLimiterRate()
-
-func evalRateLimiterRate() int64 {
-	sRateLimiterRate := strings.TrimSpace(os.Getenv("DYNATRACE_IAM_RATE_LIMITER_RATE"))
-	if len(sRateLimiterRate) == 0 {
-		return DEFAULT_RATE_LIMITER_RATE
-	}
-	var err error
-	iRateLimiterRate := DEFAULT_RATE_LIMITER_RATE
-
-	if iRateLimiterRate, err = strconv.ParseInt(sRateLimiterRate, 10, 0); err != nil {
-		return DEFAULT_RATE_LIMITER_RATE
-	}
-	if iRateLimiterRate > MAX_RATE_LIMITER_RATE {
-		return MAX_RATE_LIMITER_RATE
-	}
-	return iRateLimiterRate
-}
-
-func (rl *RateLimiter) CanCall() bool {
-	rl.mutex.Lock()
-	defer rl.mutex.Unlock()
-	if rateLimiterRate <= 0 || DISABLE_RATE_LIMITER {
-		return true
-	}
-	now := time.Now()
-	if now.Sub(rl.lastCall) >= time.Duration(rateLimiterRate)*time.Millisecond {
-		rl.lastCall = now
-		return true
-	}
-	return false
-}
-
-var limiter = NewRateLimiter()
-
-func (me *iamClient) request(ctx context.Context, url string, method string, expectedResponseCodes []int, forceNewBearer bool, forceNewBearerRetryCount int, payload any, headers map[string]string) ([]byte, error) {
-	for {
-		if limiter.CanCall() {
-			return me._request(ctx, url, method, expectedResponseCodes, forceNewBearer, forceNewBearerRetryCount, payload, headers)
-		}
-		time.Sleep(100 * time.Millisecond)
-	}
-}
-
-func (me *iamClient) _request(ctx context.Context, u string, method string, expectedResponseCodes []int, forceNewBearer bool, forceNewBearerRetryCount int, payload any, headers map[string]string) ([]byte, error) {
+func (me *iamClient) request(ctx context.Context, u string, method string, expectedResponseCodes []int, forceNewBearer bool, forceNewBearerRetryCount int, payload any, headers map[string]string) ([]byte, error) {
 	id := uuid.NewString()
 
 	var err error
