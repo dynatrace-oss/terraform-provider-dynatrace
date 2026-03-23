@@ -20,7 +20,6 @@ package business_calendars
 import (
 	"context"
 	"encoding/json"
-	"errors"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	business_calendars "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars/settings"
@@ -75,11 +74,6 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	}
 	listResponse, err := client.List(ctx, automation.BusinessCalendars)
 	if err != nil {
-		apiErr := cacapi.APIError{}
-		if errors.As(err, &apiErr) {
-			return nil, tfrest.Error{Code: apiErr.StatusCode, Message: string(apiErr.Body)}
-		}
-
 		return nil, err
 	}
 
