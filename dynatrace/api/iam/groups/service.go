@@ -156,83 +156,34 @@ type ListGroupsResponse struct {
 	Items []*ListGroup `json:"items"`
 }
 
-var cachedGroupStubs []*ListGroup
-var groupStubMutex sync.Mutex
-
 func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	groupStubMutex.Lock()
-	defer groupStubMutex.Unlock()
-
-	if cachedGroupStubs != nil {
-		var stubs api.Stubs
-		for _, elem := range cachedGroupStubs {
-			stubs = append(stubs, &api.Stub{ID: elem.UUID, Name: elem.Name})
-		}
-		return stubs, nil
-	}
-
-	groupStubs, err := me.listUnguarded(ctx)
-	if err != nil {
+	client := iam.NewIAMClient(me)
+	var groupStubs ListGroupsResponse
+	accountID := me.AccountID()
+	if err := iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups", me.endpointURL, accountID), 200, false, &groupStubs); err != nil {
 		return nil, err
 	}
+
 	var stubs api.Stubs
-	for _, elem := range groupStubs {
+	for _, elem := range groupStubs.Items {
 		stubs = append(stubs, &api.Stub{ID: elem.UUID, Name: elem.Name})
 	}
 	return stubs, nil
 }
 
-func (me *GroupServiceClient) list(ctx context.Context) ([]*ListGroup, error) {
-	groupStubMutex.Lock()
-	defer groupStubMutex.Unlock()
-
-	// if cachedGroupStubs != nil {
-	// 	return cachedGroupStubs, nil
-	// }
-	groupStubs, err := me.listUnguarded(ctx)
-	if err != nil {
-		return nil, err
-	}
-	cachedGroupStubs = groupStubs
-	return cachedGroupStubs, nil
-}
-
-func (me *GroupServiceClient) listUnguarded(ctx context.Context) ([]*ListGroup, error) {
-	var err error
-
-	client := iam.NewIAMClient(me)
-	var response ListGroupsResponse
-	accountID := me.AccountID()
-	if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups", me.endpointURL, accountID), 200, false, &response); err != nil {
-		return nil, err
-	}
-	return response.Items, nil
-}
-
 func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Group) (err error) {
-	stubs, err := me.list(ctx)
-	if err != nil {
+	var groupStub ListGroup
+	accountID := me.AccountID()
+	client := iam.NewIAMClient(me)
+	if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, accountID, id), 200, false, &groupStub); err != nil {
 		return err
 	}
-	for _, listStub := range stubs {
-		if listStub.UUID == id {
-			accountID := me.AccountID()
-			client := iam.NewIAMClient(me)
-			var groupStub ListGroup
-			if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, accountID, id), 200, false, &groupStub); err != nil {
-				return err
-			}
 
-			v.Name = listStub.Name
-			v.Description = listStub.Description
-			v.FederatedAttributeValues = listStub.FederatedAttributeValues
-			// ddd, _ := json.MarshalIndent(groupStub.Permissions, "", "  ")
-			// logging.File.Println(string(ddd))
-			v.Permissions = groupStub.Permissions
-			return nil
-		}
-	}
-	return rest.Error{Code: 404, Message: fmt.Sprintf("no group with id `%s` found", id)}
+	v.Name = groupStub.Name
+	v.Description = groupStub.Description
+	v.FederatedAttributeValues = groupStub.FederatedAttributeValues
+	v.Permissions = groupStub.Permissions
+	return nil
 }
 
 func (me *GroupServiceClient) Delete(ctx context.Context, id string) error {
