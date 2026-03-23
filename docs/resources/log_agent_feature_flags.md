@@ -25,9 +25,12 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_log_agent_feature_flags" "#name#" {
+resource "dynatrace_log_agent_feature_flags" "flags" {
     scope = "HOST-1234567890000000"
     new_container_log_detector = true
+    plain_iisconfiguration_detector = true
+    journald_log_detector = true
+    user_and_event_data = true
 }
 ```
 
@@ -37,19 +40,20 @@ resource "dynatrace_log_agent_feature_flags" "#name#" {
 ### Required
 
 - `new_container_log_detector` (Boolean) Enable OneAgent to collect all container logs in Kubernetes environments. 
-This setting enables:
-* Detection and collection of logs from short-lived containers and processes in Kubernetes.
-* Detection and collection of logs from any processes in containers in Kubernetes. Up until now only processes detected by OneAgent are covered with the Log module.
-* Log events decoration according to semantic dictionary.
- **Note:** The matcher "Deployment name" in the log sources configuration will be ignored and needs to be replaced with "Workload name", requires **Dynatrace Operator 1.4.2+**.
+ This setting enables:
+ * Detection and collection of logs from short-lived containers and processes in Kubernetes.
+ * Detection and collection of logs from any processes in containers in Kubernetes. Up until now only processes detected by OneAgent are covered with the Log module.
+ * Log events decoration according to semantic dictionary.
+  **Note:** The matcher "Deployment name" in the log sources configuration will be ignored and needs to be replaced with "Workload name", requires **Dynatrace Operator 1.4.2+**.
 
- For more details, check our [documentation](https://dt-url.net/jn02ey0).
+   For more details, check our [documentation](https://dt-url.net/jn02ey0).
 
 ### Optional
 
 - `journald_log_detector` (Boolean) Enable OneAgent to collect logs from Journald on Linux systems. 
-This setting enables:
-* Detection and to have logs ingested matching ingest rule is required.
+ This setting enables:
+ * Detection and to have logs ingested matching ingest rule is required.
+- `plain_iisconfiguration_detector` (Boolean) Enabling OneAgent to unambiguously assign logs to the appropriate IIS application pools
 - `scope` (String) The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 - `user_and_event_data` (Boolean) Enable OneAgent to collect data from Event Logs in the User Data and Event Data sections.
 

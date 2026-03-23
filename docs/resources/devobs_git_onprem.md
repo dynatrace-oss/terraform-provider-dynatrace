@@ -25,9 +25,9 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_devobs_git_onprem" "#name#" {
+resource "dynatrace_devobs_git_onprem" "onprem" {
   git_provider = "GithubOnPrem"
-  url          = "http://www.google.com/test/#name#"
+  url          = "https://example.com/test/#name#"
 }
 ```
 

@@ -25,9 +25,9 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_attribute_allow_list" "#name#" {
+resource "dynatrace_attribute_allow_list" "list" {
   enabled = true
-  key = "attribute.example"
+  key = "attribute.#name#"
 }
 ```
 

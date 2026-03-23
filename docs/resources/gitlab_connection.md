@@ -42,9 +42,9 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_gitlab_connection" "#name#"{
+resource "dynatrace_gitlab_connection" "connection" {
   name    = "#name#"
-  url     = "https://www.#name#.com"
+  url     = "https://www.example.com"
   token   = "#######"
 }
 ```

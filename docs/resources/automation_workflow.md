@@ -21,25 +21,35 @@ description: |-
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_automation_workflow" "Sample_Worklow_TF" {
+resource "dynatrace_iam_service_user" "wf_user" {
+  name = "#name#"
+}
+
+resource "dynatrace_automation_workflow" "workflow_with_davis_event_trigger" {
   description = "Desc"
-  actor       = "########-####-####-####-############"
-  title       = "Sample Worklow TF1"
-  owner       = "########-####-####-####-############"
-  private     = true
+  actor       = dynatrace_iam_service_user.wf_user.id
+  # The owner can only be changed if the workflow is public (private = false).
+  owner       = dynatrace_iam_service_user.wf_user.id
+  private     = false
+  title       = "#name#"
   tasks {
     task {
       name        = "http_request_1"
       description = "Issue an HTTP request to any API"
       action      = "dynatrace.automations:http-function"
       active      = true
-      input = jsonencode({
-        "method" : "GET",
-        "url" : "https://www.google.at/"
+      input       = jsonencode({
+        "method": "GET",
+        "url": "https://www.example.com/"
       })
       position {
         x = 0
         y = 1
+      }
+      retry {
+        count = "3"
+        delay = "1000"
+        failed_loop_iterations_only = false
       }
     }
     task {
@@ -47,37 +57,37 @@ resource "dynatrace_automation_workflow" "Sample_Worklow_TF" {
       description = "Issue an HTTP request to any API"
       action      = "dynatrace.automations:http-function"
       active      = false
-      input = jsonencode({
-        "method" : "GET",
-        "url" : "https://www.second-task.com/"
+      timeout     = 50000
+      input       = jsonencode({
+        "method": "GET",
+        "url": "https://www.example.com/"
       })
       conditions {
+        custom = ""
         states = {
           http_request_1   = "SUCCESS"
           run_javascript_1 = "OK"
         }
-        custom = ""
       }
       position {
         x = -1
         y = 2
       }
-      timeout = 50000
     }
     task {
       name        = "http_request_3"
       description = "Issue an HTTP request to any API"
       action      = "dynatrace.automations:http-function"
       active      = false
-      input = jsonencode({
-        "method" : "GET",
-        "url" : "https://www.third-task.com"
+      input       = jsonencode({
+        "method": "GET",
+        "url": "https://www.example.com"
       })
       conditions {
+        custom = "{{http_request_1}}"
         states = {
           http_request_2 = "OK"
         }
-        custom = "{{http_request_1}}"
       }
       position {
         x = 0
@@ -89,8 +99,8 @@ resource "dynatrace_automation_workflow" "Sample_Worklow_TF" {
       description = "Build a custom task running js Code"
       action      = "dynatrace.automations:run-javascript"
       active      = false
-      input = jsonencode({
-        "script" : "// optional import of sdk modules\nimport { execution } from '@dynatrace-sdk/automation-utils';\n\nexport default async function ({ execution_id }) {\n  // your code goes here\n  // e.g. get the current execution\n  const ex = await execution(execution_id);\n  console.log('Automated script execution on behalf of', ex.trigger);\n  \n  return { triggeredBy: ex.trigger };\n}"
+      input       = jsonencode({
+        "script": "// optional import of sdk modules\nimport { execution } from '@dynatrace-sdk/automation-utils';\n\nexport default async function ({ execution_id }) {\n  // your code goes here\n  // e.g. get the current execution\n  const ex = await execution(execution_id);\n  console.log('Automated script execution on behalf of', ex.trigger);\n  \n  return { triggeredBy: ex.trigger };\n}"
       })
       position {
         x = -2
@@ -103,10 +113,10 @@ resource "dynatrace_automation_workflow" "Sample_Worklow_TF" {
       active = false
       config {
         davis_event {
-          entity_tags_match = "all"
           entity_tags = {
             asdf = ""
           }
+          entity_tags_match  = "all"
           on_problem_close = false
           custom_filter = "matchesPhrase(custom.event.type, \"DEPLOY\")"
         }
@@ -129,8 +139,14 @@ resource "dynatrace_automation_workflow" "Sample_Worklow_TF" {
 
 - `actor` (String) The user context the executions of the workflow will happen with
 - `description` (String) An optional description for the workflow
+- `guide` (String) Informational guide text for the workflow
+- `hourly_execution_limit` (Number) Maximum number of executions per hour. Default is `1000`
+- `input` (String) Workflow-level input parameters as JSON. These parameters are available to all tasks in the workflow
+- `is_deployed` (Boolean) Defines whether this workflow is deployed and active, or kept as a draft. An undeployed workflow is not billed and its automatic trigger will not be running. Default is `true`
 - `owner` (String) The ID of the owner of this workflow
+- `owner_type` (String) The type of the owner. Possible values are `USER` and `GROUP`
 - `private` (Boolean) Defines whether this workflow is private to the owner or not. Default is `true`
+- `result` (String) The result of the workflow
 - `trigger` (Block List, Max: 1) Configures how executions of the workflows are getting triggered. If no trigger is specified it means the workflow is getting manually triggered (see [below for nested schema](#nestedblock--trigger))
 - `type` (String) The type of the workflow. Possible values are `STANDARD` and `SIMPLE`. Defaults to `STANDARD`. Workflows of type `SIMPLE` are allowed to contain only one action
 
@@ -317,11 +333,11 @@ Optional:
 
 Optional:
 
-- `between_end` (String) Triggers the schedule every n minutes within a given time frame - specifying the end time on any valid day in 24h format (e.g. 14:22:44). Conflicts with `cron` and `time`. Required with `interval_minutes` and `between_start`
-- `between_start` (String) Triggers the schedule every n minutes within a given time frame - specifying the start time on any valid day in 24h format (e.g. 13:22:44). Conflicts with `cron` and `time`. Required with `interval_minutes` and `between_end`
+- `between_end` (String) Triggers the schedule every n minutes within a given time frame - specifying the end time on any valid day in 24h format (e.g. 14:22). Conflicts with `cron` and `time`. Required with `interval_minutes` and `between_start`
+- `between_start` (String) Triggers the schedule every n minutes within a given time frame - specifying the start time on any valid day in 24h format (e.g. 13:22). Conflicts with `cron` and `time`. Required with `interval_minutes` and `between_end`
 - `cron` (String) Configures using cron syntax. Conflicts with `time`, `interval_minutes`, `between_start` and `between_end`
 - `interval_minutes` (Number) Triggers the schedule every n minutes within a given time frame. Minimum: 1, Maximum: 720. Required with `between_start` and `between_end`. Conflicts with `cron` and `time`
-- `time` (String) Specifies a fixed time the schedule will trigger at in 24h format (e.g. `14:23:59`). Conflicts with `cron`, `interval_minutes`, `between_start` and `between_end`
+- `time` (String) Specifies a fixed time the schedule will trigger at in 24h format (e.g. `14:23`). Conflicts with `cron`, `interval_minutes`, `between_start` and `between_end`
 
 
 <a id="nestedblock--trigger--schedule--filter_parameters"></a>
@@ -330,8 +346,8 @@ Optional:
 Optional:
 
 - `count` (Number) If specified, the schedule will end triggering executions af the given amount of executions. Minimum: 1, Maximum: 10
-- `earliest_start` (String) If specified, the schedule won't trigger executions before the given date
-- `earliest_start_time` (String) If specified, the schedule won't trigger executions before the given time
-- `exclude_dates` (Set of String) If specified, the schedule won't trigger exeuctions on the given dates
-- `include_dates` (Set of String) If specified, the schedule will trigger executions on the given dates, even if the main configuration prohibits it
+- `earliest_start` (String) If specified, the schedule won't trigger executions before the given date. Format: `yyyy-MM-dd`
+- `earliest_start_time` (String) If specified, the schedule won't trigger executions before the given time. Format: `HH:mm`
+- `exclude_dates` (Set of String) If specified, the schedule won't trigger exeuctions on the given dates. Format: `yyyy-MM-dd`
+- `include_dates` (Set of String) If specified, the schedule will trigger executions on the given dates, even if the main configuration prohibits it. Format: `yyyy-MM-dd`
 - `until` (String) If specified, the schedule won't trigger executions after the given date
