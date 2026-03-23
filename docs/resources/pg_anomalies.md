@@ -27,8 +27,12 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_pg_anomalies" "#name#" {
-  pg_id = "PROCESS_GROUP-AA665B81183B0D7A"
+variable "PROCESS_GROUP_ID" {
+  type = string
+}
+
+resource "dynatrace_pg_anomalies" "anomaly" {
+  pg_id = var.PROCESS_GROUP_ID
   availability {
     method            = "OFF"
     minimum_threshold = 0

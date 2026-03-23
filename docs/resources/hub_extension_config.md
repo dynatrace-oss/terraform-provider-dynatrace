@@ -37,6 +37,9 @@ for `management_zone` and `active_gate_group` you are required to specify the **
 
 The `value` attribute differs depending on the Extension you want to configure. The expected format is JSON. We recommend to navigate via WebUI to the Dynatrace Hub and configure such an Extension there - the WebUI provides you with the correct JSON code to use.
 
+-> **Note:** Some extensions may reference IDs of other Dynatrace API resources (e.g. credentials, alerting profiles, and management zones) within the `value` attribute. 
+This type of cross-resource reference is **not automatically resolved or tracked** by this provider, and we're **unable to provide guidance on fully configuring this resource or its dependencies** in Terraform.
+
 For defining which version of a specific Extension should currently be active you can use the resource `dynatrace_hub_extension_active_version`.
 
 ## Dynatrace Documentation
@@ -91,4 +94,3 @@ resource "dynatrace_hub_extension_config" "com_dynatrace_extension_jmx-weblogic-
 ### Read-Only
 
 - `id` (String) The ID of this resource.
- 

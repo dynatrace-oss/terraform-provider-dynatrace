@@ -150,7 +150,7 @@ resource "dynatrace_opentelemetry_metrics" "#name#" {
 
   - Dynatrace does not recommend changing/removing the attributes starting with "dt.". Dynatrace leverages these attributes to [Enrich metrics](https://www.dynatrace.com/support/help/extend-dynatrace/extend-metrics/reference/enrich-metrics). (see [below for nested schema](#nestedblock--additional_attributes))
 - `additional_attributes_to_dimension_enabled` (Boolean) Add the resource and scope attributes configured below as dimensions (Metrics Classic)
-- `enable_mint_v_2_ingest` (Boolean) Enable advanced OpenTelemetry metric capabilities with Grail, including primary field enrichment, flexible dimensions, enhanced routing, cost allocation, and support for high-cardinality queries. For more details, please see [this post](https://dt-url.net/otlp-metrics-advanced).
+- `enable_mint_v_2_ingest` (Boolean) Enable advanced OpenTelemetry metric capabilities with Grail, including primary field enrichment, flexible dimensions, enhanced routing, cost allocation, and support for high-cardinality queries. For more details about this and its effect on enrichment with the `dt.entity.service` dimension, please see [this post](https://dt-url.net/otlp-metrics-advanced).
 - `meter_name_to_dimension_enabled` (Boolean) When enabled, the Meter name (also referred to as InstrumentationScope or InstrumentationLibrary in OpenTelemetry SDKs) and version will be added as dimensions (`otel.scope.name` and `otel.scope.version`) to ingested OTLP metrics.
 - `mode` (String) Specifies whether the given attributes to enable (`additional_attributes`) and the attributes to drop (`to_drop_attributes`) will get applied explicitly (`EXPLICIT`) or additive (`ADDITIVE`).
 

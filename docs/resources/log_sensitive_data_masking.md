@@ -87,11 +87,11 @@ resource "dynatrace_log_sensitive_data_masking" "#name#" {
 Required:
 
 - `expression` (String) Maximum one capture group is allowed. If none was given, the whole expression will be treated as a capture group.
-- `type` (String) Possible Values: `SHA1`, `STRING`
+- `type` (String) Masking type. Possible values: `SHA1`, `SHA256`, `STRING`
 
 Optional:
 
-- `replacement` (String) The string to replace the masked expression with. Irrelevant if `type` is `SHA1`.
+- `replacement` (String) no documentation available
 
 
 <a id="nestedblock--matchers"></a>
@@ -106,7 +106,7 @@ Required:
 
 Required:
 
-- `attribute` (String) Possible Values: `Container_name`, `Dt_entity_container_group`, `Dt_entity_process_group`, `Host_tag`, `K8s_container_name`, `K8s_deployment_name`, `K8s_namespace_name`, `K8s_pod_annotation`, `K8s_pod_label`, `K8s_workload_kind`, `K8s_workload_name`, `Log_source`, `Log_source_origin`, `Process_technology`
-- `operator` (String) Possible Values: `MATCHES`
+- `attribute` (String) Possible values: `container.name`, `dt.entity.container_group`, `dt.entity.process_group`, `host.tag`, `k8s.container.name`, `k8s.deployment.name`, `k8s.namespace.name`, `k8s.pod.annotation`, `k8s.pod.label`, `k8s.workload.kind`, `k8s.workload.name`, `log.source`, `log.source.origin`, `process.technology`
+- `operator` (String) Possible values: `MATCHES`
 - `values` (Set of String) no documentation available
  

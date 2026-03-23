@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_host_monitoring (Resource)
 
--> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+-> This resource requires the API token scopes **Read settings** (`settings.read`), **Write settings** (`settings.write`) and **Read entities** (`entities.read`).
 
 ## Dynatrace Documentation
 
@@ -53,4 +53,3 @@ Please note that changing the monitoring mode will impact the license consumptio
 ### Read-Only
 
 - `id` (String) The ID of this resource.
- 

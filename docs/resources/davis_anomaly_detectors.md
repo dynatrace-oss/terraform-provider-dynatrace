@@ -13,6 +13,8 @@ description: |-
 -> This resource requires an OAuth client or platform token configured with the permissions outlined in the [Davis Anomaly Detection](https://docs.dynatrace.com/docs/shortlink/davis-ai-anomaly-detection-app#expand--prerequisites--1) app documentation.
 Please set the environment variables `DT_CLIENT_ID` and `DT_CLIENT_SECRET`, or alternatively `DT_PLATFORM_TOKEN`.
 
+-> Depending on the anomaly detector configuration, additional **storage permissions** may be required for DQL-related access (e.g. `storage:bizevents:read`, `storage:logs:read`, `storage:entities:read`).
+
 ## Dynatrace Documentation
 
 - Davis Anomaly Detection App - https://docs.dynatrace.com/docs/platform/davis-ai/anomaly-detection/anomaly-detection-app
@@ -96,12 +98,12 @@ resource "dynatrace_davis_anomaly_detectors" "#name#" {
 
 ### Required
 
-- `analyzer` (Block List, Min: 1, Max: 1) Analyzer input (see [below for nested schema](#nestedblock--analyzer))
+- `analyzer` (Block List, Min: 1, Max: 1) Analyzer input to initialize the analyzer (see [below for nested schema](#nestedblock--analyzer))
 - `description` (String) The description of the anomaly detector
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `event_template` (Block List, Min: 1, Max: 1) Event template (see [below for nested schema](#nestedblock--event_template))
-- `execution_settings` (Block List, Min: 1, Max: 1) Execution settings (see [below for nested schema](#nestedblock--execution_settings))
-- `source` (String) Source
+- `event_template` (Block List, Min: 1, Max: 1) Defines additional fields on the davis events triggered by the anomaly detector (see [below for nested schema](#nestedblock--event_template))
+- `execution_settings` (Block List, Min: 1, Max: 1) Defines the configuration parameters that influence how and under what context a query or evaluation is executed. (see [below for nested schema](#nestedblock--execution_settings))
+- `source` (String) The source which created the anomaly detector
 - `title` (String) The title of the anomaly detector
 
 ### Read-Only
@@ -131,8 +133,8 @@ Required:
 
 Required:
 
-- `key` (String) no documentation available
-- `value` (String) no documentation available
+- `key` (String) Analyzer input field key
+- `value` (String) Analyzer input field value
 
 
 
@@ -156,8 +158,8 @@ Required:
 
 Required:
 
-- `key` (String) no documentation available
-- `value` (String) no documentation available
+- `key` (String) Property key
+- `value` (String) Property value. Supports substitution of placeholders placed in curly braces {}.
 
 
 
@@ -168,4 +170,5 @@ Required:
 Optional:
 
 - `actor` (String) UUID of a service user. Queries will be executed on behalf of the service user.
+- `delay` (Number) Fixed delay between executions (in seconds)
 - `query_offset` (Number) Minute offset of sliding evaluation window for metrics with latency
