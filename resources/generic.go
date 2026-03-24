@@ -47,15 +47,6 @@ func NewGeneric(resourceType export.ResourceType, credVal ...int) *Generic {
 	return &Generic{Type: resourceType, Descriptor: descriptor, CredentialValidation: cv}
 }
 
-func NewGenericWithAlwaysPrintingViolationPath(resourceType export.ResourceType, credVal ...int) *Generic {
-	descriptor := export.AllResources[resourceType]
-	cv := CredValDefault
-	if len(credVal) > 0 {
-		cv = credVal[0]
-	}
-	return &Generic{Type: resourceType, Descriptor: descriptor, CredentialValidation: cv, AlwaysPrintViolationPath: true}
-}
-
 type Computer interface {
 	IsComputer() bool
 }
@@ -67,10 +58,9 @@ const (
 )
 
 type Generic struct {
-	Type                     export.ResourceType
-	Descriptor               export.ResourceDescriptor
-	CredentialValidation     int
-	AlwaysPrintViolationPath bool
+	Type                 export.ResourceType
+	Descriptor           export.ResourceDescriptor
+	CredentialValidation int
 }
 
 type Deprecated interface {
@@ -228,14 +218,7 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 			}
 			return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: restWarning.Message}}
 		}
-		if restError, ok := err.(rest.Error); ok {
-			vm := restError.ViolationMessage(me.AlwaysPrintViolationPath)
-			if len(vm) > 0 {
-				return diag.FromErr(errors.New(vm))
-			}
-			return diag.FromErr(errors.New(restError.Message))
-		}
-		return diag.FromErr(err)
+		return toDiagError(err)
 	}
 	if stub == nil {
 		return diag.FromErr(errors.New("stub was nil"))
@@ -264,6 +247,32 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 		return diag.Diagnostics{}
 	}
 	return me.Read(context.WithValue(ctx, settings.ContextKeyStateConfig, sttngs), d, m)
+}
+
+// toDiagError returns a diag.Diagnostics containing a single error with the message "API error: " followed by the violation message of the given error
+func toDiagError(err error) diag.Diagnostics {
+	if err == nil {
+		return nil
+	}
+
+	var restError rest.Error
+	var msg string
+	if errors.As(err, &restError) {
+		msg = restError.ViolationMessage()
+	} else {
+		msg = err.Error()
+	}
+	return newAPIDiagError(msg)
+}
+
+// newAPIDiagError returns a new error with the message "API error: " followed by the given message
+func newAPIDiagError(msg string) diag.Diagnostics {
+	return diag.Diagnostics{
+		diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "API error: " + msg,
+		},
+	}
 }
 
 func isIAMResourceType(resourceType export.ResourceType) bool {
@@ -305,14 +314,7 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 		if restWarning, ok := err.(rest.Warning); ok {
 			return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: restWarning.Message}}
 		}
-		if restError, ok := err.(rest.Error); ok {
-			vm := restError.ViolationMessage(me.AlwaysPrintViolationPath)
-			if len(vm) > 0 {
-				return diag.FromErr(errors.New(vm))
-			}
-			return diag.FromErr(errors.New(restError.Message))
-		}
-		return diag.FromErr(err)
+		return toDiagError(err)
 	}
 	if settings.RefersToMissingID(sttngs) {
 		settingName := settings.Name(sttngs, "")
@@ -480,7 +482,7 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 			d.SetId("")
 			return diag.Diagnostics{}
 		}
-		return diag.FromErr(err)
+		return newAPIDiagError(err.Error())
 	}
 	return me.ReadForSettings(ctx, d, m, sttngs)
 }
@@ -533,7 +535,7 @@ func (me *Generic) Delete(ctx context.Context, d *schema.ResourceData, m any) di
 			d.SetId("")
 			return diag.Diagnostics{}
 		}
-		return diag.FromErr(err)
+		return newAPIDiagError(err.Error())
 	}
 	return diag.Diagnostics{}
 }

@@ -253,22 +253,17 @@ func (me Error) Error() string {
 	return msg
 }
 
-func (me Error) ViolationMessage(alwaysIncludePath bool) string {
+// ViolationMessage returns an error message containing all constraint violations of the given error.
+// If there are no constraint violations, the message of the given error will be used
+func (me Error) ViolationMessage() string {
 	if len(me.ConstraintViolations) == 0 {
-		return ""
+		return me.Message
 	}
-	result := ""
+	messages := make([]string, 0, len(me.ConstraintViolations))
 	for _, violation := range me.ConstraintViolations {
-		if len(result) > 0 {
-			result = result + "\n"
-		}
-		if alwaysIncludePath || strings.Contains(violation.Message, "must not be null") || strings.Contains(violation.Message, "Element may not be null on creation") {
-			result = result + removeSchemaAndObjectIndexFromConstraintViolationPath(violation.Path) + ": " + violation.Message
-		} else {
-			result = result + violation.Message
-		}
+		messages = append(messages, removeSchemaAndObjectIndexFromConstraintViolationPath(violation.Path)+": "+violation.Message)
 	}
-	return result
+	return strings.Join(messages, "\n")
 }
 
 func removeSchemaAndObjectIndexFromConstraintViolationPath(path string) string {
