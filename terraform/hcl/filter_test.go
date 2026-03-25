@@ -1,3 +1,5 @@
+//go:build unit
+
 /*
  * @license
  * Copyright 2026 Dynatrace LLC
