@@ -21,31 +21,38 @@ import "reflect"
 // FilterEmpty removes entries from a slice that match the provided default value.
 // This is a generic workaround for https://github.com/hashicorp/terraform-plugin-sdk/issues/895
 // which creates phantom empty entries in TypeSet blocks during updates.
+// There may occur two different types of empty set items.
+// 1. A zero value (e.g. FieldExtractionEntry)
+// 2. A default value with all default fields set (e.g. FieldExtractionEntry{ExtractionType: "field"}) including values set by `HandlePreconditions`
 //
-// The defaultValue should represent what a phantom entry looks like — typically a
-// zero-valued struct with any schema Default values applied. For example:
+// Usage example:
 //
-//	*me = hcl.FilterEmpty(*me, FieldExtractionEntry{ExtractionType: "field"})
-func FilterEmpty[T Preconditioner](entries []T, defaultValue T) []T {
-	result := make([]T, 0, len(entries))
-	basicDefault := reflect.New(reflect.TypeOf(defaultValue).Elem()).Interface().(T)
-	_ = defaultValue.HandlePreconditions()
-	for _, entry := range entries {
-		if reflect.DeepEqual(entry, basicDefault) || reflect.DeepEqual(entry, defaultValue) {
-			continue
-		}
-		result = append(result, entry)
-	}
-	return result
-}
-
-func FilterEmptyWithBasic[T any](entries []*T, defaultValue T, basicValue T) []*T {
+//	*me = hcl.FilterEmpty(*me, FieldExtractionEntry{ExtractionType: "field"}) // contains "Default: ..." values
+func FilterEmpty[T any](entries []*T, defaultValue T) []*T {
 	result := make([]*T, 0, len(entries))
+	var zeroValue T
+	defaultValues := []T{zeroValue}
+	pointVal := &defaultValue
+
+	if v, ok := any(pointVal).(Preconditioner); ok {
+		// if the value with the defaults is in the state file, it also went through `HandlePreconditions`
+		_ = v.HandlePreconditions()
+		defaultValues = append(defaultValues, *pointVal)
+	} else {
+		defaultValues = append(defaultValues, defaultValue)
+	}
+
 	for _, entry := range entries {
-		if reflect.DeepEqual(*entry, basicValue) || reflect.DeepEqual(*entry, defaultValue) {
-			continue
+		isEmpty := false
+		for _, possibleDefault := range defaultValues {
+			if reflect.DeepEqual(*entry, possibleDefault) {
+				isEmpty = true
+				break
+			}
 		}
-		result = append(result, entry)
+		if !isEmpty {
+			result = append(result, entry)
+		}
 	}
 	return result
 }

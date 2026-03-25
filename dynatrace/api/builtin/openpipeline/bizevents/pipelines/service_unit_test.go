@@ -53,7 +53,7 @@ func TestOpenPipelineBizeventsPipelinesUnmarshal(t *testing.T) {
 			ExtractionType: "field",
 		},
 	}
-	validWithEmpty := pipelines.FieldExtractionEntries{{ExtractionType: "field"}}
+	validWithEmpty := pipelines.FieldExtractionEntries{{ExtractionType: "field", SourceFieldName: testing2.ToPointer("")}, {}}
 	validWithEmpty = append(validWithEmpty, validEntries...)
 	err := entries.UnmarshalHCL(testing2.MockDecoder{Elements: map[string]any{"dimension": validWithEmpty}})
 	require.NoError(t, err)

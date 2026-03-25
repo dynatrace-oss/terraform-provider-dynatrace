@@ -43,45 +43,14 @@ func (me FieldExtractionEntries) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeSlice("dimension", me)
 }
 
-//func (me *FieldExtractionEntries) UnmarshalHCL(decoder hcl.Decoder) error {
-//	if err := decoder.DecodeSlice("dimension", me); err != nil {
-//		return err
-//	}
-//	// https://github.com/hashicorp/terraform-plugin-sdk/issues/895
-//	*me = hcl.FilterEmpty(*me, FieldExtractionEntry{ExtractionType: "field"})
-//	return nil
-//}
 func (me *FieldExtractionEntries) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeSlice("dimension", me); err != nil {
 		return err
 	}
 	// https://github.com/hashicorp/terraform-plugin-sdk/issues/895
 	// Only known workaround is to ignore these blocks
-	newEntries := FieldExtractionEntries{}
-	for _, entry := range *me {
-		if !isEmpty(*entry) {
-			newEntries = append(newEntries, entry)
-		}
-	}
-	*me = newEntries
+	*me = hcl.FilterEmpty(*me, FieldExtractionEntry{ExtractionType: "field"})
 	return nil
-}
-
-func isEmpty(entry FieldExtractionEntry) bool {
-	return isEmptyString(entry.ConstantFieldName) &&
-		isEmptyString(entry.ConstantValue) &&
-		isEmptyString(entry.DefaultValue) &&
-		isEmptyString(entry.DestinationFieldName) &&
-		isEmptyString(entry.SourceFieldName) &&
-		isEmptyOrDefault(string(entry.ExtractionType), "field")
-}
-
-func isEmptyString(s *string) bool {
-	return s == nil || *s == ""
-}
-
-func isEmptyOrDefault(s string, def string) bool {
-	return s == "" || s == def
 }
 
 type FieldExtractionEntry struct {
