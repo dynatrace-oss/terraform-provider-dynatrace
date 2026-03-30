@@ -153,8 +153,10 @@ func (me *Task) Schema(prefix string) map[string]*schema.Schema {
 			Description: "Layouting information about the task tile when visualized. If not specified Dynatrace will position the task tiles automatically",
 			MinItems:    1,
 			MaxItems:    1,
-			Optional:    true,
-			Elem:        &schema.Resource{Schema: new(TaskPosition).Schema(prefix + ".0.position")},
+			// Note: It's computed but don't set it to computed
+			// Look at ../service.go `deComputeTaskPosition` for the reason.
+			Optional: true,
+			Elem:     &schema.Resource{Schema: new(TaskPosition).Schema(prefix + ".0.position")},
 		},
 		"conditions": {
 			Type:        schema.TypeList,

@@ -57,7 +57,33 @@ func (me *service) Get(ctx context.Context, id string, v *workflows.Workflow) er
 		return err
 	}
 
-	return json.Unmarshal(response.Data, &v)
+	if err := json.Unmarshal(response.Data, &v); err != nil {
+		return err
+	}
+	deComputeTaskPosition(ctx, v)
+
+	return nil
+}
+
+// deComputeTaskPosition removes API set defaults of task positions.
+// The reason here is simply because the TypeSet hash changes every time if a field of an item is set to computed even if nothing changed.
+// If the position is set by the user in the Terraform file, then it's correctly compared to the API set one.
+// DiffSuppress can't help here because even if the task doesn't change, the bug of TypeSet happens, which adds a new empty item which leads to a non-empty plan
+func deComputeTaskPosition(ctx context.Context, v *workflows.Workflow) {
+	positionTaskNames := map[string]bool{}
+	if stateConfig, ok := ctx.Value(settings.ContextKeyStateConfig).(*workflows.Workflow); ok {
+		for _, st := range stateConfig.Tasks {
+			if st.Position != nil {
+				positionTaskNames[st.Name] = true
+			}
+		}
+	}
+	for _, task := range v.Tasks {
+		if !positionTaskNames[task.Name] {
+			// => if not in state: set position (returned from API) to nil
+			task.Position = nil
+		}
+	}
 }
 
 func (me *service) SchemaID() string {
