@@ -58,7 +58,7 @@ func NewIAMClient(a Authenticator) IAMClient {
 		ClientSecret: a.ClientSecret(),
 		TokenURL:     a.TokenURL(),
 	}
-	httpClient := auth.NewOAuthClient(context.Background(), &oauthConfig)
+	httpClient := auth.NewOAuthClient(rest.NewContextWithOAuthRetryClient(context.Background()), &oauthConfig)
 
 	opts := []rest2.Option{
 		rest2.WithHTTPListener(logging.HTTPListener("iam")),
