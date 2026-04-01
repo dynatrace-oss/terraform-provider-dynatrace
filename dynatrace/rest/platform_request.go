@@ -92,7 +92,7 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 	if credentials.ContainsPlatformToken() {
 		client, err = CreatePlatformTokenClient(platformURL, credentials)
 	} else if credentials.ContainsOAuth() {
-		client, err = CreatePlatformOAuthClient(ctx, platformURL, credentials)
+		client, err = CreatePlatformOAuthClient(NewContextWithOAuthRetryClient(ctx), platformURL, credentials)
 	} else {
 		return nil, NoPlatformCredentialsErr
 	}
