@@ -29,21 +29,21 @@ const SchemaVersion = 4
 
 type Workflow struct {
 	Title       string `json:"title" maxlength:"200"` // The title / name of the workflow
-	Description string `json:"description,omitempty"` // An optional description for the workflow
+	Description string `json:"description"`           // An optional description for the workflow
 
 	Actor                string         `json:"actor,omitempty" maxlength:"36" format:"uuid"` // The user context the executions of the workflow will happen with
 	Owner                string         `json:"owner,omitempty" format:"uuid"`                // The ID of the owner of this workflow
 	OwnerType            string         `json:"ownerType"`                                    // The type of the owner. Possible values: `USER` and `GROUP`
 	Private              bool           `json:"isPrivate"`                                    // Defines whether this workflow is private to the owner or not. Default is `true`
 	IsDeployed           bool           `json:"isDeployed"`                                   // Defines whether this workflow is deployed or kept as a draft. Default is `true`
-	SchemaVersion        int            `json:"schemaVersion,omitempty"`                      //
+	SchemaVersion        int            `json:"schemaVersion"`                                //
 	Trigger              *Trigger       `json:"trigger,omitempty"`                            // Configures how executions of the workflows are getting triggered. If no trigger is specified it means the workflow is getting manually triggered
 	Tasks                Tasks          `json:"tasks"`                                        // The tasks to run for every execution of this workflow
 	Type                 string         `json:"type"`
-	HourlyExecutionLimit *int           `json:"hourlyExecutionLimit,omitempty"` // Maximum number of executions per hour, default is 1000
-	Input                map[string]any `json:"input,omitempty"`                // Workflow-level input parameters
-	Guide                string         `json:"guide,omitempty"`                // Informational guide text for the workflow
-	Result               string         `json:"result,omitempty"`               // The result of the workflow
+	HourlyExecutionLimit *int           `json:"hourlyExecutionLimit"` // Maximum number of executions per hour, default is 1000
+	Input                map[string]any `json:"input"`                // Workflow-level input parameters
+	Guide                string         `json:"guide"`                // Informational guide text for the workflow
+	Result               string         `json:"result"`               // The result of the workflow
 }
 
 func (me *Workflow) Name() string {
@@ -62,6 +62,7 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "An optional description for the workflow",
 			Optional:    true,
+			Default:     "", // Sets a default because Workflows behaves like PATCH if not provided; ignoring an empty value
 		},
 
 		"actor": {
@@ -136,11 +137,13 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Informational guide text for the workflow",
 			Optional:    true,
+			Default:     "", // Sets a default because Workflows behaves like PATCH if not provided; ignoring an empty value
 		},
 		"result": {
 			Type:        schema.TypeString,
 			Description: "The result of the workflow",
 			Optional:    true,
+			Default:     "", // Sets a default because Workflows behaves like PATCH if not provided; ignoring an empty value
 		},
 	}
 }

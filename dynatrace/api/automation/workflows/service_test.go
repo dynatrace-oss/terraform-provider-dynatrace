@@ -23,8 +23,35 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func TestAccWorkflows(t *testing.T) {
 	api.TestAcc(t)
+}
+
+// TestAccWorkflows_Update checks if set items can be updated to empty, like guide or description
+func TestAccWorkflows_Update(t *testing.T) {
+	if !api.AccEnvsGiven(t) {
+		return
+	}
+
+	create, _ := api.ReadTfConfig(t, "testdata/create.tf")
+	update, _ := api.ReadTfConfig(t, "testdata/update.tf") // name change because of #name# doesn't matter here. Important is the non-empty plan for guide and description
+
+	providerFactories := map[string]func() (*schema.Provider, error){
+		"dynatrace": func() (*schema.Provider, error) {
+			return provider.Provider(), nil
+		},
+	}
+
+	resource.Test(t, resource.TestCase{
+		ProviderFactories: providerFactories,
+		Steps: []resource.TestStep{
+			{Config: create},
+			{Config: update},
+		},
+	})
 }
