@@ -417,6 +417,7 @@ var ResourceTypes = struct {
 	MgmzPermission                           ResourceType
 	ManagedNetworkZones                      ResourceType
 	HubExtensionConfig                       ResourceType
+	HubExtensionV2Config                     ResourceType
 	HubActiveExtensionVersion                ResourceType
 	DatabaseAppFeatureFlags                  ResourceType
 	InfraOpsAppFeatureFlags                  ResourceType
@@ -838,6 +839,7 @@ var ResourceTypes = struct {
 	"dynatrace_mgmz_permission",
 	"dynatrace_managed_network_zones",
 	"dynatrace_hub_extension_config",
+	"dynatrace_hub_extension_v2_config",
 	"dynatrace_hub_extension_active_version",
 	"dynatrace_db_app_feature_flags",
 	"dynatrace_infraops_app_feature_flags",

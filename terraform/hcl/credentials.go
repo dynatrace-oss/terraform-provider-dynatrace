@@ -20,32 +20,32 @@ import "regexp"
 
 var credPlaceholderPattern = regexp.MustCompile(`^\*{3}\d{3}\*{3}$`)
 
-// ReplaceCredPlaceholders replaces every credential matching "***...***" in apiState with the value from tfState.
-func ReplaceCredPlaceholders(tfState, apiState any) any {
-	switch aVal := tfState.(type) {
+// ReplaceCredPlaceholders replaces every credential matching "***...***" in apiValue with the value from stateValue.
+func ReplaceCredPlaceholders(stateValue, apiValue any) any {
+	switch stateValueCast := stateValue.(type) {
 	case map[string]any:
-		bMap, ok := apiState.(map[string]any)
+		apiMap, ok := apiValue.(map[string]any)
 		if !ok {
-			return apiState
+			return apiValue
 		}
-		for key, bVal := range bMap {
-			if aInnerVal, exists := aVal[key]; exists {
-				bMap[key] = ReplaceCredPlaceholders(aInnerVal, bVal)
+		for key, apiMapValue := range apiMap {
+			if stateMapValue, exists := stateValueCast[key]; exists {
+				apiMap[key] = ReplaceCredPlaceholders(stateMapValue, apiMapValue)
 			}
 		}
 	case []any:
-		bSlice, ok := apiState.([]any)
-		if !ok || len(aVal) != len(bSlice) {
-			return apiState
+		apiSlice, ok := apiValue.([]any)
+		if !ok || len(stateValueCast) != len(apiSlice) {
+			return apiValue
 		}
-		for i := range bSlice {
-			bSlice[i] = ReplaceCredPlaceholders(aVal[i], bSlice[i])
+		for i := range apiSlice {
+			apiSlice[i] = ReplaceCredPlaceholders(stateValueCast[i], apiSlice[i])
 		}
 	case string:
-		bStr, ok := apiState.(string)
-		if ok && credPlaceholderPattern.MatchString(bStr) {
-			return aVal
+		apiStr, ok := apiValue.(string)
+		if ok && credPlaceholderPattern.MatchString(apiStr) {
+			return stateValueCast
 		}
 	}
-	return apiState
+	return apiValue
 }

@@ -1,0 +1,35 @@
+---
+layout: ""
+page_title: "dynatrace_hub_extension_v2_config Resource - terraform-provider-dynatrace"
+subcategory: "Extensions"
+description: |-
+  The resource `dynatrace_hub_extension_v2_config` manages monitoring configurations for Dynatrace Extensions 2.0.
+---
+
+# dynatrace_hub_extension_v2_config (Resource)
+
+-> This resource requires the OAuth scopes `extensions:configurations:read` and `extensions:configurations:write`
+
+This resource configures a monitoring configuration for the given extension with the specified version.
+Managing of configurations will fail if the extension has not yet gotten installed for the specified version.
+
+The `value` attribute differs depending on the Extension you want to configure. The expected format is JSON. We recommend to navigate via WebUI to the Dynatrace Hub and configure such an Extension there - the WebUI provides you with the correct JSON code to use.
+
+-> **Note:** Some extensions may reference IDs of other Dynatrace API resources (e.g. credentials, alerting profiles, and management zones) within the `value` attribute. 
+This type of cross-resource reference is **not automatically resolved or tracked** by this provider, and we're **unable to provide guidance on fully configuring this resource or its dependencies** in Terraform.
+
+## Dynatrace Documentation
+
+- Extensions 2.0 - https://docs.dynatrace.com/docs/ingest-from/extensions
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_hub_extension_v2_config` downloads the settings for all configured Extensions 2.0
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/extensions/monitoringconfigurations/testdata/terraform/withscope.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
