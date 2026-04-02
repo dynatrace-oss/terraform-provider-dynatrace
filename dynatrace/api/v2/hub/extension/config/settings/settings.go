@@ -41,6 +41,10 @@ type Settings struct {
 
 var reg = regexp.MustCompile(`^\d+\.\d+\.\d+$`)
 
+func (me *Settings) Deprecated() string {
+	return "This resource is deprecated by `dynatrace_hub_extension_v2_config` and will be removed in a future release. Please migrate to the new resource."
+}
+
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
