@@ -22,6 +22,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
@@ -681,6 +682,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DirectShares: NewResourceDescriptor(
 		directshares.Service, Dependencies.ID(ResourceTypes.Documents), Dependencies.ID(ResourceTypes.IAMUser), Dependencies.ID(ResourceTypes.IAMServiceUser), Dependencies.ID(ResourceTypes.IAMGroup),
 	),
+	ResourceTypes.HubExtensionV2Config: NewResourceDescriptor(monitoringconfigurations.Service),
 	ResourceTypes.OpenPipelineLogs: NewResourceDescriptor(
 		openpipeline.LogsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
 	ResourceTypes.OpenPipelineEvents: NewResourceDescriptor(
@@ -1916,6 +1918,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.DatabaseAnomalies, "Replaced by dynatrace_database_anomalies_v2"},
 			{ResourceTypes.DiskEventAnomalies, "Replaced by dynatrace_disk_anomaly_rules"},
 			{ResourceTypes.HostAnomalies, "Replaced by dynatrace_host_anomalies_v2"},
+			{ResourceTypes.HubExtensionConfig, "Replaced by dynatrace_hub_extension_v2_config"},
 			{ResourceTypes.KubernetesCredentials, "Replaced by dynatrace_kubernetes"},
 			{ResourceTypes.ManagementZone, "Replaced by dynatrace_management_zone_v2"},
 			{ResourceTypes.ProcessGroupAnomalies, "Replaced by dynatrace_pg_alerting"},
@@ -1981,6 +1984,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.AutomationWorkflow, ""},
 			{ResourceTypes.Documents, ""},
 			{ResourceTypes.DirectShares, ""},
+			{ResourceTypes.HubExtensionV2Config, ""},
 			{ResourceTypes.PlatformBucket, ""},
 			{ResourceTypes.Segments, ""},
 			{ResourceTypes.PlatformSLO, ""},

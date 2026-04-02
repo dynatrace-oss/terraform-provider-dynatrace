@@ -340,7 +340,7 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 	// to be discussed: should we go that route for all resources
 	//                  executing a Read right after an update
 	//                  is not common practice anyways
-	if me.Type == export.ResourceTypes.HubExtensionConfig {
+	if me.Type == export.ResourceTypes.HubExtensionConfig || me.Type == export.ResourceTypes.HubExtensionV2Config {
 		return diag.Diagnostics{}
 	}
 	return me.Read(ctx, d, m)
