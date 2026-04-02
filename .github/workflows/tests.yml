@@ -125,6 +125,7 @@ jobs:
           - { name: "automation", path: "./dynatrace/api/automation/..." }
           - { name: "cluster", path: "./dynatrace/api/cluster/..." }
           - { name: "documents", path: "./dynatrace/api/documents/..." }
+          - { name: "extensions", path: "./dynatrace/api/extensions/..." }
           - { name: "grail", path: "./dynatrace/api/grail/..." }
           - { name: "iam", path: "./dynatrace/api/iam/..." }
           - { name: "openpipeline", path: "./dynatrace/api/openpipeline/..." }
