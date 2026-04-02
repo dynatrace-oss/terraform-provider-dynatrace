@@ -49,14 +49,7 @@ func (me *FieldExtractionEntries) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	// https://github.com/hashicorp/terraform-plugin-sdk/issues/895
 	// Only known workaround is to ignore these blocks
-	newEntries := FieldExtractionEntries{}
-	var emptyItem FieldExtractionEntry
-	for _, entry := range *me {
-		if *entry != emptyItem {
-			newEntries = append(newEntries, entry)
-		}
-	}
-	*me = newEntries
+	*me = hcl.FilterEmpty(*me, FieldExtractionEntry{ExtractionType: "field"})
 	return nil
 }
 
