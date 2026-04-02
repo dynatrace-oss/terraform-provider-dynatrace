@@ -1918,6 +1918,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.DatabaseAnomalies, "Replaced by dynatrace_database_anomalies_v2"},
 			{ResourceTypes.DiskEventAnomalies, "Replaced by dynatrace_disk_anomaly_rules"},
 			{ResourceTypes.HostAnomalies, "Replaced by dynatrace_host_anomalies_v2"},
+			{ResourceTypes.HubExtensionConfig, "Replaced by dynatrace_hub_extension_v2_config"},
 			{ResourceTypes.KubernetesCredentials, "Replaced by dynatrace_kubernetes"},
 			{ResourceTypes.ManagementZone, "Replaced by dynatrace_management_zone_v2"},
 			{ResourceTypes.ProcessGroupAnomalies, "Replaced by dynatrace_pg_alerting"},
