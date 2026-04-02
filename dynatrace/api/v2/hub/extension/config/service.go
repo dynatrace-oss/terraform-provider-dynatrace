@@ -22,7 +22,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
-	"regexp"
 	"strings"
 	"time"
 
@@ -31,6 +30,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 )
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*extension_config.Settings] {
@@ -39,37 +39,6 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*extension_conf
 
 type service struct {
 	credentials *rest.Credentials
-}
-
-var pattern = regexp.MustCompile(`^\*{3}\d{3}\*{3}$`)
-
-func replaceCredPlaceholders(a, b any) any {
-	switch aVal := a.(type) {
-	case map[string]any:
-		bMap, ok := b.(map[string]any)
-		if !ok {
-			return b
-		}
-		for key, bVal := range bMap {
-			if aInnerVal, exists := aVal[key]; exists {
-				bMap[key] = replaceCredPlaceholders(aInnerVal, bVal)
-			}
-		}
-	case []any:
-		bSlice, ok := b.([]any)
-		if !ok || len(aVal) != len(bSlice) {
-			return b
-		}
-		for i := range bSlice {
-			bSlice[i] = replaceCredPlaceholders(aVal[i], bSlice[i])
-		}
-	case string:
-		bStr, ok := b.(string)
-		if ok && pattern.MatchString(bStr) {
-			return aVal
-		}
-	}
-	return b
 }
 
 func (me *service) Get(ctx context.Context, id string, v *extension_config.Settings) error {
@@ -107,7 +76,7 @@ func (me *service) Get(ctx context.Context, id string, v *extension_config.Setti
 		} else if err := json.Unmarshal([]byte(stateConfig.Value), &stateValue); err != nil {
 			logging.File.Printf("Error unmarshalling state config: %v\n", err)
 		} else {
-			merged := replaceCredPlaceholders(stateValue, receivedValue)
+			merged := hcl.ReplaceCredPlaceholders(stateValue, receivedValue)
 			if marshalled, err := json.MarshalIndent(merged, "", "  "); err != nil {
 				logging.File.Printf("Error marshalling merged config: %v\n", err)
 			} else {
