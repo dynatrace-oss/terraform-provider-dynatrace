@@ -22,6 +22,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
@@ -681,6 +682,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.DirectShares: NewResourceDescriptor(
 		directshares.Service, Dependencies.ID(ResourceTypes.Documents), Dependencies.ID(ResourceTypes.IAMUser), Dependencies.ID(ResourceTypes.IAMServiceUser), Dependencies.ID(ResourceTypes.IAMGroup),
 	),
+	ResourceTypes.HubExtensionV2Config: NewResourceDescriptor(monitoringconfigurations.Service),
 	ResourceTypes.OpenPipelineLogs: NewResourceDescriptor(
 		openpipeline.LogsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
 	ResourceTypes.OpenPipelineEvents: NewResourceDescriptor(
@@ -1981,6 +1983,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.AutomationWorkflow, ""},
 			{ResourceTypes.Documents, ""},
 			{ResourceTypes.DirectShares, ""},
+			{ResourceTypes.HubExtensionV2Config, ""},
 			{ResourceTypes.PlatformBucket, ""},
 			{ResourceTypes.Segments, ""},
 			{ResourceTypes.PlatformSLO, ""},
