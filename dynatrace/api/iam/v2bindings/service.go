@@ -20,6 +20,7 @@ package v2bindings
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -215,6 +216,13 @@ type bindingPayload = struct {
 }
 
 func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindings.PolicyBinding) error {
+	// Because a policy binding to a group is not unique (several policyIDs with different parameters can be assigned to a group)
+	// we are deleting everything first before adding new policies
+	// updating/deleting a policy binding would mean that we need to provide the whole parameters and metadata array
+	// the policy-binding identifier is basically the value (parameters and metadata) of the policy binding
+	if err := me.Delete(ctx, id); err != nil {
+		return err
+	}
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return err
@@ -222,51 +230,15 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindin
 
 	client := iam.NewIAMClient(me)
 
-	deployedBindings, err := me.getGroupPolicyBindingUUIDs(ctx, id)
-	if err != nil {
-		return err
-	}
-	existingPolicyBindings := map[string]struct{}{}
-	for _, desiredPolicy := range deployedBindings {
-		existingPolicyBindings[desiredPolicy] = struct{}{}
-	}
-	desiredPolicyBindings := map[string]*bindings.Policy{}
 	for _, desiredPolicy := range v.Policies {
 		policyUUID, _, _, _ := policies.SplitID(desiredPolicy.ID, levelType, levelID)
-		desiredPolicyBindings[policyUUID] = desiredPolicy
-	}
-
-	// update/delete
-	for existingPolicyID := range existingPolicyBindings {
-		if desiredPolicy, ok := desiredPolicyBindings[existingPolicyID]; ok {
-			// policy found that matches desired - update
-			payload := bindingPayload{
-				Parameters: desiredPolicy.Parameters,
-				Metadata:   desiredPolicy.Metadata,
-				Boundaries: desiredPolicy.Boundaries,
-			}
-			if _, err = client.PUT(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, existingPolicyID, groupID), payload, 204, false); err != nil {
-				return err
-			}
-		} else {
-			// There is an existing policy binding that is not desired anymore - delete
-			if _, err = client.DELETE_MULTI_RESPONSE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, existingPolicyID, groupID), []int{204, 400, 404}, false); err != nil {
-				return err
-			}
+		payload := bindingPayload{
+			Parameters: desiredPolicy.Parameters,
+			Metadata:   desiredPolicy.Metadata,
+			Boundaries: desiredPolicy.Boundaries,
 		}
-	}
-
-	// If not found in existing bindings, create
-	for policyUUID, desiredPolicy := range desiredPolicyBindings {
-		if _, ok := existingPolicyBindings[policyUUID]; !ok {
-			payload := bindingPayload{
-				Parameters: desiredPolicy.Parameters,
-				Metadata:   desiredPolicy.Metadata,
-				Boundaries: desiredPolicy.Boundaries,
-			}
-			if _, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyUUID, groupID), payload, 204, false); err != nil {
-				return err
-			}
+		if _, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyUUID, groupID), payload, 204, false); err != nil {
+			return err
 		}
 	}
 
@@ -411,8 +383,11 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 		}
 		policyUUIDs[policyUUID] = policyUUID
 	}
+	queryParams := url.Values{
+		"forceMultiple": []string{"true"},
+	}
 	for policyUUID := range policyUUIDs {
-		if _, err = iam.NewIAMClient(me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyUUID, groupID), 204, false); err != nil {
+		if _, err = iam.NewIAMClient(me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s?%s", me.endpointURL, levelType, levelID, policyUUID, groupID, queryParams.Encode()), 204, false); err != nil {
 			return err
 		}
 	}
