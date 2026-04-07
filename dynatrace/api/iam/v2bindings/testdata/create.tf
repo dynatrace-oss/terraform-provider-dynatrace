@@ -37,4 +37,14 @@ resource "dynatrace_iam_policy_bindings_v2" "acc_bindings" {
       "prop-b" : "value-c"
     }
   }
+  # two policy bindings with the same policy ID but different parameters
+  policy {
+    id = dynatrace_iam_policy.acc_policy.id
+    parameters = {
+      "prop-b" : "value-c"
+    }
+    metadata = {
+      "prop-b" : "value-d"
+    }
+  }
 }
