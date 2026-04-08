@@ -126,7 +126,7 @@ func (me *BindingServiceClient) getGroupPolicyBindingUUIDs(ctx context.Context, 
 	if err != nil {
 		return nil, err
 	}
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 
 	type groupPolicyBindings struct {
 		PolicyUuids []string `json:"policyUuids"`
@@ -144,7 +144,7 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 	if err != nil {
 		return err
 	}
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 
 	policyIDs, err := me.getGroupPolicyBindingUUIDs(ctx, id)
 	if err != nil {
@@ -228,7 +228,7 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindin
 		return err
 	}
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 
 	for _, desiredPolicy := range v.Policies {
 		policyUUID, _, _, _ := policies.SplitID(desiredPolicy.ID, levelType, levelID)
@@ -270,7 +270,7 @@ func (me *BindingServiceClient) FetchAccountBindings(ctx context.Context) chan *
 
 		var err error
 		var response ListPolicyBindingsResponse
-		client := iam.NewIAMClient(me)
+		client := iam.NewIAMClient(ctx, me)
 
 		if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/bindings", me.endpointURL, me.AccountID()), 200, false, &response); err != nil {
 			return
@@ -301,7 +301,7 @@ func (me *BindingServiceClient) FetchEnvironmentBindings(ctx context.Context) ch
 			close(results)
 		}()
 		var err error
-		client := iam.NewIAMClient(me)
+		client := iam.NewIAMClient(ctx, me)
 
 		var environmentIDs []string
 		if environmentIDs, err = policies.GetEnvironmentIDs(ctx, me); err != nil {
@@ -387,7 +387,7 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 		"forceMultiple": []string{"true"},
 	}
 	for policyUUID := range policyUUIDs {
-		if _, err = iam.NewIAMClient(me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s?%s", me.endpointURL, levelType, levelID, policyUUID, groupID, queryParams.Encode()), 204, false); err != nil {
+		if _, err = iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s?%s", me.endpointURL, levelType, levelID, policyUUID, groupID, queryParams.Encode()), 204, false); err != nil {
 			return err
 		}
 	}

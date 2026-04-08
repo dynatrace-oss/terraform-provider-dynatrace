@@ -52,13 +52,13 @@ type iamClient struct {
 	client *rest2.Client
 }
 
-func NewIAMClient(a Authenticator) IAMClient {
+func NewIAMClient(ctx context.Context, a Authenticator) IAMClient {
 	oauthConfig := clientcredentials.Config{
 		ClientID:     a.ClientID(),
 		ClientSecret: a.ClientSecret(),
 		TokenURL:     a.TokenURL(),
 	}
-	httpClient := auth.NewOAuthClient(rest.NewContextWithOAuthRetryClient(context.Background()), &oauthConfig)
+	httpClient := auth.NewOAuthClient(rest.NewContextWithOAuthRetryClient(ctx), &oauthConfig)
 
 	opts := []rest2.Option{
 		rest2.WithHTTPListener(logging.HTTPListener("iam")),

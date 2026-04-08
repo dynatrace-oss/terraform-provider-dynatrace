@@ -53,7 +53,7 @@ func CheckPolicyExists(ctx context.Context, auth iam.Authenticator, levelType st
 		UUID string `json:"uuid"`
 		Name string `json:"name"`
 	}{}
-	client := iam.NewIAMClient(auth)
+	client := iam.NewIAMClient(ctx, auth)
 	if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", auth.EndpointURL(), levelType, levelID, policyUUID), 200, false, &response); err != nil {
 		// TODO: this is dirty. The IAM client unfortunately doesn't produce special kinds errors. string compare is the only option atm
 		if strings.HasPrefix(err.Error(), "response code 404") {
@@ -219,7 +219,7 @@ func FetchAllPolicyLevels(ctx context.Context, auth iam.Authenticator) (map[stri
 }
 
 func fetchGlobalPolicies(ctx context.Context, auth iam.Authenticator) (results chan *api.Stub) {
-	client := iam.NewIAMClient(auth)
+	client := iam.NewIAMClient(ctx, auth)
 	results = make(chan *api.Stub)
 	go func() {
 		defer func() {
@@ -305,7 +305,7 @@ func fetchAllPolicyLevels(ctx context.Context, auth iam.Authenticator) (m map[st
 // GetEnvironmentIDs retrieves all environmentIDs reachable via the given IAM Client
 // The operation is NOT guarded by a mutex. See `GetEnvironmentIDs` for a guarded version
 func getEnvironmentIDs(ctx context.Context, auth iam.Authenticator) ([]string, error) {
-	client := iam.NewIAMClient(auth)
+	client := iam.NewIAMClient(ctx, auth)
 
 	var err error
 

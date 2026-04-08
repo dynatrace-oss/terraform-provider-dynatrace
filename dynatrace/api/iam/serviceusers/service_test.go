@@ -79,7 +79,7 @@ type mockIAMClientGetter struct {
 	client *mockIAMClient
 }
 
-func (me *mockIAMClientGetter) New() iam.IAMClient {
+func (me *mockIAMClientGetter) New(_ context.Context) iam.IAMClient {
 	return me.client
 }
 

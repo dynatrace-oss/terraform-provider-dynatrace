@@ -96,7 +96,7 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 	var err error
 	var responseBytes []byte
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 	if responseBytes, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups", me.endpointURL, me.AccountID()), []*groups.Group{group}, 201, false); err != nil {
 		return nil, err
 	}
@@ -126,7 +126,7 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *groups.Group) error {
 	var err error
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 	if _, err = client.PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s", me.endpointURL, me.AccountID(), uuid), group, 200, false); err != nil {
 		return err
 	}
@@ -157,7 +157,7 @@ type ListGroupsResponse struct {
 }
 
 func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 	var groupStubs ListGroupsResponse
 	accountID := me.AccountID()
 	if err := iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups", me.endpointURL, accountID), 200, false, &groupStubs); err != nil {
@@ -174,7 +174,7 @@ func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
 func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Group) (err error) {
 	var groupStub ListGroup
 	accountID := me.AccountID()
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 	if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, accountID, id), 200, false, &groupStub); err != nil {
 		return err
 	}
@@ -187,7 +187,7 @@ func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Grou
 }
 
 func (me *GroupServiceClient) Delete(ctx context.Context, id string) error {
-	_, err := iam.NewIAMClient(me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s", me.endpointURL, me.AccountID(), id), 200, false)
+	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s", me.endpointURL, me.AccountID(), id), 200, false)
 
 	// data sources MAY have cached a list of group IDs
 	// Updating the (publicly available) revision signals to them that either a CREATE or DELETE has happened since

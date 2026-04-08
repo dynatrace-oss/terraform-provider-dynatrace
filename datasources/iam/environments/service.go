@@ -82,7 +82,7 @@ func (ec *environmentsService) Get(ctx context.Context) ([]Environment, error) {
 		return nil, err
 	}
 
-	client := iam.NewIAMClient(ec)
+	client := iam.NewIAMClient(ctx, ec)
 	var result Response
 	err = iam.GET(client, ctx, u, 200, false, &result)
 	if err != nil {

@@ -35,7 +35,7 @@ type ServiceUserService interface {
 }
 
 type iamClientGetter interface {
-	New() iam.IAMClient
+	New(ctx context.Context) iam.IAMClient
 }
 
 type iamClientGetterImp struct {
@@ -66,8 +66,8 @@ func (me *iamClientGetterImp) EndpointURL() string {
 	return me.endpointURL
 }
 
-func (me *iamClientGetterImp) New() iam.IAMClient {
-	return iam.NewIAMClient(me)
+func (me *iamClientGetterImp) New(ctx context.Context) iam.IAMClient {
+	return iam.NewIAMClient(ctx, me)
 }
 
 type serviceUserServiceClient struct {
@@ -106,7 +106,7 @@ type createResponse struct {
 }
 
 func (me *serviceUserServiceClient) Create(ctx context.Context, serviceUser *serviceusers.ServiceUser) (*api.Stub, error) {
-	responseBytes, err := me.iamClientGetter.New().POST(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users", me.endpointURL, me.accountID), serviceUser, 201, false)
+	responseBytes, err := me.iamClientGetter.New(ctx).POST(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users", me.endpointURL, me.accountID), serviceUser, 201, false)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ type getServiceUserResponse struct {
 }
 
 func (me *serviceUserServiceClient) Get(ctx context.Context, id string, v *serviceusers.ServiceUser) error {
-	responseBytes, err := me.iamClientGetter.New().GET(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, me.accountID, id), 200, false)
+	responseBytes, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, me.accountID, id), 200, false)
 	if err != nil {
 		return err
 	}
@@ -170,7 +170,7 @@ type getUserPartialResponse struct {
 }
 
 func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email string) ([]string, error) {
-	responseBytes, err := me.iamClientGetter.New().GET(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users/%s", me.endpointURL, me.accountID, email), 200, false)
+	responseBytes, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users/%s", me.endpointURL, me.accountID, email), 200, false)
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +190,7 @@ func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email str
 
 func (me *serviceUserServiceClient) Update(ctx context.Context, id string, serviceUser *serviceusers.ServiceUser) error {
 	// Update the service user details
-	if _, err := me.iamClientGetter.New().PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, me.accountID, id), serviceUser, 200, false); err != nil {
+	if _, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, me.accountID, id), serviceUser, 200, false); err != nil {
 		return err
 	}
 
@@ -203,7 +203,7 @@ func (me *serviceUserServiceClient) updateGroupAssignments(ctx context.Context, 
 	if groups == nil {
 		groups = []string{}
 	}
-	_, err := me.iamClientGetter.New().PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users/%s/groups", me.endpointURL, me.accountID, serviceUserEmail), groups, 200, false)
+	_, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users/%s/groups", me.endpointURL, me.accountID, serviceUserEmail), groups, 200, false)
 	return err
 }
 
@@ -223,7 +223,7 @@ type listServiceUsersResponse struct {
 }
 
 func (me *serviceUserServiceClient) GetAll(ctx context.Context) ([]ServiceUserStub, error) {
-	client := me.iamClientGetter.New()
+	client := me.iamClientGetter.New(ctx)
 
 	var stubs []ServiceUserStub
 	url := fmt.Sprintf("%s/iam/v1/accounts/%s/service-users", me.endpointURL, me.accountID)
@@ -269,6 +269,6 @@ func (me *serviceUserServiceClient) List(ctx context.Context) (api.Stubs, error)
 }
 
 func (me *serviceUserServiceClient) Delete(ctx context.Context, uid string) error {
-	_, err := me.iamClientGetter.New().DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, me.accountID, uid), 200, false)
+	_, err := me.iamClientGetter.New(ctx).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, me.accountID, uid), 200, false)
 	return err
 }
