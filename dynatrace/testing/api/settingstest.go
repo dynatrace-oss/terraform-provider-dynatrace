@@ -50,14 +50,10 @@ func AccEnvsGiven(t *testing.T) bool {
 	return true
 }
 
-// RandomizeResource replaces "#name#" and "${randomize}" with a random string
-// Returns:
-// 	- The replaced config
-//  - The random string that was used
-func RandomizeResource(config string) (replacedConfig string, identifier string) {
-	name := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
-	config = strings.ReplaceAll(config, "#name#", name)
-	return strings.ReplaceAll(config, "${randomize}", name), name
+// replaceWithIdentifier replaces "#name#" and "${randomize}" with a given identifier
+func replaceWithIdentifier(config string, identifier string) string {
+	config = strings.ReplaceAll(config, "#name#", identifier)
+	return strings.ReplaceAll(config, "${randomize}", identifier)
 }
 
 // ReadTfConfig reads a config and replaces "#name#" and "${randomize}" with a random string
@@ -65,11 +61,17 @@ func RandomizeResource(config string) (replacedConfig string, identifier string)
 // 	- The replaced config
 //  - The random string that was used
 func ReadTfConfig(t *testing.T, file string) (config string, identifier string) {
+	identifier = acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
+	return ReadTfConfigWithIdentifier(t, file, identifier), identifier
+}
+
+// ReadTfConfigWithIdentifier reads a config and replaces "#name#" and "${randomize}" with a given identifier
+func ReadTfConfigWithIdentifier(t *testing.T, file string, identifier string) string {
 	t.Helper()
 	content, err := os.ReadFile(file)
 	require.NoError(t, err)
 
-	return RandomizeResource(string(content))
+	return replaceWithIdentifier(string(content), identifier)
 }
 
 func readTestData(t *testing.T) []string {
