@@ -23,8 +23,35 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func TestAccWebHookNotifications(t *testing.T) {
 	api.TestAcc(t)
+}
+
+func TestAccWebHookHeaderUpdate(t *testing.T) {
+	if !api.AccEnvsGiven(t) {
+		return
+	}
+
+	identifier := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
+	createConfig := api.ReadTfConfigWithIdentifier(t, "testdata/create.tf", identifier)
+	updateConfig := api.ReadTfConfigWithIdentifier(t, "testdata/update.tf", identifier)
+
+	providerFactories := map[string]func() (*schema.Provider, error){
+		"dynatrace": func() (*schema.Provider, error) {
+			return provider.Provider(), nil
+		},
+	}
+	resource.Test(t, resource.TestCase{
+		ProviderFactories: providerFactories,
+		Steps: []resource.TestStep{
+			{Config: createConfig},
+			{Config: updateConfig},
+		},
+	})
 }
