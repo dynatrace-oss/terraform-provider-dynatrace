@@ -95,7 +95,7 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 	}
 	var responseBytes []byte
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 
 	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/groups/%s", me.endpointURL, levelType, levelID, groupID), 200, false); err != nil {
 		return err
@@ -121,7 +121,7 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, bindings 
 		return err
 	}
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 
 	policyIDs := []string{}
 	for _, policyID := range bindings.PolicyIDs {
@@ -166,7 +166,7 @@ type ListPolicyUUIDsForGroupResponse struct {
 func (me *BindingServiceClient) GetPolicyUUIDsForGroup(ctx context.Context, groupID string, levelType string, levelID string) ([]string, error) {
 	var err error
 	var responseBytes []byte
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/groups/%s", me.endpointURL, levelType, levelID, groupID), 200, false); err != nil {
 		return nil, err
 	}
@@ -181,7 +181,7 @@ func (me *BindingServiceClient) GetPolicyUUIDsForGroup(ctx context.Context, grou
 func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var responseBytes []byte
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 
 	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/env/v2/accounts/%s/environments", me.endpointURL, me.AccountID()), 200, false); err != nil {
 		return nil, err
@@ -248,7 +248,7 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 		return err
 	}
 	for _, policyID := range binding.PolicyIDs {
-		if _, err = iam.NewIAMClient(me).DELETE_MULTI_RESPONSE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyID, groupID), []int{204, 400}, false); err != nil {
+		if _, err = iam.NewIAMClient(ctx, me).DELETE_MULTI_RESPONSE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyID, groupID), []int{204, 400}, false); err != nil {
 			return err
 		}
 	}

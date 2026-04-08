@@ -73,7 +73,7 @@ func (me *BoundaryServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var responseBytes []byte
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 
 	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries", me.endpointURL, me.AccountID()), 200, false); err != nil {
 		return nil, err
@@ -97,7 +97,7 @@ func (me *BoundaryServiceClient) Get(ctx context.Context, id string, v *boundari
 	var err error
 	var responseBytes []byte
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 
 	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.AccountID(), id), 200, false); err != nil {
 		return err
@@ -117,7 +117,7 @@ func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.Polic
 	var err error
 	var responseBytes []byte
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 
 	if responseBytes, err = client.POST(
 		ctx,
@@ -144,7 +144,7 @@ func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.Polic
 func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *boundaries.PolicyBoundary) error {
 	var err error
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 
 	if _, err = client.PUT_MULTI_RESPONSE(
 		ctx,
@@ -163,7 +163,7 @@ func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *bound
 func (me *BoundaryServiceClient) Delete(ctx context.Context, id string) error {
 	var err error
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 
 	if _, err = client.DELETE(
 		ctx,

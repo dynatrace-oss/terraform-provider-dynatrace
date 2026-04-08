@@ -59,7 +59,7 @@ func (me *BasePolicyServiceClient) CREATE(ctx context.Context, level PolicyLevel
 	var err error
 	var responseBytes []byte
 
-	client := NewIAMClient(me)
+	client := NewIAMClient(ctx, me)
 	if responseBytes, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies", me.endpointURL, level, levelID), policy, 201, false); err != nil {
 		return "", err
 	}
@@ -75,7 +75,7 @@ func (me *BasePolicyServiceClient) GET(ctx context.Context, level PolicyLevel, l
 	var err error
 	var responseBytes []byte
 
-	client := NewIAMClient(me)
+	client := NewIAMClient(ctx, me)
 
 	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, level, levelID, uuid), 200, false); err != nil {
 		return nil, err
@@ -91,7 +91,7 @@ func (me *BasePolicyServiceClient) GET(ctx context.Context, level PolicyLevel, l
 func (me *BasePolicyServiceClient) UPDATE(ctx context.Context, level PolicyLevel, levelID string, policy *Policy, uuid string) error {
 	var err error
 
-	client := NewIAMClient(me)
+	client := NewIAMClient(ctx, me)
 
 	if _, err = client.PUT(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, level, levelID, uuid), policy, 200, false); err != nil {
 		return err
@@ -113,7 +113,7 @@ func (me *BasePolicyServiceClient) List(ctx context.Context, level PolicyLevel, 
 	var err error
 	var responseBytes []byte
 
-	if responseBytes, err = NewIAMClient(me).GET(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies", me.endpointURL, level, levelID), 200, false); err != nil {
+	if responseBytes, err = NewIAMClient(ctx, me).GET(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies", me.endpointURL, level, levelID), 200, false); err != nil {
 		return nil, err
 	}
 
@@ -139,6 +139,6 @@ func (me *BasePolicyServiceClient) LIST(ctx context.Context, level PolicyLevel, 
 }
 
 func (me *BasePolicyServiceClient) DELETE(ctx context.Context, level PolicyLevel, levelID string, uuid string) error {
-	_, err := NewIAMClient(me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, level, levelID, uuid), 204, false)
+	_, err := NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, level, levelID, uuid), 204, false)
 	return err
 }

@@ -76,7 +76,7 @@ func (me *PermissionServiceClient) Name() string {
 func (me *PermissionServiceClient) Create(ctx context.Context, permission *permissions.Permission) (*api.Stub, error) {
 	var err error
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 	scope := ""
 	scopeType := ""
 	if len(permission.Account) > 0 {
@@ -110,7 +110,7 @@ func (me *PermissionServiceClient) Get(ctx context.Context, id string, v *permis
 	var err error
 	var responseBytes []byte
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 
 	parts := strings.Split(id, "#-#")
 	if len(parts) < 4 {
@@ -164,7 +164,7 @@ func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) 
 
 	var stubs api.Stubs
 
-	client := iam.NewIAMClient(me)
+	client := iam.NewIAMClient(ctx, me)
 	for _, groupStub := range groupStubs {
 		groupID := groupStub.ID
 
@@ -196,7 +196,7 @@ func (me *PermissionServiceClient) Delete(ctx context.Context, id string) error 
 	scope := parts[2]
 	scopeType := parts[3]
 
-	_, err := iam.NewIAMClient(me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions?scope=%s&permission-name=%s&scope-type=%s", me.endpointURL, me.AccountID(), groupID, url.QueryEscape(scope), url.QueryEscape(name), url.QueryEscape(scopeType)), 200, false)
+	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions?scope=%s&permission-name=%s&scope-type=%s", me.endpointURL, me.AccountID(), groupID, url.QueryEscape(scope), url.QueryEscape(name), url.QueryEscape(scopeType)), 200, false)
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("Permission %s not found", id)) {
 		return nil
 	}
