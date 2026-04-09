@@ -28,3 +28,7 @@ import (
 func TestAccAzureService(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesAzureService(t *testing.T) {
+	api.TestAccTestCases(t)
+}
