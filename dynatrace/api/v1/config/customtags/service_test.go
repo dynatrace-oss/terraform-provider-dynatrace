@@ -21,8 +21,14 @@ package customtags_test
 
 import (
 	"testing"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccCustomTags(t *testing.T) {
-	t.Skip()
+	api.TestAcc(t)
+}
+
+func TestAccTestCasesCustomTags(t *testing.T) {
+	api.TestAccTestCases(t)
 }
