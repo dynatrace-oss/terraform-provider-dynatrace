@@ -32,6 +32,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+type TestCaseAccOptions struct {
+	ExternalProviders map[string]resource.ExternalProvider
+	// TestCaseName is an optional field to set if only one testcase should be executed (useful for debugging)
+	TestCaseName string
+}
 type TestAccOptions struct {
 	ExpectNonEmptyPlan bool
 	ExternalProviders  map[string]resource.ExternalProvider
@@ -117,6 +122,70 @@ func TestAcc(t *testing.T, opts ...TestAccOptions) {
 
 			testCase := createTestCaseWithOptions(t, config, opts)
 			resource.Test(t, testCase)
+		})
+	}
+}
+
+type testCaseExecution struct {
+	TestCases []resource.TestStep
+	Name      string
+}
+
+func getTestCases(t *testing.T, specificTestCase string) []testCaseExecution {
+	testDataFolders, _ := os.ReadDir("testcases")
+	testCases := make([]testCaseExecution, 0)
+
+	for _, entry := range testDataFolders {
+		if !entry.IsDir() || specificTestCase != "" && entry.Name() != specificTestCase {
+			continue
+		}
+		folder := path.Join("testcases", entry.Name())
+
+		configCreate, identifier := ReadTfConfig(t, path.Join(folder, "create.tf"))
+		configUpdate := ReadTfConfigWithIdentifier(t, path.Join(folder, "update.tf"), identifier)
+
+		testCases = append(testCases, testCaseExecution{
+			TestCases: []resource.TestStep{
+				{
+					Config: configCreate,
+				},
+				{
+					Config: configUpdate,
+				},
+			},
+			Name: entry.Name(),
+		})
+	}
+	return testCases
+}
+
+// TestAccTestCases reads the `testcases` folder and executes every create.tf and update.tf file per testcase folder inside
+func TestAccTestCases(t *testing.T, opts ...TestCaseAccOptions) {
+	t.Helper()
+
+	if !AccEnvsGiven(t) {
+		return
+	}
+	var options TestCaseAccOptions
+	if len(opts) > 0 {
+		options = opts[0]
+	}
+
+	for _, testCase := range getTestCases(t, options.TestCaseName) {
+		t.Run(testCase.Name, func(t *testing.T) {
+			t.Helper()
+
+			providerFactories := map[string]func() (*schema.Provider, error){
+				"dynatrace": func() (*schema.Provider, error) {
+					return provider.Provider(), nil
+				},
+			}
+
+			resource.Test(t, resource.TestCase{
+				ProviderFactories: providerFactories,
+				ExternalProviders: options.ExternalProviders,
+				Steps:             testCase.TestCases,
+			})
 		})
 	}
 }
