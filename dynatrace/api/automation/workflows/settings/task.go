@@ -88,15 +88,7 @@ func (me *Tasks) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeSlice("task", me); err != nil {
 		return err
 	}
-	// https://github.com/hashicorp/terraform-plugin-sdk/issues/895
-	// Only known workaround is to ignore these blocks
-	newEntries := Tasks{}
-	for _, entry := range *me {
-		if entry.Name != "" {
-			newEntries = append(newEntries, entry)
-		}
-	}
-	*me = newEntries
+	*me = hcl.FilterEmpty(*me, Task{Active: true, Input: map[string]any{}})
 	return nil
 }
 
