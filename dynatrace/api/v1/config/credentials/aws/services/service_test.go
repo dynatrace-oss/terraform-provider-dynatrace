@@ -28,3 +28,7 @@ import (
 func TestAccAWSService(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesAWSService(t *testing.T) {
+	api.TestAccTestCases(t)
+}
