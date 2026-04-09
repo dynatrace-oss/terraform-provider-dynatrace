@@ -28,3 +28,7 @@ import (
 func TestAccAutoTags(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesAutoTags(t *testing.T) {
+	api.TestAccTestCases(t)
+}
