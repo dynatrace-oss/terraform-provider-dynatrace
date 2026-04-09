@@ -28,3 +28,7 @@ import (
 func TestAccDefaultLaunchpad(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesLaunchpad(t *testing.T) {
+	api.TestAccTestCases(t)
+}
