@@ -28,3 +28,7 @@ import (
 func TestAccAlerting(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesAlerting(t *testing.T) {
+	api.TestAccTestCases(t)
+}
