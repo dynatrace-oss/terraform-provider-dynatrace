@@ -25,6 +25,7 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
@@ -38,6 +39,11 @@ var eligiblePlatformRequests = map[string]string{
 	"/api/v2/settings/objects": "/platform/classic/environment-api/v2/settings/objects",
 	"/api/v2/settings/schemas": "/platform/classic/environment-api/v2/settings/schemas",
 }
+
+// cachedPlatformClients caches clients for OAuth requests
+// The point of it is that there aren't x requests to get an access tokens as this could run into 429
+var cachedPlatformClients = map[string]*rest.Client{}
+var clientMutex sync.Mutex
 
 type platform_request request
 
@@ -84,15 +90,22 @@ func CreatePlatformTokenClient(u string, credentials *Credentials) (*rest.Client
 	return configureCommonRestClient(rest.NewClient(parsedURL, NewBearerTokenBasedClient(credentials.OAuth.PlatformToken), opts...))
 }
 
-func CreatePlatformClient(ctx context.Context, platformURL string, credentials *Credentials) (*rest.Client, error) {
+func CreatePlatformClient(_ context.Context, platformURL string, credentials *Credentials) (*rest.Client, error) {
+	clientMutex.Lock()
+	defer clientMutex.Unlock()
 	PreRequest()
 
+	if platformClient, ok := cachedPlatformClients[platformURL]; ok {
+		return platformClient, nil
+	}
 	var client *rest.Client
 	var err error
 	if credentials.ContainsPlatformToken() {
 		client, err = CreatePlatformTokenClient(platformURL, credentials)
 	} else if credentials.ContainsOAuth() {
-		client, err = CreatePlatformOAuthClient(ctx, platformURL, credentials)
+		// This must be a new context
+		// If it's the same, one context of a resource will cancel the one of the next one because of the internal cleanup
+		client, err = CreatePlatformOAuthClient(context.Background(), platformURL, credentials)
 	} else {
 		return nil, NoPlatformCredentialsErr
 	}
@@ -100,6 +113,7 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 		return nil, err
 	}
 
+	cachedPlatformClients[platformURL] = client
 	return client, err
 }
 

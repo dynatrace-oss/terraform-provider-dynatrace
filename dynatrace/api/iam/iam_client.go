@@ -26,6 +26,7 @@ import (
 	"net/http"
 	"net/url"
 	"slices"
+	"sync"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -52,7 +53,19 @@ type iamClient struct {
 	client *rest2.Client
 }
 
+// cachedRestClients caches clients for OAuth requests
+// The point of it is that there aren't x requests to get an access tokens as this could run into 429
+var cachedRestClients = map[string]*rest2.Client{}
+var clientMutex sync.Mutex
+
 func NewIAMClient(a Authenticator) IAMClient {
+	clientMutex.Lock()
+	defer clientMutex.Unlock()
+
+	if client, exists := cachedRestClients[a.EndpointURL()]; exists {
+		return &iamClient{a, client}
+	}
+
 	oauthConfig := clientcredentials.Config{
 		ClientID:     a.ClientID(),
 		ClientSecret: a.ClientSecret(),
@@ -73,6 +86,7 @@ func NewIAMClient(a Authenticator) IAMClient {
 	}
 	eUrl, _ := url.Parse(a.EndpointURL())
 	client := rest2.NewClient(eUrl, httpClient, opts...)
+	cachedRestClients[a.EndpointURL()] = client
 	return &iamClient{a, client}
 }
 
