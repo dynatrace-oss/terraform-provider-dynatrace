@@ -44,16 +44,7 @@ func (me *Filters) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeSlice("filter", me); err != nil {
 		return err
 	}
-	// slice may contain empty values because of SDK bug
-	filters := Filters{}
-	for _, filter := range *me {
-		// empty value
-		if filter.EntityID == nil && len(filter.EntityTags) == 0 && filter.EntityType == nil && len(filter.ManagementZones) == 0 {
-			continue
-		}
-		filters = append(filters, filter)
-	}
-	*me = filters
+	*me = hcl.FilterEmpty(*me, Filter{})
 	return nil
 }
 
