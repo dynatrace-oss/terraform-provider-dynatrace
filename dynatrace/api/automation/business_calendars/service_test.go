@@ -28,3 +28,7 @@ import (
 func TestAccBusinessCalendars(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesBusinessCalendars(t *testing.T) {
+	api.TestAccTestCases(t)
+}
