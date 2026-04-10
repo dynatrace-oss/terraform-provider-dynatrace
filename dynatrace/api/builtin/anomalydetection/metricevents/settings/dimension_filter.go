@@ -53,6 +53,7 @@ func (me *DimensionFilters) UnmarshalHCL(decoder hcl.Decoder) error {
 			}
 			*me = append(*me, entry)
 		}
+		*me = hcl.FilterEmpty(*me, DimensionFilter{})
 	}
 	return nil
 }

@@ -28,3 +28,7 @@ import (
 func TestAccMetricEventAnomalies(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesMetricEventAnomalies(t *testing.T) {
+	api.TestAccTestCases(t)
+}
