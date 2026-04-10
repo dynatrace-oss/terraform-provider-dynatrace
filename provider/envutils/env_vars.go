@@ -450,6 +450,58 @@ var DynatracePrevStatePathLinked = StringEnvVar{
 	DefaultValue: "",
 }
 
+// --- Source Environment (multi-key fallback) ---
+
+// DynatraceSourceEnvURL is the URL of the source Dynatrace environment for migration.
+var DynatraceSourceEnvURL = MultiStringEnvVar{
+	Keys: []string{
+		"DYNATRACE_SOURCE_ENV_URL",
+		"DT_SOURCE_ENV_URL",
+		"DYNATRACE_SOURCE_ENVIRONMENT_URL",
+		"DT_SOURCE_ENVIRONMENT_URL",
+	},
+}
+
+// DynatraceSourceAPIToken is the API token for the source Dynatrace environment.
+var DynatraceSourceAPIToken = MultiStringEnvVar{
+	Keys: []string{
+		"DYNATRACE_SOURCE_API_TOKEN",
+		"DT_SOURCE_API_TOKEN",
+	},
+}
+
+// DynatraceSourceClientID is the OAuth client ID for the source Dynatrace environment.
+var DynatraceSourceClientID = MultiStringEnvVar{
+	Keys: []string{
+		"DT_SOURCE_CLIENT_ID",
+		"DYNATRACE_SOURCE_CLIENT_ID",
+	},
+}
+
+// DynatraceSourceAccountID is the account ID for the source Dynatrace environment.
+var DynatraceSourceAccountID = MultiStringEnvVar{
+	Keys: []string{
+		"DT_SOURCE_ACCOUNT_ID",
+		"DYNATRACE_SOURCE_ACCOUNT_ID",
+	},
+}
+
+// DynatraceSourceClientSecret is the OAuth client secret for the source Dynatrace environment.
+var DynatraceSourceClientSecret = MultiStringEnvVar{
+	Keys: []string{
+		"DT_SOURCE_CLIENT_SECRET",
+		"DYNATRACE_SOURCE_CLIENT_SECRET",
+	},
+}
+
+// DynatraceSourcePlatformToken is the platform token for the source Dynatrace environment.
+var DynatraceSourcePlatformToken = MultiStringEnvVar{
+	Keys: []string{
+		"DYNATRACE_SOURCE_PLATFORM_TOKEN",
+		"DT_SOURCE_PLATFORM_TOKEN",
+	},
+}
+
 // --- Testing ---
 
 // DynatraceEnvURL sets the Dynatrace environment URL for acceptance tests.

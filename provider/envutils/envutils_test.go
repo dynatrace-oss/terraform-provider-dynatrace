@@ -127,6 +127,32 @@ func TestClampedIntEnvVar_Get(t *testing.T) {
 	})
 }
 
+func TestMultiStringEnvVar_Get(t *testing.T) {
+	t.Run("returns default when no env vars are set", func(t *testing.T) {
+		m := MultiStringEnvVar{Keys: []string{"TEST_MULTI_A", "TEST_MULTI_B"}, DefaultValue: "fallback"}
+		assert.Equal(t, "fallback", m.Get())
+	})
+
+	t.Run("returns first set env var", func(t *testing.T) {
+		t.Setenv("TEST_MULTI_FIRST_A", "valueA")
+		t.Setenv("TEST_MULTI_FIRST_B", "valueB")
+		m := MultiStringEnvVar{Keys: []string{"TEST_MULTI_FIRST_A", "TEST_MULTI_FIRST_B"}}
+		assert.Equal(t, "valueA", m.Get())
+	})
+
+	t.Run("skips empty env vars and returns first non-empty", func(t *testing.T) {
+		t.Setenv("TEST_MULTI_SKIP_A", "")
+		t.Setenv("TEST_MULTI_SKIP_B", "valueB")
+		m := MultiStringEnvVar{Keys: []string{"TEST_MULTI_SKIP_A", "TEST_MULTI_SKIP_B"}}
+		assert.Equal(t, "valueB", m.Get())
+	})
+
+	t.Run("returns empty default when no keys match", func(t *testing.T) {
+		m := MultiStringEnvVar{Keys: []string{"TEST_MULTI_NONE_A", "TEST_MULTI_NONE_B"}}
+		assert.Equal(t, "", m.Get())
+	})
+}
+
 func TestBoundedIntEnvVar_Get(t *testing.T) {
 	t.Run("returns default when env var is not set", func(t *testing.T) {
 		b := BoundedIntEnvVar{Key: "TEST_BOUNDED_UNSET", DefaultValue: 50, Min: 10, Max: 100}

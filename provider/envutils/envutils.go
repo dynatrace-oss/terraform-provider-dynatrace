@@ -111,3 +111,20 @@ func (b BoundedIntEnvVar) Get() int {
 	}
 	return value
 }
+
+// MultiStringEnvVar checks multiple environment variable keys in order
+// and returns the first non-empty value found. If none are set, the
+// DefaultValue is returned.
+type MultiStringEnvVar struct {
+	Keys         []string
+	DefaultValue string
+}
+
+func (m MultiStringEnvVar) Get() string {
+	for _, key := range m.Keys {
+		if v, found := os.LookupEnv(key); found && len(v) > 0 {
+			return v
+		}
+	}
+	return m.DefaultValue
+}

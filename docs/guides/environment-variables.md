@@ -209,3 +209,16 @@ The Dynatrace Terraform provider can be configured using the following environme
 | Variable | Default | Min | Max | Description |
 |---|---|---|---|---|
 | `DYNATRACE_MAX_CONCURRENT_CUSTOM_TAG_LIST_REQUESTS` | `4` | `1` | `20` | Maximum number of concurrent requests for listing custom tags. Falls back to the default if the value is outside [Min, Max]. |
+
+## Source Environment
+
+These variables support multiple key aliases checked in priority order — the first non-empty value found is used.
+
+| Keys (checked in order) | Description |
+|---|---|
+| `DYNATRACE_SOURCE_ENV_URL`, `DT_SOURCE_ENV_URL`, `DYNATRACE_SOURCE_ENVIRONMENT_URL`, `DT_SOURCE_ENVIRONMENT_URL` | URL of the source Dynatrace environment for migration. |
+| `DYNATRACE_SOURCE_API_TOKEN`, `DT_SOURCE_API_TOKEN` | API token for the source Dynatrace environment. |
+| `DT_SOURCE_CLIENT_ID`, `DYNATRACE_SOURCE_CLIENT_ID` | OAuth client ID for the source Dynatrace environment. |
+| `DT_SOURCE_ACCOUNT_ID`, `DYNATRACE_SOURCE_ACCOUNT_ID` | Account ID for the source Dynatrace environment. |
+| `DT_SOURCE_CLIENT_SECRET`, `DYNATRACE_SOURCE_CLIENT_SECRET` | OAuth client secret for the source Dynatrace environment. |
+| `DYNATRACE_SOURCE_PLATFORM_TOKEN`, `DT_SOURCE_PLATFORM_TOKEN` | Platform token for the source Dynatrace environment. |
