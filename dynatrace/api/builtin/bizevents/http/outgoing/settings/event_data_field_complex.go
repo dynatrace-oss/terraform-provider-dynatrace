@@ -41,7 +41,11 @@ func (me EventDataFieldComplexes) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *EventDataFieldComplexes) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("event_data_field_complex", me)
+	if err := decoder.DecodeSlice("event_data_field_complex", me); err != nil {
+		return err
+	}
+	*me = hcl.FilterEmpty(*me, EventDataFieldComplex{})
+	return nil
 }
 
 type EventDataFieldComplex struct {
