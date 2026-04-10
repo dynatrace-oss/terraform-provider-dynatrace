@@ -28,3 +28,7 @@ import (
 func TestAccMaintenanceWindows(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesMaintenanceWindows(t *testing.T) {
+	api.TestAccTestCases(t)
+}
