@@ -45,7 +45,11 @@ func (me MatcherComplexes) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *MatcherComplexes) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("trigger", me)
+	if err := decoder.DecodeSlice("trigger", me); err != nil {
+		return err
+	}
+	*me = hcl.FilterEmpty(*me, MatcherComplex{})
+	return nil
 }
 
 // Matcher. Rule must match
@@ -94,6 +98,11 @@ func (me *MatcherComplex) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *MatcherComplex) HandlePreconditions() error {
+	var zeroItem MatcherComplex
+	if *me == zeroItem {
+		// else it will run into an error below and the zero-item would block the update
+		return nil
+	}
 	if (me.CaseSensitive == nil) && (!slices.Contains([]string{"EXISTS", "N_EXISTS"}, string(me.Type))) {
 		me.CaseSensitive = opt.NewBool(false)
 	}
