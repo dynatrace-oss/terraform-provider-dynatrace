@@ -89,3 +89,40 @@ func TestStringEnvVar_Get(t *testing.T) {
 		assert.Equal(t, "", s.Get())
 	})
 }
+
+func TestClampedIntEnvVar_Get(t *testing.T) {
+	t.Run("returns default when env var is not set", func(t *testing.T) {
+		c := ClampedIntEnvVar{Key: "TEST_CLAMPED_UNSET", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 50, c.Get())
+	})
+
+	t.Run("returns parsed value when within range", func(t *testing.T) {
+		t.Setenv("TEST_CLAMPED_VALID", "75")
+		c := ClampedIntEnvVar{Key: "TEST_CLAMPED_VALID", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 75, c.Get())
+	})
+
+	t.Run("clamps to max when value exceeds max", func(t *testing.T) {
+		t.Setenv("TEST_CLAMPED_HIGH", "200")
+		c := ClampedIntEnvVar{Key: "TEST_CLAMPED_HIGH", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 100, c.Get())
+	})
+
+	t.Run("clamps to min when value is below min", func(t *testing.T) {
+		t.Setenv("TEST_CLAMPED_LOW", "5")
+		c := ClampedIntEnvVar{Key: "TEST_CLAMPED_LOW", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 10, c.Get())
+	})
+
+	t.Run("returns default when env var is invalid", func(t *testing.T) {
+		t.Setenv("TEST_CLAMPED_INVALID", "notanint")
+		c := ClampedIntEnvVar{Key: "TEST_CLAMPED_INVALID", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 50, c.Get())
+	})
+
+	t.Run("returns default when env var is empty", func(t *testing.T) {
+		t.Setenv("TEST_CLAMPED_EMPTY", "")
+		c := ClampedIntEnvVar{Key: "TEST_CLAMPED_EMPTY", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 50, c.Get())
+	})
+}

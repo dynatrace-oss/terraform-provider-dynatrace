@@ -67,6 +67,11 @@ The Dynatrace Terraform provider can be configured using the following environme
 |---|---|---|
 | `DT_BUCKETS_IGNORE_UNEXPECTED_EOF` | `false` | Ignores unexpected EOF errors when managing buckets. |
 
+| Variable | Default | Min | Max | Description |
+|---|---|---|---|---|
+| `DT_BUCKETS_RETRIES` | `180` | `180` | `360` | Number of retries when waiting for bucket readiness. Values outside [Min, Max] are clamped to the nearest boundary. |
+| `DT_BUCKETS_NUM_SUCCESSES` | `10` | `10` | `50` | Number of consecutive successes required for bucket readiness. Values outside [Min, Max] are clamped to the nearest boundary. |
+
 ## Documents
 
 | Variable | Default | Description |
@@ -100,11 +105,30 @@ The Dynatrace Terraform provider can be configured using the following environme
 | `DYNATRACE_FORCE_NEW_ON_HEADERS` | `false` | Forces resource recreation when HTTP headers change. |
 | `DYNATRACE_GOLDEN_STATE_ENABLED` | `false` | Enables golden state tracking for resources. |
 
+## Management Zones
+
+| Variable | Default | Min | Max | Description |
+|---|---|---|---|---|
+| `DT_MGMZ_RETRIES` | `50` | `50` | `600` | Number of retries when waiting for management zone readiness. Values outside [Min, Max] are clamped to the nearest boundary. |
+| `DT_MGMZ_SUCCESSES` | `5` | `5` | `100` | Number of consecutive successes required for management zone readiness. Values outside [Min, Max] are clamped to the nearest boundary. |
+
 ## Dashboards
 
 | Variable | Default | Description |
 |---|---|---|
 | `DYNATRACE_DASHBOARD_TESTS` | `""` | Configures dashboard test behavior. |
+
+## Custom Device
+
+| Variable | Default | Min | Max | Description |
+|---|---|---|---|---|
+| `DT_CUSTOM_DEVICE_APPLY_TIMEOUT` | `100` | `100` | `500` | Timeout in seconds for custom device apply operations. Values outside [Min, Max] are clamped to the nearest boundary. |
+
+## DQL
+
+| Variable | Default | Min | Max | Description |
+|---|---|---|---|---|
+| `DYNATRACE_DQL_POLL_SLEEP_DURATION` | `5000` | `0` | `60000` | Sleep duration in milliseconds between DQL poll attempts. Values outside [Min, Max] are clamped to the nearest boundary. |
 
 ## Host Monitoring
 

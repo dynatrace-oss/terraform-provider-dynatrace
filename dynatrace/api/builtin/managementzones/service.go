@@ -20,15 +20,13 @@ package managementzones
 import (
 	"context"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/managementzones/settings"
 	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo"
@@ -50,32 +48,6 @@ type service struct {
 	service     settings.ListIDCRUDService[*managementzones.Settings]
 	client      rest.Client
 	credentials *rest.Credentials
-}
-
-const DefaultNumRequiredSuccesses = 5
-const MinNumRequiredSuccesses = 5
-const MaxNumRequiredSuccesses = 100
-
-const DefaultMaxConfirmationRetries = 50
-const MaxMaxConfirmationRetries = 600
-const MinMaxConfirmationRetries = 50
-
-func getEnv(key string, def int, min int, max int) int {
-	value := os.Getenv(key)
-	if len(value) == 0 {
-		return def
-	}
-	iValue, err := strconv.Atoi(strings.TrimSpace(value))
-	if err != nil {
-		return def
-	}
-	if iValue > max {
-		iValue = max
-	}
-	if iValue < min {
-		iValue = min
-	}
-	return iValue
 }
 
 func (me *service) Create(ctx context.Context, v *managementzones.Settings) (*api.Stub, error) {
@@ -103,8 +75,8 @@ func (me *service) Create(ctx context.Context, v *managementzones.Settings) (*ap
 
 	validator := slo.Service(me.credentials).(settings.Validator[*slosettings.Settings])
 
-	maxConfirmationRetries := getEnv("DT_MGMZ_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
-	numRequiredSuccesses := getEnv("DT_MGMZ_SUCCESSES", DefaultNumRequiredSuccesses, MinNumRequiredSuccesses, MaxNumRequiredSuccesses)
+	maxConfirmationRetries := envutils.DTMgmzRetries.Get()
+	numRequiredSuccesses := envutils.DTMgmzSuccesses.Get()
 	success := 0
 	for range maxConfirmationRetries {
 		if err := validator.Validate(ctx, &sloValue); err == nil {

@@ -152,12 +152,56 @@ var DTBucketsIgnoreUnexpectedEOF = BoolEnvVar{
 	DefaultValue: false,
 }
 
+// DTBucketsRetries is the number of retries when waiting for bucket readiness. Values outside [Min, Max] are clamped to the nearest boundary.
+var DTBucketsRetries = ClampedIntEnvVar{
+	Key:          "DT_BUCKETS_RETRIES",
+	DefaultValue: 180,
+	Min:          180,
+	Max:          360,
+}
+
+// DTBucketsNumSuccesses is the number of consecutive successes required for bucket readiness. Values outside [Min, Max] are clamped to the nearest boundary.
+var DTBucketsNumSuccesses = ClampedIntEnvVar{
+	Key:          "DT_BUCKETS_NUM_SUCCESSES",
+	DefaultValue: 10,
+	Min:          10,
+	Max:          50,
+}
+
+// --- Management Zones ---
+
+// DTMgmzRetries is the number of retries when waiting for management zone readiness. Values outside [Min, Max] are clamped to the nearest boundary.
+var DTMgmzRetries = ClampedIntEnvVar{
+	Key:          "DT_MGMZ_RETRIES",
+	DefaultValue: 50,
+	Min:          50,
+	Max:          600,
+}
+
+// DTMgmzSuccesses is the number of consecutive successes required for management zone readiness. Values outside [Min, Max] are clamped to the nearest boundary.
+var DTMgmzSuccesses = ClampedIntEnvVar{
+	Key:          "DT_MGMZ_SUCCESSES",
+	DefaultValue: 5,
+	Min:          5,
+	Max:          100,
+}
+
 // --- Documents ---
 
 // DTDocumentsIgnoreUnexpectedEOF ignores unexpected EOF errors when managing documents.
 var DTDocumentsIgnoreUnexpectedEOF = BoolEnvVar{
 	Key:          "DT_DOCUMENTS_IGNORE_UNEXPECTED_EOF",
 	DefaultValue: false,
+}
+
+// --- Custom Device ---
+
+// DTCustomDeviceApplyTimeout is the timeout in seconds for custom device apply operations. Values outside [Min, Max] are clamped to the nearest boundary.
+var DTCustomDeviceApplyTimeout = ClampedIntEnvVar{
+	Key:          "DT_CUSTOM_DEVICE_APPLY_TIMEOUT",
+	DefaultValue: 100,
+	Min:          100,
+	Max:          500,
 }
 
 // --- Entity ---
@@ -216,6 +260,16 @@ var DynatraceGoldenStateEnabled = BoolEnvVar{
 var DynatraceDashboardTests = StringEnvVar{
 	Key:          "DYNATRACE_DASHBOARD_TESTS",
 	DefaultValue: "",
+}
+
+// --- DQL ---
+
+// DynatraceDQLPollSleepDuration is the sleep duration in milliseconds between DQL poll attempts. Values outside [Min, Max] are clamped to the nearest boundary.
+var DynatraceDQLPollSleepDuration = ClampedIntEnvVar{
+	Key:          "DYNATRACE_DQL_POLL_SLEEP_DURATION",
+	DefaultValue: 5000,
+	Min:          0,
+	Max:          60000,
 }
 
 // --- Host Monitoring ---

@@ -56,3 +56,32 @@ func (s StringEnvVar) Get() string {
 	}
 	return v
 }
+
+// ClampedIntEnvVar reads an integer environment variable and clamps it
+// to the [Min, Max] range. If the env var is not set or cannot be parsed,
+// the DefaultValue is returned.
+type ClampedIntEnvVar struct {
+	Key          string
+	DefaultValue int
+	Min          int
+	Max          int
+}
+
+func (c ClampedIntEnvVar) Get() int {
+	v, found := os.LookupEnv(c.Key)
+	if !found || len(v) == 0 {
+		return c.DefaultValue
+	}
+
+	value, err := strconv.Atoi(v)
+	if err != nil {
+		return c.DefaultValue
+	}
+	if value > c.Max {
+		value = c.Max
+	}
+	if value < c.Min {
+		value = c.Min
+	}
+	return value
+}
