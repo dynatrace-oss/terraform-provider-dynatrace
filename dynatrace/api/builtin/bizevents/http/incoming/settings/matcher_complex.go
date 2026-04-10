@@ -48,17 +48,7 @@ func (me *MatcherComplexes) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeSlice("trigger", me); err != nil {
 		return err
 	}
-	if me == nil || len(*me) == 0 {
-		return nil
-	}
-	var triggers MatcherComplexes
-	for _, trigger := range *me {
-		if len(trigger.Type) == 0 {
-			continue
-		}
-		triggers = append(triggers, trigger)
-	}
-	*me = triggers
+	*me = hcl.FilterEmpty(*me, MatcherComplex{})
 	return nil
 }
 

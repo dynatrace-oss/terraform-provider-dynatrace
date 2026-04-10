@@ -28,3 +28,7 @@ import (
 func TestAccBizEventsOneAgent(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesBizEventsOneAgent(t *testing.T) {
+	api.TestAccTestCases(t)
+}
