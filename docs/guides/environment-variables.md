@@ -191,3 +191,21 @@ The Dynatrace Terraform provider can be configured using the following environme
 | Variable | Default | Description |
 |---|---|---|
 | `MIGRATION` | `false` | Enables migration mode. |
+
+## Synthetic Monitors
+
+| Variable | Default | Min | Max | Description |
+|---|---|---|---|---|
+| `DYNATRACE_CREATE_CONFIRM_SYNTHETIC_MONITORS_V2` | `8` | `1` | `50` | Number of confirmation retries when creating synthetic monitors v2. Falls back to the default if the value is outside [Min, Max]. |
+
+## Web Application
+
+| Variable | Default | Min | Max | Description |
+|---|---|---|---|---|
+| `DYNATRACE_CREATE_CONFIRM_WEB_APPLICATION` | `280` | `20` | `500` | Number of confirmation retries when creating web applications. Falls back to the default if the value is outside [Min, Max]. |
+
+## Custom Tags
+
+| Variable | Default | Min | Max | Description |
+|---|---|---|---|---|
+| `DYNATRACE_MAX_CONCURRENT_CUSTOM_TAG_LIST_REQUESTS` | `4` | `1` | `20` | Maximum number of concurrent requests for listing custom tags. Falls back to the default if the value is outside [Min, Max]. |

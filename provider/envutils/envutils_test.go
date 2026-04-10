@@ -126,3 +126,52 @@ func TestClampedIntEnvVar_Get(t *testing.T) {
 		assert.Equal(t, 50, c.Get())
 	})
 }
+
+func TestBoundedIntEnvVar_Get(t *testing.T) {
+	t.Run("returns default when env var is not set", func(t *testing.T) {
+		b := BoundedIntEnvVar{Key: "TEST_BOUNDED_UNSET", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 50, b.Get())
+	})
+
+	t.Run("returns parsed value when within range", func(t *testing.T) {
+		t.Setenv("TEST_BOUNDED_VALID", "75")
+		b := BoundedIntEnvVar{Key: "TEST_BOUNDED_VALID", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 75, b.Get())
+	})
+
+	t.Run("returns default when value exceeds max", func(t *testing.T) {
+		t.Setenv("TEST_BOUNDED_HIGH", "200")
+		b := BoundedIntEnvVar{Key: "TEST_BOUNDED_HIGH", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 50, b.Get())
+	})
+
+	t.Run("returns default when value is below min", func(t *testing.T) {
+		t.Setenv("TEST_BOUNDED_LOW", "5")
+		b := BoundedIntEnvVar{Key: "TEST_BOUNDED_LOW", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 50, b.Get())
+	})
+
+	t.Run("returns default when env var is invalid", func(t *testing.T) {
+		t.Setenv("TEST_BOUNDED_INVALID", "notanint")
+		b := BoundedIntEnvVar{Key: "TEST_BOUNDED_INVALID", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 50, b.Get())
+	})
+
+	t.Run("returns default when env var is empty", func(t *testing.T) {
+		t.Setenv("TEST_BOUNDED_EMPTY", "")
+		b := BoundedIntEnvVar{Key: "TEST_BOUNDED_EMPTY", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 50, b.Get())
+	})
+
+	t.Run("returns value at exact min boundary", func(t *testing.T) {
+		t.Setenv("TEST_BOUNDED_MIN", "10")
+		b := BoundedIntEnvVar{Key: "TEST_BOUNDED_MIN", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 10, b.Get())
+	})
+
+	t.Run("returns value at exact max boundary", func(t *testing.T) {
+		t.Setenv("TEST_BOUNDED_MAX", "100")
+		b := BoundedIntEnvVar{Key: "TEST_BOUNDED_MAX", DefaultValue: 50, Min: 10, Max: 100}
+		assert.Equal(t, 100, b.Get())
+	})
+}

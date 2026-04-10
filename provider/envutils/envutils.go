@@ -85,3 +85,29 @@ func (c ClampedIntEnvVar) Get() int {
 	}
 	return value
 }
+
+// BoundedIntEnvVar reads an integer environment variable and returns the
+// DefaultValue if the value is outside the [Min, Max] range (unlike
+// ClampedIntEnvVar which clamps to the boundary).
+type BoundedIntEnvVar struct {
+	Key          string
+	DefaultValue int
+	Min          int
+	Max          int
+}
+
+func (b BoundedIntEnvVar) Get() int {
+	v, found := os.LookupEnv(b.Key)
+	if !found || len(v) == 0 {
+		return b.DefaultValue
+	}
+
+	value, err := strconv.Atoi(v)
+	if err != nil {
+		return b.DefaultValue
+	}
+	if value < b.Min || value > b.Max {
+		return b.DefaultValue
+	}
+	return value
+}

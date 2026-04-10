@@ -23,16 +23,12 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 )
 
 const (
-	TIME_FRAME                                        = "now-3y"
-	DYNATRACE_MAX_CONCURRENT_CUSTOM_TAG_LIST_REQUESTS = "DYNATRACE_MAX_CONCURRENT_CUSTOM_TAG_LIST_REQUESTS"
-	DefaultMaxConcurrent                              = 4
-	MaxConcurrentMinValue                             = 1
-	MaxConcurrentMaxValue                             = 20
+	TIME_FRAME = "now-3y"
 )
 
 type EntityTags struct {
@@ -47,7 +43,7 @@ func List(ctx context.Context, client rest.Client) (api.Stubs, error) {
 		return nil, err
 	}
 
-	maxConcurrent := settings.GetIntEnvCtx(ctx, DYNATRACE_MAX_CONCURRENT_CUSTOM_TAG_LIST_REQUESTS, DefaultMaxConcurrent, MaxConcurrentMinValue, MaxConcurrentMaxValue)
+	maxConcurrent := envutils.DynatraceMaxConcurrentCustomTagListRequests.Get()
 
 	// limiter shared by *all* downstream calls using the same client
 	limiter := make(chan struct{}, maxConcurrent)

@@ -477,3 +477,33 @@ var Migration = BoolEnvVar{
 	Key:          "MIGRATION",
 	DefaultValue: false,
 }
+
+// --- Synthetic Monitors ---
+
+// DynatraceCreateConfirmSyntheticMonitorsV2 is the number of confirmation retries when creating synthetic monitors v2. Falls back to the default if the value is outside [Min, Max].
+var DynatraceCreateConfirmSyntheticMonitorsV2 = BoundedIntEnvVar{
+	Key:          "DYNATRACE_CREATE_CONFIRM_SYNTHETIC_MONITORS_V2",
+	DefaultValue: 8,
+	Min:          1,
+	Max:          50,
+}
+
+// --- Web Application ---
+
+// DynatraceCreateConfirmWebApplication is the number of confirmation retries when creating web applications. Falls back to the default if the value is outside [Min, Max].
+var DynatraceCreateConfirmWebApplication = BoundedIntEnvVar{
+	Key:          "DYNATRACE_CREATE_CONFIRM_WEB_APPLICATION",
+	DefaultValue: 280,
+	Min:          20,
+	Max:          500,
+}
+
+// --- Custom Tags ---
+
+// DynatraceMaxConcurrentCustomTagListRequests is the maximum number of concurrent requests for listing custom tags. Falls back to the default if the value is outside [Min, Max].
+var DynatraceMaxConcurrentCustomTagListRequests = BoundedIntEnvVar{
+	Key:          "DYNATRACE_MAX_CONCURRENT_CUSTOM_TAG_LIST_REQUESTS",
+	DefaultValue: 4,
+	Min:          1,
+	Max:          20,
+}
