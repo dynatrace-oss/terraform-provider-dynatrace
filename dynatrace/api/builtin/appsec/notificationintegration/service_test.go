@@ -28,3 +28,7 @@ import (
 func TestAccAppSecNotification(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesAppSecNotification(t *testing.T) {
+	api.TestAccTestCases(t)
+}

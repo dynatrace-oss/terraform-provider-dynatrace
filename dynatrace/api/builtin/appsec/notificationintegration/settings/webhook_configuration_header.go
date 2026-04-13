@@ -42,7 +42,11 @@ func (me WebhookConfigurationHeaders) MarshalHCL(properties hcl.Properties) erro
 }
 
 func (me *WebhookConfigurationHeaders) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("header", me)
+	if err := decoder.DecodeSlice("header", me); err != nil {
+		return err
+	}
+	*me = hcl.FilterEmpty(*me, WebhookConfigurationHeader{})
+	return nil
 }
 
 type WebhookConfigurationHeader struct {
