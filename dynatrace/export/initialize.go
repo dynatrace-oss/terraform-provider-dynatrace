@@ -150,7 +150,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		}
 	}
 
-	targetFolder := os.Getenv("DYNATRACE_TARGET_FOLDER")
+	targetFolder := envutils.DynatraceTargetFolder.Get()
 	if targetFolder == "" {
 		fmt.Println("The environment variable DYNATRACE_TARGET_FOLDER has not been set - using folder 'configuration' as default")
 		targetFolder = "configuration"

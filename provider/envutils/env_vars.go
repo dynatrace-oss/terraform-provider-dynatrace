@@ -8,6 +8,18 @@ var DynatraceDebug = BoolEnvVar{
 	DefaultValue: false,
 }
 
+// DynatraceLogDebugPrefix sets the prefix filter for debug log entries.
+var DynatraceLogDebugPrefix = StringEnvVar{
+	Key:          "DYNATRACE_LOG_DEBUG_PREFIX",
+	DefaultValue: "",
+}
+
+// DynatraceLogHTTP sets the file path for HTTP request/response logging.
+var DynatraceLogHTTP = StringEnvVar{
+	Key:          "DYNATRACE_LOG_HTTP",
+	DefaultValue: "",
+}
+
 // --- HTTP ---
 
 // DynatraceHTTPInsecure disables TLS certificate verification for HTTP requests.
@@ -52,12 +64,30 @@ var DTDebugGetOk = BoolEnvVar{
 	DefaultValue: false,
 }
 
+// DynatraceMaxHTTPWorkers sets the maximum number of concurrent HTTP workers.
+var DynatraceMaxHTTPWorkers = StringEnvVar{
+	Key:          "DYNATRACE_MAX_HTTP_WORKERS",
+	DefaultValue: "",
+}
+
+// DTRestDebugLog sets the file path for REST debug logging.
+var DTRestDebugLog = StringEnvVar{
+	Key:          "DT_REST_DEBUG_LOG",
+	DefaultValue: "",
+}
+
 // --- IAM ---
 
 // DynatraceDisableIAMRateLimiter disables the IAM rate limiter.
 var DynatraceDisableIAMRateLimiter = BoolEnvVar{
 	Key:          "DYNATRACE_DISABLE_IAM_RATE_LIMITER",
 	DefaultValue: false,
+}
+
+// DynatraceIAMRateLimiterRate sets the IAM rate limiter rate in requests per second.
+var DynatraceIAMRateLimiterRate = StringEnvVar{
+	Key:          "DYNATRACE_IAM_RATE_LIMITER_RATE",
+	DefaultValue: "",
 }
 
 // --- Settings 2.0 ---
@@ -74,10 +104,24 @@ var DynatraceDisableOrderingSupport = BoolEnvVar{
 	DefaultValue: false,
 }
 
+// --- Cache ---
+
+// DTCacheFolder sets the path to the cache folder.
+var DTCacheFolder = StringEnvVar{
+	Key:          "DT_CACHE_FOLDER",
+	DefaultValue: "",
+}
+
 // CacheOfflineMode enables offline mode using cached data.
 var CacheOfflineMode = BoolEnvVar{
 	Key:          "CACHE_OFFLINE_MODE",
 	DefaultValue: false,
+}
+
+// DTCacheDeleteOnLaunch specifies cache entries to delete on provider launch.
+var DTCacheDeleteOnLaunch = StringEnvVar{
+	Key:          "DT_CACHE_DELETE_ON_LAUNCH",
+	DefaultValue: "",
 }
 
 // DTNoCacheCleanup specifies whether to skip automatic cache cleanup on provider shutdown.
@@ -124,6 +168,20 @@ var DynatraceDisableEntityCache = BoolEnvVar{
 	DefaultValue: false,
 }
 
+// --- Duplicates ---
+
+// DynatraceDuplicateReject specifies resource types for which duplicate detection rejects the import.
+var DynatraceDuplicateReject = StringEnvVar{
+	Key:          "DYNATRACE_DUPLICATE_REJECT",
+	DefaultValue: "",
+}
+
+// DynatraceDuplicateHijack specifies resource types for which duplicate detection hijacks the existing resource.
+var DynatraceDuplicateHijack = StringEnvVar{
+	Key:          "DYNATRACE_DUPLICATE_HIJACK",
+	DefaultValue: "",
+}
+
 // --- Tags ---
 
 // DynatraceTagsErrZeroMatched returns an error when a tag query matches zero entities.
@@ -152,6 +210,14 @@ var DynatraceGoldenStateEnabled = BoolEnvVar{
 	DefaultValue: false,
 }
 
+// --- Dashboards ---
+
+// DynatraceDashboardTests configures dashboard test behavior.
+var DynatraceDashboardTests = StringEnvVar{
+	Key:          "DYNATRACE_DASHBOARD_TESTS",
+	DefaultValue: "",
+}
+
 // --- Host Monitoring ---
 
 // DynatraceHostMonitoringOffline allows managing host monitoring for offline hosts.
@@ -166,6 +232,12 @@ var DynatraceHostMonitoringWarnings = BoolEnvVar{
 	DefaultValue: false,
 }
 
+// DynatraceHostMonitoringStrictUpdateRetries sets the number of retries for strict host monitoring updates.
+var DynatraceHostMonitoringStrictUpdateRetries = StringEnvVar{
+	Key:          "DYNATRACE_HOST_MONITORING_STRICT_UPDATE_RETRIES",
+	DefaultValue: "",
+}
+
 // --- Workflows ---
 
 // DynatraceWorkflowTasksUseTypeList uses a type list for workflow task filtering.
@@ -174,12 +246,44 @@ var DynatraceWorkflowTasksUseTypeList = BoolEnvVar{
 	DefaultValue: false,
 }
 
+// --- HCL / Terraform Generation ---
+
+// DynatraceHeredoc configures heredoc usage in generated HCL.
+var DynatraceHeredoc = StringEnvVar{
+	Key:          "DYNATRACE_HEREDOC",
+	DefaultValue: "",
+}
+
 // --- Export ---
+
+// DynatraceTargetFolder sets the target folder for export output.
+var DynatraceTargetFolder = StringEnvVar{
+	Key:          "DYNATRACE_TARGET_FOLDER",
+	DefaultValue: "",
+}
 
 // DynatraceCleanTargetFolder enables cleaning of the target folder before export.
 var DynatraceCleanTargetFolder = BoolEnvVar{
 	Key:          "DYNATRACE_CLEAN_TARGET_FOLDER",
 	DefaultValue: false,
+}
+
+// DynatraceProviderSource sets the provider source for generated Terraform files.
+var DynatraceProviderSource = StringEnvVar{
+	Key:          "DYNATRACE_PROVIDER_SOURCE",
+	DefaultValue: "",
+}
+
+// DynatraceProviderVersion sets the provider version for generated Terraform files.
+var DynatraceProviderVersion = StringEnvVar{
+	Key:          "DYNATRACE_PROVIDER_VERSION",
+	DefaultValue: "",
+}
+
+// DynatraceCustomProviderLocation sets the custom provider binary location.
+var DynatraceCustomProviderLocation = StringEnvVar{
+	Key:          "DYNATRACE_CUSTOM_PROVIDER_LOCATION",
+	DefaultValue: "",
 }
 
 // DynatraceNoRefreshOnImport skips refreshing resources after export.
@@ -200,6 +304,12 @@ var DynatraceUltraParallel = BoolEnvVar{
 	DefaultValue: false,
 }
 
+// DynatraceParallel sets the number of parallel export workers.
+var DynatraceParallel = StringEnvVar{
+	Key:          "DYNATRACE_PARALLEL",
+	DefaultValue: "",
+}
+
 // DynatraceShorterNames enables shortening resource names longer than would exceed 240 characters in length in generated HCL.
 var DynatraceShorterNames = BoolEnvVar{
 	Key:          "DYNATRACE_SHORTER_NAMES",
@@ -216,6 +326,12 @@ var DynatraceEnableExportDashboard = BoolEnvVar{
 var DynatraceAtomicDependencies = BoolEnvVar{
 	Key:          "DYNATRACE_ATOMIC_DEPENDENCIES",
 	DefaultValue: false,
+}
+
+// DynatraceMigrationCacheFolder sets the migration cache folder path.
+var DynatraceMigrationCacheFolder = StringEnvVar{
+	Key:          "DYNATRACE_MIGRATION_CACHE_FOLDER",
+	DefaultValue: "",
 }
 
 // DynatraceFormatHCLFiles enables formatting of generated HCL files.
@@ -242,6 +358,12 @@ var DynatraceBuildAddressFiles = BoolEnvVar{
 	DefaultValue: false,
 }
 
+// DynatraceExportIgnoreResources is a comma-separated list of resource types to exclude from export.
+var DynatraceExportIgnoreResources = StringEnvVar{
+	Key:          "DYNATRACE_EXPORT_IGNORE_RESOURCES",
+	DefaultValue: "",
+}
+
 // DynatraceIgnoreChangesRequiresAttention enables adding a lifecycle { ignore_changes = [...] } block
 // to exported resources that contain sensitive fields (passwords, secrets, etc.) — listing those sensitive
 // attributes so Terraform won't overwrite values the user may have set manually after the export.
@@ -250,10 +372,48 @@ var DynatraceIgnoreChangesRequiresAttention = BoolEnvVar{
 	DefaultValue: false,
 }
 
+// DynatraceImportStatePath sets the path for importing Terraform state.
+var DynatraceImportStatePath = StringEnvVar{
+	Key:          "DYNATRACE_IMPORT_STATE_PATH",
+	DefaultValue: "",
+}
+
 // DynatracePrevStateOn enables keeping resource identifiers stable between runs so downstream Terraform references don't break.
 var DynatracePrevStateOn = BoolEnvVar{
 	Key:          "DYNATRACE_PREV_STATE_ON",
 	DefaultValue: false,
+}
+
+// DynatracePrevStatePathThis sets the path to the previous state for the current environment.
+var DynatracePrevStatePathThis = StringEnvVar{
+	Key:          "DYNATRACE_PREV_STATE_PATH_THIS",
+	DefaultValue: "",
+}
+
+// DynatracePrevStatePathLinked sets the path to the previous state for linked environments.
+var DynatracePrevStatePathLinked = StringEnvVar{
+	Key:          "DYNATRACE_PREV_STATE_PATH_LINKED",
+	DefaultValue: "",
+}
+
+// --- Testing ---
+
+// DynatraceEnvURL sets the Dynatrace environment URL for acceptance tests.
+var DynatraceEnvURL = StringEnvVar{
+	Key:          "DYNATRACE_ENV_URL",
+	DefaultValue: "",
+}
+
+// DynatraceAPIToken sets the Dynatrace API token for acceptance tests.
+var DynatraceAPIToken = StringEnvVar{
+	Key:          "DYNATRACE_API_TOKEN",
+	DefaultValue: "",
+}
+
+// TFAcc enables Terraform acceptance tests when set to a non-empty value.
+var TFAcc = StringEnvVar{
+	Key:          "TF_ACC",
+	DefaultValue: "",
 }
 
 // --- Migration ---

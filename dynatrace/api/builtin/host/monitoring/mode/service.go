@@ -21,7 +21,6 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -39,7 +38,7 @@ const SchemaID = "builtin:host.monitoring.mode"
 
 var WarnOnAgentOffline = envutils.DynatraceHostMonitoringWarnings.Get()
 var ExportOfflineHosts = envutils.DynatraceHostMonitoringOffline.Get()
-var StrictUpdateRetries = os.Getenv("DYNATRACE_HOST_MONITORING_STRICT_UPDATE_RETRIES")
+var StrictUpdateRetries = envutils.DynatraceHostMonitoringStrictUpdateRetries.Get()
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*mode.Settings] {
 	return &service{

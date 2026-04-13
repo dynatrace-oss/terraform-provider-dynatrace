@@ -20,7 +20,6 @@ package dashboards
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"reflect"
 	slices0 "slices"
 	"sort"
@@ -28,6 +27,7 @@ import (
 
 	"golang.org/x/exp/slices"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -39,7 +39,7 @@ type JSONDashboard struct {
 	Contents string
 }
 
-var DYNATRACE_DASHBOARD_TESTS = len(os.Getenv("DYNATRACE_DASHBOARD_TESTS")) > 0
+var DYNATRACE_DASHBOARD_TESTS = len(envutils.DynatraceDashboardTests.Get()) > 0
 
 func denullslice(s []any) []any {
 	if len(s) == 0 {

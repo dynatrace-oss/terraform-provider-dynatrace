@@ -26,6 +26,7 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -44,11 +45,11 @@ type TestAccOptions struct {
 
 func AccEnvsGiven(t *testing.T) bool {
 	t.Helper()
-	if v := os.Getenv("TF_ACC"); v == "" {
+	if v := envutils.TFAcc.Get(); v == "" {
 		t.Skip("TF_ACC has not been set for acceptance tests")
 		return false
 	}
-	if v := os.Getenv("DYNATRACE_ENV_URL"); v == "" {
+	if v := envutils.DynatraceEnvURL.Get(); v == "" {
 		t.Skip("DYNATRACE_ENV_URL has not been set for acceptance tests")
 		return false
 	}
@@ -63,8 +64,8 @@ func replaceWithIdentifier(config string, identifier string) string {
 
 // ReadTfConfig reads a config and replaces "#name#" and "${randomize}" with a random string
 // Returns:
-// 	- The replaced config
-//  - The random string that was used
+//   - The replaced config
+//   - The random string that was used
 func ReadTfConfig(t *testing.T, file string) (config string, identifier string) {
 	identifier = acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
 	return ReadTfConfigWithIdentifier(t, file, identifier), identifier

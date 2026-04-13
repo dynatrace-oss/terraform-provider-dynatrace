@@ -21,10 +21,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"os"
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -130,7 +130,7 @@ func SuppressJSONorEOT(k, old, new string, d *schema.ResourceData) bool {
 	return equalLineByLine(old, new)
 }
 
-var DYNATRACE_DASHBOARD_TESTS = len(os.Getenv("DYNATRACE_DASHBOARD_TESTS")) > 0
+var DYNATRACE_DASHBOARD_TESTS = len(envutils.DynatraceDashboardTests.Get()) > 0
 
 func Println(path string, message string, b ...bool) {
 	if !DYNATRACE_DASHBOARD_TESTS {

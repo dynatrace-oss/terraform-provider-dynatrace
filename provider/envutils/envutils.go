@@ -41,3 +41,18 @@ func (b BoolEnvVar) Get() bool {
 	}
 	return value
 }
+
+// StringEnvVar represents a string environment variable with a default value.
+type StringEnvVar struct {
+	Key          string
+	DefaultValue string
+}
+
+// Get returns the environment variable's string value or its default value if unset.
+func (s StringEnvVar) Get() string {
+	v, found := os.LookupEnv(s.Key)
+	if !found {
+		return s.DefaultValue
+	}
+	return v
+}

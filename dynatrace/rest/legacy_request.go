@@ -27,10 +27,8 @@ import (
 	"io"
 	"net/http"
 	"net/http/cookiejar"
-	"os"
 	"slices"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
@@ -220,7 +218,7 @@ const highLimitMaxWorkers = 50
 var maxWorkers = resolveMaxWorkers()
 
 func resolveMaxWorkers() int64 {
-	sMaxWorkers := os.Getenv("DYNATRACE_MAX_HTTP_WORKERS")
+	sMaxWorkers := envutils.DynatraceMaxHTTPWorkers.Get()
 	if len(sMaxWorkers) == 0 {
 		return defaultMaxWorkers
 	}

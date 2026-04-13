@@ -65,3 +65,27 @@ func TestBoolEnvVar_Get(t *testing.T) {
 		assert.Equal(t, false, b.Get())
 	})
 }
+
+func TestStringEnvVar_Get(t *testing.T) {
+	t.Run("returns default when env var is not set", func(t *testing.T) {
+		s := StringEnvVar{Key: "TEST_STRING_UNSET", DefaultValue: "default"}
+		assert.Equal(t, "default", s.Get())
+	})
+
+	t.Run("returns env var value when set", func(t *testing.T) {
+		t.Setenv("TEST_STRING_SET", "custom")
+		s := StringEnvVar{Key: "TEST_STRING_SET", DefaultValue: "default"}
+		assert.Equal(t, "custom", s.Get())
+	})
+
+	t.Run("returns empty string when env var is set to empty", func(t *testing.T) {
+		t.Setenv("TEST_STRING_EMPTY", "")
+		s := StringEnvVar{Key: "TEST_STRING_EMPTY", DefaultValue: "default"}
+		assert.Equal(t, "", s.Get())
+	})
+
+	t.Run("returns empty default when env var is not set", func(t *testing.T) {
+		s := StringEnvVar{Key: "TEST_STRING_EMPTY_DEFAULT", DefaultValue: ""}
+		assert.Equal(t, "", s.Get())
+	})
+}

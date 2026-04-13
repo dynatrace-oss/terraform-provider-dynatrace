@@ -20,7 +20,6 @@ package export
 import (
 	"fmt"
 	maps0 "maps"
-	"os"
 	"regexp"
 	"strings"
 	"sync"
@@ -734,7 +733,7 @@ func (me *tenantds) Replace(environment *Environment, s string, replacingIn Reso
 	}
 	// when running on HTTP Cache no data sources should get replaced
 	// The IDs of these entities are guaranteed to match existing ones
-	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
+	if len(envutils.DynatraceMigrationCacheFolder.Get()) > 0 {
 		return s, []any{}
 	}
 	if !strings.Contains(s, tenantID) {
@@ -763,7 +762,7 @@ func (me *policyds) DataSourceType() DataSourceType {
 func (me *policyds) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	// when running on HTTP Cache no data sources should get replaced
 	// The IDs of these entities are guaranteed to match existing ones
-	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
+	if len(envutils.DynatraceMigrationCacheFolder.Get()) > 0 {
 		return s, []any{}
 	}
 	if environment.Flags.FlagMigrationOutput {
@@ -808,7 +807,7 @@ func (me *entityds) DataSourceType() DataSourceType {
 func (me *entityds) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	// when running on HTTP Cache no data sources should get replaced
 	// The IDs of these entities are guaranteed to match existing ones
-	if len(os.Getenv("DYNATRACE_MIGRATION_CACHE_FOLDER")) > 0 {
+	if len(envutils.DynatraceMigrationCacheFolder.Get()) > 0 {
 		return s, []any{}
 	}
 	if environment.Flags.FlagMigrationOutput {

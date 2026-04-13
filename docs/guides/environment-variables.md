@@ -14,6 +14,8 @@ The Dynatrace Terraform provider can be configured using the following environme
 | Variable | Default | Description |
 |---|---|---|
 | `DYNATRACE_DEBUG` | `false` | Enables debug logging for the provider. |
+| `DYNATRACE_LOG_DEBUG_PREFIX` | `""` | Sets the prefix filter for debug log entries. |
+| `DYNATRACE_LOG_HTTP` | `""` | Sets the file path for HTTP request/response logging. |
 
 ## HTTP
 
@@ -26,12 +28,15 @@ The Dynatrace Terraform provider can be configured using the following environme
 | `DYNATRACE_HTTP_RESPONSE` | `false` | Logs HTTP responses. |
 | `DT_DEBUG_IAM_BEARER` | `false` | Enables debug logging for IAM bearer tokens. |
 | `DT_DEBUG_GET_OK` | `false` | Enables debug logging for successful GET requests. |
+| `DYNATRACE_MAX_HTTP_WORKERS` | `""` | Sets the maximum number of concurrent HTTP workers. |
+| `DT_REST_DEBUG_LOG` | `""` | Sets the file path for REST debug logging. |
 
 ## IAM
 
 | Variable | Default | Description |
 |---|---|---|
 | `DYNATRACE_DISABLE_IAM_RATE_LIMITER` | `false` | Disables the IAM rate limiter. |
+| `DYNATRACE_IAM_RATE_LIMITER_RATE` | `""` | Sets the IAM rate limiter rate in requests per second. |
 
 ## Settings 2.0
 
@@ -44,7 +49,9 @@ The Dynatrace Terraform provider can be configured using the following environme
 
 | Variable | Default | Description |
 |---|---|---|
+| `DT_CACHE_FOLDER` | `""` | Sets the path to the cache folder. |
 | `CACHE_OFFLINE_MODE` | `false` | Enables offline mode using cached data. |
+| `DT_CACHE_DELETE_ON_LAUNCH` | `""` | Specifies cache entries to delete on provider launch. |
 | `DT_NO_CACHE_CLEANUP` | `false` | Disables cache cleanup on provider shutdown. |
 | `DYNATRACE_IN_MEMORY_TAR_FOLDERS` | `false` | Uses in-memory tar archives for cache folders. |
 
@@ -72,6 +79,13 @@ The Dynatrace Terraform provider can be configured using the following environme
 |---|---|---|
 | `DYNATRACE_DISABLE_ENTITY_CACHE` | `false` | Disables the entity cache. |
 
+## Duplicates
+
+| Variable | Default | Description |
+|---|---|---|
+| `DYNATRACE_DUPLICATE_REJECT` | `""` | Specifies resource types for which duplicate detection rejects the import. |
+| `DYNATRACE_DUPLICATE_HIJACK` | `""` | Specifies resource types for which duplicate detection hijacks the existing resource. |
+
 ## Tags
 
 | Variable | Default | Description |
@@ -86,12 +100,19 @@ The Dynatrace Terraform provider can be configured using the following environme
 | `DYNATRACE_FORCE_NEW_ON_HEADERS` | `false` | Forces resource recreation when HTTP headers change. |
 | `DYNATRACE_GOLDEN_STATE_ENABLED` | `false` | Enables golden state tracking for resources. |
 
+## Dashboards
+
+| Variable | Default | Description |
+|---|---|---|
+| `DYNATRACE_DASHBOARD_TESTS` | `""` | Configures dashboard test behavior. |
+
 ## Host Monitoring
 
 | Variable | Default | Description |
 |---|---|---|
 | `DYNATRACE_HOST_MONITORING_OFFLINE` | `false` | Allows managing host monitoring for offline hosts. |
 | `DYNATRACE_HOST_MONITORING_WARNINGS` | `false` | Enables warnings for host monitoring issues. |
+| `DYNATRACE_HOST_MONITORING_STRICT_UPDATE_RETRIES` | `""` | Sets the number of retries for strict host monitoring updates. |
 
 ## Workflows
 
@@ -99,23 +120,47 @@ The Dynatrace Terraform provider can be configured using the following environme
 |---|---|---|
 | `DYNATRACE_WORKFLOW_TASKS_USE_TYPE_LIST` | `false` | Uses a type list for workflow task filtering. |
 
+## HCL / Terraform Generation
+
+| Variable | Default | Description |
+|---|---|---|
+| `DYNATRACE_HEREDOC` | `""` | Configures heredoc usage in generated HCL. |
+
 ## Export
 
 | Variable | Default | Description |
 |---|---|---|
+| `DYNATRACE_TARGET_FOLDER` | `""` | Sets the target folder for export output. |
 | `DYNATRACE_CLEAN_TARGET_FOLDER` | `false` | Cleans the target folder before export. |
+| `DYNATRACE_PROVIDER_SOURCE` | `""` | Sets the provider source for generated Terraform files. |
+| `DYNATRACE_PROVIDER_VERSION` | `""` | Sets the provider version for generated Terraform files. |
+| `DYNATRACE_CUSTOM_PROVIDER_LOCATION` | `""` | Sets the custom provider binary location. |
 | `DYNATRACE_NO_REFRESH_ON_IMPORT` | `false` | Skips refreshing resources after export. |
 | `DYNATRACE_QUICK_INIT` | `false` | Enables quick initialization during export. |
 | `DYNATRACE_ULTRA_PARALLEL` | `false` | Enables ultra-parallel export mode. |
+| `DYNATRACE_PARALLEL` | `""` | Sets the number of parallel export workers. |
 | `DYNATRACE_SHORTER_NAMES` | `false` | Shortens resource names that would exceed 240 characters in generated HCL. |
 | `DYNATRACE_ENABLE_EXPORT_DASHBOARD` | `false` | Enables export of dashboard resources. |
 | `DYNATRACE_ATOMIC_DEPENDENCIES` | `false` | Exports dependencies atomically. |
+| `DYNATRACE_MIGRATION_CACHE_FOLDER` | `""` | Sets the migration cache folder path. |
 | `DYNATRACE_FORMAT_HCL_FILES` | `false` | Formats exported HCL files. |
 | `DYNATRACE_HCL_NO_FORMAT` | `false` | Disables HCL formatting during export. |
 | `DYNATRACE_NAME_REPLACE_DASH` | `false` | Replaces dashes with underscores in resource names. |
 | `DYNATRACE_BUILD_ADDRESS_FILES` | `false` | Generates address files during export. |
+| `DYNATRACE_EXPORT_IGNORE_RESOURCES` | `""` | Comma-separated list of resource types to exclude from export. |
 | `DYNATRACE_IGNORE_CHANGES_REQUIRES_ATTENTION` | `false` | Adds a `lifecycle { ignore_changes = [...] }` block to exported resources containing sensitive fields so Terraform won't overwrite values set manually after export. |
+| `DYNATRACE_IMPORT_STATE_PATH` | `""` | Sets the path for importing Terraform state. |
 | `DYNATRACE_PREV_STATE_ON` | `false` | Keeps resource identifiers stable between runs so downstream Terraform references don't break. |
+| `DYNATRACE_PREV_STATE_PATH_THIS` | `""` | Sets the path to the previous state for the current environment. |
+| `DYNATRACE_PREV_STATE_PATH_LINKED` | `""` | Sets the path to the previous state for linked environments. |
+
+## Testing
+
+| Variable | Default | Description |
+|---|---|---|
+| `DYNATRACE_ENV_URL` | `""` | Sets the Dynatrace environment URL for acceptance tests. |
+| `DYNATRACE_API_TOKEN` | `""` | Sets the Dynatrace API token for acceptance tests. |
+| `TF_ACC` | `""` | Enables Terraform acceptance tests when set to a non-empty value. |
 
 ## Migration
 
