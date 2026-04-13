@@ -14,6 +14,10 @@ description: |-
 
 -> This resource is excluded by default in the export utility, please explicitly specify the resource to retrieve existing configuration.
 
+-> This resource re-assigns all policies bound to a group, so every policy that should remain bound must be specified in the configuration; otherwise, it will be unbound.
+During this process, there is a brief window where the group has no policies assigned, which may temporarily cause permission issues for users in that group.
+Locking out the OAuth client through this resource is theoretically possible but very unlikely, as managing policies and groups requires account-level permissions. If account permissions are set on a group, policy boundaries can still be managed even when no policies are assigned.
+
 ## Dynatrace Documentation
 
 - Dynatrace IAM Group Permissions - https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies
