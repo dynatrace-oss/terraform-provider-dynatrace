@@ -22,18 +22,18 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-	"os"
 	"regexp"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags/list"
 	customtags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags/settings"
 )
 
-var ErrZeroMatched = os.Getenv("DYNATRACE_TAGS_ERR_ZERO_MATCHED") == "true"
+var ErrZeroMatched = envutils.DynatraceTagsErrZeroMatched.Get()
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*customtags.Settings] {
 	return &service{credentials: credentials}

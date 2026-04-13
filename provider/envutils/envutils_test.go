@@ -1,0 +1,67 @@
+/**
+* @license
+* Copyright 2026 Dynatrace LLC
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+ */
+
+package envutils
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestBoolEnvVar_Get(t *testing.T) {
+	t.Run("returns default when env var is not set", func(t *testing.T) {
+		b := BoolEnvVar{Key: "TEST_BOOL_UNSET", DefaultValue: true}
+		assert.Equal(t, true, b.Get())
+	})
+
+	t.Run("returns true when env var is 'true'", func(t *testing.T) {
+		t.Setenv("TEST_BOOL_TRUE", "true")
+		b := BoolEnvVar{Key: "TEST_BOOL_TRUE", DefaultValue: false}
+		assert.Equal(t, true, b.Get())
+	})
+
+	t.Run("returns false when env var is 'false'", func(t *testing.T) {
+		t.Setenv("TEST_BOOL_FALSE", "false")
+		b := BoolEnvVar{Key: "TEST_BOOL_FALSE", DefaultValue: true}
+		assert.Equal(t, false, b.Get())
+	})
+
+	t.Run("returns true when env var is '1'", func(t *testing.T) {
+		t.Setenv("TEST_BOOL_ONE", "1")
+		b := BoolEnvVar{Key: "TEST_BOOL_ONE", DefaultValue: false}
+		assert.Equal(t, true, b.Get())
+	})
+
+	t.Run("returns false when env var is '0'", func(t *testing.T) {
+		t.Setenv("TEST_BOOL_ZERO", "0")
+		b := BoolEnvVar{Key: "TEST_BOOL_ZERO", DefaultValue: true}
+		assert.Equal(t, false, b.Get())
+	})
+
+	t.Run("returns default when env var is invalid", func(t *testing.T) {
+		t.Setenv("TEST_BOOL_INVALID", "notabool")
+		b := BoolEnvVar{Key: "TEST_BOOL_INVALID", DefaultValue: true}
+		assert.Equal(t, true, b.Get())
+	})
+
+	t.Run("returns default (false) when env var is invalid", func(t *testing.T) {
+		t.Setenv("TEST_BOOL_INVALID2", "notabool")
+		b := BoolEnvVar{Key: "TEST_BOOL_INVALID2", DefaultValue: false}
+		assert.Equal(t, false, b.Get())
+	})
+}

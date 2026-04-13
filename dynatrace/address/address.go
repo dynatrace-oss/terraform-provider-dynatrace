@@ -19,16 +19,16 @@ package address
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/spf13/afero"
 )
 
 // To speed things up when using Dynatrace Config Manager
-var BUILD_ADDRESS_FILES = os.Getenv("DYNATRACE_BUILD_ADDRESS_FILES") == "true"
+var BUILD_ADDRESS_FILES = envutils.DynatraceBuildAddressFiles.Get()
 
 type AddressOriginal struct {
 	TerraformSchemaID string

@@ -19,9 +19,9 @@ package workflows
 
 import (
 	"encoding/json"
-	"os"
 	"regexp"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -54,7 +54,7 @@ func (me *Tasks) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var useTypeList = os.Getenv("DYNATRACE_WORKFLOW_TASKS_USE_TYPE_LIST") == "true"
+var useTypeList = envutils.DynatraceWorkflowTasksUseTypeList.Get()
 
 func (me *Tasks) Schema(prefix string) map[string]*schema.Schema {
 	if useTypeList {

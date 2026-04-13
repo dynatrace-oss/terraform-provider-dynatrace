@@ -31,13 +31,14 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 const SchemaVersion = "1.3"
 const SchemaID = "builtin:host.monitoring.mode"
 
-var WarnOnAgentOffline = os.Getenv("DYNATRACE_HOST_MONITORING_WARNINGS") == "true"
-var ExportOfflineHosts = os.Getenv("DYNATRACE_HOST_MONITORING_OFFLINE") == "true"
+var WarnOnAgentOffline = envutils.DynatraceHostMonitoringWarnings.Get()
+var ExportOfflineHosts = envutils.DynatraceHostMonitoringOffline.Get()
 var StrictUpdateRetries = os.Getenv("DYNATRACE_HOST_MONITORING_STRICT_UPDATE_RETRIES")
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*mode.Settings] {

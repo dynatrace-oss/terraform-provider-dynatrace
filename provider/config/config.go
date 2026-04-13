@@ -25,12 +25,13 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // HTTPVerbose if set to `true` terraform-provider-dynatrace.log will contain request and response payload
-var HTTPVerbose = (strings.TrimSpace(os.Getenv("DYNATRACE_DEBUG")) == "true")
+var HTTPVerbose = envutils.DynatraceDebug.Get()
 
 type IAM struct {
 	ClientID     string

@@ -20,8 +20,8 @@ package goldenstate
 import (
 	"context"
 	"fmt"
-	"os"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -31,7 +31,7 @@ import (
 
 const Debug = true
 
-var Enabled = os.Getenv("DYNATRACE_GOLDEN_STATE_ENABLED") == "true"
+var Enabled = envutils.DynatraceGoldenStateEnabled.Get()
 
 func Resource() *schema.Resource {
 	schemaMap := map[string]*schema.Schema{

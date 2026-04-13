@@ -21,7 +21,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
 	"reflect"
 	"regexp"
 	"strings"
@@ -31,13 +30,14 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"net/url"
 )
 
-var DISABLE_ORDERING_SUPPORT = os.Getenv("DYNATRACE_DISABLE_ORDERING_SUPPORT") == "true"
+var DISABLE_ORDERING_SUPPORT = envutils.DynatraceDisableOrderingSupport.Get()
 
-var NO_REPAIR_INPUT = os.Getenv("DT_NO_REPAIR_INPUT") == "true"
+var NO_REPAIR_INPUT = envutils.DTNoRepairInput.Get()
 
 func Service[T settings.Settings](credentials *rest.Credentials, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.ListIDCRUDService[T] {
 	var opts *ServiceOptions[T]

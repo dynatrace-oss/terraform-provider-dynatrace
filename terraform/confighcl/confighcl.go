@@ -19,15 +19,15 @@ package confighcl
 
 import (
 	"log"
-	"os"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var debugGetOk = (os.Getenv("DT_DEBUG_GET_OK") == "true")
+var debugGetOk = envutils.DTDebugGetOk.Get()
 
 type bootstrapDecoder struct {
 	Reader schema.FieldReader

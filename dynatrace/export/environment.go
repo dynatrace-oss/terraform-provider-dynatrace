@@ -41,15 +41,16 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"github.com/google/uuid"
 	"github.com/spf13/afero"
 )
 
-var NO_REFRESH_ON_IMPORT = os.Getenv("DYNATRACE_NO_REFRESH_ON_IMPORT") == "true"
-var QUICK_INIT = os.Getenv("DYNATRACE_QUICK_INIT") == "true"
-var ULTRA_PARALLEL = os.Getenv("DYNATRACE_ULTRA_PARALLEL") == "true"
+var NO_REFRESH_ON_IMPORT = envutils.DynatraceNoRefreshOnImport.Get()
+var QUICK_INIT = envutils.DynatraceQuickInit.Get()
+var ULTRA_PARALLEL = envutils.DynatraceUltraParallel.Get()
 
 const ENV_VAR_CUSTOM_PROVIDER_LOCATION = "DYNATRACE_CUSTOM_PROVIDER_LOCATION"
 
