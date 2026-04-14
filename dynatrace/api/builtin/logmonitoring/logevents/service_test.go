@@ -28,3 +28,7 @@ import (
 func TestAccLogEvents(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesLogEvents(t *testing.T) {
+	api.TestAccTestCases(t)
+}
