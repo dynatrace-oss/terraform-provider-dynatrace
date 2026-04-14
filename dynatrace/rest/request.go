@@ -73,18 +73,14 @@ func (me request) evalClassicURL() string {
 func PreRequest() {
 	preRequestMutex.Lock()
 	defer preRequestMutex.Unlock()
-	if _, ok := http.DefaultClient.Transport.(*RoundTripper); !ok {
-		if http.DefaultClient.Transport == nil {
-			http.DefaultClient.Transport = &RoundTripper{RoundTripper: http.DefaultTransport}
-		} else {
-			http.DefaultClient.Transport = &RoundTripper{RoundTripper: http.DefaultClient.Transport}
-		}
-	}
+
 	if strings.TrimSpace(os.Getenv("DYNATRACE_HTTP_INSECURE")) == "true" {
 		if transport, ok := http.DefaultTransport.(*http.Transport); ok {
 			transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 		}
 	}
+
+	InstallRoundTripper()
 }
 
 func readerFromPayload(payload any) (io.Reader, error) {
