@@ -28,3 +28,7 @@ import (
 func TestAccLogSensitiveDataMasking(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesLogSensitiveDataMasking(t *testing.T) {
+	api.TestAccTestCases(t)
+}
