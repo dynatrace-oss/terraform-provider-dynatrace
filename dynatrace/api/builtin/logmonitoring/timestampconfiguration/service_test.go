@@ -28,3 +28,7 @@ import (
 func TestAccLogTimestamp(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesLogTimestamp(t *testing.T) {
+	api.TestAccTestCases(t)
+}
