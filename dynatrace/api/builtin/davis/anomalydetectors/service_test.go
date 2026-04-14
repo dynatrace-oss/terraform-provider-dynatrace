@@ -34,3 +34,7 @@ func TestAccDavisAnomalyDetectorsWithPreferToken(t *testing.T) {
 	t.Setenv("DYNATRACE_HTTP_OAUTH_PREFERENCE", "false")
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesDavisAnomalyDetectors(t *testing.T) {
+	api.TestAccTestCases(t)
+}
