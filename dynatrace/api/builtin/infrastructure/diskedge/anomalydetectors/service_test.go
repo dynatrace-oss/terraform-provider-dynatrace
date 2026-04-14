@@ -28,3 +28,7 @@ import (
 func TestAccDiskEdgeAnomalyDetectors(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesDiskEdgeAnomalyDetectors(t *testing.T) {
+	api.TestAccTestCases(t) // To do after settings update: Host meta condition TypeSet case
+}
