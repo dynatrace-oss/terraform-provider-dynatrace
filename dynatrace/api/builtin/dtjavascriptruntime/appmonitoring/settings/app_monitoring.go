@@ -65,7 +65,9 @@ func (me *AppMonitoring) Schema() map[string]*schema.Schema {
 		"custom_trace_level": {
 			Type:        schema.TypeString,
 			Description: "Possible Values: `off`, `on`, `useDefault`",
-			Optional:    true,
+			// new required property
+			Optional: true,
+			Default:  "useDefault",
 		},
 	}
 }
