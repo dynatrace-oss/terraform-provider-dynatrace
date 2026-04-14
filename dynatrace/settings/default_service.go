@@ -36,10 +36,6 @@ func NewAPITokenService[T Settings](credentials *rest.Credentials, schemaID stri
 	return &defaultService[T]{schemaID: schemaID, client: rest.APITokenClient(credentials), options: options}
 }
 
-func NewHybridService[T Settings](credentials *rest.Credentials, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
-	return &defaultService[T]{schemaID: schemaID, client: rest.HybridClient(credentials), options: options}
-}
-
 type defaultService[T Settings] struct {
 	schemaID string
 	client   rest.Client

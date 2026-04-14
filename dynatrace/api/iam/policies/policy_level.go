@@ -64,22 +64,6 @@ func CheckPolicyExists(ctx context.Context, auth iam.Authenticator, levelType st
 	return true, response.Name, nil
 }
 
-// FetchPolicyLevel determines the `levelType` and `levelID` of a policy identified by its UUID
-// by trial and error, i.e. requests the policy from the REST API using all known combinations
-//
-// Option 1: The policy is a global policy (levelType = global, levelID = global)
-// Option 2: The policy is on the account level, identified by the argument `accountID` (levelType = account, levelID = `accountID` argument)
-// Option 3: The policy is on the environment level. ALL environments reachable via the account are being taken into consideration
-//
-// # If all attempts fail the returned error contains the UUID in its message
-//
-// This operation is guarded by a mutex
-func FetchPolicyLevel(ctx context.Context, auth iam.Authenticator, uuid string) (levelType string, levelID string, name string, err error) {
-	allPoliciesMutex.Lock()
-	defer allPoliciesMutex.Unlock()
-	return fetchPolicyLevel(ctx, auth, uuid)
-}
-
 // fetchPolicyLevel determines the `levelType` and `levelID` of a policy identified by its UUID
 // by trial and error, i.e. requests the policy from the REST API using all known combinations
 //

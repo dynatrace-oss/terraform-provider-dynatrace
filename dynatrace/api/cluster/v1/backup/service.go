@@ -46,11 +46,6 @@ func (cs *ServiceClient) Update(ctx context.Context, config *backup.Settings) er
 	return cs.client.Put(ctx, "/backup/config", config, 200).Finish()
 }
 
-// Delete TODO: documentation
-func (cs *ServiceClient) Delete(config *backup.Settings) error {
-	return nil
-}
-
 // Get TODO: documentation
 func (cs *ServiceClient) Get(ctx context.Context) (*backup.Settings, error) {
 	var err error

@@ -79,42 +79,6 @@ func (cs *ServiceClient) Update(ctx context.Context, config *publicendpoints.Set
 	return nil
 }
 
-// Delete TODO: documentation
-func (cs *ServiceClient) Delete() error {
-	return nil
-}
-
-// Get TODO: documentation
-func (cs *ServiceClient) Get(ctx context.Context) (*publicendpoints.Settings, error) {
-	var err error
-	webUiAddress := AddressSettings{}
-	additionalWebUiAddresses := AdditionalAddressesSettings{}
-	beaconForwarderAddress := AddressSettings{}
-	cdnAddress := AddressSettings{}
-
-	if err = cs.client.Get(ctx, "/endpoint/webUiAddress", 200).Finish(&webUiAddress); err != nil {
-		return nil, err
-	}
-	if err = cs.client.Get(ctx, "/endpoint/additionalWebUiAddresses", 200).Finish(&additionalWebUiAddresses); err != nil {
-		return nil, err
-	}
-	if err = cs.client.Get(ctx, "/endpoint/beaconForwarderAddress", 200).Finish(&beaconForwarderAddress); err != nil {
-		return nil, err
-	}
-	if err = cs.client.Get(ctx, "/endpoint/cdnAddress", 200).Finish(&cdnAddress); err != nil {
-		return nil, err
-	}
-
-	config := publicendpoints.Settings{
-		WebUiAddress:             webUiAddress.Address,
-		AdditionalWebUiAddresses: additionalWebUiAddresses.AdditionalAddresses,
-		BeaconForwarderAddress:   beaconForwarderAddress.Address,
-		CDNAddress:               cdnAddress.Address,
-	}
-
-	return &config, nil
-}
-
 // Get TODO: documentation
 func (cs *ServiceClient) GetWebUiAddress(ctx context.Context) (*string, error) {
 	webUiAddress := AddressSettings{}

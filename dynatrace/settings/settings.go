@@ -74,24 +74,6 @@ func SetRestoreOnDelete(restore string, v any) {
 	}
 }
 
-func SetID(settings Settings, id string) {
-	rv := reflect.ValueOf(settings).Elem()
-	if field := getIDField(rv); field.IsValid() {
-		field.Set(reflect.ValueOf(&id))
-	}
-}
-
-func getIDField(v reflect.Value) reflect.Value {
-	field := v.FieldByName("ID")
-	if !field.IsValid() {
-		return reflect.Value{}
-	}
-	if field.Type() != stringPointerType {
-		return reflect.Value{}
-	}
-	return field
-}
-
 func getLegacyField(v reflect.Value) reflect.Value {
 	if tField, found := v.Type().FieldByName("LegacyID"); found {
 		if tField.Tag.Get("json") != "-" {
@@ -106,33 +88,6 @@ func getLegacyField(v reflect.Value) reflect.Value {
 		return reflect.Value{}
 	}
 	return field
-}
-
-func GetFlawedReasons(settings any) []string {
-	v := reflect.ValueOf(settings)
-	if tField, found := v.Type().Elem().FieldByName("FlawedReasons"); found {
-		if tField.Tag.Get("json") != "-" {
-			return []string{}
-		}
-	}
-	field := v.Elem().FieldByName("FlawedReasons")
-	if !field.IsValid() {
-		return []string{}
-	}
-	if field.Type() != stringSliceType {
-		return []string{}
-	}
-	return field.Interface().([]string)
-}
-
-func SupportsFlawedReasons(settings any) bool {
-	v := reflect.ValueOf(settings)
-	if tField, found := v.Type().Elem().FieldByName("FlawedReasons"); found {
-		if tField.Tag.Get("json") != "-" {
-			return false
-		}
-	}
-	return true
 }
 
 func LegacyID(id string) string {
@@ -246,24 +201,4 @@ func RefersToMissingID(v any) bool {
 		return strings.Contains(string(marshalledSettings), "tfmigrationid")
 	}
 	return false
-}
-
-type ErrorSettings struct {
-	Error error
-}
-
-func (me *ErrorSettings) MarshalHCL(properties hcl.Properties) error {
-	return nil
-}
-
-func (me *ErrorSettings) UnmarshalHCL(decoder hcl.Decoder) error {
-	return nil
-}
-
-func (me *ErrorSettings) Schema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{}
-}
-
-func (me *ErrorSettings) FillDemoValues() []string {
-	return []string{me.Error.Error()}
 }

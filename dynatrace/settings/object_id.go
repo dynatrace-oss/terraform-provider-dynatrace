@@ -21,7 +21,6 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/binary"
-	"encoding/json"
 	"fmt"
 	"io"
 	"strings"
@@ -37,11 +36,6 @@ type ObjectID struct {
 	} `json:"scope"`
 	SchemaID string `json:"schemaID"`
 	ID       string `json:"-"`
-}
-
-func (me *ObjectID) String() string {
-	data, _ := json.Marshal(me)
-	return string(data)
 }
 
 func IsValidUUID(u string) bool {

@@ -26,8 +26,6 @@ import (
 	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
-var DYNATRACE_HTTP_OAUTH = (os.Getenv("DYNATRACE_HTTP_OAUTH") == "true")
-
 func logResponse(ctx context.Context, id string, response *http.Response) {
 	if response == nil {
 		return

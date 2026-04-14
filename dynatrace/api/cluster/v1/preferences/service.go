@@ -46,11 +46,6 @@ func (cs *ServiceClient) Update(ctx context.Context, config *preferences.Setting
 	return cs.client.Post(ctx, "/preferences", config, 200).Finish()
 }
 
-// Delete TODO: documentation
-func (cs *ServiceClient) Delete(config *preferences.Settings) error {
-	return nil
-}
-
 // Get TODO: documentation
 func (cs *ServiceClient) Get(ctx context.Context) (*preferences.Settings, error) {
 	var err error

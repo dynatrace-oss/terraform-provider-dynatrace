@@ -55,11 +55,6 @@ func (cs *ServiceClient) Update(ctx context.Context, id string, config *remoteac
 	return cs.client.Put(ctx, fmt.Sprintf("/remoteaccess/requests/%s/state", id), config, 200).Finish()
 }
 
-// Delete TODO: documentation
-func (cs *ServiceClient) Delete() error {
-	return nil
-}
-
 // Get TODO: documentation
 func (cs *ServiceClient) Get(ctx context.Context, id string) (*remoteaccess.Settings, error) {
 	var err error

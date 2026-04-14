@@ -27,10 +27,6 @@ type Criteria struct {
 	SourceIp      *string `json:"sourceIp,omitempty"`      // Source IP
 }
 
-func (me *Criteria) IsEmpty() bool {
-	return me == nil || (me.AttackPattern == nil && me.SourceIp == nil)
-}
-
 func (me *Criteria) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"attack_pattern": {

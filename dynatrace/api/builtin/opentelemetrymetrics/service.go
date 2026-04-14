@@ -110,11 +110,6 @@ func setFlags(target, existingValue *opentelemetrymetrics.Settings) {
 	}
 }
 
-func toJSON(v any) string {
-	data, _ := json.Marshal(v)
-	return string(data)
-}
-
 func (me *service) Create(ctx context.Context, v *opentelemetrymetrics.Settings) (*api.Stub, error) {
 	mu.Lock()
 	defer mu.Unlock()
@@ -221,10 +216,6 @@ func (me *service) Delete(ctx context.Context, id string) error {
 
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
-}
-
-func getKey(v any) string {
-	return reflect.ValueOf(v).Elem().FieldByName("AttributeKey").Interface().(string)
 }
 
 func equals(a, b any) bool {

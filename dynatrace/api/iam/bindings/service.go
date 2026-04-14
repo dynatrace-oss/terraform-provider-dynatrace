@@ -59,10 +59,6 @@ func (me *BindingServiceClient) EndpointURL() string {
 	return me.endpointURL
 }
 
-func NewPolicyService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *BindingServiceClient {
-	return &BindingServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret, tokenURL: tokenURL, endpointURL: endpointURL}
-}
-
 func Service(credentials *rest.Credentials) settings.CRUDService[*bindings.PolicyBinding] {
 	return &BindingServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret, tokenURL: credentials.IAM.TokenURL, endpointURL: credentials.IAM.EndpointURL}
 }

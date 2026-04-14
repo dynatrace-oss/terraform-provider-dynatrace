@@ -154,17 +154,6 @@ func (cs *ServiceClient) Get(ctx context.Context, id string) (*Environment, erro
 	return &environment, nil
 }
 
-// ListAll TODO: documentation
-func (cs *ServiceClient) ListAll(ctx context.Context) (*EnvironmentList, error) {
-	var err error
-
-	var environmentList EnvironmentList
-	if err = cs.client.Get(ctx, "/environments", 200).Finish(&environmentList); err != nil {
-		return nil, err
-	}
-	return &environmentList, nil
-}
-
 type EnvironmentList struct {
 	Environments []*Environment `json:"environments"`
 }

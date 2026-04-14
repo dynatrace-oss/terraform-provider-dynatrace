@@ -53,48 +53,6 @@ func SetInsertBefore(settings Settings, insertBefore string) {
 	}
 }
 
-func GetInsertBefore(settings Settings) *string {
-	if settings == nil {
-		return nil
-	}
-	pInsertBeforeField := getInsertBeforeField(settings)
-	if pInsertBeforeField == nil {
-		return nil
-	}
-	insertBeforeField := *pInsertBeforeField
-	if !insertBeforeField.IsValid() {
-		return nil
-	}
-	if insertBeforeField.Type() == stringType {
-		untypedInsertBeforeValue := insertBeforeField.Interface()
-		if untypedInsertBeforeValue == nil {
-			return nil
-		}
-		if pInsertBeforeValue, ok := untypedInsertBeforeValue.(*string); ok {
-			if pInsertBeforeValue == nil {
-				return nil
-			}
-			insertBeforeValue := *pInsertBeforeValue
-			return &insertBeforeValue
-		}
-		if ppInsertBeforeValue, ok := untypedInsertBeforeValue.(**string); ok {
-			if ppInsertBeforeValue == nil {
-				return nil
-			}
-			pInsertBeforeValue := *ppInsertBeforeValue
-			if pInsertBeforeValue == nil {
-				return nil
-			}
-			insertBeforeValue := *pInsertBeforeValue
-			return &insertBeforeValue
-		}
-		if insertBeforeValue, ok := untypedInsertBeforeValue.(string); ok {
-			return &insertBeforeValue
-		}
-	}
-	return nil
-}
-
 func getInsertBeforeField(settings Settings) *reflect.Value {
 	rv := unref(reflect.ValueOf(settings))
 	t := rv.Type()

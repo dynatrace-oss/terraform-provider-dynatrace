@@ -135,42 +135,10 @@ func EnableDSCtx(fn func(ctx context.Context, d *schema.ResourceData, m any) dia
 	}
 }
 
-func EnableSchemaSetFunc(fn func(v any) int) func(v any) int {
-	if os.Getenv("DYNATRACE_DEBUG") != "true" {
-		return fn
-	}
-	return func(v any) int {
-		log.SetOutput(odl)
-		return fn(v)
-	}
-}
-
 // Enable redirects logging into a an output file
 func SetOutput() {
 	if os.Getenv("DYNATRACE_DEBUG") != "true" {
 		return
 	}
 	log.SetOutput(odl)
-}
-
-// EnableSchemaDiff redirects logging into a an output file
-func EnableSchemaDiff(fn func(k, old, new string, d *schema.ResourceData) bool) func(k, old, new string, d *schema.ResourceData) bool {
-	if os.Getenv("DYNATRACE_DEBUG") != "true" {
-		return fn
-	}
-	return func(k, old, new string, d *schema.ResourceData) bool {
-		log.SetOutput(odl)
-		return fn(k, old, new, d)
-	}
-}
-
-// EnableCustomizeDiff redirects logging into a an output file
-func EnableCustomizeDiff(fn func(context.Context, *schema.ResourceDiff, any) error) func(context.Context, *schema.ResourceDiff, any) error {
-	if os.Getenv("DYNATRACE_DEBUG") != "true" {
-		return fn
-	}
-	return func(ctx context.Context, d *schema.ResourceDiff, meta any) error {
-		log.SetOutput(odl)
-		return fn(ctx, d, meta)
-	}
 }

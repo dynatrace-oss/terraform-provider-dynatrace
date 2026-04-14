@@ -35,10 +35,6 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*serviceSetting
 	return &service{clientGetter: createCoreClient, credentials: credentials}
 }
 
-func ServiceWithClientGetter(clientGetter func(ctx context.Context, credentials *rest.Credentials) (directSharesClient, error), credentials *rest.Credentials) settings.CRUDService[*serviceSettings.DirectShare] {
-	return &service{clientGetter: clientGetter, credentials: credentials}
-}
-
 type directSharesClient interface {
 	List(ctx context.Context) (coreapi.PagedListResponse, error)
 	Get(ctx context.Context, id string) (coreapi.Response, error)

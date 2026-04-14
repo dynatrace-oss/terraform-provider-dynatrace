@@ -20,7 +20,6 @@ package comparison
 import (
 	"encoding/json"
 
-	"github.com/dlclark/regexp2"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/stringc"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -233,27 +232,4 @@ const CHARACTER_CLASS_WITH_GREEDY_OR_LAZY_QUANTIFIER = `(?<!\\)(?:\\\\)*](?>\*|\
 
 func regexCheck(s string) ([]string, error) {
 	return []string{}, nil
-}
-
-func RegexCheck(s string) ([]string, error) {
-	result := []string{}
-	match := false
-	var err error
-
-	if match, err = regexp2.MustCompile(QUANTIFIERS_WITHIN_CAPTURING_GROUP, 0).MatchString(s); err != nil {
-		return nil, err
-	} else if match {
-		result = append(result, "FLAWED SETTINGS Please use possessive or lazy quantifiers within your capture group")
-	}
-	if match, err = regexp2.MustCompile(ALL_MATCH_NO_CAPTURING_GROUP, 0).MatchString(s); err != nil {
-		return nil, err
-	} else if match {
-		result = append(result, "FLAWED SETTINGS Please do not use a greedy all match")
-	}
-	if match, err = regexp2.MustCompile(CHARACTER_CLASS_WITH_GREEDY_OR_LAZY_QUANTIFIER, 0).MatchString(s); err != nil {
-		return nil, err
-	} else if match {
-		result = append(result, "FLAWED SETTINGS Greedy or lazy character classes are not allowed, please use a possessive quantifier instead")
-	}
-	return result, nil
 }

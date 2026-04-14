@@ -46,11 +46,6 @@ func (cs *ServiceClient) Update(ctx context.Context, smtpConfig *smtp.Settings) 
 	return cs.client.Post(ctx, "/smtp", smtpConfig, 200).Finish()
 }
 
-// Delete TODO: documentation
-func (cs *ServiceClient) Delete() error {
-	return nil
-}
-
 // Get TODO: documentation
 func (cs *ServiceClient) Get(ctx context.Context) (*smtp.Settings, error) {
 	var err error

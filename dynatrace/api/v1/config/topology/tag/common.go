@@ -19,27 +19,6 @@ package tag
 
 import "strings"
 
-func TagSubsetCheck(source []Tag, input []Tag) bool {
-	for _, inputTag := range input {
-		found := false
-		for _, restTag := range source {
-			if restTag.Key == inputTag.Key {
-				if restTag.Value == nil && inputTag.Value == nil {
-					found = true
-					break
-				} else if restTag.Value != nil && inputTag.Value != nil && *restTag.Value == *inputTag.Value {
-					found = true
-					break
-				}
-			}
-		}
-		if !found {
-			return false
-		}
-	}
-	return true
-}
-
 // StringsToTags processes the slice of string tags into a slice of tag structs
 // Arguments: slice of string tags, pointer to slice of tag structs
 func StringsToTags(tagList []any, tags *[]Tag) {

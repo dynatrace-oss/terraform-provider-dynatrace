@@ -40,10 +40,6 @@ func Enable() {
 	mode = ModeEnabled
 }
 
-func Disable() {
-	mode = ModeDisabled
-}
-
 func Offline() {
 	mode = ModeOffline
 }
@@ -85,33 +81,6 @@ type stubIndex struct {
 	Complete bool                 `json:"complete"`
 	Stubs    api.Stubs            `json:"stubs"`
 	IDs      map[string]*api.Stub `json:"-"`
-}
-
-func (me *stubIndex) Remove(id string) *stubIndex {
-	var result api.Stubs
-	for _, stub := range me.Stubs {
-		if stub.ID != id {
-			result = append(result, stub)
-		}
-	}
-	me.Stubs = result
-	delete(me.IDs, id)
-	return me
-}
-
-func (me *stubIndex) Add(id string, name string) *stubIndex {
-	for _, stub := range me.Stubs {
-		if stub.ID == id {
-			return me
-		}
-	}
-	stub := &api.Stub{ID: id, Name: name}
-	me.Stubs = append(me.Stubs, stub)
-	if me.IDs == nil {
-		me.IDs = map[string]*api.Stub{}
-	}
-	me.IDs[id] = stub
-	return me
 }
 
 var caches = map[string]any{}

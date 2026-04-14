@@ -17,16 +17,5 @@
 
 package rules
 
-import (
-	rules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/tags/autotagging/rules/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
-)
-
 const SchemaVersion = "1.0.12"
 const SchemaID = "builtin:tags.auto-tagging-rules"
-
-func Service(credentials *rest.Credentials) settings.CRUDService[*rules.Settings] {
-	return settings20.Service[*rules.Settings](credentials, SchemaID, SchemaVersion)
-}

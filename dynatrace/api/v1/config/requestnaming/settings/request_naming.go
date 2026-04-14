@@ -29,8 +29,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var o Order
-
 type RequestNaming struct {
 	// Order           *string                    `json:"order,omitempty"`           // The order string. Sorting request namings alphabetically by their order string determines their relative ordering.\n\nTypically this is managed by Dynatrace internally and will not be present in GET responses nor used if present in PUT/POST requests, except where noted otherwise
 	Enabled         bool                       `json:"enabled"`                   // The rule is enabled (`true`) or disabled (`false`)

@@ -37,12 +37,6 @@ type system struct {
 	running bool
 }
 
-func (me *system) Running() bool {
-	me.mu.Lock()
-	defer me.mu.Unlock()
-	return me.running
-}
-
 func (me *system) Stopped() bool {
 	me.mu.Lock()
 	defer me.mu.Unlock()

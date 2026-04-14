@@ -380,10 +380,6 @@ func ExportResource(marshaler hcl.Marshaler, w io.Writer, resourceType string, r
 	return New("resource").Export(marshaler, w, resourceType, resourceName, comments...)
 }
 
-func ExportDataSource(marshaler hcl.Marshaler, w io.Writer, resourceType string, resourceName string, comments ...string) error {
-	return New("data").Export(marshaler, w, resourceType, resourceName, comments...)
-}
-
 func (me *HCLGen) Export(marshaler hcl.Marshaler, w io.Writer, resourceType string, resourceName string, comments ...string) error {
 	var err error
 	m := hcl.Properties{}

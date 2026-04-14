@@ -96,10 +96,6 @@ func SaveAddressMap(addresses interface{}, OutputFolder string, filename string)
 var originalMap = NewAddressMap()
 var completedMap = NewAddressMap()
 
-func AddToOriginal(a AddressOriginal) {
-	originalMap.AddToAddressMap(&a)
-}
-
 func AddToComplete(a AddressComplete) {
 	completedMap.AddToAddressMap(&a)
 }

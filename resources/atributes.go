@@ -18,9 +18,7 @@
 package resources
 
 import (
-	"encoding/json"
 	"fmt"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -35,18 +33,6 @@ func NewAttributes(m map[string]string) Attributes {
 		attributes[k] = v
 	}
 	return attributes
-}
-
-func (attributes Attributes) Keys() []string {
-	result := []string{}
-	if len(attributes) == 0 {
-		return result
-	}
-	for k := range attributes {
-		result = append(result, k)
-	}
-	sort.Strings(result)
-	return result
 }
 
 func (attributes Attributes) MatchingKeys(key string) []string {
@@ -135,11 +121,6 @@ func (attributes Attributes) Siblings(key string) Siblings {
 
 type Siblings []Sibling
 
-func (siblings Siblings) String() string {
-	data, _ := json.Marshal(siblings)
-	return string(data)
-}
-
 func (siblings Siblings) Contains(others ...Sibling) bool {
 	for _, other := range others {
 		found := false
@@ -159,11 +140,6 @@ func (siblings Siblings) Contains(others ...Sibling) bool {
 type Sibling struct {
 	Key   string
 	Value string
-}
-
-func (sibling Sibling) String() string {
-	data, _ := json.Marshal(sibling)
-	return string(data)
 }
 
 func (sibling Sibling) Equals(other Sibling) bool {
