@@ -28,3 +28,7 @@ import (
 func TestAccDashboardsAllowlist(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesDashboardsAllowlist(t *testing.T) {
+	api.TestAccTestCases(t)
+}
