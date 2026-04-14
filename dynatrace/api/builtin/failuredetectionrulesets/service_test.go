@@ -28,3 +28,7 @@ import (
 func TestAccFailureDetectionRuleSets(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesFailureDetectionRuleSets(t *testing.T) {
+	api.TestAccTestCases(t)
+}
