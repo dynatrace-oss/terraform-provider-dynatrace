@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2025 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package rest
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -27,67 +26,8 @@ import (
 	"strings"
 	"sync"
 
-	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/google/uuid"
 )
-
-func logResponse(ctx context.Context, id string, response *http.Response) {
-	if response == nil {
-		return
-	}
-
-	if response.Body == nil {
-		Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.StatusCode)
-		return
-	}
-	if os.Getenv("DYNATRACE_HTTP_RESPONSE") != "true" {
-		Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.StatusCode)
-		return
-	}
-	body, _ := io.ReadAll(response.Body)
-	if body != nil {
-		Logger.Printf(ctx, "[%s] [RESPONSE] %d %s", id, response.StatusCode, string(body))
-		return
-	}
-	Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.StatusCode)
-}
-
-func requestContext(response crest.RequestResponse) context.Context {
-	if response.Request != nil {
-		return response.Request.Context()
-	}
-	if response.Response != nil && response.Response.Request != nil {
-		return response.Response.Request.Context()
-	}
-	return context.Background()
-}
-
-func HTTPListener(prefix string) *crest.HTTPListener {
-	logRequest := func(ctx context.Context, id string, request *http.Request) {
-		if request == nil {
-			return
-		}
-		if request.URL == nil {
-			return
-		}
-		if request.Body == nil {
-			Logger.Printf(ctx, "[%s] [%s] %s %s", prefix, id, request.Method, request.URL.String())
-			return
-		}
-
-		body, _ := io.ReadAll(request.Body)
-		Logger.Printf(ctx, "[%s] [%s] %s %s", prefix, id, request.Method, request.URL.String())
-		Logger.Printf(ctx, "[%s] [PAYLOAD] %s", id, string(body))
-	}
-
-	return &crest.HTTPListener{
-		Callback: func(response crest.RequestResponse) {
-			ctx := requestContext(response)
-			logRequest(ctx, response.ID, response.Request)
-			logResponse(ctx, response.ID, response.Response)
-		},
-	}
-}
 
 var lock sync.Mutex
 

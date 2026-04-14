@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2025 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,16 +18,10 @@
 package logging
 
 import (
-	"bytes"
 	"context"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
-	"strings"
-	"sync"
-
-	"github.com/google/uuid"
 
 	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
@@ -97,57 +91,4 @@ func HTTPListener(prefix string) *crest.HTTPListener {
 			logResponse(ctx, response.ID, response.Response)
 		},
 	}
-}
-
-type RoundTripper struct {
-	RoundTripper http.RoundTripper
-	lock         sync.Mutex
-}
-
-func (rt *RoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	if !DYNATRACE_HTTP_OAUTH || !strings.Contains(req.URL.String(), "oauth2") {
-		return rt.RoundTripper.RoundTrip(req)
-	}
-	id := uuid.NewString()
-	if v := req.Context().Value("request.id"); v != nil {
-		if sv, ok := v.(string); ok {
-			id = sv
-		}
-	}
-	rt.lock.Lock()
-	ctx := req.Context()
-	category := ""
-	if strings.Contains(req.URL.String(), "oauth2") {
-		category = " [OAUTH]"
-	}
-
-	Logger.Println(ctx, fmt.Sprintf("[%s]%s %s %s", id, category, req.Method, req.URL.String()))
-	if req.Body != nil {
-		buf := new(bytes.Buffer)
-		io.Copy(buf, req.Body)
-		data := buf.Bytes()
-		Logger.Printf(ctx, "[%s]%s [PAYLOAD ] %s", id, category, string(data))
-		req.Body = io.NopCloser(bytes.NewBuffer(data))
-	}
-	rt.lock.Unlock()
-	resp, err := rt.RoundTripper.RoundTrip(req)
-	if err != nil {
-		Logger.Printf(ctx, "[%s]%s [ERROR   ] %s", id, category, err.Error())
-	}
-	if resp != nil {
-		if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
-			if resp.Body != nil {
-				buf := new(bytes.Buffer)
-				io.Copy(buf, resp.Body)
-				data := buf.Bytes()
-				resp.Body = io.NopCloser(bytes.NewBuffer(data))
-				if os.Getenv("DT_DEBUG_IAM_BEARER") == "true" || category != " [OAUTH]" {
-					Logger.Printf(ctx, "[%s]%s [RESPONSE] %v %v", id, category, resp.Status, string(data))
-				}
-			} else {
-				Logger.Printf(ctx, "[%s]%s [RESPONSE] %s", id, category, resp.Status)
-			}
-		}
-	}
-	return resp, err
 }
