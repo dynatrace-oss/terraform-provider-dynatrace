@@ -34,12 +34,16 @@ var lock sync.Mutex
 func InstallRoundTripper() {
 	lock.Lock()
 	defer lock.Unlock()
+
+	// Avoid installing this round tripper multiple times
 	if _, ok := http.DefaultClient.Transport.(*RoundTripper); !ok {
-		if http.DefaultClient.Transport == nil {
-			http.DefaultClient.Transport = &RoundTripper{RoundTripper: http.DefaultTransport}
-		} else {
-			http.DefaultClient.Transport = &RoundTripper{RoundTripper: http.DefaultClient.Transport}
-		}
+		return
+	}
+
+	if http.DefaultClient.Transport == nil {
+		http.DefaultClient.Transport = &RoundTripper{RoundTripper: http.DefaultTransport}
+	} else {
+		http.DefaultClient.Transport = &RoundTripper{RoundTripper: http.DefaultClient.Transport}
 	}
 }
 
