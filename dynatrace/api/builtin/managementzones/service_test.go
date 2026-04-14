@@ -28,3 +28,7 @@ import (
 func TestAccManagementZones(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesManagementZones(t *testing.T) {
+	api.TestAccTestCases(t)
+}
