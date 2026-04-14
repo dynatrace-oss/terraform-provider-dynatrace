@@ -41,7 +41,11 @@ func (me CustomErrorRules) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *CustomErrorRules) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("custom_error_rule", me)
+	if err := decoder.DecodeSlice("custom_error_rule", me); err != nil {
+		return err
+	}
+	*me = hcl.FilterEmpty(*me, CustomErrorRule{})
+	return nil
 }
 
 type CustomErrorRule struct {

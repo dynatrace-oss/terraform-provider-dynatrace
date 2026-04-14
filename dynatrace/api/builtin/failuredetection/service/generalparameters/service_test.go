@@ -28,3 +28,7 @@ import (
 func TestAccServiceFailure(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesServiceFailure(t *testing.T) {
+	api.TestAccTestCases(t)
+}
