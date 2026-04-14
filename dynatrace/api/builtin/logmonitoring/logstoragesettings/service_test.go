@@ -28,3 +28,7 @@ import (
 func TestAccLogStorage(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesLogStorage(t *testing.T) {
+	api.TestAccTestCases(t)
+}
