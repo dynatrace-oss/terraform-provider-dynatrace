@@ -28,3 +28,7 @@ import (
 func TestAccAppMonitoring(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesAppMonitoring(t *testing.T) {
+	api.TestAccTestCases(t)
+}
