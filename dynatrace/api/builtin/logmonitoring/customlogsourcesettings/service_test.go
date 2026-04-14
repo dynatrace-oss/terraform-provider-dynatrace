@@ -28,3 +28,7 @@ import (
 func TestAccLogCustomSource(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesLogCustomSource(t *testing.T) {
+	api.TestAccTestCases(t)
+}
