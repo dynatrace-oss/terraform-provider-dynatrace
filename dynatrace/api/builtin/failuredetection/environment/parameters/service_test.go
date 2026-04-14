@@ -28,3 +28,7 @@ import (
 func TestAccFailureDetectionParameters(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesFailureDetectionParameters(t *testing.T) {
+	api.TestAccTestCases(t)
+}
