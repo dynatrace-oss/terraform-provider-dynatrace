@@ -41,7 +41,11 @@ func (me DimensionFilters) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *DimensionFilters) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("required_dimension", me)
+	if err := decoder.DecodeSlice("required_dimension", me); err != nil {
+		return err
+	}
+	*me = hcl.FilterEmpty(*me, DimensionFilter{})
+	return nil
 }
 
 // Ingest dimension filter. A dimension describes a property key which is present in the ingest data.
