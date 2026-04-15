@@ -41,7 +41,11 @@ func (me CookieEntries) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *CookieEntries) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("cookie", me)
+	if err := decoder.DecodeSlice("cookie", me); err != nil {
+		return err
+	}
+	*me = hcl.FilterEmpty(*me, CookieEntry{})
+	return nil
 }
 
 type CookieEntry struct {
