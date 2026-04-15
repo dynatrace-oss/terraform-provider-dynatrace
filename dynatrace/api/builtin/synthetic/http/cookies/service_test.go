@@ -28,3 +28,7 @@ import (
 func TestAccHTTPMonitorCookies(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesHTTPMonitorCookies(t *testing.T) {
+	api.TestAccTestCases(t)
+}
