@@ -19,6 +19,7 @@ package relation
 
 import (
 	"fmt"
+	"reflect"
 	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -44,7 +45,11 @@ func (me SourceFilters) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *SourceFilters) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("source", me)
+	if err := decoder.DecodeSlice("source", me); err != nil {
+		return err
+	}
+	*me = hcl.FilterEmpty(*me, SourceFilter{})
+	return nil
 }
 
 // Source filter. The source filter determines based on which data the relationship should be created. This way a subset of a specified data source can be used for creating the type.
@@ -86,6 +91,11 @@ func (me *SourceFilter) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *SourceFilter) HandlePreconditions() error {
+	var emptyItem SourceFilter
+	// ignore/don't throw on empty item that is coming from the TypeSet bug
+	if reflect.DeepEqual(*me, emptyItem) {
+		return nil
+	}
 	if (me.Condition == nil) && (!slices.Contains([]string{"Logs", "Spans", "Entities", "Topology", "Business Events"}, string(me.SourceType))) {
 		return fmt.Errorf("'condition' must be specified if 'source_type' is set to '%v'", me.SourceType)
 	}

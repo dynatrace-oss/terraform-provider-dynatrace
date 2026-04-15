@@ -28,3 +28,7 @@ import (
 func TestAccGenericRelationships(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesGenericRelationships(t *testing.T) {
+	api.TestAccTestCases(t)
+}
