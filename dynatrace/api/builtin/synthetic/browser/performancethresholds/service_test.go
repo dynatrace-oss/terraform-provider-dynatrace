@@ -28,3 +28,7 @@ import (
 func TestAccBrowserMonitorPerformanceThresholds(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesBrowserMonitorPerformanceThresholds(t *testing.T) {
+	api.TestAccTestCases(t)
+}
