@@ -41,7 +41,11 @@ func (me AttributeEntries) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *AttributeEntries) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("attribute", me)
+	if err := decoder.DecodeSlice("attribute", me); err != nil {
+		return err
+	}
+	*me = hcl.FilterEmpty(*me, AttributeEntry{})
+	return nil
 }
 
 // Attribute entry. Describe how an attribute is extracted from ingest data.
