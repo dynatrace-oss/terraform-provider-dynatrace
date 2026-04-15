@@ -28,3 +28,7 @@ import (
 func TestAccResourceAttributes(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesResourceAttributes(t *testing.T) {
+	api.TestAccTestCases(t)
+}
