@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 package cluster
 
 import (
-	cluster "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/cluster/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/cluster/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.4"
 const SchemaID = "builtin:anomaly-detection.kubernetes.cluster"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*cluster.Settings] {
-	return settings20.Service[*cluster.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }

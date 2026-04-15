@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -39,48 +39,43 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"cpu_requests_saturation": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(CpuRequestsSaturation).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(CpuRequestsSaturation).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"memory_requests_saturation": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(MemoryRequestsSaturation).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(MemoryRequestsSaturation).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"monitoring_issues": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(MonitoringIssues).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(MonitoringIssues).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"pods_saturation": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(PodsSaturation).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(PodsSaturation).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"readiness_issues": {
 			Type:        schema.TypeList,
 			Description: "Alerts if cluster has not been ready for a given amount of time",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(ReadinessIssues).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(ReadinessIssues).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"scope": {
 			Type:        schema.TypeString,
