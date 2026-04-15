@@ -28,3 +28,7 @@ import (
 func TestAccRUMProviderBreakdown(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesRUMProviderBreakdown(t *testing.T) {
+	api.TestAccTestCases(t)
+}
