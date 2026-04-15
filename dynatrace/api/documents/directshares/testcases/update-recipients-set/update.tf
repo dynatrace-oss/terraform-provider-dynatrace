@@ -1,10 +1,5 @@
-variable "random_name" {
-  description = "A random name for use in the test"
-  type        = string
-}
-
 resource "dynatrace_document" "sample_dashboard" {
-  name = "${var.random_name}-dashboard"
+  name = "#name#-dashboard"
   type = "dashboard"
   content = jsonencode({
     "annotations" : [],
@@ -30,27 +25,29 @@ resource "dynatrace_document" "sample_dashboard" {
   private = true
 }
 
-resource "dynatrace_iam_service_user" "sample_service_user" {
-  name        = "${var.random_name}-service-user"
-  description = "Service user that can access the dashboard"
+resource "dynatrace_iam_group" "sample_group1" {
+  name        = "#name#-group1"
+  description = "First group that can access the dashboard"
 }
 
-resource "dynatrace_iam_group" "sample_group1" {
-  name        = "${var.random_name}-group1"
-  description = "First group that can acccess the dashboard"
+
+resource "dynatrace_iam_group" "sample_group2" {
+  name        = "#name#-group2"
+  description = "Second group that can access the dashboard"
 }
 
 resource "dynatrace_direct_shares" "direct_share" {
   access      = "read-write"
   document_id = dynatrace_document.sample_dashboard.id
   recipients {
-    recipient {
-      type = "user"
-      id   = dynatrace_iam_service_user.sample_service_user.id
-    }
+    # updated (user => group)
     recipient {
       type = "group"
       id   = dynatrace_iam_group.sample_group1.id
+    }
+    recipient {
+      type = "group"
+      id   = dynatrace_iam_group.sample_group2.id
     }
   }
 }
