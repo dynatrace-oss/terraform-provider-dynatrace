@@ -28,3 +28,7 @@ import (
 func TestAccOwnershipTeams(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesOwnershipTeams(t *testing.T) {
+	api.TestAccTestCases(t)
+}
