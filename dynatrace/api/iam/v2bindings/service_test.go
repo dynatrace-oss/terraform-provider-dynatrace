@@ -23,39 +23,15 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func TestAccV2Bindings(t *testing.T) {
-	if !api.AccEnvsGiven(t) {
-		return
-	}
-
+func TestAccTestCasesV2Bindings(t *testing.T) {
 	accountID := os.Getenv("DT_ACCOUNT_ID")
 	//fallback to DYNATRACE_ACCOUNT_ID
 	if accountID == "" {
 		accountID = os.Getenv("DYNATRACE_ACCOUNT_ID")
 	}
 	t.Setenv("TF_VAR_ACCOUNT_ID", accountID)
-	configCreate, _ := api.ReadTfConfig(t, "testdata/create.tf")
-	configUpdate, _ := api.ReadTfConfig(t, "testdata/update.tf")
 
-	providerFactories := map[string]func() (*schema.Provider, error){
-		"dynatrace": func() (*schema.Provider, error) {
-			return provider.Provider(), nil
-		},
-	}
-
-	t.Run("Removal of policies works", func(t *testing.T) {
-		testCase := resource.TestCase{
-			ProviderFactories: providerFactories,
-			Steps: []resource.TestStep{
-				{Config: configCreate},
-				{Config: configUpdate}, // removes one policy, adds a new policy and updates an existing policy
-			},
-		}
-		resource.Test(t, testCase)
-	})
+	api.TestAccTestCases(t)
 }
