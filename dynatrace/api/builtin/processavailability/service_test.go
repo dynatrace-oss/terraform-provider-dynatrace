@@ -28,3 +28,7 @@ import (
 func TestAccProcessAvailability(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesProcessAvailability(t *testing.T) {
+	api.TestAccTestCases(t)
+}
