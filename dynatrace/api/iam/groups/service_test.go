@@ -23,17 +23,9 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func TestAccUsers(t *testing.T) {
-	if !api.AccEnvsGiven(t) {
-		return
-	}
-
+func TestAccTestCasesUsers(t *testing.T) {
 	accountID := os.Getenv("DT_ACCOUNT_ID")
 	//fallback to DYNATRACE_ACCOUNT_ID
 	if accountID == "" {
@@ -41,26 +33,5 @@ func TestAccUsers(t *testing.T) {
 	}
 	t.Setenv("TF_VAR_ACCOUNT_ID", accountID)
 
-	groupName := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
-	t.Setenv("TF_VAR_GROUP_NAME", groupName)
-
-	configCreate, _ := api.ReadTfConfig(t, "testdata/create.tf")
-	configUpdate, _ := api.ReadTfConfig(t, "testdata/update.tf")
-
-	providerFactories := map[string]func() (*schema.Provider, error){
-		"dynatrace": func() (*schema.Provider, error) {
-			return provider.Provider(), nil
-		},
-	}
-
-	t.Run("Updating description, permissions, and federated attributes of group works", func(t *testing.T) {
-		testCase := resource.TestCase{
-			ProviderFactories: providerFactories,
-			Steps: []resource.TestStep{
-				{Config: configCreate}, // creates group
-				{Config: configUpdate}, // updates group fields
-			},
-		}
-		resource.Test(t, testCase)
-	})
+	api.TestAccTestCases(t)
 }
