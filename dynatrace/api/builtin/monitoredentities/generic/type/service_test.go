@@ -28,3 +28,7 @@ import (
 func TestAccGenericTypes(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesGenericTypes(t *testing.T) {
+	api.TestAccTestCases(t)
+}
