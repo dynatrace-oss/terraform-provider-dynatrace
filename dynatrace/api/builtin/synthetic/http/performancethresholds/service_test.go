@@ -28,3 +28,7 @@ import (
 func TestAccHTTPMonitorPerformanceThresholds(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesHTTPMonitorPerformanceThresholds(t *testing.T) {
+	api.TestAccTestCases(t)
+}
