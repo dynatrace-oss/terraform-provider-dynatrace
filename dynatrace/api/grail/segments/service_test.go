@@ -28,3 +28,7 @@ import (
 func TestAccSegments(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesSegments(t *testing.T) {
+	api.TestAccTestCases(t)
+}

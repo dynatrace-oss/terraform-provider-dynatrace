@@ -42,7 +42,11 @@ func (me Includes) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Includes) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("items", me)
+	if err := decoder.DecodeSlice("items", me); err != nil {
+		return err
+	}
+	*me = hcl.FilterEmpty(*me, Items{})
+	return nil
 }
 
 type Items struct {
