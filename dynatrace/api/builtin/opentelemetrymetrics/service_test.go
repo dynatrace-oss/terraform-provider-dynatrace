@@ -28,3 +28,7 @@ import (
 func TestAccOpenTelemetryMetrics(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesOpenTelemetryMetrics(t *testing.T) {
+	api.TestAccTestCases(t)
+}
