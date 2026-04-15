@@ -25,18 +25,29 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api/testcasechecker"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/stretchr/testify/require"
 )
+
+type TestCaseChecks interface {
+	CheckCreate(s *terraform.State) error
+	CheckUpdate(s *terraform.State) error
+}
 
 type TestCaseAccOptions struct {
 	ExternalProviders map[string]resource.ExternalProvider
 	// TestCaseName is an optional field to set if only one testcase should be executed (useful for debugging)
 	TestCaseName string
+	// TestCaseChecks contains checks for the create.tf and update.tf test case steps.
+	// By default, the resource IDs in create.tf are validated against update.tf .
+	TestCaseChecks TestCaseChecks
 }
+
 type TestAccOptions struct {
 	ExpectNonEmptyPlan bool
 	ExternalProviders  map[string]resource.ExternalProvider
@@ -131,12 +142,19 @@ type testCaseExecution struct {
 	Name      string
 }
 
-func getTestCases(t *testing.T, specificTestCase string) []testCaseExecution {
+func getTestCaseChecks(options TestCaseAccOptions) TestCaseChecks {
+	if options.TestCaseChecks == nil {
+		return &testcasechecker.TestCaseCheckResourceIDs{}
+	}
+	return options.TestCaseChecks
+}
+
+func getTestCases(t *testing.T, options TestCaseAccOptions) []testCaseExecution {
 	testDataFolders, _ := os.ReadDir("testcases")
 	testCases := make([]testCaseExecution, 0)
 
 	for _, entry := range testDataFolders {
-		if !entry.IsDir() || specificTestCase != "" && entry.Name() != specificTestCase {
+		if !entry.IsDir() || options.TestCaseName != "" && entry.Name() != options.TestCaseName {
 			continue
 		}
 		folder := path.Join("testcases", entry.Name())
@@ -144,13 +162,17 @@ func getTestCases(t *testing.T, specificTestCase string) []testCaseExecution {
 		configCreate, identifier := ReadTfConfig(t, path.Join(folder, "create.tf"))
 		configUpdate := ReadTfConfigWithIdentifier(t, path.Join(folder, "update.tf"), identifier)
 
+		testCaseChecks := getTestCaseChecks(options)
+
 		testCases = append(testCases, testCaseExecution{
 			TestCases: []resource.TestStep{
 				{
 					Config: configCreate,
+					Check:  testCaseChecks.CheckCreate,
 				},
 				{
 					Config: configUpdate,
+					Check:  testCaseChecks.CheckUpdate,
 				},
 			},
 			Name: entry.Name(),
@@ -171,7 +193,7 @@ func TestAccTestCases(t *testing.T, opts ...TestCaseAccOptions) {
 		options = opts[0]
 	}
 
-	for _, testCase := range getTestCases(t, options.TestCaseName) {
+	for _, testCase := range getTestCases(t, options) {
 		t.Run(testCase.Name, func(t *testing.T) {
 			t.Helper()
 
