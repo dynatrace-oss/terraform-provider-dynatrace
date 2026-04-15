@@ -28,3 +28,7 @@ import (
 func TestAccMobileAppRequestErrors(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesMobileAppRequestErrors(t *testing.T) {
+	api.TestAccTestCases(t)
+}
