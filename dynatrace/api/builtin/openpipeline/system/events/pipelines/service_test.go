@@ -28,3 +28,7 @@ import (
 func TestOpenPipelineSystemEventsPipelines(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesOpenPipelineSystemEventsPipelines(t *testing.T) {
+	api.TestAccTestCases(t)
+}
