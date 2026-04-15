@@ -28,3 +28,7 @@ import (
 func TestAccURLBasedSampling(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesURLBasedSampling(t *testing.T) {
+	api.TestAccTestCases(t)
+}
