@@ -4,11 +4,47 @@
 		"HOST_GROUP",
 		"environment"
 	],
-	"description": "The *Disk Edge* feature within Dynatrace provides automatic detection of performance anomalies related to disk infrastructure.\nUse these settings to tailor detection sensitivity to a specific disk's name and/or custom metadata. Defining custom properties can help with post processing of the event. \n\n**Policy Hierarchy and Scope**\n\nThe order of policies establishes a hierarchical structure. Disk is assigned to the first policy it matches to (based on disk name and/or metadata) according  to the policies hierarchy.\n\nPolicies  can be defined within Host, Host Group and Tenant scope. Lower scope has priority over the higher one.\n\nTo learn more about Disk Edge visit its [official documentation](https://dt-url.net/diskEdgeDoc).",
+	"description": "The *Disk Edge* feature within Dynatrace provides automatic detection of performance anomalies related to disk infrastructure.\nUse these settings to tailor detection sensitivity based on disk characteristics such as disk name, total space, filesystem type, disk type, and/or custom metadata. Defining custom properties can help with post processing of the event. \n\n**Policy Hierarchy and Scope**\n\nThe order of policies establishes a hierarchical structure. Disk is assigned to the first policy it matches to (based on disk name, total space, filesystem type, disk type, and/or metadata) according  to the policies hierarchy.\n\nPolicies  can be defined within Host, Host Group and Tenant scope. Lower scope has priority over the higher one.\n\nTo learn more about Disk Edge visit its [official documentation](https://dt-url.net/diskEdgeDoc).",
 	"displayName": "Anomaly detection for infrastructure: Disk Edge",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
+		"DiskProp": {
+			"description": "",
+			"displayName": "DiskItem",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Total Space",
+					"value": "DiskTotalSpace"
+				},
+				{
+					"displayName": "Filesystem",
+					"value": "DiskFilesystem"
+				},
+				{
+					"displayName": "Type",
+					"value": "DiskType"
+				}
+			],
+			"type": "enum"
+		},
+		"DiskType": {
+			"description": "",
+			"displayName": "Disk Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Local",
+					"value": "LOCAL"
+				},
+				{
+					"displayName": "Remote",
+					"value": "REMOTE"
+				}
+			],
+			"type": "enum"
+		},
 		"EOperatingSystem": {
 			"description": "",
 			"displayName": "Operating System",
@@ -25,6 +61,22 @@
 				{
 					"displayName": "AIX",
 					"value": "AIX"
+				}
+			],
+			"type": "enum"
+		},
+		"RuleType": {
+			"description": "",
+			"displayName": "Rule scope",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Disk",
+					"value": "RuleTypeDisk"
+				},
+				{
+					"displayName": "Host",
+					"value": "RuleTypeHost"
 				}
 			],
 			"type": "enum"
@@ -66,6 +118,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add policy",
@@ -105,6 +158,36 @@
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": "set"
+		},
+		"detectionConditions": {
+			"constraints": [
+				{
+					"customMessage": "Duplicate disk property.",
+					"customValidatorId": "uniqueDiskPropertyValidator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "Set of rules to scope which disks the policy applies to. Rules can match based on disk properties (total space, filesystem, disk type) or host resource attributes. Each disk property type can be defined at most once per policy.",
+			"displayName": "Detection rules",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/detectionCondition"
+				}
+			},
+			"maxObjects": 33,
+			"metadata": {
+				"addItemButton": "Add rule",
+				"itemDisplayName": "New rule"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
 		},
 		"diskNameFilters": {
 			"description": "Disk will be included in this policy if **any** of the filters match",
@@ -165,28 +248,6 @@
 			"metadata": {
 				"addItemButton": "Add Property",
 				"itemDisplayName": "New property"
-			},
-			"minObjects": 0,
-			"modificationPolicy": "DEFAULT",
-			"nullable": false,
-			"type": "set"
-		},
-		"hostMetadataConditions": {
-			"description": "",
-			"displayName": "Host resource attributes conditions",
-			"documentation": "Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).\n\nNote: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata.",
-			"items": {
-				"description": "",
-				"displayName": "Resource attribute",
-				"documentation": "",
-				"type": {
-					"$ref": "#/types/HostMetadataConditionType"
-				}
-			},
-			"maxObjects": 30,
-			"metadata": {
-				"addItemButton": "Add condition",
-				"itemDisplayName": "New condition"
 			},
 			"minObjects": 0,
 			"modificationPolicy": "DEFAULT",
@@ -454,6 +515,62 @@
 				}
 			},
 			"summaryPattern": "{trigger} {thresholdPercent}{thresholdMilliseconds}{thresholdMebibytes}{thresholdNumber}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DiskTotalSpaceThresholds": {
+			"constraints": [
+				{
+					"customValidatorId": "diskTotalSpaceThresholdsValidator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "",
+			"displayName": "DiskTotalSpaceThresholds",
+			"documentation": "",
+			"properties": {
+				"thresholdAbove": {
+					"constraints": [
+						{
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"description": "If this field is empty then there is no lower limit",
+					"displayName": "Threshold above (optional)",
+					"documentation": "Minimum total disk space in GiB",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "ex. 10",
+						"suffix": "GiB"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "integer"
+				},
+				"thresholdBelow": {
+					"constraints": [
+						{
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"description": "If this field is empty then there is no upper limit",
+					"displayName": "Threshold below (optional)",
+					"documentation": "Maximum total disk space in GiB",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "ex. 10000",
+						"suffix": "GiB"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -797,7 +914,171 @@
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
+		},
+		"detectionCondition": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"diskFilesystemCondition": {
+					"constraints": [
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "This value does not match the required format.",
+							"customValidatorId": "ConditionGeneralRule",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "Disk filesystem will be included in this policy if **any** of the filters match",
+					"displayName": "Filesystem condition",
+					"documentation": "Disk filesystem has to match a required format.\n\n- `$match(ext*)` – Matches string with wildcards: `*` any number (including zero) of characters and `?` exactly one character.\n- `$contains(fs)` – Matches if `fs` appears anywhere in the filesystem type.\n- `$eq(ext4)` – Matches if `ext4` matches the filesystem type exactly.\n- `$prefix(ext)` – Matches if `ext` matches the prefix of the filesystem type.\n- `$suffix(fs)` – Matches if `fs` matches the suffix of the filesystem type.\n\nAvailable logic operations:\n- `$not($eq(tmpfs))` – Matches if the filesystem type is different from `tmpfs`.\n- `$and($prefix(ext),$suffix(4))` – Matches if filesystem type starts with `ext` and ends with `4`.\n- `$or($eq(xfs),$eq(btrfs))` – Matches if filesystem type equals `xfs` or `btrfs`.\n\nBrackets **(** and **)** that are part of the matched filesystem type **must be escaped with a tilde (~)**",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.335"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "RuleTypeDisk",
+								"property": "ruleType",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "DiskFilesystem",
+								"property": "property",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": "text"
+				},
+				"diskTotalCondition": {
+					"description": "",
+					"displayName": "Disk total space thresholds",
+					"documentation": "Specify disk total space range in GiB",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.335"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "RuleTypeDisk",
+								"property": "ruleType",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "DiskTotalSpace",
+								"property": "property",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/types/DiskTotalSpaceThresholds"
+					}
+				},
+				"hostMetadataCondition": {
+					"description": "",
+					"displayName": "Resource attribute",
+					"documentation": "Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\nBy defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\nSee [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).\n\nNote: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata.",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.277"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"RuleTypeHost"
+						],
+						"property": "ruleType",
+						"type": "IN"
+					},
+					"type": {
+						"$ref": "#/types/HostMetadataConditionType"
+					}
+				},
+				"localDiskCondition": {
+					"default": "LOCAL",
+					"description": "",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.335"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "RuleTypeDisk",
+								"property": "ruleType",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "DiskType",
+								"property": "property",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": {
+						"$ref": "#/enums/DiskType"
+					}
+				},
+				"property": {
+					"default": "DiskTotalSpace",
+					"description": "",
+					"displayName": "Disk property",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"minAgentVersion": "1.335"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "RuleTypeDisk",
+						"property": "ruleType",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/enums/DiskProp"
+					}
+				},
+				"ruleType": {
+					"default": "RuleTypeDisk",
+					"description": "",
+					"displayName": "Rule scope",
+					"documentation": "Starting from agent 1.335 **disk** detection rules are supported.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/RuleType"
+					}
+				}
+			},
+			"summaryPattern": "{ruleType}: {property} {diskTotalCondition}{diskFilesystemCondition}{localDiskCondition}{hostMetadataCondition}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
 		}
 	},
-	"version": "0.0.20"
+	"version": "0.1"
 }

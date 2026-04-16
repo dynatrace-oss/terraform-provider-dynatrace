@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -22,28 +22,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type HostMetadataConditionTypes []*HostMetadataConditionType
-
-func (me *HostMetadataConditionTypes) Schema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"host_metadata_condition": {
-			Type:        schema.TypeSet,
-			Required:    true,
-			MinItems:    1,
-			Description: "",
-			Elem:        &schema.Resource{Schema: new(HostMetadataConditionType).Schema()},
-		},
-	}
-}
-
-func (me HostMetadataConditionTypes) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeSlice("host_metadata_condition", me)
-}
-
-func (me *HostMetadataConditionTypes) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("host_metadata_condition", me)
-}
-
 type HostMetadataConditionType struct {
 	HostMetadataCondition *HostMetadataCondition `json:"hostMetadataCondition"`
 }
@@ -52,7 +30,7 @@ func (me *HostMetadataConditionType) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"host_metadata_condition": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(HostMetadataCondition).Schema()},
 			MinItems:    1,

@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -17,6 +17,28 @@
 
 package anomalydetectors
 
+type DiskProp string
+
+var DiskProps = struct {
+	Diskfilesystem DiskProp
+	Disktotalspace DiskProp
+	Disktype       DiskProp
+}{
+	"DiskFilesystem",
+	"DiskTotalSpace",
+	"DiskType",
+}
+
+type DiskType string
+
+var DiskTypes = struct {
+	Local  DiskType
+	Remote DiskType
+}{
+	"LOCAL",
+	"REMOTE",
+}
+
 type EoperatingSystem string
 
 var EoperatingSystems = struct {
@@ -27,6 +49,16 @@ var EoperatingSystems = struct {
 	"AIX",
 	"LINUX",
 	"WINDOWS",
+}
+
+type RuleType string
+
+var RuleTypes = struct {
+	Ruletypedisk RuleType
+	Ruletypehost RuleType
+}{
+	"RuleTypeDisk",
+	"RuleTypeHost",
 }
 
 type Trigger string
