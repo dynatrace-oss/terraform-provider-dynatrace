@@ -28,3 +28,7 @@ import (
 func TestAccNotifications(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesNotifications(t *testing.T) {
+	api.TestAccTestCases(t)
+}
