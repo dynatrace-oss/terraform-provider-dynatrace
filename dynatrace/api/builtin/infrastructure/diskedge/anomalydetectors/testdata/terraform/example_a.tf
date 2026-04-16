@@ -22,12 +22,35 @@ resource "dynatrace_disk_edge_anomaly_detectors" "#name#" {
       metadata_value = "ExampleValue"
     }
   }
-  # host_metadata_conditions { # Disabling until v297
-  #   host_metadata_condition {
-  #     host_metadata_condition {
-  #       metadata_condition = "$contains(terraform)"
-  #       metadata_key       = "ExampleKey"
-  #     }
-  #   }
-  # }
+
+  detection_conditions {
+    detection_condition {
+      rule_type = "RuleTypeHost"
+      host_metadata_condition {
+        host_metadata_condition {
+          # key_must_exist   = true
+          metadata_condition = "$contains(terraform)"
+          metadata_key       = "ExampleKey"
+        }
+      }
+    }
+    detection_condition {
+      local_disk_condition = "REMOTE"
+      property             = "DiskType"
+      rule_type            = "RuleTypeDisk"
+    }
+    detection_condition {
+      disk_filesystem_condition = "$match(ext*)"
+      property                  = "DiskFilesystem"
+      rule_type                 = "RuleTypeDisk"
+    }
+    detection_condition {
+      property  = "DiskTotalSpace"
+      rule_type = "RuleTypeDisk"
+      disk_total_condition {
+        threshold_above = 10
+        threshold_below = 1000
+      }
+    }
+  }
 }

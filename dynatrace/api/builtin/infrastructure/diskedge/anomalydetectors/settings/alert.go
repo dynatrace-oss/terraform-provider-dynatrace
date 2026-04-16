@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ func (me *Alert) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"sample_count_thresholds": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(SampleCountThresholds).Schema()},
 			MinItems:    1,
@@ -70,7 +70,7 @@ func (me *Alert) Schema() map[string]*schema.Schema {
 		},
 		"sample_count_thresholds_immediately": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(SampleCountThresholdsImmediately).Schema()},
 			MinItems:    1,
@@ -78,22 +78,22 @@ func (me *Alert) Schema() map[string]*schema.Schema {
 		},
 		"threshold_mebibytes": {
 			Type:        schema.TypeFloat,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 		},
 		"threshold_milliseconds": {
 			Type:        schema.TypeFloat,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 		},
 		"threshold_number": {
 			Type:        schema.TypeFloat,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 		},
 		"threshold_percent": {
 			Type:        schema.TypeFloat,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 		},
 		"trigger": {
