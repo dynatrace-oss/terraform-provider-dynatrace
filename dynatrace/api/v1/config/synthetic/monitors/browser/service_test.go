@@ -29,3 +29,9 @@ import (
 func TestAccBrowserMonitors(t *testing.T) {
 	api.TestAcc(t, api.TestAccOptions{ExternalProviders: map[string]resource.ExternalProvider{"time": {Source: "hashicorp/time"}}})
 }
+
+func TestAccTestCasesBrowserMonitors(t *testing.T) {
+	t.Skip("Skipping because the eventual consistency time is way too high")
+
+	api.TestAccTestCases(t, api.TestCaseAccOptions{ExternalProviders: map[string]resource.ExternalProvider{"time": {Source: "hashicorp/time"}}})
+}
