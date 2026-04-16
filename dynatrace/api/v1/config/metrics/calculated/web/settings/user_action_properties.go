@@ -29,6 +29,7 @@ func (me *UserActionProperties) Schema() map[string]*schema.Schema {
 		"property": {
 			Type:        schema.TypeSet,
 			Optional:    true,
+			ForceNew:    true,
 			Description: "User Action Property",
 			Elem:        &schema.Resource{Schema: new(UserActionProperty).Schema()},
 		},
@@ -70,26 +71,31 @@ func (me *UserActionProperty) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The key of the action property we're checking.",
 			Optional:    true,
+			ForceNew:    true,
 		},
 		"value": {
 			Type:        schema.TypeString,
 			Description: "Only actions that have this value in the specified property are included in the metric calculation.",
 			Optional:    true,
+			ForceNew:    true,
 		},
 		"from": {
 			Type:        schema.TypeFloat,
 			Description: "Only actions that have a value greater than or equal to this are included in the metric calculation.",
 			Optional:    true,
+			ForceNew:    true,
 		},
 		"to": {
 			Type:        schema.TypeFloat,
 			Description: "Only actions that have a value less than or equal to this are included in the metric calculation.",
 			Optional:    true,
+			ForceNew:    true,
 		},
 		"match_type": {
 			Type:        schema.TypeString,
 			Description: "Specifies the match type of a string filter, e.g. using Contains or Equals.",
 			Optional:    true,
+			ForceNew:    true,
 		},
 	}
 }

@@ -23,6 +23,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// NOTE: PUT only supports updating `enabled`. Therefore, everything else should have ForceNew: true
+
 // CalculatedWebMetric Descriptor of a calculated web metric.
 type CalculatedWebMetric struct {
 	Description      *string           `json:"description,omitempty"`      // Descriptor of a calculated web metric.
@@ -40,16 +42,20 @@ func (me *CalculatedWebMetric) Schema() map[string]*schema.Schema {
 		"description": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			ForceNew:    true,
 			Description: "Descriptor of a calculated web metric.",
+			Deprecated:  "This field is deprecated and has no effect.",
 		},
 		"app_identifier": {
 			Type:        schema.TypeString,
 			Required:    true,
+			ForceNew:    true,
 			Description: "The Dynatrace entity ID of the application to which the metric belongs.",
 		},
 		"name": {
 			Type:        schema.TypeString,
 			Required:    true,
+			ForceNew:    true,
 			Description: "The displayed name of the metric.",
 		},
 		"metric_key": {
@@ -66,6 +72,7 @@ func (me *CalculatedWebMetric) Schema() map[string]*schema.Schema {
 		"metric_definition": {
 			Type:        schema.TypeList,
 			Required:    true,
+			ForceNew:    true,
 			MaxItems:    1,
 			Description: "The definition of a calculated web metric.",
 			Elem:        &schema.Resource{Schema: new(MetricDefinition).Schema()},
@@ -73,12 +80,14 @@ func (me *CalculatedWebMetric) Schema() map[string]*schema.Schema {
 		"dimensions": {
 			Type:        schema.TypeList,
 			Optional:    true,
+			ForceNew:    true,
 			Description: "Parameters of a definition of a calculated web metric.",
 			Elem:        &schema.Resource{Schema: new(Dimensions).Schema()},
 		},
 		"user_action_filter": {
 			Type:        schema.TypeList,
 			Optional:    true,
+			ForceNew:    true,
 			MaxItems:    1,
 			Description: "Parameters of a definition of a calculated web metric.",
 			Elem:        &schema.Resource{Schema: new(UserActionFilter).Schema()},

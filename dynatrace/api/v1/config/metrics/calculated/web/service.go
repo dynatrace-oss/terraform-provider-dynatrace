@@ -106,6 +106,11 @@ func (me *service) Delete(ctx context.Context, id string) error {
 		time.Sleep(2 * time.Second)
 	}
 
+	// Create after delete doesn't immediately work (which is needed for re-create due to ForceNew).
+	// => "Unable to create RumMetric my-metric in DemMetricsConfigPersistence or Metadata: Unable to create RumMetric my-metric in DemMetricsConfigPersistence"
+	// There seems also to be a cache that could lead to "Found more than one metric with key my-key" during GET
+	// Therefore, adding a static wait time here, else we would have to assert the error message inside Create
+	time.Sleep(5 * time.Second)
 	if err != nil {
 		return err
 	}
