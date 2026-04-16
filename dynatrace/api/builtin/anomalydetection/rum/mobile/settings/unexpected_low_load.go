@@ -18,7 +18,6 @@
 package rummobile
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -56,7 +55,7 @@ func (me *UnexpectedLowLoad) UnmarshalHCL(decoder hcl.Decoder) error {
 		"threshold_percentage": &me.ThresholdPercentage,
 	})
 	if me.ThresholdPercentage == nil && me.Enabled {
-		me.ThresholdPercentage = opt.NewFloat64(0)
+		me.ThresholdPercentage = new(float64(0))
 	}
 	return err
 }

@@ -18,7 +18,6 @@
 package generalparameters
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -91,7 +90,7 @@ func (me *CompareOperation) UnmarshalHCL(decoder hcl.Decoder) error {
 
 	doubleExpectedValues := []string{"DOUBLE_EQUALS", "NOT_DOUBLE_EQUALS", "DOUBLE_GREATER_THAN", "DOUBLE_GREATER_THAN_OR_EQUALS", "DOUBLE_LESS_THAN", "DOUBLE_LESS_THAN_OR_EQUALS"}
 	if me.DoubleValue == nil && stringInSlice(me.CompareOperationType, doubleExpectedValues) {
-		me.DoubleValue = opt.NewFloat64(0)
+		me.DoubleValue = new(float64(0))
 	}
 
 	return err
