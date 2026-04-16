@@ -1,3 +1,5 @@
+//go:build unit
+
 /**
 * @license
 * Copyright 2025 Dynatrace LLC
@@ -14,8 +16,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
  */
-
-//go:build unit
 
 package settings
 
@@ -87,12 +87,12 @@ func TestGroupAccessor_UnmarshalHCL(t *testing.T) {
 
 	cases := []struct {
 		name     string
-		input    map[string]interface{}
+		input    map[string]any
 		expected *GroupAccessor
 	}{
 		{
 			name:  "read-access",
-			input: map[string]interface{}{"id": "my-id", "access": HCLAccessorRead},
+			input: map[string]any{"id": "my-id", "access": HCLAccessorRead},
 			expected: &GroupAccessor{
 				ID:     "my-id",
 				Access: HCLAccessorRead,
@@ -100,7 +100,7 @@ func TestGroupAccessor_UnmarshalHCL(t *testing.T) {
 		},
 		{
 			name:  "write-access",
-			input: map[string]interface{}{"id": "my-id", "access": HCLAccessorWrite},
+			input: map[string]any{"id": "my-id", "access": HCLAccessorWrite},
 			expected: &GroupAccessor{
 				ID:     "my-id",
 				Access: HCLAccessorWrite,
@@ -108,7 +108,7 @@ func TestGroupAccessor_UnmarshalHCL(t *testing.T) {
 		},
 		{
 			name:     "empty",
-			input:    map[string]interface{}{"id": "", "access": ""},
+			input:    map[string]any{"id": "", "access": ""},
 			expected: &GroupAccessor{},
 		},
 	}
@@ -137,7 +137,7 @@ func TestGroups_MarshalHCL(t *testing.T) {
 	err := groups.MarshalHCL(properties)
 	assert.NoError(t, err)
 
-	groupList, ok := properties["group"].([]interface{})
+	groupList, ok := properties["group"].([]any)
 	assert.True(t, ok)
 	assert.Len(t, groupList, 2)
 
@@ -153,13 +153,13 @@ func TestGroups_MarshalHCL(t *testing.T) {
 func TestGroups_UnmarshalHCL(t *testing.T) {
 	s := new(Groups).Schema()
 
-	input := map[string]interface{}{
-		"group": []interface{}{
-			map[string]interface{}{
+	input := map[string]any{
+		"group": []any{
+			map[string]any{
 				"id":     "group-1",
 				"access": HCLAccessorRead,
 			},
-			map[string]interface{}{
+			map[string]any{
 				"id":     "group-2",
 				"access": HCLAccessorWrite,
 			},

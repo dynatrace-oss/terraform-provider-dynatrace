@@ -67,8 +67,15 @@ jobs:
         with:
           go-version-file: ./go.mod
 
+      - name: 🧑‍🔧 Check for `go fix` changes
+        run: |
+          go fix -tags "unit integration" ./...
+          git diff --exit-code
+        if: always()
+
       - name: 🔎 golangci-lint
         uses: golangci/golangci-lint-action@1e7e51e771db61008b38414a730f564565cf7c20 #v9.2.0
+        if: always()
         with:
           install-mode: 'goinstall' # install mode goinstall in order to use hashes for the version
           version: eabc2638a66daf5bb6c6fb052a32fa3ef7b6600d #v2.1.6
@@ -76,6 +83,7 @@ jobs:
 
       - name: ⬆️ Archive lint results
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        if: always()
         with:
           name: lint-report
           path: lint-report.xml

@@ -61,7 +61,7 @@ func (m *mockCRUDService) SchemaID() string { return "" }
 
 func TestDataSourceReadWithService(t *testing.T) {
 	t.Run("lookup by ID succeeds", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"id": "test-uid",
 		})
 
@@ -86,11 +86,11 @@ func TestDataSourceReadWithService(t *testing.T) {
 
 		groups := d.Get("groups").(*schema.Set)
 		assert.NotNil(t, groups)
-		assert.Equal(t, []interface{}{"group-1"}, groups.List())
+		assert.Equal(t, []any{"group-1"}, groups.List())
 	})
 
 	t.Run("lookup by ID fails if get fails", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"id": "test-uid",
 		})
 
@@ -107,7 +107,7 @@ func TestDataSourceReadWithService(t *testing.T) {
 	})
 
 	t.Run("lookup by name succeeds", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"name": "Test User",
 		})
 
@@ -141,11 +141,11 @@ func TestDataSourceReadWithService(t *testing.T) {
 		assert.Equal(t, "Found user", d.Get("description"))
 		groups := d.Get("groups").(*schema.Set)
 		assert.NotNil(t, groups)
-		assert.Equal(t, []interface{}{"group-1"}, groups.List())
+		assert.Equal(t, []any{"group-1"}, groups.List())
 	})
 
 	t.Run("lookup by name with duplicates fails", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"name": "Duplicate User",
 		})
 
@@ -165,7 +165,7 @@ func TestDataSourceReadWithService(t *testing.T) {
 	})
 
 	t.Run("lookup by name not found", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"name": "Nonexistent User",
 		})
 
@@ -185,7 +185,7 @@ func TestDataSourceReadWithService(t *testing.T) {
 	})
 
 	t.Run("lookup by name fails if get all fails", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"name": "Test User",
 		})
 
@@ -202,7 +202,7 @@ func TestDataSourceReadWithService(t *testing.T) {
 	})
 
 	t.Run("lookup by name fails if get fails", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"name": "Test User",
 		})
 
@@ -224,7 +224,7 @@ func TestDataSourceReadWithService(t *testing.T) {
 	})
 
 	t.Run("lookup by name fails if get all returns empty", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"name": "Test User",
 		})
 
@@ -241,7 +241,7 @@ func TestDataSourceReadWithService(t *testing.T) {
 	})
 
 	t.Run("lookup by email succeeds", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"email": "test@example.com",
 		})
 
@@ -268,11 +268,11 @@ func TestDataSourceReadWithService(t *testing.T) {
 		assert.Equal(t, "Found by email", d.Get("description"))
 		groups := d.Get("groups").(*schema.Set)
 		assert.NotNil(t, groups)
-		assert.Equal(t, []interface{}{"group-1"}, groups.List())
+		assert.Equal(t, []any{"group-1"}, groups.List())
 	})
 
 	t.Run("lookup by email not found", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"email": "nonexistent@example.com",
 		})
 
@@ -292,7 +292,7 @@ func TestDataSourceReadWithService(t *testing.T) {
 	})
 
 	t.Run("lookup by email fails if get all fails", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"email": "test@example.com",
 		})
 
@@ -309,7 +309,7 @@ func TestDataSourceReadWithService(t *testing.T) {
 	})
 
 	t.Run("lookup by email fails if get fails", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"email": "test@example.com",
 		})
 
@@ -331,7 +331,7 @@ func TestDataSourceReadWithService(t *testing.T) {
 	})
 
 	t.Run("lookup by email fails if get all returns empty", func(t *testing.T) {
-		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]interface{}{
+		d := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{
 			"email": "test@example.com",
 		})
 

@@ -52,7 +52,7 @@ func (m MockDecoder) DecodeAny(m2 map[string]any) (any, error) {
 
 func (m MockDecoder) DecodeSlice(key string, v any) error {
 	rv := reflect.ValueOf(v)
-	if rv.Kind() == reflect.Ptr && !rv.IsNil() {
+	if rv.Kind() == reflect.Pointer && !rv.IsNil() {
 		rv.Elem().Set(reflect.ValueOf(m.Elements[key]))
 	}
 	return nil

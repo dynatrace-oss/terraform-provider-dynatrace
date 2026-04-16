@@ -1,3 +1,5 @@
+//go:build unit
+
 /**
 * @license
 * Copyright 2025 Dynatrace LLC
@@ -14,8 +16,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
  */
-
-//go:build unit
 
 package settings
 
@@ -49,9 +49,9 @@ func TestSettingPermissions_MarshalHCL(t *testing.T) {
 			expected: hcl.Properties{
 				"settings_object_id": "obj-123",
 				"all_users":          HCLAccessorNone,
-				"users": []interface{}{
+				"users": []any{
 					hcl.Properties{
-						"user": []interface{}{
+						"user": []any{
 							hcl.Properties{
 								"access": HCLAccessorWrite,
 								"uid":    "user1",
@@ -59,9 +59,9 @@ func TestSettingPermissions_MarshalHCL(t *testing.T) {
 						},
 					},
 				},
-				"groups": []interface{}{
+				"groups": []any{
 					hcl.Properties{
-						"group": []interface{}{
+						"group": []any{
 							hcl.Properties{
 								"access": HCLAccessorRead,
 								"id":     "group1",
@@ -106,36 +106,36 @@ func TestSettingPermissions_UnmarshalHCL(t *testing.T) {
 
 	cases := []struct {
 		name     string
-		input    map[string]interface{}
+		input    map[string]any
 		expected SettingPermissions
 	}{
 		{
 			name: "full-permissions",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"settings_object_id": "obj-123",
 				"all_users":          HCLAccessorNone,
-				"users": []interface{}{
-					map[string]interface{}{
-						"user": []interface{}{
-							map[string]interface{}{
+				"users": []any{
+					map[string]any{
+						"user": []any{
+							map[string]any{
 								"uid":    "user1",
 								"access": HCLAccessorWrite,
 							},
-							map[string]interface{}{
+							map[string]any{
 								"uid":    "user2",
 								"access": HCLAccessorWrite,
 							},
 						},
 					},
 				},
-				"groups": []interface{}{
-					map[string]interface{}{
-						"group": []interface{}{
-							map[string]interface{}{
+				"groups": []any{
+					map[string]any{
+						"group": []any{
+							map[string]any{
 								"id":     "group1",
 								"access": HCLAccessorRead,
 							},
-							map[string]interface{}{
+							map[string]any{
 								"id":     "group2",
 								"access": HCLAccessorWrite,
 							},
@@ -158,7 +158,7 @@ func TestSettingPermissions_UnmarshalHCL(t *testing.T) {
 		},
 		{
 			name: "minimal-permissions",
-			input: map[string]interface{}{
+			input: map[string]any{
 				"settings_object_id": "obj-123",
 				"all_users":          HCLAccessorNone,
 			},
