@@ -168,7 +168,7 @@ func (me *Window) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("suppress_synth_mon_exec"); ok {
-		me.SuppressSyntheticMonitorsExecution = opt.NewBool(value.(bool))
+		me.SuppressSyntheticMonitorsExecution = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("enabled"); ok {
 		me.Enabled = value.(bool)

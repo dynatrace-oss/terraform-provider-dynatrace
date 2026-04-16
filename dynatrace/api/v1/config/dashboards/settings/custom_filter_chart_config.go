@@ -19,6 +19,7 @@ package dashboards
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -157,7 +158,7 @@ func (me *CustomFilterChartConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("legend"); ok {
-		me.LegendShown = opt.NewBool(value.(bool))
+		me.LegendShown = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("type"); ok {
 		me.Type = CustomFilterChartConfigType(value.(string))
@@ -201,9 +202,7 @@ func (me *CustomFilterChartConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 func (me *CustomFilterChartConfig) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	if me.LegendShown != nil {
 		rawMessage, err := json.Marshal(me.LegendShown)

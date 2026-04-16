@@ -20,7 +20,6 @@ package ingestsources
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -114,7 +113,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if (me.PathSegment == nil) && (string(me.SourceType) == "http") {
-		me.PathSegment = opt.NewString("")
+		me.PathSegment = new("")
 	}
 	if (me.Source == nil) && (string(me.SourceType) == "extension") {
 		return fmt.Errorf("'source' must be specified if 'source_type' is set to '%v'", me.SourceType)

@@ -38,7 +38,7 @@ func MarshalAsJSONWithType(v any, ttype string) (json.RawMessage, error) {
 		return nil, err
 	}
 
-	m := map[string]interface{}{}
+	m := map[string]any{}
 	if err := json.Unmarshal(b, &m); err != nil {
 		return nil, err
 	}

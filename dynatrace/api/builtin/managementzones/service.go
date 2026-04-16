@@ -106,7 +106,7 @@ func (me *service) Create(ctx context.Context, v *managementzones.Settings) (*ap
 	maxConfirmationRetries := getEnv("DT_MGMZ_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
 	numRequiredSuccesses := getEnv("DT_MGMZ_SUCCESSES", DefaultNumRequiredSuccesses, MinNumRequiredSuccesses, MaxNumRequiredSuccesses)
 	success := 0
-	for i := 0; i < maxConfirmationRetries; i++ {
+	for range maxConfirmationRetries {
 		if err := validator.Validate(ctx, &sloValue); err == nil {
 			success++
 			if success >= numRequiredSuccesses {

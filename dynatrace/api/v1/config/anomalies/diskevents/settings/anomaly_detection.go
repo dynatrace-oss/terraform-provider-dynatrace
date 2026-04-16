@@ -26,8 +26,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -121,7 +119,7 @@ func (me *AnomalyDetection) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Name = value.(string)
 	}
 	if value, ok := decoder.GetOk("host_group_id"); ok {
-		me.HostGroupID = opt.NewString(value.(string))
+		me.HostGroupID = new(value.(string))
 	}
 	if me.HostGroupID != nil && len(*me.HostGroupID) == 0 {
 		me.HostGroupID = nil

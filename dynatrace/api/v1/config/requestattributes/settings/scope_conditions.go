@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -104,16 +102,16 @@ func (me *ScopeConditions) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("host_group"); ok {
-		me.HostGroup = opt.NewString(value.(string))
+		me.HostGroup = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("process_group"); ok {
-		me.ProcessGroup = opt.NewString(value.(string))
+		me.ProcessGroup = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("service_technology"); ok {
 		me.ServiceTechnology = ServiceTechnology(value.(string)).Ref()
 	}
 	if value, ok := decoder.GetOk("tag_of_process_group"); ok {
-		me.TagOfProcessGroup = opt.NewString(value.(string))
+		me.TagOfProcessGroup = new(value.(string))
 	}
 	return nil
 }

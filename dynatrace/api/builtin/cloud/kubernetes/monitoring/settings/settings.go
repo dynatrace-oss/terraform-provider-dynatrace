@@ -18,7 +18,6 @@
 package monitoring
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -111,10 +110,10 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if (me.FilterEvents == nil) && (me.EventProcessingActive) {
-		me.FilterEvents = opt.NewBool(false)
+		me.FilterEvents = new(false)
 	}
 	if (me.IncludeAllFdiEvents == nil) && (me.FilterEvents != nil && *me.FilterEvents) {
-		me.IncludeAllFdiEvents = opt.NewBool(false)
+		me.IncludeAllFdiEvents = new(false)
 	}
 	// ---- EventPatterns EventComplexTypes -> {"expectedValue":true,"property":"filterEvents","type":"EQUALS"}
 	return nil

@@ -19,12 +19,11 @@ package alerting
 
 import (
 	"encoding/json"
+	"maps"
 	"sort"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -154,7 +153,7 @@ func (me *Profile) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.DisplayName = value.(string)
 	}
 	if value, ok := decoder.GetOk("mz_id"); ok {
-		me.MzID = opt.NewString(value.(string))
+		me.MzID = new(value.(string))
 	}
 	if result, ok := decoder.GetOk("rules.#"); ok {
 		me.Rules = []*ProfileSeverityRule{}
@@ -183,9 +182,7 @@ func (me *Profile) UnmarshalHCL(decoder hcl.Decoder) error {
 func (me *Profile) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	if me.ID != nil {
 		rawMessage, err := json.Marshal(me.ID)
@@ -327,7 +324,7 @@ func (me *ConfigMetadata) MarshalHCL(properties hcl.Properties) error {
 
 func (me *ConfigMetadata) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("cluster_version"); ok {
-		me.ClusterVersion = opt.NewString(value.(string))
+		me.ClusterVersion = new(value.(string))
 	}
 	if _, ok := decoder.GetOk("configuration_versions.#"); ok {
 		me.ConfigurationVersions = []int64{}

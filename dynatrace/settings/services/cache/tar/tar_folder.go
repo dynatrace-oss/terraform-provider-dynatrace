@@ -258,7 +258,7 @@ func (me *Folder) SaveAllCallback(numItems int, getStubDataFunc GetStubDataFunc)
 	}
 	writer := tar.NewWriter(file)
 
-	for idx := 0; idx < numItems; idx++ {
+	for idx := range numItems {
 		stub, data, isSkipped, err := getStubDataFunc(idx)
 		if err != nil {
 			return err

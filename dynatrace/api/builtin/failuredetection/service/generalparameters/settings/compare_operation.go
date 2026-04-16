@@ -81,12 +81,12 @@ func (me *CompareOperation) UnmarshalHCL(decoder hcl.Decoder) error {
 	})
 	expectedValues := []string{"STRING_EQUALS", "NOT_STRING_EQUALS", "STARTS_WITH", "NOT_STARTS_WITH", "CONTAINS", "NOT_CONTAINS", "ENDS_WITH", "NOT_ENDS_WITH"}
 	if me.CaseSensitive == nil && stringInSlice(me.CompareOperationType, expectedValues) {
-		me.CaseSensitive = opt.NewBool(false)
+		me.CaseSensitive = new(false)
 	}
 
 	intExpectedValues := []string{"INTEGER_EQUALS", "NOT_INTEGER_EQUALS", "INTEGER_GREATER_THAN", "INTEGER_GREATER_THAN_OR_EQUALS", "INTEGER_LESS_THAN", "INTEGER_LESS_THAN_OR_EQUALS"}
 	if me.IntValue == nil && stringInSlice(me.CompareOperationType, intExpectedValues) {
-		me.IntValue = opt.NewInt(0)
+		me.IntValue = new(0)
 	}
 
 	doubleExpectedValues := []string{"DOUBLE_EQUALS", "NOT_DOUBLE_EQUALS", "DOUBLE_GREATER_THAN", "DOUBLE_GREATER_THAN_OR_EQUALS", "DOUBLE_LESS_THAN", "DOUBLE_LESS_THAN_OR_EQUALS"}

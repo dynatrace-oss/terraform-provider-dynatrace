@@ -279,12 +279,12 @@ func injectScope(scope string, v *extension_config.Settings) {
 	v.Host = ""
 	v.HostGroup = ""
 
-	if strings.HasPrefix(scope, "ag_group-") {
-		v.ActiveGateGroup = strings.TrimPrefix(scope, "ag_group-")
+	if after, ok := strings.CutPrefix(scope, "ag_group-"); ok {
+		v.ActiveGateGroup = after
 		return
 	}
-	if strings.HasPrefix(scope, "management_zone-") {
-		v.ManagementZone = strings.TrimPrefix(scope, "management_zone-")
+	if after, ok := strings.CutPrefix(scope, "management_zone-"); ok {
+		v.ManagementZone = after
 		return
 	}
 	if strings.HasPrefix(scope, "HOST-") {

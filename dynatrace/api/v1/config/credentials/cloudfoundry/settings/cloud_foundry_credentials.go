@@ -25,8 +25,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -151,6 +149,6 @@ func (me *CloudFoundryCredentials) UnmarshalJSON(data []byte) error {
 const credsNotProvided = "REST API didn't provide credential data"
 
 func (me *CloudFoundryCredentials) FillDemoValues() []string {
-	me.Password = opt.NewString("################")
+	me.Password = new("################")
 	return []string{credsNotProvided}
 }

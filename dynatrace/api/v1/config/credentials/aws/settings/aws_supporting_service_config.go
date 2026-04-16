@@ -19,6 +19,7 @@ package aws
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -81,9 +82,7 @@ func (assc *AWSSupportingServiceConfig) UnmarshalJSON(data []byte) error {
 func (assc *AWSSupportingServiceConfig) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(assc.Unknowns) > 0 {
-		for k, v := range assc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, assc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(assc.Name)

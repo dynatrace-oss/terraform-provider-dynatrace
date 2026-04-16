@@ -20,6 +20,7 @@ package v2bindings
 import (
 	"context"
 	"fmt"
+	"maps"
 	"net/url"
 	"strings"
 
@@ -191,15 +192,11 @@ func (me *BindingServiceClient) resolvePolicies(ctx context.Context, uuid string
 		policy := &bindings.Policy{ID: deductPolicyID(uuid, levelType, levelID, existingPolicies)}
 		if len(policyBinding.Parameters) > 0 {
 			policy.Parameters = map[string]string{}
-			for key, value := range policyBinding.Parameters {
-				policy.Parameters[key] = value
-			}
+			maps.Copy(policy.Parameters, policyBinding.Parameters)
 		}
 		if len(policyBinding.Metadata) > 0 {
 			policy.Metadata = map[string]string{}
-			for key, value := range policyBinding.Metadata {
-				policy.Metadata[key] = value
-			}
+			maps.Copy(policy.Metadata, policyBinding.Metadata)
 		}
 		if len(policyBinding.Boundaries) > 0 {
 			policy.Boundaries = append([]string{}, policyBinding.Boundaries...)

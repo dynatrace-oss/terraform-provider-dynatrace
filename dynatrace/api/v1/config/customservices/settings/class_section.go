@@ -20,8 +20,6 @@ package customservices
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -58,7 +56,7 @@ func (me *ClassSection) MarshalHCL(properties hcl.Properties) error {
 
 func (me *ClassSection) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("name"); ok {
-		me.Name = opt.NewString(value.(string))
+		me.Name = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("match"); ok {
 		me.Match = ClassNameMatcher(value.(string)).Ref()

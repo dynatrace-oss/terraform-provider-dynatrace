@@ -20,8 +20,6 @@ package event
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -192,7 +190,7 @@ func (me *KeyStrokes) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	if me.Credential == nil && me.Masked == nil {
-		me.Masked = opt.NewBool(false)
+		me.Masked = new(false)
 	}
 	if err := decoder.Decode("validate", &me.Validate); err != nil {
 		return err

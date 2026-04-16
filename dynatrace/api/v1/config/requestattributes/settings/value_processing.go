@@ -150,10 +150,10 @@ func (me *ValueProcessing) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("split_at"); ok {
-		me.SplitAt = opt.NewString(value.(string))
+		me.SplitAt = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("trim"); ok {
-		me.Trim = opt.NewBool(value.(bool))
+		me.Trim = new(value.(bool))
 	}
 	if _, ok := decoder.GetOk("value_condition.#"); ok {
 		me.ValueCondition = new(ValueCondition)
@@ -162,7 +162,7 @@ func (me *ValueProcessing) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("value_extractor_regex"); ok {
-		me.ValueExtractorRegex = opt.NewString(value.(string))
+		me.ValueExtractorRegex = new(value.(string))
 	}
 	return nil
 }

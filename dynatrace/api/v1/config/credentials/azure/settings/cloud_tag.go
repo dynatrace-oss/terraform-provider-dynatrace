@@ -19,10 +19,9 @@ package azure
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -57,9 +56,7 @@ func (ct *CloudTag) Schema() map[string]*schema.Schema {
 func (ct *CloudTag) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(ct.Unknowns) > 0 {
-		for k, v := range ct.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, ct.Unknowns)
 	}
 	if ct.Value != nil {
 		rawMessage, err := json.Marshal(ct.Value)
@@ -131,10 +128,10 @@ func (ct *CloudTag) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("value"); ok {
-		ct.Value = opt.NewString(value.(string))
+		ct.Value = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("name"); ok {
-		ct.Name = opt.NewString(value.(string))
+		ct.Name = new(value.(string))
 	}
 	return nil
 }

@@ -20,6 +20,7 @@ package customtags
 import (
 	"context"
 	"encoding/json"
+	"slices"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/common"
@@ -109,13 +110,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		if stateTag.Value != nil && len(*stateTag.Value) == 0 {
 			stateTag.Value = nil
 		}
-		found := false
-		for _, tfTag := range config.Tags {
-			if stateTag.Equals(tfTag) {
-				found = true
-				break
-			}
-		}
+		found := slices.ContainsFunc(config.Tags, stateTag.Equals)
 		if !found {
 			deleteTags = append(deleteTags, stateTag)
 		}

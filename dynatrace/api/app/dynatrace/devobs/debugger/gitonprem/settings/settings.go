@@ -18,7 +18,6 @@
 package gitonprem
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -63,7 +62,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if (me.IncludeCredentials == nil) && (string(me.Provider) == "GitlabOnPrem") {
-		me.IncludeCredentials = opt.NewBool(false)
+		me.IncludeCredentials = new(false)
 	}
 	return nil
 }

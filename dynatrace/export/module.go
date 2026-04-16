@@ -22,10 +22,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"maps"
 	"os"
 	"os/exec"
 	"path"
 	"path/filepath"
+	"slices"
 	"sort"
 	"strings"
 	"sync"
@@ -160,9 +162,7 @@ func (me *Module) DataSource(id string, kind DataSourceKind, excepts ...Resource
 func (me *Module) GetDataSources(dataSources map[string]*DataSource) {
 	me.DataSourceLock.Lock()
 	defer me.DataSourceLock.Unlock()
-	for k, v := range me.DataSources {
-		dataSources[k] = v
-	}
+	maps.Copy(dataSources, me.DataSources)
 }
 
 func (me *Module) SortedDataSources() (result []*DataSource) {
@@ -216,9 +216,7 @@ func (me *Module) GetReferencedResourceTypes() []ResourceType {
 	for resourceType := range resourceTypes {
 		result = append(result, resourceType)
 	}
-	sort.Slice(result, func(i, j int) bool {
-		return result[i] < result[j]
-	})
+	slices.Sort(result)
 	return result
 }
 
@@ -516,9 +514,7 @@ func (me *Module) WriteVariablesFile(logToScreen bool) (err error) {
 			fmt.Println("- " + me.Type)
 		}
 
-		sort.Slice(referencedResourceTypes, func(i, j int) bool {
-			return referencedResourceTypes[i] < referencedResourceTypes[j]
-		})
+		slices.Sort(referencedResourceTypes)
 		for _, resourceType := range referencedResourceTypes {
 			if !me.Environment.Module(resourceType).IsReferencedAsDataSource() {
 				if _, err = variablesFile.WriteString(fmt.Sprintf(`variable "%s" {
@@ -1225,17 +1221,11 @@ func (me *Module) getResourcesPerBundle(resourcesCount int, maxThreads int) bund
 	resourcesPerBundlingMax := 100
 
 	if resourcesCount > resourcesForBundlingMin {
-		resourcesPerBundle = CeilDivide(resourcesCount, bundlingDivisor)
-		if resourcesPerBundle > resourcesPerBundlingMax {
-			resourcesPerBundle = resourcesPerBundlingMax
-		}
+		resourcesPerBundle = min(CeilDivide(resourcesCount, bundlingDivisor), resourcesPerBundlingMax)
 	}
 
 	bundlesCount := CeilDivide(resourcesCount, resourcesPerBundle)
-	splitCount := CeilDivide(resourcesCount, resourcesForSplitModuleMin)
-	if splitCount > splitCountMax {
-		splitCount = splitCountMax
-	}
+	splitCount := min(CeilDivide(resourcesCount, resourcesForSplitModuleMin), splitCountMax)
 
 	if resourcesCount > resourcesForSplitModuleMin {
 		bundlesPerSplitModule = CeilDivide(bundlesCount, splitCount)
@@ -1442,10 +1432,10 @@ type resource struct {
 }
 
 type instance struct {
-	Attributes          attrs         `json:"attributes"`
-	SchemaVersion       int           `json:"schema_version"`
-	SensitiveAttributes []interface{} `json:"sensitive_attributes"`
-	Private             string        `json:"private"`
+	Attributes          attrs  `json:"attributes"`
+	SchemaVersion       int    `json:"schema_version"`
+	SensitiveAttributes []any  `json:"sensitive_attributes"`
+	Private             string `json:"private"`
 }
 type attrs struct {
 	Id string `json:"id"`

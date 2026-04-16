@@ -19,6 +19,7 @@ package alerting
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -101,9 +102,7 @@ func (me *EventTypeFilter) UnmarshalHCL(decoder hcl.Decoder) error {
 func (me *EventTypeFilter) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	if me.CustomEventFilter != nil {
 		rawMessage, err := json.Marshal(me.CustomEventFilter)

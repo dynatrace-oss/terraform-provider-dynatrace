@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -283,7 +281,7 @@ func (me *DataSource) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("parameter_name"); ok {
-		me.ParameterName = opt.NewString(value.(string))
+		me.ParameterName = new(value.(string))
 	}
 	if _, ok := decoder.GetOk("iib_method_node_condition.#"); ok {
 		me.IIBMethodNodeCondition = new(ValueCondition)
@@ -350,7 +348,7 @@ func (me *DataSource) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.ServerVariableTechnology = ServerVariableTechnology(value.(string)).Ref()
 	}
 	if value, ok := decoder.GetOk("span_attribute_key"); ok {
-		me.SpanAttributeKey = opt.NewString(value.(string))
+		me.SpanAttributeKey = new(value.(string))
 	}
 	return nil
 }

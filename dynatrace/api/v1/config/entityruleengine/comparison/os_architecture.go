@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/osarch"
 
@@ -120,9 +121,7 @@ func (oac *OSArchitecture) UnmarshalHCL(decoder hcl.Decoder) error {
 func (oac *OSArchitecture) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(oac.Unknowns) > 0 {
-		for k, v := range oac.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, oac.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(oac.Negate)

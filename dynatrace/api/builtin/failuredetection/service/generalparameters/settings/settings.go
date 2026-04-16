@@ -18,6 +18,8 @@
 package generalparameters
 
 import (
+	"slices"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -33,12 +35,7 @@ func (me *Settings) Name() string {
 }
 
 func stringInSlice(v string, list []string) bool {
-	for _, s := range list {
-		if s == v {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(list, v)
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {

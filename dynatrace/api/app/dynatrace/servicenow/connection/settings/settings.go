@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -120,10 +119,10 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 
 func (me *Settings) FillDemoValues() []string {
 	if me.Password != nil {
-		me.Password = opt.NewString("#######")
+		me.Password = new("#######")
 	}
 	if me.ClientSecret != nil {
-		me.ClientSecret = opt.NewString("#######")
+		me.ClientSecret = new("#######")
 	}
 	return []string{"REST API didn't provide password data"}
 }

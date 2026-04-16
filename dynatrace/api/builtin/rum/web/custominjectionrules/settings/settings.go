@@ -20,7 +20,6 @@ package custominjectionrules
 import (
 	"slices"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -94,10 +93,10 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if (me.HtmlPattern == nil) && (slices.Contains([]string{"BeforeSpecificHtml", "AfterSpecificHtml"}, string(me.Rule))) {
-		me.HtmlPattern = opt.NewString("")
+		me.HtmlPattern = new("")
 	}
 	if (me.UrlPattern == nil) && (slices.Contains([]string{"Equals", "Starts", "Ends", "Contains"}, string(me.Operator))) {
-		me.UrlPattern = opt.NewString("")
+		me.UrlPattern = new("")
 	}
 	return nil
 }

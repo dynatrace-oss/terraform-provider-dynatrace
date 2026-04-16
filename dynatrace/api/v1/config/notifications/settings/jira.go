@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -107,13 +105,13 @@ func (me *JiraConfig) Schema() map[string]*schema.Schema {
 
 func (me *JiraConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("jira.0.password"); ok && len(value.(string)) > 0 {
-		me.Password = opt.NewString(value.(string))
+		me.Password = new(value.(string))
 	}
 	return nil
 }
 
 func (me *JiraConfig) FillDemoValues() []string {
-	me.Password = opt.NewString("#######")
+	me.Password = new("#######")
 	return []string{"The REST API didn't provide the credentials"}
 }
 
@@ -189,7 +187,7 @@ func (me *JiraConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.IssueType = value.(string)
 	}
 	if value, ok := decoder.GetOk("password"); ok {
-		me.Password = opt.NewString(value.(string))
+		me.Password = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("project_key"); ok {
 		me.ProjectKey = value.(string)

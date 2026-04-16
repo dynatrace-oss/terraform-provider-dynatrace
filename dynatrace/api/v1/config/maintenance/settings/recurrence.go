@@ -104,7 +104,7 @@ func (me *Recurrence) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("day_of_month"); ok {
-		me.DayOfMonth = opt.NewInt32(int32(value.(int)))
+		me.DayOfMonth = new(int32(value.(int)))
 	}
 	if value, ok := decoder.GetOk("day_of_week"); ok {
 		me.DayOfWeek = DayOfWeek(value.(string)).Ref()

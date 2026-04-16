@@ -44,14 +44,14 @@ func (me *AvailabilityMonitoring) Schema() map[string]*schema.Schema {
 }
 
 func (me *AvailabilityMonitoring) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]interface{}{
+	return properties.EncodeAll(map[string]any{
 		"method":            me.Method,
 		"minimum_threshold": me.MinimumThreshold,
 	})
 }
 
 func (me *AvailabilityMonitoring) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]interface{}{
+	return decoder.DecodeAll(map[string]any{
 		"method":            &me.Method,
 		"minimum_threshold": &me.MinimumThreshold,
 	})

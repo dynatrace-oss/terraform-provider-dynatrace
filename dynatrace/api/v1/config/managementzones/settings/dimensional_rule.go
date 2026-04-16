@@ -19,6 +19,7 @@ package managementzones
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -98,7 +99,7 @@ func (me *DimensionalRule) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("enabled"); ok {
-		me.Enabled = opt.NewBool(value.(bool))
+		me.Enabled = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("applies_to"); ok {
 		me.AppliesTo = Application(value.(string))
@@ -119,9 +120,7 @@ func (me *DimensionalRule) UnmarshalHCL(decoder hcl.Decoder) error {
 func (me *DimensionalRule) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	if opt.Bool(me.Enabled) {
 		rawMessage, err := json.Marshal(me.Enabled)

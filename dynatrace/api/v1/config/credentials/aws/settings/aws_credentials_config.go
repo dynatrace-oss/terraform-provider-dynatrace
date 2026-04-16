@@ -19,11 +19,11 @@ package aws
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -124,9 +124,7 @@ func (awscc *AWSCredentialsConfig) Schema() map[string]*schema.Schema {
 func (awscc *AWSCredentialsConfig) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(awscc.Unknowns) > 0 {
-		for k, v := range awscc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, awscc.Unknowns)
 	}
 	delete(m, "metadata")
 	delete(m, "id")
@@ -257,7 +255,7 @@ func (awscc *AWSCredentialsConfig) PrepareMarshalHCL(decoder hcl.Decoder) error 
 		if awscc.AuthenticationData.KeyBasedAuthentication != nil {
 			if awscc.AuthenticationData.KeyBasedAuthentication.SecretKey == nil {
 				if secretKey, ok := decoder.GetOk("authentication_data.0.secret_key"); ok && len(secretKey.(string)) > 0 {
-					awscc.AuthenticationData.KeyBasedAuthentication.SecretKey = opt.NewString(secretKey.(string))
+					awscc.AuthenticationData.KeyBasedAuthentication.SecretKey = new(secretKey.(string))
 				}
 			}
 		}
@@ -381,7 +379,7 @@ const credsNotProvided = "REST API didn't provide credential data"
 
 func (me *AWSCredentialsConfig) FillDemoValues() []string {
 	if me.AuthenticationData != nil && me.AuthenticationData.KeyBasedAuthentication != nil {
-		me.AuthenticationData.KeyBasedAuthentication.SecretKey = opt.NewString("################")
+		me.AuthenticationData.KeyBasedAuthentication.SecretKey = new("################")
 		return []string{credsNotProvided}
 	}
 	return nil

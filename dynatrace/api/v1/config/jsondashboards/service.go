@@ -113,8 +113,8 @@ func ValidatePreset(ctx context.Context, client rest.Client, payload *DashboardP
 				violationMessage := violation.Message
 				if strings.HasPrefix(violationMessage, userGroupViolationMessagePrefix) {
 					violationMessage = violationMessage[len(userGroupViolationMessagePrefix):]
-					idx := strings.Index(violationMessage, ",")
-					if idx < 0 {
+					found := strings.Contains(violationMessage, ",")
+					if !found {
 						return false, errors.New("no groupID found")
 					}
 					parts := strings.Split(violationMessage, ", ")

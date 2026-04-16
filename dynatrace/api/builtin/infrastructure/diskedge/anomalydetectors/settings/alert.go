@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -118,16 +117,16 @@ func (me *Alert) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Alert) HandlePreconditions() error {
 	if (me.ThresholdMebibytes == nil) && (slices.Contains([]string{"AVAILABLE_DISK_SPACE_MEBIBYTES_BELOW"}, string(me.Trigger))) {
-		me.ThresholdMebibytes = opt.NewFloat64(0.0)
+		me.ThresholdMebibytes = new(0.0)
 	}
 	if (me.ThresholdMilliseconds == nil) && (slices.Contains([]string{"READ_TIME_EXCEEDING", "WRITE_TIME_EXCEEDING"}, string(me.Trigger))) {
-		me.ThresholdMilliseconds = opt.NewFloat64(0.0)
+		me.ThresholdMilliseconds = new(0.0)
 	}
 	if (me.ThresholdNumber == nil) && (slices.Contains([]string{"AVAILABLE_INODES_NUMBER_BELOW"}, string(me.Trigger))) {
-		me.ThresholdNumber = opt.NewFloat64(0.0)
+		me.ThresholdNumber = new(0.0)
 	}
 	if (me.ThresholdPercent == nil) && (slices.Contains([]string{"AVAILABLE_DISK_SPACE_PERCENT_BELOW", "AVAILABLE_INODES_PERCENT_BELOW"}, string(me.Trigger))) {
-		me.ThresholdPercent = opt.NewFloat64(0.0)
+		me.ThresholdPercent = new(0.0)
 	}
 	if (me.SampleCountThresholds == nil) && (slices.Contains([]string{"AVAILABLE_INODES_NUMBER_BELOW", "AVAILABLE_INODES_PERCENT_BELOW", "AVAILABLE_DISK_SPACE_PERCENT_BELOW", "AVAILABLE_DISK_SPACE_MEBIBYTES_BELOW", "READ_TIME_EXCEEDING", "WRITE_TIME_EXCEEDING"}, string(me.Trigger))) {
 		return fmt.Errorf("'sample_count_thresholds' must be specified if 'trigger' is set to '%v'", me.Trigger)

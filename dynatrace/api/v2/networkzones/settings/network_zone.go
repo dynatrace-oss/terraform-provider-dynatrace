@@ -18,7 +18,6 @@
 package networkzones
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/google/uuid"
 
@@ -98,7 +97,7 @@ func (me *NetworkZone) Schema() map[string]*schema.Schema {
 
 func (me *NetworkZone) PrepareMarshalHCL(decoder hcl.Decoder) error {
 	if name, ok := decoder.GetOk("name"); ok && len(name.(string)) > 0 {
-		me.NetworkZoneName = opt.NewString(name.(string))
+		me.NetworkZoneName = new(name.(string))
 	}
 	return nil
 }

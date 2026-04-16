@@ -19,12 +19,11 @@ package dashboards
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -89,7 +88,7 @@ func (me *DashboardFilter) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 
 	if value, ok := decoder.GetOk("timeframe"); ok {
-		me.Timeframe = opt.NewString(value.(string))
+		me.Timeframe = new(value.(string))
 	}
 
 	if _, ok := decoder.GetOk("management_zone.#"); ok {
@@ -104,9 +103,7 @@ func (me *DashboardFilter) UnmarshalHCL(decoder hcl.Decoder) error {
 func (me *DashboardFilter) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	if me.Timeframe != nil {
 		rawMessage, err := json.Marshal(me.Timeframe)

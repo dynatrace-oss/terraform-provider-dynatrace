@@ -20,7 +20,6 @@ package externalwebservice
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -64,7 +63,7 @@ func (me *IdContributorsType) MarshalHCL(properties hcl.Properties) error {
 
 func (me *IdContributorsType) HandlePreconditions() error {
 	if me.PortForServiceID == nil && !me.DetectAsWebRequestService {
-		me.PortForServiceID = opt.NewBool(false)
+		me.PortForServiceID = new(false)
 	}
 	if me.UrlPath == nil && !me.DetectAsWebRequestService {
 		return fmt.Errorf("'url_path' must be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)

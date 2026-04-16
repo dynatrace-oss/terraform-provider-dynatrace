@@ -19,6 +19,7 @@ package autotags
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -98,13 +99,13 @@ func (me *EntitySelectorBasedRule) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Selector = value.(string)
 	}
 	if value, ok := decoder.GetOk("enabled"); ok {
-		me.Enabled = opt.NewBool(value.(bool))
+		me.Enabled = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("value_format"); ok {
-		me.ValueFormat = opt.NewString(value.(string))
+		me.ValueFormat = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("normalization"); ok {
-		me.Normalization = opt.NewString(value.(string))
+		me.Normalization = new(value.(string))
 	} else if me.Unknowns != nil {
 		if value, ok := me.Unknowns["normalization"]; ok {
 			normalization := ""
@@ -127,9 +128,7 @@ func (me *EntitySelectorBasedRule) UnmarshalHCL(decoder hcl.Decoder) error {
 func (me *EntitySelectorBasedRule) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(me.Selector)

@@ -19,10 +19,9 @@ package dashboards
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -96,10 +95,10 @@ func (me *EntityRef) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.ID = value.(string)
 	}
 	if value, ok := decoder.GetOk("name"); ok {
-		me.Name = opt.NewString(value.(string))
+		me.Name = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("description"); ok {
-		me.Description = opt.NewString(value.(string))
+		me.Description = new(value.(string))
 	}
 	return nil
 }
@@ -107,9 +106,7 @@ func (me *EntityRef) UnmarshalHCL(decoder hcl.Decoder) error {
 func (me *EntityRef) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(me.ID)

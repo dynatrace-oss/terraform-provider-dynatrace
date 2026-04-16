@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -83,13 +81,13 @@ func (me *SlackConfig) Schema() map[string]*schema.Schema {
 
 func (me *SlackConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("slack.0.url"); ok && len(value.(string)) > 0 {
-		me.URL = opt.NewString(value.(string))
+		me.URL = new(value.(string))
 	}
 	return nil
 }
 
 func (me *SlackConfig) FillDemoValues() []string {
-	me.URL = opt.NewString("https://www.google.at/f75e68ef-aca7-3a07-9c21-94eb00ecfc56")
+	me.URL = new("https://www.google.at/f75e68ef-aca7-3a07-9c21-94eb00ecfc56")
 	return []string{"The REST API didn't provide the credentials"}
 }
 
@@ -152,7 +150,7 @@ func (me *SlackConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Title = value.(string)
 	}
 	if value, ok := decoder.GetOk("url"); ok {
-		me.URL = opt.NewString(value.(string))
+		me.URL = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("channel"); ok {
 		me.Channel = value.(string)

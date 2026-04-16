@@ -91,7 +91,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	var err error
 	attempts := 30
 
-	for i := 0; i < attempts; i++ {
+	for range attempts {
 		if err = me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/mobile/%s", url.PathEscape(id)), 204, 200).Finish(); err != nil {
 			if strings.Contains(err.Error(), fmt.Sprintf("Metric with key \"%s\" does not exist", id)) {
 				return nil

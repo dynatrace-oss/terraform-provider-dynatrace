@@ -19,12 +19,11 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/indexed_string"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -113,7 +112,7 @@ func (isc *IndexedString) UnmarshalHCL(decoder hcl.Decoder) error {
 		isc.Operator = indexed_string.Operator(value.(string))
 	}
 	if value, ok := decoder.GetOk("value"); ok {
-		isc.Value = opt.NewString(value.(string))
+		isc.Value = new(value.(string))
 	}
 	return nil
 }
@@ -121,9 +120,7 @@ func (isc *IndexedString) UnmarshalHCL(decoder hcl.Decoder) error {
 func (isc *IndexedString) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(isc.Unknowns) > 0 {
-		for k, v := range isc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, isc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(isc.Negate)

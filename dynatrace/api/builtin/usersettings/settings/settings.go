@@ -20,7 +20,6 @@ package usersettings
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -108,7 +107,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if (me.Timezone == nil) && (!me.AutoTimezone) {
-		me.Timezone = opt.NewString("")
+		me.Timezone = new("")
 	}
 	if (me.Language == nil) && (!me.AutoLanguage) {
 		return fmt.Errorf("'language' must be specified if 'auto_language' is set to '%v'", me.AutoLanguage)

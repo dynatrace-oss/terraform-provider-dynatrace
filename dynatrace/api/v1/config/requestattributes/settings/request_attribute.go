@@ -159,10 +159,10 @@ func (me *RequestAttribute) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Name = value.(string)
 	}
 	if value, ok := decoder.GetOk("skip_personal_data_masking"); ok {
-		me.SkipPersonalDataMasking = opt.NewBool(value.(bool))
+		me.SkipPersonalDataMasking = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("confidential"); ok {
-		me.Confidential = opt.NewBool(value.(bool))
+		me.Confidential = new(value.(bool))
 	}
 	if result, ok := decoder.GetOk("data_sources.#"); ok {
 		me.DataSources = []*DataSource{}

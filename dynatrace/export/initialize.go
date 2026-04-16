@@ -23,6 +23,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"slices"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -58,13 +59,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 	resArgs := map[string][]string{}
 	if flags.Exclude {
 		for resourceType := range AllResources {
-			excludeListed := false
-			for _, excludeListedResourceType := range GetExcludeListedResources() {
-				if resourceType == excludeListedResourceType {
-					excludeListed = true
-					break
-				}
-			}
+			excludeListed := slices.Contains(GetExcludeListedResources(), resourceType)
 			if !excludeListed {
 				resArgs[string(resourceType)] = []string{}
 			}
@@ -113,13 +108,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		for _, idx := range effectiveTailArgs {
 			if idx == "*" {
 				for resourceType := range AllResources {
-					excludeListed := false
-					for _, excludeListedResourceType := range GetExcludeListedResources() {
-						if resourceType == excludeListedResourceType {
-							excludeListed = true
-							break
-						}
-					}
+					excludeListed := slices.Contains(GetExcludeListedResources(), resourceType)
 					if !excludeListed {
 						resArgs[string(resourceType)] = nil
 					}
@@ -152,13 +141,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 
 		if len(resArgs) == 0 {
 			for resourceType := range AllResources {
-				excludeListed := false
-				for _, excludeListedResourceType := range GetExcludeListedResources() {
-					if resourceType == excludeListedResourceType {
-						excludeListed = true
-						break
-					}
-				}
+				excludeListed := slices.Contains(GetExcludeListedResources(), resourceType)
 				if !excludeListed {
 					resArgs[string(resourceType)] = []string{}
 				}

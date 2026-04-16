@@ -19,6 +19,7 @@ package dashboards
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -162,7 +163,7 @@ func (me *CustomFilterChartSeriesConfig) UnmarshalHCL(decoder hcl.Decoder) error
 		me.Aggregation = Aggregation(value.(string))
 	}
 	if value, ok := decoder.GetOk("percentile"); ok {
-		me.Percentile = opt.NewInt64(int64(value.(int)))
+		me.Percentile = new(int64(value.(int)))
 	}
 	if value, ok := decoder.GetOk("type"); ok {
 		me.Type = CustomFilterChartSeriesConfigType(value.(string))
@@ -195,9 +196,7 @@ func (me *CustomFilterChartSeriesConfig) UnmarshalHCL(decoder hcl.Decoder) error
 func (me *CustomFilterChartSeriesConfig) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(me.Metric)

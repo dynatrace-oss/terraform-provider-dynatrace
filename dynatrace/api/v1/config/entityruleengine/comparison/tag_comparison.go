@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/tag"
 
@@ -126,9 +127,7 @@ func (tc *Tag) UnmarshalHCL(decoder hcl.Decoder) error {
 func (tc *Tag) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(tc.Unknowns) > 0 {
-		for k, v := range tc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, tc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(tc.Negate)

@@ -19,6 +19,7 @@ package dashboards
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -72,7 +73,7 @@ func (me *UserSessionQueryTileConfiguration) UnmarshalHCL(decoder hcl.Decoder) e
 		}
 	}
 	if value, ok := decoder.GetOk("has_axis_bucketing"); ok {
-		me.HasAxisBucketing = opt.NewBool(value.(bool))
+		me.HasAxisBucketing = new(value.(bool))
 	}
 	return nil
 }
@@ -80,9 +81,7 @@ func (me *UserSessionQueryTileConfiguration) UnmarshalHCL(decoder hcl.Decoder) e
 func (me *UserSessionQueryTileConfiguration) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	if me.HasAxisBucketing != nil {
 		rawMessage, err := json.Marshal(me.HasAxisBucketing)

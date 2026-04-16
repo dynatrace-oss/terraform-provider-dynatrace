@@ -20,7 +20,6 @@ package notificationintegration
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -172,10 +171,10 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if (me.AttackCandidateBasedAlertingProfile == nil) && (string(me.Trigger) == "ATTACK_CANDIDATE") {
-		me.AttackCandidateBasedAlertingProfile = opt.NewString("")
+		me.AttackCandidateBasedAlertingProfile = new("")
 	}
 	if (me.SecurityProblemBasedAlertingProfile == nil) && (string(me.Trigger) == "SECURITY_PROBLEM") {
-		me.SecurityProblemBasedAlertingProfile = opt.NewString("")
+		me.SecurityProblemBasedAlertingProfile = new("")
 	}
 	if (me.AttackCandidateBasedEmailPayload == nil) && ((string(me.Type) == "EMAIL") && (string(me.Trigger) == "ATTACK_CANDIDATE")) {
 		return fmt.Errorf("'attack_candidate_based_email_payload' must be specified if 'type' is set to '%v' and 'trigger' is set to '%v'", me.Type, me.Trigger)

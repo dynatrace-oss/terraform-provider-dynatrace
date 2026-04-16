@@ -126,7 +126,7 @@ func (me *DDUPool) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *DDUPool) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]interface{}{
+	return decoder.DecodeAll(map[string]any{
 		"metrics":        &me.MetricsPool,
 		"log_monitoring": &me.LogMonitoringPool,
 		"serverless":     &me.ServerlessPool,

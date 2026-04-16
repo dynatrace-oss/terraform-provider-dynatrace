@@ -19,11 +19,10 @@ package managementzones
 
 import (
 	"encoding/json"
+	"maps"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -84,7 +83,7 @@ func (mz *ManagementZone) Schema() map[string]*schema.Schema {
 			Description: "A list of entity-selector based rules for management zone usage. If several rules are specified, the `or` logic applies",
 			Optional:    true,
 			MinItems:    1,
-			Set: func(i interface{}) int {
+			Set: func(i any) int {
 				if m, mok := i.(map[string]any); mok {
 					for k, v := range m {
 						if vs, ok := v.(string); ok {
@@ -153,7 +152,7 @@ func (mz *ManagementZone) UnmarshalHCL(decoder hcl.Decoder) error {
 		mz.Name = value.(string)
 	}
 	if value, ok := decoder.GetOk("description"); ok {
-		mz.Description = opt.NewString(value.(string))
+		mz.Description = new(value.(string))
 	}
 	if err := decoder.DecodeSlice("rules", &mz.Rules); err != nil {
 		return err
@@ -181,9 +180,7 @@ func (mz *ManagementZone) UnmarshalHCL(decoder hcl.Decoder) error {
 func (mz *ManagementZone) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(mz.Unknowns) > 0 {
-		for k, v := range mz.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, mz.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(mz.Name)

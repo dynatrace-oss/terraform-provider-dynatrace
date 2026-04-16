@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/azure_sku"
 
@@ -119,9 +120,7 @@ func (asc *AzureSku) UnmarshalHCL(decoder hcl.Decoder) error {
 func (asc *AzureSku) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(asc.Unknowns) > 0 {
-		for k, v := range asc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, asc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(asc.Negate)

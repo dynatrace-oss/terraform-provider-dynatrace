@@ -66,7 +66,7 @@ func (me *service) Create(ctx context.Context, v *appdetection.Settings) (*api.S
 	var err error
 	checkedAppExists := false
 	maxIterations := 50
-	for iteration := 0; iteration < maxIterations; iteration++ {
+	for iteration := range maxIterations {
 		stub, err = me.service.Create(ctx, v)
 		if err == nil {
 			break

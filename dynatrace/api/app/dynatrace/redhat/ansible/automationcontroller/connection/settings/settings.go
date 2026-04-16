@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -86,7 +85,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 
 func (me *Settings) FillDemoValues() []string {
 	if me.Token != nil {
-		me.Token = opt.NewString("#######")
+		me.Token = new("#######")
 	}
 	return []string{"REST API didn't provide token data"}
 }

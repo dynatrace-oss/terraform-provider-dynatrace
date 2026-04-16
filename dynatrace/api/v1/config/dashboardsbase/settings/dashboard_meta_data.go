@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -65,7 +63,7 @@ func (me *DashboardMetadataBase) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Name = value.(string)
 	}
 	if value, ok := decoder.GetOk("owner"); ok {
-		me.Owner = opt.NewString(value.(string))
+		me.Owner = new(value.(string))
 	}
 	return nil
 }

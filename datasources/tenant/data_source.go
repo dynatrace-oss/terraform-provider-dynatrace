@@ -51,13 +51,13 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 	if strings.Contains(creds.URL, "/e/") {
 		idx := strings.Index(creds.URL, "/e/")
 		tenant = strings.TrimSuffix(strings.TrimPrefix(creds.URL[idx:], "/e/"), "/")
-	} else if strings.HasPrefix(creds.URL, "http://") {
-		tenant = strings.TrimPrefix(creds.URL, "http://")
+	} else if after, ok := strings.CutPrefix(creds.URL, "http://"); ok {
+		tenant = after
 		if idx := strings.Index(tenant, "."); idx != -1 {
 			tenant = tenant[:idx]
 		}
-	} else if strings.HasPrefix(creds.URL, "https://") {
-		tenant = strings.TrimPrefix(creds.URL, "https://")
+	} else if after, ok := strings.CutPrefix(creds.URL, "https://"); ok {
+		tenant = after
 		if idx := strings.Index(tenant, "."); idx != -1 {
 			tenant = tenant[:idx]
 		}

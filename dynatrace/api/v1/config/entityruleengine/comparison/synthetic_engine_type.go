@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/synthetic_engine_type"
 
@@ -119,9 +120,7 @@ func (setc *SyntheticEngineType) UnmarshalHCL(decoder hcl.Decoder) error {
 func (setc *SyntheticEngineType) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(setc.Unknowns) > 0 {
-		for k, v := range setc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, setc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(setc.Negate)
