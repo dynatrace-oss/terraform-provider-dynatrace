@@ -43,15 +43,8 @@ func (me *CustomProperties) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeSlice("custom_property", me); err != nil {
 		return err
 	}
-	// https://github.com/hashicorp/terraform-plugin-sdk/issues/895
-	// Only known workaround is to ignore these blocks
-	customProperties := CustomProperties{}
-	for _, property := range *me {
-		if property.Name != "" || property.Value != "" {
-			customProperties = append(customProperties, property)
-		}
-	}
-	*me = customProperties
+
+	*me = hcl.FilterEmpty(*me, CustomProperty{})
 	return nil
 }
 
