@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -83,13 +81,13 @@ func (me *PagerDutyConfig) Schema() map[string]*schema.Schema {
 
 func (me *PagerDutyConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("pager_duty.0.service_api_key"); ok && len(value.(string)) > 0 {
-		me.ServiceAPIKey = opt.NewString(value.(string))
+		me.ServiceAPIKey = new(value.(string))
 	}
 	return nil
 }
 
 func (me *PagerDutyConfig) FillDemoValues() []string {
-	me.ServiceAPIKey = opt.NewString("#######")
+	me.ServiceAPIKey = new("#######")
 	return []string{"The REST API didn't provide the credentials"}
 }
 
@@ -151,7 +149,7 @@ func (me *PagerDutyConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Account = value.(string)
 	}
 	if value, ok := decoder.GetOk("service_api_key"); ok {
-		me.ServiceAPIKey = opt.NewString(value.(string))
+		me.ServiceAPIKey = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("service_name"); ok {
 		me.ServiceName = value.(string)

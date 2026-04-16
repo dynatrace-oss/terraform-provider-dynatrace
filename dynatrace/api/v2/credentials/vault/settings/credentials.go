@@ -27,8 +27,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -269,7 +267,7 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Name = value.(string)
 	}
 	if value, ok := decoder.GetOk("description"); ok {
-		me.Description = opt.NewString(value.(string))
+		me.Description = new(value.(string))
 		if len(*me.Description) == 0 {
 			me.Description = nil
 		}
@@ -284,19 +282,19 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	if value, ok := decoder.GetOk("token"); ok {
-		me.Token = opt.NewString(value.(string))
+		me.Token = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("password"); ok {
-		me.Password = opt.NewString(value.(string))
+		me.Password = new(value.(string))
 	}
 	if me.Password != nil && *me.Password == "--empty--" {
-		me.Password = opt.NewString("")
+		me.Password = new("")
 	}
 	if value, ok := decoder.GetOk("username"); ok {
-		me.Username = opt.NewString(value.(string))
+		me.Username = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("certificate"); ok {
-		me.Certificate = opt.NewString(value.(string))
+		me.Certificate = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("format"); ok {
 		me.CertificateFormat = CertificateFormat(value.(string)).Ref()
@@ -308,7 +306,7 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Type = CredentialsTypes.Token
 	} else if me.Certificate != nil || me.CertificateFormat != nil {
 		if me.Password == nil {
-			me.Password = opt.NewString("")
+			me.Password = new("")
 		}
 		if value, ok := decoder.GetOk("public"); ok && value.(bool) {
 			me.Type = CredentialsTypes.PublicCertificate
@@ -323,7 +321,7 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("allow_contextless_requests"); ok {
-		me.AllowContextlessRequests = opt.NewBool(value.(bool))
+		me.AllowContextlessRequests = new(value.(bool))
 	}
 	me.AllowedEntities = AllowedEntities{}
 	if _, ok := decoder.GetOk("allowed_entities.#"); ok {
@@ -349,16 +347,16 @@ const credsNotProvided = "REST API didn't provide credential data"
 func (me *Credentials) FillDemoValues() []string {
 	switch me.Type {
 	case CredentialsTypes.Certificate, CredentialsTypes.PublicCertificate:
-		me.Certificate = opt.NewString("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")
+		me.Certificate = new("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")
 		me.CertificateFormat = CertificateFormats.Pkcs12.Ref()
-		me.Password = opt.NewString("winona00")
+		me.Password = new("winona00")
 		return []string{credsNotProvided}
 	case CredentialsTypes.Token:
-		me.Token = opt.NewString("################")
+		me.Token = new("################")
 		return []string{credsNotProvided}
 	case CredentialsTypes.UsernamePassword:
-		me.Username = opt.NewString("################")
-		me.Password = opt.NewString("################")
+		me.Username = new("################")
+		me.Password = new("################")
 		return []string{credsNotProvided}
 	}
 	return nil

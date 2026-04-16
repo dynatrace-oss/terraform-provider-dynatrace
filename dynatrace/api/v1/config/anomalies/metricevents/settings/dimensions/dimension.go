@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -111,13 +109,13 @@ func (me *BaseDimension) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("key"); ok {
-		me.Key = opt.NewString(value.(string))
+		me.Key = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("name"); ok {
-		me.Name = opt.NewString(value.(string))
+		me.Name = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("index"); ok {
-		me.Index = opt.NewInt(value.(int))
+		me.Index = new(value.(int))
 	}
 	if value, ok := decoder.GetOk("type"); ok {
 		me.FilterType = FilterType(value.(string))

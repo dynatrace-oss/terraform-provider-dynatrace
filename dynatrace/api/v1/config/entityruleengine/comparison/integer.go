@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/integer"
 
@@ -113,7 +114,7 @@ func (ic *Integer) UnmarshalHCL(decoder hcl.Decoder) error {
 		ic.Operator = integer.Operator(value.(string))
 	}
 	if value, ok := decoder.GetOk("value"); ok {
-		ic.Value = opt.NewInt32(int32(value.(int)))
+		ic.Value = new(int32(value.(int)))
 	}
 	return nil
 }
@@ -121,9 +122,7 @@ func (ic *Integer) UnmarshalHCL(decoder hcl.Decoder) error {
 func (ic *Integer) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(ic.Unknowns) > 0 {
-		for k, v := range ic.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, ic.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(ic.Negate)

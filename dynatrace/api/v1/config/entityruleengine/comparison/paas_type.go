@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	paastype "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/paas_type"
 
@@ -119,9 +120,7 @@ func (ptc *PaasType) UnmarshalHCL(decoder hcl.Decoder) error {
 func (ptc *PaasType) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(ptc.Unknowns) > 0 {
-		for k, v := range ptc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, ptc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(ptc.Negate)

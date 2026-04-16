@@ -20,7 +20,6 @@ package featureflags
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -75,10 +74,10 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if (me.BooleanValue == nil) && (string(me.Type) == "boolean") {
-		me.BooleanValue = opt.NewBool(false)
+		me.BooleanValue = new(false)
 	}
 	if (me.NumberValue == nil) && (string(me.Type) == "number") {
-		me.NumberValue = opt.NewInt(0)
+		me.NumberValue = new(0)
 	}
 	if (me.StringValue == nil) && (string(me.Type) == "string") {
 		return fmt.Errorf("'string_value' must be specified if 'type' is set to '%v'", me.Type)

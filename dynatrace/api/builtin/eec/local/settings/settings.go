@@ -18,7 +18,6 @@
 package local
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -86,10 +85,10 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"statsd_active":       &me.StatsdActive,
 	})
 	if me.IngestActive == nil && me.Enabled {
-		me.IngestActive = opt.NewBool(false)
+		me.IngestActive = new(false)
 	}
 	if me.StatsdActive == nil && me.Enabled {
-		me.StatsdActive = opt.NewBool(false)
+		me.StatsdActive = new(false)
 	}
 	return err
 }

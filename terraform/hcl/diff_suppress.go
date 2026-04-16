@@ -248,7 +248,7 @@ func DeepEqual(a any, b any, path string) bool {
 			return false
 		}
 		m := map[int]bool{}
-		for i := 0; i < len(aTyped); i++ {
+		for i := range aTyped {
 			m[i] = false
 		}
 		for ai, aElem := range aTyped {

@@ -20,8 +20,9 @@ package testbase
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -137,7 +138,7 @@ func LoadHTTP(url string, token string) (map[string]any, error) {
 	}
 	defer response.Body.Close()
 
-	if data, err = ioutil.ReadAll(response.Body); err != nil {
+	if data, err = io.ReadAll(response.Body); err != nil {
 		return nil, err
 	}
 
@@ -151,7 +152,7 @@ func LoadHTTP(url string, token string) (map[string]any, error) {
 func LoadLocal(file string) (map[string]any, error) {
 	var err error
 	var data []byte
-	if data, err = ioutil.ReadFile(file); err != nil {
+	if data, err = os.ReadFile(file); err != nil {
 		return nil, err
 	}
 	m := map[string]any{}
@@ -164,7 +165,7 @@ func LoadLocal(file string) (map[string]any, error) {
 func LoadLocalN(file string, n string) (map[string]any, error) {
 	var err error
 	var data []byte
-	if data, err = ioutil.ReadFile(file); err != nil {
+	if data, err = os.ReadFile(file); err != nil {
 		return nil, err
 	}
 	sData := string(data)

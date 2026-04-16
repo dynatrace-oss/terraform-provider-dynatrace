@@ -19,10 +19,9 @@ package azure
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -83,9 +82,7 @@ func (amm *AzureMonitoredMetric) UnmarshalJSON(data []byte) error {
 func (amm *AzureMonitoredMetric) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(amm.Unknowns) > 0 {
-		for k, v := range amm.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, amm.Unknowns)
 	}
 	if amm.Name != nil {
 		rawMessage, err := json.Marshal(amm.Name)
@@ -132,7 +129,7 @@ func (amm *AzureMonitoredMetric) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("name"); ok {
-		amm.Name = opt.NewString(value.(string))
+		amm.Name = new(value.(string))
 	}
 	if err := decoder.Decode("dimensions", &amm.Dimensions); err != nil {
 		return err

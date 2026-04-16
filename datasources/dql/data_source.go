@@ -27,7 +27,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
@@ -147,31 +146,31 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		dqlRequest.Query = processHeredocString(v.(string))
 	}
 	if v, ok := d.GetOk("default_timeframe_start"); ok && len(v.(string)) > 0 {
-		dqlRequest.DefaultTimeframeStart = opt.NewString(v.(string))
+		dqlRequest.DefaultTimeframeStart = new(v.(string))
 	}
 	if v, ok := d.GetOk("default_timeframe_end"); ok && len(v.(string)) > 0 {
-		dqlRequest.DefaultTimeframeEnd = opt.NewString(v.(string))
+		dqlRequest.DefaultTimeframeEnd = new(v.(string))
 	}
 	if v, ok := d.GetOk("timezone"); ok && len(v.(string)) > 0 {
-		dqlRequest.Timezone = opt.NewString(v.(string))
+		dqlRequest.Timezone = new(v.(string))
 	}
 	if v, ok := d.GetOk("locale"); ok && len(v.(string)) > 0 {
-		dqlRequest.Locale = opt.NewString(v.(string))
+		dqlRequest.Locale = new(v.(string))
 	}
 	if v, ok := d.GetOk("max_result_records"); ok {
-		dqlRequest.MaxResultRecords = opt.NewInt(v.(int))
+		dqlRequest.MaxResultRecords = new(v.(int))
 	}
 	if v, ok := d.GetOk("max_result_bytes"); ok {
-		dqlRequest.MaxResultBytes = opt.NewInt(v.(int))
+		dqlRequest.MaxResultBytes = new(v.(int))
 	}
 	if v, ok := d.GetOk("fetch_timeout_seconds"); ok {
-		dqlRequest.FetchTimeoutSeconds = opt.NewInt(v.(int))
+		dqlRequest.FetchTimeoutSeconds = new(v.(int))
 	}
 	if v, ok := d.GetOk("default_sampling_ratio"); ok {
-		dqlRequest.DefaultSamplingRatio = opt.NewInt(v.(int))
+		dqlRequest.DefaultSamplingRatio = new(v.(int))
 	}
 	if v, ok := d.GetOk("default_scan_limit_gbytes"); ok {
-		dqlRequest.DefaultScanLimitGbytes = opt.NewInt(v.(int))
+		dqlRequest.DefaultScanLimitGbytes = new(v.(int))
 	}
 
 	defer func(dqlRequest DQLRequest) {

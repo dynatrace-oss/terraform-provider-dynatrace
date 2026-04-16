@@ -20,8 +20,6 @@ package traffic
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -61,7 +59,7 @@ func (me *SpikeDetection) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Enabled = value.(bool)
 	}
 	if value, ok := decoder.GetOk("percent"); ok {
-		me.TrafficSpikePercent = opt.NewInt32(int32(value.(int)))
+		me.TrafficSpikePercent = new(int32(value.(int)))
 	}
 
 	return nil

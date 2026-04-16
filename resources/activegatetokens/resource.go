@@ -44,7 +44,7 @@ func Resource() *schema.Resource {
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
-func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	config := new(settings.Settings)
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
@@ -75,7 +75,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 }
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
-func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	config := new(settings.Settings)
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
@@ -93,7 +93,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 }
 
 // Read queries the Dynatrace Server for the configuration
-func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	creds, err := cfg.Credentials(m, cfg.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
@@ -118,7 +118,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagn
 }
 
 // Delete the configuration
-func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	creds, err := cfg.Credentials(m, cfg.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)

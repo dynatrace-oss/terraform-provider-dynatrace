@@ -20,6 +20,7 @@ package resources
 import (
 	"encoding/json"
 	"fmt"
+	"maps"
 	"sort"
 	"strconv"
 	"strings"
@@ -31,9 +32,7 @@ type Attributes map[string]string
 
 func NewAttributes(m map[string]string) Attributes {
 	attributes := Attributes{}
-	for k, v := range m {
-		attributes[k] = v
-	}
+	maps.Copy(attributes, m)
 	return attributes
 }
 

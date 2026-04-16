@@ -190,7 +190,7 @@ func StoreKeyUserActionsAndSessionProperties(ctx context.Context, client rest.Cl
 			TotalCount int `json:"totalCount"`
 		}{}
 
-		for i := 0; i < maxTries; i++ {
+		for range maxTries {
 			if err = client.Get(ctx, fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&&entitySelector=type("DEVICE_APPLICATION_METHOD"),fromRelationships.isDeviceApplicationMethodOf(entityId("%s"))&fields=fromRelationships`, id), 200).Finish(&response); err != nil {
 				return err
 			}

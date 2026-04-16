@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/ip_address"
 
@@ -123,10 +124,10 @@ func (iac *IPAddress) UnmarshalHCL(decoder hcl.Decoder) error {
 		iac.Operator = ip_address.Operator(value.(string))
 	}
 	if value, ok := decoder.GetOk("value"); ok {
-		iac.Value = opt.NewString(value.(string))
+		iac.Value = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("case_sensitive"); ok {
-		iac.CaseSensitive = opt.NewBool(value.(bool))
+		iac.CaseSensitive = new(value.(bool))
 	}
 
 	return nil
@@ -135,9 +136,7 @@ func (iac *IPAddress) UnmarshalHCL(decoder hcl.Decoder) error {
 func (iac *IPAddress) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(iac.Unknowns) > 0 {
-		for k, v := range iac.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, iac.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(iac.Negate)

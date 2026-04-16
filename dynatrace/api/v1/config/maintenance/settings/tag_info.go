@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -151,7 +149,7 @@ func (me *TagInfo) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Key = value.(string)
 	}
 	if value, ok := decoder.GetOk("value"); ok {
-		me.Value = opt.NewString(value.(string))
+		me.Value = new(value.(string))
 	}
 	return nil
 }

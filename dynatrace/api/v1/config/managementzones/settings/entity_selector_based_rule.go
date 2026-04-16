@@ -19,6 +19,7 @@ package managementzones
 
 import (
 	"encoding/json"
+	"maps"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -47,7 +48,7 @@ func (me *EntitySelectorBasedRule) Schema() map[string]*schema.Schema {
 			Description:      "The entity selector string, by which the entities are selected",
 			Optional:         true,
 			DiffSuppressFunc: hcl.SuppressEOT,
-			StateFunc: func(i interface{}) string {
+			StateFunc: func(i any) string {
 				if i == nil {
 					return ""
 				}
@@ -93,7 +94,7 @@ func (me *EntitySelectorBasedRule) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Selector = value.(string)
 	}
 	if value, ok := decoder.GetOk("enabled"); ok {
-		me.Enabled = opt.NewBool(value.(bool))
+		me.Enabled = new(value.(bool))
 	}
 	return nil
 }
@@ -101,9 +102,7 @@ func (me *EntitySelectorBasedRule) UnmarshalHCL(decoder hcl.Decoder) error {
 func (me *EntitySelectorBasedRule) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(me.Selector)

@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/mobile_platform"
 
@@ -119,9 +120,7 @@ func (mpc *MobilePlatform) UnmarshalHCL(decoder hcl.Decoder) error {
 func (mpc *MobilePlatform) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(mpc.Unknowns) > 0 {
-		for k, v := range mpc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, mpc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(mpc.Negate)

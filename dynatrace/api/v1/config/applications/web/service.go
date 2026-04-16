@@ -24,7 +24,6 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -82,7 +81,7 @@ func (me *service) Get(ctx context.Context, id string, v *web.Application) error
 
 	if ignoreIPAddressRestrictionSettings {
 		v.MonitoringSettings.IPAddressRestrictionSettings = nil
-		v.MonitoringSettings.IgnoreIPAddressRestrictionSettings = opt.NewBool(true)
+		v.MonitoringSettings.IgnoreIPAddressRestrictionSettings = new(true)
 	}
 
 	actions := web.KeyUserActions{}
@@ -239,7 +238,7 @@ func (me *service) pollUntilKeyUserActionsCreated(ctx context.Context, id string
 			TotalCount int `json:"totalCount"`
 		}{}
 
-		for i := 0; i < maxTries; i++ {
+		for range maxTries {
 			if err = me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&&entitySelector=type("APPLICATION_METHOD"),fromRelationships.isApplicationMethodOf(entityId("%s"))&fields=fromRelationships`, id), 200).Finish(&response); err != nil {
 				return err
 			}

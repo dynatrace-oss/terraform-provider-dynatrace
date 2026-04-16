@@ -20,8 +20,6 @@ package locations
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -222,13 +220,13 @@ func (me *PrivateSyntheticLocation) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Name = value.(string)
 	}
 	if value, ok := decoder.GetOk("country_code"); ok {
-		me.CountryCode = opt.NewString(value.(string))
+		me.CountryCode = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("region_code"); ok {
-		me.RegionCode = opt.NewString(value.(string))
+		me.RegionCode = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("city"); ok {
-		me.City = opt.NewString(value.(string))
+		me.City = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("latitude"); ok {
 		me.Latitude = float64(value.(float64))
@@ -249,7 +247,7 @@ func (me *PrivateSyntheticLocation) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.AvailabilityNodeOutage = value.(bool)
 	}
 	if value, ok := decoder.GetOk("location_node_outage_delay_in_minutes"); ok {
-		me.LocationNodeOutageDelayInMinutes = opt.NewInt(value.(int))
+		me.LocationNodeOutageDelayInMinutes = new(value.(int))
 	}
 	if value, ok := decoder.GetOk("availability_notifications_enabled"); ok {
 		me.AvailabilityNotificationsEnabled = value.(bool)
@@ -261,19 +259,19 @@ func (me *PrivateSyntheticLocation) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.AutoUpdateChromium = value.(bool)
 	}
 	if value, ok := decoder.GetOk("min_active_gate_count"); ok {
-		me.MinActiveGateCount = opt.NewInt(value.(int))
+		me.MinActiveGateCount = new(value.(int))
 	}
 	if value, ok := decoder.GetOk("max_active_gate_count"); ok {
-		me.MaxActiveGateCount = opt.NewInt(value.(int))
+		me.MaxActiveGateCount = new(value.(int))
 	}
 	if value, ok := decoder.GetOk("node_size"); ok {
-		me.NodeSize = opt.NewString(value.(string))
+		me.NodeSize = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("nam_execution_supported"); ok {
-		me.NAMExecutionSupported = opt.NewBool(value.(bool))
+		me.NAMExecutionSupported = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("use_new_kubernetes_version"); ok {
-		me.UseNewKubernetesVersion = opt.NewBool(value.(bool))
+		me.UseNewKubernetesVersion = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("fips_mode"); ok {
 		me.FipsMode = FipsMode(value.(string)).Ref()

@@ -20,7 +20,6 @@ package fullwebservice
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"golang.org/x/exp/slices"
@@ -137,10 +136,10 @@ func (me *Condition) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Condition) HandlePreconditions() error {
 	if me.IgnoreCase == nil && slices.Contains([]string{"TagEquals", "TagKeyEquals", "StringEndsWith", "NotStringEndsWith", "StringStartsWith", "NotStringStartsWith", "StringContains", "NotStringContains", "StringEquals", "NotStringEquals"}, string(me.CompareOperationType)) {
-		me.IgnoreCase = opt.NewBool(false)
+		me.IgnoreCase = new(false)
 	}
 	if me.IntValue == nil && slices.Contains([]string{"IntGreaterThan", "IntLessThan"}, string(me.CompareOperationType)) {
-		me.IntValue = opt.NewInt(0)
+		me.IntValue = new(0)
 	}
 	if me.IpRangeFrom == nil && slices.Contains([]string{"IpInRange", "NotIpInRange"}, string(me.CompareOperationType)) {
 		return fmt.Errorf("'ip_range_from' must be specified if 'compare_operation_type' is set to '%v'", me.CompareOperationType)

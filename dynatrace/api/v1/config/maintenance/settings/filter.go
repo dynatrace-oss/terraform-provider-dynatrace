@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -119,7 +117,7 @@ func (me *Filter) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Type = FilterType(value.(string)).Ref()
 	}
 	if value, ok := decoder.GetOk("mz_id"); ok {
-		me.MzID = opt.NewString(value.(string))
+		me.MzID = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("tag_combination"); ok {
 		me.TagCombination = TagCombination(value.(string)).Ref()

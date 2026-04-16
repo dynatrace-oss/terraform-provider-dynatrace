@@ -25,8 +25,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -255,7 +253,7 @@ func (me *Application) UnmarshalHCL(decoder hcl.Decoder) error {
 				me.MonitoringSettings.LibraryFileLocation = nil
 			}
 			if me.Type == ApplicationTypes.AutoInjected {
-				me.MonitoringSettings.LibraryFileLocation = opt.NewString("")
+				me.MonitoringSettings.LibraryFileLocation = new("")
 			}
 		}
 		if me.MonitoringSettings.LibraryFileLocation != nil {

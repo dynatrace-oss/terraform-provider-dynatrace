@@ -19,6 +19,7 @@ package managementzones
 
 import (
 	"encoding/json"
+	"maps"
 	"sort"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine"
@@ -169,9 +170,7 @@ func (mzr *Rule) UnmarshalHCL(decoder hcl.Decoder) error {
 func (mzr *Rule) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(mzr.Unknowns) > 0 {
-		for k, v := range mzr.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, mzr.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(mzr.Enabled)

@@ -26,8 +26,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -102,7 +100,7 @@ func (me *AnsibleTowerConfig) Schema() map[string]*schema.Schema {
 }
 
 func (me *AnsibleTowerConfig) FillDemoValues() []string {
-	me.Password = opt.NewString("#######")
+	me.Password = new("#######")
 	if me.JobTemplateID == 0 && len(me.JobTemplateURL) > 0 {
 		if idx := strings.LastIndex(me.JobTemplateURL, "/"); idx != -1 {
 			if iJobTemplateID, err := strconv.Atoi(me.JobTemplateURL[idx+1:]); err == nil {
@@ -115,7 +113,7 @@ func (me *AnsibleTowerConfig) FillDemoValues() []string {
 
 func (me *AnsibleTowerConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
 	if password, ok := decoder.GetOk("ansible_tower.0.password"); ok && len(password.(string)) > 0 {
-		me.Password = opt.NewString(password.(string))
+		me.Password = new(password.(string))
 	}
 	if job_template_id, ok := decoder.GetOk("ansible_tower.0.job_template_id"); ok && job_template_id.(int) != 0 {
 		me.JobTemplateID = int32(job_template_id.(int))
@@ -208,7 +206,7 @@ func (me *AnsibleTowerConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.JobTemplateURL = value.(string)
 	}
 	if value, ok := decoder.GetOk("password"); ok {
-		me.Password = opt.NewString(value.(string))
+		me.Password = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("username"); ok {
 		me.Username = value.(string)

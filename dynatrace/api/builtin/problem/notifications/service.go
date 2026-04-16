@@ -23,7 +23,6 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/filtered"
@@ -59,7 +58,7 @@ func Service(credentials *rest.Credentials, t Type) settings.CRUDService[*Notifi
 
 func UseOAuth2Fix(v *Notification, err error) *Notification {
 	if strings.Contains(err.Error(), "Given property 'useOAuth2' with value: 'null' does not comply with required NonNull of schema") {
-		v.WebHook.UseOAuth2 = opt.NewBool(false)
+		v.WebHook.UseOAuth2 = new(false)
 		return v
 	}
 	return nil

@@ -19,6 +19,7 @@ package xjson
 
 import (
 	"encoding/json"
+	"maps"
 	"reflect"
 )
 
@@ -37,9 +38,7 @@ func Nil(s *string) *string {
 func NewProperties(m map[string]json.RawMessage) Properties {
 	props := Properties{}
 	if len(m) > 0 {
-		for k, v := range m {
-			props[k] = v
-		}
+		maps.Copy(props, m)
 	}
 	return props
 }
@@ -77,7 +76,7 @@ func (p Properties) MarshalAll(m map[string]any) error {
 }
 
 func (p Properties) Marshal(key string, v any) error {
-	isNil := (v == nil || (reflect.ValueOf(v).Kind() == reflect.Ptr && reflect.ValueOf(v).IsNil()))
+	isNil := (v == nil || (reflect.ValueOf(v).Kind() == reflect.Pointer && reflect.ValueOf(v).IsNil()))
 	if isNil {
 		return nil
 	}

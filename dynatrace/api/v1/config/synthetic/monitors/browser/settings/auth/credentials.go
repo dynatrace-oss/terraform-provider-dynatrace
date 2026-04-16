@@ -20,7 +20,6 @@ package auth
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -64,7 +63,7 @@ func (me *Credentials) HandlePreconditions() error {
 		return fmt.Errorf("'domain' must be specified if 'type' is set to '%v'", me.Type)
 	}
 	if me.Type == "kerberos" && me.AuthServerAllowlist == nil {
-		me.AuthServerAllowlist = opt.NewString("")
+		me.AuthServerAllowlist = new("")
 	}
 	return nil
 }

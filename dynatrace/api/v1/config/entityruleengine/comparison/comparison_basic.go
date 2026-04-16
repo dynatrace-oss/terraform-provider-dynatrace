@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -112,9 +113,7 @@ func (bcb *BaseComparison) UnmarshalHCL(decoder hcl.Decoder) error {
 func (bcb *BaseComparison) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(bcb.Unknowns) > 0 {
-		for k, v := range bcb.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, bcb.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(bcb.Negate)

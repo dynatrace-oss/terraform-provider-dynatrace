@@ -154,7 +154,7 @@ func UUIDToLong(uid uuid.UUID) (int64, error) {
 		_, msb := new(big.Int).SetBytes(data[:8]).Int64(), data[:8]
 		_, lsb := new(big.Int).SetBytes(data[8:]).Int64(), data[8:]
 		buf := make([]byte, 10)
-		for idx := 0; idx < 6; idx++ {
+		for idx := range 6 {
 			buf[idx] = msb[idx]
 		}
 		for idx := 6; idx < 10; idx++ {

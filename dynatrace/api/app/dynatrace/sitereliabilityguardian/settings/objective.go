@@ -20,7 +20,6 @@ package sitereliabilityguardian
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -155,7 +154,7 @@ func (me *Objective) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Objective) HandlePreconditions() error {
 	if (me.AutoAdaptiveThresholdEnabled == nil) && (string(me.ObjectiveType) == "DQL") {
-		me.AutoAdaptiveThresholdEnabled = opt.NewBool(false)
+		me.AutoAdaptiveThresholdEnabled = new(false)
 	}
 	if (me.DisplayUnit != nil) && (string(me.ObjectiveType) != "DQL") {
 		return fmt.Errorf("'display_unit' must not be specified if 'objective_type' is set to '%v'", me.ObjectiveType)

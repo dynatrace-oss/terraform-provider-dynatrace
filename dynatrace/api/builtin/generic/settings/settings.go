@@ -44,7 +44,7 @@ func (ss SecretSlice) Merge(other SecretSlice) SecretSlice {
 		return other
 	}
 	overlap := SecretSlice{}
-	for i := 0; i < len(other); i++ {
+	for i := range other {
 		v := other[i]
 		switch tv := v.(type) {
 		case map[string]any:

@@ -18,7 +18,6 @@
 package golang
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -70,7 +69,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"host_id":                      &me.HostID,
 	})
 	if me.EnabledGoStaticMonitoring == nil && me.Enabled {
-		me.EnabledGoStaticMonitoring = opt.NewBool(false)
+		me.EnabledGoStaticMonitoring = new(false)
 	}
 	return err
 }

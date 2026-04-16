@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -156,7 +154,7 @@ func (me *WebHookConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.AlertingProfile = value.(string)
 	}
 	if value, ok := decoder.GetOk("notify_event_merges"); ok {
-		me.NotifyEventMergesEnabled = opt.NewBool(value.(bool))
+		me.NotifyEventMergesEnabled = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("accept_any_certificate"); ok {
 		me.AcceptAnyCertificate = value.(bool)

@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/hypervisor_type"
 
@@ -119,9 +120,7 @@ func (htc *HypervisorType) UnmarshalHCL(decoder hcl.Decoder) error {
 func (htc *HypervisorType) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(htc.Unknowns) > 0 {
-		for k, v := range htc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, htc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(htc.Negate)

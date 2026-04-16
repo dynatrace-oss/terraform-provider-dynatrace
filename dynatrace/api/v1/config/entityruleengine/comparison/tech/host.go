@@ -19,10 +19,9 @@ package tech
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -85,7 +84,7 @@ func (sht *Host) UnmarshalHCL(decoder hcl.Decoder) error {
 		sht.Type = SimpleHostTechType(value.(string)).Ref()
 	}
 	if value, ok := decoder.GetOk("verbatim_type"); ok {
-		sht.VerbatimType = opt.NewString(value.(string))
+		sht.VerbatimType = new(value.(string))
 	}
 	return nil
 }
@@ -93,9 +92,7 @@ func (sht *Host) UnmarshalHCL(decoder hcl.Decoder) error {
 func (sht *Host) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(sht.Unknowns) > 0 {
-		for k, v := range sht.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, sht.Unknowns)
 	}
 	if sht.Type != nil {
 		rawMessage, err := json.Marshal(sht.Type)

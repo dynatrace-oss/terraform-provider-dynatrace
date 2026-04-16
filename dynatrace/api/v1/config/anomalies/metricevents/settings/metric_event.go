@@ -28,8 +28,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -192,10 +190,10 @@ func (me *MetricEvent) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 
 	if value, ok := decoder.GetOk("metric_selector"); ok {
-		me.MetricSelector = opt.NewString(value.(string))
+		me.MetricSelector = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("metric_id"); ok {
-		me.MetricID = opt.NewString(value.(string))
+		me.MetricID = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("name"); ok {
 		me.Name = value.(string)
@@ -213,7 +211,7 @@ func (me *MetricEvent) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Enabled = value.(bool)
 	}
 	if value, ok := decoder.GetOk("primary_dimension_key"); ok {
-		me.PrimaryDimensionKey = opt.NewString(value.(string))
+		me.PrimaryDimensionKey = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("severity"); ok {
 		me.Severity = Severity(value.(string)).Ref()

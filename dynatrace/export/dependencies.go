@@ -19,6 +19,7 @@ package export
 
 import (
 	"fmt"
+	maps0 "maps"
 	"os"
 	"regexp"
 	"strings"
@@ -911,9 +912,7 @@ func mergeMaps(maps ...map[string]optimizedIdDep) map[string]optimizedIdDep {
 	mergedMap := make(map[string]optimizedIdDep)
 
 	for _, m := range maps {
-		for key, value := range m {
-			mergedMap[key] = value
-		}
+		maps0.Copy(mergedMap, m)
 	}
 
 	return mergedMap

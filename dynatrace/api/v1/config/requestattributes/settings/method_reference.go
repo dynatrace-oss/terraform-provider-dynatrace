@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -169,10 +167,10 @@ func (me *MethodReference) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("class_name"); ok {
-		me.ClassName = opt.NewString(value.(string))
+		me.ClassName = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("file_name"); ok {
-		me.FileName = opt.NewString(value.(string))
+		me.FileName = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("file_name_matcher"); ok {
 		me.FileNameMatcher = FileNameMatcher(value.(string)).Ref()

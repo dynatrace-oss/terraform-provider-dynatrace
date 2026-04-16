@@ -74,7 +74,7 @@ func (al *AddressMap) AddToAddressMap(a Address) {
 	al.mutex.Unlock()
 }
 
-func SaveAddressMap(addresses interface{}, OutputFolder string, filename string) error {
+func SaveAddressMap(addresses any, OutputFolder string, filename string) error {
 	if !BUILD_ADDRESS_FILES {
 		return nil
 	}

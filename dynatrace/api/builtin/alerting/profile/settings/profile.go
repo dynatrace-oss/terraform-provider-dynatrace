@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -142,10 +140,10 @@ func (me *Profile) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Name = value.(string)
 	}
 	if value, ok := decoder.GetOk("management_zone"); ok {
-		me.ManagementZone = opt.NewString(value.(string))
+		me.ManagementZone = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("legacy_id"); ok {
-		me.LegacyID = opt.NewString(value.(string))
+		me.LegacyID = new(value.(string))
 	}
 	me.SeverityRules = SeverityRules{}
 	if _, ok := decoder.GetOk("rules.#"); ok {

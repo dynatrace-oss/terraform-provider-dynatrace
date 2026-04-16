@@ -20,8 +20,6 @@ package customservices
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -67,7 +65,7 @@ func (me *FileSection) MarshalHCL(properties hcl.Properties) error {
 
 func (me *FileSection) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("name"); ok {
-		me.Name = opt.NewString(value.(string))
+		me.Name = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("match"); ok {
 		me.Match = FileNameMatcher(value.(string)).Ref()

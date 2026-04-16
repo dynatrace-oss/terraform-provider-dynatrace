@@ -20,7 +20,6 @@ package externalwebrequest
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"golang.org/x/exp/slices"
@@ -75,7 +74,7 @@ func (me *PublicDomainTransformationSet) MarshalHCL(properties hcl.Properties) e
 
 func (me *PublicDomainTransformationSet) HandlePreconditions() error {
 	if me.CopyFromHostName == nil && slices.Contains([]string{"OriginalValue", "TransformValue"}, string(me.ContributionType)) {
-		me.CopyFromHostName = opt.NewBool(false)
+		me.CopyFromHostName = new(false)
 	}
 	if me.ValueOverride == nil && (string(me.ContributionType) == "OverrideValue") {
 		return fmt.Errorf("'value_override' must be specified if 'contribution_type' is set to '%v'", me.ContributionType)

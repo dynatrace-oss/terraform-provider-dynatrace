@@ -19,7 +19,6 @@ package integration
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"golang.org/x/exp/slices"
@@ -136,7 +135,7 @@ const credsNotProvided = "REST API didn't provide token data"
 
 func (me *Settings) FillDemoValues() []string {
 	if slices.Contains([]string{"JIRA", "GITHUB", "GITLAB", "JIRA_CLOUD"}, string(me.Issuetrackersystem)) {
-		me.Token = opt.NewString("################")
+		me.Token = new("################")
 		return []string{credsNotProvided}
 	}
 	return nil

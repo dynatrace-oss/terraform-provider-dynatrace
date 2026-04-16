@@ -67,7 +67,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	var err error
 	var retry = 10
 
-	for i := 0; i < retry; i++ {
+	for range retry {
 		if err = me.service.Delete(ctx, id); err != nil {
 			return err
 		}

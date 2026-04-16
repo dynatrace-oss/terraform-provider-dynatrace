@@ -20,7 +20,6 @@ package connection
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -104,7 +103,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 
 func (me *Settings) FillDemoValues() []string {
 	if me.Client_secret != nil {
-		me.Client_secret = opt.NewString("#######")
+		me.Client_secret = new("#######")
 	}
 	return []string{"REST API didn't provide secret data"}
 }

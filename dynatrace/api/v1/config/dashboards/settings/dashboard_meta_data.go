@@ -201,7 +201,7 @@ func (me *DashboardMetadata) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("tiles_name_size"); ok {
-		me.TilesNameSize = opt.NewString(value.(string))
+		me.TilesNameSize = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("name"); ok {
 		me.Name = value.(string)
@@ -213,7 +213,7 @@ func (me *DashboardMetadata) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Preset = value.(bool)
 	}
 	if value, ok := decoder.GetOk("owner"); ok {
-		me.Owner = opt.NewString(value.(string))
+		me.Owner = new(value.(string))
 	}
 	// if _, ok := decoder.GetOk("sharing_details.#"); ok {
 	// 	me.SharingDetails = new(SharingInfo)

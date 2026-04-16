@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -107,13 +105,13 @@ func (me *ServiceNowConfig) Schema() map[string]*schema.Schema {
 
 func (me *ServiceNowConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
 	if password, ok := decoder.GetOk("service_now.0.password"); ok && len(password.(string)) > 0 {
-		me.Password = opt.NewString(password.(string))
+		me.Password = new(password.(string))
 	}
 	return nil
 }
 
 func (me *ServiceNowConfig) FillDemoValues() []string {
-	me.Password = opt.NewString("#######")
+	me.Password = new("#######")
 	return []string{"The REST API didn't provide the credentials"}
 }
 
@@ -193,19 +191,19 @@ func (me *ServiceNowConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.SendIncidents = value.(bool)
 	}
 	if value, ok := decoder.GetOk("url"); ok {
-		me.URL = opt.NewString(value.(string))
+		me.URL = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("username"); ok {
 		me.Username = value.(string)
 	}
 	if value, ok := decoder.GetOk("instance_name"); ok {
-		me.InstanceName = opt.NewString(value.(string))
+		me.InstanceName = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("message"); ok {
 		me.Message = value.(string)
 	}
 	if value, ok := decoder.GetOk("password"); ok {
-		me.Password = opt.NewString(value.(string))
+		me.Password = new(value.(string))
 	}
 	return nil
 }

@@ -19,10 +19,9 @@ package aws
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -100,7 +99,7 @@ func (aad *AWSAuthenticationData) UnmarshalHCL(decoder hcl.Decoder) error {
 			aad.KeyBasedAuthentication = new(KeyBasedAuthentication)
 		}
 		aad.Type = Types.Keys
-		aad.KeyBasedAuthentication.SecretKey = opt.NewString(value.(string))
+		aad.KeyBasedAuthentication.SecretKey = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("account_id"); ok {
 		if aad.RoleBasedAuthentication == nil {
@@ -186,9 +185,7 @@ func (aad *AWSAuthenticationData) UnmarshalJSON(data []byte) error {
 func (aad *AWSAuthenticationData) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(aad.Unknowns) > 0 {
-		for k, v := range aad.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, aad.Unknowns)
 	}
 	if aad.KeyBasedAuthentication != nil {
 		rawMessage, err := json.Marshal(aad.KeyBasedAuthentication)

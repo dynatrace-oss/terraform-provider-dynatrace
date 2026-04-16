@@ -21,7 +21,6 @@ import (
 	"context"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -49,7 +48,7 @@ type service struct {
 
 func GetTempScript() *http.Script {
 	return &http.Script{Requests: http.Requests{&http.Request{
-		Description: opt.NewString("--terraform-auto-generated--"),
+		Description: new("--terraform-auto-generated--"),
 		URL:         "http://localhost",
 		Method:      "OPTIONS",
 	}}}
@@ -82,7 +81,7 @@ func (me *service) Get(ctx context.Context, id string, v *http.SyntheticMonitor)
 		return err
 	}
 	if v.Script != nil && len(v.Script.Requests) == 1 && *v.Script.Requests[0].Description == *GetTempScript().Requests[0].Description {
-		v.NoScript = opt.NewBool(true)
+		v.NoScript = new(true)
 		v.Script = nil
 	}
 	return nil

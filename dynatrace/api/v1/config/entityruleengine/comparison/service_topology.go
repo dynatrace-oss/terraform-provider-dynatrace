@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/service_topology"
 
@@ -119,9 +120,7 @@ func (stc *ServiceTopology) UnmarshalHCL(decoder hcl.Decoder) error {
 func (stc *ServiceTopology) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(stc.Unknowns) > 0 {
-		for k, v := range stc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, stc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(stc.Negate)

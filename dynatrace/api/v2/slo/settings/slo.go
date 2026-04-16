@@ -22,8 +22,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -209,7 +207,7 @@ func (me *SLO) MarshalHCL(properties hcl.Properties) error {
 
 func nonNil(s *string) *string {
 	if s == nil {
-		return opt.NewString("")
+		return new("")
 	}
 	return s
 }

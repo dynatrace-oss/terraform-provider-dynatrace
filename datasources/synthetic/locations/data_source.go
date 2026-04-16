@@ -23,7 +23,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	locations "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations"
 	locsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -61,13 +60,13 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	if v, ok := d.GetOk("id"); ok {
 		d.SetId(v.(string))
-		id = opt.NewString(v.(string))
+		id = new(v.(string))
 	} else {
 		d.SetId(uuid.New().String())
 	}
 
 	if v, ok := d.GetOk("name"); ok {
-		name = opt.NewString(v.(string))
+		name = new(v.(string))
 	}
 
 	creds, err := config.Credentials(m, config.CredValDefault)

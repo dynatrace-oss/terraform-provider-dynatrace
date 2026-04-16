@@ -22,8 +22,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -124,7 +122,7 @@ func (me *Header) Equals(v any) bool {
 
 func (me *Header) FillDemoValues() []string {
 	if me.Secret {
-		me.SecretValue = opt.NewString("#######")
+		me.SecretValue = new("#######")
 		return []string{"Please fill in the secret header value"}
 	}
 	return []string{}
@@ -156,10 +154,10 @@ func (me *Header) Schema() map[string]*schema.Schema {
 
 func (me *Header) HandlePreconditions() error {
 	if (me.SecretValue == nil) && (me.Secret) {
-		me.SecretValue = opt.NewString("")
+		me.SecretValue = new("")
 	}
 	if (me.Value == nil) && (!me.Secret) {
-		me.Value = opt.NewString("")
+		me.Value = new("")
 	}
 	return nil
 }
@@ -192,11 +190,11 @@ func (me *Header) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.Name = value.(string)
 	}
 	if value, ok := decoder.GetOk("value"); ok {
-		me.Value = opt.NewString(value.(string))
+		me.Value = new(value.(string))
 		me.Secret = false
 	}
 	if value, ok := decoder.GetOk("secret_value"); ok {
-		me.SecretValue = opt.NewString(value.(string))
+		me.SecretValue = new(value.(string))
 		me.Secret = true
 	}
 	if me.Secret {

@@ -20,8 +20,6 @@ package sharing
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -69,7 +67,7 @@ func (me *SharePermission) MarshalHCL(properties hcl.Properties) error {
 // UnmarshalHCL has no documentation
 func (me *SharePermission) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("id"); ok {
-		me.ID = opt.NewString(value.(string))
+		me.ID = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("type"); ok {
 		me.Type = PermissionType(value.(string))

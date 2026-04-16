@@ -26,8 +26,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	apitokens "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/apitokens/settings"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 )
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*apitokens.APIToken] {
@@ -85,7 +83,7 @@ func (me *service) Create(ctx context.Context, v *apitokens.APIToken) (*api.Stub
 	}
 	item := v
 	if item.Enabled == nil || !*item.Enabled {
-		item.Enabled = opt.NewBool(false)
+		item.Enabled = new(false)
 		if err = client.Put(ctx, fmt.Sprintf("/api/v2/apiTokens/%s", *resultToken.ID), item, 204).Finish(); err != nil {
 			return nil, err
 		}

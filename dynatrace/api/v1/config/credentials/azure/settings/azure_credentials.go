@@ -19,6 +19,7 @@ package azure
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -146,9 +147,7 @@ func (ac *AzureCredentials) MarshalJSON() ([]byte, error) {
 	if len(ac.Unknowns) > 0 {
 		delete(ac.Unknowns, "id")
 		delete(ac.Unknowns, "metadata")
-		for k, v := range ac.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, ac.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(ac.Label)
@@ -392,7 +391,7 @@ func (ac *AzureCredentials) UnmarshalHCL(decoder hcl.Decoder) error {
 		ac.DirectoryID = value.(string)
 	}
 	if value, ok := decoder.GetOk("auto_tagging"); ok {
-		ac.AutoTagging = opt.NewBool(value.(bool))
+		ac.AutoTagging = new(value.(bool))
 	}
 	if result, ok := decoder.GetOk("monitor_only_tag_pairs.#"); ok {
 		ac.MonitorOnlyTagPairs = []*CloudTag{}
@@ -415,16 +414,16 @@ func (ac *AzureCredentials) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("active"); ok {
-		ac.Active = opt.NewBool(value.(bool))
+		ac.Active = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("app_id"); ok {
 		ac.AppID = value.(string)
 	}
 	if value, ok := decoder.GetOk("key"); ok {
-		ac.Key = opt.NewString(value.(string))
+		ac.Key = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("monitor_only_tagged_entities"); ok {
-		ac.MonitorOnlyTaggedEntities = opt.NewBool(value.(bool))
+		ac.MonitorOnlyTaggedEntities = new(value.(bool))
 	}
 	ac.SupportingServicesManagedInDynatrace = true
 	if value, ok := decoder.GetOk("remove_defaults"); ok {
@@ -436,6 +435,6 @@ func (ac *AzureCredentials) UnmarshalHCL(decoder hcl.Decoder) error {
 const credsNotProvided = "REST API didn't provide credential data"
 
 func (me *AzureCredentials) FillDemoValues() []string {
-	me.Key = opt.NewString("################")
+	me.Key = new("################")
 	return []string{credsNotProvided}
 }

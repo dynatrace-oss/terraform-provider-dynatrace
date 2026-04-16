@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -107,13 +105,13 @@ func (me *TrelloConfig) Schema() map[string]*schema.Schema {
 
 func (me *TrelloConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("trello.0.authorization_token"); ok && len(value.(string)) > 0 {
-		me.AuthorizationToken = opt.NewString(value.(string))
+		me.AuthorizationToken = new(value.(string))
 	}
 	return nil
 }
 
 func (me *TrelloConfig) FillDemoValues() []string {
-	me.AuthorizationToken = opt.NewString("#######")
+	me.AuthorizationToken = new("#######")
 	return []string{"The REST API didn't provide the credentials"}
 }
 
@@ -195,7 +193,7 @@ func (me *TrelloConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.ApplicationKey = value.(string)
 	}
 	if value, ok := decoder.GetOk("authorization_token"); ok {
-		me.AuthorizationToken = opt.NewString(value.(string))
+		me.AuthorizationToken = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("board_id"); ok {
 		me.BoardID = value.(string)

@@ -22,7 +22,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/http"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -48,7 +47,7 @@ type WebHook struct {
 
 func (me *WebHook) PrepareMarshalHCL(decoder hcl.Decoder) error {
 	if url, ok := decoder.GetOk("secret_url"); ok && len(url.(string)) > 0 {
-		me.SecretUrl = opt.NewString(url.(string))
+		me.SecretUrl = new(url.(string))
 	}
 	return nil
 }

@@ -19,6 +19,7 @@ package dashboards
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -82,7 +83,7 @@ func (me *CustomChartingItemMetadataConfig) UnmarshalHCL(decoder hcl.Decoder) er
 		}
 	}
 	if value, ok := decoder.GetOk("last_modified"); ok {
-		me.LastModified = opt.NewInt64(int64(value.(int)))
+		me.LastModified = new(int64(value.(int)))
 	}
 	if value, ok := decoder.GetOk("custom_color"); ok {
 		me.CustomColor = value.(string)
@@ -93,9 +94,7 @@ func (me *CustomChartingItemMetadataConfig) UnmarshalHCL(decoder hcl.Decoder) er
 func (me *CustomChartingItemMetadataConfig) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	if me.LastModified != nil {
 		rawMessage, err := json.Marshal(me.LastModified)

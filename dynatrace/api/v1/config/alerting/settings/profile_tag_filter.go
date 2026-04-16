@@ -19,6 +19,7 @@ package alerting
 
 import (
 	"encoding/json"
+	"maps"
 	"sort"
 
 	common "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/common"
@@ -119,9 +120,7 @@ func (me *ProfileTagFilter) UnmarshalHCL(decoder hcl.Decoder) error {
 func (me *ProfileTagFilter) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(me.IncludeMode)

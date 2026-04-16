@@ -49,10 +49,10 @@ type service struct {
 }
 
 func extractApplicationID(id string) string {
-	if strings.HasSuffix(id, "-data-privacy") {
-		return strings.TrimSuffix(id, "-data-privacy")
-	} else if strings.HasPrefix(id, "DATA-PRIVACY-") {
-		return strings.TrimPrefix(id, "DATA-PRIVACY-")
+	if before, ok := strings.CutSuffix(id, "-data-privacy"); ok {
+		return before
+	} else if after, ok := strings.CutPrefix(id, "DATA-PRIVACY-"); ok {
+		return after
 	}
 	return id
 }

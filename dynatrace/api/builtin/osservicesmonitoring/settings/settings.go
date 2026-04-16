@@ -20,7 +20,6 @@ package osservicesmonitoring
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -150,7 +149,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if (me.NotInstalledAlerting == nil) && (me.Alerting) {
-		me.NotInstalledAlerting = opt.NewBool(false)
+		me.NotInstalledAlerting = new(false)
 	}
 	if (me.AlertActivationDuration == nil) && (me.Alerting) {
 		return fmt.Errorf("'alert_activation_duration' must be specified if 'alerting' is set to '%v'", me.Alerting)

@@ -19,6 +19,7 @@ package dashboards
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -109,13 +110,13 @@ func (me *CustomFilterChartSeriesDimensionConfig) UnmarshalHCL(decoder hcl.Decod
 		me.ID = value.(string)
 	}
 	if value, ok := decoder.GetOk("name"); ok {
-		me.Name = opt.NewString(value.(string))
+		me.Name = new(value.(string))
 	}
 	if err := decoder.Decode("values", &me.Values); err != nil {
 		return err
 	}
 	if value, ok := decoder.GetOk("entity_dimension"); ok {
-		me.EntityDimension = opt.NewBool(value.(bool))
+		me.EntityDimension = new(value.(bool))
 	}
 	return nil
 }
@@ -123,9 +124,7 @@ func (me *CustomFilterChartSeriesDimensionConfig) UnmarshalHCL(decoder hcl.Decod
 func (me *CustomFilterChartSeriesDimensionConfig) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(me.ID)

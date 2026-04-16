@@ -21,7 +21,6 @@ import (
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -194,10 +193,10 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if me.CertificateCheckEnabled == nil && !me.ClusterIdEnabled {
-		me.CertificateCheckEnabled = opt.NewBool(false)
+		me.CertificateCheckEnabled = new(false)
 	}
 	if me.HostnameVerificationEnabled == nil && !me.ClusterIdEnabled {
-		me.HostnameVerificationEnabled = opt.NewBool(false)
+		me.HostnameVerificationEnabled = new(false)
 	}
 	if me.ActiveGateGroup == nil && !me.ClusterIdEnabled {
 		return fmt.Errorf("'active_gate_group' must be specified if 'cluster_id_enabled' is set to '%v'", me.ClusterIdEnabled)
@@ -242,7 +241,7 @@ const credsNotProvided = "REST API didn't provide credential data"
 
 func (me *Settings) FillDemoValues() []string {
 	if !me.ClusterIdEnabled {
-		me.AuthToken = opt.NewString("################")
+		me.AuthToken = new("################")
 		return []string{credsNotProvided}
 	}
 	return nil

@@ -23,8 +23,6 @@ import (
 	"log"
 	"reflect"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -151,12 +149,12 @@ func (d *decoder) DecodeAll(m map[string]any) error {
 
 func (d *decoder) DecodeSlice(key string, v any) error {
 	rv := reflect.ValueOf(v)
-	if rv.Type().Kind() != reflect.Ptr || rv.Type().Elem().Kind() != reflect.Slice {
+	if rv.Type().Kind() != reflect.Pointer || rv.Type().Elem().Kind() != reflect.Slice {
 		return fmt.Errorf("decoding slices requires a pointer to a slice to be specified. %T doesn't qualify", v)
 	}
 	elemType := rv.Type().Elem().Elem()
-	if !elemType.AssignableTo(stringType) && !elemType.Implements(reflect.TypeOf((*Unmarshaler)(nil)).Elem()) {
-		return fmt.Errorf("decoding slices requires a pointer to a slice of elements that implement hcl.Unmarshaler to be specified. %T doesn't qualify (%v is not implementing %v)", v, elemType, reflect.TypeOf((*Unmarshaler)(nil)).Elem())
+	if !elemType.AssignableTo(stringType) && !elemType.Implements(reflect.TypeFor[Unmarshaler]()) {
+		return fmt.Errorf("decoding slices requires a pointer to a slice of elements that implement hcl.Unmarshaler to be specified. %T doesn't qualify (%v is not implementing %v)", v, elemType, reflect.TypeFor[Unmarshaler]())
 	}
 	if result, ok := d.GetOk(fmt.Sprintf("%v", key)); ok {
 		if resultSet, ok := result.(*schema.Set); ok {
@@ -216,20 +214,20 @@ func (d *decoder) Decode(key string, v any) error {
 	return err
 }
 
-var stringType = reflect.TypeOf("")
-var stringSliceType = reflect.TypeOf([]string{})
-var intSliceType = reflect.TypeOf([]int{})
-var marshalerType = reflect.TypeOf((*Marshaler)(nil)).Elem()
+var stringType = reflect.TypeFor[string]()
+var stringSliceType = reflect.TypeFor[[]string]()
+var intSliceType = reflect.TypeFor[[]int]()
+var marshalerType = reflect.TypeFor[Marshaler]()
 
 func (d *decoder) decode(key string, v any) (bool, error) {
 	vTarget := reflect.ValueOf(v)
 	if !vTarget.IsValid() || vTarget.IsNil() {
 		return false, errors.New("passed an invalid target value to Decode()")
 	}
-	if vTarget.Type().Kind() == reflect.Ptr {
+	if vTarget.Type().Kind() == reflect.Pointer {
 		valueType := vTarget.Type()
 		valueType = valueType.Elem()
-		if valueType.Kind() == reflect.Ptr {
+		if valueType.Kind() == reflect.Pointer {
 			structValueType := valueType.Elem()
 			if structValueType.Kind() == reflect.Struct {
 				if valueType.Implements(marshalerType) {
@@ -259,7 +257,7 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 			return true, nil
 		}
 	}
-	if vTarget.Type().Kind() != reflect.Ptr {
+	if vTarget.Type().Kind() != reflect.Pointer {
 		return false, fmt.Errorf("Decode (%v) requires a pointer to store results into", key)
 	}
 	if result, ok := d.GetOk(key); ok {
@@ -308,90 +306,90 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 			*vActual = result.(string)
 			return true, nil
 		case **string:
-			*vActual = opt.NewString(result.(string))
+			*vActual = new(result.(string))
 			return true, nil
 		case *bool:
 			*vActual = result.(bool)
 			return true, nil
 		case **bool:
-			*vActual = opt.NewBool(result.(bool))
+			*vActual = new(result.(bool))
 			return true, nil
 		case *int32:
 			*vActual = int32(result.(int))
 			return true, nil
 		case **int32:
-			*vActual = opt.NewInt32(int32(result.(int)))
+			*vActual = new(int32(result.(int)))
 			return true, nil
 		case *int64:
 			*vActual = int64(result.(int))
 			return true, nil
 		case **int64:
-			*vActual = opt.NewInt64(int64(result.(int)))
+			*vActual = new(int64(result.(int)))
 			return true, nil
 		case *int8:
 			*vActual = int8(result.(int))
 			return true, nil
 		case **int8:
-			*vActual = opt.NewInt8(int8(result.(int)))
+			*vActual = new(int8(result.(int)))
 			return true, nil
 		case *int16:
 			*vActual = int16(result.(int))
 			return true, nil
 		case **int16:
-			*vActual = opt.NewInt16(int16(result.(int)))
+			*vActual = new(int16(result.(int)))
 			return true, nil
 		case *int:
 			*vActual = int(result.(int))
 			return true, nil
 		case **int:
-			*vActual = opt.NewInt(int(result.(int)))
+			*vActual = new(int(result.(int)))
 			return true, nil
 		case *uint32:
 			*vActual = uint32(result.(int))
 			return true, nil
 		case **uint32:
-			*vActual = opt.NewUInt32(uint32(result.(int)))
+			*vActual = new(uint32(result.(int)))
 			return true, nil
 		case *uint64:
 			*vActual = uint64(result.(int))
 			return true, nil
 		case **uint64:
-			*vActual = opt.NewUInt64(uint64(result.(int)))
+			*vActual = new(uint64(result.(int)))
 			return true, nil
 		case *uint8:
 			*vActual = uint8(result.(int))
 			return true, nil
 		case **uint8:
-			*vActual = opt.NewUInt8(uint8(result.(int)))
+			*vActual = new(uint8(result.(int)))
 			return true, nil
 		case *uint16:
 			*vActual = uint16(result.(int))
 			return true, nil
 		case **uint16:
-			*vActual = opt.NewUInt16(uint16(result.(int)))
+			*vActual = new(uint16(result.(int)))
 			return true, nil
 		case *uint:
 			*vActual = uint(result.(int))
 			return true, nil
 		case **uint:
-			*vActual = opt.NewUint(uint(result.(int)))
+			*vActual = new(uint(result.(int)))
 			return true, nil
 		case *float64:
 			*vActual = float64(result.(float64))
 			return true, nil
 		case **float64:
-			*vActual = opt.NewFloat64(float64(result.(float64)))
+			*vActual = new(float64(result.(float64)))
 			return true, nil
 		case *float32:
 			*vActual = float32(result.(float64))
 			return true, nil
 		case **float32:
-			*vActual = opt.NewFloat32(float32(result.(float64)))
+			*vActual = new(float32(result.(float64)))
 			return true, nil
 		default:
 			vTarget := reflect.ValueOf(v)
 			tTarget := vTarget.Type()
-			if tTarget.Kind() == reflect.Ptr {
+			if tTarget.Kind() == reflect.Pointer {
 				tElem := tTarget.Elem()
 				if tElem.Kind() == reflect.String {
 					vTarget := vTarget.Elem()
@@ -399,7 +397,7 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 					tTarget := vTarget.Type()
 					vTarget.Set(vResult.Convert(tTarget))
 					return true, nil
-				} else if tElem.Kind() == reflect.Ptr {
+				} else if tElem.Kind() == reflect.Pointer {
 					tElem := tElem.Elem()
 					if tElem.Kind() == reflect.String {
 						vTarget := vTarget.Elem()
@@ -445,7 +443,7 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 					return true, nil
 				}
 			}
-			if tTarget.Kind() == reflect.Ptr {
+			if tTarget.Kind() == reflect.Pointer {
 				tTarget = tTarget.Elem()
 				if tTarget.Kind() == reflect.String {
 					if tTarget != stringType {
@@ -457,7 +455,7 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 						// log.Printf("%v %v covered", tOrigTarget, key)
 						return true, nil
 					} else {
-						vTarget.Set(reflect.ValueOf(opt.NewString(result.(string))))
+						vTarget.Set(reflect.ValueOf(new(result.(string))))
 						// log.Printf("%v %v covered", tOrigTarget, key)
 						return true, nil
 					}

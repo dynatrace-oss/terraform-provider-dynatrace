@@ -18,7 +18,6 @@
 package notificationintegration
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -93,10 +92,10 @@ func (me *WebhookConfigurationHeader) MarshalHCL(properties hcl.Properties) erro
 
 func (me *WebhookConfigurationHeader) HandlePreconditions() error {
 	if (me.SecretValue == nil) && (me.Secret) {
-		me.SecretValue = opt.NewString("")
+		me.SecretValue = new("")
 	}
 	if (me.Value == nil) && (!me.Secret) {
-		me.Value = opt.NewString("")
+		me.Value = new("")
 	}
 	return nil
 }

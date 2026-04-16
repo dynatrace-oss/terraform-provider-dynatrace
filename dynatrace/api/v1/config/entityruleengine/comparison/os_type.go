@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/ostype"
 
@@ -119,9 +120,7 @@ func (otc *OSType) UnmarshalHCL(decoder hcl.Decoder) error {
 func (otc *OSType) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(otc.Unknowns) > 0 {
-		for k, v := range otc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, otc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(otc.Negate)

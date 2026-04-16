@@ -21,6 +21,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"maps"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -203,9 +204,7 @@ func newBearerTokenAuthTransport(baseTransport http.RoundTripper, token string) 
 // and delegates the actual round trip to the underlying transport.
 func (t *bearerTokenAuthTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	// Copy authentication headers from tokenAuthTransport to the request.
-	for k, v := range t.header {
-		req.Header[k] = v
-	}
+	maps.Copy(req.Header, t.header)
 
 	// Perform the actual HTTP request using the underlying transport.
 	return t.RoundTripper.RoundTrip(req)

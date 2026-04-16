@@ -31,8 +31,6 @@ import (
 	webservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web"
 	errors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/errors/settings"
 	web "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/settings"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 )
 
 const SchemaID = "v1:config:applications:web:errors"
@@ -97,7 +95,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 			{
 				ConsiderUnknownErrorCode: false,
 				ConsiderBlockedRequests:  false,
-				ErrorCodes:               opt.NewString("401"),
+				ErrorCodes:               new("401"),
 				FilterByURL:              false,
 				Filter:                   nil,
 				URL:                      nil,
@@ -108,10 +106,10 @@ func (me *service) Delete(ctx context.Context, id string) error {
 			{
 				ConsiderUnknownErrorCode: false,
 				ConsiderBlockedRequests:  false,
-				ErrorCodes:               opt.NewString("404"),
+				ErrorCodes:               new("404"),
 				FilterByURL:              true,
 				Filter:                   &errors.HTTPErrorRuleFilters.EndsWith,
-				URL:                      opt.NewString("favicon.ico"),
+				URL:                      new("favicon.ico"),
 				Capture:                  false,
 				ImpactApdex:              false,
 				ConsiderForAI:            false,
@@ -119,10 +117,10 @@ func (me *service) Delete(ctx context.Context, id string) error {
 			{
 				ConsiderUnknownErrorCode: false,
 				ConsiderBlockedRequests:  false,
-				ErrorCodes:               opt.NewString("404"),
+				ErrorCodes:               new("404"),
 				FilterByURL:              true,
 				Filter:                   &errors.HTTPErrorRuleFilters.EndsWith,
-				URL:                      opt.NewString(".js"),
+				URL:                      new(".js"),
 				Capture:                  true,
 				ImpactApdex:              true,
 				ConsiderForAI:            true,
@@ -130,10 +128,10 @@ func (me *service) Delete(ctx context.Context, id string) error {
 			{
 				ConsiderUnknownErrorCode: false,
 				ConsiderBlockedRequests:  false,
-				ErrorCodes:               opt.NewString("404"),
+				ErrorCodes:               new("404"),
 				FilterByURL:              true,
 				Filter:                   &errors.HTTPErrorRuleFilters.EndsWith,
-				URL:                      opt.NewString(".css"),
+				URL:                      new(".css"),
 				Capture:                  true,
 				ImpactApdex:              true,
 				ConsiderForAI:            true,
@@ -141,7 +139,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 			{
 				ConsiderUnknownErrorCode: false,
 				ConsiderBlockedRequests:  false,
-				ErrorCodes:               opt.NewString("400-499"),
+				ErrorCodes:               new("400-499"),
 				FilterByURL:              false,
 				Filter:                   nil,
 				URL:                      nil,
@@ -152,7 +150,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 			{
 				ConsiderUnknownErrorCode: false,
 				ConsiderBlockedRequests:  false,
-				ErrorCodes:               opt.NewString("500-599"),
+				ErrorCodes:               new("500-599"),
 				FilterByURL:              false,
 				Filter:                   nil,
 				URL:                      nil,
@@ -187,7 +185,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 			{
 				KeyPattern:     nil,
 				KeyMatcher:     nil,
-				ValuePattern:   opt.NewString("example"),
+				ValuePattern:   new("example"),
 				ValueMatcher:   &errors.CustomErrorRuleValueMatchers.BeginsWith,
 				Capture:        true,
 				ImpactApdex:    true,
