@@ -1,3 +1,5 @@
+//go:build unit
+
 /**
 * @license
 * Copyright 2025 Dynatrace LLC
@@ -14,8 +16,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
  */
-
-//go:build unit
 
 package settings
 
@@ -87,12 +87,12 @@ func TestUserAccessor_UnmarshalHCL(t *testing.T) {
 
 	cases := []struct {
 		name     string
-		input    map[string]interface{}
+		input    map[string]any
 		expected *UserAccessor
 	}{
 		{
 			name:  "HCLAccessorRead-access",
-			input: map[string]interface{}{"uid": "my-id", "access": HCLAccessorRead},
+			input: map[string]any{"uid": "my-id", "access": HCLAccessorRead},
 			expected: &UserAccessor{
 				UID:    "my-id",
 				Access: HCLAccessorRead,
@@ -100,7 +100,7 @@ func TestUserAccessor_UnmarshalHCL(t *testing.T) {
 		},
 		{
 			name:  "write-access",
-			input: map[string]interface{}{"uid": "my-id", "access": HCLAccessorWrite},
+			input: map[string]any{"uid": "my-id", "access": HCLAccessorWrite},
 			expected: &UserAccessor{
 				UID:    "my-id",
 				Access: HCLAccessorWrite,
@@ -108,7 +108,7 @@ func TestUserAccessor_UnmarshalHCL(t *testing.T) {
 		},
 		{
 			name:     "empty",
-			input:    map[string]interface{}{"uid": "", "access": ""},
+			input:    map[string]any{"uid": "", "access": ""},
 			expected: &UserAccessor{},
 		},
 	}
@@ -137,7 +137,7 @@ func TestUsers_MarshalHCL(t *testing.T) {
 	err := users.MarshalHCL(properties)
 	assert.NoError(t, err)
 
-	userList, ok := properties["user"].([]interface{})
+	userList, ok := properties["user"].([]any)
 	assert.True(t, ok)
 	assert.Len(t, userList, 2)
 
@@ -153,13 +153,13 @@ func TestUsers_MarshalHCL(t *testing.T) {
 func TestUsers_UnmarshalHCL(t *testing.T) {
 	s := new(Users).Schema()
 
-	input := map[string]interface{}{
-		"user": []interface{}{
-			map[string]interface{}{
+	input := map[string]any{
+		"user": []any{
+			map[string]any{
 				"uid":    "user1",
 				"access": HCLAccessorRead,
 			},
-			map[string]interface{}{
+			map[string]any{
 				"uid":    "user2",
 				"access": HCLAccessorWrite,
 			},
