@@ -31,3 +31,9 @@ func TestAccHTTPMonitors(t *testing.T) {
 		"time": {Source: "hashicorp/time"},
 	}})
 }
+
+func TestAccTestCasesHTTPMonitors(t *testing.T) {
+	api.TestAccTestCases(t, api.TestCaseAccOptions{ExternalProviders: map[string]resource.ExternalProvider{
+		"time": {Source: "hashicorp/time"},
+	}})
+}
