@@ -93,7 +93,7 @@ func (s *service) createClient(ctx context.Context) (*caclib.Client, error) {
 	return caclib.NewClient(platformClient), nil
 }
 
-func (s *service) List(ctx context.Context) (api.Stubs, error) {
+func (s *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	client, err := s.createClient(ctx)
 	if err != nil {
 		return nil, err
@@ -107,7 +107,7 @@ func (s *service) List(ctx context.Context) (api.Stubs, error) {
 	return api.Stubs{&stub}, nil
 }
 
-func (s *service) Get(ctx context.Context, id string, v *openpipeline.Configuration) error {
+func (s *service) Get(ctx context.Context, id string, v *openpipeline.Configuration, m any) error {
 	client, err := s.createClient(ctx)
 	if err != nil {
 		return err
@@ -135,15 +135,15 @@ func (s *service) SchemaID() string {
 	return "platform:openpipeline." + s.schemaSuffix
 }
 
-func (s *service) Create(ctx context.Context, v *openpipeline.Configuration) (*api.Stub, error) {
-	if err := s.Update(ctx, s.kind, v); err != nil {
+func (s *service) Create(ctx context.Context, v *openpipeline.Configuration, m any) (*api.Stub, error) {
+	if err := s.Update(ctx, s.kind, v, m); err != nil {
 		return nil, err
 	}
 
 	return &api.Stub{ID: s.kind, Name: s.kind}, nil
 }
 
-func (s *service) Update(ctx context.Context, id string, v *openpipeline.Configuration) error {
+func (s *service) Update(ctx context.Context, id string, v *openpipeline.Configuration, m any) error {
 	client, err := s.createClient(ctx)
 	if err != nil {
 		return err
@@ -159,7 +159,7 @@ func (s *service) Update(ctx context.Context, id string, v *openpipeline.Configu
 	return err
 }
 
-func (s *service) Delete(ctx context.Context, id string) error {
+func (s *service) Delete(ctx context.Context, id string, m any) error {
 	emptyConfig := openpipeline.Configuration{Routing: &openpipeline.RoutingTable{}}
-	return s.Update(ctx, s.kind, &emptyConfig)
+	return s.Update(ctx, s.kind, &emptyConfig, m)
 }

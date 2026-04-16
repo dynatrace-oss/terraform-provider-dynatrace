@@ -45,19 +45,19 @@ type service struct {
 	client  rest.Client
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.service.List(ctx, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *requestnaming.RequestNaming) error {
-	return me.service.Get(ctx, id, v)
+func (me *service) Get(ctx context.Context, id string, v *requestnaming.RequestNaming, m any) error {
+	return me.service.Get(ctx, id, v, m)
 }
 
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(ctx context.Context, v *requestnaming.RequestNaming) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *requestnaming.RequestNaming, m any) (*api.Stub, error) {
 	var err error
 	var req rest.Request
 	var stub api.Stub
@@ -81,10 +81,10 @@ func (me *service) Create(ctx context.Context, v *requestnaming.RequestNaming) (
 	return &stub, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *requestnaming.RequestNaming) error {
-	return me.service.Update(ctx, id, v)
+func (me *service) Update(ctx context.Context, id string, v *requestnaming.RequestNaming, m any) error {
+	return me.service.Update(ctx, id, v, m)
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+func (me *service) Delete(ctx context.Context, id string, m any) error {
+	return me.service.Delete(ctx, id, m)
 }

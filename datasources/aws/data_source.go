@@ -44,7 +44,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	service := svc.Service(creds)
 
 	var settings iam.Settings
-	if err = service.Get(ctx, "", &settings); err != nil {
+	if err = service.Get(ctx, "", &settings, m); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(settings.Token)

@@ -43,7 +43,7 @@ func Duplicates(ctx context.Context, service settings.RService[*hosts.NamingRule
 	if settings.RejectDuplicate("dynatrace_host_naming") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -54,7 +54,7 @@ func Duplicates(ctx context.Context, service settings.RService[*hosts.NamingRule
 	} else if settings.HijackDuplicate("dynatrace_host_naming") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

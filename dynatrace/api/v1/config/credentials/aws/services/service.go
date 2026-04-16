@@ -57,7 +57,7 @@ type servicesResponse struct {
 	Services []*services.Settings `json:"services"`
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	var stubs api.Stubs
 	var credentialStubs api.Stubs
 	var err error
@@ -76,7 +76,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *services.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *services.Settings, m any) error {
 	// smu.Lock()
 	// defer smu.Unlock()
 	parts := strings.Split(id, "#")
@@ -103,7 +103,7 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *services.Settings, m any) (*api.Stub, error) {
 	smu.Lock()
 	defer smu.Unlock()
 	credentialsID := v.CredentialsID
@@ -240,12 +240,12 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 	return &api.Stub{ID: credentialsID + "#" + v.Name, Name: credentialsID + "_" + v.Name}, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *services.Settings) error {
-	_, err := me.Create(ctx, v)
+func (me *service) Update(ctx context.Context, id string, v *services.Settings, m any) error {
+	_, err := me.Create(ctx, v, m)
 	return err
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	smu.Lock()
 	defer smu.Unlock()
 	parts := strings.Split(id, "#")

@@ -40,11 +40,11 @@ type service struct {
 	client rest.Client
 }
 
-func (me *service) Get(ctx context.Context, id string, v *mysettings.CalculatedMobileMetric) error {
+func (me *service) Get(ctx context.Context, id string, v *mysettings.CalculatedMobileMetric, m any) error {
 	return me.client.Get(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/mobile/%s", url.PathEscape(id)), 200).Finish(v)
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 
 	req := me.client.Get(ctx, "/api/config/v1/calculatedMetrics/mobile", 200)
@@ -67,7 +67,7 @@ func (me *service) Validate(ctx context.Context, v *mysettings.CalculatedMobileM
 	return nil
 }
 
-func (me *service) Create(ctx context.Context, v *mysettings.CalculatedMobileMetric) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *mysettings.CalculatedMobileMetric, m any) (*api.Stub, error) {
 	var err error
 	client := me.client
 	var stub api.Stub
@@ -80,14 +80,14 @@ func (me *service) Create(ctx context.Context, v *mysettings.CalculatedMobileMet
 	return &stub, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *mysettings.CalculatedMobileMetric) error {
+func (me *service) Update(ctx context.Context, id string, v *mysettings.CalculatedMobileMetric, m any) error {
 	if err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/mobile/%s", url.PathEscape(id)), v, 204).Finish(); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	var err error
 	attempts := 30
 

@@ -25,14 +25,14 @@ import (
 )
 
 type RService[T Settings] interface {
-	List(ctx context.Context) (api.Stubs, error)
-	Get(ctx context.Context, id string, v T) error
+	List(ctx context.Context, m any) (api.Stubs, error)
+	Get(ctx context.Context, id string, v T, m any) error
 	SchemaID() string
 }
 
 func FindByName[T Settings](ctx context.Context, service RService[T], name string) (stub *api.Stub, err error) {
 	var stubs api.Stubs
-	if stubs, err = service.List(ctx); err != nil {
+	if stubs, err = service.List(ctx, nil); err != nil {
 		return nil, err
 	}
 	for _, stub := range stubs.ToStubs() {
@@ -48,12 +48,12 @@ type ContextKey string
 const ContextKeyStateConfig = ContextKey("state-config")
 
 type CRUDService[T Settings] interface {
-	List(ctx context.Context) (api.Stubs, error)
-	Get(ctx context.Context, id string, v T) error
+	List(ctx context.Context, m any) (api.Stubs, error)
+	Get(ctx context.Context, id string, v T, m any) error
 	SchemaID() string
-	Create(ctx context.Context, v T) (*api.Stub, error)
-	Update(ctx context.Context, id string, v T) error
-	Delete(ctx context.Context, id string) error
+	Create(ctx context.Context, v T, m any) (*api.Stub, error)
+	Update(ctx context.Context, id string, v T, m any) error
+	Delete(ctx context.Context, id string, m any) error
 }
 
 type ListIDCRUDService[T Settings] interface {

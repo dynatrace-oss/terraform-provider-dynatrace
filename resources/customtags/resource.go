@@ -59,7 +59,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if _, err := customtags.Service(creds).Create(ctx, config); err != nil {
+	if _, err := customtags.Service(creds).Create(ctx, config, m); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(uuid.New().String())
@@ -135,7 +135,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		}
 	}
 
-	if err := customtags.Service(creds).Update(ctx, config.EntitySelector, config); err != nil {
+	if err := customtags.Service(creds).Update(ctx, config.EntitySelector, config, m); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -172,7 +172,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	}
 
 	apiConfig := new(settings.Settings)
-	if err := customtags.Service(creds).Get(ctx, selector, apiConfig); err != nil {
+	if err := customtags.Service(creds).Get(ctx, selector, apiConfig, m); err != nil {
 		return diag.FromErr(err)
 	}
 

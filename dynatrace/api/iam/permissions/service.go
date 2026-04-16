@@ -73,7 +73,7 @@ func (me *PermissionServiceClient) Name() string {
 	return me.SchemaID()
 }
 
-func (me *PermissionServiceClient) Create(ctx context.Context, permission *permissions.Permission) (*api.Stub, error) {
+func (me *PermissionServiceClient) Create(ctx context.Context, permission *permissions.Permission, m any) (*api.Stub, error) {
 	var err error
 
 	client := iam.NewIAMClient(ctx, me)
@@ -106,7 +106,7 @@ type GetGroupPermissionsResponse struct {
 	Permissions []*permissions.PermissionDTO
 }
 
-func (me *PermissionServiceClient) Get(ctx context.Context, id string, v *permissions.Permission) error {
+func (me *PermissionServiceClient) Get(ctx context.Context, id string, v *permissions.Permission, m any) error {
 	var err error
 	var responseBytes []byte
 
@@ -151,13 +151,13 @@ func (me *PermissionServiceClient) Get(ctx context.Context, id string, v *permis
 	return rest.Error{Code: 404, Message: fmt.Sprintf("there exists no permission for group %s with name %s, scope %s and scope type %s", groupID, name, scope, scopeType)}
 }
 
-func (me *PermissionServiceClient) Update(ctx context.Context, email string, permission *permissions.Permission) error {
+func (me *PermissionServiceClient) Update(ctx context.Context, email string, permission *permissions.Permission, m any) error {
 	return errors.New("permissions are not expected to get updated - only destroy and create are possible")
 }
 
-func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) {
+func (me *PermissionServiceClient) List(ctx context.Context, m any) (api.Stubs, error) {
 	groupsService := groups.NewGroupService(me.clientID, me.accountID, me.clientSecret, me.tokenURL, me.endpointURL)
-	groupStubs, err := groupsService.List(ctx)
+	groupStubs, err := groupsService.List(ctx, m)
 	if err != nil {
 		return nil, err
 	}
@@ -186,7 +186,7 @@ func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) 
 	return stubs, nil
 }
 
-func (me *PermissionServiceClient) Delete(ctx context.Context, id string) error {
+func (me *PermissionServiceClient) Delete(ctx context.Context, id string, m any) error {
 	parts := strings.Split(id, "#-#")
 	if len(parts) < 4 {
 		return fmt.Errorf("'%s' is not a valid permission ID", id)

@@ -103,7 +103,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	d.SetId(fmt.Sprintf("%s#%s#%s#%s#%s", service.SchemaID(), entityType, entitySelector, from, to))
 
-	if err := service.Get(ctx, service.SchemaID(), &settings); err != nil {
+	if err := service.Get(ctx, service.SchemaID(), &settings, m); err != nil {
 		if strings.Contains(err.Error(), "Scope: mzname. Management-Zone not found:") {
 			d.Set("entities", []any{})
 			if violations := rest.ConstraintViolations(err); len(violations) > 0 {

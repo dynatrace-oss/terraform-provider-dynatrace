@@ -88,7 +88,7 @@ func createCoreClient(ctx context.Context, credentials *rest.Credentials) (direc
 	return coredirectshares.NewClient(platformClient), nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *serviceSettings.DirectShare) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *serviceSettings.DirectShare, m any) (err error) {
 	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return err
@@ -143,7 +143,7 @@ func (me *service) SchemaID() string {
 	return "document:direct-shares"
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return nil, err
@@ -171,7 +171,7 @@ func (me *service) Validate(v *serviceSettings.DirectShare) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(ctx context.Context, v *serviceSettings.DirectShare) (stub *api.Stub, err error) {
+func (me *service) Create(ctx context.Context, v *serviceSettings.DirectShare, m any) (stub *api.Stub, err error) {
 	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return nil, err
@@ -210,7 +210,7 @@ func (me *service) Create(ctx context.Context, v *serviceSettings.DirectShare) (
 	return &api.Stub{ID: resp.ID}, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *serviceSettings.DirectShare) (err error) {
+func (me *service) Update(ctx context.Context, id string, v *serviceSettings.DirectShare, m any) (err error) {
 	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return err
@@ -284,7 +284,7 @@ func containsRecipient(recipients serviceSettings.Recipients, target *serviceSet
 	return false
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return err

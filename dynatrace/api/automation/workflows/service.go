@@ -47,7 +47,7 @@ func (me *service) client(ctx context.Context) (*automation.Client, error) {
 	return automation.NewClient(platformClient), nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *workflows.Workflow) error {
+func (me *service) Get(ctx context.Context, id string, v *workflows.Workflow, m any) error {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err
@@ -95,7 +95,7 @@ type WorkflowStub struct {
 	Title string `json:"title"`
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return nil, err
@@ -120,7 +120,7 @@ func (me *service) Validate(v *workflows.Workflow) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(ctx context.Context, v *workflows.Workflow) (stub *api.Stub, err error) {
+func (me *service) Create(ctx context.Context, v *workflows.Workflow, m any) (stub *api.Stub, err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return nil, err
@@ -141,7 +141,7 @@ func (me *service) Create(ctx context.Context, v *workflows.Workflow) (stub *api
 	return &api.Stub{Name: v.Title, ID: workflowStub.ID}, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow) (err error) {
+func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow, m any) (err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err
@@ -154,7 +154,7 @@ func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow)
 	return err
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err

@@ -85,7 +85,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	service := export.Service(creds, export.ResourceTypes.Documents)
 	var stubs api.Stubs
-	if stubs, err = service.List(ctx); err != nil {
+	if stubs, err = service.List(ctx, m); err != nil {
 		return diag.FromErr(err)
 	}
 

@@ -143,8 +143,8 @@ type service struct {
 	service settings.CRUDService[*dashboards.JSONDashboard]
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	stubs, err := me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	stubs, err := me.service.List(ctx, m)
 	if err != nil {
 		return stubs, err
 	}
@@ -157,8 +157,8 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return filteredStubs, nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *dashboards.JSONDashboard) error {
-	if err := me.service.Get(ctx, id, v); err != nil {
+func (me *service) Get(ctx context.Context, id string, v *dashboards.JSONDashboard, m any) error {
+	if err := me.service.Get(ctx, id, v, m); err != nil {
 		return err
 	}
 	v.DeNull()
@@ -172,7 +172,7 @@ func (me *service) Validate(ctx context.Context, v *dashboards.JSONDashboard) er
 	return nil
 }
 
-func (me *service) Create(ctx context.Context, v *dashboards.JSONDashboard) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *dashboards.JSONDashboard, m any) (*api.Stub, error) {
 	doCreateService := true
 	var stub *api.Stub = nil
 	var err error = nil
@@ -180,7 +180,7 @@ func (me *service) Create(ctx context.Context, v *dashboards.JSONDashboard) (*ap
 	if len(v.LinkID) > 0 {
 		doCreateService = false
 
-		err = me.Update(ctx, v.LinkID, v)
+		err = me.Update(ctx, v.LinkID, v, m)
 		stub = &api.Stub{ID: v.LinkID}
 
 		if restError, ok := err.(rest.Error); ok {
@@ -190,13 +190,13 @@ func (me *service) Create(ctx context.Context, v *dashboards.JSONDashboard) (*ap
 		}
 	}
 	if doCreateService {
-		stub, err = me.service.Create(ctx, v.EnrichRequireds())
+		stub, err = me.service.Create(ctx, v.EnrichRequireds(), m)
 	}
 
 	return stub, err
 }
 
-func (me *service) Update(ctx context.Context, id string, v *dashboards.JSONDashboard) error {
+func (me *service) Update(ctx context.Context, id string, v *dashboards.JSONDashboard, m any) error {
 
 	if len(v.LinkID) > 0 {
 		if id != strings.ToLower(v.LinkID) {
@@ -207,13 +207,13 @@ func (me *service) Update(ctx context.Context, id string, v *dashboards.JSONDash
 	jsonDashboard := v
 	oldContents := jsonDashboard.Contents
 	jsonDashboard.Contents = strings.Replace(oldContents, "{", `{ "id": "`+id+`", `, 1)
-	err := me.service.Update(ctx, id, v.EnrichRequireds())
+	err := me.service.Update(ctx, id, v.EnrichRequireds(), m)
 	jsonDashboard.Contents = oldContents
 	return err
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+func (me *service) Delete(ctx context.Context, id string, m any) error {
+	return me.service.Delete(ctx, id, m)
 }
 
 func (me *service) SchemaID() string {

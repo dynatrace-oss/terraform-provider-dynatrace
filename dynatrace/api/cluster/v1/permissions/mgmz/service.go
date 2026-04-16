@@ -42,23 +42,23 @@ type ServiceClient struct {
 	client rest.Client
 }
 
-func (me *service) Create(ctx context.Context, v *mgmz.Permission) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *mgmz.Permission, m any) (*api.Stub, error) {
 	return me.serviceClient.Create(ctx, v)
 }
 
-func (me *service) Update(ctx context.Context, id string, v *mgmz.Permission) error {
+func (me *service) Update(ctx context.Context, id string, v *mgmz.Permission, m any) error {
 	return me.serviceClient.Update(ctx, v)
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	return me.serviceClient.Delete(ctx, id)
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	return me.serviceClient.List(ctx)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *mgmz.Permission) error {
+func (me *service) Get(ctx context.Context, id string, v *mgmz.Permission, m any) error {
 	return me.serviceClient.Get(ctx, id, v)
 }
 

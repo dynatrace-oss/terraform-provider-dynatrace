@@ -41,11 +41,11 @@ type service struct {
 	httpService   settings.CRUDService[*httpsettings.SyntheticMonitor]
 }
 
-func (me *service) Create(ctx context.Context, v *script.Settings) (*api.Stub, error) {
-	return &api.Stub{ID: v.HttpId, Name: v.HttpId}, me.Update(ctx, v.HttpId, v)
+func (me *service) Create(ctx context.Context, v *script.Settings, m any) (*api.Stub, error) {
+	return &api.Stub{ID: v.HttpId, Name: v.HttpId}, me.Update(ctx, v.HttpId, v, m)
 }
 
-func (me *service) Update(ctx context.Context, id string, v *script.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *script.Settings, m any) error {
 	monitorSettings, err := me.getHttp(ctx, id)
 	if err != nil {
 		return err
@@ -57,17 +57,17 @@ func (me *service) Update(ctx context.Context, id string, v *script.Settings) er
 
 func (me *service) getHttp(ctx context.Context, id string) (*httpsettings.SyntheticMonitor, error) {
 	monitorSettings := new(httpsettings.SyntheticMonitor)
-	if err := me.httpService.Get(ctx, id, monitorSettings); err != nil {
+	if err := me.httpService.Get(ctx, id, monitorSettings, nil); err != nil {
 		return nil, err
 	}
 	return monitorSettings, nil
 }
 
 func (me *service) update(ctx context.Context, id string, v *httpsettings.SyntheticMonitor) error {
-	return me.httpService.Update(ctx, id, v)
+	return me.httpService.Update(ctx, id, v, nil)
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	monitorSettings, err := me.getHttp(ctx, id)
 	if err != nil {
 		return err
@@ -77,7 +77,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	return me.update(ctx, id, monitorSettings)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *script.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *script.Settings, m any) error {
 	monitorSettings, err := me.getHttp(ctx, id)
 	if err != nil {
 		return err
@@ -88,8 +88,8 @@ func (me *service) Get(ctx context.Context, id string, v *script.Settings) error
 	return nil
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.httpService.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.httpService.List(ctx, m)
 }
 
 func (me *service) SchemaID() string {

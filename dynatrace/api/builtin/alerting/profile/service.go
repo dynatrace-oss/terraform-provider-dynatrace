@@ -39,7 +39,7 @@ func Duplicates(ctx context.Context, service settings.RService[*profile.Profile]
 	if settings.RejectDuplicate("dynatrace_alerting", "dynatrace_alerting_profile") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -50,7 +50,7 @@ func Duplicates(ctx context.Context, service settings.RService[*profile.Profile]
 	} else if settings.HijackDuplicate("dynatrace_alerting", "dynatrace_alerting_profile") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

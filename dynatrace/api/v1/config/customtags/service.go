@@ -45,7 +45,7 @@ type service struct {
 
 var entityIdSelectorRegexp = regexp.MustCompile("entityId\\((.*)\\)")
 
-func (me *service) Get(ctx context.Context, selector string, v *customtags.Settings) (err error) {
+func (me *service) Get(ctx context.Context, selector string, v *customtags.Settings, m any) (err error) {
 	client := rest.APITokenClient(me.credentials)
 	if err = client.Get(ctx, fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(selector)), 200).Finish(v); err != nil {
 		return err
@@ -71,7 +71,7 @@ func (me *service) SchemaID() string {
 	return "v2:environment:customtags"
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	return list.List(ctx, rest.APITokenClient(me.credentials))
 }
 
@@ -79,14 +79,14 @@ func (me *service) Validate(ctx context.Context, v *customtags.Settings) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(ctx context.Context, v *customtags.Settings) (*api.Stub, error) {
-	if err := me.Update(ctx, v.EntitySelector, v); err != nil {
+func (me *service) Create(ctx context.Context, v *customtags.Settings, m any) (*api.Stub, error) {
+	if err := me.Update(ctx, v.EntitySelector, v, m); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: v.EntitySelector, Name: v.EntitySelector}, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *customtags.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *customtags.Settings, m any) error {
 	var err error
 
 	var settingsObj customtags.Settings
@@ -103,7 +103,7 @@ func (me *service) Update(ctx context.Context, id string, v *customtags.Settings
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	return errors.New("not implemented")
 }
 

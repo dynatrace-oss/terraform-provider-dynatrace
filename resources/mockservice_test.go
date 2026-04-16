@@ -33,11 +33,11 @@ type service struct {
 	Err  error
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	return nil, nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *mockSchema) error {
+func (me *service) Get(ctx context.Context, id string, v *mockSchema, m any) error {
 	return me.Err
 }
 
@@ -45,15 +45,15 @@ func (me *service) SchemaID() string {
 	return "mock"
 }
 
-func (me *service) Create(ctx context.Context, v *mockSchema) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *mockSchema, m any) (*api.Stub, error) {
 	return me.Stub, me.Err
 }
 
-func (me *service) Update(ctx context.Context, id string, v *mockSchema) error {
+func (me *service) Update(ctx context.Context, id string, v *mockSchema, m any) error {
 	return me.Err
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	return me.Err
 }
 

@@ -34,12 +34,12 @@ func (me *GenericRService[T]) NoCache() bool {
 	return false
 }
 
-func (me *GenericRService[T]) List(ctx context.Context) (api.Stubs, error) {
-	return me.Service.List(ctx)
+func (me *GenericRService[T]) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.Service.List(ctx, m)
 }
 
-func (me *GenericRService[T]) Get(ctx context.Context, id string, v Settings) error {
-	return me.Service.Get(ctx, id, v.(T))
+func (me *GenericRService[T]) Get(ctx context.Context, id string, v Settings, m any) error {
+	return me.Service.Get(ctx, id, v.(T), m)
 }
 
 func (me *GenericRService[T]) SchemaID() string {

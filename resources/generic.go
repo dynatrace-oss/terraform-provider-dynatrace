@@ -210,7 +210,7 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 	}
 	var stub *api.Stub
 
-	stub, err = service.Create(ctx, sttngs)
+	stub, err = service.Create(ctx, sttngs, m)
 	if err != nil {
 		if restWarning, ok := err.(rest.Warning); ok {
 			if stub != nil && len(stub.ID) > 0 {
@@ -309,7 +309,7 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 			ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
 		}
 	}
-	err = service.Update(ctx, d.Id(), sttngs)
+	err = service.Update(ctx, d.Id(), sttngs, m)
 	if err != nil {
 		if restWarning, ok := err.(rest.Warning); ok {
 			return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: restWarning.Message}}
@@ -465,7 +465,7 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 			ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
 		}
 	}
-	if err = service.Get(ctx, d.Id(), sttngs); err != nil {
+	if err = service.Get(ctx, d.Id(), sttngs, m); err != nil {
 		if err.Error() == "inaccessible" {
 			return diag.Diagnostics{}
 		}
@@ -474,7 +474,7 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 			if err = tfConfig.UnmarshalHCL(confighcl.DecoderFrom(d, me.Resource())); err == nil {
 				ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, tfConfig)
 			}
-			err = service.Get(ctx, d.Id(), sttngs)
+			err = service.Get(ctx, d.Id(), sttngs, m)
 		}
 	}
 	if err != nil {
@@ -507,7 +507,7 @@ func (me *Generic) Delete(ctx context.Context, d *schema.ResourceData, m any) di
 			if err != nil {
 				return diag.FromErr(err)
 			}
-			if err = srv.Update(ctx, d.Id(), sttngs); err != nil {
+			if err = srv.Update(ctx, d.Id(), sttngs, m); err != nil {
 				return diag.FromErr(err)
 			}
 			d.SetId("")
@@ -525,7 +525,7 @@ func (me *Generic) Delete(ctx context.Context, d *schema.ResourceData, m any) di
 			ctx = context.WithValue(ctx, settings.ContextKeyStateConfig, stateConfig)
 		}
 	}
-	err = service.Delete(ctx, d.Id())
+	err = service.Delete(ctx, d.Id(), m)
 
 	if err != nil {
 		if restWarning, ok := err.(rest.Warning); ok {

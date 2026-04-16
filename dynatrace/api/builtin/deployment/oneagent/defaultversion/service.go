@@ -36,11 +36,11 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*defaultversion
 
 type service struct{}
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	return api.Stubs{}, nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *defaultversion.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *defaultversion.Settings, m any) error {
 	return nil
 }
 
@@ -48,14 +48,14 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Create(ctx context.Context, v *defaultversion.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *defaultversion.Settings, m any) (*api.Stub, error) {
 	return &api.Stub{ID: uuid.NewString()}, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *defaultversion.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *defaultversion.Settings, m any) error {
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	return nil
 }

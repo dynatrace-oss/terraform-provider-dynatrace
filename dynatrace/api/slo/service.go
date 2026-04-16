@@ -45,7 +45,7 @@ func (me *service) client(ctx context.Context) (*sloclient.Client, error) {
 	return sloclient.NewClient(platformClient), nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *slo.SLO) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *slo.SLO, m any) (err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err
@@ -62,7 +62,7 @@ func (me *service) SchemaID() string {
 	return "platform:slo"
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return nil, err
@@ -87,7 +87,7 @@ func (me *service) Validate(_ *slo.SLO) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *slo.SLO, m any) (*api.Stub, error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
 	return &stub, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *slo.SLO) (err error) {
+func (me *service) Update(ctx context.Context, id string, v *slo.SLO, m any) (err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err
@@ -127,7 +127,7 @@ func (me *service) Update(ctx context.Context, id string, v *slo.SLO) (err error
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err

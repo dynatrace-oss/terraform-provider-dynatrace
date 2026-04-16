@@ -69,7 +69,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := settings.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	stub, err := Service(m).Create(ctx, settings)
+	stub, err := Service(m).Create(ctx, settings, m)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -83,7 +83,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := settings.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := Service(m).Update(ctx, d.Id(), settings); err != nil {
+	if err := Service(m).Update(ctx, d.Id(), settings, m); err != nil {
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
@@ -101,7 +101,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		restlogging.SetLogWriter(restLogFile)
 	}
 	settings := Settings()
-	if err := Service(m).Get(ctx, d.Id(), settings); err != nil {
+	if err := Service(m).Get(ctx, d.Id(), settings, m); err != nil {
 		return diag.FromErr(err)
 	}
 	marshalled := hcl.Properties{}
@@ -116,7 +116,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	if err := Service(m).Delete(ctx, d.Id()); err != nil {
+	if err := Service(m).Delete(ctx, d.Id(), m); err != nil {
 		return diag.FromErr(err)
 	}
 	return diag.Diagnostics{}

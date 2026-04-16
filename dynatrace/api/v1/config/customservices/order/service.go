@@ -41,13 +41,13 @@ type service struct {
 	client rest.Client
 }
 
-func (s *service) Create(ctx context.Context, v *order.Settings) (*api.Stub, error) {
+func (s *service) Create(ctx context.Context, v *order.Settings, m any) (*api.Stub, error) {
 	// Creating this resource doesn't really add a setting on the remote side
 	// It just defines a specific order
-	return &api.Stub{ID: StaticID, Name: StaticName}, s.Update(ctx, "", v)
+	return &api.Stub{ID: StaticID, Name: StaticName}, s.Update(ctx, "", v, m)
 }
 
-func (s *service) Get(ctx context.Context, id string, v *order.Settings) (err error) {
+func (s *service) Get(ctx context.Context, id string, v *order.Settings, m any) (err error) {
 	cfg := ctx.Value(settings.ContextKeyStateConfig)
 	var currentConfig *order.Settings
 	if orderConfig, ok := cfg.(*order.Settings); ok {
@@ -98,7 +98,7 @@ type ListResponse struct {
 	} `json:"values"`
 }
 
-func (s *service) List(ctx context.Context) (stubs api.Stubs, err error) {
+func (s *service) List(ctx context.Context, m any) (stubs api.Stubs, err error) {
 	return append(stubs, &api.Stub{ID: StaticID, Name: StaticName}), nil
 }
 
@@ -106,7 +106,7 @@ func (s *service) SchemaID() string {
 	return SchemaID
 }
 
-func (s *service) Update(ctx context.Context, id string, v *order.Settings) (err error) {
+func (s *service) Update(ctx context.Context, id string, v *order.Settings, m any) (err error) {
 	if len(v.IDs) == 0 {
 		return nil
 	}
@@ -138,7 +138,7 @@ func (s *service) update(ctx context.Context, technology string, ids []string) (
 	return s.client.Put(ctx, fmt.Sprintf(BasePath, technology)+"/order", &payload, 204).Finish()
 }
 
-func (s *service) Delete(ctx context.Context, id string) error {
+func (s *service) Delete(ctx context.Context, id string, m any) error {
 	// Deleting this resource does not actually destroy anything on the remote side
 	// We simply forget about the order of things
 	return nil

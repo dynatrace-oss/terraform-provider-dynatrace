@@ -68,7 +68,7 @@ func (me *ServiceImpl) getSettingsClient(ctx context.Context) (PlatformSettingsC
 	return me.SettingsClient, nil
 }
 
-func (me *ServiceImpl) Get(ctx context.Context, objectID string, v *permissions.SettingPermissions) error {
+func (me *ServiceImpl) Get(ctx context.Context, objectID string, v *permissions.SettingPermissions, m any) error {
 	currentPermissions, _, err := me.get(ctx, objectID)
 	if err != nil {
 		return err
@@ -104,7 +104,7 @@ func (me *ServiceImpl) SchemaID() string {
 	return "settings:permissions"
 }
 
-func (me *ServiceImpl) List(ctx context.Context) (api.Stubs, error) {
+func (me *ServiceImpl) List(ctx context.Context, m any) (api.Stubs, error) {
 	client, err := me.getSettingsClient(ctx)
 	if err != nil {
 		return nil, err
@@ -149,16 +149,16 @@ func (me *ServiceImpl) Upsert(ctx context.Context, v *permissions.SettingPermiss
 	return &api.Stub{ID: v.SettingsObjectID}, nil
 }
 
-func (me *ServiceImpl) Create(ctx context.Context, v *permissions.SettingPermissions) (*api.Stub, error) {
+func (me *ServiceImpl) Create(ctx context.Context, v *permissions.SettingPermissions, m any) (*api.Stub, error) {
 	return me.Upsert(ctx, v)
 }
 
-func (me *ServiceImpl) Update(ctx context.Context, _ string, v *permissions.SettingPermissions) error {
+func (me *ServiceImpl) Update(ctx context.Context, _ string, v *permissions.SettingPermissions, m any) error {
 	_, err := me.Upsert(ctx, v)
 	return err
 }
 
-func (me *ServiceImpl) Delete(ctx context.Context, id string) error {
+func (me *ServiceImpl) Delete(ctx context.Context, id string, m any) error {
 	// via the Upsert we can delete the permissions by passing an empty permissions object
 	emptyPermissions := &permissions.SettingPermissions{
 		SettingsObjectID: id,

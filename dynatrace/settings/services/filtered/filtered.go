@@ -35,11 +35,11 @@ type FilterService[T settings.Settings] struct {
 	Filter  Filter[T]
 }
 
-func (me *FilterService[T]) List(ctx context.Context) (api.Stubs, error) {
+func (me *FilterService[T]) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 	var stubs api.Stubs
 	var filteredStubs api.Stubs
-	if stubs, err = me.Service.List(ctx); err != nil {
+	if stubs, err = me.Service.List(ctx, m); err != nil {
 		return nil, err
 	}
 	for _, stub := range stubs {
@@ -64,20 +64,20 @@ func (me *FilterService[T]) Validate(ctx context.Context, v T) error {
 	return nil
 }
 
-func (me *FilterService[T]) Get(ctx context.Context, id string, v T) error {
-	return me.Service.Get(ctx, id, v)
+func (me *FilterService[T]) Get(ctx context.Context, id string, v T, m any) error {
+	return me.Service.Get(ctx, id, v, m)
 }
 
-func (me *FilterService[T]) Create(ctx context.Context, v T) (*api.Stub, error) {
-	return me.Service.Create(ctx, v)
+func (me *FilterService[T]) Create(ctx context.Context, v T, m any) (*api.Stub, error) {
+	return me.Service.Create(ctx, v, m)
 }
 
-func (me *FilterService[T]) Update(ctx context.Context, id string, v T) error {
-	return me.Service.Update(ctx, id, v)
+func (me *FilterService[T]) Update(ctx context.Context, id string, v T, m any) error {
+	return me.Service.Update(ctx, id, v, m)
 }
 
-func (me *FilterService[T]) Delete(ctx context.Context, id string) error {
-	return me.Service.Delete(ctx, id)
+func (me *FilterService[T]) Delete(ctx context.Context, id string, m any) error {
+	return me.Service.Delete(ctx, id, m)
 }
 
 func (me *FilterService[T]) SchemaID() string {

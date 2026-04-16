@@ -39,7 +39,7 @@ func Duplicates(ctx context.Context, service settings.RService[*advanceddetectio
 	if settings.RejectDuplicate("dynatrace_process_group_detection") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -53,7 +53,7 @@ func Duplicates(ctx context.Context, service settings.RService[*advanceddetectio
 	} else if settings.HijackDuplicate("dynatrace_process_group_detection") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

@@ -96,7 +96,7 @@ func (me *Environment) DataSource(id string, kind DataSourceKind, excepts ...Res
 	case DataSourceKindPolicy:
 		service := cache.CRUD(policies.Service(me.Credentials))
 		var policy policysettings.Policy
-		if err := service.Get(context.Background(), id, &policy); err == nil {
+		if err := service.Get(context.Background(), id, &policy, nil); err == nil {
 			terraformName := toTerraformName(policy.Name)
 			if policyMod := me.Module(ResourceTypes.IAMPolicy); policyMod != nil {
 				terraformName = me.Module(ResourceTypes.IAMPolicy).namer.Name(terraformName)
@@ -124,7 +124,7 @@ func (me *Environment) DataSource(id string, kind DataSourceKind, excepts ...Res
 func (me *Environment) FetchEntity(id string) *DataSource {
 	service := cache.Read(entity.DataSourceService(me.Credentials))
 	var entity entitysettings.Entity
-	if err := service.Get(context.Background(), id, &entity); err == nil {
+	if err := service.Get(context.Background(), id, &entity, nil); err == nil {
 		return &DataSource{ID: *entity.EntityId, Name: *entity.DisplayName, Type: *entity.Type, Kind: DataSourceKindEntity}
 	}
 	return nil

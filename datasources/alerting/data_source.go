@@ -89,12 +89,12 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	}
 	service := cache.Read[*alerting.Profile](alertingsrv.Service(creds), true)
 	var stubs api.Stubs
-	if stubs, err = service.List(ctx); err != nil {
+	if stubs, err = service.List(ctx, m); err != nil {
 		return diag.FromErr(err)
 	}
 	mgmzService := cache.Read[*managementzones.Settings](managementzonessrv.Service(creds), true)
 	var mgmzStubs api.Stubs
-	if mgmzStubs, err = mgmzService.List(ctx); err != nil {
+	if mgmzStubs, err = mgmzService.List(ctx, m); err != nil {
 		return diag.FromErr(err)
 	}
 	mgms := map[string]*api.Stub{}

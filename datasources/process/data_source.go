@@ -70,14 +70,14 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	service := processes.Service(creds)
 	var stubs api.Stubs
-	if stubs, err = service.List(ctx); err != nil {
+	if stubs, err = service.List(ctx, m); err != nil {
 		return diag.FromErr(err)
 	}
 	if len(stubs) > 0 {
 		for _, stub := range stubs {
 			if name == stub.Name {
 				var process processsettings.Process
-				if err = service.Get(ctx, stub.ID, &process); err != nil {
+				if err = service.Get(ctx, stub.ID, &process, m); err != nil {
 					return diag.FromErr(err)
 				}
 				if dscommon.TagSubsetCheck(process.Tags, tags) {

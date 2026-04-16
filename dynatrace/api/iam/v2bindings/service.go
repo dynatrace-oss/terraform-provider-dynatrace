@@ -75,10 +75,10 @@ type PolicyCreateResponse struct {
 	UUID string `json:"uuid"`
 }
 
-func (me *BindingServiceClient) Create(ctx context.Context, v *bindings.PolicyBinding) (*api.Stub, error) {
+func (me *BindingServiceClient) Create(ctx context.Context, v *bindings.PolicyBinding, m any) (*api.Stub, error) {
 	id := joinID(v)
 	var err error
-	if err = me.Update(ctx, id, v); err != nil {
+	if err = me.Update(ctx, id, v, m); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: id, Name: "PolicyV2Bindings-" + id}, nil
@@ -138,7 +138,7 @@ func (me *BindingServiceClient) getGroupPolicyBindingUUIDs(ctx context.Context, 
 	return policyBindings.PolicyUuids, nil
 }
 
-func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.PolicyBinding) error {
+func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.PolicyBinding, m any) error {
 	stateConfig := getStateConfig(ctx)
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
@@ -215,12 +215,12 @@ type bindingPayload = struct {
 	Boundaries []string          `json:"boundaries"`
 }
 
-func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindings.PolicyBinding) error {
+func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindings.PolicyBinding, m any) error {
 	// Because a policy binding to a group is not unique (several policyIDs with different parameters can be assigned to a group)
 	// we are deleting everything first before adding new policies
 	// updating/deleting a policy binding would mean that we need to provide the whole parameters and metadata array
 	// the policy-binding identifier is basically the value (parameters and metadata) of the policy binding
-	if err := me.Delete(ctx, id); err != nil {
+	if err := me.Delete(ctx, id, m); err != nil {
 		return err
 	}
 	groupID, levelType, levelID, err := splitID(id)
@@ -333,7 +333,7 @@ func (me *BindingServiceClient) FetchEnvironmentBindings(ctx context.Context) ch
 	return results
 }
 
-func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
+func (me *BindingServiceClient) List(ctx context.Context, m any) (api.Stubs, error) {
 	var stubs api.Stubs
 	accountStubs := me.FetchAccountBindings(ctx)
 	environmentStubs := me.FetchEnvironmentBindings(ctx)
@@ -369,7 +369,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
+func (me *BindingServiceClient) Delete(ctx context.Context, id string, m any) error {
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return err

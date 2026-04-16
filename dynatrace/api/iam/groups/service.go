@@ -92,7 +92,7 @@ func (me *GroupServiceClient) Name() string {
 // Description              string             `json:"description"`
 // FederatedAttributeValues []string           `json:"federatedAttributeValues"`
 // Permissions              groups.Permissions `json:"permissions"`
-func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (*api.Stub, error) {
+func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group, m any) (*api.Stub, error) {
 	var err error
 	var responseBytes []byte
 
@@ -123,7 +123,7 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 	return &api.Stub{ID: groupID, Name: groupName}, nil
 }
 
-func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *groups.Group) error {
+func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *groups.Group, m any) error {
 	var err error
 
 	client := iam.NewIAMClient(ctx, me)
@@ -156,7 +156,7 @@ type ListGroupsResponse struct {
 	Items []*ListGroup `json:"items"`
 }
 
-func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
+func (me *GroupServiceClient) List(ctx context.Context, m any) (api.Stubs, error) {
 	client := iam.NewIAMClient(ctx, me)
 	var groupStubs ListGroupsResponse
 	accountID := me.AccountID()
@@ -171,7 +171,7 @@ func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Group) (err error) {
+func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Group, m any) (err error) {
 	var groupStub ListGroup
 	accountID := me.AccountID()
 	client := iam.NewIAMClient(ctx, me)
@@ -186,7 +186,7 @@ func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Grou
 	return nil
 }
 
-func (me *GroupServiceClient) Delete(ctx context.Context, id string) error {
+func (me *GroupServiceClient) Delete(ctx context.Context, id string, m any) error {
 	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s", me.endpointURL, me.AccountID(), id), 200, false)
 
 	// data sources MAY have cached a list of group IDs

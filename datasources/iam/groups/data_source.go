@@ -70,7 +70,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		lastGroupsServiceRevision = groups.GetRevision()
 		var err error
 		service := groups.Service(creds)
-		stubs, err = service.List(ctx)
+		stubs, err = service.List(ctx, m)
 		if err != nil {
 			return diag.FromErr(err)
 		}

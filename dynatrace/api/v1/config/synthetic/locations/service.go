@@ -37,7 +37,7 @@ type service struct {
 	client rest.Client
 }
 
-func (me *service) List(ctx context.Context) (stubs api.Stubs, err error) {
+func (me *service) List(ctx context.Context, m any) (stubs api.Stubs, err error) {
 	var stubList locations.SyntheticLocations
 	if err = me.client.Get(ctx, "/api/v2/synthetic/locations", 200).Finish(&stubList); err != nil {
 		return nil, err
@@ -49,9 +49,9 @@ func (me *service) List(ctx context.Context) (stubs api.Stubs, err error) {
 	return stubs, nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *locations.SyntheticLocation) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *locations.SyntheticLocation, m any) (err error) {
 	var stubs api.Stubs
-	if stubs, err = me.List(ctx); err != nil {
+	if stubs, err = me.List(ctx, m); err != nil {
 		return err
 	}
 	for _, stub := range stubs {

@@ -69,7 +69,7 @@ func (me *BoundaryServiceClient) EndpointURL() string {
 	return me.endpointURL
 }
 
-func (me *BoundaryServiceClient) List(ctx context.Context) (api.Stubs, error) {
+func (me *BoundaryServiceClient) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 	var responseBytes []byte
 
@@ -93,7 +93,7 @@ func (me *BoundaryServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *BoundaryServiceClient) Get(ctx context.Context, id string, v *boundaries.PolicyBoundary) error {
+func (me *BoundaryServiceClient) Get(ctx context.Context, id string, v *boundaries.PolicyBoundary, m any) error {
 	var err error
 	var responseBytes []byte
 
@@ -113,7 +113,7 @@ func (me *BoundaryServiceClient) SchemaID() string {
 	return "accounts:iam:boundaries"
 }
 
-func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.PolicyBoundary) (*api.Stub, error) {
+func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.PolicyBoundary, m any) (*api.Stub, error) {
 	var err error
 	var responseBytes []byte
 
@@ -141,7 +141,7 @@ func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.Polic
 	return &api.Stub{ID: response.UUID, Name: response.Name}, nil
 }
 
-func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *boundaries.PolicyBoundary) error {
+func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *boundaries.PolicyBoundary, m any) error {
 	var err error
 
 	client := iam.NewIAMClient(ctx, me)
@@ -160,7 +160,7 @@ func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *bound
 	return nil
 }
 
-func (me *BoundaryServiceClient) Delete(ctx context.Context, id string) error {
+func (me *BoundaryServiceClient) Delete(ctx context.Context, id string, m any) error {
 	var err error
 
 	client := iam.NewIAMClient(ctx, me)

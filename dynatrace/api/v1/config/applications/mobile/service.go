@@ -57,7 +57,7 @@ func Duplicates(ctx context.Context, service settings.RService[*mobile.Applicati
 	if settings.RejectDuplicate("dynatrace_mobile_application") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -68,7 +68,7 @@ func Duplicates(ctx context.Context, service settings.RService[*mobile.Applicati
 	} else if settings.HijackDuplicate("dynatrace_mobile_application") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

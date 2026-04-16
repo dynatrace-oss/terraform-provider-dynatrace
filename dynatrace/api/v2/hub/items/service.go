@@ -44,7 +44,7 @@ type service struct {
 	opts   Options
 }
 
-func (me *service) Get(ctx context.Context, id string, v *items.HubItemList) error {
+func (me *service) Get(ctx context.Context, id string, v *items.HubItemList, m any) error {
 	queries := map[string]string{}
 	if len(me.opts.Type) > 0 {
 		queries["itemType"] = me.opts.Type
@@ -80,6 +80,6 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
 }

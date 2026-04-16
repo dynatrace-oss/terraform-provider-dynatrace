@@ -93,7 +93,7 @@ func Duplicates(ctx context.Context, service settings.RService[*aws.AWSCredentia
 	if settings.RejectDuplicate("dynatrace_aws_credentials") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -104,7 +104,7 @@ func Duplicates(ctx context.Context, service settings.RService[*aws.AWSCredentia
 	} else if settings.HijackDuplicate("dynatrace_aws_credentials") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -121,20 +121,20 @@ type service struct {
 	client  rest.Client
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.service.List(ctx, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *aws.AWSCredentialsConfig) error {
-	return me.service.Get(ctx, id, v)
+func (me *service) Get(ctx context.Context, id string, v *aws.AWSCredentialsConfig, m any) error {
+	return me.service.Get(ctx, id, v, m)
 }
 
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(ctx context.Context, v *aws.AWSCredentialsConfig) (*api.Stub, error) {
-	stub, err := me.service.Create(ctx, v)
+func (me *service) Create(ctx context.Context, v *aws.AWSCredentialsConfig, m any) (*api.Stub, error) {
+	stub, err := me.service.Create(ctx, v, m)
 	if err != nil {
 		return nil, err
 	}
@@ -144,7 +144,7 @@ func (me *service) Create(ctx context.Context, v *aws.AWSCredentialsConfig) (*ap
 	return stub, err
 }
 
-func (me *service) Update(ctx context.Context, id string, v *aws.AWSCredentialsConfig) error {
+func (me *service) Update(ctx context.Context, id string, v *aws.AWSCredentialsConfig, m any) error {
 	var updv aws.AWSCredentialsConfigUpdate
 	if err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", id)).Finish(&updv); err != nil {
 		return err
@@ -167,6 +167,6 @@ func (me *service) Update(ctx context.Context, id string, v *aws.AWSCredentialsC
 	return me.client.Put(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", id), &updv, 204, 201).Finish()
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+func (me *service) Delete(ctx context.Context, id string, m any) error {
+	return me.service.Delete(ctx, id, m)
 }

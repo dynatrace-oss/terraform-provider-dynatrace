@@ -41,8 +41,8 @@ type service struct {
 	service settings.CRUDService[*dashboardsbase.JSONDashboardBase]
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	stubs, err := me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	stubs, err := me.service.List(ctx, m)
 	if err != nil {
 		return stubs, err
 	}
@@ -55,7 +55,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return filteredStubs, nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *dashboardsbase.JSONDashboardBase) error {
+func (me *service) Get(ctx context.Context, id string, v *dashboardsbase.JSONDashboardBase, m any) error {
 	return nil
 }
 
@@ -63,16 +63,16 @@ func (me *service) Validate(ctx context.Context, v *dashboardsbase.JSONDashboard
 	return nil
 }
 
-func (me *service) Create(ctx context.Context, v *dashboardsbase.JSONDashboardBase) (*api.Stub, error) {
-	return me.service.Create(ctx, v)
+func (me *service) Create(ctx context.Context, v *dashboardsbase.JSONDashboardBase, m any) (*api.Stub, error) {
+	return me.service.Create(ctx, v, m)
 }
 
-func (me *service) Update(ctx context.Context, id string, v *dashboardsbase.JSONDashboardBase) error {
+func (me *service) Update(ctx context.Context, id string, v *dashboardsbase.JSONDashboardBase, m any) error {
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+func (me *service) Delete(ctx context.Context, id string, m any) error {
+	return me.service.Delete(ctx, id, m)
 }
 
 func (me *service) SchemaID() string {

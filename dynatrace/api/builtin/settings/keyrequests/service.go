@@ -48,7 +48,7 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*keyrequests.Ke
 		service: settings20.Service[*keyrequests.KeyRequest](credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*keyrequests.KeyRequest]{
 			Name: func(ctx context.Context, id string, v *keyrequests.KeyRequest) (string, error) {
 				service := settings.NewSettings(topologyService)
-				if err := topologyService.Get(ctx, v.ServiceID, service); err != nil {
+				if err := topologyService.Get(ctx, v.ServiceID, service, nil); err != nil {
 					return "", err
 				}
 				return "Key Requests for " + *service.DisplayName, nil
@@ -65,22 +65,22 @@ type service struct {
 	client      rest.Client
 }
 
-func (me *service) Create(ctx context.Context, v *keyrequests.KeyRequest) (*api.Stub, error) {
-	return me.service.Create(ctx, v)
+func (me *service) Create(ctx context.Context, v *keyrequests.KeyRequest, m any) (*api.Stub, error) {
+	return me.service.Create(ctx, v, m)
 }
 
-func (me *service) Update(ctx context.Context, id string, v *keyrequests.KeyRequest) error {
-	return me.service.Update(ctx, id, v)
+func (me *service) Update(ctx context.Context, id string, v *keyrequests.KeyRequest, m any) error {
+	return me.service.Update(ctx, id, v, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *keyrequests.KeyRequest) error {
-	if err := me.service.Get(ctx, id, v); err != nil {
+func (me *service) Get(ctx context.Context, id string, v *keyrequests.KeyRequest, m any) error {
+	if err := me.service.Get(ctx, id, v, m); err != nil {
 		return err
 	}
 
 	var entitySettings entities.Settings
 	service := srv.Service("", "", fmt.Sprintf("type(\"SERVICE_METHOD\"),fromRelationships.isServiceMethodOf(type(\"SERVICE_METHOD_GROUP\"),fromRelationships.isGroupOf(type(\"SERVICE\"),entityId(\"%s\")))", v.ServiceID), "", "", me.credentials)
-	if err := service.Get(ctx, service.SchemaID(), &entitySettings); err == nil {
+	if err := service.Get(ctx, service.SchemaID(), &entitySettings, m); err == nil {
 		keyRequestIDs := map[string]string{}
 		for _, name := range v.Names {
 			for _, entity := range entitySettings.Entities {
@@ -100,12 +100,12 @@ func (me *service) Get(ctx context.Context, id string, v *keyrequests.KeyRequest
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+func (me *service) Delete(ctx context.Context, id string, m any) error {
+	return me.service.Delete(ctx, id, m)
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.service.List(ctx, m)
 }
 
 func (me *service) SchemaID() string {

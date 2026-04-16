@@ -80,7 +80,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	service := export.Service(creds, export.ResourceTypes.Credentials)
 	var stubs api.Stubs
-	if stubs, err = service.List(ctx); err != nil {
+	if stubs, err = service.List(ctx, m); err != nil {
 		return diag.FromErr(err)
 	}
 	if len(stubs) == 0 {
@@ -91,7 +91,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 			continue
 		}
 		var credentials vault.Credentials
-		if err = service.Get(ctx, stub.ID, &credentials); err != nil {
+		if err = service.Get(ctx, stub.ID, &credentials, m); err != nil {
 			/*
 				Identically configured credentials are allowed to be configured via REST and WebUI.
 				Therefore the block

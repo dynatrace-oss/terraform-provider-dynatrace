@@ -46,7 +46,7 @@ func (me *service) client(ctx context.Context) (*automation.Client, error) {
 	return automation.NewClient(platformClient), nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *scheduling_rules.Settings) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *scheduling_rules.Settings, m any) (err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ type SchedulingRuleStub struct {
 	Title string `json:"title"`
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return nil, err
@@ -91,7 +91,7 @@ func (me *service) Validate(v *scheduling_rules.Settings) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(ctx context.Context, v *scheduling_rules.Settings) (stub *api.Stub, err error) {
+func (me *service) Create(ctx context.Context, v *scheduling_rules.Settings, m any) (stub *api.Stub, err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return nil, err
@@ -111,7 +111,7 @@ func (me *service) Create(ctx context.Context, v *scheduling_rules.Settings) (st
 	return &api.Stub{Name: v.Title, ID: scStub.ID}, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *scheduling_rules.Settings) (err error) {
+func (me *service) Update(ctx context.Context, id string, v *scheduling_rules.Settings, m any) (err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err
@@ -124,7 +124,7 @@ func (me *service) Update(ctx context.Context, id string, v *scheduling_rules.Se
 	return err
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err

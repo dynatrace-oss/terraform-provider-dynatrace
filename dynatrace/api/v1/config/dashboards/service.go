@@ -43,15 +43,15 @@ func (me *service) NoCache() bool {
 	return true
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.service.List(ctx, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *dashboards.Dashboard) error {
+func (me *service) Get(ctx context.Context, id string, v *dashboards.Dashboard, m any) error {
 	var err error
 	var data []byte
 	jsondb := settings.NewSettings(me.service.(settings.RService[*dashboards.JSONDashboard]))
-	if err = me.service.Get(ctx, id, jsondb); err != nil {
+	if err = me.service.Get(ctx, id, jsondb, m); err != nil {
 		return err
 	}
 	if data, err = settings.ToJSON(jsondb); err != nil {
@@ -76,7 +76,7 @@ func (me *service) Validate(ctx context.Context, v *dashboards.Dashboard) error 
 	return nil
 }
 
-func (me *service) Create(ctx context.Context, v *dashboards.Dashboard) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *dashboards.Dashboard, m any) (*api.Stub, error) {
 	var err error
 	var data []byte
 	jsondb := settings.NewSettings(me.service.(settings.RService[*dashboards.JSONDashboard]))
@@ -86,10 +86,10 @@ func (me *service) Create(ctx context.Context, v *dashboards.Dashboard) (*api.St
 	if err = settings.FromJSON(data, jsondb); err != nil {
 		return nil, err
 	}
-	return me.service.Create(ctx, jsondb)
+	return me.service.Create(ctx, jsondb, m)
 }
 
-func (me *service) Update(ctx context.Context, id string, v *dashboards.Dashboard) error {
+func (me *service) Update(ctx context.Context, id string, v *dashboards.Dashboard, m any) error {
 	var err error
 	var data []byte
 	jsondb := settings.NewSettings(me.service.(settings.RService[*dashboards.JSONDashboard]))
@@ -99,11 +99,11 @@ func (me *service) Update(ctx context.Context, id string, v *dashboards.Dashboar
 	if err = settings.FromJSON(data, jsondb); err != nil {
 		return err
 	}
-	return me.service.Update(ctx, id, jsondb)
+	return me.service.Update(ctx, id, jsondb, m)
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+func (me *service) Delete(ctx context.Context, id string, m any) error {
+	return me.service.Delete(ctx, id, m)
 }
 
 func (me *service) SchemaID() string {

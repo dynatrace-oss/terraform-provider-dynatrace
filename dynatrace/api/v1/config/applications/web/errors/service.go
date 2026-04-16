@@ -48,13 +48,13 @@ type service struct {
 	webAppService settings.CRUDService[*web.Application]
 }
 
-func (me *service) Get(ctx context.Context, id string, v *errors.Rules) error {
+func (me *service) Get(ctx context.Context, id string, v *errors.Rules, m any) error {
 	id = strings.TrimSuffix(id, "-error-rules")
 	if err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/errorRules", url.PathEscape(id)), 200).Finish(v); err != nil {
 		return err
 	}
 
-	stubs, err := me.webAppService.List(ctx)
+	stubs, err := me.webAppService.List(ctx, m)
 	if err != nil {
 		return err
 	}
@@ -78,7 +78,7 @@ func (me *service) Validate(ctx context.Context, v *errors.Rules) error {
 	return err
 }
 
-func (me *service) Update(ctx context.Context, id string, v *errors.Rules) error {
+func (me *service) Update(ctx context.Context, id string, v *errors.Rules, m any) error {
 	id = strings.TrimSuffix(id, "-error-rules")
 	err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/errorRules", id), v, 201, 204).Finish()
 	if err != nil && strings.HasPrefix(err.Error(), "No Content (PUT)") {
@@ -87,7 +87,7 @@ func (me *service) Update(ctx context.Context, id string, v *errors.Rules) error
 	return err
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	id = strings.TrimSuffix(id, "-error-rules")
 	settings := errors.Rules{
 		IgnoreJavaScriptErrorsInApdexCalculation: false,
@@ -204,20 +204,20 @@ func (me *service) Delete(ctx context.Context, id string) error {
 			},
 		},
 	}
-	return me.Update(ctx, id, &settings)
+	return me.Update(ctx, id, &settings, m)
 }
 
-func (me *service) Create(ctx context.Context, v *errors.Rules) (*api.Stub, error) {
-	if err := me.Update(ctx, v.WebApplicationID, v); err != nil {
+func (me *service) Create(ctx context.Context, v *errors.Rules, m any) (*api.Stub, error) {
+	if err := me.Update(ctx, v.WebApplicationID, v, m); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: v.WebApplicationID + "-error-rules"}, nil
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 	var stubs api.Stubs
-	if stubs, err = me.webAppService.List(ctx); err != nil {
+	if stubs, err = me.webAppService.List(ctx, m); err != nil {
 		return nil, err
 	}
 	for _, stub := range stubs {

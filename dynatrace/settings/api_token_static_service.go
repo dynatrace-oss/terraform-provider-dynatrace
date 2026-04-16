@@ -40,27 +40,27 @@ func APITokenStaticService[T Settings](credentials *rest.Credentials, schemaID s
 	}
 }
 
-func (me *staticService[T]) Get(ctx context.Context, id string, v T) error {
+func (me *staticService[T]) Get(ctx context.Context, id string, v T, m any) error {
 	return me.client.Get(ctx, me.url, 200).Finish(v)
 }
 
-func (me *staticService[T]) List(ctx context.Context) (api.Stubs, error) {
+func (me *staticService[T]) List(ctx context.Context, m any) (api.Stubs, error) {
 	return api.Stubs{&me.stub}, nil
 }
 
-func (me *staticService[T]) Create(ctx context.Context, v T) (*api.Stub, error) {
-	return &me.stub, me.Update(ctx, me.stub.ID, v)
+func (me *staticService[T]) Create(ctx context.Context, v T, m any) (*api.Stub, error) {
+	return &me.stub, me.Update(ctx, me.stub.ID, v, m)
 }
 
 func (me *staticService[T]) Validate(ctx context.Context, v T) error {
 	return me.client.Post(ctx, me.url+"/validator", v, 204).Finish()
 }
 
-func (me *staticService[T]) Delete(ctx context.Context, id string) error {
+func (me *staticService[T]) Delete(ctx context.Context, id string, m any) error {
 	return nil
 }
 
-func (me *staticService[T]) Update(ctx context.Context, id string, v T) error {
+func (me *staticService[T]) Update(ctx context.Context, id string, v T, m any) error {
 	return me.client.Put(ctx, me.url, v, 204).Finish()
 }
 

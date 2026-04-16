@@ -1321,7 +1321,7 @@ func (me *Module) Discover() error {
 	var err error
 
 	var stubs api.Stubs
-	if stubs, err = me.Service.List(context.Background()); err != nil {
+	if stubs, err = me.Service.List(context.Background(), nil); err != nil {
 		if strings.Contains(err.Error(), "Token is missing required scope") {
 			logging.Debug.Info.Printf("[DISCOVER] [%s] Module will not get exported. Token is missing required scope.", me.Type)
 			me.SetStatus(ModuleStati.Erronous)

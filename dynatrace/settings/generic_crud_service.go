@@ -34,16 +34,16 @@ func (me *GenericCRUDService[T]) NoCache() bool {
 	return false
 }
 
-func (me *GenericCRUDService[T]) List(ctx context.Context) (api.Stubs, error) {
-	return me.Service.List(ctx)
+func (me *GenericCRUDService[T]) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.Service.List(ctx, m)
 }
 
-func (me *GenericCRUDService[T]) Get(ctx context.Context, id string, v Settings) error {
-	return me.Service.Get(ctx, id, v.(T))
+func (me *GenericCRUDService[T]) Get(ctx context.Context, id string, v Settings, m any) error {
+	return me.Service.Get(ctx, id, v.(T), m)
 }
 
-func (me *GenericCRUDService[T]) Create(ctx context.Context, v Settings) (*api.Stub, error) {
-	return me.Service.Create(ctx, v.(T))
+func (me *GenericCRUDService[T]) Create(ctx context.Context, v Settings, m any) (*api.Stub, error) {
+	return me.Service.Create(ctx, v.(T), m)
 }
 
 func (me *GenericCRUDService[T]) Validate(ctx context.Context, v Settings) error {
@@ -53,12 +53,12 @@ func (me *GenericCRUDService[T]) Validate(ctx context.Context, v Settings) error
 	return nil
 }
 
-func (me *GenericCRUDService[T]) Update(ctx context.Context, id string, v Settings) error {
-	return me.Service.Update(ctx, id, v.(T))
+func (me *GenericCRUDService[T]) Update(ctx context.Context, id string, v Settings, m any) error {
+	return me.Service.Update(ctx, id, v.(T), m)
 }
 
-func (me *GenericCRUDService[T]) Delete(ctx context.Context, id string) error {
-	return me.Service.Delete(ctx, id)
+func (me *GenericCRUDService[T]) Delete(ctx context.Context, id string, m any) error {
+	return me.Service.Delete(ctx, id, m)
 }
 
 func (me *GenericCRUDService[T]) SchemaID() string {

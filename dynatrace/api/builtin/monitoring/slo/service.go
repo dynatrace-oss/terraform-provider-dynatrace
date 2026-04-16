@@ -53,11 +53,11 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Create(ctx context.Context, v *slo.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *slo.Settings, m any) (*api.Stub, error) {
 	slo := me.convertToEnvV2(v)
 
 	service := slo_env2_service.Service(me.credentials)
-	stub, err := service.Create(ctx, &slo)
+	stub, err := service.Create(ctx, &slo, m)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (me *service) Create(ctx context.Context, v *slo.Settings) (*api.Stub, erro
 
 	retries := 12
 	for i := 1; i <= retries; i++ {
-		if stubs, err := me.List(ctx); err == nil {
+		if stubs, err := me.List(ctx, m); err == nil {
 			for _, listStub := range stubs {
 				if listStub.Name == stub.Name {
 					stub.ID = listStub.ID
@@ -78,7 +78,7 @@ func (me *service) Create(ctx context.Context, v *slo.Settings) (*api.Stub, erro
 		time.Sleep(5 * time.Second)
 	}
 	if len(stub.ID) == 0 {
-		if err := service.Delete(ctx, *stub.LegacyID); err != nil {
+		if err := service.Delete(ctx, *stub.LegacyID, m); err != nil {
 			return nil, err
 		}
 		return nil, errors.New("SLO creation failed, unable to retrieve ID. Please create a GitHub issue.")
@@ -87,7 +87,7 @@ func (me *service) Create(ctx context.Context, v *slo.Settings) (*api.Stub, erro
 	return stub, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *slo.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *slo.Settings, m any) error {
 	legacyId := settings.LegacyID(id)
 	if len(legacyId) == 0 && isValidUUID(id) {
 		legacyId = id
@@ -96,7 +96,7 @@ func (me *service) Update(ctx context.Context, id string, v *slo.Settings) error
 	slo := me.convertToEnvV2(v)
 
 	service := slo_env2_service.Service(me.credentials)
-	err := service.Update(ctx, legacyId, &slo)
+	err := service.Update(ctx, legacyId, &slo, m)
 	if err != nil {
 		return err
 	}
@@ -124,14 +124,14 @@ func isValidUUID(u string) bool {
 	return err == nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	legacyId := settings.LegacyID(id)
 	if len(legacyId) == 0 && isValidUUID(id) {
 		legacyId = id
 	}
 
 	service := slo_env2_service.Service(me.credentials)
-	err := service.Delete(ctx, legacyId)
+	err := service.Delete(ctx, legacyId, m)
 	if err != nil {
 		return err
 	}
@@ -144,7 +144,7 @@ type sloGet struct {
 	MetricKey string `json:"metricKey"`
 }
 
-func (me *service) Get(ctx context.Context, id string, v *slo.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *slo.Settings, m any) error {
 	err := me.get(ctx, id, v)
 	if err != nil {
 		if err.Error() == "Cannot access a disabled SLO." {
@@ -187,7 +187,7 @@ func (me *service) get(ctx context.Context, id string, v *slo.Settings) error {
 	return nil
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	return me.listSettings20(ctx)
 }
 

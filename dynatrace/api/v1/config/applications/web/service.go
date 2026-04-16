@@ -57,11 +57,11 @@ type service struct {
 	client  rest.Client
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.service.List(ctx, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *web.Application) error {
+func (me *service) Get(ctx context.Context, id string, v *web.Application, m any) error {
 	var stateKeyUserActions web.KeyUserActions
 	var ignoreIPAddressRestrictionSettings bool
 	cfg := ctx.Value(settings.ContextKeyStateConfig)
@@ -70,7 +70,7 @@ func (me *service) Get(ctx context.Context, id string, v *web.Application) error
 		ignoreIPAddressRestrictionSettings = appConfig.MonitoringSettings != nil && appConfig.MonitoringSettings.IgnoreIPAddressRestrictionSettings != nil && *appConfig.MonitoringSettings.IgnoreIPAddressRestrictionSettings
 	}
 
-	if err := me.service.Get(ctx, id, v); err != nil {
+	if err := me.service.Get(ctx, id, v, m); err != nil {
 		return err
 	}
 	var err error
@@ -106,12 +106,12 @@ func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+func (me *service) Delete(ctx context.Context, id string, m any) error {
+	return me.service.Delete(ctx, id, m)
 }
 
-func (me *service) Create(ctx context.Context, v *web.Application) (*api.Stub, error) {
-	stub, err := me.service.Create(ctx, v)
+func (me *service) Create(ctx context.Context, v *web.Application, m any) (*api.Stub, error) {
+	stub, err := me.service.Create(ctx, v, m)
 	if err != nil {
 		return stub, err
 	}
@@ -126,7 +126,7 @@ func (me *service) Create(ctx context.Context, v *web.Application) (*api.Stub, e
 	return stub, me.pollUntilKeyUserActionsCreated(ctx, stub.ID, v.KeyUserActions)
 }
 
-func (me *service) Update(ctx context.Context, id string, v *web.Application) error {
+func (me *service) Update(ctx context.Context, id string, v *web.Application, m any) error {
 	var stateKeyUserActions web.KeyUserActions
 	cfg := ctx.Value(settings.ContextKeyStateConfig)
 	if appConfig, ok := cfg.(*web.Application); ok {
@@ -135,7 +135,7 @@ func (me *service) Update(ctx context.Context, id string, v *web.Application) er
 
 	if v.MonitoringSettings.IgnoreIPAddressRestrictionSettings != nil && *v.MonitoringSettings.IgnoreIPAddressRestrictionSettings {
 		remoteConfig := &web.Application{}
-		if err := me.service.Get(ctx, id, remoteConfig); err != nil {
+		if err := me.service.Get(ctx, id, remoteConfig, m); err != nil {
 			return err
 		}
 		if remoteConfig.MonitoringSettings.IPAddressRestrictionSettings != nil {
@@ -145,7 +145,7 @@ func (me *service) Update(ctx context.Context, id string, v *web.Application) er
 		}
 	}
 
-	if err := me.service.Update(ctx, id, v); err != nil {
+	if err := me.service.Update(ctx, id, v, m); err != nil {
 		return err
 	}
 	var err error
@@ -299,7 +299,7 @@ func Duplicates(ctx context.Context, service settings.RService[*web.Application]
 	if settings.RejectDuplicate("dynatrace_web_application") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -310,7 +310,7 @@ func Duplicates(ctx context.Context, service settings.RService[*web.Application]
 	} else if settings.HijackDuplicate("dynatrace_web_application") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

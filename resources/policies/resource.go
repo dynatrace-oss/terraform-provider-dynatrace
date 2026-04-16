@@ -69,7 +69,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	objStub, err := service.Create(ctx, config)
+	objStub, err := service.Create(ctx, config, m)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -93,7 +93,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := service.Update(ctx, d.Id(), config); err != nil {
+	if err := service.Update(ctx, d.Id(), config, m); err != nil {
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
@@ -112,7 +112,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		return diag.FromErr(err)
 	}
 
-	err = service.Get(ctx, d.Id(), config)
+	err = service.Get(ctx, d.Id(), config, m)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -139,7 +139,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := service.Delete(ctx, d.Id()); err != nil {
+	if err := service.Delete(ctx, d.Id(), m); err != nil {
 		if strings.HasSuffix(err.Error(), " doesn't exist") {
 			return diag.Diagnostics{}
 		}

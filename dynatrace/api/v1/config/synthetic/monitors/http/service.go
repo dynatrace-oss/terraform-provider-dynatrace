@@ -55,30 +55,30 @@ func GetTempScript() *http.Script {
 	}}}
 }
 
-func (me *service) Create(ctx context.Context, v *http.SyntheticMonitor) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *http.SyntheticMonitor, m any) (*api.Stub, error) {
 	if v.NoScript != nil && *v.NoScript && v.Script == nil {
 		v.Script = GetTempScript()
 	}
-	return me.service.Create(ctx, v)
+	return me.service.Create(ctx, v, m)
 }
 
-func (me *service) Update(ctx context.Context, id string, v *http.SyntheticMonitor) error {
+func (me *service) Update(ctx context.Context, id string, v *http.SyntheticMonitor, m any) error {
 	if v.NoScript != nil && *v.NoScript && v.Script == nil {
 		monitorSettings := new(http.SyntheticMonitor)
-		if err := me.service.Get(ctx, id, monitorSettings); err != nil {
+		if err := me.service.Get(ctx, id, monitorSettings, m); err != nil {
 			return err
 		}
 		v.Script = monitorSettings.Script
 	}
-	return me.service.Update(ctx, id, v)
+	return me.service.Update(ctx, id, v, m)
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+func (me *service) Delete(ctx context.Context, id string, m any) error {
+	return me.service.Delete(ctx, id, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *http.SyntheticMonitor) error {
-	if err := me.service.Get(ctx, id, v); err != nil {
+func (me *service) Get(ctx context.Context, id string, v *http.SyntheticMonitor, m any) error {
+	if err := me.service.Get(ctx, id, v, m); err != nil {
 		return err
 	}
 	if v.Script != nil && len(v.Script.Requests) == 1 && *v.Script.Requests[0].Description == *GetTempScript().Requests[0].Description {
@@ -88,8 +88,8 @@ func (me *service) Get(ctx context.Context, id string, v *http.SyntheticMonitor)
 	return nil
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.service.List(ctx, m)
 }
 
 func (me *service) SchemaID() string {

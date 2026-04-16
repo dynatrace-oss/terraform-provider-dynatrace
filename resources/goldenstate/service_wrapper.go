@@ -51,9 +51,9 @@ func (me *GenericService[T]) List(ctx context.Context) (api.Stubs, error) {
 	if lister, ok := me.Service.(ListIDsService); ok {
 		return lister.ListIDs(context.WithValue(ctx, settings20.ContextKeyDeleteableOnly, true))
 	}
-	return me.Service.List(ctx)
+	return me.Service.List(ctx, nil)
 }
 
 func (me *GenericService[T]) Delete(ctx context.Context, id string) error {
-	return me.Service.Delete(ctx, id)
+	return me.Service.Delete(ctx, id, nil)
 }

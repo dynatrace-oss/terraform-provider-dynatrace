@@ -69,7 +69,7 @@ func Duplicates(ctx context.Context, service settings.RService[*Notification], v
 	if settings.RejectDuplicate("dynatrace_notification") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -80,7 +80,7 @@ func Duplicates(ctx context.Context, service settings.RService[*Notification], v
 	} else if settings.HijackDuplicate("dynatrace_notification") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

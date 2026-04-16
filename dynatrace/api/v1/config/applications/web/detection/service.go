@@ -42,20 +42,20 @@ type service struct {
 	service settings.CRUDService[*detection.Rule]
 }
 
-func (s *service) List(ctx context.Context) (api.Stubs, error) {
-	return s.service.List(ctx)
+func (s *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return s.service.List(ctx, m)
 }
 
-func (s *service) Get(ctx context.Context, id string, v *detection.Rule) error {
-	return s.service.Get(ctx, id, v)
+func (s *service) Get(ctx context.Context, id string, v *detection.Rule, m any) error {
+	return s.service.Get(ctx, id, v, m)
 }
 
 func (s *service) SchemaID() string {
 	return s.service.SchemaID()
 }
 
-func (s *service) Create(ctx context.Context, v *detection.Rule) (*api.Stub, error) {
-	stub, err := s.service.Create(ctx, v)
+func (s *service) Create(ctx context.Context, v *detection.Rule, m any) (*api.Stub, error) {
+	stub, err := s.service.Create(ctx, v, m)
 	if err == nil {
 		return stub, err
 	}
@@ -66,15 +66,15 @@ func (s *service) Create(ctx context.Context, v *detection.Rule) (*api.Stub, err
 			break
 		}
 		time.Sleep(10 * time.Second)
-		stub, err = s.service.Create(ctx, v)
+		stub, err = s.service.Create(ctx, v, m)
 	}
 	return stub, err
 }
 
-func (s *service) Update(ctx context.Context, id string, v *detection.Rule) error {
-	return s.service.Update(ctx, id, v)
+func (s *service) Update(ctx context.Context, id string, v *detection.Rule, m any) error {
+	return s.service.Update(ctx, id, v, m)
 }
 
-func (s *service) Delete(ctx context.Context, id string) error {
-	return s.service.Delete(ctx, id)
+func (s *service) Delete(ctx context.Context, id string, m any) error {
+	return s.service.Delete(ctx, id, m)
 }

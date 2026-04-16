@@ -65,24 +65,24 @@ func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(ctx context.Context, v *vault.Credentials) (*api.Stub, error) {
-	return me.service.Create(ctx, v)
+func (me *service) Create(ctx context.Context, v *vault.Credentials, m any) (*api.Stub, error) {
+	return me.service.Create(ctx, v, m)
 }
 
-func (me *service) Update(ctx context.Context, id string, v *vault.Credentials) error {
-	return me.service.Update(ctx, id, v)
+func (me *service) Update(ctx context.Context, id string, v *vault.Credentials, m any) error {
+	return me.service.Update(ctx, id, v, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *vault.Credentials) error {
-	return me.service.Get(ctx, id, v)
+func (me *service) Get(ctx context.Context, id string, v *vault.Credentials, m any) error {
+	return me.service.Get(ctx, id, v, m)
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.service.List(ctx, m)
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
-	err := me.service.Delete(ctx, id)
+func (me *service) Delete(ctx context.Context, id string, m any) error {
+	err := me.service.Delete(ctx, id, m)
 
 	// Credentials cannot be deleted while they are still associated with existing synthetic monitors.
 	// To prevent a failed destroy operation, the deletion will proceed but the credential will remain.

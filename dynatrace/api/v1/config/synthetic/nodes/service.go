@@ -42,7 +42,7 @@ type nodeList struct {
 	Nodes []nodes.Settings `json:"nodes"`
 }
 
-func (me *service) List(ctx context.Context) (stubs api.Stubs, err error) {
+func (me *service) List(ctx context.Context, m any) (stubs api.Stubs, err error) {
 	var stubList nodeList
 	if err = me.client.Get(ctx, "/api/v1/synthetic/nodes", 200).Finish(&stubList); err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func (me *service) List(ctx context.Context) (stubs api.Stubs, err error) {
 	return stubs, nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *nodes.Settings) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *nodes.Settings, m any) (err error) {
 	return me.client.Get(ctx, fmt.Sprintf("/api/v1/synthetic/nodes/%v", id), 200).Finish(&v)
 }
 

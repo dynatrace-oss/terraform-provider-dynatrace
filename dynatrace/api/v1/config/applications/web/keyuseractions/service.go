@@ -64,7 +64,7 @@ type QueryForWebAppIDResponse struct {
 	} `json:"entities"`
 }
 
-func (me *service) Get(ctx context.Context, id string, v *keyuseractions.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *keyuseractions.Settings, m any) error {
 
 	applicationID, realId, err := getIDs(ctx, id, me)
 	if err != nil {
@@ -124,8 +124,8 @@ func (me *service) Validate(v *keyuseractions.Settings) error {
 	return nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *keyuseractions.Settings) error {
-	stub, err := me.Create(ctx, v)
+func (me *service) Update(ctx context.Context, id string, v *keyuseractions.Settings, m any) error {
+	stub, err := me.Create(ctx, v, m)
 	if err != nil {
 		return err
 	}
@@ -135,7 +135,7 @@ func (me *service) Update(ctx context.Context, id string, v *keyuseractions.Sett
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	applicationID, err := me.fetchApplicationID(ctx, id)
 	if err != nil {
 		return nil
@@ -147,7 +147,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 
 	for i := 0; i < maxTries; i++ {
 		var kua keyuseractions.Settings
-		if err := me.Get(ctx, id, &kua); err != nil {
+		if err := me.Get(ctx, id, &kua, m); err != nil {
 			if resterr, ok := err.(rest.Error); ok {
 				if resterr.Code == 404 {
 					successes++
@@ -175,7 +175,7 @@ type KeyUserActionCreateResponse struct {
 	ID string `json:"id"`
 }
 
-func (me *service) Create(ctx context.Context, v *keyuseractions.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *keyuseractions.Settings, m any) (*api.Stub, error) {
 	applicationID := v.ApplicationID
 	var createReponse KeyUserActionCreateResponse
 	if err := me.client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(applicationID)), v, 201).Finish(&createReponse); err != nil {
@@ -188,7 +188,7 @@ func (me *service) Create(ctx context.Context, v *keyuseractions.Settings) (*api
 
 	for i := 0; i < maxTries; i++ {
 		var kua keyuseractions.Settings
-		if err := me.Get(ctx, stub.ID, &kua); err == nil {
+		if err := me.Get(ctx, stub.ID, &kua, m); err == nil {
 			if kua.Name == v.Name {
 				successes++
 				if successes >= requiredSuccesses {
@@ -210,11 +210,11 @@ func (me *service) Create(ctx context.Context, v *keyuseractions.Settings) (*api
 	return stub, nil
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 	var stubs api.Stubs
 	var appStubs api.Stubs
-	if appStubs, err = me.webAppService.List(ctx); err != nil {
+	if appStubs, err = me.webAppService.List(ctx, m); err != nil {
 		return nil, err
 	}
 	for _, appStub := range appStubs {

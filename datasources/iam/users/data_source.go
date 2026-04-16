@@ -69,7 +69,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	var user usr.User
 	service := users.Service(creds)
-	if err := service.Get(ctx, email, &user); err != nil {
+	if err := service.Get(ctx, email, &user, m); err != nil {
 		return diag.FromErr(err)
 	}
 	if len(user.UID) > 0 {

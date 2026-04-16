@@ -45,23 +45,23 @@ type service struct {
 	service settings.CRUDService[*serviceSettings.Settings]
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.service.List(ctx, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *serviceSettings.Settings) error {
-	return me.service.Get(ctx, id, v)
+func (me *service) Get(ctx context.Context, id string, v *serviceSettings.Settings, m any) error {
+	return me.service.Get(ctx, id, v, m)
 }
 
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(ctx context.Context, v *serviceSettings.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *serviceSettings.Settings, m any) (*api.Stub, error) {
 	var stub *api.Stub
 	err := retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, serviceSettings.DefaultTimeout), func() *retry.RetryError {
 		var err error
-		stub, err = me.service.Create(ctx, v)
+		stub, err = me.service.Create(ctx, v, m)
 		return retrycommon.ClassifyRetryError(err)
 	})
 	if err != nil {
@@ -70,12 +70,12 @@ func (me *service) Create(ctx context.Context, v *serviceSettings.Settings) (*ap
 	return stub, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *serviceSettings.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *serviceSettings.Settings, m any) error {
 	return retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, serviceSettings.DefaultTimeout), func() *retry.RetryError {
-		return retrycommon.ClassifyRetryError(me.service.Update(ctx, id, v))
+		return retrycommon.ClassifyRetryError(me.service.Update(ctx, id, v, m))
 	})
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+func (me *service) Delete(ctx context.Context, id string, m any) error {
+	return me.service.Delete(ctx, id, m)
 }

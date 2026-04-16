@@ -34,11 +34,11 @@ type service struct {
 	client rest.Client
 }
 
-func (me *service) Get(ctx context.Context, id string, v *iam.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *iam.Settings, m any) error {
 	return me.client.Get(ctx, "/api/config/v1/aws/iamExternalId", 200).Finish(v)
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: StaticID, Name: StaticName}}, nil
 }
 

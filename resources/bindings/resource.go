@@ -64,7 +64,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	objStub, err := NewService(m).Create(ctx, config)
+	objStub, err := NewService(m).Create(ctx, config, m)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -82,7 +82,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := NewService(m).Update(ctx, d.Id(), config); err != nil {
+	if err := NewService(m).Update(ctx, d.Id(), config, m); err != nil {
 		return diag.FromErr(err)
 	}
 	return Read(ctx, d, m)
@@ -95,7 +95,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		return diag.FromErr(err)
 	}
 	config := new(bindings.PolicyBinding)
-	err = NewService(m).Get(ctx, d.Id(), config)
+	err = NewService(m).Get(ctx, d.Id(), config, m)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -116,7 +116,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	if err := NewService(m).Delete(ctx, d.Id()); err != nil {
+	if err := NewService(m).Delete(ctx, d.Id(), m); err != nil {
 		if strings.HasSuffix(err.Error(), " doesn't exist") {
 			return diag.Diagnostics{}
 		}

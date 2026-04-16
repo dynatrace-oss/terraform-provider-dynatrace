@@ -58,7 +58,7 @@ type DashbordMeta struct {
 	} `json:"dashboardMetadata"`
 }
 
-func (me *service) Get(ctx context.Context, id string, v *sharing.DashboardSharing) error {
+func (me *service) Get(ctx context.Context, id string, v *sharing.DashboardSharing, m any) error {
 	id = strings.TrimSuffix(id, "-sharing")
 
 	var dbm DashbordMeta
@@ -81,7 +81,7 @@ func (me *service) Get(ctx context.Context, id string, v *sharing.DashboardShari
 			return err
 		}
 	} else {
-		if stubs, err = me.dashboardService.List(ctx); err != nil {
+		if stubs, err = me.dashboardService.List(ctx, m); err != nil {
 			return err
 		}
 	}
@@ -94,7 +94,7 @@ func (me *service) Get(ctx context.Context, id string, v *sharing.DashboardShari
 	}
 	if len(dashboardName) == 0 || dashboardName == id {
 		dashboard := dashboards.JSONDashboard{}
-		if err := me.dashboardService.Get(ctx, id, &dashboard); err != nil {
+		if err := me.dashboardService.Get(ctx, id, &dashboard, m); err != nil {
 			return err
 		}
 		dashboardName = dashboard.Name()
@@ -113,7 +113,7 @@ func (me *service) Validate(ctx context.Context, v *sharing.DashboardSharing) er
 	return nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *sharing.DashboardSharing) error {
+func (me *service) Update(ctx context.Context, id string, v *sharing.DashboardSharing, m any) error {
 	return me.update(ctx, id, v, 0)
 }
 
@@ -145,7 +145,7 @@ func (me *service) update(ctx context.Context, id string, v *sharing.DashboardSh
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	id = strings.TrimSuffix(id, "-sharing")
 	settings := sharing.DashboardSharing{
 		DashboardID: id,
@@ -162,21 +162,21 @@ func (me *service) Delete(ctx context.Context, id string) error {
 			URLs:              map[string]string{},
 		},
 	}
-	return me.Update(ctx, id, &settings)
+	return me.Update(ctx, id, &settings, m)
 }
 
-func (me *service) Create(ctx context.Context, v *sharing.DashboardSharing) (*api.Stub, error) {
-	if err := me.Update(ctx, v.DashboardID, v); err != nil {
+func (me *service) Create(ctx context.Context, v *sharing.DashboardSharing, m any) (*api.Stub, error) {
+	if err := me.Update(ctx, v.DashboardID, v, m); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: v.DashboardID + "-sharing"}, nil
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 
 	var stubs api.Stubs
-	if stubs, err = me.dashboardService.List(ctx); err != nil {
+	if stubs, err = me.dashboardService.List(ctx, m); err != nil {
 		return nil, err
 	}
 	return stubs.ToStubs(), nil

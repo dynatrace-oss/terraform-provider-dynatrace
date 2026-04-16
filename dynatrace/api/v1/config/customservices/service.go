@@ -40,7 +40,7 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*customservices
 	return &service{client: rest.APITokenClient(credentials)}
 }
 
-func (me *service) Get(ctx context.Context, id string, v *customservices.CustomService) error {
+func (me *service) Get(ctx context.Context, id string, v *customservices.CustomService, m any) error {
 	if id, technology, ok := settings.SplitID(id); ok {
 		return me.GetWithTechnology(ctx, id, technology, v)
 	}
@@ -67,7 +67,7 @@ func (me *service) GetWithTechnology(ctx context.Context, id string, technology 
 	return nil
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 	var stubs api.Stubs
 	client := me.client
@@ -94,7 +94,7 @@ func (me *service) ValidateWithTechnology(ctx context.Context, technology string
 	return me.client.Post(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s/validator", url.PathEscape(technology)), v, 204).Finish()
 }
 
-func (me *service) Create(ctx context.Context, v *customservices.CustomService) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *customservices.CustomService, m any) (*api.Stub, error) {
 	return me.CreateWithTechnology(ctx, string(v.Technology), v)
 }
 
@@ -111,7 +111,7 @@ func (me *service) CreateWithTechnology(ctx context.Context, technology string, 
 	return &stub, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *customservices.CustomService) error {
+func (me *service) Update(ctx context.Context, id string, v *customservices.CustomService, m any) error {
 	if id, technology, ok := settings.SplitID(id); ok {
 		return me.UpdateWithTechnology(ctx, id, technology, v)
 	}
@@ -129,7 +129,7 @@ func (me *service) UpdateWithTechnology(ctx context.Context, id string, technolo
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	if id, technology, ok := settings.SplitID(id); ok {
 		return me.DeleteWithTechnology(ctx, id, technology)
 	}

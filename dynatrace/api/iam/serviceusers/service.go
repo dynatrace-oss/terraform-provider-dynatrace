@@ -105,7 +105,7 @@ type createResponse struct {
 	Name  string `json:"name"`
 }
 
-func (me *serviceUserServiceClient) Create(ctx context.Context, serviceUser *serviceusers.ServiceUser) (*api.Stub, error) {
+func (me *serviceUserServiceClient) Create(ctx context.Context, serviceUser *serviceusers.ServiceUser, m any) (*api.Stub, error) {
 	responseBytes, err := me.iamClientGetter.New(ctx).POST(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users", me.endpointURL, me.accountID), serviceUser, 201, false)
 	if err != nil {
 		return nil, err
@@ -117,7 +117,7 @@ func (me *serviceUserServiceClient) Create(ctx context.Context, serviceUser *ser
 	}
 
 	if err := me.updateGroupAssignments(ctx, response.Email, serviceUser.Groups); err != nil {
-		deleteErr := me.Delete(ctx, response.UID)
+		deleteErr := me.Delete(ctx, response.UID, m)
 		if deleteErr != nil {
 			return nil, fmt.Errorf("failed to create service user: %v; additionally failed to clean up service user: %v", err, deleteErr)
 		}
@@ -135,7 +135,7 @@ type getServiceUserResponse struct {
 	Description string `json:"description"`
 }
 
-func (me *serviceUserServiceClient) Get(ctx context.Context, id string, v *serviceusers.ServiceUser) error {
+func (me *serviceUserServiceClient) Get(ctx context.Context, id string, v *serviceusers.ServiceUser, m any) error {
 	responseBytes, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, me.accountID, id), 200, false)
 	if err != nil {
 		return err
@@ -188,7 +188,7 @@ func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email str
 	return groups, nil
 }
 
-func (me *serviceUserServiceClient) Update(ctx context.Context, id string, serviceUser *serviceusers.ServiceUser) error {
+func (me *serviceUserServiceClient) Update(ctx context.Context, id string, serviceUser *serviceusers.ServiceUser, m any) error {
 	// Update the service user details
 	if _, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, me.accountID, id), serviceUser, 200, false); err != nil {
 		return err
@@ -251,7 +251,7 @@ func (me *serviceUserServiceClient) GetAll(ctx context.Context) ([]ServiceUserSt
 	return stubs, nil
 }
 
-func (me *serviceUserServiceClient) List(ctx context.Context) (api.Stubs, error) {
+func (me *serviceUserServiceClient) List(ctx context.Context, m any) (api.Stubs, error) {
 	var stubs api.Stubs
 	serviceUserStubs, err := me.GetAll(ctx)
 	if err != nil {
@@ -268,7 +268,7 @@ func (me *serviceUserServiceClient) List(ctx context.Context) (api.Stubs, error)
 	return stubs, nil
 }
 
-func (me *serviceUserServiceClient) Delete(ctx context.Context, uid string) error {
+func (me *serviceUserServiceClient) Delete(ctx context.Context, uid string, m any) error {
 	_, err := me.iamClientGetter.New(ctx).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, me.accountID, uid), 200, false)
 	return err
 }

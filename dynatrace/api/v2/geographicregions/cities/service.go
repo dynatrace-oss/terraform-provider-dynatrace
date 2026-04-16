@@ -39,7 +39,7 @@ type service struct {
 	client rest.Client
 }
 
-func (me *service) Get(ctx context.Context, id string, v *cities.Settings) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *cities.Settings, m any) (err error) {
 	var countryCode, regionCode string
 	parts := strings.Split(id, "-")
 	if len(parts) == 2 {
@@ -51,7 +51,7 @@ func (me *service) Get(ctx context.Context, id string, v *cities.Settings) (err 
 	return me.client.Get(ctx, fmt.Sprintf("/api/v2/rum/cities/%s/%s", countryCode, regionCode), 200).Finish(v)
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
 }
 

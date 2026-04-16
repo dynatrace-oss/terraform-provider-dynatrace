@@ -54,7 +54,7 @@ func (me *service) client(ctx context.Context) (*bucket.Client, error) {
 
 var IGNORE_UNEXPECTED_EOF = (os.Getenv("DT_BUCKETS_IGNORE_UNEXPECTED_EOF") == "true")
 
-func (me *service) Get(ctx context.Context, id string, v *buckets.Bucket) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *buckets.Bucket, m any) (err error) {
 	err = me.get(ctx, id, v)
 	if IGNORE_UNEXPECTED_EOF && err != nil {
 		if strings.Contains(err.Error(), "unexpected EOF") {
@@ -94,7 +94,7 @@ func (me *service) SchemaID() string {
 	return "platform:buckets"
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return nil, err
@@ -144,7 +144,7 @@ func getEnv(key string, def int, min int, max int) int {
 	return iValue
 }
 
-func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stub, err error) {
+func (me *service) Create(ctx context.Context, v *buckets.Bucket, m any) (stub *api.Stub, err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return nil, err
@@ -192,13 +192,13 @@ func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stu
 	return &api.Stub{Name: v.Name, ID: v.Name}, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (err error) {
+func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket, m any) (err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err
 	}
 	var oldBucket buckets.Bucket
-	me.Get(ctx, id, &oldBucket)
+	me.Get(ctx, id, &oldBucket, m)
 	oldVersion := oldBucket.Version
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
@@ -218,7 +218,7 @@ func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (er
 	retries := 0
 	for {
 		var bucket buckets.Bucket
-		err = me.Get(ctx, id, &bucket)
+		err = me.Get(ctx, id, &bucket, m)
 		if err == nil {
 			if bucket.Version > oldVersion && len(bucket.Status) > 0 && bucket.Status != buckets.Statuses.Updating {
 				break
@@ -236,7 +236,7 @@ func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (er
 	return err
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err

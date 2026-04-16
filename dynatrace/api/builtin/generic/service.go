@@ -48,7 +48,7 @@ func (me *service) Client() rest.Client {
 	return rest.HybridClient(me.credentials)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *generic.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *generic.Settings, m any) error {
 	var settingsObject settings20.SettingsObject
 	client := me.Client()
 
@@ -76,7 +76,7 @@ type schemataResponse struct {
 	Items []schemaStub `json:"items"`
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	client := me.Client()
 	var schemata schemataResponse
 	err := client.Get(ctx, settingsSchemaEndpoint, 200).Finish(&schemata)
@@ -153,7 +153,7 @@ func (me *service) Validate(v *generic.Settings) error {
 	return nil // Settings 2.0 doesn't offer validation
 }
 
-func (me *service) Create(ctx context.Context, v *generic.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *generic.Settings, m any) (*api.Stub, error) {
 	stubs, err := me.create(ctx, v)
 	if err == nil {
 		return stubs, nil
@@ -191,7 +191,7 @@ func (me *service) create(ctx context.Context, v *generic.Settings) (*api.Stub, 
 	return stub, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *generic.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *generic.Settings, m any) error {
 	err := me.update(ctx, id, v)
 	if err == nil {
 		return nil
@@ -215,7 +215,7 @@ func (me *service) update(ctx context.Context, id string, v *generic.Settings) e
 	return me.Client().Put(ctx, u, obj).Finish(nil)
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	client := me.Client()
 
 	u, err := url.JoinPath(settingsObjectEndpoint, id)

@@ -41,55 +41,55 @@ type service struct {
 	service settings.CRUDService[*presets.Settings]
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	mu.Lock()
 	defer mu.Unlock()
-	return me.service.List(ctx)
+	return me.service.List(ctx, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *presets.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *presets.Settings, m any) error {
 	mu.Lock()
 	defer mu.Unlock()
-	if stubs, _ := me.service.List(ctx); len(stubs) > 0 {
-		return me.service.Get(ctx, stubs[0].ID, v)
+	if stubs, _ := me.service.List(ctx, m); len(stubs) > 0 {
+		return me.service.Get(ctx, stubs[0].ID, v, m)
 	}
-	return me.service.Get(ctx, id, v)
+	return me.service.Get(ctx, id, v, m)
 }
 
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(ctx context.Context, v *presets.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *presets.Settings, m any) (*api.Stub, error) {
 	mu.Lock()
 	defer mu.Unlock()
 	// This schema is flagged with `multiobject=false` - in other words only one
 	// object can exist per environment
 	// Instead of trying to CREATE the settings we simply update the existing one
-	if stubs, _ := me.service.List(ctx); len(stubs) > 0 {
+	if stubs, _ := me.service.List(ctx, m); len(stubs) > 0 {
 		return stubs[0], me.update(ctx, stubs[0].ID, v)
 	}
-	return me.service.Create(ctx, v)
+	return me.service.Create(ctx, v, m)
 }
 
 func (me *service) update(ctx context.Context, id string, v *presets.Settings) error {
-	return me.service.Update(ctx, id, v)
+	return me.service.Update(ctx, id, v, nil)
 }
 
-func (me *service) Update(ctx context.Context, id string, v *presets.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *presets.Settings, m any) error {
 	mu.Lock()
 	defer mu.Unlock()
 	// Just in case we LOCALLY are having a different ID than the ID the
 	// environment insists on having we're checking first, whether an object
 	// already exists. If so, we're updating using THAT ID.
-	if stubs, _ := me.service.List(ctx); len(stubs) > 0 {
+	if stubs, _ := me.service.List(ctx, m); len(stubs) > 0 {
 		return me.update(ctx, stubs[0].ID, v)
 	}
-	return me.service.Update(ctx, id, v)
+	return me.service.Update(ctx, id, v, m)
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	mu.Lock()
 	defer mu.Unlock()
-	return me.service.Delete(ctx, id)
+	return me.service.Delete(ctx, id, m)
 }

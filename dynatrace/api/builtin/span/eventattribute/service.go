@@ -55,7 +55,7 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Create(ctx context.Context, v *eventattribute.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *eventattribute.Settings, m any) (*api.Stub, error) {
 	soc := settings20.SettingsObjectCreate{
 		SchemaID:      SchemaID,
 		SchemaVersion: SchemaVersion,
@@ -73,7 +73,7 @@ func (me *service) Create(ctx context.Context, v *eventattribute.Settings) (*api
 				Enabled: true,
 				Key:     v.Key,
 			}
-			stub, err = allowlist.Service(me.credentials).Create(ctx, &allowlistSettings)
+			stub, err = allowlist.Service(me.credentials).Create(ctx, &allowlistSettings, m)
 			if err != nil {
 				return nil, err
 			}
@@ -84,7 +84,7 @@ func (me *service) Create(ctx context.Context, v *eventattribute.Settings) (*api
 					Key:     v.Key,
 					Masking: maskingsettings.MaskingType(v.Masking),
 				}
-				if _, err = masking.Service(me.credentials).Create(ctx, &maskingSettings); err != nil {
+				if _, err = masking.Service(me.credentials).Create(ctx, &maskingSettings, m); err != nil {
 					return nil, err
 				}
 			}
@@ -97,7 +97,7 @@ func (me *service) Create(ctx context.Context, v *eventattribute.Settings) (*api
 	return stub, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *eventattribute.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *eventattribute.Settings, m any) error {
 	if err := me.client.Get(ctx, "/api/v2/settings/schemas/builtin%3Aspan-event-attribute", 200).Finish(); err == nil {
 		sou := settings20.SettingsObjectUpdate{Value: v, SchemaVersion: SchemaVersion}
 		if err := me.client.Put(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200).Finish(); err != nil {
@@ -111,7 +111,7 @@ func (me *service) Update(ctx context.Context, id string, v *eventattribute.Sett
 				stateKey = attributeConfig.Key
 			}
 
-			allowlistStubs, err := allowlist.Service(me.credentials).List(ctx)
+			allowlistStubs, err := allowlist.Service(me.credentials).List(ctx, m)
 			if err != nil {
 				return err
 			}
@@ -129,12 +129,12 @@ func (me *service) Update(ctx context.Context, id string, v *eventattribute.Sett
 					Enabled: true,
 					Key:     v.Key,
 				}
-				if err = allowlist.Service(me.credentials).Update(ctx, *allowlistId, &allowlistSettings); err != nil {
+				if err = allowlist.Service(me.credentials).Update(ctx, *allowlistId, &allowlistSettings, m); err != nil {
 					return err
 				}
 			}
 
-			maskingStubs, err := masking.Service(me.credentials).List(ctx)
+			maskingStubs, err := masking.Service(me.credentials).List(ctx, m)
 			if err != nil {
 				return err
 			}
@@ -154,11 +154,11 @@ func (me *service) Update(ctx context.Context, id string, v *eventattribute.Sett
 						Key:     v.Key,
 						Masking: maskingsettings.MaskingType(v.Masking),
 					}
-					if err = masking.Service(me.credentials).Update(ctx, *maskingId, &maskingSettings); err != nil {
+					if err = masking.Service(me.credentials).Update(ctx, *maskingId, &maskingSettings, m); err != nil {
 						return err
 					}
 				} else {
-					if err = masking.Service(me.credentials).Delete(ctx, *maskingId); err != nil {
+					if err = masking.Service(me.credentials).Delete(ctx, *maskingId, m); err != nil {
 						return err
 					}
 				}
@@ -169,7 +169,7 @@ func (me *service) Update(ctx context.Context, id string, v *eventattribute.Sett
 						Key:     v.Key,
 						Masking: maskingsettings.MaskingType(v.Masking),
 					}
-					if _, err = masking.Service(me.credentials).Create(ctx, &maskingSettings); err != nil {
+					if _, err = masking.Service(me.credentials).Create(ctx, &maskingSettings, m); err != nil {
 						return err
 					}
 				}
@@ -185,7 +185,7 @@ func (me *service) Validate(v *eventattribute.Settings) error {
 	return nil // Settings 2.0 doesn't offer validation
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	var err error
 	if err = me.client.Get(ctx, "/api/v2/settings/schemas/builtin%3Aspan-event-attribute", 200).Finish(); err == nil {
 		if err = me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish(); err != nil {
@@ -199,7 +199,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 				stateKey = attributeConfig.Key
 			}
 
-			allowlistStubs, err := allowlist.Service(me.credentials).List(ctx)
+			allowlistStubs, err := allowlist.Service(me.credentials).List(ctx, m)
 			if err != nil {
 				return err
 			}
@@ -217,7 +217,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 				}
 			}
 
-			maskingStubs, err := masking.Service(me.credentials).List(ctx)
+			maskingStubs, err := masking.Service(me.credentials).List(ctx, m)
 			if err != nil {
 				return err
 			}
@@ -242,7 +242,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *eventattribute.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *eventattribute.Settings, m any) error {
 	var err error
 	var settingsObject settings20.SettingsObject
 	if err = me.client.Get(ctx, "/api/v2/settings/schemas/builtin%3Aspan-event-attribute", 200).Finish(); err == nil {
@@ -261,7 +261,7 @@ func (me *service) Get(ctx context.Context, id string, v *eventattribute.Setting
 				stateKey = attributeConfig.Key
 			}
 
-			allowlistStubs, err := allowlist.Service(me.credentials).List(ctx)
+			allowlistStubs, err := allowlist.Service(me.credentials).List(ctx, m)
 			if err != nil {
 				return err
 			}
@@ -277,7 +277,7 @@ func (me *service) Get(ctx context.Context, id string, v *eventattribute.Setting
 			}
 
 			v.Masking = eventattribute.MaskingTypes.NotMasked
-			maskingStubs, err := masking.Service(me.credentials).List(ctx)
+			maskingStubs, err := masking.Service(me.credentials).List(ctx, m)
 			if err != nil {
 				return err
 			}
@@ -298,7 +298,7 @@ func (me *service) Get(ctx context.Context, id string, v *eventattribute.Setting
 	return nil
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 
 	stubs := api.Stubs{}

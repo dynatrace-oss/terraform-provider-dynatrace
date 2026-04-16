@@ -40,8 +40,8 @@ type service struct {
 	connService settings.CRUDService[*azureconnection_settings.Settings]
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	stubs, err := me.connService.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	stubs, err := me.connService.List(ctx, m)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var filteredStubs api.Stubs
 	for _, stub := range stubs {
 		connValue := azureconnection_settings.Settings{}
-		if err := me.connService.Get(ctx, stub.ID, &connValue); err != nil {
+		if err := me.connService.Get(ctx, stub.ID, &connValue, m); err != nil {
 			return nil, err
 		}
 		if connValue.Type == azureconnection_settings.Types.Federatedidentitycredential {
@@ -60,9 +60,9 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return filteredStubs, nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *connectionauthentication_settings.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *connectionauthentication_settings.Settings, m any) error {
 	connValue := azureconnection_settings.Settings{}
-	if err := me.connService.Get(ctx, id, &connValue); err != nil {
+	if err := me.connService.Get(ctx, id, &connValue, m); err != nil {
 		return err
 	}
 
@@ -83,9 +83,9 @@ func (me *service) SchemaID() string {
 	return me.connService.SchemaID()
 }
 
-func (me *service) Create(ctx context.Context, v *connectionauthentication_settings.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *connectionauthentication_settings.Settings, m any) (*api.Stub, error) {
 	connValue := azureconnection_settings.Settings{}
-	if err := me.connService.Get(ctx, v.AzureConnectionID, &connValue); err != nil {
+	if err := me.connService.Get(ctx, v.AzureConnectionID, &connValue, m); err != nil {
 		return nil, err
 	}
 
@@ -106,17 +106,17 @@ func (me *service) Create(ctx context.Context, v *connectionauthentication_setti
 	connValue.FederatedIdentityCredential.DirectoryID = v.DirectoryID
 	connValue.FederatedIdentityCredential.ApplicationID = v.ApplicationID
 
-	if err := me.connService.Update(ctx, v.AzureConnectionID, &connValue); err != nil {
+	if err := me.connService.Update(ctx, v.AzureConnectionID, &connValue, m); err != nil {
 		return nil, err
 	}
 
 	return &api.Stub{ID: v.AzureConnectionID, Name: v.AzureConnectionID}, nil
 }
 
-func (me *service) Update(_ context.Context, _ string, _ *connectionauthentication_settings.Settings) error {
+func (me *service) Update(_ context.Context, _ string, _ *connectionauthentication_settings.Settings, m any) error {
 	return errors.New("update not supported: This resource is immutable after creation. Changes require replacement")
 }
 
-func (me *service) Delete(_ context.Context, _ string) error {
+func (me *service) Delete(_ context.Context, _ string, m any) error {
 	return nil
 }

@@ -38,7 +38,7 @@ type service struct {
 	credentials *rest.Credentials
 }
 
-func (me *service) Get(ctx context.Context, id string, v *apitokens.APIToken) error {
+func (me *service) Get(ctx context.Context, id string, v *apitokens.APIToken, m any) error {
 	var err error
 
 	client := rest.APITokenClient(me.credentials)
@@ -54,7 +54,7 @@ func (me *service) SchemaID() string {
 	return "v2:environment:api-tokens"
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 
 	client := rest.APITokenClient(me.credentials)
@@ -75,7 +75,7 @@ func (me *service) Validate(v *apitokens.APIToken) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(ctx context.Context, v *apitokens.APIToken) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *apitokens.APIToken, m any) (*api.Stub, error) {
 	var err error
 
 	resultToken := apitokens.APIToken{}
@@ -97,11 +97,11 @@ func (me *service) Create(ctx context.Context, v *apitokens.APIToken) (*api.Stub
 	return &api.Stub{ID: *resultToken.ID, Name: resultToken.Name, Value: resultToken}, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *apitokens.APIToken) error {
+func (me *service) Update(ctx context.Context, id string, v *apitokens.APIToken, m any) error {
 	return rest.APITokenClient(me.credentials).Put(ctx, fmt.Sprintf("/api/v2/apiTokens/%s", id), v, 204).Finish()
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	return rest.APITokenClient(me.credentials).Delete(ctx, fmt.Sprintf("/api/v2/apiTokens/%s", id), 204).Finish()
 }
 

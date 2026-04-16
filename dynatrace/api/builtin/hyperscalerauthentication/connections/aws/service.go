@@ -44,30 +44,30 @@ func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Get(ctx context.Context, id string, v *awsconnection.Settings) error {
-	return me.service.Get(ctx, id, v)
+func (me *service) Get(ctx context.Context, id string, v *awsconnection.Settings, m any) error {
+	return me.service.Get(ctx, id, v, m)
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.service.List(ctx, m)
 }
 
-func (me *service) Create(ctx context.Context, v *awsconnection.Settings) (*api.Stub, error) {
-	return me.service.Create(ctx, v)
+func (me *service) Create(ctx context.Context, v *awsconnection.Settings, m any) (*api.Stub, error) {
+	return me.service.Create(ctx, v, m)
 }
 
 // Update is only used to update the name of the connection
 // role_arn is not modifiable set in a different resource, and it's not in the state of this resource.
 // Therefore, we need to fetch the current state and assign the values manually instead of overriding the role_arn with empty/null
-func (me *service) Update(ctx context.Context, id string, v *awsconnection.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *awsconnection.Settings, m any) error {
 	var current awsconnection.Settings
-	if err := me.Get(ctx, id, &current); err != nil {
+	if err := me.Get(ctx, id, &current, m); err != nil {
 		return err
 	}
 	current.Name = v.Name
-	return me.service.Update(ctx, id, &current)
+	return me.service.Update(ctx, id, &current, m)
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+func (me *service) Delete(ctx context.Context, id string, m any) error {
+	return me.service.Delete(ctx, id, m)
 }

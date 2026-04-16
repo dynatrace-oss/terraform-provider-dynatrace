@@ -79,16 +79,16 @@ type PolicyCreateResponse struct {
 	UUID string `json:"uuid"`
 }
 
-func (me *BindingServiceClient) Create(ctx context.Context, v *bindings.PolicyBinding) (*api.Stub, error) {
+func (me *BindingServiceClient) Create(ctx context.Context, v *bindings.PolicyBinding, m any) (*api.Stub, error) {
 	id := joinID(v)
 	var err error
-	if err = me.Update(ctx, id, v); err != nil {
+	if err = me.Update(ctx, id, v, m); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: id, Name: "PolicyBindings-" + id}, nil
 }
 
-func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.PolicyBinding) error {
+func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.PolicyBinding, m any) error {
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return err
@@ -115,7 +115,7 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 	return nil
 }
 
-func (me *BindingServiceClient) Update(ctx context.Context, id string, bindings *bindings.PolicyBinding) error {
+func (me *BindingServiceClient) Update(ctx context.Context, id string, bindings *bindings.PolicyBinding, m any) error {
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return err
@@ -178,7 +178,7 @@ func (me *BindingServiceClient) GetPolicyUUIDsForGroup(ctx context.Context, grou
 	return response.PolicyUUIDs, nil
 }
 
-func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
+func (me *BindingServiceClient) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 	var responseBytes []byte
 	client := iam.NewIAMClient(ctx, me)
@@ -238,13 +238,13 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
+func (me *BindingServiceClient) Delete(ctx context.Context, id string, m any) error {
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return err
 	}
 	var binding bindings.PolicyBinding
-	if err = me.Get(ctx, id, &binding); err != nil {
+	if err = me.Get(ctx, id, &binding, m); err != nil {
 		return err
 	}
 	for _, policyID := range binding.PolicyIDs {

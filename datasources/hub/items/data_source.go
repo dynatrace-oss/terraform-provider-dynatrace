@@ -70,7 +70,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	}
 
 	service := srv.Service(creds, opts)
-	if err := service.Get(ctx, service.SchemaID(), &settings); err != nil {
+	if err := service.Get(ctx, service.SchemaID(), &settings, m); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(service.SchemaID())

@@ -77,7 +77,7 @@ func UniqueDataSourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		return diag.FromErr(err)
 	}
 	var stubs api.Stubs
-	if stubs, err = locations.Service(creds).List(ctx); err != nil {
+	if stubs, err = locations.Service(creds).List(ctx, m); err != nil {
 		return diag.FromErr(err)
 	}
 

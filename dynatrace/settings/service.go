@@ -24,11 +24,11 @@ import (
 )
 
 type Service[T Settings] interface {
-	List(ctx context.Context) (api.Stubs, error)
-	Get(ctx context.Context, id string, v T) error
-	Create(ctx context.Context, v T) (*api.Stub, error)
-	Update(ctx context.Context, id string, v T) error
-	Delete(ctx context.Context, id string) error
+	List(ctx context.Context, m any) (api.Stubs, error)
+	Get(ctx context.Context, id string, v T, m any) error
+	Create(ctx context.Context, v T, m any) (*api.Stub, error)
+	Update(ctx context.Context, id string, v T, m any) error
+	Delete(ctx context.Context, id string, m any) error
 	Validate(ctx context.Context, v T) error
 	SchemaID() string
 }

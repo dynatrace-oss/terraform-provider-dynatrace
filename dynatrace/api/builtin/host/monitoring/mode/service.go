@@ -66,7 +66,7 @@ type ListResponse struct {
 	} `json:"entities"`
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	collectStubs := func(stubs api.Stubs, listResponse *ListResponse) api.Stubs {
 		for _, entity := range listResponse.Entities {
 			setting := new(mode.Settings)
@@ -115,7 +115,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *mode.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *mode.Settings, m any) error {
 	listResponse := new(ListResponse)
 	from := "now-3y"
 	fields := "properties.monitoringMode,properties.state"
@@ -144,18 +144,18 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) Create(ctx context.Context, v *mode.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *mode.Settings, m any) (*api.Stub, error) {
 	err := me.update(ctx, v.HostID, v)
 	// it's ok to use HostID as the name here - not being used during creation
 	return &api.Stub{ID: v.HostID, Name: v.HostID}, err
 }
 
-func (me *service) Update(ctx context.Context, id string, v *mode.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *mode.Settings, m any) error {
 	return me.update(ctx, id, v)
 }
 
 func (me *service) update(ctx context.Context, id string, v *mode.Settings) error {
-	_, err := me.service.Create(ctx, v)
+	_, err := me.service.Create(ctx, v, nil)
 	if err == nil {
 		remainingRetries := 0
 		if len(StrictUpdateRetries) > 0 {
@@ -166,7 +166,7 @@ func (me *service) update(ctx context.Context, id string, v *mode.Settings) erro
 		readMode := ""
 		for remainingRetries > 0 && readMode != string(v.MonitoringMode) {
 			getSettings := new(mode.Settings)
-			me.Get(ctx, id, getSettings)
+			me.Get(ctx, id, getSettings, nil)
 			readMode = string(getSettings.MonitoringMode)
 			if readMode == string(v.MonitoringMode) {
 				break
@@ -187,7 +187,7 @@ func (me *service) update(ctx context.Context, id string, v *mode.Settings) erro
 	return err
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	// Deleting the monitoring mode for a host doesn't make sense
 	// it always exists
 	return nil

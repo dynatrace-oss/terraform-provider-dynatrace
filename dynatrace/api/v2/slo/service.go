@@ -42,7 +42,7 @@ type service struct {
 	credentials *rest.Credentials
 }
 
-func (me *service) Get(ctx context.Context, id string, v *slo.SLO) error {
+func (me *service) Get(ctx context.Context, id string, v *slo.SLO, m any) error {
 	err := me.get(ctx, id, v)
 	if err != nil {
 		if err.Error() == "Cannot access a disabled SLO." {
@@ -80,7 +80,7 @@ type sloListEntry struct {
 	ID string `json:"id"`
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 
 	client := rest.APITokenClient(me.credentials)
@@ -101,7 +101,7 @@ func (me *service) Validate(v *slo.SLO) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *slo.SLO, m any) (*api.Stub, error) {
 	// mu.Lock()
 	// defer mu.Unlock()
 
@@ -189,11 +189,11 @@ func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
 	return &api.Stub{ID: id, Name: v.Name}, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *slo.SLO) error {
+func (me *service) Update(ctx context.Context, id string, v *slo.SLO, m any) error {
 	return rest.APITokenClient(me.credentials).Put(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), v, 200).Finish()
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	return rest.APITokenClient(me.credentials).Delete(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 204).Finish()
 }
 

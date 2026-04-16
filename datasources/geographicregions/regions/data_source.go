@@ -63,7 +63,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	service := srv.Service(creds)
 
 	var settings regions.Settings
-	if err := service.Get(ctx, countryCode, &settings); err != nil {
+	if err := service.Get(ctx, countryCode, &settings, m); err != nil {
 		return diag.FromErr(err)
 	}
 

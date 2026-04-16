@@ -39,7 +39,7 @@ func Duplicates(ctx context.Context, service settings.RService[*logevents.Settin
 	if settings.RejectDuplicate("dynatrace_log_events") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -50,7 +50,7 @@ func Duplicates(ctx context.Context, service settings.RService[*logevents.Settin
 	} else if settings.HijackDuplicate("dynatrace_log_events") {
 		var err error
 		var stubs api.Stubs
-		if stubs, err = service.List(ctx); err != nil {
+		if stubs, err = service.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {

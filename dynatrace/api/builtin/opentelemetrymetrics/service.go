@@ -50,11 +50,11 @@ type service struct {
 
 var mu sync.Mutex
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.service.List(ctx, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *opentelemetrymetrics.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *opentelemetrymetrics.Settings, m any) error {
 	mu.Lock()
 	defer mu.Unlock()
 	stateConfig := getStateConfig(ctx)
@@ -115,7 +115,7 @@ func toJSON(v any) string {
 	return string(data)
 }
 
-func (me *service) Create(ctx context.Context, v *opentelemetrymetrics.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *opentelemetrymetrics.Settings, m any) (*api.Stub, error) {
 	mu.Lock()
 	defer mu.Unlock()
 	v.Mode = resolveMode(v, nil)
@@ -136,7 +136,7 @@ func (me *service) Create(ctx context.Context, v *opentelemetrymetrics.Settings)
 		}
 	}
 
-	stub, err := me.service.Create(ctx, &effectiveValue)
+	stub, err := me.service.Create(ctx, &effectiveValue, m)
 	if err != nil {
 		return stub, err
 	}
@@ -146,7 +146,7 @@ func (me *service) Create(ctx context.Context, v *opentelemetrymetrics.Settings)
 	return stub, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *opentelemetrymetrics.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *opentelemetrymetrics.Settings, m any) error {
 	mu.Lock()
 	defer mu.Unlock()
 	stateConfig := getStateConfig(ctx)
@@ -180,7 +180,7 @@ func (me *service) Update(ctx context.Context, id string, v *opentelemetrymetric
 		}
 
 	}
-	if err := me.service.Update(ctx, id, &effectiveValue); err != nil {
+	if err := me.service.Update(ctx, id, &effectiveValue, m); err != nil {
 		return err
 	}
 	v.AdditionalAttributesToDimensionEnabled = effectiveValue.AdditionalAttributesToDimensionEnabled
@@ -189,7 +189,7 @@ func (me *service) Update(ctx context.Context, id string, v *opentelemetrymetric
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	mu.Lock()
 	defer mu.Unlock()
 	stateConfig := getStateConfig(ctx)
@@ -211,12 +211,12 @@ func (me *service) Delete(ctx context.Context, id string) error {
 		}
 		// if there are no attributes left, we opt for deleting the whole setting
 		if len(effectiveValue.AdditionalAttributes) != 0 || len(effectiveValue.ToDropAttributes) != 0 {
-			return me.service.Update(ctx, id, &effectiveValue)
+			return me.service.Update(ctx, id, &effectiveValue, m)
 		}
 	}
 
 	// if mode is "Explicit" or if there are still attributes remaining
-	return me.service.Delete(ctx, id)
+	return me.service.Delete(ctx, id, m)
 }
 
 func (me *service) SchemaID() string {

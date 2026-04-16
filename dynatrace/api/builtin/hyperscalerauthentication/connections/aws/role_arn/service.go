@@ -47,13 +47,13 @@ type service struct {
 	connService settings.CRUDService[*awsconnection_settings.Settings]
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.connService.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.connService.List(ctx, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *role_arn.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *role_arn.Settings, m any) error {
 	connValue := awsconnection_settings.Settings{}
-	if err := me.connService.Get(ctx, id, &connValue); err != nil {
+	if err := me.connService.Get(ctx, id, &connValue, m); err != nil {
 		return err
 	}
 	if connValue.AWSRoleBasedAuthentication != nil {
@@ -70,9 +70,9 @@ func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(ctx context.Context, v *role_arn.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *role_arn.Settings, m any) (*api.Stub, error) {
 	connValue := awsconnection_settings.Settings{}
-	if err := me.connService.Get(ctx, v.AWSConnectionID, &connValue); err != nil {
+	if err := me.connService.Get(ctx, v.AWSConnectionID, &connValue, m); err != nil {
 		return nil, err
 	}
 
@@ -98,7 +98,7 @@ func (me *service) Create(ctx context.Context, v *role_arn.Settings) (*api.Stub,
 	}
 
 	if err := retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, role_arn.DefaultCreateTimeout), func() *retry.RetryError {
-		return retrycommon.ClassifyRetryError(me.connService.Update(ctx, v.AWSConnectionID, &connValue))
+		return retrycommon.ClassifyRetryError(me.connService.Update(ctx, v.AWSConnectionID, &connValue, m))
 	}); err != nil {
 		return nil, err
 	}
@@ -106,11 +106,11 @@ func (me *service) Create(ctx context.Context, v *role_arn.Settings) (*api.Stub,
 	return &api.Stub{ID: v.AWSConnectionID, Name: v.AWSConnectionID}, nil
 }
 
-func (me *service) Update(_ context.Context, _ string, _ *role_arn.Settings) error {
+func (me *service) Update(_ context.Context, _ string, _ *role_arn.Settings, m any) error {
 	return errors.New("update not supported: This resource is immutable after creation. Changes require replacement")
 }
 
-func (me *service) Delete(_ context.Context, _ string) error {
+func (me *service) Delete(_ context.Context, _ string, m any) error {
 	return nil
 	// Doesn't work right now - even updating to an empty roleARN errors out
 	// return me.Update(ctx, id, &role_arn.Settings{AWSConnectionID: id, RoleARN: ""})

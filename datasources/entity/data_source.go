@@ -103,7 +103,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	var settings entities.Settings
 	// service := cache.Read(srv.Service(entityType, entitySelector, creds), true)
 	service := srv.Service(entityType, name, entitySelector, from, to, creds)
-	if err := service.Get(ctx, service.SchemaID(), &settings); err != nil {
+	if err := service.Get(ctx, service.SchemaID(), &settings, m); err != nil {
 		return diag.FromErr(err)
 	}
 	if len(settings.Entities) != 0 {

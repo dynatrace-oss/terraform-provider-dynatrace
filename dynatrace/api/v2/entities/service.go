@@ -46,7 +46,7 @@ type service struct {
 	to             string
 }
 
-func (me *service) Get(ctx context.Context, id string, v *entities.Settings) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *entities.Settings, m any) (err error) {
 	from := me.from
 	to := me.to
 	if len(from) == 0 {
@@ -101,6 +101,6 @@ func (me *service) SchemaID() string {
 	return fmt.Sprintf("%s-%s", SchemaID, me.entityType)
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
 }

@@ -46,7 +46,7 @@ func (me *service) client(ctx context.Context) (*segmentsclient.Client, error) {
 	return segmentsclient.NewClient(platformClient), nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *segments.Segment) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *segments.Segment, m any) (err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err
@@ -69,7 +69,7 @@ type SegmentStub struct {
 	IsReadyMade bool   `json:"isReadyMade"`
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return nil, err
@@ -98,7 +98,7 @@ func (me *service) Validate(_ *segments.Segment) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(ctx context.Context, v *segments.Segment) (stub *api.Stub, err error) {
+func (me *service) Create(ctx context.Context, v *segments.Segment, m any) (stub *api.Stub, err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return nil, err
@@ -120,7 +120,7 @@ func (me *service) Create(ctx context.Context, v *segments.Segment) (stub *api.S
 	return &api.Stub{Name: v.Name, ID: segmentStub.UID}, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *segments.Segment) (err error) {
+func (me *service) Update(ctx context.Context, id string, v *segments.Segment, m any) (err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err
@@ -138,7 +138,7 @@ func (me *service) Update(ctx context.Context, id string, v *segments.Segment) (
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err

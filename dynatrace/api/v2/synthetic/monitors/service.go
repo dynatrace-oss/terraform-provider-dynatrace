@@ -43,7 +43,7 @@ type service struct {
 	credentials *rest.Credentials
 }
 
-func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *monitors.Settings, m any) (*api.Stub, error) {
 	var err error
 
 	resp := struct {
@@ -92,7 +92,7 @@ func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub,
 	return &api.Stub{ID: resp.EntityId, Name: v.Name}, nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *monitors.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *monitors.Settings, m any) error {
 	if err := rest.APITokenClient(me.credentials).Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), 200).Finish(v); err != nil {
 		return err
 	}
@@ -109,7 +109,7 @@ type monitorList struct {
 	} `json:"monitors"`
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 	var monitors monitorList
 
@@ -127,7 +127,7 @@ func (me *service) Validate(v *monitors.Settings) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Update(ctx context.Context, id string, v *monitors.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *monitors.Settings, m any) error {
 	err := rest.APITokenClient(me.credentials).Put(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), v, 200).Finish()
 	if err != nil {
 		return err
@@ -136,7 +136,7 @@ func (me *service) Update(ctx context.Context, id string, v *monitors.Settings) 
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	return rest.APITokenClient(me.credentials).Delete(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), 204).Finish()
 }
 

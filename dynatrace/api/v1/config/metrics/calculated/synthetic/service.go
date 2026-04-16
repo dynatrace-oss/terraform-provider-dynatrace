@@ -43,35 +43,35 @@ type service struct {
 	client  rest.Client
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.service.List(ctx, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *mysettings.CalculatedSyntheticMetric) error {
-	return me.service.Get(ctx, id, v)
+func (me *service) Get(ctx context.Context, id string, v *mysettings.CalculatedSyntheticMetric, m any) error {
+	return me.service.Get(ctx, id, v, m)
 }
 
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
-func (me *service) Create(ctx context.Context, v *mysettings.CalculatedSyntheticMetric) (*api.Stub, error) {
-	return me.service.Create(ctx, v)
+func (me *service) Create(ctx context.Context, v *mysettings.CalculatedSyntheticMetric, m any) (*api.Stub, error) {
+	return me.service.Create(ctx, v, m)
 }
 
-func (me *service) Update(ctx context.Context, id string, v *mysettings.CalculatedSyntheticMetric) error {
-	return me.service.Update(ctx, id, v)
+func (me *service) Update(ctx context.Context, id string, v *mysettings.CalculatedSyntheticMetric, m any) error {
+	return me.service.Update(ctx, id, v, m)
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	var err error
 	var retry = 10
 
 	for i := 0; i < retry; i++ {
-		if err = me.service.Delete(ctx, id); err != nil {
+		if err = me.service.Delete(ctx, id, m); err != nil {
 			return err
 		}
-		if err = me.service.Get(ctx, id, new(mysettings.CalculatedSyntheticMetric)); err != nil {
+		if err = me.service.Get(ctx, id, new(mysettings.CalculatedSyntheticMetric), m); err != nil {
 			break
 		}
 		time.Sleep(time.Second * 2)

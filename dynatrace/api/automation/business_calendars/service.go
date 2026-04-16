@@ -46,7 +46,7 @@ func (me *service) client(ctx context.Context) (*automation.Client, error) {
 	return automation.NewClient(platformClient), nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *business_calendars.Settings) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *business_calendars.Settings, m any) (err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ type BusinessCalendarStub struct {
 	Title string `json:"title"`
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return nil, err
@@ -92,7 +92,7 @@ func (me *service) Validate(v *business_calendars.Settings) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(ctx context.Context, v *business_calendars.Settings) (stub *api.Stub, err error) {
+func (me *service) Create(ctx context.Context, v *business_calendars.Settings, m any) (stub *api.Stub, err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return nil, err
@@ -112,7 +112,7 @@ func (me *service) Create(ctx context.Context, v *business_calendars.Settings) (
 	return &api.Stub{Name: v.Title, ID: bStub.ID}, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *business_calendars.Settings) (err error) {
+func (me *service) Update(ctx context.Context, id string, v *business_calendars.Settings, m any) (err error) {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err
@@ -126,7 +126,7 @@ func (me *service) Update(ctx context.Context, id string, v *business_calendars.
 	return err
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err

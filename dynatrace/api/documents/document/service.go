@@ -50,7 +50,7 @@ func (me *service) client(ctx context.Context) (*docclient.Client, error) {
 	return docclient.NewClient(platformClient), nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *documents.Document) (err error) {
+func (me *service) Get(ctx context.Context, id string, v *documents.Document, m any) (err error) {
 	err = me.get(ctx, id, v)
 	if IGNORE_UNEXPECTED_EOF && err != nil {
 		if strings.Contains(err.Error(), "unexpected EOF") {
@@ -95,7 +95,7 @@ func (me *service) SchemaID() string {
 	return "document:documents"
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	if me == nil {
 		return api.Stubs{}, nil
 	}
@@ -123,7 +123,7 @@ func (me *service) Validate(_ *documents.Document) error {
 	return nil // no endpoint for that
 }
 
-func (me *service) Create(ctx context.Context, v *documents.Document) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *documents.Document, m any) (*api.Stub, error) {
 	stub, err := me.createPrivate(ctx, v)
 	if err != nil {
 		return nil, err
@@ -154,7 +154,7 @@ func (me *service) createPrivate(ctx context.Context, v *documents.Document) (st
 
 }
 
-func (me *service) Update(ctx context.Context, id string, v *documents.Document) (err error) {
+func (me *service) Update(ctx context.Context, id string, v *documents.Document, m any) (err error) {
 	return me.update(ctx, id, v)
 }
 
@@ -171,7 +171,7 @@ func (me *service) update(ctx context.Context, id string, v *documents.Document)
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	client, err := me.client(ctx)
 	if err != nil {
 		return err

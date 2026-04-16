@@ -42,8 +42,8 @@ type service struct {
 	service     settings.CRUDService[*anomalydetectors.Settings]
 }
 
-func (me *service) Create(ctx context.Context, v *anomalydetectors.Settings) (*api.Stub, error) {
-	stub, err := me.service.Create(ctx, v)
+func (me *service) Create(ctx context.Context, v *anomalydetectors.Settings, m any) (*api.Stub, error) {
+	stub, err := me.service.Create(ctx, v, m)
 	if err == nil {
 		return stub, nil
 	}
@@ -51,14 +51,14 @@ func (me *service) Create(ctx context.Context, v *anomalydetectors.Settings) (*a
 	// if the anomaly detector requires OAuth, try again with OAuth (without an API token)
 	if rest.IsRequiresOAuthError(err) && me.credentials.ContainsOAuthOrPlatformToken() {
 		ctx := rest.NewPreferOAuthContext(ctx)
-		return me.service.Create(ctx, v)
+		return me.service.Create(ctx, v, m)
 	}
 
 	return nil, err
 }
 
-func (me *service) Update(ctx context.Context, id string, v *anomalydetectors.Settings) error {
-	err := me.service.Update(ctx, id, v)
+func (me *service) Update(ctx context.Context, id string, v *anomalydetectors.Settings, m any) error {
+	err := me.service.Update(ctx, id, v, m)
 	if err == nil {
 		return nil
 	}
@@ -66,7 +66,7 @@ func (me *service) Update(ctx context.Context, id string, v *anomalydetectors.Se
 	// if the anomaly detector requires OAuth, try again with OAuth (without an API token)
 	if rest.IsRequiresOAuthError(err) && me.credentials.ContainsOAuthOrPlatformToken() {
 		ctx := rest.NewPreferOAuthContext(ctx)
-		return me.service.Update(ctx, id, v)
+		return me.service.Update(ctx, id, v, m)
 	}
 	return err
 }
@@ -75,16 +75,16 @@ func (me *service) Validate(v *anomalydetectors.Settings) error {
 	return nil // Settings 2.0 doesn't offer validation
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+func (me *service) Delete(ctx context.Context, id string, m any) error {
+	return me.service.Delete(ctx, id, m)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *anomalydetectors.Settings) error {
-	return me.service.Get(ctx, id, v)
+func (me *service) Get(ctx context.Context, id string, v *anomalydetectors.Settings, m any) error {
+	return me.service.Get(ctx, id, v, m)
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return me.service.List(ctx)
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
+	return me.service.List(ctx, m)
 }
 
 func (me *service) SchemaID() string {

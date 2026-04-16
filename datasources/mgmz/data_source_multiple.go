@@ -77,7 +77,7 @@ func DataSourceReadMultiple(ctx context.Context, d *schema.ResourceData, m any) 
 
 	service := cache.Read[*managementzones.Settings](managementzonessrv.Service(creds), true)
 	var stubs api.Stubs
-	if stubs, err = service.List(ctx); err != nil {
+	if stubs, err = service.List(ctx, m); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(staticID)

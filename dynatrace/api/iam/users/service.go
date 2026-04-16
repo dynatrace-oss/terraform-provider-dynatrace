@@ -71,13 +71,13 @@ func (me *UserServiceClient) SchemaID() string {
 	return "accounts:iam:users"
 }
 
-func (me *UserServiceClient) Create(ctx context.Context, user *users.User) (*api.Stub, error) {
+func (me *UserServiceClient) Create(ctx context.Context, user *users.User, m any) (*api.Stub, error) {
 	var err error
 
 	client := iam.NewIAMClient(ctx, me)
 	if _, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users", me.endpointURL, me.AccountID()), user, 201, false); err != nil {
 		if err.Error() == "User already exists" {
-			if err = me.Update(ctx, user.Email, user); err != nil {
+			if err = me.Update(ctx, user.Email, user, m); err != nil {
 				return nil, err
 			}
 			return &api.Stub{ID: user.Email, Name: user.Email}, nil
@@ -106,7 +106,7 @@ type GetUserGroupsResponse struct {
 	UID    string `json:"uid"`
 }
 
-func (me *UserServiceClient) Get(ctx context.Context, email string, v *users.User) error {
+func (me *UserServiceClient) Get(ctx context.Context, email string, v *users.User, m any) error {
 	var err error
 	var responseBytes []byte
 
@@ -133,7 +133,7 @@ func (me *UserServiceClient) Get(ctx context.Context, email string, v *users.Use
 	return nil
 }
 
-func (me *UserServiceClient) Update(ctx context.Context, email string, user *users.User) error {
+func (me *UserServiceClient) Update(ctx context.Context, email string, user *users.User, m any) error {
 	var err error
 
 	groups := []string{}
@@ -157,7 +157,7 @@ type ListUsersResponse struct {
 	Items []UserStub `json:"items"`
 }
 
-func (me *UserServiceClient) List(ctx context.Context) (api.Stubs, error) {
+func (me *UserServiceClient) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 	var responseBytes []byte
 
@@ -176,7 +176,7 @@ func (me *UserServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *UserServiceClient) Delete(ctx context.Context, email string) error {
+func (me *UserServiceClient) Delete(ctx context.Context, email string, m any) error {
 	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users/%s", me.endpointURL, me.AccountID(), email), 200, false)
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
 		return nil

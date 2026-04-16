@@ -72,7 +72,7 @@ func replaceCredPlaceholders(a, b any) any {
 	return b
 }
 
-func (me *service) Get(ctx context.Context, id string, v *extension_config.Settings) error {
+func (me *service) Get(ctx context.Context, id string, v *extension_config.Settings, m any) error {
 	cfg := ctx.Value(settings.ContextKeyStateConfig)
 	stateConfig, _ := cfg.(*extension_config.Settings)
 
@@ -122,7 +122,7 @@ func (me *service) Get(ctx context.Context, id string, v *extension_config.Setti
 	return nil
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	var stubs api.Stubs
 
 	var extensionsList ExtensionsList
@@ -164,7 +164,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *service) Create(ctx context.Context, v *extension_config.Settings) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *extension_config.Settings, m any) (*api.Stub, error) {
 	version, err := extractVersion(v)
 	if err != nil {
 		return nil, err
@@ -218,7 +218,7 @@ func (me *service) ensureInstalled(ctx context.Context, name string, version str
 	return nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *extension_config.Settings) error {
+func (me *service) Update(ctx context.Context, id string, v *extension_config.Settings, m any) error {
 	_, configID := splitID(id)
 	version, err := extractVersion(v)
 	if err != nil {
@@ -240,7 +240,7 @@ func (me *service) Update(ctx context.Context, id string, v *extension_config.Se
 	return nil
 }
 
-func (me *service) Delete(ctx context.Context, id string) error {
+func (me *service) Delete(ctx context.Context, id string, m any) error {
 	name, configID := splitID(id)
 	client := rest.APITokenClient(me.credentials)
 	if err := client.Delete(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configID)), 200).Finish(nil); err != nil {

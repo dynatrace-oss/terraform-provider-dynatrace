@@ -115,7 +115,7 @@ func findServiceUser(ctx context.Context, d *schema.ResourceData, service servic
 
 func findServiceUserByID(ctx context.Context, id string, service serviceusers.ServiceUserService) (string, *su.ServiceUser, error) {
 	var serviceUser su.ServiceUser
-	if err := service.Get(ctx, id, &serviceUser); err != nil {
+	if err := service.Get(ctx, id, &serviceUser, nil); err != nil {
 		return "", nil, err
 	}
 
@@ -143,7 +143,7 @@ func findServiceUserByName(ctx context.Context, name string, service serviceuser
 	}
 
 	var serviceUser su.ServiceUser
-	if err := service.Get(ctx, foundID, &serviceUser); err != nil {
+	if err := service.Get(ctx, foundID, &serviceUser, nil); err != nil {
 		return "", nil, err
 	}
 
@@ -159,7 +159,7 @@ func findServiceUserByEmail(ctx context.Context, email string, service serviceus
 	for _, stub := range stubs {
 		if stub.Email == email {
 			var serviceUser su.ServiceUser
-			if err := service.Get(ctx, stub.UID, &serviceUser); err != nil {
+			if err := service.Get(ctx, stub.UID, &serviceUser, nil); err != nil {
 				return "", nil, err
 			}
 

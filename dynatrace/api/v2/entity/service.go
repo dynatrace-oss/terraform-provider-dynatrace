@@ -42,7 +42,7 @@ type service struct {
 	client rest.Client
 }
 
-func (me *service) Get(ctx context.Context, id string, v *entity.Entity) error {
+func (me *service) Get(ctx context.Context, id string, v *entity.Entity, m any) error {
 	return me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities/%s?from=%s`, url.PathEscape(id), url.QueryEscape("now-3y")), 200).Finish(v)
 }
 
@@ -50,7 +50,7 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func (me *service) List(ctx context.Context) (api.Stubs, error) {
+func (me *service) List(ctx context.Context, m any) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
 }
 
@@ -62,7 +62,7 @@ type dataSourceService struct {
 	client rest.Client
 }
 
-func (me *dataSourceService) Get(ctx context.Context, id string, v *entity.Entity) error {
+func (me *dataSourceService) Get(ctx context.Context, id string, v *entity.Entity, m any) error {
 	entityType := evalEntityType(id)
 	if len(entityType) == 0 {
 		return me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities/%s?from=%s&fields=tags`, url.PathEscape(id), url.QueryEscape("now-3y")), 200).Finish(v)
@@ -89,7 +89,7 @@ func (me *dataSourceService) SchemaID() string {
 	return SchemaID
 }
 
-func (me *dataSourceService) List(ctx context.Context) (api.Stubs, error) {
+func (me *dataSourceService) List(ctx context.Context, m any) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
 }
 

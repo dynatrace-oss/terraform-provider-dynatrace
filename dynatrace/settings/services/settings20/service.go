@@ -84,7 +84,7 @@ func (me *service[T]) LegacyID() func(id string) string {
 	return nil
 }
 
-func (me *service[T]) Get(ctx context.Context, id string, v T) error {
+func (me *service[T]) Get(ctx context.Context, id string, v T, m any) error {
 	var err error
 	var settingsObject SettingsObject
 
@@ -277,7 +277,7 @@ func (me *service[T]) listIDs(ctx context.Context) ([]string, error) {
 	return ids, nil
 }
 
-func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
+func (me *service[T]) List(ctx context.Context, m any) (api.Stubs, error) {
 	var err error
 
 	ids, err := me.listIDs(ctx)
@@ -350,7 +350,7 @@ func (me *service[T]) Validate(v T) error {
 	return nil // Settings 2.0 doesn't offer validation
 }
 
-func (me *service[T]) Create(ctx context.Context, v T) (*api.Stub, error) {
+func (me *service[T]) Create(ctx context.Context, v T, m any) (*api.Stub, error) {
 	return me.create(ctx, v, false, false)
 }
 
@@ -384,7 +384,7 @@ func (me *service[T]) create(ctx context.Context, v T, retry bool, noInsertAfter
 	if matcher, ok := any(v).(Matcher); ok {
 		var stubs api.Stubs
 		var err error
-		if stubs, err = me.List(ctx); err != nil {
+		if stubs, err = me.List(ctx, nil); err != nil {
 			return nil, err
 		}
 		for _, stub := range stubs {
@@ -402,7 +402,7 @@ func (me *service[T]) create(ctx context.Context, v T, retry bool, noInsertAfter
 				asjson := string(data)
 				settings.SetRestoreOnDelete(asjson, v)
 				stub.Value = v
-				return stub, me.Update(ctx, stub.ID, v)
+				return stub, me.Update(ctx, stub.ID, v, nil)
 			}
 		}
 	}
@@ -445,7 +445,7 @@ func (me *service[T]) create(ctx context.Context, v T, retry bool, noInsertAfter
 				return nil, hierr
 			}
 			if hijackedStub != nil {
-				return hijackedStub, me.Update(ctx, hijackedStub.ID, v)
+				return hijackedStub, me.Update(ctx, hijackedStub.ID, v, nil)
 			} else {
 				return nil, oerr
 			}
@@ -492,7 +492,7 @@ func isInvalidInsertAfterRestErr(resterr *rest.Error) bool {
 	return false
 }
 
-func (me *service[T]) Update(ctx context.Context, id string, v T) error {
+func (me *service[T]) Update(ctx context.Context, id string, v T, m any) error {
 	return me.update(ctx, id, v, false, false)
 }
 
@@ -538,7 +538,7 @@ func isNil[T any](t T) bool {
 		v.IsNil()
 }
 
-func (me *service[T]) Delete(ctx context.Context, id string) error {
+func (me *service[T]) Delete(ctx context.Context, id string, m any) error {
 	return me.delete(ctx, id, 0)
 }
 
