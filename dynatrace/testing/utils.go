@@ -18,6 +18,7 @@
 
 package testing
 
+//go:fix inline
 func ToPointer[T any](v T) *T {
-	return &v
+	return new(v)
 }
