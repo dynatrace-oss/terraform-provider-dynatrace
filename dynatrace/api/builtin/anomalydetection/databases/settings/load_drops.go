@@ -18,7 +18,6 @@
 package databases
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -64,7 +63,7 @@ func (me *LoadDrops) UnmarshalHCL(decoder hcl.Decoder) error {
 		"minutes_abnormal_state": &me.MinutesAbnormalState,
 	})
 	if me.LoadDropPercent == nil && me.Enabled {
-		me.LoadDropPercent = opt.NewFloat64(0)
+		me.LoadDropPercent = new(float64(0))
 	}
 	return err
 }

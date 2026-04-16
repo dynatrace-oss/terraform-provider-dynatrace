@@ -115,7 +115,7 @@ func (me *CapturedMethod) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if me.Capture == Captures.Argument {
 		if me.ArgumentIndex == nil {
-			me.ArgumentIndex = opt.NewInt32(0)
+			me.ArgumentIndex = new(int32(0))
 		}
 	}
 	if value, ok := decoder.GetOk("deep_object_access"); ok {
