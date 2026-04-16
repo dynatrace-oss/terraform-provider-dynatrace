@@ -19,13 +19,12 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dlclark/regexp2"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/stringc"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -123,7 +122,7 @@ func (sc *String) UnmarshalHCL(decoder hcl.Decoder) error {
 		sc.Operator = stringc.Operator(value.(string))
 	}
 	if value, ok := decoder.GetOk("value"); ok {
-		sc.Value = opt.NewString(value.(string))
+		sc.Value = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("case_sensitive"); ok {
 		sc.CaseSensitive = value.(bool)
@@ -135,9 +134,7 @@ func (sc *String) UnmarshalHCL(decoder hcl.Decoder) error {
 func (sc *String) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(sc.Unknowns) > 0 {
-		for k, v := range sc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, sc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(sc.Negate)

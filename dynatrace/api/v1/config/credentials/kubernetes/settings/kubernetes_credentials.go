@@ -19,6 +19,7 @@ package kubernetes
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -230,34 +231,34 @@ func (kc *KubernetesCredentials) UnmarshalHCL(decoder hcl.Decoder) error {
 		kc.ActiveGateGroup = value.(string)
 	}
 	if value, ok := decoder.GetOk("events_integration_enabled"); ok {
-		kc.EventsIntegrationEnabled = opt.NewBool(value.(bool))
+		kc.EventsIntegrationEnabled = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("event_analysis_and_alerting_enabled"); ok {
-		kc.EventAnalysisAndAlertingEnabled = opt.NewBool(value.(bool))
+		kc.EventAnalysisAndAlertingEnabled = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("active"); ok {
-		kc.Active = opt.NewBool(value.(bool))
+		kc.Active = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("workload_integration_enabled"); ok {
-		kc.WorkloadIntegrationEnabled = opt.NewBool(value.(bool))
+		kc.WorkloadIntegrationEnabled = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("label"); ok {
 		kc.Label = value.(string)
 	}
 	if value, ok := decoder.GetOk("hostname_verification"); ok {
-		kc.HostnameVerificationEnabled = opt.NewBool(value.(bool))
+		kc.HostnameVerificationEnabled = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("prometheus_exporters"); ok {
-		kc.PrometheusExportersIntegrationEnabled = opt.NewBool(value.(bool))
+		kc.PrometheusExportersIntegrationEnabled = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("davis_events_integration_enabled"); ok {
-		kc.DavisEventsIntegrationEnabled = opt.NewBool(value.(bool))
+		kc.DavisEventsIntegrationEnabled = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("auth_token"); ok {
-		kc.AuthToken = opt.NewString(value.(string))
+		kc.AuthToken = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("certificate_check_enabled"); ok {
-		kc.CertificateCheckEnabled = opt.NewBool(value.(bool))
+		kc.CertificateCheckEnabled = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("endpoint_url"); ok {
 		kc.EndpointURL = value.(string)
@@ -383,9 +384,7 @@ func (kc *KubernetesCredentials) MarshalJSON() ([]byte, error) {
 	if len(kc.Unknowns) > 0 {
 		delete(kc.Unknowns, "id")
 		delete(kc.Unknowns, "metadata")
-		for k, v := range kc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, kc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(opt.Bool(kc.EventAnalysisAndAlertingEnabled))
@@ -483,7 +482,7 @@ func (kc *KubernetesCredentials) MarshalJSON() ([]byte, error) {
 const credsNotProvided = "REST API didn't provide credential data"
 
 func (kc *KubernetesCredentials) FillDemoValues() []string {
-	kc.AuthToken = opt.NewString("################")
+	kc.AuthToken = new("################")
 	if len(kc.EndpointURL) > 0 {
 		return []string{credsNotProvided}
 	}

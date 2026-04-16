@@ -18,7 +18,6 @@
 package ddulimit
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -50,7 +49,7 @@ func (me *DDUPoolConfig) Schema() map[string]*schema.Schema {
 }
 
 func (me *DDUPoolConfig) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]interface{}{
+	return properties.EncodeAll(map[string]any{
 		"enabled": me.LimitEnabled,
 		"type":    me.LimitType,
 		"value":   me.LimitValue,
@@ -58,7 +57,7 @@ func (me *DDUPoolConfig) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *DDUPoolConfig) UnmarshalHCL(decoder hcl.Decoder) error {
-	err := decoder.DecodeAll(map[string]interface{}{
+	err := decoder.DecodeAll(map[string]any{
 		"enabled": &me.LimitEnabled,
 		"type":    &me.LimitType,
 		"value":   &me.LimitValue,
@@ -75,7 +74,7 @@ func (me *DDUPoolConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 
 	if me.LimitValue == nil && me.LimitEnabled {
-		me.LimitValue = opt.NewInt(0)
+		me.LimitValue = new(0)
 	}
 
 	return nil

@@ -20,6 +20,7 @@ package segments
 import (
 	"fmt"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -65,12 +66,7 @@ var ValidateMaxLength = func(maxLength int) schema.SchemaValidateDiagFunc {
 }
 
 func isInList(value string, list []string) bool {
-	for _, v := range list {
-		if v == value {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(list, value)
 }
 
 var ValidateTypePossibleValues = func(valuesList []string) schema.SchemaValidateDiagFunc {

@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/bitness"
 
@@ -119,9 +120,7 @@ func (bc *Bitness) UnmarshalHCL(decoder hcl.Decoder) error {
 func (bc *Bitness) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(bc.Unknowns) > 0 {
-		for k, v := range bc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, bc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(bc.Negate)

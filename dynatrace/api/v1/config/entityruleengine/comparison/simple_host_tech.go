@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/tech"
 
@@ -126,9 +127,7 @@ func (shtc *SimpleHostTech) UnmarshalHCL(decoder hcl.Decoder) error {
 func (shtc *SimpleHostTech) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(shtc.Unknowns) > 0 {
-		for k, v := range shtc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, shtc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(shtc.Negate)

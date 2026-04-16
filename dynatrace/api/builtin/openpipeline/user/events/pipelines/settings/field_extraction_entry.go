@@ -20,7 +20,6 @@ package pipelines
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -111,13 +110,13 @@ func (me *FieldExtractionEntry) MarshalHCL(properties hcl.Properties) error {
 
 func (me *FieldExtractionEntry) HandlePreconditions() error {
 	if (me.ConstantFieldName == nil) && (string(me.ExtractionType) == "constant") {
-		me.ConstantFieldName = opt.NewString("")
+		me.ConstantFieldName = new("")
 	}
 	if (me.ConstantValue == nil) && (string(me.ExtractionType) == "constant") {
-		me.ConstantValue = opt.NewString("")
+		me.ConstantValue = new("")
 	}
 	if (me.SourceFieldName == nil) && (string(me.ExtractionType) == "field") {
-		me.SourceFieldName = opt.NewString("")
+		me.SourceFieldName = new("")
 	}
 	if (me.DefaultValue != nil) && (string(me.ExtractionType) != "field") {
 		return fmt.Errorf("'default_value' must not be specified if 'extraction_type' is set to '%v'", me.ExtractionType)

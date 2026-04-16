@@ -145,7 +145,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	var successes = 0
 	var requiredSuccesses = 10
 
-	for i := 0; i < maxTries; i++ {
+	for i := range maxTries {
 		var kua keyuseractions.Settings
 		if err := me.Get(ctx, id, &kua); err != nil {
 			if resterr, ok := err.(rest.Error); ok {
@@ -186,7 +186,7 @@ func (me *service) Create(ctx context.Context, v *keyuseractions.Settings) (*api
 	var successes = 0
 	var requiredSuccesses = 10
 
-	for i := 0; i < maxTries; i++ {
+	for i := range maxTries {
 		var kua keyuseractions.Settings
 		if err := me.Get(ctx, stub.ID, &kua); err == nil {
 			if kua.Name == v.Name {

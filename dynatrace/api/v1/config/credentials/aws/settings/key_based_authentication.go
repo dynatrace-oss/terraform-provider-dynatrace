@@ -19,6 +19,7 @@ package aws
 
 import (
 	"encoding/json"
+	"maps"
 )
 
 // KeyBasedAuthentication The credentials for the key-based authentication.
@@ -55,9 +56,7 @@ func (kba *KeyBasedAuthentication) UnmarshalJSON(data []byte) error {
 func (kba *KeyBasedAuthentication) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(kba.Unknowns) > 0 {
-		for k, v := range kba.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, kba.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(kba.AccessKey)

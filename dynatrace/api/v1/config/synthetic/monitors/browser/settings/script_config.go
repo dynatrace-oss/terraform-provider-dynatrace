@@ -19,7 +19,6 @@ package browser
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/request"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -319,7 +318,7 @@ func (me *JavascriptSettings) Schema() map[string]*schema.Schema {
 
 func setDefaultTrue(properties hcl.Properties, name string, value *bool) {
 	if value == nil {
-		value = opt.NewBool(true)
+		value = new(true)
 	}
 	properties[name] = *value
 }
@@ -345,7 +344,7 @@ func (me *JavascriptSettings) MarshalHCL(properties hcl.Properties) error {
 
 func decodeDefaultTrue(decoder hcl.Decoder, name string) *bool {
 	boolValue, _ := decoder.GetOk(name)
-	return opt.NewBool(boolValue.(bool))
+	return new(boolValue.(bool))
 }
 
 func (me *JavascriptSettings) UnmarshalHCL(decoder hcl.Decoder) error {

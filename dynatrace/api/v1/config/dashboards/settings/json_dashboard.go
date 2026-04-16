@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	slices0 "slices"
 	"sort"
 	"strings"
 
@@ -284,12 +285,7 @@ func check(m map[string]any, key string, values ...string) bool {
 	if len(values) == 0 {
 		return false
 	}
-	for _, v := range values {
-		if v == svalue {
-			return true
-		}
-	}
-	return false
+	return slices0.Contains(values, svalue)
 }
 
 func (me *JSONDashboard) EnrichRequireds() *JSONDashboard {

@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -110,7 +108,7 @@ func (me *ExtractSubstring) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("end_delimiter"); ok {
-		me.EndDelimiter = opt.NewString(value.(string))
+		me.EndDelimiter = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("position"); ok {
 		me.Position = Position(value.(string))

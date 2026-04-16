@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/dcrum_decoder"
 
@@ -119,9 +120,7 @@ func (ddc *DCRumDecoder) UnmarshalHCL(decoder hcl.Decoder) error {
 func (ddc *DCRumDecoder) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(ddc.Unknowns) > 0 {
-		for k, v := range ddc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, ddc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(ddc.Negate)

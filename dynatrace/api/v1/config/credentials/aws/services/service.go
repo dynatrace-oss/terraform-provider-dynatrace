@@ -153,7 +153,7 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 						break
 					}
 				}
-				for _, metric := range strings.Split(strings.TrimSpace(m[1]), ",") {
+				for metric := range strings.SplitSeq(strings.TrimSpace(m[1]), ",") {
 					metricName := strings.TrimSpace(metric)
 					service.MonitoredMetrics = append(service.MonitoredMetrics, &services.AWSMonitoredMetric{Name: metricName})
 					if len(v.RequiredMetrics) == 0 {
@@ -183,7 +183,7 @@ func (me *service) Create(ctx context.Context, v *services.Settings) (*api.Stub,
 				for _, k := range metric.Dimensions {
 					dimMap[k] = k
 				}
-				for _, d := range strings.Split(sDimensions, ",") {
+				for d := range strings.SplitSeq(sDimensions, ",") {
 					td := strings.TrimSpace(d)
 					dimMap[td] = td
 				}

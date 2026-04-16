@@ -20,7 +20,6 @@ package mobile
 import (
 	"encoding/json"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/collections"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -87,7 +86,7 @@ func (me *Application) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 
 	if me.ApplicationType != nil && *me.ApplicationType == ApplicationTypes.MobileApplication && me.OptInModeEnabled == nil {
-		me.OptInModeEnabled = opt.NewBool(false)
+		me.OptInModeEnabled = new(false)
 	}
 
 	return nil

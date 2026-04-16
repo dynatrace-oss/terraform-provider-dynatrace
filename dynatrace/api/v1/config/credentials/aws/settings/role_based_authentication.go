@@ -17,6 +17,8 @@
 
 package aws
 
+import "maps"
+
 import "encoding/json"
 
 // RoleBasedAuthentication The credentials for the role-based authentication.
@@ -59,9 +61,7 @@ func (rba *RoleBasedAuthentication) UnmarshalJSON(data []byte) error {
 func (rba *RoleBasedAuthentication) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(rba.Unknowns) > 0 {
-		for k, v := range rba.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, rba.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(rba.AccountID)

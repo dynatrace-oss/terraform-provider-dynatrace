@@ -19,6 +19,7 @@ package kubernetes
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -135,9 +136,7 @@ func (kep *KubernetesEventPattern) UnmarshalJSON(data []byte) error {
 func (kep *KubernetesEventPattern) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(kep.Unknowns) > 0 {
-		for k, v := range kep.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, kep.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(kep.Label)

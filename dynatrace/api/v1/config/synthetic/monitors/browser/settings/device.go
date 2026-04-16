@@ -20,8 +20,6 @@ package browser
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -116,10 +114,10 @@ func (me *Device) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	if me.Mobile == nil && me.Name == nil {
-		me.Mobile = opt.NewBool(false)
+		me.Mobile = new(false)
 	}
 	if me.TouchEnabled == nil && me.Name == nil {
-		me.TouchEnabled = opt.NewBool(false)
+		me.TouchEnabled = new(false)
 	}
 	if err := decoder.Decode("width", &me.Width); err != nil {
 		return err

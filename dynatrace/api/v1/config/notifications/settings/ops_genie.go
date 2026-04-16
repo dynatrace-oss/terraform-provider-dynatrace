@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -83,13 +81,13 @@ func (me *OpsGenieConfig) Schema() map[string]*schema.Schema {
 
 func (me *OpsGenieConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("ops_genie.0.api_key"); ok && len(value.(string)) > 0 {
-		me.APIKey = opt.NewString(value.(string))
+		me.APIKey = new(value.(string))
 	}
 	return nil
 }
 
 func (me *OpsGenieConfig) FillDemoValues() []string {
-	me.APIKey = opt.NewString("#######")
+	me.APIKey = new("#######")
 	return []string{"The REST API didn't provide the credentials"}
 }
 
@@ -147,7 +145,7 @@ func (me *OpsGenieConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.AlertingProfile = value.(string)
 	}
 	if value, ok := decoder.GetOk("api_key"); ok {
-		me.APIKey = opt.NewString(value.(string))
+		me.APIKey = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("domain"); ok {
 		me.Domain = value.(string)

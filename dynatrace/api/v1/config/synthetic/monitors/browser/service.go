@@ -18,6 +18,7 @@
 package browser
 
 import (
+	"slices"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -45,12 +46,7 @@ func contains(elems []string, search string) bool {
 	if len(elems) == 0 {
 		return false
 	}
-	for _, elem := range elems {
-		if elem == search {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(elems, search)
 }
 
 func CreateRetry(v *browser.SyntheticMonitor, err error) *browser.SyntheticMonitor {

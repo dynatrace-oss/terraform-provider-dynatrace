@@ -96,7 +96,7 @@ func (me *ResultMetadataEntry) UnmarshalHCL(decoder hcl.Decoder) error {
 		if me.Config == nil {
 			me.Config = new(CustomChartingItemMetadataConfig)
 		}
-		me.Config.LastModified = opt.NewInt64(int64(value.(int)))
+		me.Config.LastModified = new(int64(value.(int)))
 	}
 	if value, ok := decoder.GetOk("custom_color"); ok {
 		if me.Config == nil {

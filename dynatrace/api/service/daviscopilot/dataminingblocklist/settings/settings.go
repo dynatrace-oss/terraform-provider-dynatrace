@@ -18,7 +18,6 @@
 package dataminingblocklist
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -80,13 +79,13 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if (me.EnableAgenticAi == nil) && (me.EnableCopilot) {
-		me.EnableAgenticAi = opt.NewBool(false)
+		me.EnableAgenticAi = new(false)
 	}
 	if (me.EnableDocumentSuggestion == nil) && (me.EnableCopilot) {
-		me.EnableDocumentSuggestion = opt.NewBool(false)
+		me.EnableDocumentSuggestion = new(false)
 	}
 	if (me.EnableTenantAwareDataMining == nil) && (me.EnableCopilot) {
-		me.EnableTenantAwareDataMining = opt.NewBool(false)
+		me.EnableTenantAwareDataMining = new(false)
 	}
 	// ---- BlocklistEntries DataminingBlocklistEntries -> {"expectedValue":true,"property":"enableTenantAwareDataMining","type":"EQUALS"}
 	return nil

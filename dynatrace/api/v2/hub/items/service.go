@@ -24,7 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	items "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/items/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
@@ -49,7 +48,7 @@ func (me *service) Get(ctx context.Context, id string, v *items.HubItemList) err
 	if len(me.opts.Type) > 0 {
 		queries["itemType"] = me.opts.Type
 	}
-	nextPageKey := opt.NewString("first")
+	nextPageKey := new("first")
 	for nextPageKey != nil && *nextPageKey != "" {
 		hubItemList := items.HubItemList{}
 		queryString := ""

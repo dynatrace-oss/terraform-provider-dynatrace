@@ -20,7 +20,6 @@ package ingestsources
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -72,7 +71,7 @@ func (me *GenericValueAssignment) MarshalHCL(properties hcl.Properties) error {
 
 func (me *GenericValueAssignment) HandlePreconditions() error {
 	if (me.Constant == nil) && (string(me.Type) == "constant") {
-		me.Constant = opt.NewString("")
+		me.Constant = new("")
 	}
 	if (me.Field == nil) && (string(me.Type) == "field") {
 		return fmt.Errorf("'field' must be specified if 'type' is set to '%v'", me.Type)

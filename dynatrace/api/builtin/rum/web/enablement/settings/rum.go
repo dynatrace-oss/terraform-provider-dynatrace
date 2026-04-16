@@ -18,7 +18,6 @@
 package enablement
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -59,7 +58,7 @@ func (me *Rum) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Rum) HandlePreconditions() error {
 	if (me.EnabledOnGrail == nil) && (me.Enabled) {
-		me.EnabledOnGrail = opt.NewBool(false)
+		me.EnabledOnGrail = new(false)
 	}
 	return nil
 }

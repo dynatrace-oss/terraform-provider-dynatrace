@@ -18,7 +18,6 @@
 package beaconendpoint
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -70,10 +69,10 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if (me.Url == nil) && (string(me.Type) == "ONEAGENT") {
-		me.Url = opt.NewString("")
+		me.Url = new("")
 	}
 	if (me.UseCors == nil) && (string(me.Type) == "ONEAGENT") {
-		me.UseCors = opt.NewBool(false)
+		me.UseCors = new(false)
 	}
 	return nil
 }

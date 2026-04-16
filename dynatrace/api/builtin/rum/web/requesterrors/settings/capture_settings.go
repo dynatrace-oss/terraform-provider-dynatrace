@@ -18,7 +18,6 @@
 package requesterrors
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -65,10 +64,10 @@ func (me *CaptureSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 	})
 	if me.Capture {
 		if me.ConsiderForAI == nil {
-			me.ConsiderForAI = opt.NewBool(false)
+			me.ConsiderForAI = new(false)
 		}
 		if me.ImpactApdex == nil {
-			me.ImpactApdex = opt.NewBool(false)
+			me.ImpactApdex = new(false)
 		}
 	}
 	return err

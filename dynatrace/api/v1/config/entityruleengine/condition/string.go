@@ -19,6 +19,7 @@ package condition
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -101,9 +102,7 @@ func (sck *String) UnmarshalHCL(decoder hcl.Decoder) error {
 func (sck *String) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(sck.Unknowns) > 0 {
-		for k, v := range sck.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, sck.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(sck.Attribute)

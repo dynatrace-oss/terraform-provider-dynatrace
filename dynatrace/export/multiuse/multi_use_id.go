@@ -25,10 +25,10 @@ import (
 var ID_PARENT_DELIMITER = "~@|#:;"
 
 func ExtractIDParent(id string) (bool, string, string) {
-	delimiterIndex := strings.Index(id, ID_PARENT_DELIMITER)
-	if delimiterIndex >= 0 {
-		applicationID := id[delimiterIndex+len(ID_PARENT_DELIMITER):]
-		realId := id[:delimiterIndex]
+	before, after, ok := strings.Cut(id, ID_PARENT_DELIMITER)
+	if ok {
+		applicationID := after
+		realId := before
 		return true, applicationID, realId
 	}
 	return false, "", ""

@@ -18,7 +18,6 @@
 package sensitivedatamasking
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -59,7 +58,7 @@ func (me *Masking) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Masking) HandlePreconditions() error {
 	if (me.Replacement == nil) && (string(me.Type) == "STRING") {
-		me.Replacement = opt.NewString("")
+		me.Replacement = new("")
 	}
 	return nil
 }

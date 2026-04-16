@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/cloud_type"
 
@@ -119,9 +120,7 @@ func (ctc *CloudType) UnmarshalHCL(decoder hcl.Decoder) error {
 func (ctc *CloudType) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(ctc.Unknowns) > 0 {
-		for k, v := range ctc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, ctc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(ctc.Negate)

@@ -19,6 +19,7 @@ package export
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 )
 
@@ -1013,12 +1014,7 @@ func (me ResourceStatus) IsOneOf(stati ...ResourceStatus) bool {
 	if len(stati) == 0 {
 		return false
 	}
-	for _, status := range stati {
-		if me == status {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(stati, me)
 }
 
 var ResourceStati = struct {
@@ -1055,12 +1051,7 @@ func (me ModuleStatus) IsOneOf(stati ...ModuleStatus) bool {
 	if len(stati) == 0 {
 		return false
 	}
-	for _, status := range stati {
-		if me == status {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(stati, me)
 }
 
 var ModuleStati = struct {

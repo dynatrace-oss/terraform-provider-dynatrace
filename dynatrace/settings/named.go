@@ -20,15 +20,13 @@ package settings
 import (
 	"encoding/json"
 	"reflect"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 )
 
 func unref(v reflect.Value) reflect.Value {
 	if v.Kind() == reflect.Struct {
 		return v
 	}
-	if v.Kind() == reflect.Ptr {
+	if v.Kind() == reflect.Pointer {
 		return unref(v.Elem())
 	}
 	if v.Kind() == reflect.Interface {
@@ -38,7 +36,7 @@ func unref(v reflect.Value) reflect.Value {
 }
 
 var stringType = reflect.ValueOf("").Type()
-var stringPointerType = reflect.ValueOf(opt.NewString("")).Type()
+var stringPointerType = reflect.ValueOf(new("")).Type()
 var stringSliceType = reflect.ValueOf([]string{}).Type()
 
 func Name(v any, id string) string {

@@ -20,8 +20,6 @@ package common
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -71,7 +69,7 @@ func (me *ConfigMetadata) MarshalHCL(properties hcl.Properties) error {
 
 func (me *ConfigMetadata) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("cluster_version"); ok {
-		me.ClusterVersion = opt.NewString(value.(string))
+		me.ClusterVersion = new(value.(string))
 	}
 	if _, ok := decoder.GetOk("configuration_versions.#"); ok {
 		me.ConfigurationVersions = []int64{}

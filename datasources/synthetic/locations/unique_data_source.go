@@ -19,13 +19,13 @@ package locations
 
 import (
 	"context"
+	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	locations "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations"
 	locsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -50,22 +50,22 @@ func UniqueDataSourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 
 	if v, ok := d.GetOk("entity_id"); ok {
 		d.SetId(v.(string))
-		id = opt.NewString(v.(string))
+		id = new(v.(string))
 	}
 	if v, ok := d.GetOk("name"); ok {
-		name = opt.NewString(v.(string))
+		name = new(v.(string))
 	}
 	if v, ok := d.GetOk("type"); ok {
-		typeLoc = opt.NewString(v.(string))
+		typeLoc = new(v.(string))
 	}
 	if v, ok := d.GetOk("status"); ok {
-		status = opt.NewString(v.(string))
+		status = new(v.(string))
 	}
 	if v, ok := d.GetOk("stage"); ok {
-		stage = opt.NewString(v.(string))
+		stage = new(v.(string))
 	}
 	if v, ok := d.GetOk("cloud_platform"); ok {
-		cloudPlatform = opt.NewString(v.(string))
+		cloudPlatform = new(v.(string))
 	}
 	if v, ok := d.GetOk("ips"); ok {
 		if vt, ok := v.([]string); ok {
@@ -141,13 +141,7 @@ func UniqueDataSourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 // Return: true if subset, false if not
 func subsetCheck(source []string, input []string) bool {
 	for _, inputString := range input {
-		found := false
-		for _, sourceString := range source {
-			if inputString == sourceString {
-				found = true
-				break
-			}
-		}
+		found := slices.Contains(source, inputString)
 		if !found {
 			return false
 		}

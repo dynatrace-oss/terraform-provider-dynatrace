@@ -19,6 +19,7 @@ package dashboards
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -309,7 +310,7 @@ func (me *Tile) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("configured"); ok {
-		me.Configured = opt.NewBool(value.(bool))
+		me.Configured = new(value.(bool))
 	}
 	if _, ok := decoder.GetOk("bounds.#"); ok {
 		me.Bounds = new(TileBounds)
@@ -327,19 +328,19 @@ func (me *Tile) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	if value, ok := decoder.GetOk("metric"); ok {
-		me.Metric = opt.NewString(value.(string))
+		me.Metric = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("custom_name"); ok {
-		me.CustomName = opt.NewString(value.(string))
+		me.CustomName = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("query"); ok {
-		me.Query = opt.NewString(value.(string))
+		me.Query = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("visualization"); ok {
 		me.Visualization = UserSessionQueryTileType(value.(string)).Ref()
 	}
 	if value, ok := decoder.GetOk("time_frame_shift"); ok {
-		me.TimeFrameShift = opt.NewString(value.(string))
+		me.TimeFrameShift = new(value.(string))
 	}
 	if _, ok := decoder.GetOk("visualization_config.#"); ok {
 		me.VisualizationConfig = new(UserSessionQueryTileConfiguration)
@@ -348,7 +349,7 @@ func (me *Tile) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("limit"); ok {
-		me.Limit = opt.NewInt32(int32(value.(int)))
+		me.Limit = new(int32(value.(int)))
 	}
 	if _, ok := decoder.GetOk("filter_config.#"); ok {
 		me.FilterConfig = new(CustomFilterConfig)
@@ -357,13 +358,13 @@ func (me *Tile) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("markdown"); ok {
-		me.Markdown = opt.NewString(value.(string))
+		me.Markdown = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("exclude_maintenance_windows"); ok {
-		me.ExcludeMaintenanceWindows = opt.NewBool(value.(bool))
+		me.ExcludeMaintenanceWindows = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("chart_visible"); ok {
-		me.ChartVisible = opt.NewBool(value.(bool))
+		me.ChartVisible = new(value.(bool))
 	}
 	return nil
 }
@@ -371,9 +372,7 @@ func (me *Tile) UnmarshalHCL(decoder hcl.Decoder) error {
 func (me *Tile) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(me.Name)

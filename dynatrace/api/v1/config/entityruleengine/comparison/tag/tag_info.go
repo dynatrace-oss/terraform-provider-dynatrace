@@ -22,8 +22,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -98,7 +96,7 @@ func (ti *Info) UnmarshalHCL(decoder hcl.Decoder) error {
 		ti.Key = value.(string)
 	}
 	if value, ok := decoder.GetOk("value"); ok {
-		ti.Value = opt.NewString(value.(string))
+		ti.Value = new(value.(string))
 	}
 	return nil
 }

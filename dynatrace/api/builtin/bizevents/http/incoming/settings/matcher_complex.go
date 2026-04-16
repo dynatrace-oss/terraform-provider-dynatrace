@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -99,7 +98,7 @@ func (me *MatcherComplex) MarshalHCL(properties hcl.Properties) error {
 
 func (me *MatcherComplex) HandlePreconditions() error {
 	if (me.CaseSensitive == nil) && (!slices.Contains([]string{"EXISTS", "N_EXISTS"}, string(me.Type))) {
-		me.CaseSensitive = opt.NewBool(false)
+		me.CaseSensitive = new(false)
 	}
 	if len(me.Type) > 0 && me.Value == nil && (!slices.Contains([]string{"EXISTS", "N_EXISTS"}, string(me.Type))) {
 		return fmt.Errorf("'value' must be specified if 'type' is set to '%v'", me.Type)

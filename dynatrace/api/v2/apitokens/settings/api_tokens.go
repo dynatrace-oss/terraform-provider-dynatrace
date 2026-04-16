@@ -19,6 +19,7 @@ package apitokens
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -68,13 +69,7 @@ func (me *APIToken) Equals(v any) (string, bool) {
 		}
 		if len(me.Scopes) > 0 {
 			for _, scope := range me.Scopes {
-				found := false
-				for _, oscope := range other.Scopes {
-					if oscope == scope {
-						found = true
-						break
-					}
-				}
+				found := slices.Contains(other.Scopes, scope)
 				if !found {
 					return fmt.Sprintf("Scopes: expected: %v, actual: %v", me.Scopes, other.Scopes), false
 				}

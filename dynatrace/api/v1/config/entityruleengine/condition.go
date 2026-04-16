@@ -19,6 +19,7 @@ package entityruleengine
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/condition"
@@ -1157,9 +1158,7 @@ func (erec *Condition) UnmarshalHCL(decoder hcl.Decoder) error {
 func (erec *Condition) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(erec.Unknowns) > 0 {
-		for k, v := range erec.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, erec.Unknowns)
 	}
 	if erec.ComparisonInfo != nil {
 		rawMessage, err := json.Marshal(erec.ComparisonInfo)

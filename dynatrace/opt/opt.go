@@ -26,7 +26,9 @@ func Int(v *int) int {
 }
 
 // NewInt produces a pointer to the given primitive value
-func NewInt(v int) *int { return &v }
+//
+//go:fix inline
+func NewInt(v int) *int { return new(v) }
 
 // String returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func String(v *string) string {
@@ -38,7 +40,9 @@ func String(v *string) string {
 }
 
 // NewString produces a pointer to the given primitive value
-func NewString(v string) *string { return &v }
+//
+//go:fix inline
+func NewString(v string) *string { return new(v) }
 
 // Bool returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func Bool(v *bool) bool {
@@ -50,7 +54,9 @@ func Bool(v *bool) bool {
 }
 
 // NewBool produces a pointer to the given primitive value
-func NewBool(v bool) *bool { return &v }
+//
+//go:fix inline
+func NewBool(v bool) *bool { return new(v) }
 
 // Int8 returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func Int8(v *int8) int8 {
@@ -62,7 +68,9 @@ func Int8(v *int8) int8 {
 }
 
 // NewInt8 produces a pointer to the given primitive value
-func NewInt8(v int8) *int8 { return &v }
+//
+//go:fix inline
+func NewInt8(v int8) *int8 { return new(v) }
 
 // Int16 returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func Int16(v *int16) int16 {
@@ -74,7 +82,9 @@ func Int16(v *int16) int16 {
 }
 
 // NewInt16 produces a pointer to the given primitive value
-func NewInt16(v int16) *int16 { return &v }
+//
+//go:fix inline
+func NewInt16(v int16) *int16 { return new(v) }
 
 // Int32 returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func Int32(v *int32) int32 {
@@ -85,7 +95,9 @@ func Int32(v *int32) int32 {
 }
 
 // NewInt32 produces a pointer to the given primitive value
-func NewInt32(v int32) *int32 { return &v }
+//
+//go:fix inline
+func NewInt32(v int32) *int32 { return new(v) }
 
 // Int64 returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func Int64(v *int64) int64 {
@@ -97,7 +109,9 @@ func Int64(v *int64) int64 {
 }
 
 // NewInt64 produces a pointer to the given primitive value
-func NewInt64(v int64) *int64 { return &v }
+//
+//go:fix inline
+func NewInt64(v int64) *int64 { return new(v) }
 
 // Uint returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func Uint(v *uint) uint {
@@ -109,7 +123,9 @@ func Uint(v *uint) uint {
 }
 
 // NewUint produces a pointer to the given primitive value
-func NewUint(v uint) *uint { return &v }
+//
+//go:fix inline
+func NewUint(v uint) *uint { return new(v) }
 
 // UInt8 returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func UInt8(v *uint8) uint8 {
@@ -121,7 +137,9 @@ func UInt8(v *uint8) uint8 {
 }
 
 // NewUInt8 produces a pointer to the given primitive value
-func NewUInt8(v uint8) *uint8 { return &v }
+//
+//go:fix inline
+func NewUInt8(v uint8) *uint8 { return new(v) }
 
 // UInt16 returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func UInt16(v *uint16) uint16 {
@@ -133,7 +151,9 @@ func UInt16(v *uint16) uint16 {
 }
 
 // NewUInt16 produces a pointer to the given primitive value
-func NewUInt16(v uint16) *uint16 { return &v }
+//
+//go:fix inline
+func NewUInt16(v uint16) *uint16 { return new(v) }
 
 // UInt32 returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func UInt32(v *uint32) uint32 {
@@ -145,7 +165,9 @@ func UInt32(v *uint32) uint32 {
 }
 
 // NewUInt32 produces a pointer to the given primitive value
-func NewUInt32(v uint32) *uint32 { return &v }
+//
+//go:fix inline
+func NewUInt32(v uint32) *uint32 { return new(v) }
 
 // UInt64 returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func UInt64(v *uint64) uint64 {
@@ -157,7 +179,9 @@ func UInt64(v *uint64) uint64 {
 }
 
 // NewUInt64 produces a pointer to the given primitive value
-func NewUInt64(v uint64) *uint64 { return &v }
+//
+//go:fix inline
+func NewUInt64(v uint64) *uint64 { return new(v) }
 
 // Float32 returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func Float32(v *float32) float32 {
@@ -168,7 +192,9 @@ func Float32(v *float32) float32 {
 }
 
 // NewFloat32 produces a pointer to the given primitive value
-func NewFloat32(v float32) *float32 { return &v }
+//
+//go:fix inline
+func NewFloat32(v float32) *float32 { return new(v) }
 
 // Float64 returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func Float64(v *float64) float64 {
@@ -179,4 +205,6 @@ func Float64(v *float64) float64 {
 }
 
 // NewFloat64 produces a pointer to the given primitive value
-func NewFloat64(v float64) *float64 { return &v }
+//
+//go:fix inline
+func NewFloat64(v float64) *float64 { return new(v) }

@@ -18,7 +18,6 @@
 package php
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -72,10 +71,10 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) HandlePreconditions() error {
 	if me.EnablePhpCliServerInstrumentation == nil && me.Enabled {
-		me.EnablePhpCliServerInstrumentation = opt.NewBool(false)
+		me.EnablePhpCliServerInstrumentation = new(false)
 	}
 	if me.EnabledFastCGI == nil && me.Enabled {
-		me.EnabledFastCGI = opt.NewBool(false)
+		me.EnabledFastCGI = new(false)
 	}
 	return nil
 }

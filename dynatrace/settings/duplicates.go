@@ -19,6 +19,7 @@ package settings
 
 import (
 	"os"
+	"slices"
 	"strings"
 )
 
@@ -42,13 +43,11 @@ func envVarContains(envVar string, search ...string) bool {
 	if svalues == VALUE_ALL {
 		return true
 	}
-	values := strings.Split(svalues, ",")
-	for _, value := range values {
+	values := strings.SplitSeq(svalues, ",")
+	for value := range values {
 		value = strings.TrimSpace(value)
-		for _, searchValue := range search {
-			if value == searchValue {
-				return true
-			}
+		if slices.Contains(search, value) {
+			return true
 		}
 	}
 	return false

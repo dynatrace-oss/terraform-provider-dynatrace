@@ -164,10 +164,10 @@ func (me *CustomService) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("queue_entry_point"); ok {
-		me.QueueEntryPoint = opt.NewBool(value.(bool))
+		me.QueueEntryPoint = new(value.(bool))
 	}
 	if me.QueueEntryPoint == nil {
-		me.QueueEntryPoint = opt.NewBool(false)
+		me.QueueEntryPoint = new(false)
 	}
 	if value, ok := decoder.GetOk("queue_entry_point_type"); ok && len(value.(string)) > 0 {
 		me.QueueEntryPointType = QueueEntryPointType(value.(string)).Ref()

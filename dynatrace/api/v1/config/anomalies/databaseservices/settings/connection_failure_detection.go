@@ -20,8 +20,6 @@ package databaseservices
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -60,10 +58,10 @@ func (me *ConnectionFailureDetection) MarshalHCL(properties hcl.Properties) erro
 
 func (me *ConnectionFailureDetection) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("connection_fails_count"); ok {
-		me.ConnectionFailsCount = opt.NewInt32(int32(value.(int)))
+		me.ConnectionFailsCount = new(int32(value.(int)))
 	}
 	if value, ok := decoder.GetOk("eval_period"); ok {
-		me.TimePeriodMinutes = opt.NewInt32(int32(value.(int)))
+		me.TimePeriodMinutes = new(int32(value.(int)))
 	}
 	me.Enabled = true
 	return nil

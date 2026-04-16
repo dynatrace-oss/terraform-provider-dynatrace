@@ -21,7 +21,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -38,13 +37,13 @@ type OpsGenie struct {
 
 func (me *OpsGenie) PrepareMarshalHCL(decoder hcl.Decoder) error {
 	if apiKey, ok := decoder.GetOk("api_key"); ok && len(apiKey.(string)) > 0 {
-		me.APIKey = opt.NewString(apiKey.(string))
+		me.APIKey = new(apiKey.(string))
 	}
 	return nil
 }
 
 func (me *OpsGenie) FillDemoValues() []string {
-	me.APIKey = opt.NewString("#######")
+	me.APIKey = new("#######")
 	return []string{"Please fill in the API Key"}
 }
 

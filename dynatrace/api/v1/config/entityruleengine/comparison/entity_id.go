@@ -19,12 +19,11 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/entity_id"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -104,7 +103,7 @@ func (eic *EntityID) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("value"); ok {
-		eic.Value = opt.NewString(value.(string))
+		eic.Value = new(value.(string))
 	}
 	eic.Type = ComparisonBasicTypes.EntityID
 	if value, ok := decoder.GetOk("negate"); ok {
@@ -119,9 +118,7 @@ func (eic *EntityID) UnmarshalHCL(decoder hcl.Decoder) error {
 func (eic *EntityID) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(eic.Unknowns) > 0 {
-		for k, v := range eic.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, eic.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(eic.Negate)

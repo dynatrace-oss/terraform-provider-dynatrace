@@ -27,7 +27,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	opentelemetrymetrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/opentelemetrymetrics/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
@@ -82,30 +81,30 @@ func (me *service) Get(ctx context.Context, id string, v *opentelemetrymetrics.S
 			v.Mode = opentelemetrymetrics.Modes.Additive
 		}
 	}
-	v.Scope = opt.NewString("environment")
+	v.Scope = new("environment")
 	return nil
 }
 
 func setFlags(target, existingValue *opentelemetrymetrics.Settings) {
 	if existingValue == nil {
 		if target.AdditionalAttributesToDimensionEnabled == nil {
-			target.AdditionalAttributesToDimensionEnabled = opt.NewBool(true)
+			target.AdditionalAttributesToDimensionEnabled = new(true)
 		}
 		if target.MeterNameToDimensionEnabled == nil {
-			target.MeterNameToDimensionEnabled = opt.NewBool(true)
+			target.MeterNameToDimensionEnabled = new(true)
 		}
 	} else {
 		if target.AdditionalAttributesToDimensionEnabled == nil {
 			target.AdditionalAttributesToDimensionEnabled = existingValue.AdditionalAttributesToDimensionEnabled
 		}
 		if target.AdditionalAttributesToDimensionEnabled == nil {
-			target.AdditionalAttributesToDimensionEnabled = opt.NewBool(true)
+			target.AdditionalAttributesToDimensionEnabled = new(true)
 		}
 		if target.MeterNameToDimensionEnabled == nil {
 			target.MeterNameToDimensionEnabled = existingValue.MeterNameToDimensionEnabled
 		}
 		if target.MeterNameToDimensionEnabled == nil {
-			target.MeterNameToDimensionEnabled = opt.NewBool(true)
+			target.MeterNameToDimensionEnabled = new(true)
 		}
 	}
 }
@@ -142,7 +141,7 @@ func (me *service) Create(ctx context.Context, v *opentelemetrymetrics.Settings)
 	}
 	v.AdditionalAttributesToDimensionEnabled = effectiveValue.AdditionalAttributesToDimensionEnabled
 	v.MeterNameToDimensionEnabled = effectiveValue.MeterNameToDimensionEnabled
-	v.Scope = opt.NewString("environment")
+	v.Scope = new("environment")
 	return stub, nil
 }
 
@@ -185,7 +184,7 @@ func (me *service) Update(ctx context.Context, id string, v *opentelemetrymetric
 	}
 	v.AdditionalAttributesToDimensionEnabled = effectiveValue.AdditionalAttributesToDimensionEnabled
 	v.MeterNameToDimensionEnabled = effectiveValue.MeterNameToDimensionEnabled
-	v.Scope = opt.NewString("environment")
+	v.Scope = new("environment")
 	return nil
 }
 

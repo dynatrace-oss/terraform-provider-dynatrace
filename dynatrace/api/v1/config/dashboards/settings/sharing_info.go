@@ -19,6 +19,7 @@ package dashboards
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
@@ -84,10 +85,10 @@ func (me *SharingInfo) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 	if value, ok := decoder.GetOk("link_shared"); ok {
-		me.LinkShared = opt.NewBool(value.(bool))
+		me.LinkShared = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("published"); ok {
-		me.Published = opt.NewBool(value.(bool))
+		me.Published = new(value.(bool))
 	}
 	return nil
 }
@@ -95,9 +96,7 @@ func (me *SharingInfo) UnmarshalHCL(decoder hcl.Decoder) error {
 func (me *SharingInfo) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(me.Unknowns) > 0 {
-		for k, v := range me.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, me.Unknowns)
 	}
 	if me.Published != nil {
 		rawMessage, err := json.Marshal(me.Published)

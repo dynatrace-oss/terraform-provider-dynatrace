@@ -18,7 +18,6 @@
 package managementzones
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -111,28 +110,28 @@ func (me *ManagementZoneAttributeRule) MarshalHCL(properties hcl.Properties) err
 
 func (me *ManagementZoneAttributeRule) HandlePreconditions() error {
 	if me.AzureToPGPropagation == nil && (string(me.EntityType) == "AZURE") {
-		me.AzureToPGPropagation = opt.NewBool(false)
+		me.AzureToPGPropagation = new(false)
 	}
 	if me.AzureToServicePropagation == nil && (string(me.EntityType) == "AZURE") {
-		me.AzureToServicePropagation = opt.NewBool(false)
+		me.AzureToServicePropagation = new(false)
 	}
 	if me.CustomDeviceGroupToCustomDevicePropagation == nil && (string(me.EntityType) == "CUSTOM_DEVICE_GROUP") {
-		me.CustomDeviceGroupToCustomDevicePropagation = opt.NewBool(false)
+		me.CustomDeviceGroupToCustomDevicePropagation = new(false)
 	}
 	if me.HostToPGPropagation == nil && (string(me.EntityType) == "HOST") {
-		me.HostToPGPropagation = opt.NewBool(false)
+		me.HostToPGPropagation = new(false)
 	}
 	if me.PGToHostPropagation == nil && (string(me.EntityType) == "PROCESS_GROUP") {
-		me.PGToHostPropagation = opt.NewBool(false)
+		me.PGToHostPropagation = new(false)
 	}
 	if me.PGToServicePropagation == nil && (string(me.EntityType) == "PROCESS_GROUP") {
-		me.PGToServicePropagation = opt.NewBool(false)
+		me.PGToServicePropagation = new(false)
 	}
 	if me.ServiceToHostPropagation == nil && (string(me.EntityType) == "SERVICE") {
-		me.ServiceToHostPropagation = opt.NewBool(false)
+		me.ServiceToHostPropagation = new(false)
 	}
 	if me.ServiceToPGPropagation == nil && (string(me.EntityType) == "SERVICE") {
-		me.ServiceToPGPropagation = opt.NewBool(false)
+		me.ServiceToPGPropagation = new(false)
 	}
 	return nil
 }

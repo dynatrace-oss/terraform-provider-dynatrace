@@ -20,7 +20,6 @@ package ingestsources
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -92,7 +91,7 @@ func (me *SamplingAwareValueMetricAttributes) MarshalHCL(properties hcl.Properti
 
 func (me *SamplingAwareValueMetricAttributes) HandlePreconditions() error {
 	if (me.Field == nil) && (string(me.Measurement) != "duration") {
-		me.Field = opt.NewString("")
+		me.Field = new("")
 	}
 	if (me.DefaultValue != nil) && (string(me.Measurement) == "duration") {
 		return fmt.Errorf("'default_value' must not be specified if 'measurement' is set to '%v'", me.Measurement)

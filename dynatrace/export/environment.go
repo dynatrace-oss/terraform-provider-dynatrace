@@ -23,6 +23,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"maps"
 	"os"
 	"os/exec"
 	"path"
@@ -73,13 +74,13 @@ func (me *Environment) TenantID() string {
 	if strings.Contains(me.Credentials.URL, "/e/") {
 		idx := strings.Index(me.Credentials.URL, "/e/")
 		tenant = strings.TrimSuffix(strings.TrimPrefix(me.Credentials.URL[idx:], "/e/"), "/")
-	} else if strings.HasPrefix(me.Credentials.URL, "http://") {
-		tenant = strings.TrimPrefix(me.Credentials.URL, "http://")
+	} else if after, ok := strings.CutPrefix(me.Credentials.URL, "http://"); ok {
+		tenant = after
 		if idx := strings.Index(tenant, "."); idx != -1 {
 			tenant = tenant[:idx]
 		}
-	} else if strings.HasPrefix(me.Credentials.URL, "https://") {
-		tenant = strings.TrimPrefix(me.Credentials.URL, "https://")
+	} else if after, ok := strings.CutPrefix(me.Credentials.URL, "https://"); ok {
+		tenant = after
 		if idx := strings.Index(tenant, "."); idx != -1 {
 			tenant = tenant[:idx]
 		}
@@ -269,10 +270,7 @@ func (me *Environment) InitialDownload() error {
 		}
 
 		var wg sync.WaitGroup
-		numThreads := 10
-		if numThreads > itemCount {
-			numThreads = itemCount
-		}
+		numThreads := min(10, itemCount)
 
 		sem := make(chan struct{}, numThreads)
 
@@ -360,10 +358,7 @@ func (me *Environment) PostProcess() error {
 				}
 
 				var wg sync.WaitGroup
-				numThreads := 10
-				if numThreads > len(reslist) {
-					numThreads = len(reslist)
-				}
+				numThreads := min(10, len(reslist))
 				sem := make(chan struct{}, numThreads)
 
 				for _, res := range reslist {
@@ -676,9 +671,7 @@ func (me *Environment) WriteDataSourceFiles() (err error) {
 			if err != nil {
 				return err
 			}
-			for k, v := range mdsm {
-				dsm[k] = v
-			}
+			maps.Copy(dsm, mdsm)
 		}
 		for _, ds := range dsm {
 			datasourcesFile.Write([]byte("\n" + ds))
@@ -748,9 +741,7 @@ func (me *Environment) WriteResourceFiles() (err error) {
 func (me *Environment) RemoveNonReferencedModules() (err error) {
 	fmt.Println("Remove Non-Referenced Modules ...")
 	m := map[ResourceType]*Module{}
-	for k, module := range me.Modules {
-		m[k] = module
-	}
+	maps.Copy(m, me.Modules)
 	for k, module := range m {
 		if module.IsReferencedAsDataSource() {
 			module.PurgeFolder()
@@ -1004,13 +995,13 @@ func (me *Environment) ExecuteImport() error {
 }
 
 type state struct {
-	Version           int         `json:"version"`
-	Terraform_version string      `json:"terraform_version"`
-	Serial            int         `json:"serial"`
-	Lineage           string      `json:"lineage"`
-	Outputs           interface{} `json:"outputs"`
-	Resources         resources   `json:"resources"`
-	CheckResults      interface{} `json:"check_results"`
+	Version           int       `json:"version"`
+	Terraform_version string    `json:"terraform_version"`
+	Serial            int       `json:"serial"`
+	Lineage           string    `json:"lineage"`
+	Outputs           any       `json:"outputs"`
+	Resources         resources `json:"resources"`
+	CheckResults      any       `json:"check_results"`
 }
 
 func (me *Environment) executeImportV2() error {

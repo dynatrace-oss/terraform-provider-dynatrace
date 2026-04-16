@@ -207,9 +207,9 @@ func extractSplitID(resource StateResource) int {
 
 	prefix := fmt.Sprintf("%s_", resModule)
 
-	if strings.HasPrefix(module, prefix) {
+	if after, ok := strings.CutPrefix(module, prefix); ok {
 
-		numberStr := strings.TrimPrefix(module, prefix)
+		numberStr := after
 
 		if num, err := strconv.Atoi(numberStr); err == nil {
 			return num

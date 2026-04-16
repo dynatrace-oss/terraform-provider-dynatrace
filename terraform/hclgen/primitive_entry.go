@@ -95,8 +95,8 @@ func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
 		rawVal := "[ "
 		sep := ""
 		for _, strVal := range strSliceVal {
-			if strings.HasPrefix(strVal, "HCL-UNQUOTE-") {
-				rawVal = rawVal + sep + strings.TrimPrefix(strVal, "HCL-UNQUOTE-")
+			if after, ok0 := strings.CutPrefix(strVal, "HCL-UNQUOTE-"); ok0 {
+				rawVal = rawVal + sep + after
 			} else {
 				rawVal = rawVal + sep + "\"" + string(escapeQuotedStringLit(strVal)) + "\""
 			}
@@ -148,7 +148,7 @@ func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
 
 func appendRune(b []byte, r rune) []byte {
 	l := utf8.RuneLen(r)
-	for i := 0; i < l; i++ {
+	for range l {
 		b = append(b, 0) // make room at the end of our buffer
 	}
 	ch := b[len(b)-l:]

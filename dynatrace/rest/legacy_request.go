@@ -28,6 +28,7 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -50,12 +51,7 @@ func createJar() *cookiejar.Jar {
 type statuscodes []int
 
 func (me statuscodes) contains(code int) bool {
-	for _, c := range me {
-		if c == code {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(me, code)
 }
 
 type legacy_request request

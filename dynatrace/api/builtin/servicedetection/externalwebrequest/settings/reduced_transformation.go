@@ -20,7 +20,6 @@ package externalwebrequest
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"golang.org/x/exp/slices"
@@ -105,7 +104,7 @@ func (me *ReducedTransformation) MarshalHCL(properties hcl.Properties) error {
 
 func (me *ReducedTransformation) HandlePreconditions() error {
 	if me.IncludeHexNumbers == nil && (string(me.TransformationType) == "REMOVE_NUMBERS") {
-		me.IncludeHexNumbers = opt.NewBool(false)
+		me.IncludeHexNumbers = new(false)
 	}
 	if me.MinDigitCount == nil && (string(me.TransformationType) == "REMOVE_NUMBERS") {
 		return fmt.Errorf("'min_digit_count' must be specified if 'transformation_type' is set to '%v'", me.TransformationType)

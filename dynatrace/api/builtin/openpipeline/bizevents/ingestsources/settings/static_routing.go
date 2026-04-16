@@ -20,7 +20,6 @@ package ingestsources
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -61,7 +60,7 @@ func (me *StaticRouting) MarshalHCL(properties hcl.Properties) error {
 
 func (me *StaticRouting) HandlePreconditions() error {
 	if (me.PipelineID == nil) && (string(me.PipelineType) == "custom") {
-		me.PipelineID = opt.NewString("")
+		me.PipelineID = new("")
 	}
 	if (me.BuiltinPipelineID == nil) && (string(me.PipelineType) == "builtin") {
 		return fmt.Errorf("'builtin_pipeline_id' must be specified if 'pipeline_type' is set to '%v'", me.PipelineType)

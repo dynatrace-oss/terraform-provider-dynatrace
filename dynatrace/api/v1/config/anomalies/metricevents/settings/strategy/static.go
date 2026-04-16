@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -130,7 +128,7 @@ func (me *Static) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.AlertCondition = AlertCondition(value.(string))
 	}
 	if value, ok := decoder.GetOk("alerting_on_missing_data"); ok {
-		me.AlertingOnMissingData = opt.NewBool(value.(bool))
+		me.AlertingOnMissingData = new(value.(bool))
 	}
 	if value, ok := decoder.GetOk("dealerting_samples"); ok {
 		me.DealertingSamples = int32(value.(int))

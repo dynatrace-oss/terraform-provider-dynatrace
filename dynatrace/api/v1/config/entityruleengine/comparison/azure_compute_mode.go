@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/azure_compute_mode"
 
@@ -119,9 +120,7 @@ func (acmc *AzureComputeMode) UnmarshalHCL(decoder hcl.Decoder) error {
 func (acmc *AzureComputeMode) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(acmc.Unknowns) > 0 {
-		for k, v := range acmc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, acmc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(acmc.Negate)

@@ -18,7 +18,6 @@
 package rules
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"golang.org/x/exp/slices"
@@ -93,7 +92,7 @@ func (me *Predicate) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Predicate) HandlePreconditions() {
 	if me.CaseSensitive == nil && slices.Contains([]string{"STRING_EQUALS", "STARTS_WITH", "ENDS_WITH", "CONTAINS"}, string(me.PredicateType)) {
-		me.CaseSensitive = opt.NewBool(false)
+		me.CaseSensitive = new(false)
 	}
 	// ---- ManagementZones []string -> {"expectedValues":["MANAGEMENT_ZONES_CONTAINS_ALL"],"property":"predicateType","type":"IN"}
 	// ---- ServiceType []ServiceTypes -> {"expectedValues":["SERVICE_TYPE_EQUALS"],"property":"predicateType","type":"IN"}

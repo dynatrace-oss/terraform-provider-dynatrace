@@ -20,7 +20,6 @@ package ingestsources
 import (
 	"fmt"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -325,7 +324,7 @@ func (me *Processor) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Processor) HandlePreconditions() error {
 	if (me.Matcher == nil) && (string(me.Type) != "technology") {
-		me.Matcher = opt.NewString("")
+		me.Matcher = new("")
 	}
 	if (me.AzureLogForwarding == nil) && (string(me.Type) == "azureLogForwarding") {
 		return fmt.Errorf("'azure_log_forwarding' must be specified if 'type' is set to '%v'", me.Type)

@@ -69,14 +69,14 @@ func (me *Settings) Name() string {
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
-	return properties.EncodeAll(map[string]interface{}{
+	return properties.EncodeAll(map[string]any{
 		"entity_selector": me.EntitySelector,
 		"tags":            me.Tags,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeAll(map[string]interface{}{
+	return decoder.DecodeAll(map[string]any{
 		"entity_selector": &me.EntitySelector,
 		"tags":            &me.Tags,
 	})

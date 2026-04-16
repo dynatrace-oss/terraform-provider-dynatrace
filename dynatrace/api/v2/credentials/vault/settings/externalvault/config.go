@@ -20,8 +20,6 @@ package externalvault
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -219,56 +217,56 @@ func (me *Config) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Config) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("client_secret"); ok {
-		me.ClientSecret = opt.NewString(value.(string))
+		me.ClientSecret = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("clientid"); ok {
-		me.ClientID = opt.NewString(value.(string))
+		me.ClientID = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("tenantid"); ok {
-		me.TenantID = opt.NewString(value.(string))
+		me.TenantID = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("certificate"); ok {
-		me.Certificate = opt.NewString(value.(string))
+		me.Certificate = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("vault_namespace"); ok {
-		me.VaultNameSpace = opt.NewString(value.(string))
+		me.VaultNameSpace = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("secretid"); ok {
-		me.SecretID = opt.NewString(value.(string))
+		me.SecretID = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("roleid"); ok {
-		me.RoleID = opt.NewString(value.(string))
+		me.RoleID = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("path_to_credentials"); ok {
-		me.PathtoCredentials = opt.NewString(value.(string))
+		me.PathtoCredentials = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("vault_url"); ok {
-		me.VaultURL = opt.NewString(value.(string))
+		me.VaultURL = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("username_secret_name"); ok {
-		me.UsernameSecretName = opt.NewString(value.(string))
+		me.UsernameSecretName = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("password_secret_name"); ok {
-		me.PasswordSecretName = opt.NewString(value.(string))
+		me.PasswordSecretName = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("token_secret_name"); ok {
-		me.TokenSecretName = opt.NewString(value.(string))
+		me.TokenSecretName = new(value.(string))
 	}
 
 	if value, ok := decoder.GetOk("username_password_for_cpm"); ok {
-		me.UsernamePasswordForCPM = opt.NewString(value.(string))
+		me.UsernamePasswordForCPM = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("application_id"); ok {
-		me.ApplicationID = opt.NewString(value.(string))
+		me.ApplicationID = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("safe_name"); ok {
-		me.SafeName = opt.NewString(value.(string))
+		me.SafeName = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("folder_name"); ok {
-		me.FolderName = opt.NewString(value.(string))
+		me.FolderName = new(value.(string))
 	}
 	if value, ok := decoder.GetOk("account_name"); ok {
-		me.AccountName = opt.NewString(value.(string))
+		me.AccountName = new(value.(string))
 	}
 
 	// removed because this seems to get automatically assumed by the REST API

@@ -20,6 +20,7 @@ package sensitive
 import (
 	"fmt"
 	"os"
+	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/meta"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -97,10 +98,8 @@ func buildIgnoreSensitiveFromSchema(schema map[string]*schema.Schema, additional
 }
 
 func appendIfNotExists(slice []string, element string) []string {
-	for _, existingElement := range slice {
-		if existingElement == element {
-			return slice
-		}
+	if slices.Contains(slice, element) {
+		return slice
 	}
 
 	return append(slice, element)

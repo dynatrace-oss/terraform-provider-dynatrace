@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -142,7 +141,7 @@ func (me *EventTriggerConfig) UnmarshalJSON(data []byte) error {
 			return err
 		}
 	default:
-		me.GenericConfig = opt.NewString(string(m.Config))
+		me.GenericConfig = new(string(m.Config))
 	}
 
 	return nil

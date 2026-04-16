@@ -316,7 +316,7 @@ func (me Properties) Encode(key string, v any) error {
 				return err
 			}
 
-		} else if reflect.TypeOf(v).Kind() == reflect.Ptr {
+		} else if reflect.TypeOf(v).Kind() == reflect.Pointer {
 			switch reflect.TypeOf(v).Elem().Kind() {
 			case reflect.String:
 				if reflect.ValueOf(v).IsNil() {

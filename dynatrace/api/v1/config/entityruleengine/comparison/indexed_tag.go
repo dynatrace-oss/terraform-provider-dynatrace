@@ -19,6 +19,7 @@ package comparison
 
 import (
 	"encoding/json"
+	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/indexed_tag"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/tag"
@@ -127,9 +128,7 @@ func (itc *IndexedTag) UnmarshalHCL(decoder hcl.Decoder) error {
 func (itc *IndexedTag) MarshalJSON() ([]byte, error) {
 	m := map[string]json.RawMessage{}
 	if len(itc.Unknowns) > 0 {
-		for k, v := range itc.Unknowns {
-			m[k] = v
-		}
+		maps.Copy(m, itc.Unknowns)
 	}
 	{
 		rawMessage, err := json.Marshal(itc.Negate)

@@ -24,8 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -64,10 +62,10 @@ func (me *DropDetection) MarshalHCL(properties hcl.Properties) error {
 func (me *DropDetection) UnmarshalHCL(decoder hcl.Decoder) error {
 	me.Enabled = true
 	if value, ok := decoder.GetOk("percent"); ok {
-		me.LoadDropPercent = opt.NewInt32(int32(value.(int)))
+		me.LoadDropPercent = new(int32(value.(int)))
 	}
 	if value, ok := decoder.GetOk("minutes"); ok {
-		me.AbnormalMinutes = opt.NewInt32(int32(value.(int)))
+		me.AbnormalMinutes = new(int32(value.(int)))
 	}
 	return nil
 }
