@@ -21,10 +21,14 @@ package permissions_test
 import (
 	"testing"
 
-	settingsapi "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAC(t *testing.T) {
 	// for the example that we show in the documentation we may not want to add a lifecycle to ignore the default group changes. Therefore, setting ExpectNonEmptyPlan to true
-	settingsapi.TestAcc(t, settingsapi.TestAccOptions{ExpectNonEmptyPlan: true})
+	api.TestAcc(t, api.TestAccOptions{ExpectNonEmptyPlan: true})
+}
+
+func TestAccTestCasesSettingsPermissions(t *testing.T) {
+	api.TestAccTestCases(t)
 }
