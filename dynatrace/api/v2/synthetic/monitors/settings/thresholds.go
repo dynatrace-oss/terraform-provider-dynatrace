@@ -58,31 +58,37 @@ func (me *Threshold) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Aggregation type, possible values: `AVG`, `MAX`, `MIN`",
 			Optional:    true,
+			Default:     "AVG",
 		},
 		"dealerting_samples": {
 			Type:        schema.TypeInt,
 			Description: "Number of most recent non-violating request executions that closes the problem",
 			Optional:    true,
+			Default:     5,
 		},
 		"samples": {
 			Type:        schema.TypeInt,
 			Description: "Number of request executions in analyzed sliding window (sliding window size)",
 			Optional:    true,
+			Default:     5,
 		},
 		"step_index": {
 			Type:        schema.TypeInt,
 			Description: "Specify the step's index to which a threshold applies",
 			Optional:    true,
+			Default:     0,
 		},
 		"threshold": {
 			Type:        schema.TypeFloat,
 			Description: "Notify if monitor request takes longer than X milliseconds to execute",
 			Optional:    true,
+			Default:     100,
 		},
 		"violating_samples": {
 			Type:        schema.TypeInt,
 			Description: "Number of violating request executions in analyzed sliding window",
 			Optional:    true,
+			Default:     3,
 		},
 	}
 }
