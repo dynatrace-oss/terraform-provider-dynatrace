@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -167,7 +167,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		dqlRequest.FetchTimeoutSeconds = new(v.(int))
 	}
 	if v, ok := d.GetOk("default_sampling_ratio"); ok {
-		dqlRequest.DefaultSamplingRatio = new(v.(int))
+		dqlRequest.DefaultSamplingRatio = new(v.(float64))
 	}
 	if v, ok := d.GetOk("default_scan_limit_gbytes"); ok {
 		dqlRequest.DefaultScanLimitGbytes = new(v.(int))
@@ -234,18 +234,18 @@ type DQLResponse struct {
 }
 
 type DQLRequest struct {
-	Query                      string  `json:"query"`
-	DefaultTimeframeStart      *string `json:"defaultTimeframeStart,omitempty"`
-	DefaultTimeframeEnd        *string `json:"defaultTimeframeEnd,omitempty"`
-	Timezone                   *string `json:"timezone,omitempty"`
-	Locale                     *string `json:"locale,omitempty"`
-	MaxResultRecords           *int    `json:"maxResultRecords,omitempty"`
-	MaxResultBytes             *int    `json:"maxResultBytes,omitempty"`
-	FetchTimeoutSeconds        *int    `json:"fetchTimeoutSeconds,omitempty"`
-	RequestTimeoutMilliseconds int     `json:"requestTimeoutMilliseconds,omitempty"`
-	EnablePreview              bool    `json:"enablePreview"`
-	DefaultSamplingRatio       *int    `json:"defaultSamplingRatio,omitempty"`
-	DefaultScanLimitGbytes     *int    `json:"defaultScanLimitGbytes,omitempty"`
-	QueryOptions               any     `json:"queryOptions"`
-	FilterSegments             any     `json:"filterSegments"`
+	Query                      string   `json:"query"`
+	DefaultTimeframeStart      *string  `json:"defaultTimeframeStart,omitempty"`
+	DefaultTimeframeEnd        *string  `json:"defaultTimeframeEnd,omitempty"`
+	Timezone                   *string  `json:"timezone,omitempty"`
+	Locale                     *string  `json:"locale,omitempty"`
+	MaxResultRecords           *int     `json:"maxResultRecords,omitempty"`
+	MaxResultBytes             *int     `json:"maxResultBytes,omitempty"`
+	FetchTimeoutSeconds        *int     `json:"fetchTimeoutSeconds,omitempty"`
+	RequestTimeoutMilliseconds int      `json:"requestTimeoutMilliseconds,omitempty"`
+	EnablePreview              bool     `json:"enablePreview"`
+	DefaultSamplingRatio       *float64 `json:"defaultSamplingRatio,omitempty"`
+	DefaultScanLimitGbytes     *int     `json:"defaultScanLimitGbytes,omitempty"`
+	QueryOptions               any      `json:"queryOptions"`
+	FilterSegments             any      `json:"filterSegments"`
 }
