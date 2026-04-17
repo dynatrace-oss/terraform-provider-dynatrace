@@ -126,6 +126,21 @@ func TestAcc(t *testing.T, opts ...TestAccOptions) {
 	}
 }
 
+// TestAccSingle executes a single test file. e.g., "testdata/terraform/example.tf"
+// useful for debugging purposes
+func TestAccSingle(t *testing.T, file string, opts ...TestAccOptions) {
+	t.Helper()
+
+	if !AccEnvsGiven(t) {
+		return
+	}
+
+	config, _ := ReadTfConfig(t, file)
+
+	testCase := createTestCaseWithOptions(t, config, opts)
+	resource.Test(t, testCase)
+}
+
 type testCaseExecution struct {
 	TestCases []resource.TestStep
 	Name      string
