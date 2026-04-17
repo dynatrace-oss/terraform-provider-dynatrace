@@ -41,7 +41,11 @@ func (me RequestConfigurations) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *RequestConfigurations) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("request_configuration", me)
+	if err := decoder.DecodeSlice("request_configuration", me); err != nil {
+		return err
+	}
+	*me = hcl.FilterEmpty(*me, RequestConfiguration{})
+	return nil
 }
 
 type RequestConfiguration struct {
