@@ -43,7 +43,7 @@ type Workflow struct {
 	HourlyExecutionLimit *int           `json:"hourlyExecutionLimit"` // Maximum number of executions per hour, default is 1000
 	Input                map[string]any `json:"input"`                // Workflow-level input parameters
 	Guide                string         `json:"guide"`                // Informational guide text for the workflow
-	Result               string         `json:"result"`               // The result of the workflow
+	Result               *string        `json:"result,omitempty"`     // The result of the workflow
 }
 
 func (me *Workflow) Name() string {
@@ -143,7 +143,7 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The result of the workflow",
 			Optional:    true,
-			Default:     "", // Sets a default because Workflows behaves like PATCH if not provided; ignoring an empty value
+			// Default must not be set because SIMPLE workflows don't support it
 		},
 	}
 }
@@ -209,6 +209,15 @@ func (me *Workflow) UnmarshalHCL(decoder hcl.Decoder) error {
 		}
 	}
 
+	return nil
+}
+
+func (me *Workflow) HandlePreconditions() error {
+	// set conditional default value for STANDARD workflows
+	if me.Type == "STANDARD" && me.Result == nil {
+		// Sets a default because Workflows behaves like PATCH if not provided; ignoring an empty value
+		me.Result = new(string)
+	}
 	return nil
 }
 
