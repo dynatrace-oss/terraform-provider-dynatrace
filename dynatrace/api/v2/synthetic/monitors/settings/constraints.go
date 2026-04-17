@@ -44,15 +44,8 @@ func (me *Constraints) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeSlice("constraint", me); err != nil {
 		return err
 	}
-	// https://github.com/hashicorp/terraform-plugin-sdk/issues/895
-	// Only known workaround is to ignore these blocks
-	newEntries := Constraints{}
-	for _, entry := range *me {
-		if entry.Type != "" || entry.Properties != nil {
-			newEntries = append(newEntries, entry)
-		}
-	}
-	*me = newEntries
+
+	*me = hcl.FilterEmpty(*me, Constraint{})
 	return nil
 }
 
