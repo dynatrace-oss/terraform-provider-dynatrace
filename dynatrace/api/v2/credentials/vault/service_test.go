@@ -28,3 +28,7 @@ import (
 func TestAccCredentials(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesCredentials(t *testing.T) {
+	api.TestAccTestCases(t)
+}
