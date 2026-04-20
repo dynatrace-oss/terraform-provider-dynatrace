@@ -21,6 +21,12 @@
 			"customValidatorId": "mrum-experience-analytics",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "New Real User Monitoring Experience must be enabled to enable New Session Session Replay Experience or New Session Replay on Crashes Experience.",
+			"customValidatorId": "mrumOnGrailEnabledForReplayOnGrailValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
 	"description": "Turn on Real User Monitoring and Session Replay. Configure cost and traffic control settings.",
@@ -223,5 +229,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.6.1"
+	"version": "2.7.2"
 }
