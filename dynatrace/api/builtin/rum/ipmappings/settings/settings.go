@@ -100,10 +100,10 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	})
 	if me.City != nil {
 		if me.Latitude == nil {
-			me.Latitude = new(float64(0))
+			me.Latitude = new(0.0)
 		}
 		if me.Longitude == nil {
-			me.Longitude = new(float64(0))
+			me.Longitude = new(0.0)
 		}
 	}
 	return err

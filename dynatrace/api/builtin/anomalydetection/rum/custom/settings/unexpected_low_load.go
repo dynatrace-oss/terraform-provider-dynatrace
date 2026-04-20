@@ -55,7 +55,7 @@ func (me *UnexpectedLowLoad) UnmarshalHCL(decoder hcl.Decoder) error {
 		"threshold_percentage": &me.ThresholdPercentage,
 	})
 	if me.ThresholdPercentage == nil && me.Enabled {
-		me.ThresholdPercentage = new(float64(0))
+		me.ThresholdPercentage = new(0.0)
 	}
 	return err
 }
