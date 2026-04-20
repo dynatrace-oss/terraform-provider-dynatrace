@@ -18,37 +18,41 @@
 package aws
 
 type ConsumersOfAwsRoleBasedAuthentication string
-type ConsumersOfAwsWebIdentity string
-type Type string
-
-var Types = struct {
-	AWSRoleBasedAuthentication Type
-	AWSWebIdentity             Type
-}{
-	"awsRoleBasedAuthentication",
-	"awsWebIdentity",
-}
 
 var ConsumersOfAwsRoleBasedAuthentications = struct {
-	DataAcquisitionDeprecated ConsumersOfAwsRoleBasedAuthentication
-	DataAcquisition           ConsumersOfAwsRoleBasedAuthentication
-	CostAndCarbonOptimization ConsumersOfAwsRoleBasedAuthentication
-	BusinessObservability     ConsumersOfAwsRoleBasedAuthentication
-	OpenPipeline              ConsumersOfAwsRoleBasedAuthentication
-	None                      ConsumersOfAwsRoleBasedAuthentication
+	AppDynatraceBizCarbon       ConsumersOfAwsRoleBasedAuthentication
+	Da                          ConsumersOfAwsRoleBasedAuthentication
+	None                        ConsumersOfAwsRoleBasedAuthentication
+	SvcComDynatraceBo           ConsumersOfAwsRoleBasedAuthentication
+	SvcComDynatraceDa           ConsumersOfAwsRoleBasedAuthentication
+	SvcComDynatraceGrail        ConsumersOfAwsRoleBasedAuthentication
+	SvcComDynatraceOpenpipeline ConsumersOfAwsRoleBasedAuthentication
 }{
-	"DA",
-	"SVC:com.dynatrace.da",
 	"APP:dynatrace.biz.carbon",
-	"SVC:com.dynatrace.bo",
-	"SVC:com.dynatrace.openpipeline",
+	"DA",
 	"NONE",
+	"SVC:com.dynatrace.bo",
+	"SVC:com.dynatrace.da",
+	"SVC:com.dynatrace.grail",
+	"SVC:com.dynatrace.openpipeline",
 }
 
+type ConsumersOfAwsWebIdentity string
+
 var ConsumersOfAwsWebIdentities = struct {
-	AWSConnector              ConsumersOfAwsWebIdentity
-	CostAndCarbonOptimization ConsumersOfAwsWebIdentity
+	AppDynatraceAwsConnector ConsumersOfAwsWebIdentity
+	AppDynatraceBizCarbon    ConsumersOfAwsWebIdentity
 }{
 	"APP:dynatrace.aws.connector",
 	"APP:dynatrace.biz.carbon",
+}
+
+type Type string
+
+var Types = struct {
+	Awsrolebasedauthentication Type
+	Awswebidentity             Type
+}{
+	"awsRoleBasedAuthentication",
+	"awsWebIdentity",
 }
