@@ -18,15 +18,15 @@
 package approval
 
 import (
-	approval "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/automation/approval/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/automation/approval/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.2"
+const SchemaVersion = "0.4"
 const SchemaID = "builtin:automation.approval"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*approval.Settings] {
-	return settings20.Service[*approval.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }
