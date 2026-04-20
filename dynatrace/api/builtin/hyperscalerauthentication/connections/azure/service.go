@@ -31,7 +31,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.14"
+const SchemaVersion = "0.0.15"
 const SchemaID = "builtin:hyperscaler-authentication.connections.azure"
 const DefaultTimeout = 2 * time.Minute
 
