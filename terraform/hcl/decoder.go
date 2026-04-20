@@ -339,7 +339,7 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 			*vActual = new(int16(result.(int)))
 			return true, nil
 		case *int:
-			*vActual = int(result.(int))
+			*vActual = result.(int)
 			return true, nil
 		case **int:
 			*vActual = new(result.(int))
@@ -375,7 +375,7 @@ func (d *decoder) decode(key string, v any) (bool, error) {
 			*vActual = new(uint(result.(int)))
 			return true, nil
 		case *float64:
-			*vActual = float64(result.(float64))
+			*vActual = result.(float64)
 			return true, nil
 		case **float64:
 			*vActual = new(result.(float64))
