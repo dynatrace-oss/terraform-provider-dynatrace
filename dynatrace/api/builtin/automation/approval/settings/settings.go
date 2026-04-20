@@ -23,7 +23,8 @@ import (
 )
 
 type Settings struct {
-	WorkflowAppAccessApprovalEnabled bool `json:"workflowAppAccessApprovalEnabled"` // Allow on tenant level anyone with access to the app can respond to requests via an approval link.
+	ExternalApprovalsEnabled         *bool `json:"externalApprovalsEnabled,omitempty"` // Allow external systems to trigger approval responses via webhook handlers.
+	WorkflowAppAccessApprovalEnabled bool  `json:"workflowAppAccessApprovalEnabled"`   // Allow on tenant level anyone with access to the app can respond to requests via an approval link.
 }
 
 func (me *Settings) Name() string {
@@ -32,6 +33,11 @@ func (me *Settings) Name() string {
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"external_approvals_enabled": {
+			Type:        schema.TypeBool,
+			Description: "Allow external systems to trigger approval responses via webhook handlers.",
+			Optional:    true, // nullable
+		},
 		"workflow_app_access_approval_enabled": {
 			Type:        schema.TypeBool,
 			Description: "Allow on tenant level anyone with access to the app can respond to requests via an approval link.",
@@ -42,12 +48,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
+		"external_approvals_enabled":           me.ExternalApprovalsEnabled,
 		"workflow_app_access_approval_enabled": me.WorkflowAppAccessApprovalEnabled,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
+		"external_approvals_enabled":           &me.ExternalApprovalsEnabled,
 		"workflow_app_access_approval_enabled": &me.WorkflowAppAccessApprovalEnabled,
 	})
 }

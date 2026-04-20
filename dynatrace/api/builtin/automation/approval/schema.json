@@ -7,9 +7,19 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
+		"externalApprovalsEnabled": {
+			"description": "Allow external systems to trigger approval responses via webhook handlers.",
+			"displayName": "Enable external approvals",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "boolean"
+		},
 		"workflowAppAccessApprovalEnabled": {
 			"default": true,
 			"description": "Allow on tenant level anyone with access to the app can respond to requests via an approval link.",
@@ -23,5 +33,5 @@
 	},
 	"schemaId": "builtin:automation.approval",
 	"types": {},
-	"version": "0.2"
+	"version": "0.4"
 }
