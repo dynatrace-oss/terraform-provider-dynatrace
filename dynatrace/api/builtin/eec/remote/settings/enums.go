@@ -17,16 +17,14 @@
 
 package remote
 
-import (
-	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eec/remote/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
-)
+type PerformanceProfile string
 
-const SchemaVersion = "0.2"
-const SchemaID = "builtin:eec.remote"
-
-func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
-	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
+var PerformanceProfiles = struct {
+	Dedicated PerformanceProfile
+	Default   PerformanceProfile
+	High      PerformanceProfile
+}{
+	"DEDICATED",
+	"DEFAULT",
+	"HIGH",
 }
