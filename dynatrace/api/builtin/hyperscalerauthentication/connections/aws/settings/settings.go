@@ -23,38 +23,38 @@ import (
 )
 
 type Settings struct {
-	Name                       string                            `json:"name"`
-	Type                       Type                              `json:"type"`
-	AWSRoleBasedAuthentication *AwsRoleBasedAuthenticationConfig `json:"awsRoleBasedAuthentication,omitempty"`
-	AWSWebIdentity             *AWSWebIdentity                   `json:"awsWebIdentity,omitempty"`
+	AwsRoleBasedAuthentication *AwsRoleBasedAuthenticationConfig `json:"awsRoleBasedAuthentication,omitempty"`
+	AwsWebIdentity             *AwsWebIdentity                   `json:"awsWebIdentity,omitempty"`
+	Name                       string                            `json:"name"` // The name of the connection
+	Type                       Type                              `json:"type"` // AWS Authentication mechanism to be used by the connection. Possible values: `awsRoleBasedAuthentication`, `awsWebIdentity`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"name": {
-			Type:        schema.TypeString,
-			Description: "The name of the connection",
-			Required:    true,
-		},
-		"web_identity": {
-			Type:         schema.TypeList,
-			Description:  "Configuration required for authenticating via AWS Web Identity",
-			Optional:     true,
-			Elem:         &schema.Resource{Schema: new(AWSWebIdentity).Schema()},
-			ExactlyOneOf: []string{"web_identity", "role_based_auth"},
-			MinItems:     1,
-			MaxItems:     1,
-			ForceNew:     true,
-		},
 		"role_based_auth": {
 			Type:         schema.TypeList,
-			Description:  "Configuration required for authenticating via AWS Role Based Authentication",
-			Optional:     true,
+			Description:  "No documentation available",
+			Optional:     true, // precondition
 			Elem:         &schema.Resource{Schema: new(AwsRoleBasedAuthenticationConfig).Schema()},
 			ExactlyOneOf: []string{"web_identity", "role_based_auth"},
 			MinItems:     1,
 			MaxItems:     1,
 			ForceNew:     true,
+		},
+		"web_identity": {
+			Type:         schema.TypeList,
+			Description:  "No documentation available",
+			Optional:     true, // precondition
+			Elem:         &schema.Resource{Schema: new(AwsWebIdentity).Schema()},
+			ExactlyOneOf: []string{"web_identity", "role_based_auth"},
+			MinItems:     1,
+			MaxItems:     1,
+			ForceNew:     true,
+		},
+		"name": {
+			Type:        schema.TypeString,
+			Description: "The name of the connection",
+			Required:    true,
 		},
 	}
 }
@@ -62,24 +62,24 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"name":            me.Name,
-		"web_identity":    me.AWSWebIdentity,
-		"role_based_auth": me.AWSRoleBasedAuthentication,
+		"web_identity":    me.AwsWebIdentity,
+		"role_based_auth": me.AwsRoleBasedAuthentication,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeAll(map[string]any{
 		"name":            &me.Name,
-		"web_identity":    &me.AWSWebIdentity,
-		"role_based_auth": &me.AWSRoleBasedAuthentication,
+		"web_identity":    &me.AwsWebIdentity,
+		"role_based_auth": &me.AwsRoleBasedAuthentication,
 	}); err != nil {
 		return err
 	}
 
-	if me.AWSWebIdentity != nil {
-		me.Type = Types.AWSWebIdentity
-	} else if me.AWSRoleBasedAuthentication != nil {
-		me.Type = Types.AWSRoleBasedAuthentication
+	if me.AwsWebIdentity != nil {
+		me.Type = Types.Awswebidentity
+	} else if me.AwsRoleBasedAuthentication != nil {
+		me.Type = Types.Awsrolebasedauthentication
 	}
 
 	return nil

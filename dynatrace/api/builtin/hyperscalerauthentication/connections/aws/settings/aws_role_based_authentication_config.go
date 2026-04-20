@@ -23,8 +23,8 @@ import (
 )
 
 type AwsRoleBasedAuthenticationConfig struct {
-	RoleARN   string                                  `json:"roleArn"`   // The ARN of the AWS role that should be assumed
-	Consumers []ConsumersOfAwsRoleBasedAuthentication `json:"consumers"` // Default "SVC:com.dynatrace.da" Dynatrace integrations that can use this connection. Possible Values: `APP:dynatrace.biz.carbon`, `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`
+	Consumers []ConsumersOfAwsRoleBasedAuthentication `json:"consumers"` // Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.biz.carbon`, `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`
+	RoleArn   string                                  `json:"roleArn"`   // The ARN of the AWS role that should be assumed
 }
 
 func (me *AwsRoleBasedAuthenticationConfig) Schema() map[string]*schema.Schema {
@@ -37,11 +37,11 @@ func (me *AwsRoleBasedAuthenticationConfig) Schema() map[string]*schema.Schema {
 		// },
 		"consumers": {
 			Type:        schema.TypeSet,
-			Description: "Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.biz.carbon`, `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`",
+			Description: "Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.biz.carbon`, `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`",
+			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			MinItems:    1,
 			MaxItems:    1,
-			Optional:    true,
 			ForceNew:    true,
 		},
 	}

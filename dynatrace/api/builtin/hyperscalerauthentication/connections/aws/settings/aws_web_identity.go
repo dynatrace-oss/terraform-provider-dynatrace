@@ -22,12 +22,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type AWSWebIdentity struct {
-	RoleARN   string                      `json:"roleArn"`   // The ARN of the AWS role that should be assumed
+type AwsWebIdentity struct {
 	Consumers []ConsumersOfAwsWebIdentity `json:"consumers"` // Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.aws.connector`, `APP:dynatrace.biz.carbon`
+	RoleArn   string                      `json:"roleArn"`   // The ARN of the AWS role that should be assumed
 }
 
-func (me *AWSWebIdentity) Schema() map[string]*schema.Schema {
+func (me *AwsWebIdentity) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		// "role_arn": {
 		// 	Type:        schema.TypeString,
@@ -47,14 +47,14 @@ func (me *AWSWebIdentity) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (me *AWSWebIdentity) MarshalHCL(properties hcl.Properties) error {
+func (me *AwsWebIdentity) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		// "role_arn":  me.RoleARN,
 		"consumers": me.Consumers,
 	})
 }
 
-func (me *AWSWebIdentity) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *AwsWebIdentity) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		// "role_arn":  &me.RoleARN,
 		"consumers": &me.Consumers,

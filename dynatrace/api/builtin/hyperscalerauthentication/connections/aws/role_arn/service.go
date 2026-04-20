@@ -56,10 +56,10 @@ func (me *service) Get(ctx context.Context, id string, v *role_arn.Settings) err
 	if err := me.connService.Get(ctx, id, &connValue); err != nil {
 		return err
 	}
-	if connValue.AWSRoleBasedAuthentication != nil {
-		v.RoleARN = connValue.AWSRoleBasedAuthentication.RoleARN
-	} else if connValue.AWSWebIdentity != nil {
-		v.RoleARN = connValue.AWSWebIdentity.RoleARN
+	if connValue.AwsRoleBasedAuthentication != nil {
+		v.RoleARN = connValue.AwsRoleBasedAuthentication.RoleArn
+	} else if connValue.AwsWebIdentity != nil {
+		v.RoleARN = connValue.AwsWebIdentity.RoleArn
 	}
 	v.AWSConnectionID = id
 	v.Name = connValue.Name
@@ -76,25 +76,25 @@ func (me *service) Create(ctx context.Context, v *role_arn.Settings) (*api.Stub,
 		return nil, err
 	}
 
-	if connValue.Type == awsconnection_settings.Types.AWSRoleBasedAuthentication && connValue.AWSRoleBasedAuthentication != nil {
+	if connValue.Type == awsconnection_settings.Types.Awsrolebasedauthentication && connValue.AwsRoleBasedAuthentication != nil {
 		// no update needed if there are no changes
-		if connValue.AWSRoleBasedAuthentication.RoleARN == v.RoleARN {
+		if connValue.AwsRoleBasedAuthentication.RoleArn == v.RoleARN {
 			return &api.Stub{ID: v.AWSConnectionID, Name: v.AWSConnectionID}, nil
 		}
 		// it is not possible to change the role ARN after it has been set
-		if connValue.AWSRoleBasedAuthentication.RoleARN != "" {
+		if connValue.AwsRoleBasedAuthentication.RoleArn != "" {
 			return nil, errors.New("AWS Role ARN is already set for the specified AWS Connection")
 		}
-		connValue.AWSRoleBasedAuthentication.RoleARN = v.RoleARN
-	} else if connValue.Type == awsconnection_settings.Types.AWSWebIdentity && connValue.AWSWebIdentity != nil {
-		if connValue.AWSWebIdentity.RoleARN == v.RoleARN {
+		connValue.AwsRoleBasedAuthentication.RoleArn = v.RoleARN
+	} else if connValue.Type == awsconnection_settings.Types.Awswebidentity && connValue.AwsWebIdentity != nil {
+		if connValue.AwsWebIdentity.RoleArn == v.RoleARN {
 			return &api.Stub{ID: v.AWSConnectionID, Name: v.AWSConnectionID}, nil
 		}
 		// it is not possible to change the role ARN after it has been set
-		if connValue.AWSWebIdentity.RoleARN != "" {
+		if connValue.AwsWebIdentity.RoleArn != "" {
 			return nil, errors.New("AWS Role ARN is already set for the specified AWS Connection")
 		}
-		connValue.AWSWebIdentity.RoleARN = v.RoleARN
+		connValue.AwsWebIdentity.RoleArn = v.RoleARN
 	}
 
 	if err := retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, role_arn.DefaultCreateTimeout), func() *retry.RetryError {

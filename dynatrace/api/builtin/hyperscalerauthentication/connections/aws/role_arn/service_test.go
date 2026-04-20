@@ -59,8 +59,8 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("success AWSRoleBasedAuthentication", func(t *testing.T) {
 		mockConn := &aws.Settings{
-			Type:                       aws.Types.AWSRoleBasedAuthentication,
-			AWSRoleBasedAuthentication: &aws.AwsRoleBasedAuthenticationConfig{RoleARN: ""},
+			Type:                       aws.Types.Awsrolebasedauthentication,
+			AwsRoleBasedAuthentication: &aws.AwsRoleBasedAuthenticationConfig{RoleArn: ""},
 			Name:                       name,
 		}
 		mock := &mockCRUDService{
@@ -69,7 +69,7 @@ func TestService_Create(t *testing.T) {
 				return nil
 			},
 			updateFunc: func(ctx context.Context, id string, v *aws.Settings) error {
-				assert.Equal(t, roleARN, v.AWSRoleBasedAuthentication.RoleARN)
+				assert.Equal(t, roleARN, v.AwsRoleBasedAuthentication.RoleArn)
 				return nil
 			},
 		}
@@ -84,8 +84,8 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("success AWSWebIdentity", func(t *testing.T) {
 		mockConn := &aws.Settings{
-			Type:           aws.Types.AWSWebIdentity,
-			AWSWebIdentity: &aws.AWSWebIdentity{RoleARN: ""},
+			Type:           aws.Types.Awswebidentity,
+			AwsWebIdentity: &aws.AwsWebIdentity{RoleArn: ""},
 			Name:           name,
 		}
 		mock := &mockCRUDService{
@@ -94,7 +94,7 @@ func TestService_Create(t *testing.T) {
 				return nil
 			},
 			updateFunc: func(ctx context.Context, id string, v *aws.Settings) error {
-				assert.Equal(t, roleARN, v.AWSWebIdentity.RoleARN)
+				assert.Equal(t, roleARN, v.AwsWebIdentity.RoleArn)
 				return nil
 			},
 		}
@@ -110,8 +110,8 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("role ARN already set AWSRoleBasedAuthentication", func(t *testing.T) {
 		mockConn := &aws.Settings{
-			Type:                       aws.Types.AWSRoleBasedAuthentication,
-			AWSRoleBasedAuthentication: &aws.AwsRoleBasedAuthenticationConfig{RoleARN: "other-arn"},
+			Type:                       aws.Types.Awsrolebasedauthentication,
+			AwsRoleBasedAuthentication: &aws.AwsRoleBasedAuthenticationConfig{RoleArn: "other-arn"},
 			Name:                       name,
 		}
 		mock := &mockCRUDService{
@@ -131,8 +131,8 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("role ARN already set but equal AWSRoleBasedAuthentication", func(t *testing.T) {
 		mockConn := &aws.Settings{
-			Type:                       aws.Types.AWSRoleBasedAuthentication,
-			AWSRoleBasedAuthentication: &aws.AwsRoleBasedAuthenticationConfig{RoleARN: roleARN},
+			Type:                       aws.Types.Awsrolebasedauthentication,
+			AwsRoleBasedAuthentication: &aws.AwsRoleBasedAuthenticationConfig{RoleArn: roleARN},
 			Name:                       name,
 		}
 		mock := &mockCRUDService{
@@ -141,7 +141,7 @@ func TestService_Create(t *testing.T) {
 				return nil
 			},
 			updateFunc: func(ctx context.Context, id string, v *aws.Settings) error {
-				assert.Equal(t, roleARN, v.AWSRoleBasedAuthentication.RoleARN)
+				assert.Equal(t, roleARN, v.AwsRoleBasedAuthentication.RoleArn)
 				return nil
 			},
 		}
@@ -157,8 +157,8 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("role ARN already set AWSWebIdentity", func(t *testing.T) {
 		mockConn := &aws.Settings{
-			Type:           aws.Types.AWSWebIdentity,
-			AWSWebIdentity: &aws.AWSWebIdentity{RoleARN: "other-arn"},
+			Type:           aws.Types.Awswebidentity,
+			AwsWebIdentity: &aws.AwsWebIdentity{RoleArn: "other-arn"},
 			Name:           name,
 		}
 		mock := &mockCRUDService{
@@ -178,8 +178,8 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("role ARN already set but equal AWSWebIdentity", func(t *testing.T) {
 		mockConn := &aws.Settings{
-			Type:           aws.Types.AWSWebIdentity,
-			AWSWebIdentity: &aws.AWSWebIdentity{RoleARN: roleARN},
+			Type:           aws.Types.Awswebidentity,
+			AwsWebIdentity: &aws.AwsWebIdentity{RoleArn: roleARN},
 			Name:           name,
 		}
 		mock := &mockCRUDService{
@@ -188,7 +188,7 @@ func TestService_Create(t *testing.T) {
 				return nil
 			},
 			updateFunc: func(ctx context.Context, id string, v *aws.Settings) error {
-				assert.Equal(t, roleARN, v.AWSWebIdentity.RoleARN)
+				assert.Equal(t, roleARN, v.AwsWebIdentity.RoleArn)
 				return nil
 			},
 		}
@@ -219,8 +219,8 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("connService.Update error", func(t *testing.T) {
 		mockConn := &aws.Settings{
-			Type:                       aws.Types.AWSRoleBasedAuthentication,
-			AWSRoleBasedAuthentication: &aws.AwsRoleBasedAuthenticationConfig{RoleARN: ""},
+			Type:                       aws.Types.Awsrolebasedauthentication,
+			AwsRoleBasedAuthentication: &aws.AwsRoleBasedAuthenticationConfig{RoleArn: ""},
 			Name:                       name,
 		}
 		mock := &mockCRUDService{
