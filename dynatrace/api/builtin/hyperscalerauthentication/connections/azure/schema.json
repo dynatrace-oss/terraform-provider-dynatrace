@@ -56,6 +56,10 @@
 					"value": "SVC:com.dynatrace.openpipeline"
 				},
 				{
+					"displayName": "Grail",
+					"value": "SVC:com.dynatrace.grail"
+				},
+				{
 					"displayName": "None",
 					"value": "NONE"
 				}
@@ -337,5 +341,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.14"
+	"version": "0.0.15"
 }

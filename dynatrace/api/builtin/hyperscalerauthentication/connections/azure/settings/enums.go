@@ -36,12 +36,14 @@ var ConsumersOfFederatedIdentityCredentials = struct {
 	Da                                  ConsumersOfFederatedIdentityCredential
 	None                                ConsumersOfFederatedIdentityCredential
 	SvcComDynatraceDa                   ConsumersOfFederatedIdentityCredential
+	SvcComDynatraceGrail                ConsumersOfFederatedIdentityCredential
 	SvcComDynatraceOpenpipeline         ConsumersOfFederatedIdentityCredential
 }{
 	"APP:dynatrace.microsoft.azure.connector",
 	"DA",
 	"NONE",
 	"SVC:com.dynatrace.da",
+	"SVC:com.dynatrace.grail",
 	"SVC:com.dynatrace.openpipeline",
 }
 
