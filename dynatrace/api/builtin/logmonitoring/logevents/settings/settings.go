@@ -25,7 +25,7 @@ import (
 type Settings struct {
 	Enabled       bool           `json:"enabled"`       // This setting is enabled (`true`) or disabled (`false`)
 	EventTemplate *EventTemplate `json:"eventTemplate"` // Event template
-	Query         string         `json:"query"`         // Log query
+	Query         string         `json:"query"`         // Matcher
 	Summary       string         `json:"summary"`       // The textual summary of the log event entry
 }
 
@@ -44,14 +44,13 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Event template",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(EventTemplate).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(EventTemplate).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"query": {
 			Type:        schema.TypeString,
-			Description: "Log query",
+			Description: "Matcher",
 			Required:    true,
 		},
 		"summary": {

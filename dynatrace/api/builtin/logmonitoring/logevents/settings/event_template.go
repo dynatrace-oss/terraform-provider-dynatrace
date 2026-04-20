@@ -25,8 +25,8 @@ import (
 type EventTemplate struct {
 	DavisMerge  *bool         `json:"davisMerge,omitempty"` // Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.
 	Description string        `json:"description"`          // The description of the event to trigger.
-	EventType   EventTypeEnum `json:"eventType"`            // Possible Values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`, `WARNING`
-	Metadata    MetadataItems `json:"metadata,omitempty"`   // Set of additional key-value properties to be attached to the triggered event.
+	EventType   EventTypeEnum `json:"eventType"`            // The event type to trigger. Possible values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`, `WARNING`
+	Metadata    MetadataItems `json:"metadata,omitempty"`   // Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w).
 	Title       string        `json:"title"`                // The title of the event to trigger.
 }
 
@@ -35,7 +35,7 @@ func (me *EventTemplate) Schema() map[string]*schema.Schema {
 		"davis_merge": {
 			Type:        schema.TypeBool,
 			Description: "Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 		"description": {
 			Type:        schema.TypeString,
@@ -44,17 +44,16 @@ func (me *EventTemplate) Schema() map[string]*schema.Schema {
 		},
 		"event_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`, `WARNING`",
+			Description: "The event type to trigger. Possible values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`, `WARNING`",
 			Required:    true,
 		},
 		"metadata": {
 			Type:        schema.TypeList,
-			Description: "Set of additional key-value properties to be attached to the triggered event.",
-			Optional:    true,
-
-			Elem:     &schema.Resource{Schema: new(MetadataItems).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Description: "Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w).",
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(MetadataItems).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"title": {
 			Type:        schema.TypeString,
@@ -74,16 +73,19 @@ func (me *EventTemplate) MarshalHCL(properties hcl.Properties) error {
 	})
 }
 
+func (me *EventTemplate) HandlePreconditions() error {
+	if (me.DavisMerge == nil) && (string(me.EventType) != "INFO") {
+		me.DavisMerge = new(false)
+	}
+	return nil
+}
+
 func (me *EventTemplate) UnmarshalHCL(decoder hcl.Decoder) error {
-	err := decoder.DecodeAll(map[string]any{
+	return decoder.DecodeAll(map[string]any{
 		"davis_merge": &me.DavisMerge,
 		"description": &me.Description,
 		"event_type":  &me.EventType,
 		"metadata":    &me.Metadata,
 		"title":       &me.Title,
 	})
-	if me.DavisMerge == nil && me.EventType != EventTypeEnums.Info {
-		me.DavisMerge = new(false)
-	}
-	return err
 }

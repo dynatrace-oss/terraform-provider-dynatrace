@@ -2,7 +2,7 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Configure log patterns that trigger events for alerting and Davis® analysis. Note that log event detection consumes [Davis® data units](https://dt-url.net/hk03ulj)",
+	"description": "Configure log patterns that trigger events for alerting and Davis® analysis. Note that log event detection incurs [billing costs](https://dt-url.net/hk03ulj)",
 	"displayName": "Log events",
 	"documentation": "",
 	"dynatrace": "1",
@@ -60,6 +60,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add log event"
@@ -332,5 +333,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "3.2.5"
+	"version": "3.2.6"
 }
