@@ -23,10 +23,16 @@ import (
 )
 
 type Settings struct {
-	IgnoreDockerPauseContainer     bool `json:"ignoreDockerPauseContainer"`     // Disable monitoring of platform internal pause containers in Kubernetes and OpenShift.
-	IgnoreKubernetesPauseContainer bool `json:"ignoreKubernetesPauseContainer"` // Disable monitoring of platform internal pause containers in Kubernetes and OpenShift.
-	IgnoreOpenShiftBuildPodName    bool `json:"ignoreOpenShiftBuildPodName"`    // Disable monitoring of intermediate containers created during image build.
-	IgnoreOpenShiftSdnNamespace    bool `json:"ignoreOpenShiftSdnNamespace"`    // Disable monitoring of platform internal containers in the openshift-sdn namespace.
+	IgnoreDockerPauseContainer                    bool `json:"ignoreDockerPauseContainer"`                    // Disable monitoring of platform internal pause containers in Kubernetes and OpenShift.
+	IgnoreKubernetesPauseContainer                bool `json:"ignoreKubernetesPauseContainer"`                // Disable monitoring of platform internal pause containers in Kubernetes and OpenShift.
+	IgnoreOpenShiftBuildPodName                   bool `json:"ignoreOpenShiftBuildPodName"`                   // Disable monitoring of intermediate containers created during image build.
+	IgnoreOpenShiftEtcdNamespace                  bool `json:"ignoreOpenShiftEtcdNamespace"`                  // Disable monitoring of platform internal containers in the openshift-etcd namespace.
+	IgnoreOpenShiftIngressCanaryNamespace         bool `json:"ignoreOpenShiftIngressCanaryNamespace"`         // Disable monitoring of platform internal containers in the openshift-ingress-canary namespace.
+	IgnoreOpenShiftKubeApiserverNamespace         bool `json:"ignoreOpenShiftKubeApiserverNamespace"`         // Disable monitoring of platform internal containers in the openshift-kube-apiserver namespace.
+	IgnoreOpenShiftMachineConfigOperatorNamespace bool `json:"ignoreOpenShiftMachineConfigOperatorNamespace"` // Disable monitoring of platform internal containers in the openshift-machine-config-operator namespace.
+	IgnoreOpenShiftMonitoringNamespace            bool `json:"ignoreOpenShiftMonitoringNamespace"`            // Disable monitoring of platform internal containers in the openshift-monitoring namespace.
+	IgnoreOpenShiftOvnKubernetesNamespace         bool `json:"ignoreOpenShiftOvnKubernetesNamespace"`         // Disable monitoring of platform internal containers in the openshift-ovn-kubernetes namespace.
+	IgnoreOpenShiftSdnNamespace                   bool `json:"ignoreOpenShiftSdnNamespace"`                   // Disable monitoring of platform internal containers in the openshift-sdn namespace.
 }
 
 func (me *Settings) Name() string {
@@ -50,6 +56,48 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Disable monitoring of intermediate containers created during image build.",
 			Required:    true,
 		},
+		"ignore_open_shift_etcd_namespace": {
+			Type:        schema.TypeBool,
+			Description: "Disable monitoring of platform internal containers in the openshift-etcd namespace.",
+			// new required property, default to `true`
+			Optional: true,
+			Default:  true,
+		},
+		"ignore_open_shift_ingress_canary_namespace": {
+			Type:        schema.TypeBool,
+			Description: "Disable monitoring of platform internal containers in the openshift-ingress-canary namespace.",
+			// new required property, default to `true`
+			Optional: true,
+			Default:  true,
+		},
+		"ignore_open_shift_kube_apiserver_namespace": {
+			Type:        schema.TypeBool,
+			Description: "Disable monitoring of platform internal containers in the openshift-kube-apiserver namespace.",
+			// new required property, default to `true`
+			Optional: true,
+			Default:  true,
+		},
+		"ignore_open_shift_machine_config_operator_namespace": {
+			Type:        schema.TypeBool,
+			Description: "Disable monitoring of platform internal containers in the openshift-machine-config-operator namespace.",
+			// new required property, default to `true`
+			Optional: true,
+			Default:  true,
+		},
+		"ignore_open_shift_monitoring_namespace": {
+			Type:        schema.TypeBool,
+			Description: "Disable monitoring of platform internal containers in the openshift-monitoring namespace.",
+			// new required property, default to `true`
+			Optional: true,
+			Default:  true,
+		},
+		"ignore_open_shift_ovn_kubernetes_namespace": {
+			Type:        schema.TypeBool,
+			Description: "Disable monitoring of platform internal containers in the openshift-ovn-kubernetes namespace.",
+			// new required property, default to `true`
+			Optional: true,
+			Default:  true,
+		},
 		"ignore_open_shift_sdn_namespace": {
 			Type:        schema.TypeBool,
 			Description: "Disable monitoring of platform internal containers in the openshift-sdn namespace.",
@@ -60,18 +108,30 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"ignore_docker_pause_container":     me.IgnoreDockerPauseContainer,
-		"ignore_kubernetes_pause_container": me.IgnoreKubernetesPauseContainer,
-		"ignore_open_shift_build_pod_name":  me.IgnoreOpenShiftBuildPodName,
-		"ignore_open_shift_sdn_namespace":   me.IgnoreOpenShiftSdnNamespace,
+		"ignore_docker_pause_container":                       me.IgnoreDockerPauseContainer,
+		"ignore_kubernetes_pause_container":                   me.IgnoreKubernetesPauseContainer,
+		"ignore_open_shift_build_pod_name":                    me.IgnoreOpenShiftBuildPodName,
+		"ignore_open_shift_etcd_namespace":                    me.IgnoreOpenShiftEtcdNamespace,
+		"ignore_open_shift_ingress_canary_namespace":          me.IgnoreOpenShiftIngressCanaryNamespace,
+		"ignore_open_shift_kube_apiserver_namespace":          me.IgnoreOpenShiftKubeApiserverNamespace,
+		"ignore_open_shift_machine_config_operator_namespace": me.IgnoreOpenShiftMachineConfigOperatorNamespace,
+		"ignore_open_shift_monitoring_namespace":              me.IgnoreOpenShiftMonitoringNamespace,
+		"ignore_open_shift_ovn_kubernetes_namespace":          me.IgnoreOpenShiftOvnKubernetesNamespace,
+		"ignore_open_shift_sdn_namespace":                     me.IgnoreOpenShiftSdnNamespace,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"ignore_docker_pause_container":     &me.IgnoreDockerPauseContainer,
-		"ignore_kubernetes_pause_container": &me.IgnoreKubernetesPauseContainer,
-		"ignore_open_shift_build_pod_name":  &me.IgnoreOpenShiftBuildPodName,
-		"ignore_open_shift_sdn_namespace":   &me.IgnoreOpenShiftSdnNamespace,
+		"ignore_docker_pause_container":                       &me.IgnoreDockerPauseContainer,
+		"ignore_kubernetes_pause_container":                   &me.IgnoreKubernetesPauseContainer,
+		"ignore_open_shift_build_pod_name":                    &me.IgnoreOpenShiftBuildPodName,
+		"ignore_open_shift_etcd_namespace":                    &me.IgnoreOpenShiftEtcdNamespace,
+		"ignore_open_shift_ingress_canary_namespace":          &me.IgnoreOpenShiftIngressCanaryNamespace,
+		"ignore_open_shift_kube_apiserver_namespace":          &me.IgnoreOpenShiftKubeApiserverNamespace,
+		"ignore_open_shift_machine_config_operator_namespace": &me.IgnoreOpenShiftMachineConfigOperatorNamespace,
+		"ignore_open_shift_monitoring_namespace":              &me.IgnoreOpenShiftMonitoringNamespace,
+		"ignore_open_shift_ovn_kubernetes_namespace":          &me.IgnoreOpenShiftOvnKubernetesNamespace,
+		"ignore_open_shift_sdn_namespace":                     &me.IgnoreOpenShiftSdnNamespace,
 	})
 }

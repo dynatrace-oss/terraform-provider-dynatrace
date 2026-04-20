@@ -18,15 +18,15 @@
 package builtinmonitoringrule
 
 import (
-	builtinmonitoringrule "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/builtinmonitoringrule/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/builtinmonitoringrule/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.3"
+const SchemaVersion = "0.0.4"
 const SchemaID = "builtin:container.built-in-monitoring-rule"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*builtinmonitoringrule.Settings] {
-	return settings20.Service[*builtinmonitoringrule.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }
