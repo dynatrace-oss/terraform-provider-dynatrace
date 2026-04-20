@@ -42,8 +42,8 @@
 		},
 		"PlainIISConfigurationDetector": {
 			"default": false,
-			"description": "Enabling OneAgent to unambiguously assign logs to the appropriate IIS application pools",
-			"displayName": "Detection of a plain IIS configuration",
+			"description": "Enable OneAgent to assign logs to the appropriate IIS application pools when an unambiguous IIS configuration is detected.",
+			"displayName": "Add IIS Application Pool context to Logs",
 			"documentation": "",
 			"maxObjects": 1,
 			"metadata": {
@@ -73,5 +73,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-agent-feature-flags",
 	"types": {},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }
