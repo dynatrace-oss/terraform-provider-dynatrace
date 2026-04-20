@@ -3,7 +3,7 @@ module github.com/dynatrace-oss/terraform-provider-dynatrace
 go 1.25.0
 
 require (
-	github.com/dlclark/regexp2 v1.11.5
+	github.com/dlclark/regexp2 v1.12.0
 	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20260319155614-6bc81b419401
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cty v1.5.0
