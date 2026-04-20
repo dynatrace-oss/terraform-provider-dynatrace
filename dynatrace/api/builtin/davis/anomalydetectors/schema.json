@@ -363,11 +363,6 @@
 							"type": "PATTERN"
 						},
 						{
-							"customValidatorId": "detector-actor-validator",
-							"skipAsyncValidation": false,
-							"type": "CUSTOM_VALIDATOR_REF"
-						},
-						{
 							"maxLength": 500,
 							"minLength": 1,
 							"type": "LENGTH"
@@ -425,5 +420,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.12"
+	"version": "1.0.13"
 }
