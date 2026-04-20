@@ -15,6 +15,12 @@
 			"customValidatorId": "experienceAnalyticsEnablementValidator",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "New Real User Monitoring Experience is required to enable New Session Replay Experience.",
+			"customValidatorId": "rumOnGrailEnabledForReplayOnGrailValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
 	"deletionConstraints": [
@@ -234,5 +240,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.8"
+	"version": "1.9.1"
 }
