@@ -17,7 +17,7 @@
 * limitations under the License.
  */
 
-package sensitivedatamasking_test
+package sensitivedatamaskingsettings_test
 
 import (
 	"testing"

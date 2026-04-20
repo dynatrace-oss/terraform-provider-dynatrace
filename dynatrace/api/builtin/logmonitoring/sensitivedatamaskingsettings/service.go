@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package sensitivedatamasking
+package sensitivedatamaskingsettings
 
 import (
 	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/sensitivedatamaskingsettings/settings"
@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.17"
+const SchemaVersion = "1.0.18"
 const SchemaID = "builtin:logmonitoring.sensitive-data-masking-settings"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
