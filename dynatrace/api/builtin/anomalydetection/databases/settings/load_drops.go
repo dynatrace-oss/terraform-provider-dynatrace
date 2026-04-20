@@ -63,7 +63,7 @@ func (me *LoadDrops) UnmarshalHCL(decoder hcl.Decoder) error {
 		"minutes_abnormal_state": &me.MinutesAbnormalState,
 	})
 	if me.LoadDropPercent == nil && me.Enabled {
-		me.LoadDropPercent = new(float64(0))
+		me.LoadDropPercent = new(0.0)
 	}
 	return err
 }
