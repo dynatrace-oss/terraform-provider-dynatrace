@@ -25,7 +25,7 @@ import (
 type Settings struct {
 	JournaldLogDetector           bool    `json:"JournaldLogDetector"`           // Enable OneAgent to collect logs from Journald on Linux systems. \n This setting enables:\n * Detection and to have logs ingested matching ingest rule is required.
 	NewContainerLogDetector       bool    `json:"NewContainerLogDetector"`       // Enable OneAgent to collect all container logs in Kubernetes environments. \n This setting enables:\n * Detection and collection of logs from short-lived containers and processes in Kubernetes.\n * Detection and collection of logs from any processes in containers in Kubernetes. Up until now only processes detected by OneAgent are covered with the Log module.\n * Log events decoration according to semantic dictionary.\n  **Note:** The matcher \"Deployment name\" in the log sources configuration will be ignored and needs to be replaced with \"Workload name\", requires **Dynatrace Operator 1.4.2+**.\n\n   For more details, check our [documentation](https://dt-url.net/jn02ey0).
-	PlainIISConfigurationDetector bool    `json:"PlainIISConfigurationDetector"` // Enabling OneAgent to unambiguously assign logs to the appropriate IIS application pools
+	PlainIISConfigurationDetector bool    `json:"PlainIISConfigurationDetector"` // Enable OneAgent to assign logs to the appropriate IIS application pools when an unambiguous IIS configuration is detected.
 	Scope                         *string `json:"-" scope:"scope"`               // The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 	UserAndEventData              bool    `json:"UserAndEventData"`              // Enable OneAgent to collect data from Event Logs in the User Data and Event Data sections.
 }
@@ -48,7 +48,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"plain_iisconfiguration_detector": {
 			Type:        schema.TypeBool,
-			Description: "Enabling OneAgent to unambiguously assign logs to the appropriate IIS application pools",
+			Description: "Enable OneAgent to assign logs to the appropriate IIS application pools when an unambiguous IIS configuration is detected.",
 			Optional:    true, // new required property. Default to false
 		},
 		"scope": {
