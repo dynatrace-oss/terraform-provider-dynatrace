@@ -1,9 +1,13 @@
+data "dynatrace_synthetic_location" "location" {
+  name = "Location"
+}
+
 resource "dynatrace_network_monitor" "ICMP_Test" {
   name          = "ICMP Test"
   type          = "MULTI_PROTOCOL"
   enabled       = false
   frequency_min = 30
-  locations     = [ "SYNTHETIC_LOCATION-39F97465BE7BF644" ]
+  locations     = [ data.dynatrace_synthetic_location.location.id ]
   outage_handling {
     global_consecutive_outage_count_threshold = 1
     global_outages                            = true
