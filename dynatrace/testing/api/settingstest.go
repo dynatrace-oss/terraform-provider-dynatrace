@@ -34,8 +34,6 @@ import (
 
 type TestCaseAccOptions struct {
 	ExternalProviders map[string]resource.ExternalProvider
-	// TestCaseName is an optional field to set if only one testcase should be executed (useful for debugging)
-	TestCaseName string
 }
 type TestAccOptions struct {
 	ExpectNonEmptyPlan bool
@@ -103,6 +101,11 @@ func readTestData(t *testing.T) []string {
 	return allFiles
 }
 
+// TestAcc executes all test files in the `testdata` folder ("testdata/*/*.tf").
+// Fail conditions could be
+// - API errors during create and cleanup (GET, POST, DELETE)
+// - Inconsistencies (GET after apply)
+// - Non-empty plan after create
 func TestAcc(t *testing.T, opts ...TestAccOptions) {
 	t.Helper()
 
@@ -126,8 +129,11 @@ func TestAcc(t *testing.T, opts ...TestAccOptions) {
 	}
 }
 
-// TestAccSingle executes a single test file. e.g., "testdata/terraform/example.tf"
-// useful for debugging purposes
+// TestAccSingle executes a single test/example file.  e.g., "testdata/terraform/example.tf"
+// Fail conditions could be
+// - API errors during create and cleanup (GET, POST, DELETE)
+// - Inconsistencies (GET after apply)
+// - Non-empty plan after create
 func TestAccSingle(t *testing.T, file string, opts ...TestAccOptions) {
 	t.Helper()
 
@@ -146,35 +152,43 @@ type testCaseExecution struct {
 	Name      string
 }
 
-func getTestCases(t *testing.T, specificTestCase string) []testCaseExecution {
+func getTestCase(t *testing.T, folder string, testName string) testCaseExecution {
+	configCreate, identifier := ReadTfConfig(t, path.Join(folder, "create.tf"))
+	configUpdate := ReadTfConfigWithIdentifier(t, path.Join(folder, "update.tf"), identifier)
+
+	return testCaseExecution{
+		TestCases: []resource.TestStep{
+			{
+				Config: configCreate,
+			},
+			{
+				Config: configUpdate,
+			},
+		},
+		Name: testName,
+	}
+}
+
+func getTestCases(t *testing.T) []testCaseExecution {
 	testDataFolders, _ := os.ReadDir("testcases")
 	testCases := make([]testCaseExecution, 0)
 
 	for _, entry := range testDataFolders {
-		if !entry.IsDir() || specificTestCase != "" && entry.Name() != specificTestCase {
+		if !entry.IsDir() {
 			continue
 		}
 		folder := path.Join("testcases", entry.Name())
 
-		configCreate, identifier := ReadTfConfig(t, path.Join(folder, "create.tf"))
-		configUpdate := ReadTfConfigWithIdentifier(t, path.Join(folder, "update.tf"), identifier)
-
-		testCases = append(testCases, testCaseExecution{
-			TestCases: []resource.TestStep{
-				{
-					Config: configCreate,
-				},
-				{
-					Config: configUpdate,
-				},
-			},
-			Name: entry.Name(),
-		})
+		testCases = append(testCases, getTestCase(t, folder, entry.Name()))
 	}
 	return testCases
 }
 
 // TestAccTestCases reads the `testcases` folder and executes every create.tf and update.tf file per testcase folder inside
+// Fail conditions could be
+// - API errors during create, update, and cleanup (GET, POST, PUT, DELETE)
+// - Inconsistencies (GET after apply)
+// - Non-empty plan after create and update
 func TestAccTestCases(t *testing.T, opts ...TestCaseAccOptions) {
 	t.Helper()
 
@@ -186,7 +200,7 @@ func TestAccTestCases(t *testing.T, opts ...TestCaseAccOptions) {
 		options = opts[0]
 	}
 
-	for _, testCase := range getTestCases(t, options.TestCaseName) {
+	for _, testCase := range getTestCases(t) {
 		t.Run(testCase.Name, func(t *testing.T) {
 			t.Helper()
 
@@ -203,6 +217,33 @@ func TestAccTestCases(t *testing.T, opts ...TestCaseAccOptions) {
 			})
 		})
 	}
+}
+
+// TestAccTestCase executes a single test case. e.g., "testcases/update-sets" (containing create.tf and update.tf)
+// useful different testcase setups or debugging
+// Fail conditions could be
+// - API errors during create, update, and cleanup (GET, POST, PUT, DELETE)
+// - Inconsistencies (GET after apply)
+// - Non-empty plan after create and update
+func TestAccTestCase(t *testing.T, folder string, opts ...TestCaseAccOptions) {
+	t.Helper()
+	if !AccEnvsGiven(t) {
+		return
+	}
+	var options TestCaseAccOptions
+	if len(opts) > 0 {
+		options = opts[0]
+	}
+
+	resource.Test(t, resource.TestCase{
+		ProviderFactories: map[string]func() (*schema.Provider, error){
+			"dynatrace": func() (*schema.Provider, error) {
+				return provider.Provider(), nil
+			},
+		},
+		ExternalProviders: options.ExternalProviders,
+		Steps:             getTestCase(t, folder, "").TestCases,
+	})
 }
 
 // TestAccParallel runs all tests in parallel by concatenating all configs into one and running them together.
