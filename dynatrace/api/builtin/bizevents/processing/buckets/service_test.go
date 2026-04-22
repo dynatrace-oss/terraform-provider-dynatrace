@@ -26,5 +26,6 @@ import (
 )
 
 func TestAccBizEventsBuckets(t *testing.T) {
+	t.Skip("Deprecated")
 	api.TestAcc(t)
 }
