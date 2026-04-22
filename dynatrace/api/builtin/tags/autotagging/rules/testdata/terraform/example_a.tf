@@ -1,5 +1,5 @@
-resource "dynatrace_autotag_rules" "Avengers" {
-  auto_tag_id = "vu9U3hXa3q0AAAABABlidWlsdGluOnRhZ3MuYXV0by10YWdnaW5nAAZ0ZW5hbnQABnRlbmFudAAkOTNjMDBkYzktY2FkMC0zMWY3LWEzZGQtMWQ4MDdjMWQwMjhivu9U3hXa3q0"
+resource "dynatrace_autotag_rules" "rules" {
+  auto_tag_id = dynatrace_autotag_v2.tag.id
   rules {
     rule {
       type                = "ME"
@@ -58,4 +58,10 @@ resource "dynatrace_autotag_rules" "Avengers" {
       }
     }
   }
+}
+
+
+resource "dynatrace_autotag_v2" "tag" {
+  name                        = "#name#"
+  rules_maintained_externally = true
 }
