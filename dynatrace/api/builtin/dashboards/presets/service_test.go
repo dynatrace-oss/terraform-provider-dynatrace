@@ -23,8 +23,13 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccDashboardsPresets(t *testing.T) {
-	api.TestAcc(t)
+	api.TestAcc(t, api.TestAccOptions{
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"time": {Source: "hashicorp/time"},
+		},
+	})
 }
