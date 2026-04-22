@@ -19,15 +19,19 @@ package web
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"net/http"
 	"net/url"
 	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	retrycommon "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/retry"
 	mysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/web/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 )
 
 const SchemaID = "v1:config:calculated-metrics-web"
@@ -68,16 +72,30 @@ func (me *service) Validate(ctx context.Context, v *mysettings.CalculatedWebMetr
 }
 
 func (me *service) Create(ctx context.Context, v *mysettings.CalculatedWebMetric) (*api.Stub, error) {
-	var err error
 	client := me.client
 	var stub api.Stub
 
-	req := client.Post(ctx, "/api/config/v1/calculatedMetrics/rum", v, 201)
-	if err = req.Finish(&stub); err != nil {
-		return nil, err
+	// retry max 10s
+	err := retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, 10*time.Second), func() *retry.RetryError {
+		return classifyCreateRetryError(client.Post(ctx, "/api/config/v1/calculatedMetrics/rum", v, 201).Finish(&stub))
+	})
+
+	return &stub, err
+}
+
+// classifyCreateRetryError retries when there is a conflict during create.
+// Create after delete doesn't immediately work, which is needed for re-create due to ForceNew.
+// => "Unable to create RumMetric my-metric in DemMetricsConfigPersistence or Metadata: Unable to create RumMetric my-metric in DemMetricsConfigPersistence"
+func classifyCreateRetryError(err error) *retry.RetryError {
+	if err == nil {
+		return nil
 	}
 
-	return &stub, nil
+	if restError, ok := errors.AsType[rest.Error](err); ok && restError.Code == http.StatusBadRequest && strings.Contains(restError.Message, "Unable to create RumMetric") {
+		return retry.RetryableError(err)
+	}
+
+	return retry.NonRetryableError(err)
 }
 
 func (me *service) Update(ctx context.Context, id string, v *mysettings.CalculatedWebMetric) error {
