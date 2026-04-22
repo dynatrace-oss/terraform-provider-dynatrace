@@ -8,7 +8,7 @@ resource "dynatrace_davis_anomaly_detectors" "anomaly" {
     input {
       analyzer_input_field {
         key   = "query.expression"
-        value =<<-EOT
+        value = <<-EOT
           fetch dt.system.query_executions
                                  | filter status == "SUCCEEDED"
                                  | fields timestamp, scanned_bytes, user.email
@@ -70,6 +70,11 @@ resource "dynatrace_davis_anomaly_detectors" "anomaly" {
   }
   execution_settings {
     query_offset = 3
-    delay = 60
+    delay        = 60
+    actor        = dynatrace_iam_service_user.user.id
   }
+}
+
+resource "dynatrace_iam_service_user" "user" {
+  name = "#name#"
 }
