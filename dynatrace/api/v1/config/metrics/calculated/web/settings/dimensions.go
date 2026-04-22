@@ -33,6 +33,7 @@ func (me *Dimensions) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			Description: "A dimensions for the metric usage",
 			Elem:        &schema.Resource{Schema: new(Dimension).Schema()},
+			ForceNew:    true,
 		},
 	}
 }
@@ -58,16 +59,19 @@ func (me *Dimension) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeInt,
 			Required:    true,
 			Description: "The number of top values to be calculated",
+			ForceNew:    true,
 		},
 		"dimension": {
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The dimension of the metric. Possible values are `ApdexType`, `Browser`, `ErrorContext`, `ErrorOrigin`, `ErrorType`, `GeoLocation`, `StringProperty`, `UserActionType`",
+			ForceNew:    true,
 		},
 		"property_key": {
 			Type:        schema.TypeString,
 			Optional:    true,
 			Description: "The key of the user action property. Only applicable for the StringProperty dimension.",
+			ForceNew:    true,
 		},
 	}
 }

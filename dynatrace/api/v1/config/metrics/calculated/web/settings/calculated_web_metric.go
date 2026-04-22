@@ -23,6 +23,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// NOTE: PUT only supports updating `enabled`. Therefore, everything else should have ForceNew: true
+
 // CalculatedWebMetric Descriptor of a calculated web metric.
 type CalculatedWebMetric struct {
 	Description      *string           `json:"description,omitempty"`      // Descriptor of a calculated web metric.
@@ -41,16 +43,19 @@ func (me *CalculatedWebMetric) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Optional:    true,
 			Description: "Descriptor of a calculated web metric.",
+			ForceNew:    true,
 		},
 		"app_identifier": {
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The Dynatrace entity ID of the application to which the metric belongs.",
+			ForceNew:    true,
 		},
 		"name": {
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The displayed name of the metric.",
+			ForceNew:    true,
 		},
 		"metric_key": {
 			Type:        schema.TypeString,
@@ -69,12 +74,14 @@ func (me *CalculatedWebMetric) Schema() map[string]*schema.Schema {
 			MaxItems:    1,
 			Description: "The definition of a calculated web metric.",
 			Elem:        &schema.Resource{Schema: new(MetricDefinition).Schema()},
+			ForceNew:    true,
 		},
 		"dimensions": {
 			Type:        schema.TypeList,
 			Optional:    true,
 			Description: "Parameters of a definition of a calculated web metric.",
 			Elem:        &schema.Resource{Schema: new(Dimensions).Schema()},
+			ForceNew:    true,
 		},
 		"user_action_filter": {
 			Type:        schema.TypeList,
@@ -82,6 +89,7 @@ func (me *CalculatedWebMetric) Schema() map[string]*schema.Schema {
 			MaxItems:    1,
 			Description: "Parameters of a definition of a calculated web metric.",
 			Elem:        &schema.Resource{Schema: new(UserActionFilter).Schema()},
+			ForceNew:    true,
 		},
 	}
 }

@@ -35,11 +35,13 @@ func (me *MetricDefinition) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "The metric to be captured. Possible values are `Apdex`, `ApplicationCache`, `Callback`, `CumulativeLayoutShift`, `DNSLookup`, `DOMComplete`, `DOMContentLoaded`, `DOMInteractive`, `DoubleProperty`, `ErrorCount`, `FirstContentfulPaint`, `FirstInputDelay`, `FirstInputStart`, `FirstPaint`, `HTMLDownloaded`, `LargestContentfulPaint`, `LoadEventEnd`, `LoadEventStart`, `LongProperty`, `LongTasksTime`, `NavigationStart`, `OnDOMContentLoaded`, `OnLoad`, `Processing`, `RedirectTime`, `Request`, `RequestStart`, `Response`, `SecureConnect`, `SpeedIndex`, `TCPConnect`, `TimeToFirstByte`, `UserActionDuration`, `VisuallyComplete`",
+			ForceNew:    true,
 		},
 		"property_key": {
 			Type:        schema.TypeString,
 			Optional:    true,
 			Description: "The key of the user action property. Only applicable for DoubleProperty and LongProperty metrics.",
+			ForceNew:    true,
 		},
 	}
 }
