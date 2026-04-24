@@ -21,6 +21,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -31,17 +33,27 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
+const maxPageSize = 10000
+
 func Service(credentials *rest.Credentials) settings.CRUDService[*boundaries.PolicyBoundary] {
 	return &BoundaryServiceClient{
-		clientID:     credentials.IAM.ClientID,
-		accountID:    credentials.IAM.AccountID,
-		clientSecret: credentials.IAM.ClientSecret,
-		tokenURL:     credentials.IAM.TokenURL,
-		endpointURL:  credentials.IAM.EndpointURL,
+		iamClientGetter: &iamClientGetterImp{
+			clientID:     credentials.IAM.ClientID,
+			accountID:    credentials.IAM.AccountID,
+			clientSecret: credentials.IAM.ClientSecret,
+			tokenURL:     credentials.IAM.TokenURL,
+			endpointURL:  credentials.IAM.EndpointURL,
+		},
+		accountID:   credentials.IAM.AccountID,
+		endpointURL: credentials.IAM.EndpointURL,
 	}
 }
 
-type BoundaryServiceClient struct {
+type iamClientGetter interface {
+	New(ctx context.Context) iam.IAMClient
+}
+
+type iamClientGetterImp struct {
 	clientID     string
 	accountID    string
 	clientSecret string
@@ -49,64 +61,74 @@ type BoundaryServiceClient struct {
 	endpointURL  string
 }
 
-func (me *BoundaryServiceClient) ClientID() string {
+func (me *iamClientGetterImp) ClientID() string {
 	return me.clientID
 }
 
-func (me *BoundaryServiceClient) AccountID() string {
+func (me *iamClientGetterImp) AccountID() string {
 	return me.accountID
 }
 
-func (me *BoundaryServiceClient) ClientSecret() string {
+func (me *iamClientGetterImp) ClientSecret() string {
 	return me.clientSecret
 }
 
-func (me *BoundaryServiceClient) TokenURL() string {
+func (me *iamClientGetterImp) TokenURL() string {
 	return me.tokenURL
 }
 
-func (me *BoundaryServiceClient) EndpointURL() string {
+func (me *iamClientGetterImp) EndpointURL() string {
 	return me.endpointURL
 }
 
+func (me *iamClientGetterImp) New(ctx context.Context) iam.IAMClient {
+	return iam.NewIAMClient(ctx, me)
+}
+
+type BoundaryServiceClient struct {
+	iamClientGetter iamClientGetter
+	accountID       string
+	endpointURL     string
+}
+
 func (me *BoundaryServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	var err error
-	var responseBytes []byte
-
-	client := iam.NewIAMClient(ctx, me)
-
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries", me.endpointURL, me.AccountID()), 200, false); err != nil {
-		return nil, err
-	}
-
-	var response ListPolicyBoundariesResponse
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
-		return nil, err
-	}
-	if len(response.PolicyBoundaries) == 0 {
-		return api.Stubs{}, nil
-	}
+	client := me.iamClientGetter.New(ctx)
 	stubs := api.Stubs{}
-	for _, boundary := range response.PolicyBoundaries {
-		stubs = append(stubs, &api.Stub{ID: boundary.UUID, Name: boundary.Name})
+	params := url.Values{}
+	params.Set("size", strconv.Itoa(maxPageSize))
+
+	for page := 1; ; page++ {
+		params.Set("page", strconv.Itoa(page))
+		reqURL := fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries?%s", me.endpointURL, me.accountID, params.Encode())
+		responseBytes, err := client.GET(ctx, reqURL, 200, false)
+		if err != nil {
+			return nil, err
+		}
+
+		var response ListPolicyBoundariesResponse
+		if err = json.Unmarshal(responseBytes, &response); err != nil {
+			return nil, err
+		}
+
+		for _, boundary := range response.PolicyBoundaries {
+			stubs = append(stubs, &api.Stub{ID: boundary.UUID, Name: boundary.Name})
+		}
+
+		if len(response.PolicyBoundaries) < maxPageSize {
+			break
+		}
 	}
+
 	return stubs, nil
 }
 
 func (me *BoundaryServiceClient) Get(ctx context.Context, id string, v *boundaries.PolicyBoundary) error {
-	var err error
-	var responseBytes []byte
-
-	client := iam.NewIAMClient(ctx, me)
-
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.AccountID(), id), 200, false); err != nil {
+	responseBytes, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.accountID, id), 200, false)
+	if err != nil {
 		return err
 	}
 
-	if err = json.Unmarshal(responseBytes, v); err != nil {
-		return err
-	}
-	return nil
+	return json.Unmarshal(responseBytes, v)
 }
 
 func (me *BoundaryServiceClient) SchemaID() string {
@@ -114,18 +136,14 @@ func (me *BoundaryServiceClient) SchemaID() string {
 }
 
 func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.PolicyBoundary) (*api.Stub, error) {
-	var err error
-	var responseBytes []byte
-
-	client := iam.NewIAMClient(ctx, me)
-
-	if responseBytes, err = client.POST(
+	responseBytes, err := me.iamClientGetter.New(ctx).POST(
 		ctx,
-		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries", me.endpointURL, me.AccountID()),
+		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries", me.endpointURL, me.accountID),
 		v,
 		201,
 		false,
-	); err != nil {
+	)
+	if err != nil {
 		return nil, err
 	}
 
@@ -142,40 +160,30 @@ func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.Polic
 }
 
 func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *boundaries.PolicyBoundary) error {
-	var err error
-
-	client := iam.NewIAMClient(ctx, me)
-
-	if _, err = client.PUT_MULTI_RESPONSE(
+	_, err := me.iamClientGetter.New(ctx).PUT_MULTI_RESPONSE(
 		ctx,
-		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.AccountID(), id),
+		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.accountID, id),
 		v,
 		[]int{201, 204},
 		false,
-	); err != nil {
-		return err
-
-	}
-
-	return nil
+	)
+	return err
 }
 
 func (me *BoundaryServiceClient) Delete(ctx context.Context, id string) error {
-	var err error
-
-	client := iam.NewIAMClient(ctx, me)
-
-	if _, err = client.DELETE(
+	client := me.iamClientGetter.New(ctx)
+	_, err := client.DELETE(
 		ctx,
-		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.AccountID(), id),
+		fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.accountID, id),
 		204,
 		false,
-	); err != nil {
+	)
+	if err != nil {
 		if strings.Contains(err.Error(), "Policy boundary is in use") {
 			clean.CleanUp.Register(func() {
 				client.DELETE(
 					ctx,
-					fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.AccountID(), id),
+					fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries/%s", me.endpointURL, me.accountID, id),
 					204,
 					false,
 				)
