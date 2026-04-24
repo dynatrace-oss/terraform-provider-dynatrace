@@ -25,8 +25,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	serviceusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/serviceusers/settings"
+	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -34,58 +34,19 @@ import (
 const testAccountID = "test-account-id"
 const testEndpointURL = "https://api-test.dynatrace.com"
 
-type mockIAMClient struct {
-	POSTFunc   func(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
-	PUTFunc    func(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
-	GETFunc    func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
-	DELETEFunc func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
-}
-
-func (me *mockIAMClient) POST(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.POSTFunc(ctx, url, payload, expectedResponseCode, forceNewBearer)
-}
-
-func (me *mockIAMClient) PUT(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.PUTFunc(ctx, url, payload, expectedResponseCode, forceNewBearer)
-}
-
-func (me *mockIAMClient) PUT_MULTI_RESPONSE(ctx context.Context, url string, payload any, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error) {
-	panic("mock doesnt support PUT_MULTI_RESPONSE")
-}
-
-func (me *mockIAMClient) GET(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.GETFunc(ctx, url, expectedResponseCode, forceNewBearer)
-}
-
-func (me *mockIAMClient) DELETE(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.DELETEFunc(ctx, url, expectedResponseCode, forceNewBearer)
-}
-
-func (me *mockIAMClient) DELETE_MULTI_RESPONSE(ctx context.Context, url string, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error) {
-	panic("mock doesnt support DELETE_MULTI_RESPONSE")
-}
-
-func createTestServiceUserServiceClient(client *mockIAMClient) *serviceUserServiceClient {
+func createTestServiceUserServiceClient(client *testing2.MockIAMClient) *serviceUserServiceClient {
 	return &serviceUserServiceClient{
-		iamClientGetter: &mockIAMClientGetter{
-			client: client,
+		iamClientGetter: &testing2.MockIAMClientGetter{
+			Client: client,
 		},
 		accountID:   testAccountID,
 		endpointURL: testEndpointURL,
 	}
 }
 
-type mockIAMClientGetter struct {
-	client *mockIAMClient
-}
-
-func (me *mockIAMClientGetter) New(_ context.Context) iam.IAMClient {
-	return me.client
-}
-
 func TestService_Create(t *testing.T) {
 	t.Run("successful creation", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			POSTFunc: func(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				assert.Equal(t, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users", testEndpointURL, testAccountID), url)
 				return []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`), nil
@@ -110,7 +71,7 @@ func TestService_Create(t *testing.T) {
 	})
 
 	t.Run("successful creation with empty groups", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			POSTFunc: func(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				assert.Equal(t, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users", testEndpointURL, testAccountID), url)
 				return []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`), nil
@@ -135,7 +96,7 @@ func TestService_Create(t *testing.T) {
 	})
 
 	t.Run("creation fails on POST", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			POSTFunc: func(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return nil, errors.New("POST failed")
 			},
@@ -151,7 +112,7 @@ func TestService_Create(t *testing.T) {
 	})
 
 	t.Run("creation fails on group assignment and cleanup succeeds", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			POSTFunc: func(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`), nil
 			},
@@ -174,7 +135,7 @@ func TestService_Create(t *testing.T) {
 	})
 
 	t.Run("creation fails on group assignment and cleanup fails", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			POSTFunc: func(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`), nil
 			},
@@ -197,7 +158,7 @@ func TestService_Create(t *testing.T) {
 	})
 
 	t.Run("creation fails on invalid JSON response", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			POSTFunc: func(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return []byte(`{invalid json`), nil
 			},
@@ -217,7 +178,7 @@ func TestService_Create(t *testing.T) {
 func TestService_Get(t *testing.T) {
 	t.Run("successful get with groups", func(t *testing.T) {
 		getCallCount := 0
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				getCallCount++
 				if getCallCount == 1 {
@@ -247,7 +208,7 @@ func TestService_Get(t *testing.T) {
 
 	t.Run("successful get without groups", func(t *testing.T) {
 		getCallCount := 0
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				getCallCount++
 				if getCallCount == 1 {
@@ -274,7 +235,7 @@ func TestService_Get(t *testing.T) {
 	})
 
 	t.Run("get fails on service user fetch", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return nil, errors.New("GET failed")
 			},
@@ -289,7 +250,7 @@ func TestService_Get(t *testing.T) {
 
 	t.Run("get fails on user groups fetch", func(t *testing.T) {
 		getCallCount := 0
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				getCallCount++
 				if getCallCount == 1 {
@@ -311,7 +272,7 @@ func TestService_Get(t *testing.T) {
 	})
 
 	t.Run("get returns error when service user not found", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return nil, errors.New("Service user test-uid does not exist")
 			},
@@ -325,7 +286,7 @@ func TestService_Get(t *testing.T) {
 	})
 
 	t.Run("get fails on invalid JSON for service user", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return []byte(`{invalid json`), nil
 			},
@@ -340,7 +301,7 @@ func TestService_Get(t *testing.T) {
 
 	t.Run("get fails on invalid JSON for user groups", func(t *testing.T) {
 		getCallCount := 0
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				getCallCount++
 				if getCallCount == 1 {
@@ -364,7 +325,7 @@ func TestService_Get(t *testing.T) {
 
 func TestService_GetAll(t *testing.T) {
 	t.Run("successful get all without pagination", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				assert.Equal(t, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users", testEndpointURL, testAccountID), url)
 				return []byte(`{
@@ -393,7 +354,7 @@ func TestService_GetAll(t *testing.T) {
 
 	t.Run("successful get all with pagination", func(t *testing.T) {
 		callCount := 0
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				callCount++
 				if callCount == 1 {
@@ -431,7 +392,7 @@ func TestService_GetAll(t *testing.T) {
 
 	t.Run("successful get all with multiple pagination pages", func(t *testing.T) {
 		callCount := 0
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				callCount++
 				if callCount == 1 {
@@ -467,7 +428,7 @@ func TestService_GetAll(t *testing.T) {
 	})
 
 	t.Run("get all fails", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return nil, errors.New("GET failed")
 			},
@@ -480,7 +441,7 @@ func TestService_GetAll(t *testing.T) {
 
 	t.Run("get all fails on second page", func(t *testing.T) {
 		callCount := 0
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				callCount++
 				if callCount == 1 {
@@ -500,7 +461,7 @@ func TestService_GetAll(t *testing.T) {
 	})
 
 	t.Run("get all empty", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return []byte(`{
 					"count": 0,
@@ -516,7 +477,7 @@ func TestService_GetAll(t *testing.T) {
 	})
 
 	t.Run("get all fails on invalid JSON response", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return []byte(`{invalid json`), nil
 			},
@@ -529,7 +490,7 @@ func TestService_GetAll(t *testing.T) {
 
 	t.Run("get all fails on invalid JSON response on second page", func(t *testing.T) {
 		callCount := 0
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				callCount++
 				if callCount == 1 {
@@ -551,7 +512,7 @@ func TestService_GetAll(t *testing.T) {
 
 func TestService_List(t *testing.T) {
 	t.Run("successful list without pagination", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return []byte(`{
 					"count": 2,
@@ -575,7 +536,7 @@ func TestService_List(t *testing.T) {
 
 	t.Run("successful list with pagination", func(t *testing.T) {
 		callCount := 0
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				callCount++
 				if callCount == 1 {
@@ -610,7 +571,7 @@ func TestService_List(t *testing.T) {
 	})
 
 	t.Run("list fails", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return nil, errors.New("GET failed")
 			},
@@ -622,7 +583,7 @@ func TestService_List(t *testing.T) {
 	})
 
 	t.Run("list empty", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return []byte(`{
 					"count": 0,
@@ -638,7 +599,7 @@ func TestService_List(t *testing.T) {
 	})
 
 	t.Run("list fails on invalid JSON response", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			GETFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return []byte(`{invalid json`), nil
 			},
@@ -653,7 +614,7 @@ func TestService_List(t *testing.T) {
 func TestService_Update(t *testing.T) {
 	t.Run("successful update", func(t *testing.T) {
 		putCallCount := 0
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			PUTFunc: func(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				putCallCount++
 				if putCallCount == 1 {
@@ -685,7 +646,7 @@ func TestService_Update(t *testing.T) {
 	})
 
 	t.Run("update fails on user details", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			PUTFunc: func(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return nil, errors.New("PUT failed")
 			},
@@ -703,7 +664,7 @@ func TestService_Update(t *testing.T) {
 
 	t.Run("update fails on group assignment", func(t *testing.T) {
 		putCallCount := 0
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			PUTFunc: func(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				putCallCount++
 				if putCallCount == 1 {
@@ -733,7 +694,7 @@ func TestService_Update(t *testing.T) {
 
 func TestService_Delete(t *testing.T) {
 	t.Run("successful delete", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			DELETEFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				assert.Equal(t, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", testEndpointURL, testAccountID, "test-uid"), url)
 				return nil, nil
@@ -746,7 +707,7 @@ func TestService_Delete(t *testing.T) {
 	})
 
 	t.Run("delete fails", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			DELETEFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return nil, errors.New("DELETE failed")
 			},
@@ -758,7 +719,7 @@ func TestService_Delete(t *testing.T) {
 	})
 
 	t.Run("delete errors if service user does not exist", func(t *testing.T) {
-		mockClient := &mockIAMClient{
+		mockClient := &testing2.MockIAMClient{
 			DELETEFunc: func(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
 				return nil, errors.New("User test-uid does not exist")
 			},
@@ -771,7 +732,7 @@ func TestService_Delete(t *testing.T) {
 }
 
 func TestService_SchemaID(t *testing.T) {
-	client := createTestServiceUserServiceClient(&mockIAMClient{})
+	client := createTestServiceUserServiceClient(&testing2.MockIAMClient{})
 	schemaID := client.SchemaID()
 	assert.Equal(t, "accounts:iam:serviceusers", schemaID)
 }
