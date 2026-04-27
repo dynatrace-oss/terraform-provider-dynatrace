@@ -2,6 +2,7 @@ resource "dynatrace_dashboards_general" "general" {
   enable_public_sharing = false
   default_dashboard_list {
     default_dashboard {
+      # to update (a new just created dashboard)
       dashboard = dynatrace_dashboard.dashboard.id
       user_group = dynatrace_iam_group.group.id
     }
