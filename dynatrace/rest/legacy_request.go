@@ -33,6 +33,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"golang.org/x/sync/semaphore"
@@ -113,10 +114,10 @@ func (me *legacy_request) Raw() ([]byte, error) {
 	}
 
 	if len(data) > 0 {
-		Logger.Printf(me.ctx, "[legacy  ] [%s] [REQUEST ] %s %s", me.id, me.method, url)
-		Logger.Printf(me.ctx, "           [%s] [PAYLOAD ] %s", me.id, string(data))
+		logging.Logger.Printf(me.ctx, "[legacy] [%s] [REQUEST] %s %s", me.id, me.method, url)
+		logging.Logger.Printf(me.ctx, "           [%s] [PAYLOAD] %s", me.id, string(data))
 	} else {
-		Logger.Printf(me.ctx, "[legacy  ] [%s] [REQUEST ] %s %s", me.id, me.method, url)
+		logging.Logger.Printf(me.ctx, "[legacy] [%s] [REQUEST] %s %s", me.id, me.method, url)
 	}
 
 	var req *http.Request
@@ -169,9 +170,9 @@ func (me *legacy_request) Raw() ([]byte, error) {
 	}
 	if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
 		if data != nil {
-			Logger.Printf(me.ctx, "           [%s] [RESPONSE] %s %s", me.id, res.Status, string(data))
+			logging.Logger.Printf(me.ctx, "           [%s] [RESPONSE] %s %s", me.id, res.Status, string(data))
 		} else {
-			Logger.Printf(me.ctx, "           [%s] [RESPONSE] %s", me.id, res.Status)
+			logging.Logger.Printf(me.ctx, "           [%s] [RESPONSE] %s", me.id, res.Status)
 		}
 	}
 	if len(me.expect) > 0 && !me.expect.contains(res.StatusCode) {
@@ -262,8 +263,8 @@ func (s *legacy_request) execute(ctx context.Context, callback func() (*http.Res
 	for response.StatusCode == http.StatusTooManyRequests && currentIteration < maxIterationCount {
 
 		if limit, humanReadableTimestamp, timeInMicroseconds, err := s.extractRateLimitHeaders(response); err == nil {
-			Logger.Printf(ctx, "Rate limit of %s requests/min reached (iteration: %d)", limit, currentIteration+1)
-			Logger.Printf(ctx, "Attempting to sleep until %s", humanReadableTimestamp)
+			logging.Logger.Printf(ctx, "Rate limit of %s requests/min reached (iteration: %d)", limit, currentIteration+1)
+			logging.Logger.Printf(ctx, "Attempting to sleep until %s", humanReadableTimestamp)
 
 			now := Now()                                            // client time
 			resetTime := MicrosecondsToUnixTime(timeInMicroseconds) // server time

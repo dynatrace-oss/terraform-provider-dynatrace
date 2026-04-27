@@ -19,8 +19,6 @@ package rest
 
 import (
 	"context"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 )
 
 type Client interface {
@@ -30,5 +28,3 @@ type Client interface {
 	Delete(ctx context.Context, url string, expectedStatusCodes ...int) Request
 	Credentials() *Credentials
 }
-
-var Logger = logging.Logger
