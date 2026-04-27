@@ -31,7 +31,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
-	"github.com/google/uuid"
 	"golang.org/x/oauth2/clientcredentials"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
@@ -101,21 +100,14 @@ func (me *iamClient) DELETE_MULTI_RESPONSE(ctx context.Context, url string, expe
 }
 
 func (me *iamClient) request(ctx context.Context, u string, method string, expectedResponseCodes []int, forceNewBearer bool, forceNewBearerRetryCount int, payload any, headers map[string]string) ([]byte, error) {
-	id := uuid.NewString()
-
 	var err error
 	var httpRequest *http.Request
 	var httpResponse *http.Response
 	var responseBytes []byte
 	var requestBody []byte
 
-	rest.Logger.Printf(ctx, "[%s] %s %s", id, method, u)
-
 	if requestBody, err = json.Marshal(payload); err != nil {
 		return nil, err
-	}
-	if payload != nil {
-		rest.Logger.Printf(ctx, "[%s] [PAYLOAD] %s", id, string(requestBody))
 	}
 
 	var body io.Reader
@@ -141,7 +133,6 @@ func (me *iamClient) request(ctx context.Context, u string, method string, expec
 	if responseBytes, err = io.ReadAll(httpResponse.Body); err != nil {
 		return nil, err
 	}
-	rest.Logger.Printf(ctx, "[%s] [RESPONSE] %d %s", id, httpResponse.StatusCode, string(responseBytes))
 
 	if slices.Contains(expectedResponseCodes, httpResponse.StatusCode) {
 		return responseBytes, nil
