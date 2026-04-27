@@ -79,8 +79,6 @@ func PreRequest() {
 			transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 		}
 	}
-
-	InstallRoundTripper()
 }
 
 func readerFromPayload(payload any) (io.Reader, error) {
