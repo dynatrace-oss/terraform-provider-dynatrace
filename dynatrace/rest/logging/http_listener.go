@@ -26,10 +26,11 @@ import (
 	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
-func logRequest(ctx context.Context, id string, request *http.Request, prefix string) {
+func logRequest(id string, request *http.Request, prefix string) {
 	if request == nil || request.URL == nil {
 		return
 	}
+	ctx := request.Context()
 
 	Logger.Printf(ctx, "[%s] [%s] [REQUEST] %s %s", prefix, id, request.Method, request.URL.String())
 	if request.Body == nil {
@@ -40,9 +41,14 @@ func logRequest(ctx context.Context, id string, request *http.Request, prefix st
 	Logger.Printf(ctx, "[%s] [%s] [PAYLOAD] %s", prefix, id, string(body))
 }
 
-func logResponse(ctx context.Context, id string, response *http.Response, prefix string) {
+func logResponse(id string, response *http.Response, prefix string) {
 	if response == nil {
 		return
+	}
+
+	ctx := context.Background()
+	if response.Request != nil {
+		ctx = response.Request.Context()
 	}
 
 	var bodyStr string
@@ -55,22 +61,11 @@ func logResponse(ctx context.Context, id string, response *http.Response, prefix
 	Logger.Printf(ctx, "[%s] [%s] [RESPONSE] %d%s", prefix, id, response.StatusCode, bodyStr)
 }
 
-func requestContext(response crest.RequestResponse) context.Context {
-	if response.Request != nil {
-		return response.Request.Context()
-	}
-	if response.Response != nil && response.Response.Request != nil {
-		return response.Response.Request.Context()
-	}
-	return context.Background()
-}
-
 func HTTPListener(prefix string) *crest.HTTPListener {
 	return &crest.HTTPListener{
 		Callback: func(response crest.RequestResponse) {
-			ctx := requestContext(response)
-			logRequest(ctx, response.ID, response.Request, prefix)
-			logResponse(ctx, response.ID, response.Response, prefix)
+			logRequest(response.ID, response.Request, prefix)
+			logResponse(response.ID, response.Response, prefix)
 		},
 	}
 }
