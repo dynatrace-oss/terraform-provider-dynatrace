@@ -28,28 +28,28 @@ import (
 )
 
 type RESTLogger struct {
-	log *log.Logger
+	Log *log.Logger
 }
 
 func (l *RESTLogger) Print(ctx context.Context, v ...any) {
 	if stdoutLog {
 		tflog.Debug(ctx, fmt.Sprint(append(append([]any{}, "[HTTP]"), v...)...))
 	}
-	l.log.Print(v...)
+	l.Log.Print(v...)
 }
 
 func (l *RESTLogger) Printf(ctx context.Context, format string, v ...any) {
 	if stdoutLog {
 		tflog.Debug(ctx, fmt.Sprintf("[HTTP] "+format, v...))
 	}
-	l.log.Printf(format, v...)
+	l.Log.Printf(format, v...)
 }
 
 func (l *RESTLogger) Println(ctx context.Context, v ...any) {
 	if stdoutLog {
 		tflog.Debug(ctx, fmt.Sprint(append(append([]any{}, "[HTTP]"), v...)...))
 	}
-	l.log.Println(v...)
+	l.Log.Println(v...)
 }
 
 var stdoutLog = os.Getenv("DYNATRACE_LOG_HTTP") == "stdout"
@@ -77,12 +77,12 @@ func initLogger() *RESTLogger {
 		if restLogFileName != "true" {
 			logger.SetOutput(&onDemandWriter{logFileName: restLogFileName})
 		}
-		return &RESTLogger{log: logger}
+		return &RESTLogger{Log: logger}
 	}
-	return &RESTLogger{log: log.New(io.Discard, "", log.LstdFlags)}
+	return &RESTLogger{Log: log.New(io.Discard, "", log.LstdFlags)}
 }
 
 func SetLogWriter(writer io.Writer) error {
-	logger.log.SetOutput(writer)
+	logger.Log.SetOutput(writer)
 	return nil
 }
