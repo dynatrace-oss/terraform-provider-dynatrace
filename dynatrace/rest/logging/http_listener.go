@@ -30,35 +30,29 @@ func logRequest(ctx context.Context, id string, request *http.Request, prefix st
 	if request == nil || request.URL == nil {
 		return
 	}
+
+	Logger.Printf(ctx, "[%s] [%s] [REQUEST] %s %s", prefix, id, request.Method, request.URL.String())
 	if request.Body == nil {
-		Logger.Printf(ctx, "[%s] [%s] [REQUEST] %s %s", prefix, id, request.Method, request.URL.String())
 		return
 	}
 
 	body, _ := io.ReadAll(request.Body)
-	Logger.Printf(ctx, "[%s] [%s] [REQUEST] %s %s", prefix, id, request.Method, request.URL.String())
-	Logger.Printf(ctx, "           [%s] [PAYLOAD] %s", id, string(body))
+	Logger.Printf(ctx, "[%s] [%s] [PAYLOAD] %s", prefix, id, string(body))
 }
 
-func logResponse(ctx context.Context, id string, response *http.Response) {
+func logResponse(ctx context.Context, id string, response *http.Response, prefix string) {
 	if response == nil {
 		return
 	}
 
-	if response.Body == nil {
-		Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.StatusCode)
-		return
+	var bodyStr string
+	if response.Body != nil && os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
+		body, _ := io.ReadAll(response.Body)
+		if body != nil {
+			bodyStr = " " + string(body)
+		}
 	}
-	if os.Getenv("DYNATRACE_HTTP_RESPONSE") != "true" {
-		Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.StatusCode)
-		return
-	}
-	body, _ := io.ReadAll(response.Body)
-	if body != nil {
-		Logger.Printf(ctx, "           [%s] [RESPONSE] %d %s", id, response.StatusCode, string(body))
-		return
-	}
-	Logger.Printf(ctx, "           [%s] [RESPONSE] %d", id, response.StatusCode)
+	Logger.Printf(ctx, "[%s] [%s] [RESPONSE] %d%s", prefix, id, response.StatusCode, bodyStr)
 }
 
 func requestContext(response crest.RequestResponse) context.Context {
@@ -76,7 +70,7 @@ func HTTPListener(prefix string) *crest.HTTPListener {
 		Callback: func(response crest.RequestResponse) {
 			ctx := requestContext(response)
 			logRequest(ctx, response.ID, response.Request, prefix)
-			logResponse(ctx, response.ID, response.Response)
+			logResponse(ctx, response.ID, response.Response, prefix)
 		},
 	}
 }
