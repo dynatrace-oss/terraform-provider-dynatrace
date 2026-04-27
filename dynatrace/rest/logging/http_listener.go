@@ -26,7 +26,19 @@ import (
 	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
-var DYNATRACE_HTTP_OAUTH = (os.Getenv("DYNATRACE_HTTP_OAUTH") == "true")
+func logRequest(ctx context.Context, id string, request *http.Request, prefix string) {
+	if request == nil || request.URL == nil {
+		return
+	}
+	if request.Body == nil {
+		Logger.Printf(ctx, "[%s] [%s] [REQUEST] %s %s", prefix, id, request.Method, request.URL.String())
+		return
+	}
+
+	body, _ := io.ReadAll(request.Body)
+	Logger.Printf(ctx, "[%s] [%s] [REQUEST] %s %s", prefix, id, request.Method, request.URL.String())
+	Logger.Printf(ctx, "           [%s] [PAYLOAD] %s", id, string(body))
+}
 
 func logResponse(ctx context.Context, id string, response *http.Response) {
 	if response == nil {
@@ -60,34 +72,10 @@ func requestContext(response crest.RequestResponse) context.Context {
 }
 
 func HTTPListener(prefix string) *crest.HTTPListener {
-	logRequest := func(ctx context.Context, id string, request *http.Request) {
-		if request == nil {
-			return
-		}
-		if request.URL == nil {
-			return
-		}
-		if request.Body == nil {
-			Logger.Printf(ctx, "[%s] [%s] [REQUEST ] %s %s", prefix, id, request.Method, request.URL.String())
-			return
-		}
-		// if len(request.Header) > 0 {
-		// 	for headerName, headerValue := range request.Header {
-		// 		if len(headerValue) > 0 {
-		// 			Logger.Printf(ctx, "[%s] [%s] [HEADER  ] %s => %s", prefix, id, headerName, headerValue[0])
-		// 		}
-		// 	}
-		// }
-
-		body, _ := io.ReadAll(request.Body)
-		Logger.Printf(ctx, "[%s] [%s] [REQUEST ] %s %s", prefix, id, request.Method, request.URL.String())
-		Logger.Printf(ctx, "           [%s] [PAYLOAD ] %s", id, string(body))
-	}
-
 	return &crest.HTTPListener{
 		Callback: func(response crest.RequestResponse) {
 			ctx := requestContext(response)
-			logRequest(ctx, response.ID, response.Request)
+			logRequest(ctx, response.ID, response.Request, prefix)
 			logResponse(ctx, response.ID, response.Response)
 		},
 	}
