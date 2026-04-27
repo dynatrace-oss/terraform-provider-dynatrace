@@ -113,11 +113,9 @@ func (me *legacy_request) Raw() ([]byte, error) {
 		body = bytes.NewBuffer(data)
 	}
 
+	logging.Logger.Printf(me.ctx, "[legacy] [%s] [REQUEST] %s %s", me.id, me.method, url)
 	if len(data) > 0 {
-		logging.Logger.Printf(me.ctx, "[legacy] [%s] [REQUEST] %s %s", me.id, me.method, url)
-		logging.Logger.Printf(me.ctx, "           [%s] [PAYLOAD] %s", me.id, string(data))
-	} else {
-		logging.Logger.Printf(me.ctx, "[legacy] [%s] [REQUEST] %s %s", me.id, me.method, url)
+		logging.Logger.Printf(me.ctx, "[legacy] [%s] [PAYLOAD] %s", me.id, string(data))
 	}
 
 	var req *http.Request
@@ -169,11 +167,11 @@ func (me *legacy_request) Raw() ([]byte, error) {
 		return nil, err
 	}
 	if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
+		var dataStr string
 		if data != nil {
-			logging.Logger.Printf(me.ctx, "           [%s] [RESPONSE] %s %s", me.id, res.Status, string(data))
-		} else {
-			logging.Logger.Printf(me.ctx, "           [%s] [RESPONSE] %s", me.id, res.Status)
+			dataStr = " " + string(data)
 		}
+		logging.Logger.Printf(me.ctx, "[legacy] [%s] [RESPONSE] %s%s", me.id, res.Status, dataStr)
 	}
 	if len(me.expect) > 0 && !me.expect.contains(res.StatusCode) {
 		var env errorEnvelope
