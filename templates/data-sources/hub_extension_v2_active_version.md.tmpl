@@ -1,0 +1,24 @@
+---
+layout: ""
+page_title: "dynatrace_hub_extension_v2_active_version Resource - terraform-provider-dynatrace"
+subcategory: "Extensions"
+description: |-
+  The `dynatrace_hub_extension_v2_active_version` data source retrieves the active installed version of an extension.
+---
+
+
+# dynatrace_hub_extension_v2_active_version (Data Source)
+
+-> This data source requires the OAuth scope `extensions:definitions:read`.
+
+The `dynatrace_hub_extension_v2_active_version` data source retrieves the active installed version of an extension.
+
+## Dynatrace Documentation
+
+- Extensions 2.0 - https://docs.dynatrace.com/docs/ingest-from/extensions
+
+## Example Usage
+
+{{ tffile "datasources/extensions/active_version/testdata/example.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
