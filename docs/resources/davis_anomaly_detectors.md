@@ -89,7 +89,12 @@ resource "dynatrace_davis_anomaly_detectors" "#name#" {
     }
   }
   execution_settings {
+    actor = dynatrace_iam_service_user.user.id
   }
+}
+
+resource "dynatrace_iam_service_user" "user" {
+  name = "#name#"
 }
 ```
 

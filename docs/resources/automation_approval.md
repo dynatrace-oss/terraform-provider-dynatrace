@@ -19,8 +19,9 @@ description: |-
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_automation_approval" "#name#" {
+resource "dynatrace_automation_approval" "wf_approval" {
   workflow_app_access_approval_enabled = true
+  external_approvals_enabled = true
 }
 ```
 
@@ -30,6 +31,10 @@ resource "dynatrace_automation_approval" "#name#" {
 ### Required
 
 - `workflow_app_access_approval_enabled` (Boolean) Allow on tenant level anyone with access to the app can respond to requests via an approval link.
+
+### Optional
+
+- `external_approvals_enabled` (Boolean) Allow external systems to trigger approval responses via webhook handlers.
 
 ### Read-Only
 

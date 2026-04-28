@@ -25,8 +25,8 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_rum_ip_determination" "#name#" {
-  header_name = "X-Header-Example3"
+resource "dynatrace_rum_ip_determination" "determination" {
+  header_name = "X-Header-#name#"
 }
 ```
 

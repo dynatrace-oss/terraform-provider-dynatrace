@@ -104,8 +104,8 @@ resource "dynatrace_aws_connection_role_arn" "test-aws-connection-arn" {
 
 ### Optional
 
-- `role_based_auth` (Block List, Max: 1) Configuration required for authenticating via AWS Role Based Authentication (see [below for nested schema](#nestedblock--role_based_auth))
-- `web_identity` (Block List, Max: 1) Configuration required for authenticating via AWS Web Identity (see [below for nested schema](#nestedblock--web_identity))
+- `role_based_auth` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--role_based_auth))
+- `web_identity` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--web_identity))
 
 ### Read-Only
 
@@ -116,7 +116,7 @@ resource "dynatrace_aws_connection_role_arn" "test-aws-connection-arn" {
 
 Optional:
 
-- `consumers` (Set of String) Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.biz.carbon`, `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`
+- `consumers` (Set of String) Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.biz.carbon`, `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`
 
 
 <a id="nestedblock--web_identity"></a>

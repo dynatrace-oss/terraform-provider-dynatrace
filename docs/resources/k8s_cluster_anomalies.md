@@ -73,10 +73,10 @@ resource "dynatrace_k8s_cluster_anomalies" "#name#" {
 
 ### Required
 
-- `cpu_requests_saturation` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--cpu_requests_saturation))
-- `memory_requests_saturation` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--memory_requests_saturation))
-- `monitoring_issues` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--monitoring_issues))
-- `pods_saturation` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--pods_saturation))
+- `cpu_requests_saturation` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--cpu_requests_saturation))
+- `memory_requests_saturation` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--memory_requests_saturation))
+- `monitoring_issues` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--monitoring_issues))
+- `pods_saturation` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--pods_saturation))
 - `readiness_issues` (Block List, Min: 1, Max: 1) Alerts if cluster has not been ready for a given amount of time (see [below for nested schema](#nestedblock--readiness_issues))
 
 ### Optional

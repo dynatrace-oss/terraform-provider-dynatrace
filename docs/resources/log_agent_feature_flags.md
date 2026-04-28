@@ -53,7 +53,7 @@ resource "dynatrace_log_agent_feature_flags" "flags" {
 - `journald_log_detector` (Boolean) Enable OneAgent to collect logs from Journald on Linux systems. 
  This setting enables:
  * Detection and to have logs ingested matching ingest rule is required.
-- `plain_iisconfiguration_detector` (Boolean) Enabling OneAgent to unambiguously assign logs to the appropriate IIS application pools
+- `plain_iisconfiguration_detector` (Boolean) Enable OneAgent to assign logs to the appropriate IIS application pools when an unambiguous IIS configuration is detected.
 - `scope` (String) The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 - `user_and_event_data` (Boolean) Enable OneAgent to collect data from Event Logs in the User Data and Event Data sections.
 

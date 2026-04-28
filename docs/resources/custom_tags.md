@@ -25,8 +25,8 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_custom_tags" "#name#" {
-    entity_selector = "entityId(\"HOST-123456789000000\")"
+resource "dynatrace_custom_tags" "tags" {
+    entity_selector = "type(HOST)"
     tags {
       filter {
         context = "CONTEXTLESS"

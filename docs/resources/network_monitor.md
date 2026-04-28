@@ -23,13 +23,17 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
+data "dynatrace_synthetic_location" "location" {
+  name = "Location"
+}
+
 resource "dynatrace_network_monitor" "DNS_Test" {
   name          = "DNS Test"
   description   = "This is an example DNS test"
   type          = "MULTI_PROTOCOL"
   enabled       = false
   frequency_min = 15
-  locations     = [ "SYNTHETIC_LOCATION-39F97465BE7BF644" ]
+  locations     = [ data.dynatrace_synthetic_location.location.id ]
   outage_handling {
     global_consecutive_outage_count_threshold = 1
     global_outages                            = true

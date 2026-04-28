@@ -50,7 +50,7 @@ resource "dynatrace_log_events" "#name#" {
 
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `event_template` (Block List, Min: 1, Max: 1) Event template (see [below for nested schema](#nestedblock--event_template))
-- `query` (String) Log query
+- `query` (String) Matcher
 - `summary` (String) The textual summary of the log event entry
 
 ### Read-Only
@@ -63,13 +63,13 @@ resource "dynatrace_log_events" "#name#" {
 Required:
 
 - `description` (String) The description of the event to trigger.
-- `event_type` (String) Possible Values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`, `WARNING`
+- `event_type` (String) The event type to trigger. Possible values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`, `WARNING`
 - `title` (String) The title of the event to trigger.
 
 Optional:
 
 - `davis_merge` (Boolean) Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.
-- `metadata` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. (see [below for nested schema](#nestedblock--event_template--metadata))
+- `metadata` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). (see [below for nested schema](#nestedblock--event_template--metadata))
 
 <a id="nestedblock--event_template--metadata"></a>
 ### Nested Schema for `event_template.metadata`

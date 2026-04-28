@@ -36,7 +36,7 @@ resource "dynatrace_extension_execution_remote" "#name#" {
 
 ### Required
 
-- `performance_profile` (String) Select performance profile for Extension Execution Controller [Documentation](https://www.dynatrace.com/support/help/shortlink/extensions-concepts#resource-consumption "More about performance profiles")
+- `performance_profile` (String) Select performance profile for Extension Execution Controller [Documentation](https://www.dynatrace.com/support/help/shortlink/extensions-concepts#resource-consumption "More about performance profiles"). Possible values: `DEDICATED`, `DEFAULT`, `HIGH`
 - `scope` (String) The scope of this setting (ENVIRONMENT_ACTIVE_GATE)
 
 ### Read-Only
