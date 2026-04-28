@@ -126,7 +126,7 @@ func TestFilterEmpty_WithPreconditioner_RemovesZeroValue(t *testing.T) {
 	defaultVal := preconditionEntry{Name: "", Value: 0}
 
 	entries := []*preconditionEntry{
-		{},                        // zero value → removed
+		{Name: "default-name"},    // zero value + precondition → removed
 		{Name: "real", Value: 99}, // kept
 	}
 
@@ -153,7 +153,7 @@ func TestFilterEmpty_IgnoresErrors(t *testing.T) {
 	defaultVal := preconditionErrorEntry{Name: "", Value: 0}
 
 	entries := []*preconditionErrorEntry{
-		{},                        // zero value → removed
+		{Name: "default-name"},    // zero value + precondition → removed
 		{Name: "real", Value: 99}, // kept
 	}
 

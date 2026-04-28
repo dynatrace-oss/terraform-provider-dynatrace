@@ -22,8 +22,8 @@ import "reflect"
 // This is a generic workaround for https://github.com/hashicorp/terraform-plugin-sdk/issues/895
 // which creates phantom empty entries in TypeSet blocks during updates.
 // There may occur two different types of empty set items.
-// 1. A zero value (e.g. FieldExtractionEntry)
-// 2. A default value with all default fields set (e.g. FieldExtractionEntry{ExtractionType: "field"}) including values set by `HandlePreconditions`
+// 1. A zero value (e.g. FieldExtractionEntry) including values set by `HandlePreconditions`.
+// 2. A default value with all default fields set (e.g. FieldExtractionEntry{ExtractionType: "field"}) including values set by `HandlePreconditions`.
 //
 // Usage example:
 //
@@ -31,16 +31,7 @@ import "reflect"
 func FilterEmpty[T any](entries []*T, defaultValue T) []*T {
 	result := make([]*T, 0, len(entries))
 	var zeroValue T
-	defaultValues := []T{zeroValue}
-	pointVal := &defaultValue
-
-	if v, ok := any(pointVal).(Preconditioner); ok {
-		// if the value with the defaults is in the state file, it also went through `HandlePreconditions`
-		_ = v.HandlePreconditions()
-		defaultValues = append(defaultValues, *pointVal)
-	} else {
-		defaultValues = append(defaultValues, defaultValue)
-	}
+	defaultValues := []T{preconditionOrDefault(zeroValue), preconditionOrDefault(defaultValue)}
 
 	for _, entry := range entries {
 		isEmpty := false
@@ -55,4 +46,14 @@ func FilterEmpty[T any](entries []*T, defaultValue T) []*T {
 		}
 	}
 	return result
+}
+
+func preconditionOrDefault[T any](val T) T {
+	pointVal := &val
+	if v, ok := any(pointVal).(Preconditioner); ok {
+		// if the value with the defaults is in the state file, it also went through `HandlePreconditions`
+		_ = v.HandlePreconditions()
+		return *pointVal
+	}
+	return val
 }
