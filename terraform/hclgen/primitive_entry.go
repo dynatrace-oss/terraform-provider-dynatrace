@@ -20,17 +20,17 @@ package hclgen
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"strings"
 	"unicode"
 	"unicode/utf8"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/zclconf/go-cty/cty"
 )
 
-var preventHeredoc = os.Getenv("DYNATRACE_HEREDOC") == "false"
+var preventHeredoc = envutils.DynatraceHeredoc.Get() == "false"
 
 type primitiveEntry struct {
 	Indent      string

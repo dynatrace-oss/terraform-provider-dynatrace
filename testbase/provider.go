@@ -19,10 +19,10 @@ package testbase
 
 import (
 	"context"
-	"os"
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -58,11 +58,11 @@ func init() {
 func TestAccPreCheck(t *testing.T) {
 	ctx := context.Background()
 
-	if v := os.Getenv("DYNATRACE_ENV_URL"); v == "" {
+	if v := envutils.DynatraceEnvURL.Get(); v == "" {
 		t.Fatalf("[WARN] DYNATRACE_ENV_URL has not been set for acceptance tests")
 	}
 
-	if v := os.Getenv("DYNATRACE_API_TOKEN"); v == "" {
+	if v := envutils.DynatraceAPIToken.Get(); v == "" {
 		t.Fatalf("[WARN] DYNATRACE_API_TOKEN must be set for acceptance tests")
 	}
 

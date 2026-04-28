@@ -31,12 +31,13 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hclgen"
 )
 
-var SHORTER_NAMES = os.Getenv("DYNATRACE_SHORTER_NAMES") == "true"
+var SHORTER_NAMES = envutils.DynatraceShorterNames.Get()
 
 type Resource struct {
 	ID                              string

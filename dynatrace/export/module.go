@@ -35,6 +35,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"github.com/spf13/afero"
@@ -413,10 +414,10 @@ func (me *Module) writeProviderFile(specificPath string) error {
 	}()
 	providerSource := "dynatrace-oss/dynatrace"
 	providerVersion := version.Version
-	if value := os.Getenv("DYNATRACE_PROVIDER_SOURCE"); len(value) != 0 {
+	if value := envutils.DynatraceProviderSource.Get(); len(value) != 0 {
 		providerSource = value
 	}
-	if value := os.Getenv("DYNATRACE_PROVIDER_VERSION"); len(value) != 0 {
+	if value := envutils.DynatraceProviderVersion.Get(); len(value) != 0 {
 		providerVersion = value
 	}
 
@@ -1464,7 +1465,7 @@ func (me *Module) ExecuteImportV2(fs afero.Fs) (resList resources, err error) {
 
 		}
 
-		providerSource := os.Getenv("DYNATRACE_PROVIDER_SOURCE")
+		providerSource := envutils.DynatraceProviderSource.Get()
 		if len(providerSource) == 0 {
 			providerSource = `provider["registry.terraform.io/dynatrace-oss/dynatrace"]`
 		} else {

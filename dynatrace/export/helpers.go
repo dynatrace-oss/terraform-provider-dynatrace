@@ -18,23 +18,24 @@
 package export
 
 import (
-	"os"
 	"os/exec"
 	"strings"
 	"unicode"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 // To speed things up when using Dynatrace Config Manager
-var HCL_NO_FORMAT = os.Getenv("DYNATRACE_HCL_NO_FORMAT") == "true"
+var HCL_NO_FORMAT = envutils.DynatraceHCLNoFormat.Get()
 
 // To get more unique names when using Dynatrace Config Manager
-var NAME_REPLACE_DASH = os.Getenv("DYNATRACE_NAME_REPLACE_DASH") == "true"
+var NAME_REPLACE_DASH = envutils.DynatraceNameReplaceDash.Get()
 
 func format(name string, force bool) {
 	if HCL_NO_FORMAT {
 		return
 	}
-	if force || os.Getenv("DYNATRACE_FORMAT_HCL_FILES") == "true" {
+	if force || envutils.DynatraceFormatHCLFiles.Get() {
 		exePath, _ := exec.LookPath("terraform.exe")
 		// log.Println(exePath, "fmt", name)
 		cmd := exec.Command(exePath, "fmt", name)

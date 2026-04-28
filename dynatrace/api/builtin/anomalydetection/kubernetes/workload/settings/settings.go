@@ -18,8 +18,7 @@
 package workload
 
 import (
-	"os"
-
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -67,8 +66,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"high_cpu_throttling": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") != "true",
-			Optional:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") == "true",
+			Required:    !envutils.DTBackwardsCompatibility.Get(),
+			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(HighCpuThrottling).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -76,8 +75,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"high_cpu_usage": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") != "true",
-			Optional:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") == "true",
+			Required:    !envutils.DTBackwardsCompatibility.Get(),
+			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(HighCpuUsage).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -85,8 +84,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"high_memory_usage": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") != "true",
-			Optional:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") == "true",
+			Required:    !envutils.DTBackwardsCompatibility.Get(),
+			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(HighMemoryUsage).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -94,8 +93,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"job_failure_events": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") != "true",
-			Optional:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") == "true",
+			Required:    !envutils.DTBackwardsCompatibility.Get(),
+			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(JobFailureEvents).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -111,8 +110,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"oom_kills": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") != "true",
-			Optional:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") == "true",
+			Required:    !envutils.DTBackwardsCompatibility.Get(),
+			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(OOMKills).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -128,8 +127,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"pod_backoff_events": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") != "true",
-			Optional:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") == "true",
+			Required:    !envutils.DTBackwardsCompatibility.Get(),
+			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(PodBackoffEvents).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -137,8 +136,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"pod_eviction_events": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") != "true",
-			Optional:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") == "true",
+			Required:    !envutils.DTBackwardsCompatibility.Get(),
+			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(PodEvictionEvents).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -146,8 +145,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"pod_preemption_events": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") != "true",
-			Optional:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") == "true",
+			Required:    !envutils.DTBackwardsCompatibility.Get(),
+			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(PodPreemptionEvents).Schema()},
 			MinItems:    1,
 			MaxItems:    1,

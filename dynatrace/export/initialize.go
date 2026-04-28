@@ -30,6 +30,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
@@ -149,12 +150,12 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		}
 	}
 
-	targetFolder := os.Getenv("DYNATRACE_TARGET_FOLDER")
+	targetFolder := envutils.DynatraceTargetFolder.Get()
 	if targetFolder == "" {
 		fmt.Println("The environment variable DYNATRACE_TARGET_FOLDER has not been set - using folder 'configuration' as default")
 		targetFolder = "configuration"
 	}
-	if os.Getenv("DYNATRACE_CLEAN_TARGET_FOLDER") == "true" {
+	if envutils.DynatraceCleanTargetFolder.Get() {
 		os.RemoveAll(targetFolder)
 	}
 

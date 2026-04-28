@@ -24,6 +24,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
@@ -52,7 +53,7 @@ func (l *RESTLogger) Println(ctx context.Context, v ...any) {
 	l.log.Println(v...)
 }
 
-var stdoutLog = os.Getenv("DYNATRACE_LOG_HTTP") == "stdout"
+var stdoutLog = envutils.DynatraceLogHTTP.Get() == "stdout"
 var logger = initLogger()
 var Logger = logger
 
@@ -71,7 +72,7 @@ func (odw *onDemandWriter) Write(p []byte) (n int, err error) {
 }
 
 func initLogger() *RESTLogger {
-	restLogFileName := os.Getenv("DYNATRACE_LOG_HTTP")
+	restLogFileName := envutils.DynatraceLogHTTP.Get()
 	if len(restLogFileName) > 0 && restLogFileName != "false" && !stdoutLog {
 		logger := log.New(os.Stderr, "", log.LstdFlags)
 		if restLogFileName != "true" {

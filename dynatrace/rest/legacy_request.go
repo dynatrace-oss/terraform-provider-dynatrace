@@ -27,13 +27,12 @@ import (
 	"io"
 	"net/http"
 	"net/http/cookiejar"
-	"os"
 	"slices"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"golang.org/x/sync/semaphore"
 )
@@ -135,7 +134,7 @@ func (me *legacy_request) Raw() ([]byte, error) {
 		Jar:       jar,
 		Transport: http.DefaultTransport,
 	}
-	if strings.TrimSpace(os.Getenv("DYNATRACE_HTTP_INSECURE")) == "true" {
+	if envutils.DynatraceHTTPInsecure.Get() {
 		httpClient.Transport = &http.Transport{
 			ForceAttemptHTTP2:     http.DefaultTransport.(*http.Transport).ForceAttemptHTTP2,
 			Proxy:                 http.DefaultTransport.(*http.Transport).Proxy,
@@ -167,7 +166,7 @@ func (me *legacy_request) Raw() ([]byte, error) {
 	if data, err = io.ReadAll(res.Body); err != nil {
 		return nil, err
 	}
-	if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
+	if envutils.DynatraceHTTPResponse.Get() {
 		if data != nil {
 			Logger.Printf(me.ctx, "           [%s] [RESPONSE] %s %s", me.id, res.Status, string(data))
 		} else {
@@ -219,7 +218,7 @@ const highLimitMaxWorkers = 50
 var maxWorkers = resolveMaxWorkers()
 
 func resolveMaxWorkers() int64 {
-	sMaxWorkers := os.Getenv("DYNATRACE_MAX_HTTP_WORKERS")
+	sMaxWorkers := envutils.DynatraceMaxHTTPWorkers.Get()
 	if len(sMaxWorkers) == 0 {
 		return defaultMaxWorkers
 	}

@@ -26,18 +26,18 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/google/uuid"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 var preRequestMutex sync.Mutex
-var DYNATRACE_HTTP_LEGACY = (os.Getenv("DYNATRACE_HTTP_LEGACY") == "true")
-var DYNATRACE_HTTP_OAUTH_PREFERENCE = (os.Getenv("DYNATRACE_HTTP_OAUTH_PREFERENCE") == "true")
+var DYNATRACE_HTTP_LEGACY = envutils.DynatraceHTTPLegacy.Get()
+var DYNATRACE_HTTP_OAUTH_PREFERENCE = envutils.DynatraceHTTPOAuthPreference.Get()
 
 type Request interface {
 	Finish(v ...any) error
@@ -74,7 +74,7 @@ func PreRequest() {
 	preRequestMutex.Lock()
 	defer preRequestMutex.Unlock()
 
-	if strings.TrimSpace(os.Getenv("DYNATRACE_HTTP_INSECURE")) == "true" {
+	if envutils.DynatraceHTTPInsecure.Get() {
 		if transport, ok := http.DefaultTransport.(*http.Transport); ok {
 			transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 		}

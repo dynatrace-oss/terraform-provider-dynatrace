@@ -22,42 +22,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"hash/fnv"
-	"os"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-const ENV_VAR_POLL_SLEEP_DURATION = "DYNATRACE_DQL_POLL_SLEEP_DURATION"
-const DEFAULT_POLL_SLEEP_DURATION = 5000
-const MIN_POLL_SLEEP_DURATION = 0
-const MAX_POLL_SLEEP_DURATION = 60000
-
-var POLL_SLEEP_DURATION = evalPollSleepDuration()
-
-func evalPollSleepDuration() int {
-	value := os.Getenv(ENV_VAR_POLL_SLEEP_DURATION)
-	if len(value) == 0 {
-		return DEFAULT_POLL_SLEEP_DURATION
-	}
-	iValue, err := strconv.Atoi(value)
-	if err != nil {
-		return DEFAULT_POLL_SLEEP_DURATION
-	}
-	if iValue < 0 {
-		return DEFAULT_POLL_SLEEP_DURATION
-	}
-	if iValue > MAX_POLL_SLEEP_DURATION {
-		return DEFAULT_POLL_SLEEP_DURATION
-	}
-	return iValue
-}
+var POLL_SLEEP_DURATION = envutils.DynatraceDQLPollSleepDuration.Get()
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{

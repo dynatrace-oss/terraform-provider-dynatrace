@@ -18,7 +18,6 @@
 package export
 
 import (
-	"os"
 	"reflect"
 	"strings"
 
@@ -27,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 	settingsPermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	msentraidconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection"
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
@@ -2044,7 +2044,7 @@ func genExcludeListedResourceGroups() []ResourceType {
 	return result
 }
 
-var ENABLE_EXPORT_DASHBOARD = os.Getenv("DYNATRACE_ENABLE_EXPORT_DASHBOARD") == "true"
+var ENABLE_EXPORT_DASHBOARD = envutils.DynatraceEnableExportDashboard.Get()
 
 func GetExcludeListedResourceGroups() []ResourceExclusionGroup {
 	if ENABLE_EXPORT_DASHBOARD {

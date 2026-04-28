@@ -18,14 +18,13 @@
 package http
 
 import (
-	"os"
-
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var ForceNewOnHeaders = os.Getenv("DYNATRACE_FORCE_NEW_ON_HEADERS") == "true"
+var ForceNewOnHeaders = envutils.DynatraceForceNewOnHeaders.Get()
 
 type Headers []*Header
 

@@ -21,8 +21,6 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"os"
-	"strconv"
 	"sync"
 	"time"
 
@@ -30,6 +28,7 @@ import (
 	customdevice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/customdevice/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/google/uuid"
 )
 
@@ -43,11 +42,6 @@ type service struct {
 	credentials *rest.Credentials
 }
 
-const DT_CUSTOM_DEVICE_APPLY_TIMEOUT = "DT_CUSTOM_DEVICE_APPLY_TIMEOUT"
-const DefaultApplyTimeout = 100
-const MinApplyTimeout = 100
-const MaxApplyTimeout = 500
-
 func (me *service) Get(ctx context.Context, id string, v *customdevice.CustomDevice) error {
 	cfg := ctx.Value(settings.ContextKeyStateConfig)
 	stateConfig, stateConfigFound := cfg.(*customdevice.CustomDevice)
@@ -57,18 +51,7 @@ func (me *service) Get(ctx context.Context, id string, v *customdevice.CustomDev
 	entitySelector := `detectedName("` + id + `"),type("CUSTOM_DEVICE")`
 	var CustomDeviceGetResponse customdevice.CustomDeviceGetResponse
 
-	applyTimeout := DefaultApplyTimeout
-	sApplyTimeout := os.Getenv(DT_CUSTOM_DEVICE_APPLY_TIMEOUT)
-	if len(sApplyTimeout) > 0 {
-		if timeOutValue, err := strconv.Atoi(sApplyTimeout); err == nil {
-			if timeOutValue < MinApplyTimeout {
-				timeOutValue = MinApplyTimeout
-			} else if timeOutValue > MaxApplyTimeout {
-				timeOutValue = MaxApplyTimeout
-			}
-			applyTimeout = timeOutValue
-		}
-	}
+	applyTimeout := envutils.DTCustomDeviceApplyTimeout.Get()
 
 	maxIteration := applyTimeout / 5
 
@@ -240,18 +223,7 @@ func (me *service) Create(ctx context.Context, v *customdevice.CustomDevice) (*a
 		return nil, err
 	}
 
-	applyTimeout := DefaultApplyTimeout
-	sApplyTimeout := os.Getenv(DT_CUSTOM_DEVICE_APPLY_TIMEOUT)
-	if len(sApplyTimeout) > 0 {
-		if timeOutValue, err := strconv.Atoi(sApplyTimeout); err == nil {
-			if timeOutValue < MinApplyTimeout {
-				timeOutValue = MinApplyTimeout
-			} else if timeOutValue > MaxApplyTimeout {
-				timeOutValue = MaxApplyTimeout
-			}
-			applyTimeout = timeOutValue
-		}
-	}
+	applyTimeout := envutils.DTCustomDeviceApplyTimeout.Get()
 
 	maxIteration := applyTimeout / 5
 	// Check the custom device was indeed created before finishing up

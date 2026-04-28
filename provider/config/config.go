@@ -20,17 +20,17 @@ package config
 import (
 	"context"
 	"fmt"
-	"os"
 	"regexp"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // HTTPVerbose if set to `true` terraform-provider-dynatrace.log will contain request and response payload
-var HTTPVerbose = (strings.TrimSpace(os.Getenv("DYNATRACE_DEBUG")) == "true")
+var HTTPVerbose = envutils.DynatraceDebug.Get()
 
 type IAM struct {
 	ClientID     string
@@ -306,69 +306,26 @@ func (me ConfigGetter) Get(key string) any {
 	if result == nil {
 		return ""
 	}
-	srcEnvVars := []string{}
+	var sourceEnvVar *envutils.MultiStringEnvVar
 	switch key {
 	case "dt_env_url", "automation_env_url":
-		srcEnvVars = sourceEnvURLEnvVars
+		sourceEnvVar = &envutils.DynatraceSourceEnvURL
 	case "dt_api_token":
-		srcEnvVars = sourceAPITokenEnvVars
+		sourceEnvVar = &envutils.DynatraceSourceAPIToken
 	case "client_id", "automation_client_id":
-		srcEnvVars = sourceClientIDEnvVars
+		sourceEnvVar = &envutils.DynatraceSourceClientID
 	case "account_id":
-		srcEnvVars = sourceAccountIDEnvVars
+		sourceEnvVar = &envutils.DynatraceSourceAccountID
 	case "client_secret", "automation_client_secret":
-		srcEnvVars = sourceClientSecretEnvVars
+		sourceEnvVar = &envutils.DynatraceSourceClientSecret
 	case "platform_token":
-		srcEnvVars = sourcePlatformTokenEnvVars
+		sourceEnvVar = &envutils.DynatraceSourcePlatformToken
 	}
-	if len(srcEnvVars) > 0 {
-		sourceValue := evalSourceEnv(sourceEnvURLEnvVars)
-		if len(sourceValue) > 0 {
+	if sourceEnvVar != nil {
+		if sourceValue := sourceEnvVar.Get(); len(sourceValue) > 0 {
 			return sourceValue
 		}
 	}
 
 	return result
-}
-
-var sourceEnvURLEnvVars = []string{
-	"DYNATRACE_SOURCE_ENV_URL",
-	"DT_SOURCE_ENV_URL",
-	"DYNATRACE_SOURCE_ENVIRONMENT_URL",
-	"DT_SOURCE_ENVIRONMENT_URL",
-}
-
-var sourceAPITokenEnvVars = []string{
-	"DYNATRACE_SOURCE_API_TOKEN",
-	"DT_SOURCE_API_TOKEN",
-}
-
-var sourceClientIDEnvVars = []string{
-	"DT_SOURCE_CLIENT_ID",
-	"DYNATRACE_SOURCE_CLIENT_ID",
-}
-
-var sourceAccountIDEnvVars = []string{
-	"DT_SOURCE_ACCOUNT_ID",
-	"DYNATRACE_SOURCE_ACCOUNT_ID",
-}
-
-var sourceClientSecretEnvVars = []string{
-	"DT_SOURCE_CLIENT_SECRET",
-	"DYNATRACE_SOURCE_CLIENT_SECRET",
-}
-
-var sourcePlatformTokenEnvVars = []string{
-	"DYNATRACE_SOURCE_PLATFORM_TOKEN",
-	"DT_SOURCE_PLATFORM_TOKEN",
-}
-
-func evalSourceEnv(envVars []string) string {
-	for _, envVar := range envVars {
-		value := os.Getenv(envVar)
-		if len(value) > 0 {
-			return value
-		}
-	}
-	return ""
 }

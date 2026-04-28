@@ -19,13 +19,13 @@ package export
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"regexp"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/spf13/afero"
 )
 
-var EXPORT_IGNORE_RESOURCES_PATH = os.Getenv("DYNATRACE_EXPORT_IGNORE_RESOURCES")
+var EXPORT_IGNORE_RESOURCES_PATH = envutils.DynatraceExportIgnoreResources.Get()
 var ANSI_ESCAPE_PATTERN = regexp.MustCompile(`\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])`)
 
 type IgnoreResourcesMap map[string]map[string][]string

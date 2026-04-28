@@ -27,13 +27,13 @@ import (
 	monitors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/synthetic/monitors/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 const SchemaID = "v2:synthetic:monitors:network"
 const BasePath = "/api/v2/synthetic/monitors"
 
-var defaultCreateConfirm = 8
-var createConfirm = settings.GetIntEnv("DYNATRACE_CREATE_CONFIRM_SYNTHETIC_MONITORS_V2", defaultCreateConfirm, 1, 50)
+var createConfirm = envutils.DynatraceCreateConfirmSyntheticMonitorsV2.Get()
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*monitors.Settings] {
 	return &service{credentials: credentials}

@@ -23,6 +23,7 @@ import (
 	"path"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/google/uuid"
 )
 
@@ -49,16 +50,11 @@ func Offline() {
 }
 
 func Cleanup() {
-	if os.Getenv(ENV_VAR_NO_CACHE_CLEANUP) == "true" {
+	if envutils.DTNoCacheCleanup.Get() {
 		return
 	}
 	os.RemoveAll(cache_root_folder)
 }
-
-const ENV_VAR_CACHE_ROOT_FOLDER = "DT_CACHE_FOLDER"
-const ENV_VAR_CACHE_OFFLINE_MODE = "CACHE_OFFLINE_MODE"
-const ENV_VAR_DELETE_CACHE_ON_LAUNCH = "DT_CACHE_DELETE_ON_LAUNCH"
-const ENV_VAR_NO_CACHE_CLEANUP = "DT_NO_CACHE_CLEANUP"
 
 var cache_root_folder = getCacheRootFolder()
 
@@ -68,14 +64,14 @@ func GetCacheFolder() string {
 
 func getCacheRootFolder() string {
 	folder := path.Join(os.TempDir(), ".terraform-provider-dynatrace", uuid.NewString())
-	if envFolder := os.Getenv(ENV_VAR_CACHE_ROOT_FOLDER); envFolder != "" {
+	if envFolder := envutils.DTCacheFolder.Get(); envFolder != "" {
 		folder = envFolder
 	}
-	deleteCache := os.Getenv(ENV_VAR_DELETE_CACHE_ON_LAUNCH)
+	deleteCache := envutils.DTCacheDeleteOnLaunch.Get()
 	if len(deleteCache) != 0 && deleteCache != "false" {
 		os.RemoveAll(folder)
 	}
-	if os.Getenv(ENV_VAR_CACHE_OFFLINE_MODE) == "true" {
+	if envutils.CacheOfflineMode.Get() {
 		Offline()
 	}
 	return folder

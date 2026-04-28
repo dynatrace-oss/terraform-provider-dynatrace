@@ -20,12 +20,12 @@ package documents
 import (
 	"context"
 	"encoding/json"
-	"os"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	docclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/documents"
 
@@ -36,7 +36,7 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*documents.Docu
 	return &service{credentials}
 }
 
-var IGNORE_UNEXPECTED_EOF = (os.Getenv("DT_DOCUMENTS_IGNORE_UNEXPECTED_EOF") == "true")
+var IGNORE_UNEXPECTED_EOF = envutils.DTDocumentsIgnoreUnexpectedEOF.Get()
 
 type service struct {
 	credentials *rest.Credentials

@@ -19,18 +19,18 @@ package export
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/spf13/afero"
 )
 
-var PREV_STATE_ON = os.Getenv("DYNATRACE_PREV_STATE_ON") == "true"
-var PREV_STATE_PATH_THIS = os.Getenv("DYNATRACE_PREV_STATE_PATH_THIS")
-var PREV_STATE_PATH_LINKED = os.Getenv("DYNATRACE_PREV_STATE_PATH_LINKED")
-var IMPORT_STATE_PATH = os.Getenv("DYNATRACE_IMPORT_STATE_PATH")
+var PREV_STATE_ON = envutils.DynatracePrevStateOn.Get()
+var PREV_STATE_PATH_THIS = envutils.DynatracePrevStatePathThis.Get()
+var PREV_STATE_PATH_LINKED = envutils.DynatracePrevStatePathLinked.Get()
+var IMPORT_STATE_PATH = envutils.DynatraceImportStatePath.Get()
 
 type StateMap struct {
 	mutex     *sync.Mutex

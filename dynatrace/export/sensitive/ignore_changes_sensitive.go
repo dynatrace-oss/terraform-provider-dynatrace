@@ -19,16 +19,16 @@ package sensitive
 
 import (
 	"fmt"
-	"os"
 	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/meta"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // Avoid overwriting password that the user has changed manually with known bad data
-var IGNORE_CHANGES_REQUIRES_ATTENTION = os.Getenv("DYNATRACE_IGNORE_CHANGES_REQUIRES_ATTENTION") == "true"
+var IGNORE_CHANGES_REQUIRES_ATTENTION = envutils.DynatraceIgnoreChangesRequiresAttention.Get()
 
 const SecretValueExact = "${state.secret_value.exact}"
 const SecretValue = "${state.secret_value}"

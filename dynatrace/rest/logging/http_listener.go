@@ -21,12 +21,13 @@ import (
 	"context"
 	"io"
 	"net/http"
-	"os"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	crest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
-var DYNATRACE_HTTP_OAUTH = (os.Getenv("DYNATRACE_HTTP_OAUTH") == "true")
+var DYNATRACE_HTTP_OAUTH = envutils.DynatraceHTTPOAuth.Get()
 
 func logResponse(ctx context.Context, id string, response *http.Response) {
 	if response == nil {
@@ -37,7 +38,7 @@ func logResponse(ctx context.Context, id string, response *http.Response) {
 		Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.StatusCode)
 		return
 	}
-	if os.Getenv("DYNATRACE_HTTP_RESPONSE") != "true" {
+	if !envutils.DynatraceHTTPResponse.Get() {
 		Logger.Printf(ctx, "[%s] [RESPONSE] %d", id, response.StatusCode)
 		return
 	}
