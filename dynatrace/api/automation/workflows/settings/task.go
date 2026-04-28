@@ -88,7 +88,7 @@ func (me *Tasks) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeSlice("task", me); err != nil {
 		return err
 	}
-	*me = hcl.FilterEmpty(*me, Task{Active: true, Input: map[string]any{}})
+	*me = hcl.FilterEmpty(*me, Task{Active: new(true), Input: map[string]any{}})
 	return nil
 }
 
@@ -97,7 +97,7 @@ type Task struct {
 	Action       string               `json:"action" pattern:"^.+:.+$"`
 	Description  *string              `json:"description,omitempty"` // A description for this task
 	Input        map[string]any       `json:"input"`
-	Active       bool                 `json:"active"` // Specifies whether a task should be skipped as a no operation or not
+	Active       *bool                `json:"active,omitempty"` // Specifies whether a task should be skipped as a no operation or not
 	Position     *TaskPosition        `json:"position"`
 	Predecessors []string             `json:"predecessors,omitempty"`
 	Conditions   *TaskConditionOption `json:"conditions,omitempty"`
@@ -256,6 +256,16 @@ func (me *Task) UnmarshalHCL(decoder hcl.Decoder) error {
 				me.Predecessors = append(me.Predecessors, k)
 			}
 		}
+	}
+	return nil
+}
+
+func (me *Task) HandlePreconditions() error {
+	// not set => default of "true"
+	// set to `false` => d.GetOk is !ok => me.Active == nil => we need to correctly set it to "false"
+	// We can't remove the pointer because export would then return false instead of null/notGiven
+	if me.Active == nil {
+		me.Active = new(false)
 	}
 	return nil
 }
