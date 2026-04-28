@@ -25,11 +25,17 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_container_builtin_rule" "#name#" {
-  ignore_docker_pause_container     = false
-  ignore_kubernetes_pause_container = true
-  ignore_open_shift_build_pod_name  = false
-  ignore_open_shift_sdn_namespace   = true
+resource "dynatrace_container_builtin_rule" "rules" {
+  ignore_docker_pause_container                       = false
+  ignore_kubernetes_pause_container                   = true
+  ignore_open_shift_build_pod_name                    = false
+  ignore_open_shift_sdn_namespace                     = true
+  ignore_open_shift_etcd_namespace                    = false
+  ignore_open_shift_ingress_canary_namespace          = false
+  ignore_open_shift_kube_apiserver_namespace          = false
+  ignore_open_shift_machine_config_operator_namespace = false
+  ignore_open_shift_monitoring_namespace              = false
+  ignore_open_shift_ovn_kubernetes_namespace          = false
 }
 ```
 
@@ -42,6 +48,15 @@ resource "dynatrace_container_builtin_rule" "#name#" {
 - `ignore_kubernetes_pause_container` (Boolean) Disable monitoring of platform internal pause containers in Kubernetes and OpenShift.
 - `ignore_open_shift_build_pod_name` (Boolean) Disable monitoring of intermediate containers created during image build.
 - `ignore_open_shift_sdn_namespace` (Boolean) Disable monitoring of platform internal containers in the openshift-sdn namespace.
+
+### Optional
+
+- `ignore_open_shift_etcd_namespace` (Boolean) Disable monitoring of platform internal containers in the openshift-etcd namespace.
+- `ignore_open_shift_ingress_canary_namespace` (Boolean) Disable monitoring of platform internal containers in the openshift-ingress-canary namespace.
+- `ignore_open_shift_kube_apiserver_namespace` (Boolean) Disable monitoring of platform internal containers in the openshift-kube-apiserver namespace.
+- `ignore_open_shift_machine_config_operator_namespace` (Boolean) Disable monitoring of platform internal containers in the openshift-machine-config-operator namespace.
+- `ignore_open_shift_monitoring_namespace` (Boolean) Disable monitoring of platform internal containers in the openshift-monitoring namespace.
+- `ignore_open_shift_ovn_kubernetes_namespace` (Boolean) Disable monitoring of platform internal containers in the openshift-ovn-kubernetes namespace.
 
 ### Read-Only
 

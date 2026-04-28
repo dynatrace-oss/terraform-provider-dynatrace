@@ -25,13 +25,40 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_dashboards_general" "#name#" {
+resource "dynatrace_dashboards_general" "general" {
   enable_public_sharing = false
   default_dashboard_list {
     default_dashboard {
-      dashboard = "41eae96d-4930-4f44-bbd8-3699f21a8bbf"
-      user_group = "d0c2d3e3-c1b4-456a-b0ce-c560273f1488"
+      dashboard = dynatrace_dashboard.dashboard.id
+      user_group = dynatrace_iam_group.group.id
     }
+  }
+}
+
+resource "dynatrace_iam_group" "group" {
+  name = "#name#"
+}
+
+resource "dynatrace_dashboard" "dashboard" {
+  dashboard_metadata {
+    name   = "#name#"
+    owner  = "Dynatrace"
+    tags   = ["Kubernetes"]
+    dynamic_filters {
+      filters = ["KUBERNETES_CLUSTER"]
+    }
+  }
+  tile {
+    name       = "Markdown"
+    tile_type  = "MARKDOWN"
+    configured = true
+    bounds {
+      top    = 0
+      width  = 684
+      height = 38
+      left   = 0
+    }
+    markdown = "## Cluster resource overview"
   }
 }
 ```

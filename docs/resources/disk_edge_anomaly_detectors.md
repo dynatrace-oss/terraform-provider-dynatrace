@@ -49,14 +49,37 @@ resource "dynatrace_disk_edge_anomaly_detectors" "#name#" {
       metadata_value = "ExampleValue"
     }
   }
-  # host_metadata_conditions { # Disabling until v297
-  #   host_metadata_condition {
-  #     host_metadata_condition {
-  #       metadata_condition = "$contains(terraform)"
-  #       metadata_key       = "ExampleKey"
-  #     }
-  #   }
-  # }
+
+  detection_conditions {
+    detection_condition {
+      rule_type = "RuleTypeHost"
+      host_metadata_condition {
+        host_metadata_condition {
+          # key_must_exist   = true
+          metadata_condition = "$contains(terraform)"
+          metadata_key       = "ExampleKey"
+        }
+      }
+    }
+    detection_condition {
+      local_disk_condition = "REMOTE"
+      property             = "DiskType"
+      rule_type            = "RuleTypeDisk"
+    }
+    detection_condition {
+      disk_filesystem_condition = "$match(ext*)"
+      property                  = "DiskFilesystem"
+      rule_type                 = "RuleTypeDisk"
+    }
+    detection_condition {
+      property  = "DiskTotalSpace"
+      rule_type = "RuleTypeDisk"
+      disk_total_condition {
+        threshold_above = 10
+        threshold_below = 1000
+      }
+    }
+  }
 }
 ```
 
@@ -71,15 +94,9 @@ resource "dynatrace_disk_edge_anomaly_detectors" "#name#" {
 ### Optional
 
 - `alerts` (Block List, Max: 1) Alerts (see [below for nested schema](#nestedblock--alerts))
+- `detection_conditions` (Block List, Max: 1) Set of rules to scope which disks the policy applies to. Rules can match based on disk properties (total space, filesystem, disk type) or host resource attributes. Each disk property type can be defined at most once per policy. (see [below for nested schema](#nestedblock--detection_conditions))
 - `disk_name_filters` (Set of String) Disk will be included in this policy if **any** of the filters match
 - `event_properties` (Block List, Max: 1) Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+) (see [below for nested schema](#nestedblock--event_properties))
-- `host_metadata_conditions` (Block List, Max: 1) Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.
-
-  By defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.
-
-  See [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).
-
-  Note: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata. (see [below for nested schema](#nestedblock--host_metadata_conditions))
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `operating_system` (Set of String) Select the operating systems on which policy should be applied. Possible values: `AIX`, `LINUX`, `WINDOWS`
 - `scope` (String) The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
@@ -104,12 +121,12 @@ Required:
 
 Optional:
 
-- `sample_count_thresholds` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--alerts--alert--sample_count_thresholds))
-- `sample_count_thresholds_immediately` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--alerts--alert--sample_count_thresholds_immediately))
-- `threshold_mebibytes` (Number) no documentation available
-- `threshold_milliseconds` (Number) no documentation available
-- `threshold_number` (Number) no documentation available
-- `threshold_percent` (Number) no documentation available
+- `sample_count_thresholds` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--alerts--alert--sample_count_thresholds))
+- `sample_count_thresholds_immediately` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--alerts--alert--sample_count_thresholds_immediately))
+- `threshold_mebibytes` (Number) No documentation available
+- `threshold_milliseconds` (Number) No documentation available
+- `threshold_number` (Number) No documentation available
+- `threshold_percent` (Number) No documentation available
 
 <a id="nestedblock--alerts--alert--sample_count_thresholds"></a>
 ### Nested Schema for `alerts.alert.sample_count_thresholds`
@@ -135,39 +152,65 @@ Required:
 
 
 
-<a id="nestedblock--event_properties"></a>
-### Nested Schema for `event_properties`
+<a id="nestedblock--detection_conditions"></a>
+### Nested Schema for `detection_conditions`
 
 Required:
 
-- `event_propertie` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--event_properties--event_propertie))
+- `detection_condition` (Block List, Min: 1) (see [below for nested schema](#nestedblock--detection_conditions--detection_condition))
 
-<a id="nestedblock--event_properties--event_propertie"></a>
-### Nested Schema for `event_properties.event_propertie`
-
-Required:
-
-- `metadata_key` (String) Type 'dt.' for key hints.
-- `metadata_value` (String) no documentation available
-
-
-
-<a id="nestedblock--host_metadata_conditions"></a>
-### Nested Schema for `host_metadata_conditions`
+<a id="nestedblock--detection_conditions--detection_condition"></a>
+### Nested Schema for `detection_conditions.detection_condition`
 
 Required:
 
-- `host_metadata_condition` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--host_metadata_conditions--host_metadata_condition))
+- `rule_type` (String) Starting from agent 1.335 **disk** detection rules are supported. Possible values: `RuleTypeDisk`, `RuleTypeHost`
 
-<a id="nestedblock--host_metadata_conditions--host_metadata_condition"></a>
-### Nested Schema for `host_metadata_conditions.host_metadata_condition`
+Optional:
+
+- `disk_filesystem_condition` (String) Disk filesystem will be included in this policy if **any** of the filters match. Disk filesystem has to match a required format.
+
+  - `$match(ext*)` – Matches string with wildcards: `*` any number (including zero) of characters and `?` exactly one character.
+ - `$contains(fs)` – Matches if `fs` appears anywhere in the filesystem type.
+ - `$eq(ext4)` – Matches if `ext4` matches the filesystem type exactly.
+ - `$prefix(ext)` – Matches if `ext` matches the prefix of the filesystem type.
+ - `$suffix(fs)` – Matches if `fs` matches the suffix of the filesystem type.
+
+  Available logic operations:
+ - `$not($eq(tmpfs))` – Matches if the filesystem type is different from `tmpfs`.
+ - `$and($prefix(ext),$suffix(4))` – Matches if filesystem type starts with `ext` and ends with `4`.
+ - `$or($eq(xfs),$eq(btrfs))` – Matches if filesystem type equals `xfs` or `btrfs`.
+
+  Brackets **(** and **)** that are part of the matched filesystem type **must be escaped with a tilde (~)**
+- `disk_total_condition` (Block List, Max: 1) Specify disk total space range in GiB (see [below for nested schema](#nestedblock--detection_conditions--detection_condition--disk_total_condition))
+- `host_metadata_condition` (Block List, Max: 1) Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.
+
+  By defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.
+
+  See [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).
+
+  Note: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata. (see [below for nested schema](#nestedblock--detection_conditions--detection_condition--host_metadata_condition))
+- `local_disk_condition` (String) Possible values: `LOCAL`, `REMOTE`
+- `property` (String) Disk property. Possible values: `DiskFilesystem`, `DiskTotalSpace`, `DiskType`
+
+<a id="nestedblock--detection_conditions--detection_condition--disk_total_condition"></a>
+### Nested Schema for `detection_conditions.detection_condition.disk_total_condition`
+
+Optional:
+
+- `threshold_above` (Number) If this field is empty then there is no lower limit. Minimum total disk space in GiB
+- `threshold_below` (Number) If this field is empty then there is no upper limit. Maximum total disk space in GiB
+
+
+<a id="nestedblock--detection_conditions--detection_condition--host_metadata_condition"></a>
+### Nested Schema for `detection_conditions.detection_condition.host_metadata_condition`
 
 Required:
 
-- `host_metadata_condition` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--host_metadata_conditions--host_metadata_condition--host_metadata_condition))
+- `host_metadata_condition` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--detection_conditions--detection_condition--host_metadata_condition--host_metadata_condition))
 
-<a id="nestedblock--host_metadata_conditions--host_metadata_condition--host_metadata_condition"></a>
-### Nested Schema for `host_metadata_conditions.host_metadata_condition.host_metadata_condition`
+<a id="nestedblock--detection_conditions--detection_condition--host_metadata_condition--host_metadata_condition"></a>
+### Nested Schema for `detection_conditions.detection_condition.host_metadata_condition.host_metadata_condition`
 
 Required:
 
@@ -190,4 +233,23 @@ Required:
 Optional:
 
 - `key_must_exist` (Boolean) When enabled, the condition requires a resource attribute to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.
+
+
+
+
+
+<a id="nestedblock--event_properties"></a>
+### Nested Schema for `event_properties`
+
+Required:
+
+- `event_propertie` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--event_properties--event_propertie))
+
+<a id="nestedblock--event_properties--event_propertie"></a>
+### Nested Schema for `event_properties.event_propertie`
+
+Required:
+
+- `metadata_key` (String) Type 'dt.' for key hints.
+- `metadata_value` (String) No documentation available
  

@@ -50,12 +50,11 @@ resource "dynatrace_log_processing" "#name#" {
 ### Required
 
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `processor_definition` (Block List, Min: 1, Max: 1) ## Processor definition
-Add a rule definition using our syntax. [In our documentation](https://dt-url.net/8k03xm2) you will find instructions and application [examples](https://dt-url.net/m24305t). (see [below for nested schema](#nestedblock--processor_definition))
+- `processor_definition` (Block List, Min: 1, Max: 1) ## Processor definition (see [below for nested schema](#nestedblock--processor_definition))
 - `query` (String) Matcher
 - `rule_name` (String) Rule name
 - `rule_testing` (Block List, Min: 1, Max: 1) ## Rule testing
-### 1. Paste a log / JSON sample (see [below for nested schema](#nestedblock--rule_testing))
+ ### 1. Paste a log / JSON sample (see [below for nested schema](#nestedblock--rule_testing))
 
 ### Optional
 
