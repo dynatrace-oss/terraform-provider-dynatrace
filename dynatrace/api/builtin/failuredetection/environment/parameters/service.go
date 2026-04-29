@@ -19,10 +19,6 @@ package parameters
 
 import (
 	"context"
-	"errors"
-	"net/http"
-	"slices"
-	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -37,6 +33,11 @@ const SchemaVersion = "1.0.6"
 const SchemaID = "builtin:failure-detection.environment.parameters"
 const defaultTimeout = 10 * time.Second
 
+// During "create" and potentially "update" there is a "delete"-error happening that is not related to the object that should be created.
+// Seems like the delete-constraint is done at the wrong place, and that there is some eventual consistency.
+// error: builtin:failure-detection.environment.parameters: Failure detection rule EnvironmentFailureDetectionRules {your-values-here} refers to this parameter ID: <uuid>.
+const retryErr = "refers to this parameter"
+
 type service struct {
 	service settings.CRUDService[*parameters.Settings]
 }
@@ -49,7 +50,7 @@ func (me *service) Create(ctx context.Context, v *parameters.Settings) (*api.Stu
 	err := retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
 		var err error
 		apiStub, err = me.service.Create(ctx, v)
-		return classifyRetryError(err)
+		return settings.ClassifyConstraintRetryError(err, retryErr)
 	})
 
 	if err != nil {
@@ -58,30 +59,10 @@ func (me *service) Create(ctx context.Context, v *parameters.Settings) (*api.Stu
 	return apiStub, nil
 }
 
-// classifyRetryErrors retries on certain conflicts
-// During "create" and potentially "update" there is a "delete"-error happening that is not related to the object that should be created.
-// Seems like the delete-constraint is done at the wrong place, and that there is some eventual consistency.
-// error: builtin:failure-detection.environment.parameters: Failure detection rule EnvironmentFailureDetectionRules {your-values-here} refers to this parameter ID: <uuid>.
-func classifyRetryError(err error) *retry.RetryError {
-	if err == nil {
-		return nil
-	}
-	if restError, ok := errors.AsType[rest.Error](err); ok && restError.Code == http.StatusBadRequest {
-		containsConflict := slices.ContainsFunc(restError.ConstraintViolations, func(cv rest.ConstraintViolation) bool {
-			return strings.Contains(cv.Message, "refers to this parameter")
-		})
-		if containsConflict {
-			return retry.RetryableError(err)
-		}
-	}
-
-	return retry.NonRetryableError(err)
-}
-
 func (me *service) Update(ctx context.Context, id string, v *parameters.Settings) error {
 	return retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
 		err := me.service.Update(ctx, id, v)
-		return classifyRetryError(err)
+		return settings.ClassifyConstraintRetryError(err, retryErr)
 	})
 }
 
