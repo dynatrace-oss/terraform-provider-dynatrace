@@ -19,10 +19,6 @@ package general
 
 import (
 	"context"
-	"errors"
-	"net/http"
-	"slices"
-	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -37,6 +33,9 @@ const SchemaVersion = "1.0.18"
 const SchemaID = "builtin:dashboards.general"
 const defaultTimeout = 20 * time.Second
 
+// During "create" the data source of the dashboard may not be up to date.
+const retryErr = "Invalid value in datasource"
+
 type service struct {
 	service settings.CRUDService[*general.Settings]
 }
@@ -49,7 +48,7 @@ func (me *service) Create(ctx context.Context, v *general.Settings) (*api.Stub, 
 	err := retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
 		var err error
 		apiStub, err = me.service.Create(ctx, v)
-		return classifyRetryError(err)
+		return settings.ClassifyConstraintRetryError(err, retryErr)
 	})
 
 	if err != nil {
@@ -58,28 +57,10 @@ func (me *service) Create(ctx context.Context, v *general.Settings) (*api.Stub, 
 	return apiStub, nil
 }
 
-// classifyRetryErrors retries on certain conflicts
-// During "create" the data source of the dashboard may not be up to date.
-func classifyRetryError(err error) *retry.RetryError {
-	if err == nil {
-		return nil
-	}
-	if restError, ok := errors.AsType[rest.Error](err); ok && restError.Code == http.StatusBadRequest {
-		containsConflict := slices.ContainsFunc(restError.ConstraintViolations, func(cv rest.ConstraintViolation) bool {
-			return strings.Contains(cv.Message, "Invalid value in datasource")
-		})
-		if containsConflict {
-			return retry.RetryableError(err)
-		}
-	}
-
-	return retry.NonRetryableError(err)
-}
-
 func (me *service) Update(ctx context.Context, id string, v *general.Settings) error {
 	return retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
 		err := me.service.Update(ctx, id, v)
-		return classifyRetryError(err)
+		return settings.ClassifyConstraintRetryError(err, retryErr)
 	})
 }
 
