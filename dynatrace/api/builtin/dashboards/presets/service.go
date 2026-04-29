@@ -20,16 +20,22 @@ package presets
 import (
 	"context"
 	"sync"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	presets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dashboards/presets/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 )
 
 const SchemaVersion = "0.9.14"
 const SchemaID = "builtin:dashboards.presets"
+const defaultTimeout = 20 * time.Second
+
+// During "create" the data source of the dashboard may not be up to date.
+const retryErr = "Invalid value in datasource"
 
 var mu sync.Mutex
 
@@ -63,17 +69,29 @@ func (me *service) SchemaID() string {
 func (me *service) Create(ctx context.Context, v *presets.Settings) (*api.Stub, error) {
 	mu.Lock()
 	defer mu.Unlock()
+	var apiStub *api.Stub
 	// This schema is flagged with `multiobject=false` - in other words only one
 	// object can exist per environment
 	// Instead of trying to CREATE the settings we simply update the existing one
 	if stubs, _ := me.service.List(ctx); len(stubs) > 0 {
 		return stubs[0], me.update(ctx, stubs[0].ID, v)
 	}
-	return me.service.Create(ctx, v)
+	err := retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
+		var err error
+		apiStub, err = me.service.Create(ctx, v)
+		return settings.ClassifyConstraintRetryError(err, retryErr)
+	})
+	if err != nil {
+		return nil, err
+	}
+	return apiStub, nil
 }
 
 func (me *service) update(ctx context.Context, id string, v *presets.Settings) error {
-	return me.service.Update(ctx, id, v)
+	return retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
+		err := me.service.Update(ctx, id, v)
+		return settings.ClassifyConstraintRetryError(err, retryErr)
+	})
 }
 
 func (me *service) Update(ctx context.Context, id string, v *presets.Settings) error {
@@ -83,9 +101,9 @@ func (me *service) Update(ctx context.Context, id string, v *presets.Settings) e
 	// environment insists on having we're checking first, whether an object
 	// already exists. If so, we're updating using THAT ID.
 	if stubs, _ := me.service.List(ctx); len(stubs) > 0 {
-		return me.update(ctx, stubs[0].ID, v)
+		id = stubs[0].ID
 	}
-	return me.service.Update(ctx, id, v)
+	return me.update(ctx, id, v)
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
