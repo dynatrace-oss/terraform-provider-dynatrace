@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"slices"
 	"strings"
 	"time"
 
@@ -35,6 +36,15 @@ import (
 )
 
 const SchemaID = "v1:config:calculated-metrics-web"
+const defaultTimeout = 20 * time.Second
+
+// error messages (parts) that may be returned because of eventual consistency
+const (
+	overallErr = "Found more than one metric" // create => delete => create => leads to having the same "unique" identifier (metric key) twice
+	createErr  = "Unable to create"
+	deleteErr  = "Unable to delete"
+	getErr     = "does not exist" // should exist but is not synced across server nodes.
+)
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*mysettings.CalculatedWebMetric] {
 	return &service{client: rest.APITokenClient(credentials)}
@@ -45,7 +55,10 @@ type service struct {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *mysettings.CalculatedWebMetric) error {
-	return me.client.Get(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id)), 200).Finish(v)
+	return retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, defaultTimeout), func() *retry.RetryError {
+		err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id)), 200).Finish(v)
+		return classifyRetryError(err, getErr)
+	})
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
@@ -72,26 +85,36 @@ func (me *service) Validate(ctx context.Context, v *mysettings.CalculatedWebMetr
 }
 
 func (me *service) Create(ctx context.Context, v *mysettings.CalculatedWebMetric) (*api.Stub, error) {
-	client := me.client
 	var stub api.Stub
 
-	// retry max 10s
-	err := retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, 10*time.Second), func() *retry.RetryError {
-		return classifyCreateRetryError(client.Post(ctx, "/api/config/v1/calculatedMetrics/rum", v, 201).Finish(&stub))
+	err := retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, defaultTimeout), func() *retry.RetryError {
+		err := me.client.Post(ctx, "/api/config/v1/calculatedMetrics/rum", v, 201).Finish(&stub)
+		return classifyRetryError(err, createErr)
 	})
 
 	return &stub, err
 }
 
-// classifyCreateRetryError retries when there is a conflict during create.
-// Create after delete doesn't immediately work, which is needed for re-create due to ForceNew.
-// => "Unable to create RumMetric my-metric in DemMetricsConfigPersistence or Metadata: Unable to create RumMetric my-metric in DemMetricsConfigPersistence"
-func classifyCreateRetryError(err error) *retry.RetryError {
+// classifyRetryError retries when there is a conflict during create/update/delete.
+// Create after delete (e.g., ForceNew) => "Unable to create RumMetric my-metric in DemMetricsConfigPersistence or Metadata: Unable to create RumMetric my-metric in DemMetricsConfigPersistence"
+// Delete after cleanup => "Found more than one metric with key <my-key>"
+// GET after apply of an update => "Metric with key <my-key> does not exist"
+func classifyRetryError(err error, expectedErrs ...string) *retry.RetryError {
 	if err == nil {
 		return nil
 	}
+	restError, ok := errors.AsType[rest.Error](err)
 
-	if restError, ok := errors.AsType[rest.Error](err); ok && restError.Code == http.StatusBadRequest && strings.Contains(restError.Message, "Unable to create RumMetric") {
+	if !ok || restError.Code != http.StatusBadRequest {
+		return retry.NonRetryableError(err)
+	}
+
+	expectedErrs = append(expectedErrs, overallErr)
+
+	containsEventualConsistencyErr := slices.ContainsFunc(expectedErrs, func(s string) bool {
+		return strings.Contains(restError.Message, s)
+	})
+	if containsEventualConsistencyErr {
 		return retry.RetryableError(err)
 	}
 
@@ -99,35 +122,17 @@ func classifyCreateRetryError(err error) *retry.RetryError {
 }
 
 func (me *service) Update(ctx context.Context, id string, v *mysettings.CalculatedWebMetric) error {
-	if err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id)), v, 204).Finish(); err != nil {
-		return err
-	}
-	return nil
+	return retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, defaultTimeout), func() *retry.RetryError {
+		err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id)), v, 204).Finish()
+		return classifyRetryError(err, getErr)
+	})
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	var err error
-	attempts := 30
-
-	for range attempts {
-		if err = me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id)), 204, 200).Finish(); err != nil {
-			if !strings.Contains(err.Error(), fmt.Sprintf("Unable to delete Rum metric with key: \"%s\" from DemMetricsConfigPersistence", id)) {
-				return err
-			}
-		} else {
-			if err = me.Get(ctx, id, &mysettings.CalculatedWebMetric{}); err != nil {
-				if strings.Contains(err.Error(), fmt.Sprintf("Metric with key \"%s\" does not exist", id)) {
-					break
-				}
-			}
-		}
-		time.Sleep(2 * time.Second)
-	}
-
-	if err != nil {
-		return err
-	}
-	return nil
+	return retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, defaultTimeout), func() *retry.RetryError {
+		err := me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id)), 204, 200).Finish()
+		return classifyRetryError(err, deleteErr)
+	})
 }
 
 func (me *service) SchemaID() string {
