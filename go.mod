@@ -3,7 +3,8 @@ module github.com/dynatrace-oss/terraform-provider-dynatrace
 go 1.26.2
 
 require (
-	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20260408092445-c82e7a7729ff
+	github.com/Masterminds/semver/v3 v3.2.0
+	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20260428113012-406b6ed7b4eb
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cty v1.5.0
 	github.com/hashicorp/go-hclog v1.6.3
@@ -24,7 +25,6 @@ require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/Kunde21/markdownfmt/v3 v3.1.0 // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
-	github.com/Masterminds/semver/v3 v3.2.0 // indirect
 	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
 	github.com/ProtonMail/go-crypto v1.4.1 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
