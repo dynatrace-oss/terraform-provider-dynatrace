@@ -23,3 +23,9 @@ ignore:
   'snyk:lic:golang:github.com:hashicorp:terraform-registry-address:MPL-2.0': *ignore-mpl-2-0-license
   'snyk:lic:golang:github.com:hashicorp:terraform-svchost:MPL-2.0': *ignore-mpl-2-0-license
   'snyk:lic:golang:github.com:hashicorp:yamux:MPL-2.0': *ignore-mpl-2-0-license
+
+  SNYK-GOLANG-GITHUBCOMVMIHAILENCOMSGPACK-15702236: &msg-pack-ignore
+    - '*':
+        reason: 'Transitive dependency via terraform-plugin-sdk/v2; no fixed version available upstream.'
+        expires: 2026-06-06T00:00:00.000Z
+  SNYK-GOLANG-GITHUBCOMVMIHAILENCOMSGPACKV5-15702238: *msg-pack-ignore
