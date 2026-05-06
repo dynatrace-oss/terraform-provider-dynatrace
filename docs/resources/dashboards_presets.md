@@ -26,7 +26,6 @@ The full documentation of the export feature is available [here](https://dt-url.
 
 ```terraform
 resource "dynatrace_dashboards_presets" "presets" {
-  depends_on = [time_sleep.dashboard_create]
   enable_dashboard_presets = true
   dashboard_presets_list {
     dashboard_presets {
@@ -34,13 +33,6 @@ resource "dynatrace_dashboards_presets" "presets" {
       user_group = dynatrace_iam_group.group.id
     }
   }
-}
-
-
-# the datasource of dynatrace_dashboards_presets may not be updated yet.
-resource "time_sleep" "dashboard_create" {
-  depends_on = [dynatrace_dashboard.dashboard]
-  create_duration = "5s"
 }
 
 resource "dynatrace_iam_group" "group" {
