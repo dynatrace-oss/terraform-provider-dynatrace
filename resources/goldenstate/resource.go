@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ package goldenstate
 import (
 	"context"
 	"fmt"
-	"os"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -31,7 +31,6 @@ import (
 
 const Debug = true
 
-var Enabled = os.Getenv("DYNATRACE_GOLDEN_STATE_ENABLED") == "true"
 
 func Resource() *schema.Resource {
 	schemaMap := map[string]*schema.Schema{
@@ -63,7 +62,7 @@ func Resource() *schema.Resource {
 
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	d.SetId("")
-	if !Enabled {
+	if !envutils.DynatraceGoldenStateEnabled.Get() {
 		return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: DisabledMessage}}
 	}
 	return diag.Diagnostics{}

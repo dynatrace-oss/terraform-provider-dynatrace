@@ -18,6 +18,7 @@
 package goldenstate
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"context"
 	"fmt"
 	"regexp"
@@ -32,7 +33,7 @@ import (
 )
 
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	if !Enabled {
+	if !envutils.DynatraceGoldenStateEnabled.Get() {
 		return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: DisabledMessage}}
 	}
 	return read(ctx, d, m, "")
