@@ -190,3 +190,13 @@ var DTDocumentsIgnoreUnexpectedEOF = BoolEnvVar{
 	Key:          "DT_DOCUMENTS_IGNORE_UNEXPECTED_EOF",
 	DefaultValue: false,
 }
+
+// --- Custom Device ---
+
+// DTCustomDeviceApplyTimeout is the timeout in seconds for custom device apply operations. Values outside [Min, Max] are clamped to the nearest boundary.
+var DTCustomDeviceApplyTimeout = ClampedIntEnvVar{
+	Key:          "DT_CUSTOM_DEVICE_APPLY_TIMEOUT",
+	DefaultValue: 100,
+	Min:          100,
+	Max:          500,
+}
