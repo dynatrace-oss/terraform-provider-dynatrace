@@ -120,3 +120,9 @@ var DTCacheDeleteOnLaunch = BoolEnvVar{
 	Key:          "DT_CACHE_DELETE_ON_LAUNCH",
 	DefaultValue: false,
 }
+
+// DTNoCacheCleanup specifies whether to skip automatic cache cleanup on provider shutdown.
+var DTNoCacheCleanup = BoolEnvVar{
+	Key:          "DT_NO_CACHE_CLEANUP",
+	DefaultValue: false,
+}
