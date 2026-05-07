@@ -28,7 +28,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-var PREV_STATE_PATH_THIS = os.Getenv("DYNATRACE_PREV_STATE_PATH_THIS")
 var PREV_STATE_PATH_LINKED = os.Getenv("DYNATRACE_PREV_STATE_PATH_LINKED")
 
 type StateMap struct {
@@ -241,7 +240,7 @@ func getResourceByUniqueName(res *Resource, sm *StateMap) (string, StateResource
 }
 
 func LoadStateThis() (*state, error) {
-	return LoadStateFile(PREV_STATE_PATH_THIS)
+	return LoadStateFile(envutils.DynatracePrevStatePathThis.Get())
 }
 
 func LoadStateLinked() (*state, error) {
