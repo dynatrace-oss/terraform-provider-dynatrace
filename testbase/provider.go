@@ -19,7 +19,6 @@ package testbase
 
 import (
 	"context"
-	"os"
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
@@ -63,7 +62,7 @@ func TestAccPreCheck(t *testing.T) {
 		t.Fatalf("[WARN] DYNATRACE_ENV_URL has not been set for acceptance tests")
 	}
 
-	if v := os.Getenv("DYNATRACE_API_TOKEN"); v == "" {
+	if v := envutils.DynatraceAPIToken.Get(); v == "" {
 		t.Fatalf("[WARN] DYNATRACE_API_TOKEN must be set for acceptance tests")
 	}
 

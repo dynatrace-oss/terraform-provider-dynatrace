@@ -508,3 +508,9 @@ var DynatraceEnvURL = StringEnvVar{
 	Key:          "DYNATRACE_ENV_URL",
 	DefaultValue: "",
 }
+
+// DynatraceAPIToken sets the Dynatrace API token for acceptance tests.
+var DynatraceAPIToken = StringEnvVar{
+	Key:          "DYNATRACE_API_TOKEN",
+	DefaultValue: "",
+}
