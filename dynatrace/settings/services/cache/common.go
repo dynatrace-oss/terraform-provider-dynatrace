@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import (
 	"path"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/google/uuid"
 )
 
@@ -55,7 +56,6 @@ func Cleanup() {
 	os.RemoveAll(cache_root_folder)
 }
 
-const ENV_VAR_CACHE_ROOT_FOLDER = "DT_CACHE_FOLDER"
 const ENV_VAR_CACHE_OFFLINE_MODE = "CACHE_OFFLINE_MODE"
 const ENV_VAR_DELETE_CACHE_ON_LAUNCH = "DT_CACHE_DELETE_ON_LAUNCH"
 const ENV_VAR_NO_CACHE_CLEANUP = "DT_NO_CACHE_CLEANUP"
@@ -68,7 +68,7 @@ func GetCacheFolder() string {
 
 func getCacheRootFolder() string {
 	folder := path.Join(os.TempDir(), ".terraform-provider-dynatrace", uuid.NewString())
-	if envFolder := os.Getenv(ENV_VAR_CACHE_ROOT_FOLDER); envFolder != "" {
+	if envFolder := envutils.DTCacheFolder.Get(); envFolder != "" {
 		folder = envFolder
 	}
 	deleteCache := os.Getenv(ENV_VAR_DELETE_CACHE_ON_LAUNCH)
