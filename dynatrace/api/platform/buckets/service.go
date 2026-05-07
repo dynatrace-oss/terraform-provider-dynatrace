@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	bucket "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/buckets"
@@ -52,11 +53,10 @@ func (me *service) client(ctx context.Context) (*bucket.Client, error) {
 	return bucket.NewClient(platformClient), nil
 }
 
-var IGNORE_UNEXPECTED_EOF = (os.Getenv("DT_BUCKETS_IGNORE_UNEXPECTED_EOF") == "true")
 
 func (me *service) Get(ctx context.Context, id string, v *buckets.Bucket) (err error) {
 	err = me.get(ctx, id, v)
-	if IGNORE_UNEXPECTED_EOF && err != nil {
+	if envutils.DTBucketsIgnoreUnexpectedEOF.Get() && err != nil {
 		if strings.Contains(err.Error(), "unexpected EOF") {
 			cfg := ctx.Value(settings.ContextKeyStateConfig)
 			if stateBucket, ok := cfg.(*buckets.Bucket); ok {
