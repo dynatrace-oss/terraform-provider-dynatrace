@@ -436,3 +436,9 @@ var DynatracePrevStateOn = BoolEnvVar{
 	Key:          "DYNATRACE_PREV_STATE_ON",
 	DefaultValue: false,
 }
+
+// DynatracePrevStatePathThis sets the path to the previous state for the current environment.
+var DynatracePrevStatePathThis = StringEnvVar{
+	Key:          "DYNATRACE_PREV_STATE_PATH_THIS",
+	DefaultValue: "",
+}
