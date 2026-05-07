@@ -140,3 +140,11 @@ var DTBackwardsCompatibility = BoolEnvVar{
 	Key:          "DT_BACKWARDS_COMPATIBILITY",
 	DefaultValue: false,
 }
+
+// --- Buckets ---
+
+// DTBucketsIgnoreUnexpectedEOF ignores unexpected EOF errors when managing buckets.
+var DTBucketsIgnoreUnexpectedEOF = BoolEnvVar{
+	Key:          "DT_BUCKETS_IGNORE_UNEXPECTED_EOF",
+	DefaultValue: false,
+}
