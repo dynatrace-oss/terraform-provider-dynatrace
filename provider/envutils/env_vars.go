@@ -114,3 +114,9 @@ var CacheOfflineMode = BoolEnvVar{
 	Key:          "CACHE_OFFLINE_MODE",
 	DefaultValue: false,
 }
+
+// DTCacheDeleteOnLaunch enables deleting the cache on provider launch.
+var DTCacheDeleteOnLaunch = BoolEnvVar{
+	Key:          "DT_CACHE_DELETE_ON_LAUNCH",
+	DefaultValue: false,
+}
