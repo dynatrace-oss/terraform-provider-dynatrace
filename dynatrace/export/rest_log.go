@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,12 +21,13 @@ import (
 	"os"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 var restLogFile *os.File
 
 func ConfigureRESTLog() (err error) {
-	restLogFileName := os.Getenv("DT_REST_DEBUG_LOG")
+	restLogFileName := envutils.DTRestDebugLog.Get()
 	if len(restLogFileName) > 0 {
 		if restLogFile, err = os.Create(restLogFileName); err != nil {
 			return err
