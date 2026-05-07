@@ -320,3 +320,9 @@ var DynatraceCleanTargetFolder = BoolEnvVar{
 	Key:          "DYNATRACE_CLEAN_TARGET_FOLDER",
 	DefaultValue: false,
 }
+
+// DynatraceProviderSource sets the provider source for generated Terraform files.
+var DynatraceProviderSource = StringEnvVar{
+	Key:          "DYNATRACE_PROVIDER_SOURCE",
+	DefaultValue: "",
+}
