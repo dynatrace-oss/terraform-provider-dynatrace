@@ -22,42 +22,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"hash/fnv"
-	"os"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-const ENV_VAR_POLL_SLEEP_DURATION = "DYNATRACE_DQL_POLL_SLEEP_DURATION"
-const DEFAULT_POLL_SLEEP_DURATION = 5000
-const MIN_POLL_SLEEP_DURATION = 0
-const MAX_POLL_SLEEP_DURATION = 60000
-
-var POLL_SLEEP_DURATION = evalPollSleepDuration()
-
-func evalPollSleepDuration() int {
-	value := os.Getenv(ENV_VAR_POLL_SLEEP_DURATION)
-	if len(value) == 0 {
-		return DEFAULT_POLL_SLEEP_DURATION
-	}
-	iValue, err := strconv.Atoi(value)
-	if err != nil {
-		return DEFAULT_POLL_SLEEP_DURATION
-	}
-	if iValue < 0 {
-		return DEFAULT_POLL_SLEEP_DURATION
-	}
-	if iValue > MAX_POLL_SLEEP_DURATION {
-		return DEFAULT_POLL_SLEEP_DURATION
-	}
-	return iValue
-}
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
@@ -198,7 +173,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 			if len(dqlResponse.RequestToken) == 0 {
 				return diag.FromErr(fmt.Errorf("query is running but no request token for result polling was provided by REST API"))
 			}
-			time.Sleep(time.Duration(POLL_SLEEP_DURATION) * time.Millisecond)
+			time.Sleep(time.Duration(envutils.DynatraceDQLPollSleepDuration.Get()) * time.Millisecond)
 			response, err := client.Poll(ctx, dqlResponse.RequestToken)
 			if err != nil {
 				return diag.FromErr(err)
