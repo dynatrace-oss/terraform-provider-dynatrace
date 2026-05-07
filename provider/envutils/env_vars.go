@@ -298,3 +298,11 @@ var DynatraceWorkflowTasksUseTypeList = BoolEnvVar{
 	Key:          "DYNATRACE_WORKFLOW_TASKS_USE_TYPE_LIST",
 	DefaultValue: false,
 }
+
+// --- HCL / Terraform Generation ---
+
+// DynatraceHeredoc enables heredoc usage in generated HCL.
+var DynatraceHeredoc = BoolEnvVar{
+	Key:          "DYNATRACE_HEREDOC",
+	DefaultValue: true,
+}
