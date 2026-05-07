@@ -306,3 +306,11 @@ var DynatraceHeredoc = BoolEnvVar{
 	Key:          "DYNATRACE_HEREDOC",
 	DefaultValue: true,
 }
+
+// --- Export ---
+
+// DynatraceTargetFolder sets the target folder for export output.
+var DynatraceTargetFolder = StringEnvVar{
+	Key:          "DYNATRACE_TARGET_FOLDER",
+	DefaultValue: "",
+}
