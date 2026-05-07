@@ -442,3 +442,9 @@ var DynatracePrevStatePathThis = StringEnvVar{
 	Key:          "DYNATRACE_PREV_STATE_PATH_THIS",
 	DefaultValue: "",
 }
+
+// DynatracePrevStatePathLinked sets the path to the previous state for linked environments.
+var DynatracePrevStatePathLinked = StringEnvVar{
+	Key:          "DYNATRACE_PREV_STATE_PATH_LINKED",
+	DefaultValue: "",
+}

@@ -19,7 +19,6 @@ package export
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -28,7 +27,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-var PREV_STATE_PATH_LINKED = os.Getenv("DYNATRACE_PREV_STATE_PATH_LINKED")
 
 type StateMap struct {
 	mutex     *sync.Mutex
@@ -244,7 +242,7 @@ func LoadStateThis() (*state, error) {
 }
 
 func LoadStateLinked() (*state, error) {
-	return LoadStateFile(PREV_STATE_PATH_LINKED)
+	return LoadStateFile(envutils.DynatracePrevStatePathLinked.Get())
 }
 
 func LoadStateFile(filePath string) (*state, error) {
