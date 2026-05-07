@@ -314,3 +314,9 @@ var DynatraceTargetFolder = StringEnvVar{
 	Key:          "DYNATRACE_TARGET_FOLDER",
 	DefaultValue: "",
 }
+
+// DynatraceCleanTargetFolder enables cleaning of the target folder before export.
+var DynatraceCleanTargetFolder = BoolEnvVar{
+	Key:          "DYNATRACE_CLEAN_TARGET_FOLDER",
+	DefaultValue: false,
+}
