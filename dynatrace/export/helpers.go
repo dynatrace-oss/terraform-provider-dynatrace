@@ -18,7 +18,6 @@
 package export
 
 import (
-	"os"
 	"os/exec"
 	"strings"
 	"unicode"
@@ -29,7 +28,6 @@ import (
 // To speed things up when using Dynatrace Config Manager
 
 // To get more unique names when using Dynatrace Config Manager
-var NAME_REPLACE_DASH = os.Getenv("DYNATRACE_NAME_REPLACE_DASH") == "true"
 
 func format(name string, force bool) {
 	if envutils.DynatraceHCLNoFormat.Get() {
@@ -58,7 +56,7 @@ func fileSystemName(filename string) string {
 
 func toTerraformName(s string) string {
 	replaceChar := "_"
-	if NAME_REPLACE_DASH {
+	if envutils.DynatraceNameReplaceDash.Get() {
 		replaceChar = "-"
 	}
 	result := ""

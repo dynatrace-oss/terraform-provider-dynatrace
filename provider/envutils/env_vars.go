@@ -398,3 +398,9 @@ var DynatraceHCLNoFormat = BoolEnvVar{
 	Key:          "DYNATRACE_HCL_NO_FORMAT",
 	DefaultValue: false,
 }
+
+// DynatraceNameReplaceDash replaces dashes with underscores in resource names.
+var DynatraceNameReplaceDash = BoolEnvVar{
+	Key:          "DYNATRACE_NAME_REPLACE_DASH",
+	DefaultValue: false,
+}
