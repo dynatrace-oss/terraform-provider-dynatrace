@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,10 +24,11 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 // To allow -target to work with dependencies at an atomic level
-var ATOMIC_DEPENDENCIES = os.Getenv("DYNATRACE_ATOMIC_DEPENDENCIES") == "true"
 
 type Dependency interface {
 	Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any)
@@ -126,7 +127,7 @@ func (me *mgmzdep) DataSourceType() DataSourceType {
 
 func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	var replacePattern string
-	if ATOMIC_DEPENDENCIES {
+	if envutils.DynatraceAtomicDependencies.Get() {
 		replacePattern = "${var.%s_%s.value.name}"
 	} else {
 		replacePattern = "${var.%s.%s.name}"
@@ -153,7 +154,7 @@ func (me *mgmzdep) Replace(environment *Environment, s string, replacingIn Resou
 				replacePattern = "${data.%s.%s.name}"
 			}
 		} else {
-			if ATOMIC_DEPENDENCIES {
+			if envutils.DynatraceAtomicDependencies.Get() {
 				replacePattern = "${var.%s_%s.value.name}"
 			} else {
 				replacePattern = "${var.%s.%s.name}"
@@ -305,7 +306,7 @@ func (me *dashdep) Replace(environment *Environment, s string, replacingIn Resou
 	isParent := !environment.ChildResourceOverride && childDescriptor.Parent != nil && string(*childDescriptor.Parent) == string(me.resourceType)
 
 	var replacePattern string
-	if ATOMIC_DEPENDENCIES {
+	if envutils.DynatraceAtomicDependencies.Get() {
 		replacePattern = "${var.%s_%s.value.id}"
 	} else {
 		replacePattern = "${var.%s.%s.id}"
@@ -331,7 +332,7 @@ func (me *dashdep) Replace(environment *Environment, s string, replacingIn Resou
 					replacePattern = "${data.%s.%s.id}"
 				}
 			} else {
-				if ATOMIC_DEPENDENCIES {
+				if envutils.DynatraceAtomicDependencies.Get() {
 					replacePattern = "${var.%s_%s.value.id}"
 				} else {
 					replacePattern = "${var.%s.%s.id}"
@@ -371,7 +372,7 @@ func (me *legacyID) DataSourceType() DataSourceType {
 
 func (me *legacyID) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	var replacePattern string
-	if ATOMIC_DEPENDENCIES {
+	if envutils.DynatraceAtomicDependencies.Get() {
 		replacePattern = "${var.%s_%s.value.legacy_id}"
 	} else {
 		replacePattern = "${var.%s.%s.legacy_id}"
@@ -419,7 +420,7 @@ func (me *legacyID) Replace(environment *Environment, s string, replacingIn Reso
 				replacePattern = "${data.%s.%s.legacy_id}"
 			}
 		} else {
-			if ATOMIC_DEPENDENCIES {
+			if envutils.DynatraceAtomicDependencies.Get() {
 				replacePattern = "${var.%s_%s.value.legacy_id}"
 			} else {
 				replacePattern = "${var.%s.%s.legacy_id}"
@@ -563,7 +564,7 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 	}
 
 	var replacePattern string
-	if ATOMIC_DEPENDENCIES {
+	if envutils.DynatraceAtomicDependencies.Get() {
 		replacePattern = "${var.%s_%s.value.id}"
 	} else {
 		replacePattern = "${var.%s.%s.id}"
@@ -600,7 +601,7 @@ func (me *iddep) Replace(environment *Environment, s string, replacingIn Resourc
 					replacePattern = "${data.%s.%s.id}"
 				}
 			} else {
-				if ATOMIC_DEPENDENCIES {
+				if envutils.DynatraceAtomicDependencies.Get() {
 					replacePattern = "${var.%s_%s.value.id}"
 				} else {
 					replacePattern = "${var.%s.%s.id}"
@@ -850,7 +851,7 @@ func (me *reqAttName) DataSourceType() DataSourceType {
 
 func (me *reqAttName) Replace(environment *Environment, s string, replacingIn ResourceType, resourceId string, nonPostProcessedResources []*Resource) (string, []any) {
 	var replacePattern string
-	if ATOMIC_DEPENDENCIES {
+	if envutils.DynatraceAtomicDependencies.Get() {
 		replacePattern = "${var.%s_%s.value.name}"
 	} else {
 		replacePattern = "${var.%s.%s.name}"
@@ -875,7 +876,7 @@ func (me *reqAttName) Replace(environment *Environment, s string, replacingIn Re
 					replacePattern = "${data.%s.%s.name}"
 				}
 			} else {
-				if ATOMIC_DEPENDENCIES {
+				if envutils.DynatraceAtomicDependencies.Get() {
 					replacePattern = "${var.%s_%s.value.name}"
 				} else {
 					replacePattern = "${var.%s.%s.name}"

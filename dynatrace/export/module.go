@@ -468,7 +468,7 @@ func (me *Module) WriteVariablesFile(logToScreen bool) (err error) {
 		}
 	}()
 
-	if ATOMIC_DEPENDENCIES {
+	if envutils.DynatraceAtomicDependencies.Get() {
 		uniqueNameExists := map[string]bool{}
 		referencedResources := me.GetResourceReferences()
 		if len(referencedResources) == 0 {
@@ -698,7 +698,7 @@ func (me *Module) WriteResourcesFile() (err error) {
 		format(resourcesFile.Name(), true)
 	}()
 
-	if ATOMIC_DEPENDENCIES {
+	if envutils.DynatraceAtomicDependencies.Get() {
 
 		uniqueNameExists := map[string]bool{}
 		for _, resource := range referencedResources {
