@@ -21,8 +21,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"os"
-	"strconv"
 	"strings"
 	"time"
 
@@ -52,7 +50,6 @@ func (me *service) client(ctx context.Context) (*bucket.Client, error) {
 	}
 	return bucket.NewClient(platformClient), nil
 }
-
 
 func (me *service) Get(ctx context.Context, id string, v *buckets.Bucket) (err error) {
 	err = me.get(ctx, id, v)
@@ -118,32 +115,6 @@ func (me *service) Validate(v *buckets.Bucket) error {
 	return nil // no endpoint for that
 }
 
-const DefaultNumRequiredSuccesses = 10
-const MinNumRequiredSuccesses = 10
-const MaxNumRequiredSuccesses = 50
-
-const DefaultMaxConfirmationRetries = 180
-const MaxMaxConfirmationRetries = 360
-const MinMaxConfirmationRetries = 180
-
-func getEnv(key string, def int, min int, max int) int {
-	value := os.Getenv(key)
-	if len(value) == 0 {
-		return def
-	}
-	iValue, err := strconv.Atoi(strings.TrimSpace(value))
-	if err != nil {
-		return def
-	}
-	if iValue > max {
-		iValue = max
-	}
-	if iValue < min {
-		iValue = min
-	}
-	return iValue
-}
-
 func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stub, err error) {
 	client, err := me.client(ctx)
 	if err != nil {
@@ -163,7 +134,7 @@ func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stu
 	}
 
 	maxConfirmationRetries := envutils.DTBucketsRetries.Get()
-	numRequiredSuccesses := getEnv("DT_BUCKETS_NUM_SUCCESSES", DefaultNumRequiredSuccesses, MinNumRequiredSuccesses, MaxNumRequiredSuccesses)
+	numRequiredSuccesses := envutils.DTBucketsNumSuccesses.Get()
 	requiredSuccessesLeft := numRequiredSuccesses
 	retries := 0
 	var responseBucket buckets.Bucket
