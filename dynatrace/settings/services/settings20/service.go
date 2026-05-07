@@ -21,7 +21,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
 	"reflect"
 	"regexp"
 	"strings"
@@ -36,7 +35,6 @@ import (
 	"net/url"
 )
 
-var DISABLE_ORDERING_SUPPORT = os.Getenv("DYNATRACE_DISABLE_ORDERING_SUPPORT") == "true"
 
 
 func Service[T settings.Settings](credentials *rest.Credentials, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.ListIDCRUDService[T] {
@@ -109,7 +107,7 @@ func (me *service[T]) Get(ctx context.Context, id string, v T) error {
 }
 
 func (me *service[T]) handleOrdering(ctx context.Context, id string, v T) error {
-	if DISABLE_ORDERING_SUPPORT {
+	if envutils.DynatraceDisableOrderingSupport.Get() {
 		return nil
 	}
 

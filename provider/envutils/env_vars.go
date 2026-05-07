@@ -94,3 +94,9 @@ var DTNoRepairInput = BoolEnvVar{
 	Key:          "DT_NO_REPAIR_INPUT",
 	DefaultValue: false,
 }
+
+// DynatraceDisableOrderingSupport disables ordering support for settings resources.
+var DynatraceDisableOrderingSupport = BoolEnvVar{
+	Key:          "DYNATRACE_DISABLE_ORDERING_SUPPORT",
+	DefaultValue: false,
+}
