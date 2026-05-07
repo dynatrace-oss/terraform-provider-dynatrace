@@ -37,7 +37,6 @@ import (
 const SchemaVersion = "1.3"
 const SchemaID = "builtin:host.monitoring.mode"
 
-var WarnOnAgentOffline = os.Getenv("DYNATRACE_HOST_MONITORING_WARNINGS") == "true"
 var StrictUpdateRetries = os.Getenv("DYNATRACE_HOST_MONITORING_STRICT_UPDATE_RETRIES")
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*mode.Settings] {
@@ -179,7 +178,7 @@ func (me *service) update(ctx context.Context, id string, v *mode.Settings) erro
 	}
 	// we don't want to error out just because the Agent isn't online
 	if strings.Contains(err.Error(), "Monitoring mode can't be changed while OneAgent is offline") {
-		if WarnOnAgentOffline {
+		if envutils.DynatraceHostMonitoringWarnings.Get() {
 			return rest.Warning{Message: fmt.Sprintf("The host '%s' is currently offline - changing the monitoring mode was not possible", id)}
 		}
 		return nil

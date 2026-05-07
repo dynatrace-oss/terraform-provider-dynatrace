@@ -276,3 +276,9 @@ var DynatraceHostMonitoringOffline = BoolEnvVar{
 	Key:          "DYNATRACE_HOST_MONITORING_OFFLINE",
 	DefaultValue: false,
 }
+
+// DynatraceHostMonitoringWarnings enables warnings for host monitoring issues.
+var DynatraceHostMonitoringWarnings = BoolEnvVar{
+	Key:          "DYNATRACE_HOST_MONITORING_WARNINGS",
+	DefaultValue: false,
+}
