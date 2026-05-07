@@ -48,7 +48,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-var ULTRA_PARALLEL = os.Getenv("DYNATRACE_ULTRA_PARALLEL") == "true"
 
 type Environment struct {
 	mu                    sync.Mutex
