@@ -48,7 +48,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-var NO_REFRESH_ON_IMPORT = os.Getenv("DYNATRACE_NO_REFRESH_ON_IMPORT") == "true"
 var QUICK_INIT = os.Getenv("DYNATRACE_QUICK_INIT") == "true"
 var ULTRA_PARALLEL = os.Getenv("DYNATRACE_ULTRA_PARALLEL") == "true"
 
@@ -1036,7 +1035,7 @@ func (me *Environment) executeImportV2() error {
 		return err
 	}
 
-	if NO_REFRESH_ON_IMPORT {
+	if envutils.DynatraceNoRefreshOnImport.Get() {
 		fmt.Println("NO_REFRESH_ON_IMPORT set to true")
 	} else {
 		me.executeTF(genPlanCmd())
