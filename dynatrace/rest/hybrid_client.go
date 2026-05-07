@@ -18,6 +18,7 @@
 package rest
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"context"
 	"errors"
 	"net/http"
@@ -79,7 +80,7 @@ func (me *hybrid_request) Finish(optionalTarget ...any) error {
 
 	credentials := me.client.Credentials()
 
-	if DYNATRACE_HTTP_LEGACY {
+	if envutils.DynatraceHTTPLegacy.Get() {
 		if !credentials.ContainsAPIToken() {
 			return NoAPITokenError
 		}

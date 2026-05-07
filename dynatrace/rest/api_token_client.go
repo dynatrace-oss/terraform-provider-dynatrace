@@ -18,6 +18,7 @@
 package rest
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"context"
 	"errors"
 	"net/http"
@@ -83,7 +84,7 @@ func (me *api_token_request) Finish(vs ...any) error {
 	if !credentials.ContainsAPIToken() {
 		return NoAPITokenError
 	}
-	if DYNATRACE_HTTP_LEGACY {
+	if envutils.DynatraceHTTPLegacy.Get() {
 		legacyRequest := legacy_request(*me)
 		if credentials.URL == TestCaseEnvURL {
 			return errors.New("legacy")
