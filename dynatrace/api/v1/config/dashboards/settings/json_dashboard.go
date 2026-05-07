@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package dashboards
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"reflect"
 	slices0 "slices"
 	"sort"
@@ -28,6 +27,7 @@ import (
 
 	"golang.org/x/exp/slices"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -39,7 +39,6 @@ type JSONDashboard struct {
 	Contents string
 }
 
-var DYNATRACE_DASHBOARD_TESTS = len(os.Getenv("DYNATRACE_DASHBOARD_TESTS")) > 0
 
 func denullslice(s []any) []any {
 	if len(s) == 0 {
@@ -185,7 +184,7 @@ func enrm(m map[string]any, bc string, fordiff bool) {
 	}
 	if bc == "tiles[#].filterConfig.chartConfig.series[#].dimensions[#]" {
 		ensure(m, "values", []string{})
-		if DYNATRACE_DASHBOARD_TESTS && fordiff {
+		if envutils.DynatraceDashboardTests.Get() && fordiff {
 			delete(m, "name")
 		}
 	}
@@ -352,7 +351,7 @@ func get(v any, key string) any {
 func diffSuppressedContent(content string) string {
 	m := map[string]any{}
 	json.Unmarshal([]byte(content), &m)
-	if DYNATRACE_DASHBOARD_TESTS {
+	if envutils.DynatraceDashboardTests.Get() {
 		if dmd := get(m, "dashboardMetadata"); dmd != nil {
 			if df := get(dmd, "dashboardFilter"); df != nil {
 				if mgmz := get(df, "managementZone"); mgmz != nil {
@@ -364,7 +363,7 @@ func diffSuppressedContent(content string) string {
 	denullmap(m)
 	delete(m, "metadata")
 	enrm(m, "", true)
-	if DYNATRACE_DASHBOARD_TESTS {
+	if envutils.DynatraceDashboardTests.Get() {
 		if tiles, found := m["tiles"]; found {
 			if tileSlice, ok := tiles.([]any); ok {
 				for _, tile := range tileSlice {

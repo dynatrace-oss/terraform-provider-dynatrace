@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2025 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,10 +21,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"os"
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -130,10 +130,9 @@ func SuppressJSONorEOT(k, old, new string, d *schema.ResourceData) bool {
 	return equalLineByLine(old, new)
 }
 
-var DYNATRACE_DASHBOARD_TESTS = len(os.Getenv("DYNATRACE_DASHBOARD_TESTS")) > 0
 
 func Println(path string, message string, b ...bool) {
-	if !DYNATRACE_DASHBOARD_TESTS {
+	if !envutils.DynatraceDashboardTests.Get() {
 		return
 	}
 	if len(b) > 0 {
@@ -213,7 +212,7 @@ func DeepEqual(a any, b any, path string) bool {
 		delete(bTyped, "metricExpressions")
 		if len(aTyped) != len(bTyped) {
 			Println(path, "MAP len(a) != len(b)")
-			if DYNATRACE_DASHBOARD_TESTS {
+			if envutils.DynatraceDashboardTests.Get() {
 				aData, _ := json.Marshal(a)
 				Println(path, "--- THIS IS A ---")
 				Println(path, string(aData))
@@ -265,7 +264,7 @@ func DeepEqual(a any, b any, path string) bool {
 			}
 			if !found {
 				Println(fmt.Sprintf("%s[%d]", path, ai), "not found in b")
-				if DYNATRACE_DASHBOARD_TESTS {
+				if envutils.DynatraceDashboardTests.Get() {
 					aData, _ := json.Marshal(a)
 					Println(path, "--- THIS IS A ---")
 					Println(path, string(aData))

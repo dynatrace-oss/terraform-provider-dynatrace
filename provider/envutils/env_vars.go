@@ -250,3 +250,11 @@ var DynatraceGoldenStateEnabled = BoolEnvVar{
 	Key:          "DYNATRACE_GOLDEN_STATE_ENABLED",
 	DefaultValue: false,
 }
+
+// --- Dashboards ---
+
+// DynatraceDashboardTests enables dashboard test behavior.
+var DynatraceDashboardTests = BoolEnvVar{
+	Key:          "DYNATRACE_DASHBOARD_TESTS",
+	DefaultValue: false,
+}
