@@ -24,3 +24,9 @@ var DynatraceDebug = BoolEnvVar{
 	Key:          "DYNATRACE_DEBUG",
 	DefaultValue: false,
 }
+
+// DynatraceLogDebugPrefix sets the prefix filter for debug log entries.
+var DynatraceLogDebugPrefix = StringEnvVar{
+	Key:          "DYNATRACE_LOG_DEBUG_PREFIX",
+	DefaultValue: "",
+}
