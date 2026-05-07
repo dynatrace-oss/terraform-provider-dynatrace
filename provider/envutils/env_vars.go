@@ -338,3 +338,9 @@ var DynatraceCustomProviderLocation = StringEnvVar{
 	Key:          "DYNATRACE_CUSTOM_PROVIDER_LOCATION",
 	DefaultValue: "",
 }
+
+// DynatraceNoRefreshOnImport skips refreshing resources after export.
+var DynatraceNoRefreshOnImport = BoolEnvVar{
+	Key:          "DYNATRACE_NO_REFRESH_ON_IMPORT",
+	DefaultValue: false,
+}
