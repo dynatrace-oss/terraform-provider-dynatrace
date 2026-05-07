@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -26,14 +26,13 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	web "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/settings"
 )
 
 const SchemaID = "v1:config:applications:web"
 
-var DefaultCreateConfirmTimeout = 280
-var createConfirmTimeout = settings.GetIntEnv("DYNATRACE_CREATE_CONFIRM_WEB_APPLICATION", DefaultCreateConfirmTimeout, 20, 500)
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*web.Application] {
 	return &service{
@@ -43,7 +42,7 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*web.Applicatio
 			&settings.ServiceOptions[*web.Application]{
 				Get:           settings.Path("/api/config/v1/applications/web/%s"),
 				List:          settings.Path("/api/config/v1/applications/web"),
-				CreateConfirm: createConfirmTimeout,
+				CreateConfirm: envutils.DynatraceCreateConfirmWebApplication.Get(),
 				Duplicates:    Duplicates,
 			},
 		),

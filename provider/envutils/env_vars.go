@@ -538,3 +538,13 @@ var DynatraceCreateConfirmSyntheticMonitorsV2 = BoundedIntEnvVar{
 	Min:          1,
 	Max:          50,
 }
+
+// --- Web Application ---
+
+// DynatraceCreateConfirmWebApplication is the number of confirmation retries when creating web applications. Falls back to the default if the value is outside [Min, Max].
+var DynatraceCreateConfirmWebApplication = BoundedIntEnvVar{
+	Key:          "DYNATRACE_CREATE_CONFIRM_WEB_APPLICATION",
+	DefaultValue: 280,
+	Min:          20,
+	Max:          500,
+}
