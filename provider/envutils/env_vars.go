@@ -374,3 +374,9 @@ var DynatraceEnableExportDashboard = BoolEnvVar{
 	Key:          "DYNATRACE_ENABLE_EXPORT_DASHBOARD",
 	DefaultValue: false,
 }
+
+// DynatraceAtomicDependencies exports dependencies atomically.
+var DynatraceAtomicDependencies = BoolEnvVar{
+	Key:          "DYNATRACE_ATOMIC_DEPENDENCIES",
+	DefaultValue: false,
+}

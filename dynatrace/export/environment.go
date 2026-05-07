@@ -923,7 +923,7 @@ func (me *Environment) WriteMainFile() error {
 		module := me.Module(resourceType)
 		me.writeOpeningMainSection(mainFile, resourceType.Trim(), module.GetFolder(true))
 
-		if ATOMIC_DEPENDENCIES {
+		if envutils.DynatraceAtomicDependencies.Get() {
 
 			uniqueNameExists := map[string]bool{}
 			referencedResources := module.GetResourceReferences()
