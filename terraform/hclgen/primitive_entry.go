@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,17 +20,16 @@ package hclgen
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"strings"
 	"unicode"
 	"unicode/utf8"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/zclconf/go-cty/cty"
 )
 
-var preventHeredoc = os.Getenv("DYNATRACE_HEREDOC") == "false"
 
 type primitiveEntry struct {
 	Indent      string
@@ -108,7 +107,7 @@ func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(toJSONencode(strVal, indent))}})
 	} else if strValP, ok := me.Value.(*string); ok && strValP != nil && isJSON(*strValP) {
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(toJSONencode(*strValP, indent))}})
-	} else if strVal, ok := me.Value.(string); ok && !preventHeredoc && strings.Contains(strVal, "\n") {
+	} else if strVal, ok := me.Value.(string); ok && envutils.DynatraceHeredoc.Get() && strings.Contains(strVal, "\n") {
 		var eotIndent string
 		// If we always add a newline before the EOT end, then we end up with an extra blank line at the end of the string if the string already ends with a newline.
 		// This would cause a non-empty terraform plan
@@ -117,13 +116,13 @@ func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
 		}
 		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(strVal, indent) + eotIndent + "EOT"
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
-	} else if strVal, ok := me.Value.(string); ok && !preventHeredoc && strings.Count(strVal, "\"") > 3 {
+	} else if strVal, ok := me.Value.(string); ok && envutils.DynatraceHeredoc.Get() && strings.Count(strVal, "\"") > 3 {
 		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(strVal, indent) + "\n" + indent + "EOT"
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
-	} else if strValP, ok := me.Value.(*string); ok && !preventHeredoc && strValP != nil && strings.Count(*strValP, "\"") > 3 {
+	} else if strValP, ok := me.Value.(*string); ok && envutils.DynatraceHeredoc.Get() && strValP != nil && strings.Count(*strValP, "\"") > 3 {
 		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(*strValP, indent) + "\n" + indent + "EOT"
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
-	} else if strValP, ok := me.Value.(*string); ok && !preventHeredoc && strValP != nil && strings.Contains(*strValP, "\n") {
+	} else if strValP, ok := me.Value.(*string); ok && envutils.DynatraceHeredoc.Get() && strValP != nil && strings.Contains(*strValP, "\n") {
 		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(*strValP, indent) + "\n" + indent + "EOT"
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
 	} else if strVal, ok := me.Value.(string); ok {
