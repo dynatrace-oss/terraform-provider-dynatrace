@@ -166,7 +166,7 @@ func (me *legacy_request) Raw() ([]byte, error) {
 	if data, err = io.ReadAll(res.Body); err != nil {
 		return nil, err
 	}
-	if os.Getenv("DYNATRACE_HTTP_RESPONSE") == "true" {
+	if envutils.DynatraceHTTPResponse.Get() {
 		var dataStr string
 		if data != nil {
 			dataStr = " " + string(data)

@@ -60,3 +60,9 @@ var DynatraceHTTPOAuthPreference = BoolEnvVar{
 	Key:          "DYNATRACE_HTTP_OAUTH_PREFERENCE",
 	DefaultValue: false,
 }
+
+// DynatraceHTTPResponse logs HTTP responses.
+var DynatraceHTTPResponse = BoolEnvVar{
+	Key:          "DYNATRACE_HTTP_RESPONSE",
+	DefaultValue: false,
+}
