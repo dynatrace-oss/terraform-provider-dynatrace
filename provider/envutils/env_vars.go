@@ -356,3 +356,9 @@ var DynatraceUltraParallel = BoolEnvVar{
 	Key:          "DYNATRACE_ULTRA_PARALLEL",
 	DefaultValue: false,
 }
+
+// DynatraceParallel enables parallel export mode.
+var DynatraceParallel = BoolEnvVar{
+	Key:          "DYNATRACE_PARALLEL",
+	DefaultValue: true,
+}
