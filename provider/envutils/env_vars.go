@@ -200,3 +200,11 @@ var DTCustomDeviceApplyTimeout = ClampedIntEnvVar{
 	Min:          100,
 	Max:          500,
 }
+
+// --- Entity ---
+
+// DynatraceDisableEntityCache disables the entity cache.
+var DynatraceDisableEntityCache = BoolEnvVar{
+	Key:          "DYNATRACE_DISABLE_ENTITY_CACHE",
+	DefaultValue: false,
+}
