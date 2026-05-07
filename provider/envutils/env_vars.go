@@ -392,3 +392,9 @@ var DynatraceFormatHCLFiles = BoolEnvVar{
 	Key:          "DYNATRACE_FORMAT_HCL_FILES",
 	DefaultValue: false,
 }
+
+// DynatraceHCLNoFormat disables HCL formatting during export.
+var DynatraceHCLNoFormat = BoolEnvVar{
+	Key:          "DYNATRACE_HCL_NO_FORMAT",
+	DefaultValue: false,
+}
