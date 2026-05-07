@@ -18,26 +18,24 @@
 package settings
 
 import (
-	"os"
 	"slices"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
-const DYNATRACE_DUPLICATE_HIJACK = "DYNATRACE_DUPLICATE_HIJACK"
 const VALUE_ALL = "ALL"
 
 func RejectDuplicate(resourceNames ...string) bool {
-	return envVarContains(envutils.DynatraceDuplicateReject.Get(), resourceNames...)
+	return envVarContains(envutils.DynatraceDuplicateReject, resourceNames...)
 }
 
 func HijackDuplicate(resourceNames ...string) bool {
-	return envVarContains(DYNATRACE_DUPLICATE_HIJACK, resourceNames...)
+	return envVarContains(envutils.DynatraceDuplicateHijack, resourceNames...)
 }
 
-func envVarContains(envVar string, search ...string) bool {
-	svalues := os.Getenv(envVar)
+func envVarContains(envVar envutils.StringEnvVar, search ...string) bool {
+	svalues := envVar.Get()
 	if len(svalues) == 0 {
 		return false
 	}

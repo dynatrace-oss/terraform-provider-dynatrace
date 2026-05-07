@@ -216,3 +216,9 @@ var DynatraceDuplicateReject = StringEnvVar{
 	Key:          "DYNATRACE_DUPLICATE_REJECT",
 	DefaultValue: "",
 }
+
+// DynatraceDuplicateHijack specifies resource types for which duplicate detection hijacks the existing resource.
+var DynatraceDuplicateHijack = StringEnvVar{
+	Key:          "DYNATRACE_DUPLICATE_HIJACK",
+	DefaultValue: "",
+}
