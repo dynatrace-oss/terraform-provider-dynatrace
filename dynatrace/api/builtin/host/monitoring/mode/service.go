@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,13 +31,13 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 const SchemaVersion = "1.3"
 const SchemaID = "builtin:host.monitoring.mode"
 
 var WarnOnAgentOffline = os.Getenv("DYNATRACE_HOST_MONITORING_WARNINGS") == "true"
-var ExportOfflineHosts = os.Getenv("DYNATRACE_HOST_MONITORING_OFFLINE") == "true"
 var StrictUpdateRetries = os.Getenv("DYNATRACE_HOST_MONITORING_STRICT_UPDATE_RETRIES")
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*mode.Settings] {
@@ -77,7 +77,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 			if len(entity.Properties.State) == 0 {
 				continue
 			}
-			if !ExportOfflineHosts && (entity.Properties.State == "OFFLINE" || entity.Properties.State == "SHUTDOWN" || entity.Properties.State == "MONITORING_DISABLED") {
+			if !envutils.DynatraceHostMonitoringOffline.Get() && (entity.Properties.State == "OFFLINE" || entity.Properties.State == "SHUTDOWN" || entity.Properties.State == "MONITORING_DISABLED") {
 				continue
 			}
 			if entity.Properties.MonitoringMode == "INFRASTRUCTURE" {
