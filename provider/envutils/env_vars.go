@@ -132,3 +132,11 @@ var DynatraceInMemoryTarFolders = BoolEnvVar{
 	Key:          "DYNATRACE_IN_MEMORY_TAR_FOLDERS",
 	DefaultValue: false,
 }
+
+// --- Backwards Compatibility ---
+
+// DTBackwardsCompatibility enables backwards compatibility mode.
+var DTBackwardsCompatibility = BoolEnvVar{
+	Key:          "DT_BACKWARDS_COMPATIBILITY",
+	DefaultValue: false,
+}

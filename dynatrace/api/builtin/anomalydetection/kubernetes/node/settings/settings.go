@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@
 package node
 
 import (
-	"os"
-
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -58,8 +57,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"node_problematic_condition": {
 			Type:        schema.TypeList,
 			Description: "no documentation available",
-			Required:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") != "true",
-			Optional:    os.Getenv("DT_BACKWARDS_COMPATIBILITY") == "true",
+			Required:    !envutils.DTBackwardsCompatibility.Get(),
+			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(NodeProblematicCondition).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
