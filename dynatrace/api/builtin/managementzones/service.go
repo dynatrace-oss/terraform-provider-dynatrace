@@ -20,9 +20,6 @@ package managementzones
 import (
 	"context"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -53,32 +50,6 @@ type service struct {
 	credentials *rest.Credentials
 }
 
-const DefaultNumRequiredSuccesses = 5
-const MinNumRequiredSuccesses = 5
-const MaxNumRequiredSuccesses = 100
-
-const DefaultMaxConfirmationRetries = 50
-const MaxMaxConfirmationRetries = 600
-const MinMaxConfirmationRetries = 50
-
-func getEnv(key string, def int, min int, max int) int {
-	value := os.Getenv(key)
-	if len(value) == 0 {
-		return def
-	}
-	iValue, err := strconv.Atoi(strings.TrimSpace(value))
-	if err != nil {
-		return def
-	}
-	if iValue > max {
-		iValue = max
-	}
-	if iValue < min {
-		iValue = min
-	}
-	return iValue
-}
-
 func (me *service) Create(ctx context.Context, v *managementzones.Settings) (*api.Stub, error) {
 	stub, err := me.service.Create(ctx, v)
 	if err != nil {
@@ -105,7 +76,7 @@ func (me *service) Create(ctx context.Context, v *managementzones.Settings) (*ap
 	validator := slo.Service(me.credentials).(settings.Validator[*slosettings.Settings])
 
 	maxConfirmationRetries := envutils.DTMgmzRetries.Get()
-	numRequiredSuccesses := getEnv("DT_MGMZ_SUCCESSES", DefaultNumRequiredSuccesses, MinNumRequiredSuccesses, MaxNumRequiredSuccesses)
+	numRequiredSuccesses := envutils.DTMgmzSuccesses.Get()
 	success := 0
 	for range maxConfirmationRetries {
 		if err := validator.Validate(ctx, &sloValue); err == nil {
