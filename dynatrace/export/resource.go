@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,12 +31,12 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hclgen"
 )
 
-var SHORTER_NAMES = os.Getenv("DYNATRACE_SHORTER_NAMES") == "true"
 
 type Resource struct {
 	ID                              string
@@ -205,7 +205,7 @@ const MAX_PATH_LENGTH_FILENAME_SHORTER = 240
 func (me *Resource) GetFileName() string {
 	filename := fileSystemName(fmt.Sprintf("%s.%s.tf", strings.TrimSpace(me.UniqueName), me.Type.Trim()))
 
-	if SHORTER_NAMES {
+	if envutils.DynatraceShorterNames.Get() {
 		filename = me.getShorterFileName(filename)
 	}
 

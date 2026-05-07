@@ -362,3 +362,9 @@ var DynatraceParallel = BoolEnvVar{
 	Key:          "DYNATRACE_PARALLEL",
 	DefaultValue: true,
 }
+
+// DynatraceShorterNames enables shortening resource names longer than would exceed 240 characters in length in generated HCL.
+var DynatraceShorterNames = BoolEnvVar{
+	Key:          "DYNATRACE_SHORTER_NAMES",
+	DefaultValue: false,
+}
