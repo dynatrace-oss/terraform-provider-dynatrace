@@ -410,3 +410,9 @@ var DynatraceBuildAddressFiles = BoolEnvVar{
 	Key:          "DYNATRACE_BUILD_ADDRESS_FILES",
 	DefaultValue: false,
 }
+
+// DynatraceExportIgnoreResources is a comma-separated list of resource types to exclude from export.
+var DynatraceExportIgnoreResources = StringEnvVar{
+	Key:          "DYNATRACE_EXPORT_IGNORE_RESOURCES",
+	DefaultValue: "",
+}
