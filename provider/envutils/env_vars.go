@@ -148,3 +148,11 @@ var DTBucketsIgnoreUnexpectedEOF = BoolEnvVar{
 	Key:          "DT_BUCKETS_IGNORE_UNEXPECTED_EOF",
 	DefaultValue: false,
 }
+
+// DTBucketsRetries is the number of retries when waiting for bucket readiness. Values outside [Min, Max] are clamped to the nearest boundary.
+var DTBucketsRetries = ClampedIntEnvVar{
+	Key:          "DT_BUCKETS_RETRIES",
+	DefaultValue: 180,
+	Min:          180,
+	Max:          360,
+}
