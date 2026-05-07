@@ -230,3 +230,11 @@ var DynatraceTagsErrZeroMatched = BoolEnvVar{
 	Key:          "DYNATRACE_TAGS_ERR_ZERO_MATCHED",
 	DefaultValue: false,
 }
+
+// --- Resources ---
+
+// DTTerraformImport enables Terraform import mode.
+var DTTerraformImport = BoolEnvVar{
+	Key:          "DT_TERRAFORM_IMPORT",
+	DefaultValue: false,
+}
