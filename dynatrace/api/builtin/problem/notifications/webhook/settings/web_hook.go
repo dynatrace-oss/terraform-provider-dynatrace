@@ -18,6 +18,7 @@
 package notifications
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/http"
@@ -103,7 +104,7 @@ func (me *WebHook) Schema() map[string]*schema.Schema {
 			Elem:        &schema.Resource{Schema: new(http.Headers).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
-			ForceNew:    http.ForceNewOnHeaders,
+			ForceNew:    envutils.DynatraceForceNewOnHeaders.Get(),
 		},
 		"notify_closed_problems": {
 			Type:        schema.TypeBool,

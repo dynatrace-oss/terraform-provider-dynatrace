@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,14 +18,12 @@
 package http
 
 import (
-	"os"
-
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var ForceNewOnHeaders = os.Getenv("DYNATRACE_FORCE_NEW_ON_HEADERS") == "true"
 
 type Headers []*Header
 
@@ -37,7 +35,7 @@ func (me *Headers) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			Description: "An additional HTTP Header to include when sending requests",
 			Elem:        &schema.Resource{Schema: new(Header).Schema()},
-			ForceNew:    ForceNewOnHeaders,
+			ForceNew:    envutils.DynatraceForceNewOnHeaders.Get(),
 		},
 	}
 }
@@ -134,20 +132,20 @@ func (me *Header) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The name of the HTTP header.",
 			Required:    true,
-			ForceNew:    ForceNewOnHeaders,
+			ForceNew:    envutils.DynatraceForceNewOnHeaders.Get(),
 		},
 		"secret_value": {
 			Type:        schema.TypeString,
 			Description: "The secret value of the HTTP header. May contain an empty value.",
 			Optional:    true, // precondition
 			Sensitive:   true,
-			ForceNew:    ForceNewOnHeaders,
+			ForceNew:    envutils.DynatraceForceNewOnHeaders.Get(),
 		},
 		"value": {
 			Type:        schema.TypeString,
 			Description: "The value of the HTTP header. May contain an empty value.",
 			Optional:    true, // precondition
-			ForceNew:    ForceNewOnHeaders,
+			ForceNew:    envutils.DynatraceForceNewOnHeaders.Get(),
 		},
 	}
 }
