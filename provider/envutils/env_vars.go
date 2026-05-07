@@ -282,3 +282,11 @@ var DynatraceHostMonitoringWarnings = BoolEnvVar{
 	Key:          "DYNATRACE_HOST_MONITORING_WARNINGS",
 	DefaultValue: false,
 }
+
+// DynatraceHostMonitoringStrictUpdateRetries sets the number of retries for strict host monitoring updates. Values outside [Min, Max] are clamped to the nearest boundary.
+var DynatraceHostMonitoringStrictUpdateRetries = ClampedIntEnvVar{
+	Key:          "DYNATRACE_HOST_MONITORING_STRICT_UPDATE_RETRIES",
+	DefaultValue: 0,
+	Min:          0,
+	Max:          60,
+}
