@@ -27,7 +27,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/cookiejar"
-	"os"
 	"slices"
 	"strconv"
 	"time"
@@ -167,7 +166,7 @@ func (me *legacy_request) Raw() ([]byte, error) {
 		return nil, err
 	}
 	if envutils.DynatraceHTTPResponse.Get() {
-		var dataStr string
+		dataStr := ""
 		if data != nil {
 			dataStr = " " + string(data)
 		}
@@ -212,30 +211,8 @@ func Envelope(data []byte, url string, method string) error {
 	return nil
 }
 
-const defaultMaxWorkers = 20
-const highLimitMaxWorkers = 50
 
-var maxWorkers = resolveMaxWorkers()
-
-func resolveMaxWorkers() int64 {
-	sMaxWorkers := os.Getenv("DYNATRACE_MAX_HTTP_WORKERS")
-	if len(sMaxWorkers) == 0 {
-		return defaultMaxWorkers
-	}
-	mw, err := strconv.Atoi(sMaxWorkers)
-	if err != nil {
-		return defaultMaxWorkers
-	}
-	if mw > highLimitMaxWorkers {
-		return highLimitMaxWorkers
-	}
-	if mw < 1 {
-		return 1
-	}
-	return int64(mw)
-}
-
-var sem = semaphore.NewWeighted(maxWorkers)
+var sem = semaphore.NewWeighted(int64(envutils.DynatraceMaxHTTPWorkers.Get()))
 
 func (s *legacy_request) execute(ctx context.Context, callback func() (*http.Response, error)) (*http.Response, error) {
 	if ctx == nil {
