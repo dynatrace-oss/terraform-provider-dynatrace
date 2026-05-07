@@ -108,3 +108,9 @@ var DTCacheFolder = StringEnvVar{
 	Key:          "DT_CACHE_FOLDER",
 	DefaultValue: "",
 }
+
+// CacheOfflineMode enables offline mode using cached data.
+var CacheOfflineMode = BoolEnvVar{
+	Key:          "CACHE_OFFLINE_MODE",
+	DefaultValue: false,
+}

@@ -56,7 +56,6 @@ func Cleanup() {
 	os.RemoveAll(cache_root_folder)
 }
 
-const ENV_VAR_CACHE_OFFLINE_MODE = "CACHE_OFFLINE_MODE"
 const ENV_VAR_DELETE_CACHE_ON_LAUNCH = "DT_CACHE_DELETE_ON_LAUNCH"
 const ENV_VAR_NO_CACHE_CLEANUP = "DT_NO_CACHE_CLEANUP"
 
@@ -75,7 +74,7 @@ func getCacheRootFolder() string {
 	if len(deleteCache) != 0 && deleteCache != "false" {
 		os.RemoveAll(folder)
 	}
-	if os.Getenv(ENV_VAR_CACHE_OFFLINE_MODE) == "true" {
+	if envutils.CacheOfflineMode.Get() {
 		Offline()
 	}
 	return folder
