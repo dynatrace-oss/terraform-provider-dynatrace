@@ -26,7 +26,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"sync"
 
@@ -37,7 +36,6 @@ import (
 )
 
 var preRequestMutex sync.Mutex
-var DYNATRACE_HTTP_OAUTH_PREFERENCE = (os.Getenv("DYNATRACE_HTTP_OAUTH_PREFERENCE") == "true")
 
 type Request interface {
 	Finish(v ...any) error
