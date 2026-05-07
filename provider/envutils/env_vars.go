@@ -368,3 +368,9 @@ var DynatraceShorterNames = BoolEnvVar{
 	Key:          "DYNATRACE_SHORTER_NAMES",
 	DefaultValue: false,
 }
+
+// DynatraceEnableExportDashboard enables export of dashboard resources.
+var DynatraceEnableExportDashboard = BoolEnvVar{
+	Key:          "DYNATRACE_ENABLE_EXPORT_DASHBOARD",
+	DefaultValue: false,
+}

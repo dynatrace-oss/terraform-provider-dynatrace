@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 package export
 
 import (
-	"os"
 	"reflect"
 	"strings"
 
@@ -28,6 +27,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 	settingsPermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	msentraidconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection"
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
@@ -2048,10 +2048,9 @@ func genExcludeListedResourceGroups() []ResourceType {
 	return result
 }
 
-var ENABLE_EXPORT_DASHBOARD = os.Getenv("DYNATRACE_ENABLE_EXPORT_DASHBOARD") == "true"
 
 func GetExcludeListedResourceGroups() []ResourceExclusionGroup {
-	if ENABLE_EXPORT_DASHBOARD {
+	if envutils.DynatraceEnableExportDashboard.Get() {
 		return excludeListedResourceGroups
 	}
 
@@ -2068,7 +2067,7 @@ func GetExcludeListedResourceGroups() []ResourceExclusionGroup {
 
 func GetExcludeListedResources() []ResourceType {
 
-	if ENABLE_EXPORT_DASHBOARD {
+	if envutils.DynatraceEnableExportDashboard.Get() {
 		return excludeListedResources
 	}
 
