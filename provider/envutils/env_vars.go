@@ -416,3 +416,11 @@ var DynatraceExportIgnoreResources = StringEnvVar{
 	Key:          "DYNATRACE_EXPORT_IGNORE_RESOURCES",
 	DefaultValue: "",
 }
+
+// DynatraceIgnoreChangesRequiresAttention enables adding a lifecycle { ignore_changes = [...] } block
+// to exported resources that contain sensitive fields (passwords, secrets, etc.) — listing those sensitive
+// attributes so Terraform won't overwrite values the user may have set manually after the export.
+var DynatraceIgnoreChangesRequiresAttention = BoolEnvVar{
+	Key:          "DYNATRACE_IGNORE_CHANGES_REQUIRES_ATTENTION",
+	DefaultValue: false,
+}

@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2023 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,16 +19,15 @@ package sensitive
 
 import (
 	"fmt"
-	"os"
 	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/meta"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // Avoid overwriting password that the user has changed manually with known bad data
-var IGNORE_CHANGES_REQUIRES_ATTENTION = os.Getenv("DYNATRACE_IGNORE_CHANGES_REQUIRES_ATTENTION") == "true"
 
 const SecretValueExact = "${state.secret_value.exact}"
 const SecretValue = "${state.secret_value}"
@@ -47,7 +46,7 @@ func ConditionalIgnoreChangesMap(schema map[string]*schema.Schema, itemsToEncode
 	return ConditionalIgnoreChangesMapPlus(schema, itemsToEncode, []string{})
 }
 func ConditionalIgnoreChangesMapPlus(schema map[string]*schema.Schema, itemsToEncode map[string]any, additionalIgnoreFields []string) map[string]any {
-	if IGNORE_CHANGES_REQUIRES_ATTENTION {
+	if envutils.DynatraceIgnoreChangesRequiresAttention.Get() {
 
 		lifeCycleIgnoreChanges := buildIgnoreSensitiveFromSchema(schema, additionalIgnoreFields)
 
@@ -71,7 +70,7 @@ func ConditionalIgnoreChangesSingle(schema map[string]*schema.Schema, properties
 func ConditionalIgnoreChangesSinglePlus(schema map[string]*schema.Schema, properties *hcl.Properties, additionalIgnoreFields []string) error {
 	lifeCycleIgnoreChanges := buildIgnoreSensitiveFromSchema(schema, additionalIgnoreFields)
 
-	if IGNORE_CHANGES_REQUIRES_ATTENTION {
+	if envutils.DynatraceIgnoreChangesRequiresAttention.Get() {
 		if err := properties.Encode("lifecycle", &lifeCycleIgnoreChanges); err != nil {
 			return err
 		}
