@@ -240,7 +240,7 @@ func (me *Environment) ProcessPrevState() error {
 }
 
 func (me *Environment) InitialDownload() error {
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	parallel := envutils.DynatraceParallel.Get()
 	logging.Debug.Info.Println("DYNATRACE_PARALLEL:", parallel)
 	resourceTypes := []string{}
 	for resourceType := range me.ResArgs {
@@ -321,7 +321,7 @@ func (me *Environment) InitialDownload() error {
 
 func (me *Environment) PostProcess() error {
 	fmt.Println("Post-Processing Resources ...")
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	parallel := envutils.DynatraceParallel.Get()
 	logging.Debug.Info.Println("DYNATRACE_PARALLEL:", parallel)
 	resources := me.GetNonPostProcessedResources()
 
@@ -675,7 +675,7 @@ func (me *Environment) WriteDataSourceFiles() (err error) {
 
 		return nil
 	}
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	parallel := envutils.DynatraceParallel.Get()
 	if parallel {
 		var wg sync.WaitGroup
 		wg.Add(len(me.Modules))
@@ -707,7 +707,7 @@ func (me *Environment) WriteResourceFiles() (err error) {
 		return nil
 	}
 	fmt.Println("Writing ___resources___.tf")
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	parallel := envutils.DynatraceParallel.Get()
 	if parallel {
 		var wg sync.WaitGroup
 		wg.Add(len(me.Modules))
@@ -772,7 +772,7 @@ func (me *Environment) WriteProviderFiles() (err error) {
 	}
 
 	fmt.Println("Writing modules ___providers___.tf")
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	parallel := envutils.DynatraceParallel.Get()
 	if parallel {
 		var wg sync.WaitGroup
 		wg.Add(len(me.Modules))
@@ -812,10 +812,10 @@ func (me *Environment) WriteMainProviderFile() error {
 	}()
 	providerSource := "dynatrace-oss/dynatrace"
 	providerVersion := version.Version
-	if value := os.Getenv(DYNATRACE_PROVIDER_SOURCE); len(value) != 0 {
+	if value := envutils.DynatraceProviderSource.Get(); len(value) != 0 {
 		providerSource = value
 	}
-	if value := os.Getenv(DYNATRACE_PROVIDER_VERSION); len(value) != 0 {
+	if value := envutils.DynatraceProviderVersion.Get(); len(value) != 0 {
 		providerVersion = value
 	}
 
@@ -839,7 +839,7 @@ func (me *Environment) WriteMainProviderFile() error {
 
 func (me *Environment) WriteVariablesFiles() (err error) {
 	fmt.Println("Writing ___variables___.tf")
-	parallel := (os.Getenv("DYNATRACE_PARALLEL") != "false")
+	parallel := envutils.DynatraceParallel.Get()
 	if parallel {
 		var wg sync.WaitGroup
 
