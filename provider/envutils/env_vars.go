@@ -208,3 +208,11 @@ var DynatraceDisableEntityCache = BoolEnvVar{
 	Key:          "DYNATRACE_DISABLE_ENTITY_CACHE",
 	DefaultValue: false,
 }
+
+// --- Duplicates ---
+
+// DynatraceDuplicateReject specifies resource types for which duplicate detection rejects the import.
+var DynatraceDuplicateReject = StringEnvVar{
+	Key:          "DYNATRACE_DUPLICATE_REJECT",
+	DefaultValue: "",
+}
