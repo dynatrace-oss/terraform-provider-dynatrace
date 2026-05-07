@@ -27,13 +27,12 @@ import (
 )
 
 // To speed things up when using Dynatrace Config Manager
-var HCL_NO_FORMAT = os.Getenv("DYNATRACE_HCL_NO_FORMAT") == "true"
 
 // To get more unique names when using Dynatrace Config Manager
 var NAME_REPLACE_DASH = os.Getenv("DYNATRACE_NAME_REPLACE_DASH") == "true"
 
 func format(name string, force bool) {
-	if HCL_NO_FORMAT {
+	if envutils.DynatraceHCLNoFormat.Get() {
 		return
 	}
 	if force || envutils.DynatraceFormatHCLFiles.Get() {

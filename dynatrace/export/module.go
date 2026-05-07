@@ -458,7 +458,7 @@ func (me *Module) WriteVariablesFile(logToScreen bool) (err error) {
 	defer func() {
 		variablesFile.Close()
 
-		if HCL_NO_FORMAT {
+		if envutils.DynatraceHCLNoFormat.Get() {
 			// pass
 		} else {
 			exePath, _ := exec.LookPath("terraform.exe")
