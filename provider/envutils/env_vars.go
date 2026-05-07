@@ -182,3 +182,11 @@ var DTMgmzSuccesses = ClampedIntEnvVar{
 	Min:          5,
 	Max:          100,
 }
+
+// --- Documents ---
+
+// DTDocumentsIgnoreUnexpectedEOF ignores unexpected EOF errors when managing documents.
+var DTDocumentsIgnoreUnexpectedEOF = BoolEnvVar{
+	Key:          "DT_DOCUMENTS_IGNORE_UNEXPECTED_EOF",
+	DefaultValue: false,
+}

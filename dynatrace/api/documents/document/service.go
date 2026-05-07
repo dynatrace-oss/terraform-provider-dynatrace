@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ package documents
 import (
 	"context"
 	"encoding/json"
-	"os"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	docclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/documents"
 
@@ -36,7 +36,6 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*documents.Docu
 	return &service{credentials}
 }
 
-var IGNORE_UNEXPECTED_EOF = (os.Getenv("DT_DOCUMENTS_IGNORE_UNEXPECTED_EOF") == "true")
 
 type service struct {
 	credentials *rest.Credentials
@@ -52,7 +51,7 @@ func (me *service) client(ctx context.Context) (*docclient.Client, error) {
 
 func (me *service) Get(ctx context.Context, id string, v *documents.Document) (err error) {
 	err = me.get(ctx, id, v)
-	if IGNORE_UNEXPECTED_EOF && err != nil {
+	if envutils.DTDocumentsIgnoreUnexpectedEOF.Get() && err != nil {
 		if strings.Contains(err.Error(), "unexpected EOF") {
 			cfg := ctx.Value(settings.ContextKeyStateConfig)
 			if stateDocument, ok := cfg.(*documents.Document); ok {
