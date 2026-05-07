@@ -50,13 +50,11 @@ func Offline() {
 }
 
 func Cleanup() {
-	if os.Getenv(ENV_VAR_NO_CACHE_CLEANUP) == "true" {
+	if envutils.DTNoCacheCleanup.Get() {
 		return
 	}
 	os.RemoveAll(cache_root_folder)
 }
-
-const ENV_VAR_NO_CACHE_CLEANUP = "DT_NO_CACHE_CLEANUP"
 
 var cache_root_folder = getCacheRootFolder()
 
