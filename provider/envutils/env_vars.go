@@ -174,3 +174,11 @@ var DTMgmzRetries = ClampedIntEnvVar{
 	Min:          50,
 	Max:          600,
 }
+
+// DTMgmzSuccesses is the number of consecutive successes required for management zone readiness. Values outside [Min, Max] are clamped to the nearest boundary.
+var DTMgmzSuccesses = ClampedIntEnvVar{
+	Key:          "DT_MGMZ_SUCCESSES",
+	DefaultValue: 5,
+	Min:          5,
+	Max:          100,
+}
