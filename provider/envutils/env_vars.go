@@ -514,3 +514,9 @@ var DynatraceAPIToken = StringEnvVar{
 	Key:          "DYNATRACE_API_TOKEN",
 	DefaultValue: "",
 }
+
+// TFAcc enables Terraform acceptance tests when set to a non-empty value.
+var TFAcc = StringEnvVar{
+	Key:          "TF_ACC",
+	DefaultValue: "",
+}

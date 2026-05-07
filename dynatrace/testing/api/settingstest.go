@@ -43,7 +43,7 @@ type TestAccOptions struct {
 
 func AccEnvsGiven(t *testing.T) bool {
 	t.Helper()
-	if v := os.Getenv("TF_ACC"); v == "" {
+	if v := envutils.TFAcc.Get(); v == "" {
 		t.Skip("TF_ACC has not been set for acceptance tests")
 		return false
 	}
