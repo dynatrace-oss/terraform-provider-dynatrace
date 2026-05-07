@@ -216,7 +216,7 @@ func (me *Environment) LoadImportState() error {
 }
 
 func (me *Environment) ProcessPrevState() error {
-	if PREV_STATE_ON {
+	if envutils.DynatracePrevStateOn.Get() {
 		// pass
 	} else {
 		return nil
@@ -1044,7 +1044,7 @@ func (me *Environment) executeImportV2() error {
 }
 
 func (me *Environment) importPrevResources(state *state) {
-	if PREV_STATE_ON {
+	if envutils.DynatracePrevStateOn.Get() {
 		for _, statePrev := range me.PrevStateMapCommon.resources {
 			if statePrev.Used {
 				continue

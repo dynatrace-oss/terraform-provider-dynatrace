@@ -885,7 +885,7 @@ func (me *Module) Download(multiThreaded bool, keys ...string) (err error) {
 }
 
 func (me *Module) blockPrevNames() {
-	if PREV_STATE_ON {
+	if envutils.DynatracePrevStateOn.Get() {
 		names, found := me.Environment.PrevNamesByModule[string(me.Type)]
 		if found {
 			for _, name := range names {
