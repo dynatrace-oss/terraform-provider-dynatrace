@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,13 +27,12 @@ import (
 	monitors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/synthetic/monitors/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 const SchemaID = "v2:synthetic:monitors:network"
 const BasePath = "/api/v2/synthetic/monitors"
 
-var defaultCreateConfirm = 8
-var createConfirm = settings.GetIntEnv("DYNATRACE_CREATE_CONFIRM_SYNTHETIC_MONITORS_V2", defaultCreateConfirm, 1, 50)
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*monitors.Settings] {
 	return &service{credentials: credentials}
@@ -61,7 +60,7 @@ func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub,
 	for {
 		if err = client.Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(resp.EntityId)), 200).Finish(); err == nil {
 			successes = successes + 1
-			if successes >= createConfirm {
+			if successes >= envutils.DynatraceCreateConfirmSyntheticMonitorsV2.Get() {
 				break
 			}
 			time.Sleep(time.Millisecond * 100)
@@ -78,7 +77,7 @@ func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub,
 			if err = client.Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(resp.EntityId)), 200).Finish(&validateMonitor); err == nil {
 				if len(v.Tags) == len(validateMonitor.Tags) {
 					successes = successes + 1
-					if successes >= createConfirm {
+					if successes >= envutils.DynatraceCreateConfirmSyntheticMonitorsV2.Get() {
 						break
 					}
 				} else {
