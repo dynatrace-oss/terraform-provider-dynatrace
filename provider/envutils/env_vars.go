@@ -350,3 +350,9 @@ var DynatraceQuickInit = BoolEnvVar{
 	Key:          "DYNATRACE_QUICK_INIT",
 	DefaultValue: false,
 }
+
+// DynatraceUltraParallel enables ultra-parallel export mode.
+var DynatraceUltraParallel = BoolEnvVar{
+	Key:          "DYNATRACE_ULTRA_PARALLEL",
+	DefaultValue: false,
+}

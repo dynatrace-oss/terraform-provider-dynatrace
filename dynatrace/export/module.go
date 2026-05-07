@@ -1245,7 +1245,7 @@ func (me *Module) getResourcesPerBundle(resourcesCount int, maxThreads int) bund
 func (me *Module) IsBundleImpossible() bool {
 	resourceDefinition := AllResources[me.Type]
 
-	if ULTRA_PARALLEL {
+	if envutils.DynatraceUltraParallel.Get() {
 		// pass
 	} else {
 		return true
