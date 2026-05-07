@@ -199,11 +199,11 @@ func (me *Environment) ProcessHasDependenciesTo() {
 }
 
 func (me *Environment) LoadImportState() error {
-	if IMPORT_STATE_PATH == "" {
+	if envutils.DynatraceImportStatePath.Get() == "" {
 		return nil
 	}
 
-	state, err := LoadStateFile(IMPORT_STATE_PATH)
+	state, err := LoadStateFile(envutils.DynatraceImportStatePath.Get())
 	if err != nil {
 		return err
 	}

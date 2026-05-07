@@ -424,3 +424,9 @@ var DynatraceIgnoreChangesRequiresAttention = BoolEnvVar{
 	Key:          "DYNATRACE_IGNORE_CHANGES_REQUIRES_ATTENTION",
 	DefaultValue: false,
 }
+
+// DynatraceImportStatePath sets the path for importing Terraform state.
+var DynatraceImportStatePath = StringEnvVar{
+	Key:          "DYNATRACE_IMPORT_STATE_PATH",
+	DefaultValue: "",
+}

@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2023 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/spf13/afero"
 )
 
 var PREV_STATE_ON = os.Getenv("DYNATRACE_PREV_STATE_ON") == "true"
 var PREV_STATE_PATH_THIS = os.Getenv("DYNATRACE_PREV_STATE_PATH_THIS")
 var PREV_STATE_PATH_LINKED = os.Getenv("DYNATRACE_PREV_STATE_PATH_LINKED")
-var IMPORT_STATE_PATH = os.Getenv("DYNATRACE_IMPORT_STATE_PATH")
 
 type StateMap struct {
 	mutex     *sync.Mutex
@@ -179,7 +179,7 @@ func getResourceOfReference(nameKey string, res *Resource, typeOfReference strin
 }
 
 func (sm *StateMap) GetResourceSplitId(res *Resource) (int, bool) {
-	if IMPORT_STATE_PATH == "" {
+	if envutils.DynatraceImportStatePath.Get() == "" {
 		return -1, false
 	}
 
