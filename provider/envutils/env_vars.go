@@ -72,3 +72,11 @@ var DTDebugGetOk = BoolEnvVar{
 	Key:          "DT_DEBUG_GET_OK",
 	DefaultValue: false,
 }
+
+// DynatraceMaxHTTPWorkers sets the maximum number of concurrent HTTP workers. Values outside [Min, Max] are clamped to the nearest boundary.
+var DynatraceMaxHTTPWorkers = ClampedIntEnvVar{
+	Key:          "DYNATRACE_MAX_HTTP_WORKERS",
+	DefaultValue: 20,
+	Min:          1,
+	Max:          50,
+}
