@@ -344,3 +344,9 @@ var DynatraceNoRefreshOnImport = BoolEnvVar{
 	Key:          "DYNATRACE_NO_REFRESH_ON_IMPORT",
 	DefaultValue: false,
 }
+
+// DynatraceQuickInit enables quick initialization during export.
+var DynatraceQuickInit = BoolEnvVar{
+	Key:          "DYNATRACE_QUICK_INIT",
+	DefaultValue: false,
+}

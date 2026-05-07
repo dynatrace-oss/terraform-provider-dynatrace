@@ -48,7 +48,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-var QUICK_INIT = os.Getenv("DYNATRACE_QUICK_INIT") == "true"
 var ULTRA_PARALLEL = os.Getenv("DYNATRACE_ULTRA_PARALLEL") == "true"
 
 type Environment struct {
@@ -760,7 +759,7 @@ func (me *Environment) RemoveNonReferencedModules() (err error) {
 
 func (me *Environment) WriteProviderFiles() (err error) {
 
-	if QUICK_INIT {
+	if envutils.DynatraceQuickInit.Get() {
 		// pass
 	} else {
 		err = me.WriteMainProviderFile()
@@ -1135,7 +1134,7 @@ func (me *Environment) FinishExport() error {
 	address.SaveOriginalMap(me.OutputFolder)
 	address.SaveCompletedMap(me.OutputFolder)
 
-	if QUICK_INIT {
+	if envutils.DynatraceQuickInit.Get() {
 		err := me.WriteQuickModulesJSON()
 		if err != nil {
 			return err
@@ -1203,7 +1202,7 @@ type TerraformInitModule struct {
 
 func (me *Environment) RunQuickInit() error {
 
-	if QUICK_INIT {
+	if envutils.DynatraceQuickInit.Get() {
 		// pass
 	} else {
 		return nil
@@ -1225,7 +1224,7 @@ func (me *Environment) RunQuickInit() error {
 
 func (me *Environment) WriteQuickModulesJSON() error {
 
-	if QUICK_INIT {
+	if envutils.DynatraceQuickInit.Get() {
 		// pass
 	} else {
 		return nil
