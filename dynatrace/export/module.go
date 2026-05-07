@@ -417,7 +417,7 @@ func (me *Module) writeProviderFile(specificPath string) error {
 	if value := envutils.DynatraceProviderSource.Get(); len(value) != 0 {
 		providerSource = value
 	}
-	if value := os.Getenv("DYNATRACE_PROVIDER_VERSION"); len(value) != 0 {
+	if value := envutils.DynatraceProviderVersion.Get(); len(value) != 0 {
 		providerVersion = value
 	}
 

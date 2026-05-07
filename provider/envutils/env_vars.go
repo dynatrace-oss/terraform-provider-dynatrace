@@ -326,3 +326,9 @@ var DynatraceProviderSource = StringEnvVar{
 	Key:          "DYNATRACE_PROVIDER_SOURCE",
 	DefaultValue: "",
 }
+
+// DynatraceProviderVersion sets the provider version for generated Terraform files.
+var DynatraceProviderVersion = StringEnvVar{
+	Key:          "DYNATRACE_PROVIDER_VERSION",
+	DefaultValue: "",
+}
