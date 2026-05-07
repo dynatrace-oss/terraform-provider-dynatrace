@@ -80,3 +80,9 @@ var DynatraceMaxHTTPWorkers = ClampedIntEnvVar{
 	Min:          1,
 	Max:          50,
 }
+
+// DTRestDebugLog sets the file path for REST debug logging.
+var DTRestDebugLog = StringEnvVar{
+	Key:          "DT_REST_DEBUG_LOG",
+	DefaultValue: "",
+}
