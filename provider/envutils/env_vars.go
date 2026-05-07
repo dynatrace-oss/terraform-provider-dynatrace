@@ -548,3 +548,13 @@ var DynatraceCreateConfirmWebApplication = BoundedIntEnvVar{
 	Min:          20,
 	Max:          500,
 }
+
+// --- Custom Tags ---
+
+// DynatraceMaxConcurrentCustomTagListRequests is the maximum number of concurrent requests for listing custom tags. Falls back to the default if the value is outside [Min, Max].
+var DynatraceMaxConcurrentCustomTagListRequests = BoundedIntEnvVar{
+	Key:          "DYNATRACE_MAX_CONCURRENT_CUSTOM_TAG_LIST_REQUESTS",
+	DefaultValue: 4,
+	Min:          1,
+	Max:          20,
+}

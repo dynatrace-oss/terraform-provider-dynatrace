@@ -1,3 +1,5 @@
+//go:build unit
+
 /**
 * @license
 * Copyright 2025 Dynatrace LLC
@@ -15,8 +17,6 @@
 * limitations under the License.
  */
 
-//go:build unit
-
 package list
 
 import (
@@ -28,6 +28,7 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 const (
@@ -175,7 +176,7 @@ func TestCustomTagExport(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if got := client.MaxConcurrent(); got > DefaultMaxConcurrent {
-		t.Fatalf("saw %d concurrent requests; want <= 8", got)
+	if got := (int)(client.MaxConcurrent()); got > envutils.DynatraceMaxConcurrentCustomTagListRequests.DefaultValue {
+		t.Fatalf("saw %d concurrent requests; want <= %d", got, envutils.DynatraceMaxConcurrentCustomTagListRequests.DefaultValue)
 	}
 }
