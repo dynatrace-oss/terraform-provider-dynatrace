@@ -268,3 +268,11 @@ var DynatraceDQLPollSleepDuration = BoundedIntEnvVar{
 	Min:          0,
 	Max:          60000,
 }
+
+// --- Host Monitoring ---
+
+// DynatraceHostMonitoringOffline allows managing host monitoring for offline hosts.
+var DynatraceHostMonitoringOffline = BoolEnvVar{
+	Key:          "DYNATRACE_HOST_MONITORING_OFFLINE",
+	DefaultValue: false,
+}
