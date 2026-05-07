@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2023 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,13 +19,12 @@ package export
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"regexp"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/spf13/afero"
 )
 
-var EXPORT_IGNORE_RESOURCES_PATH = os.Getenv("DYNATRACE_EXPORT_IGNORE_RESOURCES")
 var ANSI_ESCAPE_PATTERN = regexp.MustCompile(`\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])`)
 
 type IgnoreResourcesMap map[string]map[string][]string
@@ -33,7 +32,7 @@ type IgnoreResourcesMap map[string]map[string][]string
 var IGNORE_RESOURCES_MAP *IgnoreResourcesMap = nil
 
 func LoadIgnoreResourcesMap() error {
-	if EXPORT_IGNORE_RESOURCES_PATH == "" {
+	if envutils.DynatraceExportIgnoreResources.Get() == "" {
 		return nil
 	}
 
@@ -47,19 +46,19 @@ func LoadIgnoreResourcesMap() error {
 
 	IGNORE_RESOURCES_MAP = &IgnoreResourcesMap{}
 
-	data, err := afero.ReadFile(fs, EXPORT_IGNORE_RESOURCES_PATH)
+	data, err := afero.ReadFile(fs, envutils.DynatraceExportIgnoreResources.Get())
 	if err != nil {
-		fmt.Printf("\nIgnore Resource file not found: %s", EXPORT_IGNORE_RESOURCES_PATH)
+		fmt.Printf("\nIgnore Resource file not found: %s", envutils.DynatraceExportIgnoreResources.Get())
 		return nil
 	}
 
 	err = json.Unmarshal(data, IGNORE_RESOURCES_MAP)
 	if err != nil {
-		fmt.Printf("\nThe Ignore Resource file wasn't formatted properly: %s, error: %s", EXPORT_IGNORE_RESOURCES_PATH, err)
+		fmt.Printf("\nThe Ignore Resource file wasn't formatted properly: %s, error: %s", envutils.DynatraceExportIgnoreResources.Get(), err)
 		return nil
 	}
 
-	fmt.Printf("\nThe Ignore Resource file was read properly: %s", EXPORT_IGNORE_RESOURCES_PATH)
+	fmt.Printf("\nThe Ignore Resource file was read properly: %s", envutils.DynatraceExportIgnoreResources.Get())
 	for module_name, resourceMap := range *IGNORE_RESOURCES_MAP {
 
 		fmt.Printf("\n- %s", module_name)
