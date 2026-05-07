@@ -258,3 +258,13 @@ var DynatraceDashboardTests = BoolEnvVar{
 	Key:          "DYNATRACE_DASHBOARD_TESTS",
 	DefaultValue: false,
 }
+
+// --- DQL ---
+
+// DynatraceDQLPollSleepDuration is the sleep duration in milliseconds between DQL poll attempts. Values outside [Min, Max] are clamped to the nearest boundary.
+var DynatraceDQLPollSleepDuration = BoundedIntEnvVar{
+	Key:          "DYNATRACE_DQL_POLL_SLEEP_DURATION",
+	DefaultValue: 5000,
+	Min:          0,
+	Max:          60000,
+}
