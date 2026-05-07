@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"os"
 	"strings"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	entity "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
 )
@@ -70,7 +70,7 @@ func (me *dataSourceService) Get(ctx context.Context, id string, v *entity.Entit
 
 	var result *entity.Entity
 
-	if os.Getenv("DYNATRACE_DISABLE_ENTITY_CACHE") == "true" {
+	if envutils.DynatraceDisableEntityCache.Get() {
 		result = getEntityByID(ctx, me.client, id)
 	} else {
 		result = getEntity(ctx, id, me.client, getEntitiesRecord(entityType))
