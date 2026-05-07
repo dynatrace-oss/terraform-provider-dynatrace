@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package common
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	tagapi "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/tag"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/google/uuid"
 )
 
@@ -67,7 +67,7 @@ func StringsToTags(tagList []any, tags *[]tagapi.Tag) {
 }
 
 func NotFoundID(values ...any) string {
-	if os.Getenv("MIGRATION") != "true" {
+	if !envutils.Migration.Get() {
 		return ""
 	}
 	stringValues := []string{}

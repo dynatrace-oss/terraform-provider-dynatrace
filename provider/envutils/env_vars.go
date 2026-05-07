@@ -520,3 +520,11 @@ var TFAcc = StringEnvVar{
 	Key:          "TF_ACC",
 	DefaultValue: "",
 }
+
+// --- Migration ---
+
+// Migration enables migration mode.
+var Migration = BoolEnvVar{
+	Key:          "MIGRATION",
+	DefaultValue: false,
+}
