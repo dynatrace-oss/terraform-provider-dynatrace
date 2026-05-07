@@ -332,3 +332,9 @@ var DynatraceProviderVersion = StringEnvVar{
 	Key:          "DYNATRACE_PROVIDER_VERSION",
 	DefaultValue: "",
 }
+
+// DynatraceCustomProviderLocation sets the custom provider binary location.
+var DynatraceCustomProviderLocation = StringEnvVar{
+	Key:          "DYNATRACE_CUSTOM_PROVIDER_LOCATION",
+	DefaultValue: "",
+}
