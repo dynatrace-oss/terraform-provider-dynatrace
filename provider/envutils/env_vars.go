@@ -100,3 +100,11 @@ var DynatraceDisableOrderingSupport = BoolEnvVar{
 	Key:          "DYNATRACE_DISABLE_ORDERING_SUPPORT",
 	DefaultValue: false,
 }
+
+// --- Cache ---
+
+// DTCacheFolder sets the path to the cache folder.
+var DTCacheFolder = StringEnvVar{
+	Key:          "DT_CACHE_FOLDER",
+	DefaultValue: "",
+}
