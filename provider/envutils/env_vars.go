@@ -430,3 +430,9 @@ var DynatraceImportStatePath = StringEnvVar{
 	Key:          "DYNATRACE_IMPORT_STATE_PATH",
 	DefaultValue: "",
 }
+
+// DynatracePrevStateOn enables keeping resource identifiers stable between runs so downstream Terraform references don't break.
+var DynatracePrevStateOn = BoolEnvVar{
+	Key:          "DYNATRACE_PREV_STATE_ON",
+	DefaultValue: false,
+}

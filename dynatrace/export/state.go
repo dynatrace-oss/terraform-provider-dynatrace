@@ -28,7 +28,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-var PREV_STATE_ON = os.Getenv("DYNATRACE_PREV_STATE_ON") == "true"
 var PREV_STATE_PATH_THIS = os.Getenv("DYNATRACE_PREV_STATE_PATH_THIS")
 var PREV_STATE_PATH_LINKED = os.Getenv("DYNATRACE_PREV_STATE_PATH_LINKED")
 
@@ -119,7 +118,7 @@ func (sm *StateMap) GetPrevUniqueName(res *Resource) string {
 	typeOfReference := res.getTypeOfReference()
 	name := ""
 
-	if PREV_STATE_ON {
+	if envutils.DynatracePrevStateOn.Get() {
 		// pass
 	} else {
 		return name
