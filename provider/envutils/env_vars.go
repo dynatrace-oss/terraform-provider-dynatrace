@@ -238,3 +238,9 @@ var DTTerraformImport = BoolEnvVar{
 	Key:          "DT_TERRAFORM_IMPORT",
 	DefaultValue: false,
 }
+
+// DynatraceForceNewOnHeaders forces resource recreation when HTTP headers change.
+var DynatraceForceNewOnHeaders = BoolEnvVar{
+	Key:          "DYNATRACE_FORCE_NEW_ON_HEADERS",
+	DefaultValue: false,
+}
