@@ -18,6 +18,7 @@
 package goldenstate
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"context"
 	"fmt"
 	"strings"
@@ -35,14 +36,14 @@ const DisabledMessage = "The resource `dynatrace_golden_state` is currently only
 
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	d.SetId(uuid.NewString())
-	if !Enabled {
+	if !envutils.DynatraceGoldenStateEnabled.Get() {
 		return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: DisabledMessage}}
 	}
 	return update(ctx, d, m, "  ")
 }
 
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	if !Enabled {
+	if !envutils.DynatraceGoldenStateEnabled.Get() {
 		return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: DisabledMessage}}
 	}
 	return update(ctx, d, m, "  ")

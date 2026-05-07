@@ -244,3 +244,9 @@ var DynatraceForceNewOnHeaders = BoolEnvVar{
 	Key:          "DYNATRACE_FORCE_NEW_ON_HEADERS",
 	DefaultValue: false,
 }
+
+// DynatraceGoldenStateEnabled enables golden state tracking for resources.
+var DynatraceGoldenStateEnabled = BoolEnvVar{
+	Key:          "DYNATRACE_GOLDEN_STATE_ENABLED",
+	DefaultValue: false,
+}
