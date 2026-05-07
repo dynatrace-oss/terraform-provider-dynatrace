@@ -156,3 +156,11 @@ var DTBucketsRetries = ClampedIntEnvVar{
 	Min:          180,
 	Max:          360,
 }
+
+// DTBucketsNumSuccesses is the number of consecutive successes required for bucket readiness. Values outside [Min, Max] are clamped to the nearest boundary.
+var DTBucketsNumSuccesses = ClampedIntEnvVar{
+	Key:          "DT_BUCKETS_NUM_SUCCESSES",
+	DefaultValue: 10,
+	Min:          10,
+	Max:          50,
+}
