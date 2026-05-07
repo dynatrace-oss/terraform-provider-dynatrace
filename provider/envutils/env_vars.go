@@ -66,3 +66,9 @@ var DynatraceHTTPResponse = BoolEnvVar{
 	Key:          "DYNATRACE_HTTP_RESPONSE",
 	DefaultValue: false,
 }
+
+// DTDebugGetOk enables debug logging for successful GET requests.
+var DTDebugGetOk = BoolEnvVar{
+	Key:          "DT_DEBUG_GET_OK",
+	DefaultValue: false,
+}
