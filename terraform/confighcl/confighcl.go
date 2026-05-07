@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,15 +19,14 @@ package confighcl
 
 import (
 	"log"
-	"os"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var debugGetOk = (os.Getenv("DT_DEBUG_GET_OK") == "true")
 
 type bootstrapDecoder struct {
 	Reader schema.FieldReader
@@ -47,7 +46,7 @@ func (me *bootstrapDecoder) getRaw(key string) (any, bool) {
 
 func (me *bootstrapDecoder) GetOk(key string) (any, bool) {
 	res, ok := me.getRaw(key)
-	if debugGetOk {
+	if envutils.DTDebugGetOk.Get() {
 		log.Println("GetOK("+key+")", "=>", res, ok)
 	}
 	return res, ok
