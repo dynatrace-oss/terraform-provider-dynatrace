@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -30,11 +30,11 @@ import (
 	"os"
 	"slices"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"golang.org/x/sync/semaphore"
 )
@@ -134,7 +134,7 @@ func (me *legacy_request) Raw() ([]byte, error) {
 		Jar:       jar,
 		Transport: http.DefaultTransport,
 	}
-	if strings.TrimSpace(os.Getenv("DYNATRACE_HTTP_INSECURE")) == "true" {
+	if envutils.DynatraceHTTPInsecure.Get() {
 		httpClient.Transport = &http.Transport{
 			ForceAttemptHTTP2:     http.DefaultTransport.(*http.Transport).ForceAttemptHTTP2,
 			Proxy:                 http.DefaultTransport.(*http.Transport).Proxy,

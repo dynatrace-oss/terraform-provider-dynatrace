@@ -40,3 +40,11 @@ var DynatraceLogHTTP = StringEnvVar{
 	Key:          "DYNATRACE_LOG_HTTP",
 	DefaultValue: "",
 }
+
+// --- HTTP ---
+
+// DynatraceHTTPInsecure disables TLS certificate verification for HTTP requests.
+var DynatraceHTTPInsecure = BoolEnvVar{
+	Key:          "DYNATRACE_HTTP_INSECURE",
+	DefaultValue: false,
+}
