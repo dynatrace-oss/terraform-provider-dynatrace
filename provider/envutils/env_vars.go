@@ -126,3 +126,9 @@ var DTNoCacheCleanup = BoolEnvVar{
 	Key:          "DT_NO_CACHE_CLEANUP",
 	DefaultValue: false,
 }
+
+// DynatraceInMemoryTarFolders uses in-memory tar archives for cache folders.
+var DynatraceInMemoryTarFolders = BoolEnvVar{
+	Key:          "DYNATRACE_IN_MEMORY_TAR_FOLDERS",
+	DefaultValue: false,
+}

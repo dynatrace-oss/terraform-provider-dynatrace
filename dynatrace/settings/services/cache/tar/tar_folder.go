@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2025 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,13 +27,13 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 const bootstrapentry = "__bootstrap__"
 const bootstrapoffset = 512
 const indexentry = "__index__"
 
-var IN_MEMORY_TAR_FOLDERS = os.Getenv("DYNATRACE_IN_MEMORY_TAR_FOLDERS") == "true"
 
 var folderCache = FolderCache{
 	mu:      sync.Mutex{},
@@ -72,7 +72,7 @@ func New(name string) (*Folder, bool, error) {
 
 func NewExisting(name string) (*Folder, bool, error) {
 
-	if IN_MEMORY_TAR_FOLDERS {
+	if envutils.DynatraceInMemoryTarFolders.Get() {
 		folderCache.mu.Lock()
 		folder, ok := folderCache.folders[name]
 		if ok {
@@ -90,7 +90,7 @@ func NewExisting(name string) (*Folder, bool, error) {
 			return tf, true, err
 		}
 
-		if IN_MEMORY_TAR_FOLDERS {
+		if envutils.DynatraceInMemoryTarFolders.Get() {
 			folderCache.mu.Lock()
 
 			folder, ok := folderCache.folders[name]
