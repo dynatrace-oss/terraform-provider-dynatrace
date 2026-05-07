@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import (
 	"os/exec"
 	"strings"
 	"unicode"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 // To speed things up when using Dynatrace Config Manager
@@ -34,7 +36,7 @@ func format(name string, force bool) {
 	if HCL_NO_FORMAT {
 		return
 	}
-	if force || os.Getenv("DYNATRACE_FORMAT_HCL_FILES") == "true" {
+	if force || envutils.DynatraceFormatHCLFiles.Get() {
 		exePath, _ := exec.LookPath("terraform.exe")
 		// log.Println(exePath, "fmt", name)
 		cmd := exec.Command(exePath, "fmt", name)

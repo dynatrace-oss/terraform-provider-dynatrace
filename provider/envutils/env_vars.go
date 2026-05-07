@@ -386,3 +386,9 @@ var DynatraceMigrationCacheFolder = StringEnvVar{
 	Key:          "DYNATRACE_MIGRATION_CACHE_FOLDER",
 	DefaultValue: "",
 }
+
+// DynatraceFormatHCLFiles enables formatting of generated HCL files.
+var DynatraceFormatHCLFiles = BoolEnvVar{
+	Key:          "DYNATRACE_FORMAT_HCL_FILES",
+	DefaultValue: false,
+}
