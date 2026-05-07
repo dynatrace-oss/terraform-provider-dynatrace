@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/confighcl"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -442,7 +443,7 @@ func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, 
 		err := d.Set(k, v)
 		// currently behind an env variable, because it could potentially break existing resources
 		// TODO: Remove this once we have proper integration tests
-		if err != nil && os.Getenv("DYNATRACE_DEBUG") == "true" {
+		if err != nil && envutils.DynatraceDebug.Get() {
 			return diag.FromErr(err)
 		}
 	}
