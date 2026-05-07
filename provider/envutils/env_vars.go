@@ -380,3 +380,9 @@ var DynatraceAtomicDependencies = BoolEnvVar{
 	Key:          "DYNATRACE_ATOMIC_DEPENDENCIES",
 	DefaultValue: false,
 }
+
+// DynatraceMigrationCacheFolder sets the migration cache folder path.
+var DynatraceMigrationCacheFolder = StringEnvVar{
+	Key:          "DYNATRACE_MIGRATION_CACHE_FOLDER",
+	DefaultValue: "",
+}
