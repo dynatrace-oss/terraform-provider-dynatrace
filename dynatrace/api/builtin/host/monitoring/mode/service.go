@@ -21,8 +21,6 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"os"
-	"strconv"
 	"strings"
 	"time"
 
@@ -36,8 +34,6 @@ import (
 
 const SchemaVersion = "1.3"
 const SchemaID = "builtin:host.monitoring.mode"
-
-var StrictUpdateRetries = os.Getenv("DYNATRACE_HOST_MONITORING_STRICT_UPDATE_RETRIES")
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*mode.Settings] {
 	return &service{
@@ -156,12 +152,7 @@ func (me *service) Update(ctx context.Context, id string, v *mode.Settings) erro
 func (me *service) update(ctx context.Context, id string, v *mode.Settings) error {
 	_, err := me.service.Create(ctx, v)
 	if err == nil {
-		remainingRetries := 0
-		if len(StrictUpdateRetries) > 0 {
-			if iStrictUpdateRetries, err := strconv.Atoi(StrictUpdateRetries); err == nil && iStrictUpdateRetries >= 0 {
-				remainingRetries = iStrictUpdateRetries
-			}
-		}
+		remainingRetries := envutils.DynatraceHostMonitoringStrictUpdateRetries.Get()
 		readMode := ""
 		for remainingRetries > 0 && readMode != string(v.MonitoringMode) {
 			getSettings := new(mode.Settings)
