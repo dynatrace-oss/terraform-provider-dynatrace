@@ -41,6 +41,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"github.com/google/uuid"
@@ -50,8 +51,6 @@ import (
 var NO_REFRESH_ON_IMPORT = os.Getenv("DYNATRACE_NO_REFRESH_ON_IMPORT") == "true"
 var QUICK_INIT = os.Getenv("DYNATRACE_QUICK_INIT") == "true"
 var ULTRA_PARALLEL = os.Getenv("DYNATRACE_ULTRA_PARALLEL") == "true"
-
-const ENV_VAR_CUSTOM_PROVIDER_LOCATION = "DYNATRACE_CUSTOM_PROVIDER_LOCATION"
 
 type Environment struct {
 	mu                    sync.Mutex
@@ -1167,7 +1166,7 @@ func (me *Environment) RunTerraformInit() error {
 	}
 	cmdOptions := []string{"init", "-no-color"}
 
-	customProviderLocation := os.Getenv(ENV_VAR_CUSTOM_PROVIDER_LOCATION)
+	customProviderLocation := envutils.DynatraceCustomProviderLocation.Get()
 	if len(customProviderLocation) != 0 && customProviderLocation != "" {
 		cmdOptions = append(cmdOptions, fmt.Sprint("-plugin-dir=", customProviderLocation))
 	}
