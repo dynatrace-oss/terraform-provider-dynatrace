@@ -162,7 +162,7 @@ func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stu
 		return nil, err
 	}
 
-	maxConfirmationRetries := getEnv("DT_BUCKETS_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
+	maxConfirmationRetries := envutils.DTBucketsRetries.Get()
 	numRequiredSuccesses := getEnv("DT_BUCKETS_NUM_SUCCESSES", DefaultNumRequiredSuccesses, MinNumRequiredSuccesses, MaxNumRequiredSuccesses)
 	requiredSuccessesLeft := numRequiredSuccesses
 	retries := 0
@@ -214,7 +214,7 @@ func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (er
 		return err
 	}
 
-	maxConfirmationRetries := getEnv("DT_BUCKETS_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
+	maxConfirmationRetries := envutils.DTBucketsRetries.Get()
 	retries := 0
 	for {
 		var bucket buckets.Bucket
@@ -245,7 +245,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	maxConfirmationRetries := getEnv("DT_BUCKETS_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
+	maxConfirmationRetries := envutils.DTBucketsRetries.Get()
 	retries := 0
 	response, err := client.Get(ctx, id)
 	for response.StatusCode != 404 {
