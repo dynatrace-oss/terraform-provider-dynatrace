@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/managementzones/settings"
 	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo"
@@ -103,7 +104,7 @@ func (me *service) Create(ctx context.Context, v *managementzones.Settings) (*ap
 
 	validator := slo.Service(me.credentials).(settings.Validator[*slosettings.Settings])
 
-	maxConfirmationRetries := getEnv("DT_MGMZ_RETRIES", DefaultMaxConfirmationRetries, MinMaxConfirmationRetries, MaxMaxConfirmationRetries)
+	maxConfirmationRetries := envutils.DTMgmzRetries.Get()
 	numRequiredSuccesses := getEnv("DT_MGMZ_SUCCESSES", DefaultNumRequiredSuccesses, MinNumRequiredSuccesses, MaxNumRequiredSuccesses)
 	success := 0
 	for range maxConfirmationRetries {

@@ -164,3 +164,13 @@ var DTBucketsNumSuccesses = ClampedIntEnvVar{
 	Min:          10,
 	Max:          50,
 }
+
+// --- Management Zones ---
+
+// DTMgmzRetries is the number of retries when waiting for management zone readiness. Values outside [Min, Max] are clamped to the nearest boundary.
+var DTMgmzRetries = ClampedIntEnvVar{
+	Key:          "DT_MGMZ_RETRIES",
+	DefaultValue: 50,
+	Min:          50,
+	Max:          600,
+}
