@@ -404,3 +404,9 @@ var DynatraceNameReplaceDash = BoolEnvVar{
 	Key:          "DYNATRACE_NAME_REPLACE_DASH",
 	DefaultValue: false,
 }
+
+// DynatraceBuildAddressFiles generates address files during export.
+var DynatraceBuildAddressFiles = BoolEnvVar{
+	Key:          "DYNATRACE_BUILD_ADDRESS_FILES",
+	DefaultValue: false,
+}

@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,16 +19,15 @@ package address
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 	"sync"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/spf13/afero"
 )
 
 // To speed things up when using Dynatrace Config Manager
-var BUILD_ADDRESS_FILES = os.Getenv("DYNATRACE_BUILD_ADDRESS_FILES") == "true"
 
 type AddressOriginal struct {
 	TerraformSchemaID string
@@ -64,7 +63,7 @@ func NewAddressMap() *AddressMap {
 }
 
 func (al *AddressMap) AddToAddressMap(a Address) {
-	if !BUILD_ADDRESS_FILES {
+	if !envutils.DynatraceBuildAddressFiles.Get() {
 		return
 	}
 
@@ -75,7 +74,7 @@ func (al *AddressMap) AddToAddressMap(a Address) {
 }
 
 func SaveAddressMap(addresses any, OutputFolder string, filename string) error {
-	if !BUILD_ADDRESS_FILES {
+	if !envutils.DynatraceBuildAddressFiles.Get() {
 		return nil
 	}
 
