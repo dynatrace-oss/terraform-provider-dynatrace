@@ -1,7 +1,16 @@
+data "dynatrace_application" "web_application" {
+  name = "Web Application"
+}
+
+data "dynatrace_synthetic_location" "location" {
+  type           = "PUBLIC"
+  name           = "Sydney"
+}
+
 resource "dynatrace_calculated_web_metric" "user_action_properties" {
   name           = "#name#"
   enabled        = true
-  app_identifier = dynatrace_web_application.application.id
+  app_identifier = data.dynatrace_application.web_application.id
   metric_key     = "calc:apps.web.#name#"
   dimensions {
     dimension {
