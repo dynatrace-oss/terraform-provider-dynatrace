@@ -21,7 +21,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"os"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -356,14 +355,14 @@ func (me *Generic) ReadForSettings(ctx context.Context, d *schema.ResourceData, 
 	if preparer, ok := sttngs.(MarshalPreparer); ok {
 		preparer.PrepareMarshalHCL(hcl.DecoderFrom(d))
 	}
-	if os.Getenv("DT_TERRAFORM_IMPORT") == "true" {
+	if envutils.DTTerraformImport.Get() {
 		if demoSettings, ok := sttngs.(settings.DemoSettings); ok {
 			demoSettings.FillDemoValues()
 		}
 	}
 	marshalled := hcl.Properties{}
 	err = sttngs.MarshalHCL(marshalled)
-	if os.Getenv("DT_TERRAFORM_IMPORT") != "true" {
+	if !envutils.DTTerraformImport.Get() {
 		stateAttributes := NewAttributes(d.State().Attributes)
 
 		// Replacing Algorithm A
