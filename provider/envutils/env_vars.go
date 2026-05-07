@@ -48,3 +48,9 @@ var DynatraceHTTPInsecure = BoolEnvVar{
 	Key:          "DYNATRACE_HTTP_INSECURE",
 	DefaultValue: false,
 }
+
+// DynatraceHTTPLegacy uses the legacy HTTP client.
+var DynatraceHTTPLegacy = BoolEnvVar{
+	Key:          "DYNATRACE_HTTP_LEGACY",
+	DefaultValue: false,
+}

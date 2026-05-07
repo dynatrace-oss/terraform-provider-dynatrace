@@ -18,6 +18,7 @@
 package rest
 
 import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"context"
 	"errors"
 	"net/http"
@@ -111,7 +112,7 @@ func clusterV2Client(baseURL string, apiToken string) (*rest.Client, error) {
 
 func (me *cluster_v2_request) Finish(optionalTarget ...any) error {
 	credentials := me.client.Credentials()
-	if DYNATRACE_HTTP_LEGACY {
+	if envutils.DynatraceHTTPLegacy.Get() {
 		if !credentials.ContainsClusterURL() {
 			return NoClusterURLError
 		}

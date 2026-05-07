@@ -37,7 +37,6 @@ import (
 )
 
 var preRequestMutex sync.Mutex
-var DYNATRACE_HTTP_LEGACY = (os.Getenv("DYNATRACE_HTTP_LEGACY") == "true")
 var DYNATRACE_HTTP_OAUTH_PREFERENCE = (os.Getenv("DYNATRACE_HTTP_OAUTH_PREFERENCE") == "true")
 
 type Request interface {
