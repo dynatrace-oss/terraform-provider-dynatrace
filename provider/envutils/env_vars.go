@@ -222,3 +222,11 @@ var DynatraceDuplicateHijack = StringEnvVar{
 	Key:          "DYNATRACE_DUPLICATE_HIJACK",
 	DefaultValue: "",
 }
+
+// --- Tags ---
+
+// DynatraceTagsErrZeroMatched returns an error when a tag query matches zero entities.
+var DynatraceTagsErrZeroMatched = BoolEnvVar{
+	Key:          "DYNATRACE_TAGS_ERR_ZERO_MATCHED",
+	DefaultValue: false,
+}
