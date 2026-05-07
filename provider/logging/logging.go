@@ -50,7 +50,7 @@ func createDebugLogger(name string) *log.Logger {
 
 	prefix := "terraform-provider-dynatrace"
 
-	logDebugPrefix := os.Getenv("DYNATRACE_LOG_DEBUG_PREFIX")
+	logDebugPrefix := envutils.DynatraceLogDebugPrefix.Get()
 	if len(logDebugPrefix) > 0 && logDebugPrefix != "false" {
 		prefix = logDebugPrefix
 	}
