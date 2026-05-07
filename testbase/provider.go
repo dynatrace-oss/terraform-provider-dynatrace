@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -58,7 +59,7 @@ func init() {
 func TestAccPreCheck(t *testing.T) {
 	ctx := context.Background()
 
-	if v := os.Getenv("DYNATRACE_ENV_URL"); v == "" {
+	if v := envutils.DynatraceEnvURL.Get(); v == "" {
 		t.Fatalf("[WARN] DYNATRACE_ENV_URL has not been set for acceptance tests")
 	}
 

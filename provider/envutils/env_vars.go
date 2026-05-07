@@ -500,3 +500,11 @@ var DynatraceSourcePlatformToken = MultiStringEnvVar{
 		"DT_SOURCE_PLATFORM_TOKEN",
 	},
 }
+
+// --- Testing ---
+
+// DynatraceEnvURL sets the Dynatrace environment URL for acceptance tests.
+var DynatraceEnvURL = StringEnvVar{
+	Key:          "DYNATRACE_ENV_URL",
+	DefaultValue: "",
+}
