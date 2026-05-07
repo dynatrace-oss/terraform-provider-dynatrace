@@ -86,3 +86,11 @@ var DTRestDebugLog = StringEnvVar{
 	Key:          "DT_REST_DEBUG_LOG",
 	DefaultValue: "",
 }
+
+// --- Settings 2.0 ---
+
+// DTNoRepairInput disables automatic repair of invalid settings input.
+var DTNoRepairInput = BoolEnvVar{
+	Key:          "DT_NO_REPAIR_INPUT",
+	DefaultValue: false,
+}
