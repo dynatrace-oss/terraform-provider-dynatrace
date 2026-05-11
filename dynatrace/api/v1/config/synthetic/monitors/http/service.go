@@ -34,6 +34,10 @@ import (
 const SchemaID = "v1:synthetic:monitors:http"
 const BasePath = "/api/v1/synthetic/monitors"
 
+const DesiredReadySuccesses = 5
+
+var ErrConsistencyRetry = errors.New("eventual consistency check")
+
 func Service(credentials *rest.Credentials) settings.CRUDService[*http.SyntheticMonitor] {
 	return &service{service: settings.NewAPITokenService(credentials, SchemaID, &settings.ServiceOptions[*http.SyntheticMonitor]{
 		Get:            settings.Path("/api/v1/synthetic/monitors/%s"),
@@ -42,6 +46,10 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*http.Synthetic
 		Stubs:          &monitors.Monitors{},
 		HasNoValidator: true,
 	})}
+}
+
+func WithPredefinedService(s settings.CRUDService[*http.SyntheticMonitor]) *service {
+	return &service{service: s}
 }
 
 type service struct {
@@ -97,13 +105,26 @@ func (me *service) Update(ctx context.Context, id string, v *http.SyntheticMonit
 // 3. Retry several times, even if 1. and 2. succeeded. Server nodes may still be out of sync.
 func (me *service) validateReady(ctx context.Context, id string, v *http.SyntheticMonitor) error {
 	retryOnTags := len(v.Tags) > 0
-	consistencyRetryErr := errors.New("eventual consistency check")
-	desiredSuccesses := 5
-	successes := 0
 
-	var newVal *http.SyntheticMonitor
-	err := retry.RetryContext(ctx, 1*time.Minute, func() *retry.RetryError {
-		newVal = new(http.SyntheticMonitor)
+	err := retry.RetryContext(ctx, 1*time.Minute, me.ReadyCheck(ctx, id, retryOnTags))
+	if err != nil && errors.Is(err, ErrConsistencyRetry) {
+		// ignore our retry check errors (returned by timeout)
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// ReadyCheck returns a retry.RetryFunc that performs one readiness probe per
+// invocation. The returned closure holds the success counter, so the same
+// instance must be reused across retries (and can be invoked directly from
+// tests to drive each branch synchronously).
+func (me *service) ReadyCheck(ctx context.Context, id string, retryOnTags bool) retry.RetryFunc {
+	successes := 0
+	return func() *retry.RetryError {
+		newVal := new(http.SyntheticMonitor)
 		err := me.Get(ctx, id, newVal)
 
 		// may not exist immediately after creation (not synced across server nodes)
@@ -118,24 +139,15 @@ func (me *service) validateReady(ctx context.Context, id string, v *http.Synthet
 
 		// checks if tags are synced (consistent)
 		if retryOnTags && len(newVal.Tags) == 0 {
-			return retry.RetryableError(consistencyRetryErr)
+			return retry.RetryableError(ErrConsistencyRetry)
 		}
 
 		successes++
-		if successes < desiredSuccesses {
-			return retry.RetryableError(consistencyRetryErr)
+		if successes < DesiredReadySuccesses {
+			return retry.RetryableError(ErrConsistencyRetry)
 		}
 		return nil
-	})
-	if err != nil && errors.Is(err, consistencyRetryErr) {
-		// ignore our retry check errors (returned by timeout)
-		return nil
 	}
-	if err != nil {
-		return err
-	}
-	*v = *newVal
-	return nil
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
