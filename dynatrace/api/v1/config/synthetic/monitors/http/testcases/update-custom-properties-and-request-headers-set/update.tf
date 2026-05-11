@@ -50,8 +50,3 @@ resource "dynatrace_http_monitor" "advanced" {
     }
   }
 }
-
-resource "time_sleep" "wait_for_monitor" {
-  depends_on = [dynatrace_http_monitor.advanced]
-  create_duration = "10s"
-}

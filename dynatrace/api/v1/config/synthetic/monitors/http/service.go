@@ -19,10 +19,13 @@ package http
 
 import (
 	"context"
+	"errors"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors"
 	http "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http/settings"
@@ -38,7 +41,6 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*http.Synthetic
 		CreateURL:      func(v *http.SyntheticMonitor) string { return "/api/v1/synthetic/monitors" },
 		Stubs:          &monitors.Monitors{},
 		HasNoValidator: true,
-		CreateConfirm:  30,
 	})}
 }
 
@@ -58,7 +60,15 @@ func (me *service) Create(ctx context.Context, v *http.SyntheticMonitor) (*api.S
 	if v.NoScript != nil && *v.NoScript && v.Script == nil {
 		v.Script = GetTempScript()
 	}
-	return me.service.Create(ctx, v)
+	stub, err := me.service.Create(ctx, v)
+	if err != nil {
+		return nil, err
+	}
+	err = me.validateReady(ctx, stub.ID, v)
+	if err != nil {
+		return nil, err
+	}
+	return stub, nil
 }
 
 func (me *service) Update(ctx context.Context, id string, v *http.SyntheticMonitor) error {
@@ -69,7 +79,63 @@ func (me *service) Update(ctx context.Context, id string, v *http.SyntheticMonit
 		}
 		v.Script = monitorSettings.Script
 	}
-	return me.service.Update(ctx, id, v)
+	err := me.service.Update(ctx, id, v)
+	if err != nil {
+		return err
+	}
+	return me.validateReady(ctx, id, v)
+}
+
+// validateReady check when an HTTP monitor is ready to use/get after create/update.
+// Because of eventual consistency
+// - `tags` may not be returned.
+// - Get may return 404
+// - Even if Get returns non 404 and the expected tags, we can't rely on it because server nodes may not be synced.
+// That's why we need to
+// 1. Retry on 404
+// 2. Retry if tags are not present (if there should be any)
+// 3. Retry several times, even if 1. and 2. succeeded. Server nodes may still be out of sync.
+func (me *service) validateReady(ctx context.Context, id string, v *http.SyntheticMonitor) error {
+	retryOnTags := len(v.Tags) > 0
+	consistencyRetryErr := errors.New("eventual consistency check")
+	desiredSuccesses := 5
+	successes := 0
+
+	var newVal *http.SyntheticMonitor
+	err := retry.RetryContext(ctx, 1*time.Minute, func() *retry.RetryError {
+		newVal = new(http.SyntheticMonitor)
+		err := me.Get(ctx, id, newVal)
+
+		// may not exist immediately after creation (not synced across server nodes)
+		if rest.IsNotFoundError(err) {
+			return retry.RetryableError(err)
+		}
+
+		// other errors not related to inconsistency and 404
+		if err != nil {
+			return retry.NonRetryableError(err)
+		}
+
+		// checks if tags are synced (consistent)
+		if retryOnTags && len(newVal.Tags) == 0 {
+			return retry.RetryableError(consistencyRetryErr)
+		}
+
+		successes++
+		if successes < desiredSuccesses {
+			return retry.RetryableError(consistencyRetryErr)
+		}
+		return nil
+	})
+	if err != nil && errors.Is(err, consistencyRetryErr) {
+		// ignore our retry check errors (returned by timeout)
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	*v = *newVal
+	return nil
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {

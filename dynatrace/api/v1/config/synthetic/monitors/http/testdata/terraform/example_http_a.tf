@@ -432,8 +432,3 @@ resource "dynatrace_http_monitor" "monitor" {
     }
   }
 }
-
-resource "time_sleep" "wait_to_be_consistent" {
-  depends_on = [dynatrace_http_monitor.monitor]
-  create_duration = "10s"
-}
