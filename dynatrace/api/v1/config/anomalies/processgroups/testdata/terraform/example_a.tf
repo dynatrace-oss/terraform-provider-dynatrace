@@ -1,9 +1,9 @@
-variable "PROCESS_GROUP_ID" {
-  type = string
+data "dynatrace_entity" "process_group" {
+  entity_selector = "type(\"PROCESS_GROUP\")"
 }
 
 resource "dynatrace_pg_anomalies" "anomaly" {
-  pg_id = var.PROCESS_GROUP_ID
+  pg_id = data.dynatrace_entity.process_group.id
   availability {
     method            = "OFF"
     minimum_threshold = 0
