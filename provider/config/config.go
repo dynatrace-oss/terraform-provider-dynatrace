@@ -320,7 +320,7 @@ func (me ConfigGetter) Get(key string) any {
 		sourceEnvVar = &envutils.DynatraceSourcePlatformToken
 	}
 	if sourceEnvVar != nil {
-		if sourceValue := envutils.DynatraceSourceEnvURL.Get(); len(sourceValue) > 0 {
+		if sourceValue := sourceEnvVar.Get(); len(sourceValue) > 0 {
 			return sourceValue
 		}
 	}
