@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: "dynatrace_process_grouping_rules Resource - terraform-provider-dynatrace"
+subcategory: "Process Group Monitoring"
+description: |-
+  The resource `dynatrace_process_grouping_rules` covers configuration for process grouping
+---
+
+# dynatrace_process_grouping_rules (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Process grouping rules - https://docs.dynatrace.com/docs/observe/infrastructure-observability/process-groups/configuration/unified-process-grouping/process-grouping-rules-configure
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:process-grouping-rules`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_process_grouping_rules` downloads all existing process grouping rules
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/processgroupingrules/testdata/terraform/example.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
