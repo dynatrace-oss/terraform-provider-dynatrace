@@ -26,5 +26,6 @@ import (
 )
 
 func TestAccProcessGroupSimpleDetectionRules(t *testing.T) {
+	t.Skip("Deprecated in favor of dynatrace_process_grouping_rules")
 	api.TestAcc(t)
 }
