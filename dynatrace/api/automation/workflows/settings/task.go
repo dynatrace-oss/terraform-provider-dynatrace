@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ package workflows
 
 import (
 	"encoding/json"
-	"os"
 	"regexp"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -54,10 +54,8 @@ func (me *Tasks) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var useTypeList = os.Getenv("DYNATRACE_WORKFLOW_TASKS_USE_TYPE_LIST") == "true"
-
 func (me *Tasks) Schema(prefix string) map[string]*schema.Schema {
-	if useTypeList {
+	if envutils.DynatraceWorkflowTasksUseTypeList.Get() {
 		return map[string]*schema.Schema{
 			"task": {
 				Type:        schema.TypeList,

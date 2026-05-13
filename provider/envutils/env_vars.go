@@ -290,3 +290,11 @@ var DynatraceHostMonitoringStrictUpdateRetries = ClampedIntEnvVar{
 	Min:          0,
 	Max:          60,
 }
+
+// --- Workflows ---
+
+// DynatraceWorkflowTasksUseTypeList uses a type list for workflow task filtering.
+var DynatraceWorkflowTasksUseTypeList = BoolEnvVar{
+	Key:          "DYNATRACE_WORKFLOW_TASKS_USE_TYPE_LIST",
+	DefaultValue: false,
+}
