@@ -716,6 +716,7 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_system_events_pipelinegroups":   resources.NewGeneric(export.ResourceTypes.OpenpipelineSystemEventsPipelinegroups).Resource(),
 			"dynatrace_openpipeline_v2_user_events_pipelinegroups":     resources.NewGeneric(export.ResourceTypes.OpenpipelineUserEventsPipelinegroups).Resource(),
 			"dynatrace_openpipeline_v2_usersessions_pipelinegroups":    resources.NewGeneric(export.ResourceTypes.OpenpipelineUsersessionsPipelinegroups).Resource(),
+			"dynatrace_process_grouping_rules":                         resources.NewGeneric(export.ResourceTypes.ProcessGroupingRules).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
