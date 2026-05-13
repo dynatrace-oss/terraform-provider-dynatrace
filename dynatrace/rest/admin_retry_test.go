@@ -1,3 +1,5 @@
+//go:build unit
+
 /**
 * @license
 * Copyright 2025 Dynatrace LLC
@@ -14,8 +16,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
  */
-
-//go:build unit
 
 package rest_test
 
