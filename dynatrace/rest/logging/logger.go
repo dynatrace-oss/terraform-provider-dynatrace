@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,7 +24,14 @@ import (
 	"log"
 	"os"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
+)
+
+const (
+	logHTTPTrue   = "true"
+	logHTTPFalse  = "false"
+	logHTTPStdout = "stdout"
 )
 
 type RESTLogger struct {
@@ -32,27 +39,26 @@ type RESTLogger struct {
 }
 
 func (l *RESTLogger) Print(ctx context.Context, v ...any) {
-	if stdoutLog {
+	if envutils.DynatraceLogHTTP.Get() == logHTTPStdout {
 		tflog.Debug(ctx, fmt.Sprint(append(append([]any{}, "[HTTP]"), v...)...))
 	}
 	l.Log.Print(v...)
 }
 
 func (l *RESTLogger) Printf(ctx context.Context, format string, v ...any) {
-	if stdoutLog {
+	if envutils.DynatraceLogHTTP.Get() == logHTTPStdout {
 		tflog.Debug(ctx, fmt.Sprintf("[HTTP] "+format, v...))
 	}
 	l.Log.Printf(format, v...)
 }
 
 func (l *RESTLogger) Println(ctx context.Context, v ...any) {
-	if stdoutLog {
+	if envutils.DynatraceLogHTTP.Get() == logHTTPStdout {
 		tflog.Debug(ctx, fmt.Sprint(append(append([]any{}, "[HTTP]"), v...)...))
 	}
 	l.Log.Println(v...)
 }
 
-var stdoutLog = os.Getenv("DYNATRACE_LOG_HTTP") == "stdout"
 var logger = initLogger()
 var Logger = logger
 
@@ -71,15 +77,17 @@ func (odw *onDemandWriter) Write(p []byte) (n int, err error) {
 }
 
 func initLogger() *RESTLogger {
-	restLogFileName := os.Getenv("DYNATRACE_LOG_HTTP")
-	if len(restLogFileName) > 0 && restLogFileName != "false" && !stdoutLog {
-		logger := log.New(os.Stderr, "", log.LstdFlags)
-		if restLogFileName != "true" {
-			logger.SetOutput(&onDemandWriter{logFileName: restLogFileName})
-		}
-		return &RESTLogger{Log: logger}
+	logHTTP := envutils.DynatraceLogHTTP.Get()
+
+	if logHTTP == "" || logHTTP == logHTTPFalse || logHTTP == logHTTPStdout {
+		return &RESTLogger{Log: log.New(io.Discard, "", log.LstdFlags)}
 	}
-	return &RESTLogger{Log: log.New(io.Discard, "", log.LstdFlags)}
+
+	logger := log.New(os.Stderr, "", log.LstdFlags)
+	if logHTTP != logHTTPTrue {
+		logger.SetOutput(&onDemandWriter{logFileName: logHTTP})
+	}
+	return &RESTLogger{Log: logger}
 }
 
 func SetLogWriter(writer io.Writer) error {
