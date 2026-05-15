@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -47,9 +47,9 @@ func (me *DimensionConditions) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type DimensionCondition struct {
-	ConditionType DimensionConditionType `json:"conditionType"` // Possible Values: `DIMENSION`, `LOG_FILE_NAME`, `METRIC_KEY`
+	ConditionType DimensionConditionType `json:"conditionType"` // Type. Possible values: `DIMENSION`, `LOG_FILE_NAME`, `METRIC_KEY`
 	Key           *string                `json:"key,omitempty"`
-	RuleMatcher   DimensionOperator      `json:"ruleMatcher"` // Possible Values: `BEGINS_WITH`, `EQUALS`
+	RuleMatcher   DimensionOperator      `json:"ruleMatcher"` // Operator. Possible values: `BEGINS_WITH`, `EQUALS`
 	Value         string                 `json:"value"`
 }
 
@@ -57,22 +57,22 @@ func (me *DimensionCondition) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"condition_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `DIMENSION`, `LOG_FILE_NAME`, `METRIC_KEY`",
+			Description: "Type. Possible values: `DIMENSION`, `LOG_FILE_NAME`, `METRIC_KEY`",
 			Required:    true,
 		},
 		"key": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 		},
 		"rule_matcher": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `BEGINS_WITH`, `EQUALS`",
+			Description: "Operator. Possible values: `BEGINS_WITH`, `EQUALS`",
 			Required:    true,
 		},
 		"value": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 	}
@@ -88,8 +88,11 @@ func (me *DimensionCondition) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *DimensionCondition) HandlePreconditions() error {
-	if me.Key == nil && (string(me.ConditionType) == "DIMENSION") {
-		return fmt.Errorf("'key' must be specified if 'condition_type' is set to '%v'", me.ConditionType)
+	if (me.Key == nil) && (string(me.ConditionType) == "DIMENSION") {
+		return fmt.Errorf("'key' must be specified when 'condition_type' is set to 'DIMENSION'; got 'condition_type'='%v'", me.ConditionType)
+	}
+	if (me.Key != nil) && (string(me.ConditionType) != "DIMENSION") {
+		return fmt.Errorf("'key' must not be specified unless 'condition_type' is set to 'DIMENSION'; got 'condition_type'='%v'", me.ConditionType)
 	}
 	return nil
 }

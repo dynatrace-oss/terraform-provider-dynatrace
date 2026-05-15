@@ -1330,6 +1330,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 5000,
 	"metadata": {
 		"addItemButton": "Add new management zone"
