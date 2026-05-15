@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,15 +23,15 @@ import (
 )
 
 type DimensionRule struct {
-	AppliesTo  DimensionType       `json:"appliesTo"`            // Possible Values: `ANY`, `LOG`, `METRIC`
-	Conditions DimensionConditions `json:"conditions,omitempty"` // Conditions
+	AppliesTo  DimensionType       `json:"appliesTo"` // Type. Possible values: `ANY`, `LOG`, `METRIC`
+	Conditions DimensionConditions `json:"conditions,omitempty"`
 }
 
 func (me *DimensionRule) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"applies_to": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `ANY`, `LOG`, `METRIC`",
+			Description: "Type. Possible values: `ANY`, `LOG`, `METRIC`",
 			Required:    true,
 		},
 		"dimension_conditions": {

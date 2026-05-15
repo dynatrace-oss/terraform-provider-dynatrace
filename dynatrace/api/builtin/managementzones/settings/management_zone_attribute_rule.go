@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@
 package managementzones
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -27,12 +29,12 @@ type ManagementZoneAttributeRule struct {
 	AzureToServicePropagation                  *bool                `json:"azureToServicePropagation,omitempty"` // Apply to services provided by matching Azure entities
 	Conditions                                 AttributeConditions  `json:"conditions"`
 	CustomDeviceGroupToCustomDevicePropagation *bool                `json:"customDeviceGroupToCustomDevicePropagation,omitempty"` // Apply to custom devices in a custom device group
-	EntityType                                 ManagementZoneMeType `json:"entityType"`                                           // Possible Values: `APPMON_SERVER`, `APPMON_SYSTEM_PROFILE`, `AWS_ACCOUNT`, `AWS_APPLICATION_LOAD_BALANCER`, `AWS_AUTO_SCALING_GROUP`, `AWS_CLASSIC_LOAD_BALANCER`, `AWS_NETWORK_LOAD_BALANCER`, `AWS_RELATIONAL_DATABASE_SERVICE`, `AZURE`, `BROWSER_MONITOR`, `CLOUD_APPLICATION`, `CLOUD_APPLICATION_NAMESPACE`, `CLOUD_FOUNDRY_FOUNDATION`, `CUSTOM_APPLICATION`, `CUSTOM_DEVICE`, `CUSTOM_DEVICE_GROUP`, `DATA_CENTER_SERVICE`, `ENTERPRISE_APPLICATION`, `ESXI_HOST`, `EXTERNAL_MONITOR`, `HOST`, `HOST_GROUP`, `HTTP_MONITOR`, `KUBERNETES_CLUSTER`, `KUBERNETES_SERVICE`, `MOBILE_APPLICATION`, `OPENSTACK_ACCOUNT`, `PROCESS_GROUP`, `QUEUE`, `SERVICE`, `WEB_APPLICATION`
-	HostToPGPropagation                        *bool                `json:"hostToPGPropagation,omitempty"`                        // Apply to processes running on matching hosts. `entity_type` must be set to `HOST`
-	PGToHostPropagation                        *bool                `json:"pgToHostPropagation,omitempty"`                        // Apply to underlying hosts of matching process groups. `entity_type` must be set to `PROCESS_GROUP`
-	PGToServicePropagation                     *bool                `json:"pgToServicePropagation,omitempty"`                     // Apply to all services provided by the process groups. `entity_type` must be set to `PROCESS_GROUP`
-	ServiceToHostPropagation                   *bool                `json:"serviceToHostPropagation,omitempty"`                   // Apply to underlying hosts of matching services. `entity_type` must be set to `SERVICE`
-	ServiceToPGPropagation                     *bool                `json:"serviceToPGPropagation,omitempty"`                     // Apply to underlying process groups of matching services. `entity_type` must be set to `SERVICE`
+	EntityType                                 ManagementZoneMeType `json:"entityType"`                                           // Rule applies to. Possible values: `APPMON_SERVER`, `APPMON_SYSTEM_PROFILE`, `AWS_ACCOUNT`, `AWS_APPLICATION_LOAD_BALANCER`, `AWS_AUTO_SCALING_GROUP`, `AWS_CLASSIC_LOAD_BALANCER`, `AWS_NETWORK_LOAD_BALANCER`, `AWS_RELATIONAL_DATABASE_SERVICE`, `AZURE`, `BROWSER_MONITOR`, `CLOUD_APPLICATION`, `CLOUD_APPLICATION_NAMESPACE`, `CLOUD_FOUNDRY_FOUNDATION`, `CUSTOM_APPLICATION`, `CUSTOM_DEVICE`, `CUSTOM_DEVICE_GROUP`, `DATA_CENTER_SERVICE`, `ENTERPRISE_APPLICATION`, `ESXI_HOST`, `EXTERNAL_MONITOR`, `HOST`, `HOST_GROUP`, `HTTP_MONITOR`, `KUBERNETES_CLUSTER`, `KUBERNETES_SERVICE`, `MOBILE_APPLICATION`, `NETWORK_AVAILABILITY_MONITOR`, `OPENSTACK_ACCOUNT`, `PROCESS_GROUP`, `QUEUE`, `SERVICE`, `WEB_APPLICATION`
+	HostToPGPropagation                        *bool                `json:"hostToPGPropagation,omitempty"`                        // Apply to processes running on matching hosts
+	PGToHostPropagation                        *bool                `json:"pgToHostPropagation,omitempty"`                        // Apply to underlying hosts of matching process groups
+	PGToServicePropagation                     *bool                `json:"pgToServicePropagation,omitempty"`                     // Apply to all services provided by the process groups
+	ServiceToHostPropagation                   *bool                `json:"serviceToHostPropagation,omitempty"`                   // Apply to underlying hosts of matching services
+	ServiceToPGPropagation                     *bool                `json:"serviceToPGPropagation,omitempty"`                     // Apply to underlying process groups of matching services
 }
 
 func (me *ManagementZoneAttributeRule) Schema() map[string]*schema.Schema {
@@ -49,7 +51,7 @@ func (me *ManagementZoneAttributeRule) Schema() map[string]*schema.Schema {
 		},
 		"attribute_conditions": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(AttributeConditions).Schema()},
 			MinItems:    1,
@@ -62,7 +64,7 @@ func (me *ManagementZoneAttributeRule) Schema() map[string]*schema.Schema {
 		},
 		"entity_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `APPMON_SERVER`, `APPMON_SYSTEM_PROFILE`, `AWS_ACCOUNT`, `AWS_APPLICATION_LOAD_BALANCER`, `AWS_AUTO_SCALING_GROUP`, `AWS_CLASSIC_LOAD_BALANCER`, `AWS_NETWORK_LOAD_BALANCER`, `AWS_RELATIONAL_DATABASE_SERVICE`, `AZURE`, `BROWSER_MONITOR`, `CLOUD_APPLICATION`, `CLOUD_APPLICATION_NAMESPACE`, `CLOUD_FOUNDRY_FOUNDATION`, `CUSTOM_APPLICATION`, `CUSTOM_DEVICE`, `CUSTOM_DEVICE_GROUP`, `DATA_CENTER_SERVICE`, `ENTERPRISE_APPLICATION`, `ESXI_HOST`, `EXTERNAL_MONITOR`, `HOST`, `HOST_GROUP`, `HTTP_MONITOR`, `KUBERNETES_CLUSTER`, `KUBERNETES_SERVICE`, `MOBILE_APPLICATION`, `OPENSTACK_ACCOUNT`, `PROCESS_GROUP`, `QUEUE`, `SERVICE`, `WEB_APPLICATION`",
+			Description: "Rule applies to. Possible values: `APPMON_SERVER`, `APPMON_SYSTEM_PROFILE`, `AWS_ACCOUNT`, `AWS_APPLICATION_LOAD_BALANCER`, `AWS_AUTO_SCALING_GROUP`, `AWS_CLASSIC_LOAD_BALANCER`, `AWS_NETWORK_LOAD_BALANCER`, `AWS_RELATIONAL_DATABASE_SERVICE`, `AZURE`, `BROWSER_MONITOR`, `CLOUD_APPLICATION`, `CLOUD_APPLICATION_NAMESPACE`, `CLOUD_FOUNDRY_FOUNDATION`, `CUSTOM_APPLICATION`, `CUSTOM_DEVICE`, `CUSTOM_DEVICE_GROUP`, `DATA_CENTER_SERVICE`, `ENTERPRISE_APPLICATION`, `ESXI_HOST`, `EXTERNAL_MONITOR`, `HOST`, `HOST_GROUP`, `HTTP_MONITOR`, `KUBERNETES_CLUSTER`, `KUBERNETES_SERVICE`, `MOBILE_APPLICATION`, `NETWORK_AVAILABILITY_MONITOR`, `OPENSTACK_ACCOUNT`, `PROCESS_GROUP`, `QUEUE`, `SERVICE`, `WEB_APPLICATION`",
 			Required:    true,
 		},
 		"host_to_pgpropagation": {
@@ -109,29 +111,53 @@ func (me *ManagementZoneAttributeRule) MarshalHCL(properties hcl.Properties) err
 }
 
 func (me *ManagementZoneAttributeRule) HandlePreconditions() error {
-	if me.AzureToPGPropagation == nil && (string(me.EntityType) == "AZURE") {
+	if (me.AzureToPGPropagation == nil) && (string(me.EntityType) == "AZURE") {
 		me.AzureToPGPropagation = new(false)
 	}
-	if me.AzureToServicePropagation == nil && (string(me.EntityType) == "AZURE") {
+	if (me.AzureToServicePropagation == nil) && (string(me.EntityType) == "AZURE") {
 		me.AzureToServicePropagation = new(false)
 	}
-	if me.CustomDeviceGroupToCustomDevicePropagation == nil && (string(me.EntityType) == "CUSTOM_DEVICE_GROUP") {
+	if (me.CustomDeviceGroupToCustomDevicePropagation == nil) && (string(me.EntityType) == "CUSTOM_DEVICE_GROUP") {
 		me.CustomDeviceGroupToCustomDevicePropagation = new(false)
 	}
-	if me.HostToPGPropagation == nil && (string(me.EntityType) == "HOST") {
+	if (me.HostToPGPropagation == nil) && (string(me.EntityType) == "HOST") {
 		me.HostToPGPropagation = new(false)
 	}
-	if me.PGToHostPropagation == nil && (string(me.EntityType) == "PROCESS_GROUP") {
+	if (me.PGToHostPropagation == nil) && (string(me.EntityType) == "PROCESS_GROUP") {
 		me.PGToHostPropagation = new(false)
 	}
-	if me.PGToServicePropagation == nil && (string(me.EntityType) == "PROCESS_GROUP") {
+	if (me.PGToServicePropagation == nil) && (string(me.EntityType) == "PROCESS_GROUP") {
 		me.PGToServicePropagation = new(false)
 	}
-	if me.ServiceToHostPropagation == nil && (string(me.EntityType) == "SERVICE") {
+	if (me.ServiceToHostPropagation == nil) && (string(me.EntityType) == "SERVICE") {
 		me.ServiceToHostPropagation = new(false)
 	}
-	if me.ServiceToPGPropagation == nil && (string(me.EntityType) == "SERVICE") {
+	if (me.ServiceToPGPropagation == nil) && (string(me.EntityType) == "SERVICE") {
 		me.ServiceToPGPropagation = new(false)
+	}
+	if (me.AzureToPGPropagation != nil) && (string(me.EntityType) != "AZURE") {
+		return fmt.Errorf("'azure_to_pgpropagation' must not be specified unless 'entity_type' is set to 'AZURE'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.AzureToServicePropagation != nil) && (string(me.EntityType) != "AZURE") {
+		return fmt.Errorf("'azure_to_service_propagation' must not be specified unless 'entity_type' is set to 'AZURE'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.CustomDeviceGroupToCustomDevicePropagation != nil) && (string(me.EntityType) != "CUSTOM_DEVICE_GROUP") {
+		return fmt.Errorf("'custom_device_group_to_custom_device_propagation' must not be specified unless 'entity_type' is set to 'CUSTOM_DEVICE_GROUP'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.HostToPGPropagation != nil) && (string(me.EntityType) != "HOST") {
+		return fmt.Errorf("'host_to_pgpropagation' must not be specified unless 'entity_type' is set to 'HOST'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.PGToHostPropagation != nil) && (string(me.EntityType) != "PROCESS_GROUP") {
+		return fmt.Errorf("'pg_to_host_propagation' must not be specified unless 'entity_type' is set to 'PROCESS_GROUP'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.PGToServicePropagation != nil) && (string(me.EntityType) != "PROCESS_GROUP") {
+		return fmt.Errorf("'pg_to_service_propagation' must not be specified unless 'entity_type' is set to 'PROCESS_GROUP'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.ServiceToHostPropagation != nil) && (string(me.EntityType) != "SERVICE") {
+		return fmt.Errorf("'service_to_host_propagation' must not be specified unless 'entity_type' is set to 'SERVICE'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.ServiceToPGPropagation != nil) && (string(me.EntityType) != "SERVICE") {
+		return fmt.Errorf("'service_to_pgpropagation' must not be specified unless 'entity_type' is set to 'SERVICE'; got 'entity_type'='%v'", me.EntityType)
 	}
 	return nil
 }

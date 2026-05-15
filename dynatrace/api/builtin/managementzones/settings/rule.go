@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -53,14 +53,14 @@ type Rule struct {
 	DimensionRule  *DimensionRule               `json:"dimensionRule,omitempty"`
 	Enabled        bool                         `json:"enabled"`                  // This setting is enabled (`true`) or disabled (`false`)
 	EntitySelector *string                      `json:"entitySelector,omitempty"` // Learn more about the [Entity selector](https://dt-url.net/apientityselector).
-	Type           RuleType                     `json:"type"`                     // Possible Values: `DIMENSION`, `ME`, `SELECTOR`
+	Type           RuleType                     `json:"type"`                     // Rule type. Possible values: `DIMENSION`, `ME`, `SELECTOR`
 }
 
 func (me *Rule) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"attribute_rule": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(ManagementZoneAttributeRule).Schema()},
 			MinItems:    1,
@@ -68,7 +68,7 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 		},
 		"dimension_rule": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(DimensionRule).Schema()},
 			MinItems:    1,
@@ -96,7 +96,7 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `DIMENSION`, `ME`, `SELECTOR`",
+			Description: "Rule type. Possible values: `DIMENSION`, `ME`, `SELECTOR`",
 			Required:    true,
 		},
 	}
@@ -117,20 +117,23 @@ func (me *Rule) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Rule) HandlePreconditions() error {
-	if me.AttributeRule == nil && (string(me.Type) == "ME") {
-		return fmt.Errorf("'attribute_rule' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.AttributeRule != nil) && (string(me.Type) != "ME") {
+		return fmt.Errorf("'attribute_rule' must not be specified unless 'type' is set to 'ME'; got 'type'='%v'", me.Type)
 	}
-	if me.AttributeRule != nil && (string(me.Type) != "ME") {
-		return fmt.Errorf("'attribute_rule' must not be specified if 'type' is set to '%v'", me.Type)
+	if (me.AttributeRule == nil) && (string(me.Type) == "ME") {
+		return fmt.Errorf("'attribute_rule' must be specified when 'type' is set to 'ME'; got 'type'='%v'", me.Type)
 	}
-	if me.DimensionRule == nil && (string(me.Type) == "DIMENSION") {
-		return fmt.Errorf("'dimension_rule' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.DimensionRule != nil) && (string(me.Type) != "DIMENSION") {
+		return fmt.Errorf("'dimension_rule' must not be specified unless 'type' is set to 'DIMENSION'; got 'type'='%v'", me.Type)
 	}
-	if me.DimensionRule != nil && (string(me.Type) != "DIMENSION") {
-		return fmt.Errorf("'dimension_rule' must not be specified if 'type' is set to '%v'", me.Type)
+	if (me.DimensionRule == nil) && (string(me.Type) == "DIMENSION") {
+		return fmt.Errorf("'dimension_rule' must be specified when 'type' is set to 'DIMENSION'; got 'type'='%v'", me.Type)
 	}
-	if me.EntitySelector == nil && (string(me.Type) == "SELECTOR") {
-		return fmt.Errorf("'entity_selector' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.EntitySelector != nil) && (string(me.Type) != "SELECTOR") {
+		return fmt.Errorf("'entity_selector' must not be specified unless 'type' is set to 'SELECTOR'; got 'type'='%v'", me.Type)
+	}
+	if (me.EntitySelector == nil) && (string(me.Type) == "SELECTOR") {
+		return fmt.Errorf("'entity_selector' must be specified when 'type' is set to 'SELECTOR'; got 'type'='%v'", me.Type)
 	}
 	return nil
 }
