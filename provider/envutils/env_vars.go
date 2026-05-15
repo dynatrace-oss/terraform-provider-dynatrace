@@ -30,3 +30,13 @@ var DynatraceLogDebugPrefix = StringEnvVar{
 	Key:          "DYNATRACE_LOG_DEBUG_PREFIX",
 	DefaultValue: "",
 }
+
+// DynatraceLogHTTP sets the file path for HTTP request/response logging.
+// If set to "false" (note case) or an empty value, HTTP logging is disabled.
+// If set to "true" (note case), HTTP logs will be written to standard error with a "[HTTP]" prefix.
+// If set to "stdout" (note case), HTTP logs will be written to standard output with a "[HTTP]" prefix.
+// If set to any other non-empty value, it is treated as a file path where HTTP logs will be written.
+var DynatraceLogHTTP = StringEnvVar{
+	Key:          "DYNATRACE_LOG_HTTP",
+	DefaultValue: "",
+}
