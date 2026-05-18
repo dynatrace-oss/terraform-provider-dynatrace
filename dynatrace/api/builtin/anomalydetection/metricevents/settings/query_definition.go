@@ -19,6 +19,7 @@ package metricevents
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -165,6 +166,11 @@ func (me *QueryDefinition) UnmarshalHCL(decoder hcl.Decoder) error {
 		"query_offset":     &me.QueryOffset,
 		"type":             &me.Type,
 	})
+	// An empty entity_filter can survive in state from an earlier auto-create + suppressed diff;
+	// drop it so a switch to METRIC_SELECTOR doesn't ship an empty entityFilter to the API.
+	if me.EntityFilter != nil && reflect.DeepEqual(*me.EntityFilter, EntityFilter{}) {
+		me.EntityFilter = nil
+	}
 	if me.Type == Types.MetricKey && me.EntityFilter == nil {
 		me.EntityFilter = new(EntityFilter)
 	}
