@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroupingrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
@@ -1880,6 +1881,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelineusersessionspipelinegroups.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 	),
+	ResourceTypes.ProcessGroupingRules: NewResourceDescriptor(processgroupingrules.Service),
 }
 
 type ResourceExclusion struct {

@@ -1,0 +1,718 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"KUBERNETES_CLUSTER",
+		"HOST_GROUP",
+		"environment"
+	],
+	"description": "Dynatrace automatically monitors process groups that are of known technology types or that consume significant resources. With process grouping rules, you can automatically monitor additional technologies.\n\nFor more information read the [community post](https://dt-url.net/ea2319k).",
+	"displayName": "Process grouping rules",
+	"documentation": "\n\nProcess grouping rules also work for processes that have [deep monitoring enabled](https://dt-url.net/3203vvp).",
+	"dynatrace": "1",
+	"enums": {
+		"IdType": {
+			"description": "",
+			"displayName": "Id type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Custom id calculation parameter",
+					"value": "CUSTOM"
+				},
+				{
+					"displayName": "Existing process property",
+					"value": "EXISTING"
+				}
+			],
+			"type": "enum"
+		},
+		"ProcessType": {
+			"description": "",
+			"displayName": "ProcessType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Apache",
+					"icon": "apache",
+					"value": "PROCESS_TYPE_APACHE_HTTPD"
+				},
+				{
+					"displayName": "GlassFish",
+					"icon": "glassfish",
+					"value": "PROCESS_TYPE_GLASSFISH"
+				},
+				{
+					"displayName": "Go",
+					"icon": "golang-signet",
+					"value": "PROCESS_TYPE_GO"
+				},
+				{
+					"displayName": "IBM Cics Region",
+					"icon": "ibm",
+					"value": "PROCESS_TYPE_IBM_CICS_REGION"
+				},
+				{
+					"displayName": "IBM IMS Control Region",
+					"icon": "ibm-ims",
+					"value": "PROCESS_TYPE_IBM_IMS_CONTROL"
+				},
+				{
+					"displayName": "IBM IMS Message Region",
+					"icon": "ibm-ims",
+					"value": "PROCESS_TYPE_IBM_IMS_MPR"
+				},
+				{
+					"displayName": "IIS App Pool",
+					"icon": "iis-microsoft",
+					"value": "PROCESS_TYPE_IIS_APP_POOL"
+				},
+				{
+					"displayName": "JBoss",
+					"icon": "jboss",
+					"value": "PROCESS_TYPE_JBOSS"
+				},
+				{
+					"displayName": "Java",
+					"icon": "java",
+					"value": "PROCESS_TYPE_JAVA"
+				},
+				{
+					"displayName": "Nginx",
+					"icon": "nginx",
+					"value": "PROCESS_TYPE_NGINX"
+				},
+				{
+					"displayName": "Node JS",
+					"icon": "node-js",
+					"value": "PROCESS_TYPE_NODE_JS"
+				},
+				{
+					"displayName": "PHP",
+					"icon": "php",
+					"value": "PROCESS_TYPE_PHP"
+				},
+				{
+					"displayName": "Ruby",
+					"icon": "ruby",
+					"value": "PROCESS_TYPE_RUBY"
+				},
+				{
+					"displayName": "Tomcat",
+					"icon": "apache-tomcat",
+					"value": "PROCESS_TYPE_TOMCAT"
+				},
+				{
+					"displayName": "WebLogic",
+					"icon": "oracleweblogic",
+					"value": "PROCESS_TYPE_WEBLOGIC"
+				},
+				{
+					"displayName": "WebSphere",
+					"icon": "web-sphere",
+					"value": "PROCESS_TYPE_WEBSPHERE"
+				}
+			],
+			"type": "enum"
+		},
+		"ReportItem": {
+			"description": "",
+			"displayName": "Report",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Always",
+					"icon": "alarm-on",
+					"value": "always"
+				},
+				{
+					"displayName": "Auto",
+					"icon": "services",
+					"value": "auto"
+				},
+				{
+					"displayName": "Never",
+					"icon": "alarm-off",
+					"value": "never"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maturity": "GENERAL_AVAILABILITY",
+	"maxObjects": 400,
+	"metadata": {
+		"addItemButton": "Add rule",
+		"itemDisplayName": "New grouping rule",
+		"minAgentVersion": "1.329"
+	},
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"customTechnologyName": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "Note: Reported only in full-stack, infrastructure and discovery modes.",
+			"displayName": "Custom technology name",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"placeholder": "Enter a custom display name for the monitored technology type."
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"pgExtraction": {
+			"description": "Define process groups and processes.",
+			"displayName": "Define the process groups",
+			"documentation": "",
+			"items": {
+				"description": "### 1. Define group properties",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/ProcessGroupExtraction"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Extract process group",
+				"itemDisplayName": "New process group"
+			},
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list",
+			"uiCustomization": {
+				"table": {
+					"columns": [
+						{
+							"displayName": "Report",
+							"id": "report",
+							"propertyRef": "report"
+						},
+						{
+							"displayName": "Process type",
+							"id": "processType",
+							"propertyRef": "processType"
+						}
+					]
+				}
+			}
+		}
+	},
+	"schemaGroups": [
+		"group:processes-and-containers.processes",
+		"group:processes-and-containers"
+	],
+	"schemaId": "builtin:process-grouping-rules",
+	"types": {
+		"AdvancedSettings": {
+			"description": "",
+			"displayName": "Advanced Settings",
+			"documentation": "",
+			"properties": {
+				"from": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Separators (comma, colon, semicolon) aren't allowed.",
+							"pattern": "^[^,:;]*$",
+							"type": "PATTERN"
+						}
+					],
+					"description": "",
+					"displayName": "Delimit from (optional)",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "eg. --env="
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"ignoreNumbers": {
+					"default": false,
+					"description": "(e.g. versions, hex, dates, and build numbers)",
+					"displayName": "Ignore numbers",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"to": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Separators (comma, colon, semicolon) aren't allowed.",
+							"pattern": "^[^,:;]*$",
+							"type": "PATTERN"
+						}
+					],
+					"description": "",
+					"displayName": "Delimit to (optional)",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "eg. --id"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{from|valueSet, select, true {from: **{from}** } other {}} {to|valueSet, select, true {to: **{to}** } other {}}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DetectionCondition": {
+			"description": "",
+			"displayName": "DetectionCondition",
+			"documentation": "",
+			"properties": {
+				"caseSensitive": {
+					"default": false,
+					"description": "",
+					"displayName": "Case sensitive",
+					"documentation": "When enabled, matching conditions are case sensitive. When disabled, matching conditions are case insensitive",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"condition": {
+					"constraints": [
+						{
+							"customMessage": "Should have one of the following formats: $prefix(parameter), $eq(parameter), $suffix(parameter), $contains(parameter)",
+							"pattern": "^\\$(eq|prefix|suffix|contains)\\(((?:[^()$,~]|~[()])+?)\\)$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 1000,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "- $contains(svc) – Matches if svc appears anywhere in the process property value.\n- $eq(svc.exe) – Matches if svc.exe matches the process property value exactly.\n- $prefix(svc) – Matches if app matches the prefix of the process property value.\n- $suffix(svc.py) – Matches if svc.py matches the suffix of the process property value.\n\nFor example, $suffix(svc.py) would detect processes named loyaltysvc.py and paymentssvc.py.\n\nFor more details, see [documentation](https://dt-url.net/j142w57).",
+					"displayName": "2.2. Condition",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Property condition to be detected"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValues": [
+								"ENVIRONMENT_VARIABLE",
+								"JAVA_SYS_PROP"
+							],
+							"property": "property",
+							"type": "IN"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				},
+				"name": {
+					"constraints": [
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "If Dynatrace detects this property at startup of a process, it will be matched to this grouping rule.",
+					"displayName": "2.2. Variable name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"ENVIRONMENT_VARIABLE",
+							"JAVA_SYS_PROP"
+						],
+						"property": "property",
+						"type": "IN"
+					},
+					"type": "text"
+				},
+				"property": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "detectionPropertiesSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "",
+					"description": "",
+					"displayName": "2.1. Property",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "datasource",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "**{property}** {name} {condition}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"GroupIdSource": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"advancedSettings": {
+					"description": "Set advanced options to customize delimiters and control how property values are processed.",
+					"displayName": "3.1.3. Advanced settings (optional)",
+					"documentation": "Consider an environment with processes such as:\n * `python myScript.py --env=prod12 --id=12`\n * `python myScript.py --env=dev2 --id=2`\n * etc.\n\n To group production *(prod)* and development *(dev)* processes together you could use Command line property with:\n * **Delimiter** from `--env=` to `--id` to extract `prod12 ` and `dev2 `\n * Enable **Ignore numbers** to transform `prod12` to `prod*` and `dev2` to `dev*`.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"expectedValue": "EXISTING",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/AdvancedSettings"
+					}
+				},
+				"id": {
+					"constraints": [
+						{
+							"maxLength": 100,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "This identifier is used by Dynatrace to recognize this process group.",
+					"displayName": "3.1.2. Process group identifier",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Enter a string (no empty spaces)"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "CUSTOM",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"name": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "If Dynatrace detects this property at startup of a process, it will use its value to identify process groups.",
+					"displayName": "Variable name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"ENVIRONMENT_VARIABLE",
+							"JAVA_SYS_PROP"
+						],
+						"property": "property",
+						"type": "IN"
+					},
+					"type": "text"
+				},
+				"property": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "groupIdSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"default": "EXE_NAME",
+					"description": "",
+					"displayName": "3.1.2. Property",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "EXISTING",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"subType": "datasource",
+					"type": "text"
+				},
+				"standaloneRule": {
+					"default": true,
+					"description": "Valid only for **deep monitored** processes.",
+					"displayName": "Standalone rule",
+					"documentation": "If this option is selected, the default Dynatrace behavior is disabled for the detected processes. Only this rule is used to separate the process group.\n\nIf this option is not selected, this rule contributes to the default Dynatrace process group detection. \n\n[See our help page for examples.](https://dt-url.net/1722wrz)",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"type": {
+					"default": "CUSTOM",
+					"description": "Pick which property should be used to identify your process group. You can pick a custom variable or pick an existing process property.",
+					"displayName": "3.1.1. Id type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"subType": "radio",
+					"type": {
+						"$ref": "#/enums/IdType"
+					}
+				}
+			},
+			"summaryPattern": "{id|valueSet, select, true {custom identifier **{id}**} other {}}{property|valueSet, select, true {**{property}**} other {}}{name|valueSet, select, true { {name}} other {}}{advancedSettings|valueSet, select, true { {advancedSettings}} other {}}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"InstanceIdSource": {
+			"description": "",
+			"displayName": "",
+			"documentation": "",
+			"properties": {
+				"advancedSettings": {
+					"description": "Set advanced options to customize delimiters and control how property values are processed.",
+					"displayName": "3.2.2. Advanced settings (optional)",
+					"documentation": "Consider an environment with processes such as:\n * `python myScript.py --env=prod12 --id=12`\n * `python myScript.py --env=dev2 --id=2`\n * etc.\n\n To group production *(prod)* and development *(dev)* processes together you could use Command line property with:\n * **Delimiter** from `--env=` to `--id` to extract `prod12 ` and `dev2 `\n * Enable **Ignore numbers** to transform `prod12` to `prod*` and `dev2` to `dev*`.",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/types/AdvancedSettings"
+					}
+				},
+				"name": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "If Dynatrace detects this property at startup of a process, it will use its value to identify process groups more granular.",
+					"displayName": "Variable name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValues": [
+							"ENVIRONMENT_VARIABLE",
+							"JAVA_SYS_PROP"
+						],
+						"property": "property",
+						"type": "IN"
+					},
+					"type": "text"
+				},
+				"property": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"datasource": {
+						"filterProperties": [],
+						"fullContext": false,
+						"identifier": "groupIdSource",
+						"resetValue": "NEVER",
+						"useApiSearch": false,
+						"validate": true
+					},
+					"description": "",
+					"displayName": "3.2.1. Property",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"subType": "datasource",
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{property|valueSet, select, true {instance identified by **{property}**} other {}} {name} {advancedSettings}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ProcessGroupExtraction": {
+			"description": "",
+			"displayName": "ProcessGroupExtraction",
+			"documentation": "",
+			"properties": {
+				"detection": {
+					"description": "### 2. Define detection rules\n Define process detection rules to select processes on which this rule will apply to. **At least one rule must be defined.**",
+					"displayName": "",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/DetectionCondition"
+						}
+					},
+					"maxObjects": 100,
+					"metadata": {
+						"addItemButton": "Add detection rule",
+						"itemDisplayName": "New detection rule"
+					},
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list",
+					"uiCustomization": {
+						"table": {
+							"columns": [
+								{
+									"displayName": "Case sensitive",
+									"id": "caseSensitive",
+									"propertyRef": "caseSensitive"
+								}
+							]
+						}
+					}
+				},
+				"name": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "1.1. Process group display name (optional)",
+					"documentation": "When this field is empty, OneAgent will automatically assign the process group name based on process type and properties like executable name. If you expect that multiple processes will be matched by the rule, it is highly recommended that you fill this field because it is unspecified which process will be used as the group name source.",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "Enter a descriptive name"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"pgIdSource": {
+					"description": "### 3. Define grouping rules\n **3.1. Process group id source**",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GroupIdSource"
+					}
+				},
+				"pgiIdSource": {
+					"description": "**3.2. Process id source (optional)**\n\nDefine a property that should be used to identify your process.",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/types/InstanceIdSource"
+					}
+				},
+				"processType": {
+					"description": "Note: Not all types can be detected at startup.",
+					"displayName": "1.3. Type of captured processes (optional)",
+					"documentation": "Restrict this rule to specific process types to avoid mixing deep monitored properties leading to confusing results.",
+					"maxObjects": 1,
+					"metadata": {
+						"placeholder": "ex. Java"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/ProcessType"
+					}
+				},
+				"report": {
+					"default": "always",
+					"description": "Auto reports only processes which are important - meaning deep monitored or with high resource usage",
+					"displayName": "1.2. Report process group",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ReportItem"
+					}
+				}
+			},
+			"summaryPattern": "{name|valueSet, select, true {**{name}** | } other {}} Group identified by {pgIdSource|valueSet, select, true {{pgIdSource}} other {}}{pgiIdSource|valueSet, select, true { | {pgiIdSource}} other {}}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "2.4.7"
+}

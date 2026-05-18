@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package declarativegrouping
+package processgroupingrules
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -23,43 +23,42 @@ import (
 )
 
 type Settings struct {
-	Detection   ProcessDefinitions `json:"detection"`       // Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group.
-	Enabled     bool               `json:"enabled"`         // This setting is enabled (`true`) or disabled (`false`)
-	Name        string             `json:"name"`            // Note: Reported only in full-stack, infrastructure and discovery modes.
-	Scope       *string            `json:"-" scope:"scope"` // The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
-	InsertAfter string             `json:"-"`
+	CustomTechnologyName *string                 `json:"customTechnologyName,omitempty"` // Note: Reported only in full-stack, infrastructure and discovery modes.
+	Enabled              bool                    `json:"enabled"`                        // This setting is enabled (`true`) or disabled (`false`)
+	PgExtraction         ProcessGroupExtractions `json:"pgExtraction"`                   // Define process groups and processes.
+	Scope                *string                 `json:"-" scope:"scope"`                // The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
+	InsertAfter          string                  `json:"-"`
 }
 
-func (me *Settings) Deprecated() string {
-	return "This resource has been deprecated. Please use the `dynatrace_process_grouping_rules` resource instead."
+func (me *Settings) Name() string {
+	return "process_grouping_rules"
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"detection": {
-			Type:        schema.TypeList,
-			Description: "Enter a descriptive process group display name and a unique identifier that Dynatrace can use to recognize this process group.",
-			Required:    true,
-			Elem:        &schema.Resource{Schema: new(ProcessDefinitions).Schema()},
-			MinItems:    1,
-			MaxItems:    1,
+		"custom_technology_name": {
+			Type:        schema.TypeString,
+			Description: "Note: Reported only in full-stack, infrastructure and discovery modes.",
+			Optional:    true, // nullable
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
-		"name": {
-			Type:        schema.TypeString,
-			Description: "Note: Reported only in full-stack, infrastructure and discovery modes.",
+		"pg_extraction": {
+			Type:        schema.TypeList,
+			Description: "Define process groups and processes.",
 			Required:    true,
+			Elem:        &schema.Resource{Schema: new(ProcessGroupExtractions).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"scope": {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.",
 			Optional:    true,
 			Default:     "environment",
-			ForceNew:    true,
 		},
 		"insert_after": {
 			Type:        schema.TypeString,
@@ -72,20 +71,20 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"detection":    me.Detection,
-		"enabled":      me.Enabled,
-		"name":         me.Name,
-		"scope":        me.Scope,
-		"insert_after": me.InsertAfter,
+		"custom_technology_name": me.CustomTechnologyName,
+		"enabled":                me.Enabled,
+		"pg_extraction":          me.PgExtraction,
+		"scope":                  me.Scope,
+		"insert_after":           me.InsertAfter,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"detection":    &me.Detection,
-		"enabled":      &me.Enabled,
-		"name":         &me.Name,
-		"scope":        &me.Scope,
-		"insert_after": &me.InsertAfter,
+		"custom_technology_name": &me.CustomTechnologyName,
+		"enabled":                &me.Enabled,
+		"pg_extraction":          &me.PgExtraction,
+		"scope":                  &me.Scope,
+		"insert_after":           &me.InsertAfter,
 	})
 }

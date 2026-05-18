@@ -31,6 +31,10 @@ type Settings struct {
 	InsertAfter        string            `json:"-"`
 }
 
+func (me *Settings) Deprecated() string {
+	return "This resource has been deprecated. Please use the `dynatrace_process_grouping_rules` resource instead."
+}
+
 func (me *Settings) Name() string {
 	name := string(me.RuleType)
 
