@@ -27,21 +27,21 @@ import (
 )
 
 type QueryDefinition struct {
-	Aggregation     *Aggregation     `json:"aggregation,omitempty"`     // Possible Values: `AVG`, `COUNT`, `MAX`, `MEDIAN`, `MIN`, `PERCENTILE90`, `SUM`, `VALUE`
+	Aggregation     *Aggregation     `json:"aggregation,omitempty"`     // Possible values: `AVG`, `COUNT`, `MAX`, `MEDIAN`, `MIN`, `PERCENTILE90`, `SUM`, `VALUE`
 	DimensionFilter DimensionFilters `json:"dimensionFilter,omitempty"` // Dimension filter
 	EntityFilter    *EntityFilter    `json:"entityFilter"`              // Use rule-based filters to define the scope this event monitors.
 	ManagementZone  *string          `json:"managementZone,omitempty"`  // Management zone
 	MetricKey       *string          `json:"metricKey,omitempty"`       // Metric key
 	MetricSelector  *string          `json:"metricSelector,omitempty"`  // To learn more, visit [Metric Selector](https://dt-url.net/metselad)
 	QueryOffset     *int             `json:"queryOffset,omitempty"`     // Minute offset of sliding evaluation window for metrics with latency
-	Type            Type             `json:"type"`                      // Possible Values: `METRIC_KEY`, `METRIC_SELECTOR`
+	Type            Type             `json:"type"`                      // Possible values: `METRIC_KEY`, `METRIC_SELECTOR`
 }
 
 func (me *QueryDefinition) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"aggregation": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `AVG`, `COUNT`, `MAX`, `MEDIAN`, `MIN`, `PERCENTILE90`, `SUM`, `VALUE`",
+			Description: "Possible values: `AVG`, `COUNT`, `MAX`, `MEDIAN`, `MIN`, `PERCENTILE90`, `SUM`, `VALUE`",
 			Optional:    true, // precondition
 		},
 		"dimension_filter": {
@@ -117,7 +117,7 @@ func (me *QueryDefinition) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `METRIC_KEY`, `METRIC_SELECTOR`",
+			Description: "Possible values: `METRIC_KEY`, `METRIC_SELECTOR`",
 			Required:    true,
 		},
 	}
@@ -137,21 +137,36 @@ func (me *QueryDefinition) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *QueryDefinition) HandlePreconditions() error {
-	if me.Aggregation == nil && (string(me.Type) == "METRIC_KEY") {
-		return fmt.Errorf("'aggregation' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.Aggregation != nil) && (string(me.Type) != "METRIC_KEY") {
+		return fmt.Errorf("'aggregation' must not be specified unless 'type' is set to 'METRIC_KEY'; got 'type'='%v'", me.Type)
 	}
-	if me.Aggregation != nil && (string(me.Type) != "METRIC_KEY") {
-		return fmt.Errorf("'aggregation' must not be specified if 'type' is set to '%v'", me.Type)
+	if (me.Aggregation == nil) && (string(me.Type) == "METRIC_KEY") {
+		return fmt.Errorf("'aggregation' must be specified when 'type' is set to 'METRIC_KEY'; got 'type'='%v'", me.Type)
 	}
-	if me.MetricKey == nil && (string(me.Type) == "METRIC_KEY") {
-		return fmt.Errorf("'metric_key' must be specified if 'type' is set to '%v'", me.Type)
+	// Previously unhandled NULL-condition
+	if (len(me.DimensionFilter) > 0) && (string(me.Type) != "METRIC_KEY" || me.MetricKey == nil) {
+		return fmt.Errorf("'dimension_filter' must not be specified unless ('type' is set to 'METRIC_KEY' and 'metric_key' is set); got 'type'='%v', 'metric_key'='%v'", me.Type, me.MetricKey)
 	}
-	if me.MetricSelector == nil && (string(me.Type) == "METRIC_SELECTOR") {
-		return fmt.Errorf("'metric_selector' must be specified if 'type' is set to '%v'", me.Type)
+	// Previously unhandled NULL-condition
+	if (me.EntityFilter != nil && !reflect.DeepEqual(EntityFilter{}, *me.EntityFilter)) && (string(me.Type) != "METRIC_KEY" || me.MetricKey == nil) {
+		return fmt.Errorf("'entity_filter' must not be specified unless ('type' is set to 'METRIC_KEY' and 'metric_key' is set); got 'type'='%v', 'metric_key'='%v'", me.Type, me.MetricKey)
 	}
-	// ---- DimensionFilter DimensionFilters -> {"preconditions":[{"expectedValue":"METRIC_KEY","property":"type","type":"EQUALS"},{"precondition":{"property":"metricKey","type":"NULL"},"type":"NOT"}],"type":"AND"}
-	// ---- EntityFilter *EntityFilter -> {"preconditions":[{"expectedValue":"METRIC_KEY","property":"type","type":"EQUALS"},{"precondition":{"property":"metricKey","type":"NULL"},"type":"NOT"}],"type":"AND"}
-	// ---- ManagementZone *string -> {"preconditions":[{"expectedValue":"METRIC_KEY","property":"type","type":"EQUALS"},{"expectedValue":"METRIC_SELECTOR","property":"type","type":"EQUALS"}],"type":"OR"}
+	// Previously unhandled NULL-condition
+	if (me.EntityFilter == nil) && (string(me.Type) == "METRIC_KEY" && me.MetricKey != nil) {
+		return fmt.Errorf("'entity_filter' must be specified when ('type' is set to 'METRIC_KEY' and 'metric_key' is set); got 'type'='%v', 'metric_key'='%v'", me.Type, me.MetricKey)
+	}
+	if (me.MetricKey != nil) && (string(me.Type) != "METRIC_KEY") {
+		return fmt.Errorf("'metric_key' must not be specified unless 'type' is set to 'METRIC_KEY'; got 'type'='%v'", me.Type)
+	}
+	if (me.MetricKey == nil) && (string(me.Type) == "METRIC_KEY") {
+		return fmt.Errorf("'metric_key' must be specified when 'type' is set to 'METRIC_KEY'; got 'type'='%v'", me.Type)
+	}
+	if (me.MetricSelector != nil) && (string(me.Type) != "METRIC_SELECTOR") {
+		return fmt.Errorf("'metric_selector' must not be specified unless 'type' is set to 'METRIC_SELECTOR'; got 'type'='%v'", me.Type)
+	}
+	if (me.MetricSelector == nil) && (string(me.Type) == "METRIC_SELECTOR") {
+		return fmt.Errorf("'metric_selector' must be specified when 'type' is set to 'METRIC_SELECTOR'; got 'type'='%v'", me.Type)
+	}
 	return nil
 }
 
