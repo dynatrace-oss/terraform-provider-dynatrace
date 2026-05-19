@@ -70,16 +70,26 @@ func (me *service) Get(ctx context.Context, id string, v *workflows.Workflow) er
 // If the position is set by the user in the Terraform file, then it's correctly compared to the API set one.
 // DiffSuppress can't help here because even if the task doesn't change, the bug of TypeSet happens, which adds a new empty item which leads to a non-empty plan
 func deComputeTaskPosition(ctx context.Context, v *workflows.Workflow) {
-	positionTaskNames := map[string]bool{}
-	if stateConfig, ok := ctx.Value(settings.ContextKeyStateConfig).(*workflows.Workflow); ok {
-		for _, st := range stateConfig.Tasks {
-			if st.Position != nil {
-				positionTaskNames[st.Name] = true
-			}
-		}
+	// We only remove the position of the API task if the related task in the state and doesn't have positions
+	// We keep the permisisons if:
+	// - the task is in the state and has a position (we assume that the user set it, so we keep it). Drift detection works.
+	// - the task is not in the state
+	//   - Either because we removed one or on the API side something was added, and now it needs to be removed (showing with posision). Drift detection doesn't matter much, the task will be removed.
+	//   - Or if an import block with generate resource is used (settings.ContextKeyStateConfig is set but empty). Not in state => generate with position. No drift detection, because generate.
+
+	stateConfig, ok := ctx.Value(settings.ContextKeyStateConfig).(*workflows.Workflow)
+	if !ok {
+		// export doesn't have a state. Keep the position
+		return
 	}
+
+	positionTaskNames := map[string]bool{}
+	for _, st := range stateConfig.Tasks {
+		positionTaskNames[st.Name] = st.Position != nil
+	}
+
 	for _, task := range v.Tasks {
-		if !positionTaskNames[task.Name] {
+		if hasPosition, ok := positionTaskNames[task.Name]; ok && !hasPosition {
 			// => if not in state: set position (returned from API) to nil
 			task.Position = nil
 		}
