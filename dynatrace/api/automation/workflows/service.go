@@ -31,16 +31,30 @@ import (
 	apiClient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
 )
 
-func Service(credentials *tfrest.Credentials) settings.CRUDService[*workflows.Workflow] {
-	return &service{credentials}
+// AutomationClient defines the subset of the automation client used by this service.
+type AutomationClient interface {
+	Get(ctx context.Context, resourceType apiClient.ResourceType, id string) (cacapi.Response, error)
+	List(ctx context.Context, resourceType apiClient.ResourceType) (cacapi.PagedListResponse, error)
+	Create(ctx context.Context, resourceType apiClient.ResourceType, data []byte) (cacapi.Response, error)
+	Update(ctx context.Context, resourceType apiClient.ResourceType, id string, data []byte) (cacapi.Response, error)
+	Delete(ctx context.Context, resourceType apiClient.ResourceType, id string) (cacapi.Response, error)
 }
 
 type service struct {
-	credentials *tfrest.Credentials
+	credentials  *tfrest.Credentials
+	clientGetter func(ctx context.Context, credentials *tfrest.Credentials) (AutomationClient, error)
 }
 
-func (me *service) client(ctx context.Context) (*automation.Client, error) {
-	platformClient, err := tfrest.CreatePlatformClient(ctx, me.credentials.OAuth.EnvironmentURL, me.credentials)
+func Service(credentials *tfrest.Credentials) settings.CRUDService[*workflows.Workflow] {
+	return &service{credentials: credentials, clientGetter: createCoreClient}
+}
+
+func ServiceWithClientGetter(clientGetter func(ctx context.Context, credentials *tfrest.Credentials) (AutomationClient, error), credentials *tfrest.Credentials) settings.CRUDService[*workflows.Workflow] {
+	return &service{credentials: credentials, clientGetter: clientGetter}
+}
+
+func createCoreClient(ctx context.Context, credentials *tfrest.Credentials) (AutomationClient, error) {
+	platformClient, err := tfrest.CreatePlatformClient(ctx, credentials.OAuth.EnvironmentURL, credentials)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +62,7 @@ func (me *service) client(ctx context.Context) (*automation.Client, error) {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *workflows.Workflow) error {
-	client, err := me.client(ctx)
+	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return err
 	}
@@ -106,7 +120,7 @@ type WorkflowStub struct {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	client, err := me.client(ctx)
+	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +145,7 @@ func (me *service) Validate(v *workflows.Workflow) error {
 }
 
 func (me *service) Create(ctx context.Context, v *workflows.Workflow) (stub *api.Stub, err error) {
-	client, err := me.client(ctx)
+	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +166,7 @@ func (me *service) Create(ctx context.Context, v *workflows.Workflow) (stub *api
 }
 
 func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow) (err error) {
-	client, err := me.client(ctx)
+	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return err
 	}
@@ -165,7 +179,7 @@ func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow)
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	client, err := me.client(ctx)
+	client, err := me.clientGetter(ctx, me.credentials)
 	if err != nil {
 		return err
 	}
