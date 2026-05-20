@@ -7,6 +7,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 10,
 	"metadata": {
 		"addItemButton": "Create custom client IP header"
@@ -32,11 +33,20 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"flattenCollections": false,
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"headerName"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:web-and-mobile-monitoring.geographic-regions",
 		"group:web-and-mobile-monitoring"
 	],
 	"schemaId": "builtin:rum.ip-determination",
 	"types": {},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }
