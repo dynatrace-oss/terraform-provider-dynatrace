@@ -76,6 +76,10 @@ func (me *resourceEntry) Write(w *hclwrite.Body, indent string) error {
 					return err
 				}
 			}
+		} else {
+			if err := entry.Write(body, "  "); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
