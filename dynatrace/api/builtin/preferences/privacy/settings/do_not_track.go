@@ -26,7 +26,7 @@ import (
 
 type DoNotTrack struct {
 	ComplyWithDoNotTrack bool              `json:"complyWithDoNotTrack"` // Comply with \"Do Not Track\" browser settings
-	DoNotTrack           *DoNotTrackOption `json:"doNotTrack,omitempty"` // Possible Values: `Anonymous`, `Disable_rum`
+	DoNotTrack           *DoNotTrackOption `json:"doNotTrack,omitempty"` // Possible values: `anonymous`, `disable-rum`
 }
 
 func (me *DoNotTrack) Schema() map[string]*schema.Schema {
@@ -38,7 +38,7 @@ func (me *DoNotTrack) Schema() map[string]*schema.Schema {
 		},
 		"do_not_track": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Anonymous`, `Disable_rum`",
+			Description: "Possible values: `anonymous`, `disable-rum`",
 			Optional:    true, // precondition
 		},
 	}
@@ -52,11 +52,11 @@ func (me *DoNotTrack) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *DoNotTrack) HandlePreconditions() error {
-	if me.DoNotTrack == nil && me.ComplyWithDoNotTrack {
-		return fmt.Errorf("'do_not_track' must be specified if 'comply_with_do_not_track' is set to '%v'", me.ComplyWithDoNotTrack)
+	if (me.DoNotTrack != nil) && (!me.ComplyWithDoNotTrack) {
+		return fmt.Errorf("'do_not_track' must not be specified unless 'comply_with_do_not_track' is set to 'true'; got 'comply_with_do_not_track'='%v'", me.ComplyWithDoNotTrack)
 	}
-	if me.DoNotTrack != nil && !me.ComplyWithDoNotTrack {
-		return fmt.Errorf("'do_not_track' must not be specified if 'comply_with_do_not_track' is set to '%v'", me.ComplyWithDoNotTrack)
+	if (me.DoNotTrack == nil) && (me.ComplyWithDoNotTrack) {
+		return fmt.Errorf("'do_not_track' must be specified when 'comply_with_do_not_track' is set to 'true'; got 'comply_with_do_not_track'='%v'", me.ComplyWithDoNotTrack)
 	}
 	return nil
 }
