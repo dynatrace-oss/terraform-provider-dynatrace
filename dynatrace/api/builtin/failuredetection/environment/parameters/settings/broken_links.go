@@ -22,9 +22,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// brokenLinks. Settings for special handling of HTTP 404 response codes. By default, 404s are classified as broken links on the client side and not as server-side service failures.
 type BrokenLinks struct {
 	BrokenLinkDomains       []string `json:"brokenLinkDomains,omitempty"` // If your application relies on other hosts at other domains, add the associated domain names here. Once configured, Dynatrace will consider 404s thrown by hosts at these domains to be service failures related to your application.
-	Http404NotFoundFailures bool     `json:"http404NotFoundFailures"`     // Consider 404 HTTP response codes as failures
+	Http404NotFoundFailures bool     `json:"http404NotFoundFailures"`     // If `true`, HTTP 404 response codes are treated as server-side service failures. Only applicable when 404 is not already in the list of failing server-side HTTP response codes. Default: `false`.
 }
 
 func (me *BrokenLinks) Schema() map[string]*schema.Schema {
@@ -37,7 +38,7 @@ func (me *BrokenLinks) Schema() map[string]*schema.Schema {
 		},
 		"http_404_not_found_failures": {
 			Type:        schema.TypeBool,
-			Description: "Consider 404 HTTP response codes as failures",
+			Description: "If `true`, HTTP 404 response codes are treated as server-side service failures. Only applicable when 404 is not already in the list of failing server-side HTTP response codes. Default: `false`.",
 			Required:    true,
 		},
 	}
@@ -50,8 +51,9 @@ func (me *BrokenLinks) MarshalHCL(properties hcl.Properties) error {
 	})
 }
 
-func (me *BrokenLinks) HandlePreconditions() {
+func (me *BrokenLinks) HandlePreconditions() error {
 	// ---- BrokenLinkDomains []string -> {"expectedValue":true,"property":"http404NotFoundFailures","type":"EQUALS"}
+	return nil
 }
 
 func (me *BrokenLinks) UnmarshalHCL(decoder hcl.Decoder) error {

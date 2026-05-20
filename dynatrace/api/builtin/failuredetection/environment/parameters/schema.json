@@ -2,11 +2,12 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Failure detection parameters that determine whether a service call is considered successful or failed. Use [failure detection rules](/ui/settings/builtin:failure-detection.environment.rules) to configure which services these parameters apply to.\n\nThese settings are not applied to [Unified services](https://dt-url.net/gy03cmt).",
+	"description": "Failure detection parameters that determine whether a service call is considered successful or failed. Use [failure detection rules](/ui/settings/builtin:failure-detection.environment.rules) to configure which services these parameters apply to.\n\nThese settings are not applied to [Unified services](https://dt-url.net/gy03cmt).\n\nTo programmatically manage these settings, see [API Reference](https://docs.dynatrace.com/docs/shortlink/service-failure-detection#settings-api).",
 	"displayName": "Failure detection parameters",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 10000,
 	"metadata": {
 		"addItemButton": "Add failure detection parameters"
@@ -33,7 +34,7 @@
 					"type": "LENGTH"
 				}
 			],
-			"description": "",
+			"description": "A short description of this failure detection parameter set.",
 			"displayName": "Description",
 			"documentation": "",
 			"maxObjects": 1,
@@ -42,7 +43,7 @@
 			"type": "text"
 		},
 		"exceptionRules": {
-			"description": "",
+			"description": "Exception and custom error rules that determine how specific exceptions, handled errors, and request-attribute-based conditions affect failure detection.",
 			"displayName": "Customize failure detection for specific exceptions and errors",
 			"documentation": "",
 			"maxObjects": 1,
@@ -53,7 +54,7 @@
 			}
 		},
 		"httpResponseCodes": {
-			"description": "",
+			"description": "HTTP response code settings that control which response codes are treated as server-side or client-side errors.",
 			"displayName": "HTTP response codes",
 			"documentation": "",
 			"maxObjects": 1,
@@ -72,7 +73,7 @@
 				}
 			],
 			"default": "",
-			"description": "",
+			"description": "The display name of this failure detection parameter set.",
 			"displayName": "Name",
 			"documentation": "",
 			"maxObjects": 1,
@@ -84,6 +85,7 @@
 	"schemaConstraints": [
 		{
 			"customValidatorId": "failure-detection-params-delete-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -94,7 +96,7 @@
 	"schemaId": "builtin:failure-detection.environment.parameters",
 	"types": {
 		"brokenLinks": {
-			"description": "",
+			"description": "Settings for special handling of HTTP 404 response codes. By default, 404s are classified as broken links on the client side and not as server-side service failures.",
 			"displayName": "brokenLinks",
 			"documentation": "",
 			"properties": {
@@ -134,7 +136,7 @@
 				},
 				"http404NotFoundFailures": {
 					"default": false,
-					"description": "",
+					"description": "If `true`, HTTP 404 response codes are treated as server-side service failures. Only applicable when 404 is not already in the list of failing server-side HTTP response codes. Default: `false`.",
 					"displayName": "Consider 404 HTTP response codes as failures",
 					"documentation": "",
 					"maxObjects": 1,
@@ -149,13 +151,13 @@
 			"versionInfo": ""
 		},
 		"compareOperation": {
-			"description": "",
+			"description": "A comparison operation that tests the value of a request attribute. The type of comparison and the value to compare against depend on the data type of the request attribute.",
 			"displayName": "compareOperation",
 			"documentation": "",
 			"properties": {
 				"caseSensitive": {
 					"default": false,
-					"description": "",
+					"description": "If `true`, the comparison is case-sensitive. Only applicable for string comparison types. Default: `false`.",
 					"displayName": "Case sensitive",
 					"documentation": "",
 					"maxObjects": 1,
@@ -196,7 +198,7 @@
 						"validate": true
 					},
 					"default": "STRING_EXISTS",
-					"description": "",
+					"description": "The type of comparison to apply. Available types depend on the data type of the request attribute:\n* String types support `STRING_EXISTS`, `STRING_EQUALS`, `NOT_STRING_EQUALS`, `STARTS_WITH`, `NOT_STARTS_WITH`, `CONTAINS`, `NOT_CONTAINS`, `ENDS_WITH`, `NOT_ENDS_WITH`.\n* Integer types support `INTEGER_EQUALS` and related comparisons;\n* Double types support `DOUBLE_EQUALS` and related comparisons.",
 					"displayName": "Apply this comparison",
 					"documentation": "",
 					"maxObjects": 1,
@@ -207,7 +209,7 @@
 				},
 				"doubleValue": {
 					"default": 0,
-					"description": "",
+					"description": "The floating-point value to compare the request attribute against. Only applicable for double comparison types.",
 					"displayName": "Value",
 					"documentation": "",
 					"maxObjects": 1,
@@ -229,7 +231,7 @@
 				},
 				"intValue": {
 					"default": 0,
-					"description": "",
+					"description": "The integer value to compare the request attribute against. Only applicable for integer comparison types.",
 					"displayName": "Value",
 					"documentation": "",
 					"maxObjects": 1,
@@ -258,7 +260,7 @@
 						}
 					],
 					"default": "",
-					"description": "",
+					"description": "The text value to compare the request attribute against. Only applicable for string comparison types.",
 					"displayName": "Value",
 					"documentation": "",
 					"maxObjects": 1,
@@ -287,12 +289,12 @@
 			"versionInfo": ""
 		},
 		"customErrorRule": {
-			"description": "",
+			"description": "A custom error rule that determines if a request has failed based on the value of a request attribute. Define a request attribute that captures the relevant data, then configure a condition to check the captured value.",
 			"displayName": "customErrorRule",
 			"documentation": "",
 			"properties": {
 				"condition": {
-					"description": "",
+					"description": "The condition that determines whether the request attribute value indicates a failure.",
 					"displayName": "Request attribute condition",
 					"documentation": "",
 					"maxObjects": 1,
@@ -319,7 +321,7 @@
 						"validate": true
 					},
 					"default": "",
-					"description": "",
+					"description": "The ID of the request attribute to check. The request attribute must already be defined.",
 					"displayName": "Request attribute",
 					"documentation": "",
 					"maxObjects": 1,
@@ -335,7 +337,7 @@
 			"versionInfo": ""
 		},
 		"exception": {
-			"description": "",
+			"description": "An exception pattern used to match exceptions by class name and/or message content.",
 			"displayName": "exception",
 			"documentation": "",
 			"properties": {
@@ -378,7 +380,7 @@
 			"versionInfo": ""
 		},
 		"exceptionRules": {
-			"description": "",
+			"description": "Exception and custom error rules that determine how specific exceptions, handled errors, and request-attribute-based conditions affect failure detection.",
 			"displayName": "exceptionRules",
 			"documentation": "",
 			"properties": {
@@ -431,7 +433,7 @@
 				},
 				"ignoreAllExceptions": {
 					"default": false,
-					"description": "",
+					"description": "If `true`, all exceptions are ignored for failure detection. Success forcing exceptions, ignored exceptions, and custom handled exceptions have no effect. Exceptions are still tracked and appear in distributed traces, but requests are not labeled as failed. Default: `false`.",
 					"displayName": "Ignore all exceptions",
 					"documentation": "",
 					"maxObjects": 1,
@@ -441,7 +443,7 @@
 				},
 				"ignoreSpanFailureDetection": {
 					"default": false,
-					"description": "",
+					"description": "If `true`, span failure detection is ignored. This is specific to OpenTelemetry. Default: `false`.",
 					"displayName": "Ignore span failure detection",
 					"documentation": "",
 					"maxObjects": 1,
@@ -508,7 +510,7 @@
 			"versionInfo": ""
 		},
 		"httpResponseCodes": {
-			"description": "",
+			"description": "HTTP response code settings that control which response codes are treated as failures on the server side and client side.",
 			"displayName": "httpResponseCodes",
 			"documentation": "",
 			"properties": {
@@ -519,7 +521,7 @@
 						}
 					],
 					"default": "400-599",
-					"description": "",
+					"description": "A list of HTTP response code ranges and individual values that are treated as client-side errors. The format is a comma-separated list of ranges and values (e.g., `400-499, 503, 510-599`). Default: `400-599`.",
 					"displayName": "HTTP response codes which indicate client side errors",
 					"documentation": "",
 					"maxObjects": 1,
@@ -532,7 +534,7 @@
 				},
 				"failOnMissingResponseCodeClientSide": {
 					"default": false,
-					"description": "",
+					"description": "If `true`, a missing HTTP response code on the client side is treated as a failure. Missing response codes can indicate a fire-and-forget call, a timeout, or an error. Default: `false`.",
 					"displayName": "Treat missing HTTP response code as client side error",
 					"documentation": "",
 					"maxObjects": 1,
@@ -542,7 +544,7 @@
 				},
 				"failOnMissingResponseCodeServerSide": {
 					"default": false,
-					"description": "",
+					"description": "If `true`, a missing HTTP response code on the server side is treated as a failure. Missing response codes can indicate a fire-and-forget call, a timeout, or an error. Default: `false`.",
 					"displayName": "Treat missing HTTP response code as server side errors",
 					"documentation": "",
 					"maxObjects": 1,
@@ -557,7 +559,7 @@
 						}
 					],
 					"default": "500-599",
-					"description": "",
+					"description": "A list of HTTP response code ranges and individual values that are treated as server-side errors. The format is a comma-separated list of ranges and values (e.g., `500-599, 402, 405-499`). Default: `500-599`.",
 					"displayName": "HTTP response codes which indicate an error on the server side",
 					"documentation": "",
 					"maxObjects": 1,
@@ -575,5 +577,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.0.7"
 }

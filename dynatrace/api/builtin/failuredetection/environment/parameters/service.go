@@ -29,7 +29,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 )
 
-const SchemaVersion = "1.0.6"
+const SchemaVersion = "1.0.7"
 const SchemaID = "builtin:failure-detection.environment.parameters"
 const defaultTimeout = 10 * time.Second
 
