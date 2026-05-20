@@ -34,28 +34,25 @@ func (me *ResponseTimeAuto) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Avoid over-alerting",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(OverAlertingProtectionAuto).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(OverAlertingProtectionAuto).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"response_time_all": {
 			Type:        schema.TypeList,
 			Description: "Alert if the median response time of all user actions degrades beyond **both** the absolute and relative thresholds:",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(ResponseTimeAutoAll).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(ResponseTimeAutoAll).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"response_time_slowest": {
 			Type:        schema.TypeList,
 			Description: "Alert if the response time of the slowest 10% of requests degrades beyond **both** the absolute and relative thresholds:",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(ResponseTimeAutoSlowest).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(ResponseTimeAutoSlowest).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }

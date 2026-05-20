@@ -18,12 +18,14 @@
 package rumweb
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type ResponseTime struct {
-	DetectionMode     *DetectionMode     `json:"detectionMode,omitempty"` // Possible Values: `Auto`, `Fixed`
+	DetectionMode     *DetectionMode     `json:"detectionMode,omitempty"` // Detection strategy for key performance metric degradations. Possible values: `auto`, `fixed`
 	Enabled           bool               `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
 	ResponseTimeAuto  *ResponseTimeAuto  `json:"responseTimeAuto,omitempty"`
 	ResponseTimeFixed *ResponseTimeFixed `json:"responseTimeFixed,omitempty"`
@@ -33,8 +35,8 @@ func (me *ResponseTime) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"detection_mode": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Auto`, `Fixed`",
-			Optional:    true,
+			Description: "Detection strategy for key performance metric degradations. Possible values: `auto`, `fixed`",
+			Optional:    true, // precondition
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
@@ -43,21 +45,19 @@ func (me *ResponseTime) Schema() map[string]*schema.Schema {
 		},
 		"response_time_auto": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
-			Optional:    true,
-
-			Elem:     &schema.Resource{Schema: new(ResponseTimeAuto).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Description: "No documentation available",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(ResponseTimeAuto).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"response_time_fixed": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
-			Optional:    true,
-
-			Elem:     &schema.Resource{Schema: new(ResponseTimeFixed).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Description: "No documentation available",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(ResponseTimeFixed).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }
@@ -69,6 +69,28 @@ func (me *ResponseTime) MarshalHCL(properties hcl.Properties) error {
 		"response_time_auto":  me.ResponseTimeAuto,
 		"response_time_fixed": me.ResponseTimeFixed,
 	})
+}
+
+func (me *ResponseTime) HandlePreconditions() error {
+	if (me.DetectionMode != nil) && (!me.Enabled) {
+		return fmt.Errorf("'detection_mode' must not be specified unless 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	if (me.DetectionMode == nil) && (me.Enabled) {
+		return fmt.Errorf("'detection_mode' must be specified when 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	if (me.ResponseTimeAuto != nil) && (!me.Enabled || (me.DetectionMode == nil || string(*me.DetectionMode) != "auto")) {
+		return fmt.Errorf("'response_time_auto' must not be specified unless ('enabled' is set to 'true' and 'detection_mode' is set to 'auto'); got 'enabled'='%v', 'detection_mode'='%v'", me.Enabled, me.DetectionMode)
+	}
+	if (me.ResponseTimeAuto == nil) && (me.Enabled && (me.DetectionMode != nil && string(*me.DetectionMode) == "auto")) {
+		return fmt.Errorf("'response_time_auto' must be specified when ('enabled' is set to 'true' and 'detection_mode' is set to 'auto'); got 'enabled'='%v', 'detection_mode'='%v'", me.Enabled, me.DetectionMode)
+	}
+	if (me.ResponseTimeFixed != nil) && (!me.Enabled || (me.DetectionMode == nil || string(*me.DetectionMode) != "fixed")) {
+		return fmt.Errorf("'response_time_fixed' must not be specified unless ('enabled' is set to 'true' and 'detection_mode' is set to 'fixed'); got 'enabled'='%v', 'detection_mode'='%v'", me.Enabled, me.DetectionMode)
+	}
+	if (me.ResponseTimeFixed == nil) && (me.Enabled && (me.DetectionMode != nil && string(*me.DetectionMode) == "fixed")) {
+		return fmt.Errorf("'response_time_fixed' must be specified when ('enabled' is set to 'true' and 'detection_mode' is set to 'fixed'); got 'enabled'='%v', 'detection_mode'='%v'", me.Enabled, me.DetectionMode)
+	}
+	return nil
 }
 
 func (me *ResponseTime) UnmarshalHCL(decoder hcl.Decoder) error {

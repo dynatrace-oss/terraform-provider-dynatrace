@@ -23,8 +23,8 @@ var DetectionModes = struct {
 	Auto  DetectionMode
 	Fixed DetectionMode
 }{
-	"Auto",
-	"Fixed",
+	"auto",
+	"fixed",
 }
 
 type Sensitivity string
@@ -34,7 +34,7 @@ var Sensitivities = struct {
 	Low    Sensitivity
 	Medium Sensitivity
 }{
-	"High",
-	"Low",
-	"Medium",
+	"high",
+	"low",
+	"medium",
 }
