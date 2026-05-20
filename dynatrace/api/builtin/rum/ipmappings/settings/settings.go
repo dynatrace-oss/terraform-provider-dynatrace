@@ -24,12 +24,12 @@ import (
 
 type Settings struct {
 	City        *string  `json:"city,omitempty"`       // The city name of the location.
-	CountryCode string   `json:"countryCode"`          // The country code of the location. \n\n Use the alpha-2 code of the [ISO 3166-2 standard](https://dt-url.net/iso3166-2), (for example, `AT` for Austria or `PL` for Poland).
+	CountryCode string   `json:"countryCode"`          // The country code of the location. \n\n   Use the alpha-2 code of the [ISO 3166-2 standard](https://dt-url.net/iso3166-2), (for example, `AT` for Austria or `PL` for Poland).
 	Ip          string   `json:"ip"`                   // Single IP or IP range start address
 	IpTo        *string  `json:"ipTo,omitempty"`       // IP range end
 	Latitude    *float64 `json:"latitude,omitempty"`   // Latitude
 	Longitude   *float64 `json:"longitude,omitempty"`  // Longitude
-	RegionCode  *string  `json:"regionCode,omitempty"` // The region code of the location. \n\n For the [USA](https://dt-url.net/iso3166us) or [Canada](https://dt-url.net/iso3166ca) use ISO 3166-2 state codes without `US-` or `CA-` prefix. \n\n For the rest of the world use [FIPS 10-4 codes](https://dt-url.net/fipscodes) without country prefix.
+	RegionCode  *string  `json:"regionCode,omitempty"` // The region code of the location. \n\n   For the [USA](https://dt-url.net/iso3166us) or [Canada](https://dt-url.net/iso3166ca) use ISO 3166-2 state codes without `US-` or `CA-` prefix. \n\n   For the rest of the world use [FIPS 10-4 codes](https://dt-url.net/fipscodes) without country prefix.
 }
 
 func (me *Settings) Name() string {
@@ -41,11 +41,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"city": {
 			Type:        schema.TypeString,
 			Description: "The city name of the location.",
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 		"country_code": {
 			Type:        schema.TypeString,
-			Description: "The country code of the location. \n\n Use the alpha-2 code of the [ISO 3166-2 standard](https://dt-url.net/iso3166-2), (for example, `AT` for Austria or `PL` for Poland).",
+			Description: "The country code of the location. \n\n   Use the alpha-2 code of the [ISO 3166-2 standard](https://dt-url.net/iso3166-2), (for example, `AT` for Austria or `PL` for Poland).",
 			Required:    true,
 		},
 		"ip": {
@@ -56,22 +56,22 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"ip_to": {
 			Type:        schema.TypeString,
 			Description: "IP range end",
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 		"latitude": {
 			Type:        schema.TypeFloat,
 			Description: "Latitude",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 		"longitude": {
 			Type:        schema.TypeFloat,
 			Description: "Longitude",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 		"region_code": {
 			Type:        schema.TypeString,
-			Description: "The region code of the location. \n\n For the [USA](https://dt-url.net/iso3166us) or [Canada](https://dt-url.net/iso3166ca) use ISO 3166-2 state codes without `US-` or `CA-` prefix. \n\n For the rest of the world use [FIPS 10-4 codes](https://dt-url.net/fipscodes) without country prefix.",
-			Optional:    true,
+			Description: "The region code of the location. \n\n   For the [USA](https://dt-url.net/iso3166us) or [Canada](https://dt-url.net/iso3166ca) use ISO 3166-2 state codes without `US-` or `CA-` prefix. \n\n   For the rest of the world use [FIPS 10-4 codes](https://dt-url.net/fipscodes) without country prefix.",
+			Optional:    true, // nullable
 		},
 	}
 }
@@ -86,6 +86,12 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"longitude":    me.Longitude,
 		"region_code":  me.RegionCode,
 	})
+}
+
+func (me *Settings) HandlePreconditions() error {
+	// ---- Latitude *float64 -> {"precondition":{"property":"city","type":"NULL"},"type":"NOT"}
+	// ---- Longitude *float64 -> {"precondition":{"property":"city","type":"NULL"},"type":"NOT"}
+	return nil
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
