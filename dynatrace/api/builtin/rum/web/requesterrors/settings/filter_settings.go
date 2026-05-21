@@ -23,7 +23,7 @@ import (
 )
 
 type FilterSettings struct {
-	Filter *UrlFilter `json:"filter,omitempty"` // Possible Values: `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
+	Filter *UrlFilter `json:"filter,omitempty"` // Filter by URL. Possible values: `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
 	Url    *string    `json:"url,omitempty"`
 }
 
@@ -31,13 +31,13 @@ func (me *FilterSettings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"filter": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`",
-			Optional:    true,
+			Description: "Filter by URL. Possible values: `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`",
+			Optional:    true, // nullable
 		},
 		"url": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
-			Optional:    true,
+			Description: "No documentation available",
+			Optional:    true, // precondition
 		},
 	}
 }
@@ -47,6 +47,11 @@ func (me *FilterSettings) MarshalHCL(properties hcl.Properties) error {
 		"filter": me.Filter,
 		"url":    me.Url,
 	})
+}
+
+func (me *FilterSettings) HandlePreconditions() error {
+	// ---- Url *string -> {"precondition":{"property":"filter","type":"NULL"},"type":"NOT"}
+	return nil
 }
 
 func (me *FilterSettings) UnmarshalHCL(decoder hcl.Decoder) error {

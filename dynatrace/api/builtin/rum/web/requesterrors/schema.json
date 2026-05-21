@@ -33,6 +33,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -41,6 +42,7 @@
 				{
 					"customMessage": "Duplicate error rule found",
 					"customValidatorId": "RumAppRequestErrorsSchemaValidator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -68,14 +70,17 @@
 					"columns": [
 						{
 							"displayName": "Capture",
+							"id": "capture",
 							"propertyRef": "./captureSettings/capture"
 						},
 						{
 							"displayName": "Impact Apdex",
+							"id": "impactApdex",
 							"propertyRef": "./captureSettings/impactApdex"
 						},
 						{
 							"displayName": "Consider for Davis",
+							"id": "considerForAi",
 							"propertyRef": "./captureSettings/considerForAi"
 						}
 					]
@@ -205,6 +210,7 @@
 				{
 					"customMessage": "Enable at least one matching option",
 					"customValidatorId": "RumAppRequestErrorsValidator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -256,6 +262,7 @@
 						{
 							"customMessage": "The entered rules are not valid",
 							"customValidatorId": "httpErrorCodes",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -288,5 +295,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.3"
 }
