@@ -18,6 +18,8 @@
 package customerrors
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -46,9 +48,9 @@ func (me *CustomErrorRules) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type CustomErrorRule struct {
 	CaptureSettings *CaptureSettings `json:"captureSettings"`        // Capture settings
-	KeyMatcher      Matcher          `json:"keyMatcher"`             // Possible Values: `ALL`, `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
+	KeyMatcher      Matcher          `json:"keyMatcher"`             // Match key. Possible values: `ALL`, `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
 	KeyPattern      *string          `json:"keyPattern,omitempty"`   // A case-insensitive key pattern
-	ValueMatcher    Matcher          `json:"valueMatcher"`           // Possible Values: `ALL`, `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
+	ValueMatcher    Matcher          `json:"valueMatcher"`           // Match value. Possible values: `ALL`, `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
 	ValuePattern    *string          `json:"valuePattern,omitempty"` // A case-insensitive value pattern
 }
 
@@ -58,30 +60,29 @@ func (me *CustomErrorRule) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Capture settings",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(CaptureSettings).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(CaptureSettings).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"key_matcher": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `ALL`, `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`",
+			Description: "Match key. Possible values: `ALL`, `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`",
 			Required:    true,
 		},
 		"key_pattern": {
 			Type:        schema.TypeString,
 			Description: "A case-insensitive key pattern",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 		"value_matcher": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `ALL`, `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`",
+			Description: "Match value. Possible values: `ALL`, `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`",
 			Required:    true,
 		},
 		"value_pattern": {
 			Type:        schema.TypeString,
 			Description: "A case-insensitive value pattern",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 	}
 }
@@ -94,6 +95,22 @@ func (me *CustomErrorRule) MarshalHCL(properties hcl.Properties) error {
 		"value_matcher":    me.ValueMatcher,
 		"value_pattern":    me.ValuePattern,
 	})
+}
+
+func (me *CustomErrorRule) HandlePreconditions() error {
+	if (me.KeyPattern == nil) && (string(me.KeyMatcher) != "ALL") {
+		me.KeyPattern = new("")
+	}
+	if (me.ValuePattern == nil) && (string(me.ValueMatcher) != "ALL") {
+		me.ValuePattern = new("")
+	}
+	if (me.KeyPattern != nil) && (string(me.KeyMatcher) == "ALL") {
+		return fmt.Errorf("'key_pattern' must not be specified unless 'key_matcher' is not set to 'ALL'; got 'key_matcher'='%v'", me.KeyMatcher)
+	}
+	if (me.ValuePattern != nil) && (string(me.ValueMatcher) == "ALL") {
+		return fmt.Errorf("'value_pattern' must not be specified unless 'value_matcher' is not set to 'ALL'; got 'value_matcher'='%v'", me.ValueMatcher)
+	}
+	return nil
 }
 
 func (me *CustomErrorRule) UnmarshalHCL(decoder hcl.Decoder) error {
