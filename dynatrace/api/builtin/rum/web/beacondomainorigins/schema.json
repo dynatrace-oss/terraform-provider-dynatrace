@@ -32,6 +32,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 20,
 	"multiObject": true,
 	"ordered": false,
@@ -66,11 +67,21 @@
 			"type": "text"
 		}
 	},
+	"schemaConstraints": [
+		{
+			"flattenCollections": false,
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"matcher",
+				"pattern"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:web-and-mobile-monitoring.web-applications",
 		"group:web-and-mobile-monitoring"
 	],
 	"schemaId": "builtin:rum.web.beacon-domain-origins",
 	"types": {},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }
