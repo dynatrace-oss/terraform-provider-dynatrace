@@ -423,27 +423,24 @@ func (me *HCLGen) export(m map[string]any, schema map[string]*schema.Schema, w i
 			resourceName,
 		},
 	)
-	body := bs.Body()
-	for _, entry := range ents {
-		if !entry.IsComputed() {
-			if !(entry.IsOptional() && entry.IsDefault()) {
-				if err := entry.Write(body, "  "); err != nil {
-					return err
-				}
-			} else {
-				body.AppendUnstructuredTokens(hclwrite.Tokens{
-					&hclwrite.Token{Type: hclsyntax.TokenComment, Bytes: []byte("#")},
-				})
-				if err := entry.Write(body, "  "); err != nil {
-					return err
-				}
-			}
-		} else { // if entry.IsOptional() && !entry.IsDefault() {
-			if err := entry.Write(body, "  "); err != nil {
-				return err
-			}
-		}
+	if err = WriteEntries(ents, bs, ""); err != nil {
+		return err
 	}
 	w.Write(me.file.Bytes())
 	return err
+}
+
+func WriteEntries(entries exportEntries, block *hclwrite.Block, indent string) error {
+	body := block.Body()
+	for _, entry := range entries {
+		if !entry.IsComputed() && entry.IsOptional() && entry.IsDefault() {
+			body.AppendUnstructuredTokens(hclwrite.Tokens{
+				&hclwrite.Token{Type: hclsyntax.TokenComment, Bytes: []byte("#")},
+			})
+		}
+		if err := entry.Write(body, indent+"  "); err != nil {
+			return err
+		}
+	}
+	return nil
 }
