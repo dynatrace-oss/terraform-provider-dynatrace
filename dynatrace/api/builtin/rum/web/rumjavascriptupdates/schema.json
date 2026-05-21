@@ -57,6 +57,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -89,5 +90,5 @@
 	],
 	"schemaId": "builtin:rum.web.rum-javascript-updates",
 	"types": {},
-	"version": "1.2.1"
+	"version": "1.2.2"
 }
