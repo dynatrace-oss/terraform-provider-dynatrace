@@ -18,13 +18,15 @@
 package beaconendpoint
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type Settings struct {
-	ApplicationID string                `json:"-" scope:"applicationId"` // The scope of this setting
-	Type          WebBeaconEndpointType `json:"type"`                    // Possible Values: `ACTIVEGATE`, `DEFAULT_CONFIG`, `ONEAGENT`
+	ApplicationID string                `json:"-" scope:"applicationId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+	Type          WebBeaconEndpointType `json:"type"`                    // Type. Possible values: `ACTIVEGATE`, `DEFAULT_CONFIG`, `ONEAGENT`
 	Url           *string               `json:"url,omitempty"`           // You can specify either path segments or an absolute URL.
 	UseCors       *bool                 `json:"useCors,omitempty"`       // Learn more about [sending beacon data via CORS](https://dt-url.net/r7038sa)
 }
@@ -37,12 +39,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"application_id": {
 			Type:        schema.TypeString,
-			Description: "The scope of this setting",
+			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
 			Required:    true,
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `ACTIVEGATE`, `DEFAULT_CONFIG`, `ONEAGENT`",
+			Description: "Type. Possible values: `ACTIVEGATE`, `DEFAULT_CONFIG`, `ONEAGENT`",
 			Required:    true,
 		},
 		"url": {
@@ -73,6 +75,12 @@ func (me *Settings) HandlePreconditions() error {
 	}
 	if (me.UseCors == nil) && (string(me.Type) == "ONEAGENT") {
 		me.UseCors = new(false)
+	}
+	if (me.Url != nil) && (string(me.Type) != "ONEAGENT") {
+		return fmt.Errorf("'url' must not be specified unless 'type' is set to 'ONEAGENT'; got 'type'='%v'", me.Type)
+	}
+	if (me.UseCors != nil) && (string(me.Type) != "ONEAGENT") {
+		return fmt.Errorf("'use_cors' must not be specified unless 'type' is set to 'ONEAGENT'; got 'type'='%v'", me.Type)
 	}
 	return nil
 }
