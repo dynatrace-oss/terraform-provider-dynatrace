@@ -125,27 +125,6 @@ func (me *Generic) Resource() *schema.Resource {
 	}
 	updateableAttrs := len(sch) - len(nonUpdateableAttrs)
 
-	if dep, ok := stngs.(Deprecated); ok {
-		resRes := &schema.Resource{
-			Schema:             sch,
-			CreateContext:      logging.Enable(me.Create),
-			ReadContext:        logging.Enable(me.Read),
-			DeleteContext:      logging.Enable(me.Delete),
-			Importer:           &schema.ResourceImporter{StateContext: schema.ImportStatePassthroughContext},
-			DeprecationMessage: dep.Deprecated(),
-		}
-		if updateableAttrs > 0 {
-			resRes.UpdateContext = logging.Enable(me.Update)
-		}
-		if dc, ok := stngs.(DiffCustomizer); ok {
-			resRes.CustomizeDiff = dc.CustomizeDiff
-		}
-		if tp, ok := stngs.(TimeoutProvider); ok {
-			resRes.Timeouts = tp.Timeouts()
-		}
-		return resRes
-	}
-
 	resRes := &schema.Resource{
 		Schema:        sch,
 		CreateContext: logging.Enable(me.Create),
@@ -153,12 +132,22 @@ func (me *Generic) Resource() *schema.Resource {
 		DeleteContext: logging.Enable(me.Delete),
 		Importer:      &schema.ResourceImporter{StateContext: schema.ImportStatePassthroughContext},
 	}
+
+	if dep, ok := stngs.(Deprecated); ok {
+		resRes.DeprecationMessage = dep.Deprecated()
+	}
+
 	if updateableAttrs > 0 {
 		resRes.UpdateContext = logging.Enable(me.Update)
 	}
 	if dc, ok := stngs.(DiffCustomizer); ok {
 		resRes.CustomizeDiff = dc.CustomizeDiff
+	} else {
+		resRes.CustomizeDiff = func(ctx context.Context, diff *schema.ResourceDiff, i any) error {
+			return hcl.UnmarshalHCL(me.Settings(), hcl.DecoderFrom(diff))
+		}
 	}
+
 	if tp, ok := stngs.(TimeoutProvider); ok {
 		resRes.Timeouts = tp.Timeouts()
 	}
