@@ -55,11 +55,11 @@ func (me *PodStuckInTerminating) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *PodStuckInTerminating) HandlePreconditions() error {
-	if me.Configuration == nil && me.Enabled {
-		return fmt.Errorf("'configuration' must be specified if 'enabled' is set to '%v'", me.Enabled)
+	if (me.Configuration != nil) && (!me.Enabled) {
+		return fmt.Errorf("'configuration' must not be specified unless 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
 	}
-	if me.Configuration != nil && !me.Enabled {
-		return fmt.Errorf("'configuration' must not be specified if 'enabled' is set to '%v'", me.Enabled)
+	if (me.Configuration == nil) && (me.Enabled) {
+		return fmt.Errorf("'configuration' must be specified when 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
 	}
 	return nil
 }
