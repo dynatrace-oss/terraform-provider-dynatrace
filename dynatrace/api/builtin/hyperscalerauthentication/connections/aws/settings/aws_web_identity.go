@@ -23,7 +23,7 @@ import (
 )
 
 type AwsWebIdentity struct {
-	Consumers []ConsumersOfAwsWebIdentity `json:"consumers"` // Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.aws.connector`, `APP:dynatrace.biz.carbon`
+	Consumers []ConsumersOfAwsWebIdentity `json:"consumers"` // Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.aws.connector`
 	RoleArn   string                      `json:"roleArn"`   // The ARN of the AWS role that should be assumed
 }
 
@@ -37,7 +37,7 @@ func (me *AwsWebIdentity) Schema() map[string]*schema.Schema {
 		// },
 		"consumers": {
 			Type:        schema.TypeSet,
-			Description: "Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.aws.connector`, `APP:dynatrace.biz.carbon`",
+			Description: "Dynatrace integrations that can use this connection. Possible values: `APP:dynatrace.aws.connector`",
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			MinItems:    1,
 			MaxItems:    1,
