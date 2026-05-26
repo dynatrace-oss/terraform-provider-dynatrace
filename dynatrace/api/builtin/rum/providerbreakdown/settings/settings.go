@@ -27,7 +27,7 @@ type Settings struct {
 	IconUrl                 *string                      `json:"iconUrl,omitempty"`       // Specify an URL for the provider's brand icon
 	ReportPublicImprovement bool                         `json:"reportPublicImprovement"` // Send the patterns of this provider to Dynatrace to help us improve 3rd-party detection.
 	ResourceName            string                       `json:"resourceName"`            // Resource name
-	ResourceType            ResourceType                 `json:"resourceType"`            // Possible Values: `FirstParty`, `ThirdParty`, `Cdn`
+	ResourceType            ResourceType                 `json:"resourceType"`            // Resource type. Possible values: `Cdn`, `FirstParty`, `ThirdParty`
 	InsertAfter             string                       `json:"-"`
 }
 
@@ -41,15 +41,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Domain name pattern",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(DomainNamePatternListObjects).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(DomainNamePatternListObjects).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"icon_url": {
 			Type:        schema.TypeString,
 			Description: "Specify an URL for the provider's brand icon",
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 		"report_public_improvement": {
 			Type:        schema.TypeBool,
@@ -63,7 +62,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"resource_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `FirstParty`, `ThirdParty`, `Cdn`",
+			Description: "Resource type. Possible values: `Cdn`, `FirstParty`, `ThirdParty`",
 			Required:    true,
 		},
 		"insert_after": {

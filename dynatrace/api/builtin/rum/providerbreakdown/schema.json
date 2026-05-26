@@ -28,6 +28,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"addItemButton": "Add custom provider item"
@@ -141,6 +142,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "Resource names must be unique.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"resourceName"
@@ -185,5 +187,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.7"
+	"version": "1.0.8"
 }
