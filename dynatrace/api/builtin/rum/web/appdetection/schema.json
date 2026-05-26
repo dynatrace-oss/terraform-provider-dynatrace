@@ -52,6 +52,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"multiObject": true,
 	"ordered": true,
@@ -66,6 +67,7 @@
 				{
 					"customMessage": "Invalid applicationId",
 					"customValidatorId": "rumAppDetectionAppIdValidator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -141,5 +143,5 @@
 	],
 	"schemaId": "builtin:rum.web.app-detection",
 	"types": {},
-	"version": "2.1.1"
+	"version": "2.1.2"
 }
