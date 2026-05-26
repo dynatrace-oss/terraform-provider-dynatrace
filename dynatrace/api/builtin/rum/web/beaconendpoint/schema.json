@@ -28,6 +28,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -97,5 +98,5 @@
 	],
 	"schemaId": "builtin:rum.web.beacon-endpoint",
 	"types": {},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }
