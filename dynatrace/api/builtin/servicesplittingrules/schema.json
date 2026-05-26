@@ -10,6 +10,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add rule",
@@ -203,5 +204,5 @@
 			]
 		}
 	},
-	"version": "0.0.10"
+	"version": "0.0.12"
 }
