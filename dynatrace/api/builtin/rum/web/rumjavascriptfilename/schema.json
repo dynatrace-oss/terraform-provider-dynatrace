@@ -7,6 +7,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "EARLY_ADOPTER",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -44,5 +45,5 @@
 	],
 	"schemaId": "builtin:rum.web.rum-javascript-file-name",
 	"types": {},
-	"version": "1.1.5"
+	"version": "1.1.6"
 }
