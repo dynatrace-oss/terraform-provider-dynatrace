@@ -23,7 +23,7 @@ import (
 )
 
 type Settings struct {
-	ApplicationID  string `json:"-" scope:"applicationId"` // The scope of this setting
+	ApplicationID  string `json:"-" scope:"applicationId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 	CustomProperty string `json:"customProperty"`          // Custom configuration property
 }
 
@@ -35,7 +35,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"application_id": {
 			Type:        schema.TypeString,
-			Description: "The scope of this setting",
+			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
 			Required:    true,
 		},
 		"custom_property": {
