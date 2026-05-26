@@ -24,8 +24,8 @@ import (
 
 type Settings struct {
 	ApplicationID string  `json:"applicationId"`         // Select an existing application or create a new one.
-	Description   *string `json:"description,omitempty"` // (v1.274) Add a description for your rule
-	Matcher       Matcher `json:"matcher"`               // Possible Values: `DOMAIN_CONTAINS`, `DOMAIN_ENDS_WITH`, `DOMAIN_EQUALS`, `DOMAIN_MATCHES`, `DOMAIN_STARTS_WITH`, `URL_CONTAINS`, `URL_ENDS_WITH`, `URL_EQUALS`, `URL_STARTS_WITH`
+	Description   *string `json:"description,omitempty"` // Add a description for your rule
+	Matcher       Matcher `json:"matcher"`               // Matcher. Possible values: `DOMAIN_CONTAINS`, `DOMAIN_ENDS_WITH`, `DOMAIN_EQUALS`, `DOMAIN_MATCHES`, `DOMAIN_STARTS_WITH`, `URL_CONTAINS`, `URL_ENDS_WITH`, `URL_EQUALS`, `URL_STARTS_WITH`
 	Pattern       string  `json:"pattern"`               // Pattern
 	InsertAfter   string  `json:"-"`
 }
@@ -43,12 +43,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"description": {
 			Type:        schema.TypeString,
-			Description: "(v1.274) Add a description for your rule",
+			Description: "Add a description for your rule",
 			Optional:    true, // nullable
 		},
 		"matcher": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `DOMAIN_CONTAINS`, `DOMAIN_ENDS_WITH`, `DOMAIN_EQUALS`, `DOMAIN_MATCHES`, `DOMAIN_STARTS_WITH`, `URL_CONTAINS`, `URL_ENDS_WITH`, `URL_EQUALS`, `URL_STARTS_WITH`",
+			Description: "Matcher. Possible values: `DOMAIN_CONTAINS`, `DOMAIN_ENDS_WITH`, `DOMAIN_EQUALS`, `DOMAIN_MATCHES`, `DOMAIN_STARTS_WITH`, `URL_CONTAINS`, `URL_ENDS_WITH`, `URL_EQUALS`, `URL_STARTS_WITH`",
 			Required:    true,
 		},
 		"pattern": {
