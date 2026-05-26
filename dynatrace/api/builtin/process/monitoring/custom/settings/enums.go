@@ -100,6 +100,8 @@ var AgentItemNames = struct {
 	PythonScript                       AgentItemName
 	PythonScriptPath                   AgentItemName
 	Rke2Type                           AgentItemName
+	RubyAppRootPath                    AgentItemName
+	RubyScriptPath                     AgentItemName
 	RuxitClusterId                     AgentItemName
 	RuxitNodeId                        AgentItemName
 	ServiceName                        AgentItemName
@@ -209,6 +211,8 @@ var AgentItemNames = struct {
 	"PYTHON_SCRIPT",
 	"PYTHON_SCRIPT_PATH",
 	"RKE2_TYPE",
+	"RUBY_APP_ROOT_PATH",
+	"RUBY_SCRIPT_PATH",
 	"RUXIT_CLUSTER_ID",
 	"RUXIT_NODE_ID",
 	"SERVICE_NAME",
