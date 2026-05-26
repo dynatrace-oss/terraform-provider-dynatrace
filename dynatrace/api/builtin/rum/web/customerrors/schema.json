@@ -37,6 +37,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -77,14 +78,17 @@
 					"columns": [
 						{
 							"displayName": "Capture",
+							"id": "capture",
 							"propertyRef": "./captureSettings/capture"
 						},
 						{
 							"displayName": "Impact Apdex",
+							"id": "impactApdex",
 							"propertyRef": "./captureSettings/impactApdex"
 						},
 						{
 							"displayName": "Consider for Davis",
+							"id": "considerForAi",
 							"propertyRef": "./captureSettings/considerForAi"
 						}
 					]
@@ -265,5 +269,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }
