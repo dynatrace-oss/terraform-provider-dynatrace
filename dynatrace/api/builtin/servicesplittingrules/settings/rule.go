@@ -23,7 +23,7 @@ import (
 )
 
 type Rule struct {
-	Condition                  *string   `json:"condition,omitempty"` // Limits the scope of the service splitting rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes..  A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\nIf empty, the condition will always match.
+	Condition                  *string   `json:"condition,omitempty"` // Limits the scope of the service splitting rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes..  A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\n  If empty, the condition will always match.
 	Description                *string   `json:"description,omitempty"`
 	RuleName                   string    `json:"ruleName"`                             // Rule name
 	ServiceSplittingAttributes SplitBies `json:"serviceSplittingAttributes,omitempty"` // Define the entire set of resource attributes that should split your services in the matching scope.. Each attribute that exists will contribute to the final service ID.
@@ -33,12 +33,12 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"condition": {
 			Type:        schema.TypeString,
-			Description: "Limits the scope of the service splitting rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes..  A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\nIf empty, the condition will always match.",
+			Description: "Limits the scope of the service splitting rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes..  A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\n  If empty, the condition will always match.",
 			Optional:    true, // nullable
 		},
 		"description": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // nullable
 		},
 		"rule_name": {
