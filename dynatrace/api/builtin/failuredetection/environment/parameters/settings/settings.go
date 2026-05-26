@@ -24,10 +24,10 @@ import (
 
 type Settings struct {
 	BrokenLinks       *BrokenLinks       `json:"brokenLinks"`           // HTTP 404 response codes are thrown when a web server can't find a certain page. 404s are classified as broken links on the client side and therefore aren't considered to be service failures. By enabling this setting, you can have 404s treated as server-side service failures.
-	Description       *string            `json:"description,omitempty"` // Description
-	ExceptionRules    *ExceptionRules    `json:"exceptionRules"`        // Customize failure detection for specific exceptions and errors
-	HttpResponseCodes *HttpResponseCodes `json:"httpResponseCodes"`     // HTTP response codes
-	Name              string             `json:"name"`                  // Name
+	Description       *string            `json:"description,omitempty"` // A short description of this failure detection parameter set.
+	ExceptionRules    *ExceptionRules    `json:"exceptionRules"`        // Exception and custom error rules that determine how specific exceptions, handled errors, and request-attribute-based conditions affect failure detection.
+	HttpResponseCodes *HttpResponseCodes `json:"httpResponseCodes"`     // HTTP response code settings that control which response codes are treated as server-side or client-side errors.
+	Name              string             `json:"name"`                  // The display name of this failure detection parameter set.
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -42,12 +42,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"description": {
 			Type:        schema.TypeString,
-			Description: "Description",
+			Description: "A short description of this failure detection parameter set.",
 			Optional:    true, // nullable
 		},
 		"exception_rules": {
 			Type:        schema.TypeList,
-			Description: "Customize failure detection for specific exceptions and errors",
+			Description: "Exception and custom error rules that determine how specific exceptions, handled errors, and request-attribute-based conditions affect failure detection.",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(ExceptionRules).Schema()},
 			MinItems:    1,
@@ -55,7 +55,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"http_response_codes": {
 			Type:        schema.TypeList,
-			Description: "HTTP response codes",
+			Description: "HTTP response code settings that control which response codes are treated as server-side or client-side errors.",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(HttpResponseCodes).Schema()},
 			MinItems:    1,
@@ -63,7 +63,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"name": {
 			Type:        schema.TypeString,
-			Description: "Name",
+			Description: "The display name of this failure detection parameter set.",
 			Required:    true,
 		},
 	}
