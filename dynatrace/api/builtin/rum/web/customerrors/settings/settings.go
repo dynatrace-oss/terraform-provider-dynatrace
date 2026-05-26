@@ -23,9 +23,9 @@ import (
 )
 
 type Settings struct {
-	ErrorRules                           CustomErrorRules `json:"errorRules,omitempty"`                 // (Field has overlap with `dynatrace_application_error_rules`)
-	IgnoreCustomErrorsInApdexCalculation bool             `json:"ignoreCustomErrorsInApdexCalculation"` // (Field has overlap with `dynatrace_application_error_rules`) This setting overrides Apdex settings for individual rules listed below
-	Scope                                string           `json:"-" scope:"scope"`                      // The scope of this setting (APPLICATION)
+	ErrorRules                           CustomErrorRules `json:"errorRules,omitempty"`
+	IgnoreCustomErrorsInApdexCalculation bool             `json:"ignoreCustomErrorsInApdexCalculation"` // This setting overrides Apdex settings for individual rules listed below
+	Scope                                string           `json:"-" scope:"scope"`                      // The scope of this setting (APPLICATION, environment-default)
 }
 
 func (me *Settings) Name() string {
@@ -49,7 +49,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"scope": {
 			Type:        schema.TypeString,
-			Description: "The scope of this setting (APPLICATION)",
+			Description: "The scope of this setting (APPLICATION, environment-default)",
 			Required:    true,
 			ForceNew:    true,
 		},
