@@ -18,13 +18,15 @@
 package rumweb
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type AppTrafficSpikes struct {
 	Enabled       bool           `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
-	TrafficSpikes *TrafficSpikes `json:"trafficSpikes,omitempty"` // Dynatrace learns your typical application traffic over an observation period of one week.\n\nDepending on this expected value Dynatrace detects abnormal traffic spikes within your application.
+	TrafficSpikes *TrafficSpikes `json:"trafficSpikes,omitempty"` // Dynatrace learns your typical application traffic over an observation period of one week.\n\n  Depending on this expected value Dynatrace detects abnormal traffic spikes within your application.
 }
 
 func (me *AppTrafficSpikes) Schema() map[string]*schema.Schema {
@@ -36,12 +38,11 @@ func (me *AppTrafficSpikes) Schema() map[string]*schema.Schema {
 		},
 		"traffic_spikes": {
 			Type:        schema.TypeList,
-			Description: "Dynatrace learns your typical application traffic over an observation period of one week.\n\nDepending on this expected value Dynatrace detects abnormal traffic spikes within your application.",
-			Optional:    true,
-
-			Elem:     &schema.Resource{Schema: new(TrafficSpikes).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Description: "Dynatrace learns your typical application traffic over an observation period of one week.\n\n  Depending on this expected value Dynatrace detects abnormal traffic spikes within your application.",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(TrafficSpikes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }
@@ -51,6 +52,16 @@ func (me *AppTrafficSpikes) MarshalHCL(properties hcl.Properties) error {
 		"enabled":        me.Enabled,
 		"traffic_spikes": me.TrafficSpikes,
 	})
+}
+
+func (me *AppTrafficSpikes) HandlePreconditions() error {
+	if (me.TrafficSpikes != nil) && (!me.Enabled) {
+		return fmt.Errorf("'traffic_spikes' must not be specified unless 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	if (me.TrafficSpikes == nil) && (me.Enabled) {
+		return fmt.Errorf("'traffic_spikes' must be specified when 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	return nil
 }
 
 func (me *AppTrafficSpikes) UnmarshalHCL(decoder hcl.Decoder) error {

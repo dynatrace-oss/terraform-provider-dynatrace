@@ -18,13 +18,15 @@
 package rumweb
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type AppTrafficDrops struct {
 	Enabled      bool          `json:"enabled"`                // This setting is enabled (`true`) or disabled (`false`)
-	TrafficDrops *TrafficDrops `json:"trafficDrops,omitempty"` // Dynatrace learns your typical application traffic over an observation period of one week.\n\nDepending on this expected value Dynatrace detects abnormal traffic drops within your application.
+	TrafficDrops *TrafficDrops `json:"trafficDrops,omitempty"` // Dynatrace learns your typical application traffic over an observation period of one week.\n\n  Depending on this expected value Dynatrace detects abnormal traffic drops within your application.
 }
 
 func (me *AppTrafficDrops) Schema() map[string]*schema.Schema {
@@ -36,12 +38,11 @@ func (me *AppTrafficDrops) Schema() map[string]*schema.Schema {
 		},
 		"traffic_drops": {
 			Type:        schema.TypeList,
-			Description: "Dynatrace learns your typical application traffic over an observation period of one week.\n\nDepending on this expected value Dynatrace detects abnormal traffic drops within your application.",
-			Optional:    true,
-
-			Elem:     &schema.Resource{Schema: new(TrafficDrops).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Description: "Dynatrace learns your typical application traffic over an observation period of one week.\n\n  Depending on this expected value Dynatrace detects abnormal traffic drops within your application.",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(TrafficDrops).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }
@@ -51,6 +52,16 @@ func (me *AppTrafficDrops) MarshalHCL(properties hcl.Properties) error {
 		"enabled":       me.Enabled,
 		"traffic_drops": me.TrafficDrops,
 	})
+}
+
+func (me *AppTrafficDrops) HandlePreconditions() error {
+	if (me.TrafficDrops != nil) && (!me.Enabled) {
+		return fmt.Errorf("'traffic_drops' must not be specified unless 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	if (me.TrafficDrops == nil) && (me.Enabled) {
+		return fmt.Errorf("'traffic_drops' must be specified when 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	return nil
 }
 
 func (me *AppTrafficDrops) UnmarshalHCL(decoder hcl.Decoder) error {
