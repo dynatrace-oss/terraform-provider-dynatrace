@@ -23,8 +23,8 @@ import (
 )
 
 type Settings struct {
-	Enable         bool   `json:"enable"`                   // Allows OneAgent to:\n* automatically inject the RUM JavaScript tag into each page delivered by this process group\n* provide the necessary info to correlate RUM data with server-side PurePaths\n* forward beacons to the cluster\n* deliver the monitoring code
-	ProcessGroupID string `json:"-" scope:"processGroupId"` // The scope of this setting - PROCESS_GROUP-XXXXXXXXXXXXXXXX
+	Enable         bool   `json:"enable"`                   // Allows OneAgent to:\n * automatically inject the RUM JavaScript tag into each page delivered by this process group\n * provide the necessary info to correlate RUM data with server-side PurePaths\n * forward beacons to the cluster\n * deliver the monitoring code
+	ProcessGroupID string `json:"-" scope:"processGroupId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 }
 
 func (me *Settings) Name() string {
@@ -35,12 +35,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"enable": {
 			Type:        schema.TypeBool,
-			Description: "Allows OneAgent to:\n* automatically inject the RUM JavaScript tag into each page delivered by this process group\n* provide the necessary info to correlate RUM data with server-side PurePaths\n* forward beacons to the cluster\n* deliver the monitoring code",
+			Description: "Allows OneAgent to:\n * automatically inject the RUM JavaScript tag into each page delivered by this process group\n * provide the necessary info to correlate RUM data with server-side PurePaths\n * forward beacons to the cluster\n * deliver the monitoring code",
 			Required:    true,
 		},
 		"process_group_id": {
 			Type:        schema.TypeString,
-			Description: "The scope of this setting - PROCESS_GROUP-XXXXXXXXXXXXXXXX",
+			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
 			Required:    true,
 			ForceNew:    true,
 		},
