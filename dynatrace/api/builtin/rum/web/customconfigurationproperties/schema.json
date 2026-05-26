@@ -7,6 +7,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"addItemButton": "Add a custom configuration property"
@@ -47,6 +48,7 @@
 	},
 	"schemaConstraints": [
 		{
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"customProperty"
@@ -66,5 +68,5 @@
 	],
 	"schemaId": "builtin:rum.web.custom-configuration-properties",
 	"types": {},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }
