@@ -25,11 +25,11 @@ import (
 )
 
 type Settings struct {
-	Conditions  Conditions `json:"conditions"`            // Conditions
-	Description *string    `json:"description,omitempty"` // Rule description
+	Conditions  Conditions `json:"conditions"`            // A list of conditions for this rule. All conditions must be fulfilled for the rule to match a service.
+	Description *string    `json:"description,omitempty"` // A short description of this failure detection rule.
 	Enabled     bool       `json:"enabled"`               // This setting is enabled (`true`) or disabled (`false`)
-	RuleName    string     `json:"name"`                  // Rule name
-	ParameterID string     `json:"parameterId"`           // Failure detection parameters
+	RuleName    string     `json:"name"`                  // The display name of this failure detection rule.
+	ParameterID string     `json:"parameterId"`           // The ID of the failure detection parameter set to apply when this rule matches. The parameter set must already exist.
 	InsertAfter string     `json:"-"`
 }
 
@@ -51,7 +51,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"conditions": {
 			Type:        schema.TypeList,
-			Description: "Conditions",
+			Description: "A list of conditions for this rule. All conditions must be fulfilled for the rule to match a service.",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(Conditions).Schema()},
 			MinItems:    1,
@@ -59,7 +59,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"description": {
 			Type:        schema.TypeString,
-			Description: "Rule description",
+			Description: "A short description of this failure detection rule.",
 			Optional:    true, // nullable
 		},
 		"enabled": {
@@ -69,12 +69,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"name": {
 			Type:        schema.TypeString,
-			Description: "Rule name",
+			Description: "The display name of this failure detection rule.",
 			Required:    true,
 		},
 		"parameter_id": {
 			Type:        schema.TypeString,
-			Description: "Failure detection parameters",
+			Description: "The ID of the failure detection parameter set to apply when this rule matches. The parameter set must already exist.",
 			Required:    true,
 		},
 		"insert_after": {

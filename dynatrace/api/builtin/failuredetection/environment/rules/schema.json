@@ -2,37 +2,43 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Configure rules which services certain [failure detection parameters](/ui/settings/builtin:failure-detection.environment.parameters) should apply to. For more information please refer to [Failure detection settings](https://dt-url.net/7v034gp).\n\nThese settings are not applied to [Unified services](https://dt-url.net/gy03cmt).",
+	"description": "Configure rules which services certain [failure detection parameters](/ui/settings/builtin:failure-detection.environment.parameters) should apply to. For more information please refer to [Failure detection settings](https://dt-url.net/7v034gp).\n\nThese settings are not applied to [Unified services](https://dt-url.net/gy03cmt).\n\nTo programmatically manage these settings, see [API Reference](https://docs.dynatrace.com/docs/shortlink/service-failure-detection#settings-api).",
 	"displayName": "Failure detection rules",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
 		"attributes": {
-			"description": "",
+			"description": "The service or process group attribute to check in a rule condition.",
 			"displayName": "attributes",
 			"documentation": "",
 			"items": [
 				{
+					"description": "Matches the name of the process group that hosts the service.",
 					"displayName": "Process group name",
 					"value": "PG_NAME"
 				},
 				{
+					"description": "Matches process group tags. Use predicate type `TAG_EQUALS` for exact tag match or `TAG_KEY_EQUALS` for key-only match.",
 					"displayName": "Process group tag",
 					"value": "PG_TAG"
 				},
 				{
+					"description": "Matches the management zones assigned to the service. Use predicate type `MANAGEMENT_ZONES_CONTAINS_ALL`.",
 					"displayName": "Service management zone",
 					"value": "SERVICE_MANAGEMENT_ZONE"
 				},
 				{
+					"description": "Matches the detected service name.",
 					"displayName": "Service name",
 					"value": "SERVICE_NAME"
 				},
 				{
+					"description": "Matches the service type (e.g., WebRequest, Database, Messaging). Use predicate type `SERVICE_TYPE_EQUALS`.",
 					"displayName": "Service type",
 					"value": "SERVICE_TYPE"
 				},
 				{
+					"description": "Matches service tags. Use predicate type `TAG_EQUALS` for exact tag match or `TAG_KEY_EQUALS` for key-only match.",
 					"displayName": "Service tag",
 					"value": "SERVICE_TAG"
 				}
@@ -132,6 +138,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add failure detection rule"
@@ -140,7 +147,7 @@
 	"ordered": true,
 	"properties": {
 		"conditions": {
-			"description": "",
+			"description": "A list of conditions for this rule. All conditions must be fulfilled for the rule to match a service.",
 			"displayName": "Conditions",
 			"documentation": "",
 			"items": {
@@ -168,7 +175,7 @@
 					"type": "LENGTH"
 				}
 			],
-			"description": "",
+			"description": "A short description of this failure detection rule.",
 			"displayName": "Rule description",
 			"documentation": "",
 			"maxObjects": 1,
@@ -178,7 +185,7 @@
 		},
 		"enabled": {
 			"default": true,
-			"description": "",
+			"description": "Whether this rule is enabled. Disabled rules are not evaluated.",
 			"displayName": "Enabled",
 			"documentation": "",
 			"maxObjects": 1,
@@ -194,7 +201,7 @@
 				}
 			],
 			"default": "",
-			"description": "",
+			"description": "The display name of this failure detection rule.",
 			"displayName": "Rule name",
 			"documentation": "",
 			"maxObjects": 1,
@@ -204,7 +211,7 @@
 		},
 		"parameterId": {
 			"default": "00000000-0000-0000-0000-000000000000",
-			"description": "",
+			"description": "The ID of the failure detection parameter set to apply when this rule matches. The parameter set must already exist.",
 			"displayName": "Failure detection parameters",
 			"documentation": "",
 			"maxObjects": 1,
@@ -225,7 +232,7 @@
 	"schemaId": "builtin:failure-detection.environment.rules",
 	"types": {
 		"condition": {
-			"description": "",
+			"description": "A condition that checks a service or process group attribute using a predicate. All conditions of a rule must be fulfilled for the rule to match.",
 			"displayName": "condition",
 			"documentation": "",
 			"properties": {
@@ -251,7 +258,7 @@
 					}
 				},
 				"predicate": {
-					"description": "",
+					"description": "The predicate that tests the value of the attribute.\n\nThe actual set of fields depends on the type of the predicate. Find the list of actual objects in the description of the type field or see [Failure detection API - JSON models](https://dt-url.net/9sg3swf).",
 					"displayName": "Condition to check the attribute against",
 					"documentation": "",
 					"maxObjects": 1,
@@ -268,13 +275,13 @@
 			"versionInfo": ""
 		},
 		"predicate": {
-			"description": "",
+			"description": "A predicate that tests a condition attribute value. The available fields depend on the predicate type: string predicates use `textValues` and `caseSensitive`, service type predicates use `serviceType`, management zone predicates use `managementZones`, and tag predicates use `tags` or `tagKeys`.",
 			"displayName": "predicate",
 			"documentation": "",
 			"properties": {
 				"caseSensitive": {
 					"default": false,
-					"description": "",
+					"description": "If `true`, the string comparison is case-sensitive. Default: `false`.",
 					"displayName": "Case sensitive",
 					"documentation": "",
 					"maxObjects": 1,
@@ -293,7 +300,7 @@
 					"type": "boolean"
 				},
 				"managementZones": {
-					"description": "",
+					"description": "A set of management zone references. The rule matches if the service belongs to all specified management zones. Only applicable for predicate type `MANAGEMENT_ZONES_CONTAINS_ALL`.",
 					"displayName": "Management zones",
 					"documentation": "",
 					"items": {
@@ -338,7 +345,7 @@
 						"validate": true
 					},
 					"default": "STRING_EQUALS",
-					"description": "",
+					"description": "The type of predicate to apply. Available types depend on the condition attribute:\n* `SERVICE_NAME` and `PG_NAME` support `STRING_EQUALS`, `STARTS_WITH`, `ENDS_WITH`, `CONTAINS`;\n* `SERVICE_TYPE` supports `SERVICE_TYPE_EQUALS`;\n* `SERVICE_MANAGEMENT_ZONE` supports `MANAGEMENT_ZONES_CONTAINS_ALL`;\n* `SERVICE_TAG` and `PG_TAG` support `TAG_EQUALS` and `TAG_KEY_EQUALS`.",
 					"displayName": "Predicate type",
 					"documentation": "",
 					"maxObjects": 1,
@@ -348,7 +355,7 @@
 					"type": "text"
 				},
 				"serviceType": {
-					"description": "",
+					"description": "A set of service types to match against. The rule matches if the service type is contained in this set. Only applicable for predicate type `SERVICE_TYPE_EQUALS`.",
 					"displayName": "Service types",
 					"documentation": "",
 					"items": {
@@ -373,7 +380,7 @@
 					"type": "set"
 				},
 				"tagKeys": {
-					"description": "",
+					"description": "A set of tag keys to match. The rule matches if the entity has tags with all specified keys, regardless of tag value. Only applicable for predicate type `TAG_KEY_EQUALS`.",
 					"displayName": "Tag keys",
 					"documentation": "",
 					"items": {
@@ -406,7 +413,7 @@
 					"type": "set"
 				},
 				"tags": {
-					"description": "",
+					"description": "A set of tags to match exactly. The rule matches if the entity has all specified tags (both key and value must match). Only applicable for predicate type `TAG_EQUALS`.",
 					"displayName": "Tags (exact match)",
 					"documentation": "",
 					"items": {
@@ -445,7 +452,7 @@
 					"type": "set"
 				},
 				"textValues": {
-					"description": "",
+					"description": "A list of text values to match against. The rule matches if the attribute value matches any of these values according to the predicate type.",
 					"displayName": "Names",
 					"documentation": "",
 					"items": {
@@ -485,5 +492,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.9"
+	"version": "1.0.10"
 }
