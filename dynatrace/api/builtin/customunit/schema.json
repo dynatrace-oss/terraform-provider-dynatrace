@@ -33,7 +33,8 @@
 		}
 	},
 	"keyProperty": "newUnitName",
-	"maxObjects": 100,
+	"maturity": "EARLY_ADOPTER",
+	"maxObjects": 500,
 	"multiObject": true,
 	"ordered": false,
 	"properties": {
@@ -168,5 +169,5 @@
 	],
 	"schemaId": "builtin:custom-unit",
 	"types": {},
-	"version": "0.7.1"
+	"version": "0.8"
 }
