@@ -1,5 +1,5 @@
 resource "dynatrace_calculated_service_metric" "metric_k" {
-  depends_on = [time_sleep.wait_for_request_attributes]
+  depends_on = [time_sleep.wait_for_consistency]
   name             = "#name#"
   enabled          = true
   management_zones = [dynatrace_management_zone_v2.mzone.name]

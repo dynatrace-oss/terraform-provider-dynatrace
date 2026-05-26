@@ -57,7 +57,7 @@ resource "dynatrace_request_attribute" "behavior_class" {
   }
 }
 
-resource "time_sleep" "wait_for_request_attributes" {
-  depends_on = [dynatrace_request_attribute.attribute, dynatrace_request_attribute.accept_ranges, dynatrace_request_attribute.behavior_class]
-  create_duration = "10s"
+resource "time_sleep" "wait_for_consistency" {
+  depends_on = [dynatrace_request_attribute.attribute, dynatrace_request_attribute.accept_ranges, dynatrace_request_attribute.behavior_class, dynatrace_management_zone_v2.mzone]
+  create_duration = "15s"
 }
