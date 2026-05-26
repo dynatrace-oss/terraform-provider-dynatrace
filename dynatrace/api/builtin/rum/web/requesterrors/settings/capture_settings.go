@@ -18,6 +18,8 @@
 package requesterrors
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -38,12 +40,12 @@ func (me *CaptureSettings) Schema() map[string]*schema.Schema {
 		"consider_for_ai": {
 			Type:        schema.TypeBool,
 			Description: "[View more details](https://dt-url.net/hd580p2k)",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 		"impact_apdex": {
 			Type:        schema.TypeBool,
 			Description: "Include error in Apdex calculations",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 	}
 }
@@ -56,19 +58,26 @@ func (me *CaptureSettings) MarshalHCL(properties hcl.Properties) error {
 	})
 }
 
+func (me *CaptureSettings) HandlePreconditions() error {
+	if (me.ConsiderForAI == nil) && (me.Capture) {
+		me.ConsiderForAI = new(false)
+	}
+	if (me.ImpactApdex == nil) && (me.Capture) {
+		me.ImpactApdex = new(false)
+	}
+	if (me.ConsiderForAI != nil) && (!me.Capture) {
+		return fmt.Errorf("'consider_for_ai' must not be specified unless 'capture' is set to 'true'; got 'capture'='%v'", me.Capture)
+	}
+	if (me.ImpactApdex != nil) && (!me.Capture) {
+		return fmt.Errorf("'impact_apdex' must not be specified unless 'capture' is set to 'true'; got 'capture'='%v'", me.Capture)
+	}
+	return nil
+}
+
 func (me *CaptureSettings) UnmarshalHCL(decoder hcl.Decoder) error {
-	err := decoder.DecodeAll(map[string]any{
+	return decoder.DecodeAll(map[string]any{
 		"capture":         &me.Capture,
 		"consider_for_ai": &me.ConsiderForAI,
 		"impact_apdex":    &me.ImpactApdex,
 	})
-	if me.Capture {
-		if me.ConsiderForAI == nil {
-			me.ConsiderForAI = new(false)
-		}
-		if me.ImpactApdex == nil {
-			me.ImpactApdex = new(false)
-		}
-	}
-	return err
 }

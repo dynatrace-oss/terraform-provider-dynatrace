@@ -18,12 +18,15 @@
 package requesterrors
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type FilterSettings struct {
-	Filter *UrlFilter `json:"filter,omitempty"` // Possible Values: `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
+	Filter *UrlFilter `json:"filter,omitempty"` // Filter by URL. Possible values: `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
 	Url    *string    `json:"url,omitempty"`
 }
 
@@ -31,13 +34,13 @@ func (me *FilterSettings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"filter": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`",
-			Optional:    true,
+			Description: "Filter by URL. Possible values: `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`",
+			Optional:    true, // nullable
 		},
 		"url": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
-			Optional:    true,
+			Description: "No documentation available",
+			Optional:    true, // precondition
 		},
 	}
 }
@@ -47,6 +50,16 @@ func (me *FilterSettings) MarshalHCL(properties hcl.Properties) error {
 		"filter": me.Filter,
 		"url":    me.Url,
 	})
+}
+
+func (me *FilterSettings) HandlePreconditions() error {
+	if (me.Url == nil) && (me.Filter != nil) {
+		me.Url = new("")
+	}
+	if (me.Url != nil) && (me.Filter == nil) {
+		return fmt.Errorf("'url' must not be specified unless 'filter' is set; got 'filter'='%v'", opt.ValOrNil(me.Filter))
+	}
+	return nil
 }
 
 func (me *FilterSettings) UnmarshalHCL(decoder hcl.Decoder) error {
