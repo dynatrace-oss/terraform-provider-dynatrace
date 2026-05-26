@@ -26,8 +26,8 @@ import (
 type Settings struct {
 	Condition   *Condition     `json:"condition"`             // Condition
 	Enabled     bool           `json:"enabled"`               // This setting is enabled (`true`) or disabled (`false`)
-	Mode        MonitoringMode `json:"mode"`                  // Possible Values: `MONITORING_ON`, `MONITORING_OFF`
-	HostGroupID string         `json:"-" scope:"hostGroupId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope
+	HostGroupID string         `json:"-" scope:"hostGroupId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+	Mode        MonitoringMode `json:"mode"`                  // Mode. Possible values: `MONITORING_OFF`, `MONITORING_ON`
 	InsertAfter string         `json:"-"`
 }
 
@@ -77,17 +77,17 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
-		"mode": {
-			Type:        schema.TypeString,
-			Description: "Possible Values: `MONITORING_ON`, `MONITORING_OFF`",
-			Required:    true,
-		},
 		"host_group_id": {
 			Type:        schema.TypeString,
-			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope",
+			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
 			Optional:    true,
 			Default:     "environment",
 			ForceNew:    true,
+		},
+		"mode": {
+			Type:        schema.TypeString,
+			Description: "Mode. Possible values: `MONITORING_OFF`, `MONITORING_ON`",
+			Required:    true,
 		},
 		"insert_after": {
 			Type:        schema.TypeString,
@@ -102,8 +102,8 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"condition":     me.Condition,
 		"enabled":       me.Enabled,
-		"mode":          me.Mode,
 		"host_group_id": me.HostGroupID,
+		"mode":          me.Mode,
 		"insert_after":  me.InsertAfter,
 	})
 }
@@ -112,8 +112,8 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"condition":     &me.Condition,
 		"enabled":       &me.Enabled,
-		"mode":          &me.Mode,
 		"host_group_id": &me.HostGroupID,
+		"mode":          &me.Mode,
 		"insert_after":  &me.InsertAfter,
 	})
 }
