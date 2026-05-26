@@ -27,7 +27,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.25"
+const SchemaVersion = "0.0.26"
 const SchemaID = "builtin:hyperscaler-authentication.connections.aws"
 
 type service struct {

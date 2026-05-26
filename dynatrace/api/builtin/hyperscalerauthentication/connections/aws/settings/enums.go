@@ -20,7 +20,6 @@ package aws
 type ConsumersOfAwsRoleBasedAuthentication string
 
 var ConsumersOfAwsRoleBasedAuthentications = struct {
-	AppDynatraceBizCarbon       ConsumersOfAwsRoleBasedAuthentication
 	Da                          ConsumersOfAwsRoleBasedAuthentication
 	None                        ConsumersOfAwsRoleBasedAuthentication
 	SvcComDynatraceBo           ConsumersOfAwsRoleBasedAuthentication
@@ -28,7 +27,6 @@ var ConsumersOfAwsRoleBasedAuthentications = struct {
 	SvcComDynatraceGrail        ConsumersOfAwsRoleBasedAuthentication
 	SvcComDynatraceOpenpipeline ConsumersOfAwsRoleBasedAuthentication
 }{
-	"APP:dynatrace.biz.carbon",
 	"DA",
 	"NONE",
 	"SVC:com.dynatrace.bo",
@@ -41,10 +39,8 @@ type ConsumersOfAwsWebIdentity string
 
 var ConsumersOfAwsWebIdentities = struct {
 	AppDynatraceAwsConnector ConsumersOfAwsWebIdentity
-	AppDynatraceBizCarbon    ConsumersOfAwsWebIdentity
 }{
 	"APP:dynatrace.aws.connector",
-	"APP:dynatrace.biz.carbon",
 }
 
 type Type string
