@@ -6,6 +6,7 @@
 		{
 			"customMessage": "IP range end must be \u003e IP range start address",
 			"customValidatorId": "ipRangeValidator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -14,6 +15,7 @@
 	"documentation": "\n\nGranularity of regional performance analysis increases as the number of detected user requests goes up in a specific region (continent, country, state, or city). You can even override auto-detected IP addresses if necessary to improve mapping accuracy.\n\n## Dynatrace built in IP mapping\n\nDynatrace uses an IP address to geolocation mapping service offered by [MaxMind GeoIP2](https://dt-url.net/6a21pxd). The names for regions and cities are following the [GeoNames database](https://dt-url.net/tz41pwz).\nTo find out which names and IDs are used out of the box, use the [geographic regions REST API](/rest-api-doc/index.jsp?urls.primaryName=Environment%20API%20v2#/Geographic%20regions).",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 5000,
 	"multiObject": true,
 	"ordered": false,
@@ -83,6 +85,7 @@
 				{
 					"customMessage": "Invalid IP address",
 					"customValidatorId": "ipValidator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
@@ -105,6 +108,7 @@
 				{
 					"customMessage": "Invalid IP address",
 					"customValidatorId": "ipValidator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
@@ -203,6 +207,7 @@
 	"schemaConstraints": [
 		{
 			"customValidatorId": "ipRangeOverlapValidator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -212,5 +217,5 @@
 	],
 	"schemaId": "builtin:rum.ip-mappings",
 	"types": {},
-	"version": "1.1.2"
+	"version": "1.1.3"
 }
