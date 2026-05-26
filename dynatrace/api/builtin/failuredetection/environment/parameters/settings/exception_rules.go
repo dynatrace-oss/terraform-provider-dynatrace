@@ -22,13 +22,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// exceptionRules. Exception and custom error rules that determine how specific exceptions, handled errors, and request-attribute-based conditions affect failure detection.
 type ExceptionRules struct {
 	CustomErrorRules           CustomErrorRules `json:"customErrorRules,omitempty"`         // Some custom error situations are only detectable via a return value or other means. To support such cases, [define a request attribute](https://dt-url.net/ys5k0p4y) that captures the required data. Then define a custom error rule that determines if the request has failed based on the value of the request attribute.
 	CustomHandledExceptions    Exceptions       `json:"customHandledExceptions,omitempty"`  // There may be situations where your application code handles exceptions gracefully in a manner that these failures aren't detected by Dynatrace. Use this setting to define specific gracefully-handled exceptions that should be treated as service failures.
-	IgnoreAllExceptions        bool             `json:"ignoreAllExceptions"`                // Ignore all exceptions
-	IgnoreSpanFailureDetection bool             `json:"ignoreSpanFailureDetection"`         // Ignore span failure detection
-	IgnoredExceptions          Exceptions       `json:"ignoredExceptions,omitempty"`        // Some exceptions that are thrown by legacy or 3rd-party code indicate a specific response, not an error. Use this setting to instruct Dynatrace to treat such exceptions as non-failed requests.. If an exception matching any of the defined patterns occurs in a request, it will not be considered as a failure. Other exceptions occurring at the same request might still mark the request as failed.
-	SuccessForcingExceptions   Exceptions       `json:"successForcingExceptions,omitempty"` // Define exceptions which indicate that a service call should not be considered as failed. E.g. an exception indicating that the client aborted the operation.. If an exception matching any of the defined patterns occurs on the entry node of the service, it will be considered successful. Compared to ignored exceptions, the request will be considered successful even if other exceptions occur in the same request.
+	IgnoreAllExceptions        bool             `json:"ignoreAllExceptions"`                // If `true`, all exceptions are ignored for failure detection. Success forcing exceptions, ignored exceptions, and custom handled exceptions have no effect. Exceptions are still tracked and appear in distributed traces, but requests are not labeled as failed. Default: `false`.
+	IgnoreSpanFailureDetection bool             `json:"ignoreSpanFailureDetection"`         // If `true`, span failure detection is ignored. This is specific to OpenTelemetry. Default: `false`.
+	IgnoredExceptions          Exceptions       `json:"ignoredExceptions,omitempty"`        // Some exceptions that are thrown by legacy or 3rd-party code indicate a specific response, not an error. Use this setting to instruct Dynatrace to treat such exceptions as non-failed requests. If an exception matching any of the defined patterns occurs on the __entry node__ of the service, it will not be considered as a failure. Other exceptions occurring at the same request might still mark the request as failed.
+	SuccessForcingExceptions   Exceptions       `json:"successForcingExceptions,omitempty"` // Define exceptions which indicate that an entire service call should not be considered as failed. E.g. an exception indicating that the client aborted the operation. If an exception matching any of the defined patterns occurs on the __entry node__ of the service, it will be considered successful. Compared to ignored exceptions, the request will be considered successful even if other exceptions occur in the same request.
 }
 
 func (me *ExceptionRules) Schema() map[string]*schema.Schema {
@@ -51,17 +52,17 @@ func (me *ExceptionRules) Schema() map[string]*schema.Schema {
 		},
 		"ignore_all_exceptions": {
 			Type:        schema.TypeBool,
-			Description: "Ignore all exceptions",
+			Description: "If `true`, all exceptions are ignored for failure detection. Success forcing exceptions, ignored exceptions, and custom handled exceptions have no effect. Exceptions are still tracked and appear in distributed traces, but requests are not labeled as failed. Default: `false`.",
 			Required:    true,
 		},
 		"ignore_span_failure_detection": {
 			Type:        schema.TypeBool,
-			Description: "Ignore span failure detection",
+			Description: "If `true`, span failure detection is ignored. This is specific to OpenTelemetry. Default: `false`.",
 			Required:    true,
 		},
 		"ignored_exceptions": {
 			Type:        schema.TypeList,
-			Description: "Some exceptions that are thrown by legacy or 3rd-party code indicate a specific response, not an error. Use this setting to instruct Dynatrace to treat such exceptions as non-failed requests.. If an exception matching any of the defined patterns occurs in a request, it will not be considered as a failure. Other exceptions occurring at the same request might still mark the request as failed.",
+			Description: "Some exceptions that are thrown by legacy or 3rd-party code indicate a specific response, not an error. Use this setting to instruct Dynatrace to treat such exceptions as non-failed requests. If an exception matching any of the defined patterns occurs on the __entry node__ of the service, it will not be considered as a failure. Other exceptions occurring at the same request might still mark the request as failed.",
 			Optional:    true, // precondition & minobjects == 0
 			Elem:        &schema.Resource{Schema: new(Exceptions).Schema()},
 			MinItems:    1,
@@ -69,7 +70,7 @@ func (me *ExceptionRules) Schema() map[string]*schema.Schema {
 		},
 		"success_forcing_exceptions": {
 			Type:        schema.TypeList,
-			Description: "Define exceptions which indicate that a service call should not be considered as failed. E.g. an exception indicating that the client aborted the operation.. If an exception matching any of the defined patterns occurs on the entry node of the service, it will be considered successful. Compared to ignored exceptions, the request will be considered successful even if other exceptions occur in the same request.",
+			Description: "Define exceptions which indicate that an entire service call should not be considered as failed. E.g. an exception indicating that the client aborted the operation. If an exception matching any of the defined patterns occurs on the __entry node__ of the service, it will be considered successful. Compared to ignored exceptions, the request will be considered successful even if other exceptions occur in the same request.",
 			Optional:    true, // precondition & minobjects == 0
 			Elem:        &schema.Resource{Schema: new(Exceptions).Schema()},
 			MinItems:    1,
@@ -89,10 +90,11 @@ func (me *ExceptionRules) MarshalHCL(properties hcl.Properties) error {
 	})
 }
 
-func (me *ExceptionRules) HandlePreconditions() {
+func (me *ExceptionRules) HandlePreconditions() error {
 	// ---- CustomHandledExceptions Exceptions -> {"expectedValue":false,"property":"ignoreAllExceptions","type":"EQUALS"}
 	// ---- IgnoredExceptions Exceptions -> {"expectedValue":false,"property":"ignoreAllExceptions","type":"EQUALS"}
 	// ---- SuccessForcingExceptions Exceptions -> {"expectedValue":false,"property":"ignoreAllExceptions","type":"EQUALS"}
+	return nil
 }
 
 func (me *ExceptionRules) UnmarshalHCL(decoder hcl.Decoder) error {

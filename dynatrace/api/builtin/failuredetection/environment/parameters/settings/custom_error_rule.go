@@ -48,16 +48,17 @@ func (me *CustomErrorRules) UnmarshalHCL(decoder hcl.Decoder) error {
 	return nil
 }
 
+// customErrorRule. A custom error rule that determines if a request has failed based on the value of a request attribute. Define a request attribute that captures the relevant data, then configure a condition to check the captured value.
 type CustomErrorRule struct {
-	Condition        *CompareOperation `json:"condition"`        // Request attribute condition
-	RequestAttribute string            `json:"requestAttribute"` // Request attribute
+	Condition        *CompareOperation `json:"condition"`        // The condition that determines whether the request attribute value indicates a failure.
+	RequestAttribute string            `json:"requestAttribute"` // The ID of the request attribute to check. The request attribute must already be defined.
 }
 
 func (me *CustomErrorRule) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"condition": {
 			Type:        schema.TypeList,
-			Description: "Request attribute condition",
+			Description: "The condition that determines whether the request attribute value indicates a failure.",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(CompareOperation).Schema()},
 			MinItems:    1,
@@ -65,7 +66,7 @@ func (me *CustomErrorRule) Schema() map[string]*schema.Schema {
 		},
 		"request_attribute": {
 			Type:        schema.TypeString,
-			Description: "Request attribute",
+			Description: "The ID of the request attribute to check. The request attribute must already be defined.",
 			Required:    true,
 		},
 	}
