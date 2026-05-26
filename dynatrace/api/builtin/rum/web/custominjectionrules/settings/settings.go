@@ -18,6 +18,7 @@
 package custominjectionrules
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -28,8 +29,8 @@ type Settings struct {
 	ApplicationID string   `json:"-" scope:"applicationId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 	Enabled       bool     `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
 	HtmlPattern   *string  `json:"htmlPattern,omitempty"`
-	Operator      Operator `json:"operator"`             // Possible Values: `AllPages`, `Contains`, `Ends`, `Equals`, `Starts`
-	Rule          Rule     `json:"rule"`                 // Possible Values: `AfterSpecificHtml`, `Automatic`, `BeforeSpecificHtml`, `DoNotInject`
+	Operator      Operator `json:"operator"`             // **Example**: \n\n   **For the URL:**  \n  `http://www.example.com:8080/lorem/ipsum.jsp?mode=desktop` \n\n   A rule can be specified on the URL pattern:  \n  `/lorem/ipsum.jsp` \n\n   Using the operator:  \n  `URL ends with` \n\n   **Result:**  \n  If URL ends with .jsp do not inject the JavaScript library. Possible values: `AllPages`, `Contains`, `Ends`, `Equals`, `Starts`
+	Rule          Rule     `json:"rule"`                 // Rule. Possible values: `AfterSpecificHtml`, `Automatic`, `BeforeSpecificHtml`, `DoNotInject`
 	UrlPattern    *string  `json:"urlPattern,omitempty"` // URL pattern
 	InsertAfter   string   `json:"-"`
 }
@@ -52,17 +53,17 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"html_pattern": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 		},
 		"operator": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `AllPages`, `Contains`, `Ends`, `Equals`, `Starts`",
+			Description: "**Example**: \n\n   **For the URL:**  \n  `http://www.example.com:8080/lorem/ipsum.jsp?mode=desktop` \n\n   A rule can be specified on the URL pattern:  \n  `/lorem/ipsum.jsp` \n\n   Using the operator:  \n  `URL ends with` \n\n   **Result:**  \n  If URL ends with .jsp do not inject the JavaScript library. Possible values: `AllPages`, `Contains`, `Ends`, `Equals`, `Starts`",
 			Required:    true,
 		},
 		"rule": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `AfterSpecificHtml`, `Automatic`, `BeforeSpecificHtml`, `DoNotInject`",
+			Description: "Rule. Possible values: `AfterSpecificHtml`, `Automatic`, `BeforeSpecificHtml`, `DoNotInject`",
 			Required:    true,
 		},
 		"url_pattern": {
@@ -97,6 +98,12 @@ func (me *Settings) HandlePreconditions() error {
 	}
 	if (me.UrlPattern == nil) && (slices.Contains([]string{"Equals", "Starts", "Ends", "Contains"}, string(me.Operator))) {
 		me.UrlPattern = new("")
+	}
+	if (me.HtmlPattern != nil) && (!slices.Contains([]string{"BeforeSpecificHtml", "AfterSpecificHtml"}, string(me.Rule))) {
+		return fmt.Errorf("'html_pattern' must not be specified unless 'rule' is one of ['BeforeSpecificHtml', 'AfterSpecificHtml']; got 'rule'='%v'", me.Rule)
+	}
+	if (me.UrlPattern != nil) && (!slices.Contains([]string{"Equals", "Starts", "Ends", "Contains"}, string(me.Operator))) {
+		return fmt.Errorf("'url_pattern' must not be specified unless 'operator' is one of ['Equals', 'Starts', 'Ends', 'Contains']; got 'operator'='%v'", me.Operator)
 	}
 	return nil
 }
