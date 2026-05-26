@@ -24,10 +24,10 @@ import (
 
 type Settings struct {
 	ApplicationID  *string         `json:"-" scope:"applicationId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
-	DataCollection *DataCollection `json:"dataCollection"`          // (Field has overlap with `dynatrace_application_data_privacy`) To provide your end users with the ability to decide for themselves if their activities should be tracked to measure application performance and usage, enable opt-in mode.
-	DoNotTrack     *DoNotTrack     `json:"doNotTrack"`              // (Field has overlap with `dynatrace_application_data_privacy`) Most modern web browsers have a privacy feature called [\"Do Not Track\"](https://dt-url.net/sb3n0pnl) that individual users may have enabled on their devices. Customize how Dynatrace should behave when it encounters this setting.
-	Masking        *Masking        `json:"masking"`                 // (Field has overlap with `dynatrace_application_data_privacy`)
-	UserTracking   *UserTracking   `json:"userTracking"`            // (Field has overlap with `dynatrace_application_data_privacy`) User tracking
+	DataCollection *DataCollection `json:"dataCollection"`          // To provide your end users with the ability to decide for themselves if their activities should be tracked to measure application performance and usage, enable opt-in mode.
+	DoNotTrack     *DoNotTrack     `json:"doNotTrack"`              // Most modern web browsers have a privacy feature called [\"Do Not Track\"](https://dt-url.net/sb3n0pnl) that individual users may have enabled on their devices. Customize how Dynatrace should behave when it encounters this setting.
+	Masking        *Masking        `json:"masking"`
+	UserTracking   *UserTracking   `json:"userTracking"` // User tracking
 }
 
 func (me *Settings) Name() string {
@@ -61,7 +61,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"masking": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(Masking).Schema()},
 			MinItems:    1,

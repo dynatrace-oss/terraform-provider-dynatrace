@@ -25,6 +25,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -146,9 +147,9 @@
 			"properties": {
 				"personalDataUriMaskingEnabled": {
 					"default": false,
-					"description": "Dynatrace captures the URIs and request headers sent from desktop and mobile browsers. Dynatrace also captures full URIs on the server-side to enable detailed performance analysis of your applications. For complete details, visit [Mask personal data in URIs](https://dt-url.net/mask-personal-data-in-URIs).",
+					"description": "Dynatrace captures the URIs and request headers sent from desktop and mobile browsers. Dynatrace also captures request data on the server-side to enable detailed performance analysis of your applications. For complete details, visit [Mask personal data in URIs](https://dt-url.net/mask-personal-data-in-URIs).",
 					"displayName": "Mask personal data in URIs",
-					"documentation": "URIs and request headers contain personal data. When this setting is enabled, Dynatrace automatically detects UUIDs, credit card numbers, email addresses, IP addresses, and other IDs and replaces those values with placeholders. The personal data is then masked in PurePath analysis, error analysis, user action naming for RUM, and elsewhere in Dynatrace.",
+					"documentation": "URIs, query strings, headers, exception messages and data captured for request attributes can contain personal data. When this setting is enabled, Dynatrace automatically detects UUIDs, credit card numbers, email addresses, IP addresses, and other IDs and replaces those values with placeholders. The personal data is then masked in PurePath analysis, error analysis, user action naming for RUM, and elsewhere in Dynatrace.",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -192,5 +193,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "4.0.1"
+	"version": "4.0.2"
 }
