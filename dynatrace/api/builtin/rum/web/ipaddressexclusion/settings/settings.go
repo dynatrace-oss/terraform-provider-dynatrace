@@ -25,7 +25,7 @@ import (
 type Settings struct {
 	ApplicationID             string                  `json:"-" scope:"applicationId"`   // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 	IpAddressExclusionInclude bool                    `json:"ipAddressExclusionInclude"` // These are the only IP addresses that should be monitored
-	IpExclusionList           IpAddressExclusionRules `json:"ipExclusionList,omitempty"` // **Examples:**\n\n   - 84.112.10.5\n   - fe80::10a1:c6b2:5f68:785d
+	IpExclusionList           IpAddressExclusionRules `json:"ipExclusionList,omitempty"` // **Examples:**\n\n     - 84.112.10.5\n    - fe80::10a1:c6b2:5f68:785d
 }
 
 func (me *Settings) Name() string {
@@ -46,7 +46,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"ip_exclusion_list": {
 			Type:        schema.TypeList,
-			Description: "**Examples:**\n\n   - 84.112.10.5\n   - fe80::10a1:c6b2:5f68:785d",
+			Description: "**Examples:**\n\n     - 84.112.10.5\n    - fe80::10a1:c6b2:5f68:785d",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(IpAddressExclusionRules).Schema()},
 			MinItems:    1,
