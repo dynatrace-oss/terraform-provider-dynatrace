@@ -49,7 +49,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"container_restarts": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(ContainerRestarts).Schema()},
 			MinItems:    1,
@@ -57,7 +57,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"deployment_stuck": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(DeploymentStuck).Schema()},
 			MinItems:    1,
@@ -65,7 +65,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"high_cpu_throttling": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    !envutils.DTBackwardsCompatibility.Get(),
 			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(HighCpuThrottling).Schema()},
@@ -74,7 +74,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"high_cpu_usage": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    !envutils.DTBackwardsCompatibility.Get(),
 			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(HighCpuUsage).Schema()},
@@ -83,7 +83,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"high_memory_usage": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    !envutils.DTBackwardsCompatibility.Get(),
 			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(HighMemoryUsage).Schema()},
@@ -92,7 +92,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"job_failure_events": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    !envutils.DTBackwardsCompatibility.Get(),
 			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(JobFailureEvents).Schema()},
@@ -101,7 +101,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"not_all_pods_ready": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(NotAllPodsReady).Schema()},
 			MinItems:    1,
@@ -109,7 +109,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"oom_kills": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    !envutils.DTBackwardsCompatibility.Get(),
 			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(OOMKills).Schema()},
@@ -118,7 +118,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"pending_pods": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(PendingPods).Schema()},
 			MinItems:    1,
@@ -126,7 +126,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"pod_backoff_events": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    !envutils.DTBackwardsCompatibility.Get(),
 			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(PodBackoffEvents).Schema()},
@@ -135,7 +135,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"pod_eviction_events": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    !envutils.DTBackwardsCompatibility.Get(),
 			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(PodEvictionEvents).Schema()},
@@ -144,7 +144,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"pod_preemption_events": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    !envutils.DTBackwardsCompatibility.Get(),
 			Optional:    envutils.DTBackwardsCompatibility.Get(),
 			Elem:        &schema.Resource{Schema: new(PodPreemptionEvents).Schema()},
@@ -153,7 +153,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"pod_stuck_in_terminating": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(PodStuckInTerminating).Schema()},
 			MinItems:    1,
@@ -168,7 +168,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"workload_without_ready_pods": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(WorkloadWithoutReadyPods).Schema()},
 			MinItems:    1,
