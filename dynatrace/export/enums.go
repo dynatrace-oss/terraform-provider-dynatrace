@@ -545,6 +545,7 @@ var ResourceTypes = struct {
 	OpenpipelineUserEventsPipelinegroups     ResourceType
 	OpenpipelineUsersessionsPipelinegroups   ResourceType
 	ProcessGroupingRules                     ResourceType
+	AWSMonitoringConfiguration               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -968,6 +969,7 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v2_user_events_pipelinegroups",
 	"dynatrace_openpipeline_v2_usersessions_pipelinegroups",
 	"dynatrace_process_grouping_rules",
+	"dynatrace_aws_monitoring_configuration",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

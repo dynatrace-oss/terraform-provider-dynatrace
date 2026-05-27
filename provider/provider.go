@@ -585,6 +585,7 @@ func Provider() *schema.Provider {
 			"dynatrace_managed_network_zones":                          networkzones.Resource(),
 			"dynatrace_hub_extension_config":                           resources.NewGeneric(export.ResourceTypes.HubExtensionConfig).Resource(),
 			"dynatrace_hub_extension_v2_config":                        resources.NewGeneric(export.ResourceTypes.HubExtensionV2Config).Resource(),
+			"dynatrace_aws_monitoring_configuration":                   resources.NewGeneric(export.ResourceTypes.AWSMonitoringConfiguration).Resource(),
 			"dynatrace_hub_extension_active_version":                   resources.NewGeneric(export.ResourceTypes.HubActiveExtensionVersion).Resource(),
 			"dynatrace_document":                                       resources.NewGeneric(export.ResourceTypes.Documents).Resource(),
 			"dynatrace_direct_shares":                                  resources.NewGeneric(export.ResourceTypes.DirectShares).Resource(),
