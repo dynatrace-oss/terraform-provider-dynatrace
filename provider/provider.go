@@ -47,6 +47,7 @@ import (
 	georegions "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/geographicregions/regions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/host"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/hub/items"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/hyperscalerauthentication/connections/gcpdynatraceprincipal"
 	environments2 "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/environments"
 	ds_iam_groups "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/groups"
 	ds_iam_policies "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/iam/policies"
@@ -283,6 +284,7 @@ func Provider() *schema.Provider {
 			"dynatrace_platform_slo_template":           objectivetemplates.DataSource(),
 			"dynatrace_hub_extension_v2_active_version": active_version.DataSource(),
 			"dynatrace_hub_extension_v2_latest_version": latest_version.DataSource(),
+			"dynatrace_gcp_principal":                   gcpdynatraceprincipal.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                                 resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
@@ -717,6 +719,7 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_user_events_pipelinegroups":     resources.NewGeneric(export.ResourceTypes.OpenpipelineUserEventsPipelinegroups).Resource(),
 			"dynatrace_openpipeline_v2_usersessions_pipelinegroups":    resources.NewGeneric(export.ResourceTypes.OpenpipelineUsersessionsPipelinegroups).Resource(),
 			"dynatrace_process_grouping_rules":                         resources.NewGeneric(export.ResourceTypes.ProcessGroupingRules).Resource(),
+			"dynatrace_gcp_connection":                                 resources.NewGeneric(export.ResourceTypes.GCPConnection).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
