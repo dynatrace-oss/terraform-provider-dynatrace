@@ -249,8 +249,8 @@ jobs:
           DT_CLIENT_ID: ${{ secrets.DT_CLIENT_ID }}
           DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
           DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
-          TF_VAR_gcp_project_number: ${{ secrets.DT_GCP_PROJECT_NUMBER }}
-        run: go test -tags=gcp_integration -v -p 1 ./...
+          TF_VAR_gcp_project_id: "team-monaco---gcp-e2e-testing"
+        run: go test -tags=gcp_integration -v -p 1 ./dynatrace/api/builtin/hyperscalerauthentication/connections/gcp/...
 
   sonar_scan:
     name: SonarQube lint and test coverage

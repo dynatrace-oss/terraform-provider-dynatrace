@@ -1,24 +1,11 @@
-variable "gcp_project_number" {
+variable "gcp_project_id" {
   type        = string
-  description = "The Google Cloud Platform project number"
-}
-
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "7.33.0"
-    }
-    time = {
-      source  = "hashicorp/time"
-      version = "0.14.0"
-    }
-  }
+  description = "The Google Cloud Platform project ID"
 }
 
 # Configure the GCP provider
 provider "google" {
-  project = var.gcp_project_number
+  project = var.gcp_project_id
 }
 
 # Create a Service Account in GCP
