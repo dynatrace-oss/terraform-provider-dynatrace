@@ -10,6 +10,11 @@ on:
   push:
     branches:
       - '**'
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   unit-tests:
     name: Run Unit Tests
