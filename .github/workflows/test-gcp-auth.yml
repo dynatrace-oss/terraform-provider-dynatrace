@@ -1,0 +1,35 @@
+name: Test WIF Auth
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test-auth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print identity claims
+        run: |
+          echo "repository: ${{ github.repository }}"
+          echo "repository_id: ${{ github.repository_id }}"
+          echo "workflow_ref: ${{ github.workflow_ref }}"
+          echo "ref: ${{ github.ref }}"
+          echo "actor: ${{ github.actor }}"
+          echo "actor_id: ${{ github.actor_id }}"
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: 'projects/${{ secrets.DT_GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          service_account: '${{ secrets.DT_GCP_SERVICE_ACCOUNT }}'
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+
+      - name: Verify identity
+        run: gcloud auth list
+
+      - name: Smoke test API access
+        run: gcloud storage buckets list --limit=5
