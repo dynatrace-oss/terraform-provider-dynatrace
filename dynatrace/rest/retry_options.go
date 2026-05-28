@@ -1,6 +1,6 @@
 /*
  * @license
- * Copyright 2025 Dynatrace LLC
+ * Copyright 2026 Dynatrace LLC
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,14 +17,9 @@
 package rest
 
 import (
-	"net/http"
 	"time"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
-var defaultRetryOptions = &rest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: shouldRetry}
-
-func shouldRetry(resp *http.Response) bool {
-	return resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode == http.StatusServiceUnavailable
-}
+var defaultRetryOptions = &rest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: rest.RetryIfTooManyRequestsOrServiceUnavailable}
