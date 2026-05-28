@@ -1,4 +1,4 @@
-//go:build integration || sequential_integration
+//go:build integration || sequential_integration || gcp_integration
 
 /**
 * @license
