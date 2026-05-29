@@ -21,7 +21,7 @@ data "dynatrace_gcp_principal" "principal" {
 # Grant DT GCP Principal access to the service account
 resource "google_service_account_iam_member" "wif_binding" {
   service_account_id = google_service_account.gcp_service_account.name
-  member  = data.dynatrace_gcp_principal.principal.principal
+  member  = "serviceAccount:${data.dynatrace_gcp_principal.principal.principal}"
   role    = "roles/iam.serviceAccountTokenCreator"
 }
 
@@ -36,9 +36,9 @@ resource "dynatrace_gcp_connection" "example" {
   name = "#name#"
   type = "serviceAccountImpersonation"
   service_account_impersonation {
-    service_account_id  = google_service_account.gcp_service_account.name
+    service_account_id  = google_service_account.gcp_service_account.email
     consumers = [
-      "DA"
+      "SVC:com.dynatrace.da"
     ]
   }
 
