@@ -18,6 +18,9 @@
 package pipelines
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -45,8 +48,9 @@ func (me *SmartscapeFieldExtractionEntries) UnmarshalHCL(decoder hcl.Decoder) er
 }
 
 type SmartscapeFieldExtractionEntry struct {
-	FieldName           string `json:"fieldName"`           // Field name
-	ReferencedFieldName string `json:"referencedFieldName"` // Referenced field name
+	FieldName           *string                  `json:"fieldName,omitempty"` // Field name
+	ReferencedFieldName string                   `json:"referencedFieldName"` // Referenced field name
+	Strategy            *FieldExtractionStrategy `json:"strategy,omitempty"`  // Strategy for field extraction. Possible values: `equals`, `startsWith`
 }
 
 func (me *SmartscapeFieldExtractionEntry) Schema() map[string]*schema.Schema {
@@ -54,12 +58,17 @@ func (me *SmartscapeFieldExtractionEntry) Schema() map[string]*schema.Schema {
 		"field_name": {
 			Type:        schema.TypeString,
 			Description: "Field name",
-			Required:    true,
+			Optional:    true, // precondition
 		},
 		"referenced_field_name": {
 			Type:        schema.TypeString,
 			Description: "Referenced field name",
 			Required:    true,
+		},
+		"strategy": {
+			Type:        schema.TypeString,
+			Description: "Strategy for field extraction. Possible values: `equals`, `startsWith`",
+			Optional:    true, // nullable
 		},
 	}
 }
@@ -68,12 +77,24 @@ func (me *SmartscapeFieldExtractionEntry) MarshalHCL(properties hcl.Properties) 
 	return properties.EncodeAll(map[string]any{
 		"field_name":            me.FieldName,
 		"referenced_field_name": me.ReferencedFieldName,
+		"strategy":              me.Strategy,
 	})
+}
+
+func (me *SmartscapeFieldExtractionEntry) HandlePreconditions() error {
+	if (me.FieldName != nil) && ((me.Strategy == nil || string(*me.Strategy) != "equals") && (me.Strategy != nil)) {
+		return fmt.Errorf("'field_name' must not be specified unless ('strategy' is set to 'equals' or 'strategy' is not set); got 'strategy'='%v'", opt.ValOrNil(me.Strategy))
+	}
+	if (me.FieldName == nil) && ((me.Strategy != nil && string(*me.Strategy) == "equals") || (me.Strategy == nil)) {
+		return fmt.Errorf("'field_name' must be specified when ('strategy' is set to 'equals' or 'strategy' is not set); got 'strategy'='%v'", opt.ValOrNil(me.Strategy))
+	}
+	return nil
 }
 
 func (me *SmartscapeFieldExtractionEntry) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"field_name":            &me.FieldName,
 		"referenced_field_name": &me.ReferencedFieldName,
+		"strategy":              &me.Strategy,
 	})
 }
