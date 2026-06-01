@@ -30,7 +30,7 @@ func (me *DavisAttributes) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"properties": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(DavisEventProperties).Schema()},
 			MinItems:    1,
