@@ -60,6 +60,7 @@ type Processor struct {
 	FieldsAdd                    *FieldsAddAttributes                    `json:"fieldsAdd,omitempty"`                    // Fields add processor attributes
 	FieldsRemove                 *FieldsRemoveAttributes                 `json:"fieldsRemove,omitempty"`                 // Fields remove processor attributes
 	FieldsRename                 *FieldsRenameAttributes                 `json:"fieldsRename,omitempty"`                 // Fields rename processor attributes
+	GeoLookup                    *GeoLookupAttributes                    `json:"geoLookup,omitempty"`                    // Geo lookup processor attributes
 	HistogramMetric              *HistogramMetricAttributes              `json:"histogramMetric,omitempty"`              // Histogram metric processor attributes
 	ID                           string                                  `json:"id"`                                     // Processor identifier
 	Matcher                      *string                                 `json:"matcher,omitempty"`                      // [See our documentation](https://dt-url.net/bp234rv)
@@ -74,7 +75,7 @@ type Processor struct {
 	SmartscapeEdge               *SmartscapeEdgeAttributes               `json:"smartscapeEdge,omitempty"`               // Smartscape edge extraction processor attributes
 	SmartscapeNode               *SmartscapeNodeAttributes               `json:"smartscapeNode,omitempty"`               // Smartscape node extraction processor attributes
 	Technology                   *TechnologyAttributes                   `json:"technology,omitempty"`                   // Technology processor attributes
-	Type                         ProcessorType                           `json:"type"`                                   // Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+	Type                         ProcessorType                           `json:"type"`                                   // Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 	ValueMetric                  *ValueMetricAttributes                  `json:"valueMetric,omitempty"`                  // Value metric processor attributes
 }
 
@@ -130,7 +131,7 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 		},
 		"description": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 		"dql": {
@@ -167,6 +168,14 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 			Description: "Fields rename processor attributes",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(FieldsRenameAttributes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"geo_lookup": {
+			Type:        schema.TypeList,
+			Description: "Geo lookup processor attributes",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(GeoLookupAttributes).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
@@ -275,7 +284,7 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`",
+			Description: "Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`",
 			Required:    true,
 		},
 		"value_metric": {
@@ -303,6 +312,7 @@ func (me *Processor) MarshalHCL(properties hcl.Properties) error {
 		"fields_add":                      me.FieldsAdd,
 		"fields_remove":                   me.FieldsRemove,
 		"fields_rename":                   me.FieldsRename,
+		"geo_lookup":                      me.GeoLookup,
 		"histogram_metric":                me.HistogramMetric,
 		"id":                              me.ID,
 		"matcher":                         me.Matcher,
@@ -326,137 +336,146 @@ func (me *Processor) HandlePreconditions() error {
 	if (me.Matcher == nil) && (string(me.Type) != "technology") {
 		me.Matcher = new("")
 	}
-	if (me.AzureLogForwarding == nil) && (string(me.Type) == "azureLogForwarding") {
-		return fmt.Errorf("'azure_log_forwarding' must be specified if 'type' is set to '%v'", me.Type)
-	}
 	if (me.AzureLogForwarding != nil) && (string(me.Type) != "azureLogForwarding") {
-		return fmt.Errorf("'azure_log_forwarding' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'azure_log_forwarding' must not be specified unless 'type' is set to 'azureLogForwarding'; got 'type'='%v'", me.Type)
 	}
-	if (me.Bizevent == nil) && (string(me.Type) == "bizevent") {
-		return fmt.Errorf("'bizevent' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.AzureLogForwarding == nil) && (string(me.Type) == "azureLogForwarding") {
+		return fmt.Errorf("'azure_log_forwarding' must be specified when 'type' is set to 'azureLogForwarding'; got 'type'='%v'", me.Type)
 	}
 	if (me.Bizevent != nil) && (string(me.Type) != "bizevent") {
-		return fmt.Errorf("'bizevent' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'bizevent' must not be specified unless 'type' is set to 'bizevent'; got 'type'='%v'", me.Type)
 	}
-	if (me.BucketAssignment == nil) && (string(me.Type) == "bucketAssignment") {
-		return fmt.Errorf("'bucket_assignment' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.Bizevent == nil) && (string(me.Type) == "bizevent") {
+		return fmt.Errorf("'bizevent' must be specified when 'type' is set to 'bizevent'; got 'type'='%v'", me.Type)
 	}
 	if (me.BucketAssignment != nil) && (string(me.Type) != "bucketAssignment") {
-		return fmt.Errorf("'bucket_assignment' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'bucket_assignment' must not be specified unless 'type' is set to 'bucketAssignment'; got 'type'='%v'", me.Type)
 	}
-	if (me.CostAllocation == nil) && (string(me.Type) == "costAllocation") {
-		return fmt.Errorf("'cost_allocation' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.BucketAssignment == nil) && (string(me.Type) == "bucketAssignment") {
+		return fmt.Errorf("'bucket_assignment' must be specified when 'type' is set to 'bucketAssignment'; got 'type'='%v'", me.Type)
 	}
 	if (me.CostAllocation != nil) && (string(me.Type) != "costAllocation") {
-		return fmt.Errorf("'cost_allocation' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'cost_allocation' must not be specified unless 'type' is set to 'costAllocation'; got 'type'='%v'", me.Type)
 	}
-	if (me.CounterMetric == nil) && (string(me.Type) == "counterMetric") {
-		return fmt.Errorf("'counter_metric' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.CostAllocation == nil) && (string(me.Type) == "costAllocation") {
+		return fmt.Errorf("'cost_allocation' must be specified when 'type' is set to 'costAllocation'; got 'type'='%v'", me.Type)
 	}
 	if (me.CounterMetric != nil) && (string(me.Type) != "counterMetric") {
-		return fmt.Errorf("'counter_metric' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'counter_metric' must not be specified unless 'type' is set to 'counterMetric'; got 'type'='%v'", me.Type)
 	}
-	if (me.Davis == nil) && (string(me.Type) == "davis") {
-		return fmt.Errorf("'davis' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.CounterMetric == nil) && (string(me.Type) == "counterMetric") {
+		return fmt.Errorf("'counter_metric' must be specified when 'type' is set to 'counterMetric'; got 'type'='%v'", me.Type)
 	}
 	if (me.Davis != nil) && (string(me.Type) != "davis") {
-		return fmt.Errorf("'davis' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'davis' must not be specified unless 'type' is set to 'davis'; got 'type'='%v'", me.Type)
 	}
-	if (me.Dql == nil) && (string(me.Type) == "dql") {
-		return fmt.Errorf("'dql' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.Davis == nil) && (string(me.Type) == "davis") {
+		return fmt.Errorf("'davis' must be specified when 'type' is set to 'davis'; got 'type'='%v'", me.Type)
 	}
 	if (me.Dql != nil) && (string(me.Type) != "dql") {
-		return fmt.Errorf("'dql' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'dql' must not be specified unless 'type' is set to 'dql'; got 'type'='%v'", me.Type)
 	}
-	if (me.FieldsAdd == nil) && (string(me.Type) == "fieldsAdd") {
-		return fmt.Errorf("'fields_add' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.Dql == nil) && (string(me.Type) == "dql") {
+		return fmt.Errorf("'dql' must be specified when 'type' is set to 'dql'; got 'type'='%v'", me.Type)
 	}
 	if (me.FieldsAdd != nil) && (string(me.Type) != "fieldsAdd") {
-		return fmt.Errorf("'fields_add' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'fields_add' must not be specified unless 'type' is set to 'fieldsAdd'; got 'type'='%v'", me.Type)
 	}
-	if (me.FieldsRemove == nil) && (string(me.Type) == "fieldsRemove") {
-		return fmt.Errorf("'fields_remove' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.FieldsAdd == nil) && (string(me.Type) == "fieldsAdd") {
+		return fmt.Errorf("'fields_add' must be specified when 'type' is set to 'fieldsAdd'; got 'type'='%v'", me.Type)
 	}
 	if (me.FieldsRemove != nil) && (string(me.Type) != "fieldsRemove") {
-		return fmt.Errorf("'fields_remove' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'fields_remove' must not be specified unless 'type' is set to 'fieldsRemove'; got 'type'='%v'", me.Type)
 	}
-	if (me.FieldsRename == nil) && (string(me.Type) == "fieldsRename") {
-		return fmt.Errorf("'fields_rename' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.FieldsRemove == nil) && (string(me.Type) == "fieldsRemove") {
+		return fmt.Errorf("'fields_remove' must be specified when 'type' is set to 'fieldsRemove'; got 'type'='%v'", me.Type)
 	}
 	if (me.FieldsRename != nil) && (string(me.Type) != "fieldsRename") {
-		return fmt.Errorf("'fields_rename' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'fields_rename' must not be specified unless 'type' is set to 'fieldsRename'; got 'type'='%v'", me.Type)
 	}
-	if (me.HistogramMetric == nil) && (string(me.Type) == "histogramMetric") {
-		return fmt.Errorf("'histogram_metric' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.FieldsRename == nil) && (string(me.Type) == "fieldsRename") {
+		return fmt.Errorf("'fields_rename' must be specified when 'type' is set to 'fieldsRename'; got 'type'='%v'", me.Type)
+	}
+	if (me.GeoLookup != nil) && (string(me.Type) != "geoLookup") {
+		return fmt.Errorf("'geo_lookup' must not be specified unless 'type' is set to 'geoLookup'; got 'type'='%v'", me.Type)
+	}
+	if (me.GeoLookup == nil) && (string(me.Type) == "geoLookup") {
+		return fmt.Errorf("'geo_lookup' must be specified when 'type' is set to 'geoLookup'; got 'type'='%v'", me.Type)
 	}
 	if (me.HistogramMetric != nil) && (string(me.Type) != "histogramMetric") {
-		return fmt.Errorf("'histogram_metric' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'histogram_metric' must not be specified unless 'type' is set to 'histogramMetric'; got 'type'='%v'", me.Type)
 	}
-	if (me.ProductAllocation == nil) && (string(me.Type) == "productAllocation") {
-		return fmt.Errorf("'product_allocation' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.HistogramMetric == nil) && (string(me.Type) == "histogramMetric") {
+		return fmt.Errorf("'histogram_metric' must be specified when 'type' is set to 'histogramMetric'; got 'type'='%v'", me.Type)
+	}
+	if (me.Matcher != nil) && (string(me.Type) == "technology") {
+		return fmt.Errorf("'matcher' must not be specified unless 'type' is not set to 'technology'; got 'type'='%v'", me.Type)
 	}
 	if (me.ProductAllocation != nil) && (string(me.Type) != "productAllocation") {
-		return fmt.Errorf("'product_allocation' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'product_allocation' must not be specified unless 'type' is set to 'productAllocation'; got 'type'='%v'", me.Type)
 	}
-	if (me.SamplingAwareCounterMetric == nil) && (string(me.Type) == "samplingAwareCounterMetric") {
-		return fmt.Errorf("'sampling_aware_counter_metric' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.ProductAllocation == nil) && (string(me.Type) == "productAllocation") {
+		return fmt.Errorf("'product_allocation' must be specified when 'type' is set to 'productAllocation'; got 'type'='%v'", me.Type)
 	}
 	if (me.SamplingAwareCounterMetric != nil) && (string(me.Type) != "samplingAwareCounterMetric") {
-		return fmt.Errorf("'sampling_aware_counter_metric' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'sampling_aware_counter_metric' must not be specified unless 'type' is set to 'samplingAwareCounterMetric'; got 'type'='%v'", me.Type)
 	}
-	if (me.SamplingAwareHistogramMetric == nil) && (string(me.Type) == "samplingAwareHistogramMetric") {
-		return fmt.Errorf("'sampling_aware_histogram_metric' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.SamplingAwareCounterMetric == nil) && (string(me.Type) == "samplingAwareCounterMetric") {
+		return fmt.Errorf("'sampling_aware_counter_metric' must be specified when 'type' is set to 'samplingAwareCounterMetric'; got 'type'='%v'", me.Type)
 	}
 	if (me.SamplingAwareHistogramMetric != nil) && (string(me.Type) != "samplingAwareHistogramMetric") {
-		return fmt.Errorf("'sampling_aware_histogram_metric' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'sampling_aware_histogram_metric' must not be specified unless 'type' is set to 'samplingAwareHistogramMetric'; got 'type'='%v'", me.Type)
 	}
-	if (me.SamplingAwareValueMetric == nil) && (string(me.Type) == "samplingAwareValueMetric") {
-		return fmt.Errorf("'sampling_aware_value_metric' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.SamplingAwareHistogramMetric == nil) && (string(me.Type) == "samplingAwareHistogramMetric") {
+		return fmt.Errorf("'sampling_aware_histogram_metric' must be specified when 'type' is set to 'samplingAwareHistogramMetric'; got 'type'='%v'", me.Type)
 	}
 	if (me.SamplingAwareValueMetric != nil) && (string(me.Type) != "samplingAwareValueMetric") {
-		return fmt.Errorf("'sampling_aware_value_metric' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'sampling_aware_value_metric' must not be specified unless 'type' is set to 'samplingAwareValueMetric'; got 'type'='%v'", me.Type)
 	}
-	if (me.SdlcEvent == nil) && (string(me.Type) == "sdlcEvent") {
-		return fmt.Errorf("'sdlc_event' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.SamplingAwareValueMetric == nil) && (string(me.Type) == "samplingAwareValueMetric") {
+		return fmt.Errorf("'sampling_aware_value_metric' must be specified when 'type' is set to 'samplingAwareValueMetric'; got 'type'='%v'", me.Type)
 	}
 	if (me.SdlcEvent != nil) && (string(me.Type) != "sdlcEvent") {
-		return fmt.Errorf("'sdlc_event' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'sdlc_event' must not be specified unless 'type' is set to 'sdlcEvent'; got 'type'='%v'", me.Type)
 	}
-	if (me.SecurityContext == nil) && (string(me.Type) == "securityContext") {
-		return fmt.Errorf("'security_context' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.SdlcEvent == nil) && (string(me.Type) == "sdlcEvent") {
+		return fmt.Errorf("'sdlc_event' must be specified when 'type' is set to 'sdlcEvent'; got 'type'='%v'", me.Type)
 	}
 	if (me.SecurityContext != nil) && (string(me.Type) != "securityContext") {
-		return fmt.Errorf("'security_context' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'security_context' must not be specified unless 'type' is set to 'securityContext'; got 'type'='%v'", me.Type)
 	}
-	if (me.SecurityEvent == nil) && (string(me.Type) == "securityEvent") {
-		return fmt.Errorf("'security_event' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.SecurityContext == nil) && (string(me.Type) == "securityContext") {
+		return fmt.Errorf("'security_context' must be specified when 'type' is set to 'securityContext'; got 'type'='%v'", me.Type)
 	}
 	if (me.SecurityEvent != nil) && (string(me.Type) != "securityEvent") {
-		return fmt.Errorf("'security_event' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'security_event' must not be specified unless 'type' is set to 'securityEvent'; got 'type'='%v'", me.Type)
 	}
-	if (me.SmartscapeEdge == nil) && (string(me.Type) == "smartscapeEdge") {
-		return fmt.Errorf("'smartscape_edge' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.SecurityEvent == nil) && (string(me.Type) == "securityEvent") {
+		return fmt.Errorf("'security_event' must be specified when 'type' is set to 'securityEvent'; got 'type'='%v'", me.Type)
 	}
 	if (me.SmartscapeEdge != nil) && (string(me.Type) != "smartscapeEdge") {
-		return fmt.Errorf("'smartscape_edge' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'smartscape_edge' must not be specified unless 'type' is set to 'smartscapeEdge'; got 'type'='%v'", me.Type)
 	}
-	if (me.SmartscapeNode == nil) && (string(me.Type) == "smartscapeNode") {
-		return fmt.Errorf("'smartscape_node' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.SmartscapeEdge == nil) && (string(me.Type) == "smartscapeEdge") {
+		return fmt.Errorf("'smartscape_edge' must be specified when 'type' is set to 'smartscapeEdge'; got 'type'='%v'", me.Type)
 	}
 	if (me.SmartscapeNode != nil) && (string(me.Type) != "smartscapeNode") {
-		return fmt.Errorf("'smartscape_node' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'smartscape_node' must not be specified unless 'type' is set to 'smartscapeNode'; got 'type'='%v'", me.Type)
 	}
-	if (me.Technology == nil) && (string(me.Type) == "technology") {
-		return fmt.Errorf("'technology' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.SmartscapeNode == nil) && (string(me.Type) == "smartscapeNode") {
+		return fmt.Errorf("'smartscape_node' must be specified when 'type' is set to 'smartscapeNode'; got 'type'='%v'", me.Type)
 	}
 	if (me.Technology != nil) && (string(me.Type) != "technology") {
-		return fmt.Errorf("'technology' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'technology' must not be specified unless 'type' is set to 'technology'; got 'type'='%v'", me.Type)
 	}
-	if (me.ValueMetric == nil) && (string(me.Type) == "valueMetric") {
-		return fmt.Errorf("'value_metric' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.Technology == nil) && (string(me.Type) == "technology") {
+		return fmt.Errorf("'technology' must be specified when 'type' is set to 'technology'; got 'type'='%v'", me.Type)
 	}
 	if (me.ValueMetric != nil) && (string(me.Type) != "valueMetric") {
-		return fmt.Errorf("'value_metric' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'value_metric' must not be specified unless 'type' is set to 'valueMetric'; got 'type'='%v'", me.Type)
+	}
+	if (me.ValueMetric == nil) && (string(me.Type) == "valueMetric") {
+		return fmt.Errorf("'value_metric' must be specified when 'type' is set to 'valueMetric'; got 'type'='%v'", me.Type)
 	}
 	return nil
 }
@@ -475,6 +494,7 @@ func (me *Processor) UnmarshalHCL(decoder hcl.Decoder) error {
 		"fields_add":                      &me.FieldsAdd,
 		"fields_remove":                   &me.FieldsRemove,
 		"fields_rename":                   &me.FieldsRename,
+		"geo_lookup":                      &me.GeoLookup,
 		"histogram_metric":                &me.HistogramMetric,
 		"id":                              &me.ID,
 		"matcher":                         &me.Matcher,
