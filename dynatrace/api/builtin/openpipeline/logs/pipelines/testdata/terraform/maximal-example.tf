@@ -1,9 +1,9 @@
 resource "dynatrace_openpipeline_v2_logs_pipelines" "max-pipeline" {
   display_name = "Warning pipeline"
-  custom_id = "pipeline_Warning_pipeline_2773_tf_#name#"
+  custom_id    = "pipeline_Warning_pipeline_2773_tf_#name#"
   metadata_list {
     metadata {
-      entry_key = "environment"
+      entry_key   = "environment"
       entry_value = "production"
     }
   }
@@ -41,7 +41,7 @@ resource "dynatrace_openpipeline_v2_logs_pipelines" "max-pipeline" {
         fields_remove {
           fields = ["record.details"]
         }
-        enabled     = true
+        enabled = true
       }
       processor {
         type        = "fieldsRename"
@@ -57,7 +57,7 @@ resource "dynatrace_openpipeline_v2_logs_pipelines" "max-pipeline" {
             }
           }
         }
-        enabled     = true
+        enabled = true
       }
       processor {
         type        = "dql"
@@ -68,7 +68,7 @@ resource "dynatrace_openpipeline_v2_logs_pipelines" "max-pipeline" {
         dql {
           script = "fieldsAdd record.name = concat(record.title, \" - \", record.summary)"
         }
-        enabled     = true
+        enabled = true
       }
     }
   }
@@ -82,15 +82,15 @@ resource "dynatrace_openpipeline_v2_logs_pipelines" "max-pipeline" {
         davis {
           properties {
             property {
-              key = "event.type"
+              key   = "event.type"
               value = "CUSTOM_ALERT"
             }
             property {
-              key = "event.name"
+              key   = "event.name"
               value = "Warning detected"
             }
             property {
-              key = "event.description"
+              key   = "event.description"
               value = "Warning: {dims:record.summary}"
             }
           }
@@ -110,15 +110,23 @@ resource "dynatrace_openpipeline_v2_logs_pipelines" "max-pipeline" {
           metric_key = "warning.count"
           dimensions {
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.costcenter"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.product"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.security_context"
             }
             dimension {
+              extraction_type        = "field"
+              strategy               = "equals"
               source_field_name      = "record.category"
               destination_field_name = "warning_category"
             }
@@ -137,15 +145,23 @@ resource "dynatrace_openpipeline_v2_logs_pipelines" "max-pipeline" {
           default_value = 60
           dimensions {
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.costcenter"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.product"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.security_context"
             }
             dimension {
+              extraction_type        = "field"
+              strategy               = "equals"
               source_field_name      = "record.category"
               destination_field_name = "warning_category"
             }
@@ -179,7 +195,7 @@ resource "dynatrace_openpipeline_v2_logs_pipelines" "max-pipeline" {
         matcher     = "isNull(dt.security_context)"
         security_context {
           value {
-            type = "multiValueConstant"
+            type                 = "multiValueConstant"
             multi_value_constant = ["ACME1", "ACME2"]
           }
         }
@@ -211,19 +227,19 @@ resource "dynatrace_openpipeline_v2_logs_pipelines" "max-pipeline" {
         matcher     = "true"
         sdlc_event {
           event_category {
-            type = "constant"
+            type     = "constant"
             constant = "my-category"
           }
           event_provider {
-            type = "constant"
+            type     = "constant"
             constant = "my-provider"
           }
           event_status {
-            type = "constant"
+            type     = "constant"
             constant = "my-status"
           }
           event_type {
-            type = "constant"
+            type     = "constant"
             constant = "my-type"
           }
           field_extraction {
