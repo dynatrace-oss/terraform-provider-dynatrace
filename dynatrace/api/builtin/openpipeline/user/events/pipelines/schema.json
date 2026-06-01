@@ -61,6 +61,22 @@
 			],
 			"type": "enum"
 		},
+		"FieldExtractionStrategy": {
+			"description": "",
+			"displayName": "FieldExtractionStrategy",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Field name must match to be extracted",
+					"value": "equals"
+				},
+				{
+					"displayName": "Field name must start with pattern to be extracted",
+					"value": "startsWith"
+				}
+			],
+			"type": "enum"
+		},
 		"FieldExtractionType": {
 			"description": "",
 			"displayName": "FieldExtractionType",
@@ -97,17 +113,69 @@
 			],
 			"type": "enum"
 		},
+		"GeoOutputField": {
+			"description": "",
+			"displayName": "Geo output field",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "city.name",
+					"value": "cityName"
+				},
+				{
+					"displayName": "country.iso_code",
+					"value": "countryIsoCode"
+				},
+				{
+					"displayName": "country.name",
+					"value": "countryName"
+				},
+				{
+					"displayName": "location",
+					"value": "location"
+				},
+				{
+					"displayName": "continent.iso_code",
+					"value": "continentIsoCode"
+				},
+				{
+					"displayName": "continent.name",
+					"value": "continentName"
+				},
+				{
+					"displayName": "postal_code",
+					"value": "postalCode"
+				},
+				{
+					"displayName": "region.iso_code",
+					"value": "regionIsoCode"
+				},
+				{
+					"displayName": "region.name",
+					"value": "regionName"
+				},
+				{
+					"displayName": "subdivision.iso_codes",
+					"value": "subdivisionIsoCodes"
+				}
+			],
+			"type": "enum"
+		},
 		"GroupRole": {
 			"description": "",
 			"displayName": "Group Role",
 			"documentation": "",
 			"items": [
 				{
-					"displayName": "Can be used as a pre/post pipeline within a Pipeline Group's composition.",
+					"displayName": "Can be used as a pre/post pipeline within a Pipeline Group's basePipeline.",
 					"value": "memberPipeline"
 				},
 				{
 					"displayName": "Can be part of a Pipeline Group as a member pipeline and is subject to the group’s policies.",
+					"value": "basePipeline"
+				},
+				{
+					"displayName": "(Deprecated) Can be part of a Pipeline Group as a member pipeline and is subject to the group’s policies.",
 					"value": "compositionPipeline"
 				}
 			],
@@ -229,6 +297,10 @@
 				{
 					"displayName": "smartscapeEdge",
 					"value": "smartscapeEdge"
+				},
+				{
+					"displayName": "geoLookup",
+					"value": "geoLookup"
 				}
 			],
 			"type": "enum"
@@ -711,6 +783,7 @@
 						{
 							"type": "UNIQUE",
 							"uniqueProperties": [
+								"strategy",
 								"key"
 							]
 						}
@@ -767,6 +840,17 @@
 					"nullable": false,
 					"type": "text"
 				},
+				"strategy": {
+					"description": "",
+					"displayName": "Strategy for field extraction",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/FieldExtractionStrategy"
+					}
+				},
 				"value": {
 					"constraints": [
 						{
@@ -784,10 +868,24 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "equals",
+								"property": "strategy",
+								"type": "EQUALS"
+							},
+							{
+								"property": "strategy",
+								"type": "NULL"
+							}
+						],
+						"type": "OR"
+					},
 					"type": "text"
 				}
 			},
-			"summaryPattern": "{key} - {value}",
+			"summaryPattern": "{strategy} - {key} - {value}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -918,9 +1016,28 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"precondition": {
-						"expectedValue": "constant",
-						"property": "extractionType",
-						"type": "EQUALS"
+						"preconditions": [
+							{
+								"preconditions": [
+									{
+										"expectedValue": "equals",
+										"property": "strategy",
+										"type": "EQUALS"
+									},
+									{
+										"property": "strategy",
+										"type": "NULL"
+									}
+								],
+								"type": "OR"
+							},
+							{
+								"expectedValue": "constant",
+								"property": "extractionType",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
 					},
 					"type": "text"
 				},
@@ -939,9 +1056,28 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"precondition": {
-						"expectedValue": "constant",
-						"property": "extractionType",
-						"type": "EQUALS"
+						"preconditions": [
+							{
+								"preconditions": [
+									{
+										"expectedValue": "equals",
+										"property": "strategy",
+										"type": "EQUALS"
+									},
+									{
+										"property": "strategy",
+										"type": "NULL"
+									}
+								],
+								"type": "OR"
+							},
+							{
+								"expectedValue": "constant",
+								"property": "extractionType",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
 					},
 					"type": "text"
 				},
@@ -960,9 +1096,28 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
 					"precondition": {
-						"expectedValue": "field",
-						"property": "extractionType",
-						"type": "EQUALS"
+						"preconditions": [
+							{
+								"preconditions": [
+									{
+										"expectedValue": "equals",
+										"property": "strategy",
+										"type": "EQUALS"
+									},
+									{
+										"property": "strategy",
+										"type": "NULL"
+									}
+								],
+								"type": "OR"
+							},
+							{
+								"expectedValue": "field",
+								"property": "extractionType",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
 					},
 					"type": "text"
 				},
@@ -984,9 +1139,28 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
 					"precondition": {
-						"expectedValue": "field",
-						"property": "extractionType",
-						"type": "EQUALS"
+						"preconditions": [
+							{
+								"preconditions": [
+									{
+										"expectedValue": "equals",
+										"property": "strategy",
+										"type": "EQUALS"
+									},
+									{
+										"property": "strategy",
+										"type": "NULL"
+									}
+								],
+								"type": "OR"
+							},
+							{
+								"expectedValue": "field",
+								"property": "extractionType",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
 					},
 					"type": "text"
 				},
@@ -998,6 +1172,20 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "equals",
+								"property": "strategy",
+								"type": "EQUALS"
+							},
+							{
+								"property": "strategy",
+								"type": "NULL"
+							}
+						],
+						"type": "OR"
+					},
 					"type": {
 						"$ref": "#/enums/FieldValueExtractionType"
 					}
@@ -1020,14 +1208,35 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"precondition": {
-						"expectedValue": "field",
-						"property": "extractionType",
-						"type": "EQUALS"
+						"preconditions": [
+							{
+								"expectedValue": "field",
+								"property": "extractionType",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "startsWith",
+								"property": "strategy",
+								"type": "EQUALS"
+							}
+						],
+						"type": "OR"
 					},
 					"type": "text"
+				},
+				"strategy": {
+					"description": "",
+					"displayName": "Strategy for field extraction",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/FieldExtractionStrategy"
+					}
 				}
 			},
-			"summaryPattern": "{extractionType} - {sourceFieldName} - {destinationFieldName} - {defaultValue} - {constantFieldName} - {constantValue}",
+			"summaryPattern": "{strategy} - {extractionType} - {sourceFieldName} - {destinationFieldName} - {defaultValue} - {constantFieldName} - {constantValue}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -1295,6 +1504,70 @@
 					"type": {
 						"$ref": "#/enums/AssignmentType"
 					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"GeoLookupAttributes": {
+			"description": "",
+			"displayName": "GeoLookupAttributes",
+			"documentation": "",
+			"properties": {
+				"geoFieldPrefix": {
+					"constraints": [
+						{
+							"maxLength": 255,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "Optional prefix for all output geo fields. If specified, output fields will be prefixed as \u003cprefix\u003e.geo.\u003cfield\u003e. If omitted, output fields will be geo.\u003cfield\u003e.",
+					"displayName": "Geo field prefix",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"ipFieldKey": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 255,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The field key that contains the IP address to be resolved to a geo location.",
+					"displayName": "IP field key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"outputFields": {
+					"description": "The geo fields to enrich the record with. If empty or not specified, the default fields (city name, country ISO code, country name, location) are used.",
+					"displayName": "Output fields",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/enums/GeoOutputField"
+						}
+					},
+					"maxObjects": 10,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
 				}
 			},
 			"summaryPattern": "",
@@ -1657,6 +1930,22 @@
 						"$ref": "#/types/FieldsRenameAttributes"
 					}
 				},
+				"geoLookup": {
+					"description": "",
+					"displayName": "Geo lookup processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "geoLookup",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/GeoLookupAttributes"
+					}
+				},
 				"histogramMetric": {
 					"description": "",
 					"displayName": "Histogram metric processor attributes",
@@ -1704,7 +1993,7 @@
 							"type": "NOT_BLANK"
 						},
 						{
-							"maxLength": 1500,
+							"maxLength": 4096,
 							"type": "LENGTH"
 						}
 					],
@@ -2667,6 +2956,20 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "equals",
+								"property": "strategy",
+								"type": "EQUALS"
+							},
+							{
+								"property": "strategy",
+								"type": "NULL"
+							}
+						],
+						"type": "OR"
+					},
 					"type": "text"
 				},
 				"referencedFieldName": {
@@ -2687,9 +2990,20 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "text"
+				},
+				"strategy": {
+					"description": "",
+					"displayName": "Strategy for field extraction",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/FieldExtractionStrategy"
+					}
 				}
 			},
-			"summaryPattern": "{fieldName} - {referencedFieldName}",
+			"summaryPattern": "{strategy} - {fieldName} - {referencedFieldName}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -2763,6 +3077,7 @@
 						{
 							"type": "UNIQUE",
 							"uniqueProperties": [
+								"strategy",
 								"fieldName",
 								"referencedFieldName"
 							]
@@ -3034,7 +3349,7 @@
 							"type": "NOT_BLANK"
 						},
 						{
-							"maxLength": 1500,
+							"maxLength": 4096,
 							"minLength": 1,
 							"type": "LENGTH"
 						}
@@ -3233,5 +3548,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.55"
+	"version": "1.65"
 }
