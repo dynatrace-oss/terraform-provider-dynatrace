@@ -133,7 +133,7 @@ resource "dynatrace_openpipeline_v2_events_security_pipelines" "example2" {
   group_role = "memberPipeline"
 }
 
-resource "dynatrace_openpipeline_v2_events_sdlc_pipelinegroups" "example" {
+resource "dynatrace_openpipeline_v2_events_security_pipelinegroups" "example" {
   display_name = "#name#"
   composition {
     pipeline_group_composition {
