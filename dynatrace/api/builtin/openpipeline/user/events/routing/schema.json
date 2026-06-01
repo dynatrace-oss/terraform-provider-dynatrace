@@ -135,7 +135,7 @@
 							"type": "NOT_BLANK"
 						},
 						{
-							"maxLength": 1500,
+							"maxLength": 4096,
 							"type": "LENGTH"
 						}
 					],
@@ -183,5 +183,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.55"
+	"version": "1.65"
 }
