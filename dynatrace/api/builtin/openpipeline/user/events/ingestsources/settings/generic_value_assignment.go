@@ -73,11 +73,14 @@ func (me *GenericValueAssignment) HandlePreconditions() error {
 	if (me.Constant == nil) && (string(me.Type) == "constant") {
 		me.Constant = new("")
 	}
-	if (me.Field == nil) && (string(me.Type) == "field") {
-		return fmt.Errorf("'field' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.Constant != nil) && (string(me.Type) != "constant") {
+		return fmt.Errorf("'constant' must not be specified unless 'type' is set to 'constant'; got 'type'='%v'", me.Type)
 	}
 	if (me.Field != nil) && (string(me.Type) != "field") {
-		return fmt.Errorf("'field' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'field' must not be specified unless 'type' is set to 'field'; got 'type'='%v'", me.Type)
+	}
+	if (me.Field == nil) && (string(me.Type) == "field") {
+		return fmt.Errorf("'field' must be specified when 'type' is set to 'field'; got 'type'='%v'", me.Type)
 	}
 	// ---- MultiValueConstant []string -> {"expectedValue":"multiValueConstant","property":"type","type":"EQUALS"}
 	return nil
