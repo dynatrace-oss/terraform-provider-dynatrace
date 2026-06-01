@@ -115,11 +115,14 @@ func (me *Settings) HandlePreconditions() error {
 	if (me.PathSegment == nil) && (string(me.SourceType) == "http") {
 		me.PathSegment = new("")
 	}
-	if (me.Source == nil) && (string(me.SourceType) == "extension") {
-		return fmt.Errorf("'source' must be specified if 'source_type' is set to '%v'", me.SourceType)
+	if (me.PathSegment != nil) && (string(me.SourceType) != "http") {
+		return fmt.Errorf("'path_segment' must not be specified unless 'source_type' is set to 'http'; got 'source_type'='%v'", me.SourceType)
 	}
 	if (me.Source != nil) && (string(me.SourceType) != "extension") {
-		return fmt.Errorf("'source' must not be specified if 'source_type' is set to '%v'", me.SourceType)
+		return fmt.Errorf("'source' must not be specified unless 'source_type' is set to 'extension'; got 'source_type'='%v'", me.SourceType)
+	}
+	if (me.Source == nil) && (string(me.SourceType) == "extension") {
+		return fmt.Errorf("'source' must be specified when 'source_type' is set to 'extension'; got 'source_type'='%v'", me.SourceType)
 	}
 	return nil
 }
