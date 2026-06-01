@@ -187,18 +187,12 @@
 					"type": "boolean"
 				},
 				"pipelineId": {
-					"constraints": [
-						{
-							"maxLength": 500,
-							"minLength": 1,
-							"type": "LENGTH"
-						}
-					],
-					"default": "",
+					"default": "00000000-0000-0000-0000-000000000000",
 					"description": "",
 					"displayName": "Pipeline ID",
 					"documentation": "",
 					"maxObjects": 1,
+					"migrationPattern": "{pipelineId | objectIdtoUUID}",
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"precondition": {
@@ -206,7 +200,8 @@
 						"property": "isPipelinePlaceholder",
 						"type": "EQUALS"
 					},
-					"type": "text"
+					"referencedType": "builtin:openpipeline.spans.pipelines",
+					"type": "setting"
 				},
 				"stages": {
 					"description": "",
@@ -300,5 +295,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.55"
+	"version": "1.65"
 }
