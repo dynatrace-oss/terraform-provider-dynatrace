@@ -99,11 +99,11 @@ func (me *SmartscapeNodeAttributes) MarshalHCL(properties hcl.Properties) error 
 }
 
 func (me *SmartscapeNodeAttributes) HandlePreconditions() error {
-	if (me.NodeName == nil) && (me.ExtractNode) {
-		return fmt.Errorf("'node_name' must be specified if 'extract_node' is set to '%v'", me.ExtractNode)
-	}
 	if (me.NodeName != nil) && (!me.ExtractNode) {
-		return fmt.Errorf("'node_name' must not be specified if 'extract_node' is set to '%v'", me.ExtractNode)
+		return fmt.Errorf("'node_name' must not be specified unless 'extract_node' is set to 'true'; got 'extract_node'='%v'", me.ExtractNode)
+	}
+	if (me.NodeName == nil) && (me.ExtractNode) {
+		return fmt.Errorf("'node_name' must be specified when 'extract_node' is set to 'true'; got 'extract_node'='%v'", me.ExtractNode)
 	}
 	// ---- FieldsToExtract SmartscapeFieldExtractionEntries -> {"expectedValue":true,"property":"extractNode","type":"EQUALS"}
 	// ---- StaticEdgesToExtract SmartscapeStaticEdgeExtractionEntries -> {"expectedValue":true,"property":"extractNode","type":"EQUALS"}
