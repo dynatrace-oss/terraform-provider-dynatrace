@@ -341,6 +341,9 @@ func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
+// Validate submits v to the Settings 2.0 API with validateOnly=true, which runs
+// all synchronous schema validators without persisting any object. It returns an
+// error if the payload violates the schema; nil means the payload is valid.
 func (me *service[T]) Validate(ctx context.Context, v T) error {
 	soc := SettingsObjectCreate{
 		SchemaID:      me.schemaID,
@@ -353,11 +356,11 @@ func (me *service[T]) Validate(ctx context.Context, v T) error {
 	}
 
 	var req rest.Request
-	if me.skipRepairInput() {
-		req = me.client.Post(ctx, "/api/v2/settings/objects?validateOnly=true", []SettingsObjectCreate{soc}).Expect(200)
-	} else {
-		req = me.client.Post(ctx, "/api/v2/settings/objects?validateOnly=true&repairInput=true", []SettingsObjectCreate{soc}).Expect(200)
+	postUrl := "/api/v2/settings/objects?validateOnly=true"
+	if !me.skipRepairInput() {
+		postUrl = postUrl + "&repairInput=true"
 	}
+	req = me.client.Post(ctx, postUrl, []SettingsObjectCreate{soc}).Expect(200)
 
 	return req.Finish()
 }
