@@ -85,16 +85,16 @@ func (me *PipelineGroupComposition) MarshalHCL(properties hcl.Properties) error 
 
 func (me *PipelineGroupComposition) HandlePreconditions() error {
 	if (me.PipelineID == nil) && (!me.IsPipelinePlaceholder) {
-		return fmt.Errorf("'pipeline_id' must be specified if 'is_pipeline_placeholder' is set to '%v'", me.IsPipelinePlaceholder)
+		me.PipelineID = new("")
 	}
 	if (me.PipelineID != nil) && (me.IsPipelinePlaceholder) {
-		return fmt.Errorf("'pipeline_id' must not be specified if 'is_pipeline_placeholder' is set to '%v'", me.IsPipelinePlaceholder)
-	}
-	if (me.Stages == nil) && (!me.IsPipelinePlaceholder) {
-		return fmt.Errorf("'stages' must be specified if 'is_pipeline_placeholder' is set to '%v'", me.IsPipelinePlaceholder)
+		return fmt.Errorf("'pipeline_id' must not be specified unless 'is_pipeline_placeholder' is set to 'false'; got 'is_pipeline_placeholder'='%v'", me.IsPipelinePlaceholder)
 	}
 	if (me.Stages != nil) && (me.IsPipelinePlaceholder) {
-		return fmt.Errorf("'stages' must not be specified if 'is_pipeline_placeholder' is set to '%v'", me.IsPipelinePlaceholder)
+		return fmt.Errorf("'stages' must not be specified unless 'is_pipeline_placeholder' is set to 'false'; got 'is_pipeline_placeholder'='%v'", me.IsPipelinePlaceholder)
+	}
+	if (me.Stages == nil) && (!me.IsPipelinePlaceholder) {
+		return fmt.Errorf("'stages' must be specified when 'is_pipeline_placeholder' is set to 'false'; got 'is_pipeline_placeholder'='%v'", me.IsPipelinePlaceholder)
 	}
 	return nil
 }
