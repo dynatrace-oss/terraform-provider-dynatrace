@@ -116,6 +116,11 @@ func (me *FieldExtractionEntry) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *FieldExtractionEntry) HandlePreconditions() error {
+	empty := FieldExtractionEntry{}
+	if *me == empty {
+		// ignore empty item, else it will error on missing conditional required fields
+		return nil
+	}
 	if (me.ConstantFieldName == nil) && (((me.Strategy != nil && string(*me.Strategy) == "equals") || (me.Strategy == nil)) && (me.ExtractionType != nil && string(*me.ExtractionType) == "constant")) {
 		me.ConstantFieldName = new("")
 	}
