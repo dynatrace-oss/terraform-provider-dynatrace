@@ -62,11 +62,14 @@ func (me *StaticRouting) HandlePreconditions() error {
 	if (me.PipelineID == nil) && (string(me.PipelineType) == "custom") {
 		me.PipelineID = new("")
 	}
-	if (me.BuiltinPipelineID == nil) && (string(me.PipelineType) == "builtin") {
-		return fmt.Errorf("'builtin_pipeline_id' must be specified if 'pipeline_type' is set to '%v'", me.PipelineType)
-	}
 	if (me.BuiltinPipelineID != nil) && (string(me.PipelineType) != "builtin") {
-		return fmt.Errorf("'builtin_pipeline_id' must not be specified if 'pipeline_type' is set to '%v'", me.PipelineType)
+		return fmt.Errorf("'builtin_pipeline_id' must not be specified unless 'pipeline_type' is set to 'builtin'; got 'pipeline_type'='%v'", me.PipelineType)
+	}
+	if (me.BuiltinPipelineID == nil) && (string(me.PipelineType) == "builtin") {
+		return fmt.Errorf("'builtin_pipeline_id' must be specified when 'pipeline_type' is set to 'builtin'; got 'pipeline_type'='%v'", me.PipelineType)
+	}
+	if (me.PipelineID != nil) && (string(me.PipelineType) != "custom") {
+		return fmt.Errorf("'pipeline_id' must not be specified unless 'pipeline_type' is set to 'custom'; got 'pipeline_type'='%v'", me.PipelineType)
 	}
 	return nil
 }
