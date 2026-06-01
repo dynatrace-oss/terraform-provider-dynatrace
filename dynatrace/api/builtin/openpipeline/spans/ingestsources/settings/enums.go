@@ -39,6 +39,16 @@ var AssignmentTypes = struct {
 	"multiValueConstant",
 }
 
+type FieldExtractionStrategy string
+
+var FieldExtractionStrategies = struct {
+	Equals     FieldExtractionStrategy
+	Startswith FieldExtractionStrategy
+}{
+	"equals",
+	"startsWith",
+}
+
 type FieldExtractionType string
 
 var FieldExtractionTypes = struct {
@@ -59,6 +69,32 @@ var FieldValueExtractionTypes = struct {
 }{
 	"constant",
 	"field",
+}
+
+type GeoOutputField string
+
+var GeoOutputFields = struct {
+	Cityname            GeoOutputField
+	Continentisocode    GeoOutputField
+	Continentname       GeoOutputField
+	Countryisocode      GeoOutputField
+	Countryname         GeoOutputField
+	Location            GeoOutputField
+	Postalcode          GeoOutputField
+	Regionisocode       GeoOutputField
+	Regionname          GeoOutputField
+	Subdivisionisocodes GeoOutputField
+}{
+	"cityName",
+	"continentIsoCode",
+	"continentName",
+	"countryIsoCode",
+	"countryName",
+	"location",
+	"postalCode",
+	"regionIsoCode",
+	"regionName",
+	"subdivisionIsoCodes",
 }
 
 type IngestSourceType string
@@ -105,6 +141,7 @@ var ProcessorTypes = struct {
 	Fieldsadd                    ProcessorType
 	Fieldsremove                 ProcessorType
 	Fieldsrename                 ProcessorType
+	Geolookup                    ProcessorType
 	Histogrammetric              ProcessorType
 	Nostorage                    ProcessorType
 	Productallocation            ProcessorType
@@ -130,6 +167,7 @@ var ProcessorTypes = struct {
 	"fieldsAdd",
 	"fieldsRemove",
 	"fieldsRename",
+	"geoLookup",
 	"histogramMetric",
 	"noStorage",
 	"productAllocation",
