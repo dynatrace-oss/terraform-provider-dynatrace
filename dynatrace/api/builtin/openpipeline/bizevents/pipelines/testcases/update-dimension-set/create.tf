@@ -12,10 +12,14 @@ resource "dynatrace_openpipeline_v2_bizevents_pipelines" "pipeline" {
           metric_key = "warning.count"
           dimensions {
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.costcenter"
             }
             # This dimension is updated in this test case
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.product"
             }
           }

@@ -1,6 +1,6 @@
 resource "dynatrace_openpipeline_v2_security_events_pipelines" "pipeline" {
   display_name = "Warning pipeline"
-  custom_id = "pipeline_Warning_pipeline_2773_tf_#name#"
+  custom_id    = "pipeline_Warning_pipeline_2773_tf_#name#"
   metric_extraction {
     processors {
       processor {
@@ -12,10 +12,14 @@ resource "dynatrace_openpipeline_v2_security_events_pipelines" "pipeline" {
           metric_key = "warning.count"
           dimensions {
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.costcenter"
             }
             # This dimension is updated in this test case
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.product"
             }
           }

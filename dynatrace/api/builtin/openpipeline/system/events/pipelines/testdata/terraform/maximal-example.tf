@@ -1,9 +1,9 @@
 resource "dynatrace_openpipeline_v2_system_events_pipelines" "max-pipeline" {
   display_name = "Warning pipeline"
-  custom_id = "pipeline_Warning_pipeline_2773_tf_#name#"
+  custom_id    = "pipeline_Warning_pipeline_2773_tf_#name#"
   metadata_list {
     metadata {
-      entry_key = "environment"
+      entry_key   = "environment"
       entry_value = "production"
     }
   }
@@ -17,15 +17,15 @@ resource "dynatrace_openpipeline_v2_system_events_pipelines" "max-pipeline" {
         davis {
           properties {
             property {
-              key = "event.type"
+              key   = "event.type"
               value = "CUSTOM_ALERT"
             }
             property {
-              key = "event.name"
+              key   = "event.name"
               value = "Warning detected"
             }
             property {
-              key = "event.description"
+              key   = "event.description"
               value = "Warning: {dims:record.summary}"
             }
           }
@@ -45,15 +45,23 @@ resource "dynatrace_openpipeline_v2_system_events_pipelines" "max-pipeline" {
           metric_key = "warning.count"
           dimensions {
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.costcenter"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.product"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.security_context"
             }
             dimension {
+              extraction_type        = "field"
+              strategy               = "equals"
               source_field_name      = "record.category"
               destination_field_name = "warning_category"
             }
@@ -72,15 +80,23 @@ resource "dynatrace_openpipeline_v2_system_events_pipelines" "max-pipeline" {
           default_value = 60
           dimensions {
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.costcenter"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.product"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.security_context"
             }
             dimension {
+              extraction_type        = "field"
+              strategy               = "equals"
               source_field_name      = "record.category"
               destination_field_name = "warning_category"
             }
