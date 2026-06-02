@@ -23,11 +23,10 @@ import (
 )
 
 type Settings struct {
-	Interface_saturation_threshold float64 `json:"interface.saturation.threshold,omitempty"` // (Required v305+) The threshold at which a network device interface is deemed to be saturated.
-	Show_monitoring_candidates     bool    `json:"show.monitoring.candidates"`               // When set to true, the app will display monitoring candidates in the Hosts table
-	Show_standalone_hosts          bool    `json:"show.standalone.hosts"`                    // When set to true, the app will display app only hosts in the Hosts table
-	Invex_dql_query_limit          int     `json:"invex.dql.query.limit,omitempty"`          // Limit the number of results returned from Grail for Host, Network device, and Extensions entities.
-	Invex_dql_sort_limit           int     `json:"invex.dql.sort.limit,omitempty"`           // Limit for server-side sorting in Host, Network device and Extensions inventories. Sorting is disabled when the row count exceeds the configured threshold.
+	Interface_saturation_threshold float64 `json:"interface.saturation.threshold"` // The threshold at which a network device interface is deemed to be saturated.
+	Invex_dql_query_limit          int     `json:"invex.dql.query.limit"`          // Limit the number of results returned from Grail for Host, Network device, and Extensions entities.
+	Show_monitoring_candidates     bool    `json:"show.monitoring.candidates"`     // When set to true, the app will display monitoring candidates in the Hosts table
+	Show_standalone_hosts          bool    `json:"show.standalone.hosts"`          // When set to true, the app will display app only hosts in the Hosts table
 }
 
 func (me *Settings) Name() string {
@@ -39,7 +38,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"interface_saturation_threshold": {
 			Type:        schema.TypeFloat,
 			Description: "The threshold at which a network device interface is deemed to be saturated.",
-			Optional:    true,
+			Required:    true,
+		},
+		"invex_dql_query_limit": {
+			Type:        schema.TypeInt,
+			Description: "Limit the number of results returned from Grail for Host, Network device, and Extensions entities.",
+			Required:    true,
 		},
 		"show_monitoring_candidates": {
 			Type:        schema.TypeBool,
@@ -51,37 +55,23 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "When set to true, the app will display app only hosts in the Hosts table",
 			Required:    true,
 		},
-		"invex_dql_query_limit": {
-			Type:        schema.TypeInt,
-			Description: "Limit the number of results returned from Grail for Host, Network device, and Extensions entities.",
-			Optional:    true,
-			Default:     25000,
-		},
-		"invex_dql_sort_limit": {
-			Type:        schema.TypeInt,
-			Description: "Limit for server-side sorting in Host, Network device and Extensions inventories. Sorting is disabled when the row count exceeds the configured threshold.",
-			Optional:    true,
-			Default:     25000,
-		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"interface_saturation_threshold": me.Interface_saturation_threshold,
+		"invex_dql_query_limit":          me.Invex_dql_query_limit,
 		"show_monitoring_candidates":     me.Show_monitoring_candidates,
 		"show_standalone_hosts":          me.Show_standalone_hosts,
-		"invex_dql_query_limit":          me.Invex_dql_query_limit,
-		"invex_dql_sort_limit":           me.Invex_dql_sort_limit,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"interface_saturation_threshold": &me.Interface_saturation_threshold,
+		"invex_dql_query_limit":          &me.Invex_dql_query_limit,
 		"show_monitoring_candidates":     &me.Show_monitoring_candidates,
 		"show_standalone_hosts":          &me.Show_standalone_hosts,
-		"invex_dql_query_limit":          &me.Invex_dql_query_limit,
-		"invex_dql_sort_limit":           &me.Invex_dql_sort_limit,
 	})
 }
