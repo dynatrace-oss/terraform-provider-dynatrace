@@ -19,10 +19,10 @@ package fullwebrequest
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"golang.org/x/exp/slices"
 )
 
 type ReducedTransformations []*ReducedTransformation
@@ -47,45 +47,46 @@ func (me *ReducedTransformations) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeSlice("transformation", me)
 }
 
+// Transformation. Transforms a detected context root value before it contributes to the Service Id.
 type ReducedTransformation struct {
-	IncludeHexNumbers  *bool                         `json:"includeHexNumbers,omitempty"` // include hexadecimal numbers
-	MinDigitCount      *int                          `json:"minDigitCount,omitempty"`     // min digit count
-	Prefix             *string                       `json:"prefix,omitempty"`
-	ReplacementValue   *string                       `json:"replacementValue,omitempty"` // replacement
-	Suffix             *string                       `json:"suffix,omitempty"`
-	TransformationType ContextRootTransformationType `json:"transformationType"` // Possible Values: `BEFORE`, `REMOVE_CREDIT_CARDS`, `REMOVE_IBANS`, `REMOVE_IPS`, `REMOVE_NUMBERS`, `REPLACE_BETWEEN`
+	IncludeHexNumbers  *bool                         `json:"includeHexNumbers,omitempty"` // Whether to also remove hexadecimal numbers (sequences of at least `minDigitCount` hexadecimal digits preceded by '0x'). It is used only when the transformation type is `REMOVE_NUMBERS`.
+	MinDigitCount      *int                          `json:"minDigitCount,omitempty"`     // The minimum number of digits that a numeric sequence must have to be removed. It is used only when the transformation type is `REMOVE_NUMBERS`.
+	Prefix             *string                       `json:"prefix,omitempty"`            // The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.
+	ReplacementValue   *string                       `json:"replacementValue,omitempty"`  // The text that replaces the part between `prefix` and `suffix`. It is used only when the transformation type is `REPLACE_BETWEEN`.
+	Suffix             *string                       `json:"suffix,omitempty"`            // The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.
+	TransformationType ContextRootTransformationType `json:"transformationType"`          // Defines what kind of transformation will be applied on the original value. Possible values: `BEFORE`, `REMOVE_CREDIT_CARDS`, `REMOVE_IBANS`, `REMOVE_IPS`, `REMOVE_NUMBERS`, `REPLACE_BETWEEN`
 }
 
 func (me *ReducedTransformation) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"include_hex_numbers": {
 			Type:        schema.TypeBool,
-			Description: "include hexadecimal numbers",
+			Description: "Whether to also remove hexadecimal numbers (sequences of at least `minDigitCount` hexadecimal digits preceded by '0x'). It is used only when the transformation type is `REMOVE_NUMBERS`.",
 			Optional:    true, // precondition
 		},
 		"min_digit_count": {
 			Type:        schema.TypeInt,
-			Description: "min digit count",
+			Description: "The minimum number of digits that a numeric sequence must have to be removed. It is used only when the transformation type is `REMOVE_NUMBERS`.",
 			Optional:    true, // precondition
 		},
 		"prefix": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.",
 			Optional:    true, // nullable & precondition
 		},
 		"replacement_value": {
 			Type:        schema.TypeString,
-			Description: "replacement",
+			Description: "The text that replaces the part between `prefix` and `suffix`. It is used only when the transformation type is `REPLACE_BETWEEN`.",
 			Optional:    true, // nullable & precondition
 		},
 		"suffix": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.",
 			Optional:    true, // nullable & precondition
 		},
 		"transformation_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `BEFORE`, `REMOVE_CREDIT_CARDS`, `REMOVE_IBANS`, `REMOVE_IPS`, `REMOVE_NUMBERS`, `REPLACE_BETWEEN`",
+			Description: "Defines what kind of transformation will be applied on the original value. Possible values: `BEFORE`, `REMOVE_CREDIT_CARDS`, `REMOVE_IBANS`, `REMOVE_IPS`, `REMOVE_NUMBERS`, `REPLACE_BETWEEN`",
 			Required:    true,
 		},
 	}
@@ -103,20 +104,26 @@ func (me *ReducedTransformation) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *ReducedTransformation) HandlePreconditions() error {
-	if me.IncludeHexNumbers == nil && (string(me.TransformationType) == "REMOVE_NUMBERS") {
+	if (me.IncludeHexNumbers == nil) && (string(me.TransformationType) == "REMOVE_NUMBERS") {
 		me.IncludeHexNumbers = new(false)
 	}
-	if me.MinDigitCount == nil && (string(me.TransformationType) == "REMOVE_NUMBERS") {
-		return fmt.Errorf("'min_digit_count' must be specified if 'transformation_type' is set to '%v'", me.TransformationType)
+	if (me.IncludeHexNumbers != nil) && (string(me.TransformationType) != "REMOVE_NUMBERS") {
+		return fmt.Errorf("'include_hex_numbers' must not be specified unless 'transformation_type' is set to 'REMOVE_NUMBERS'; got 'transformation_type'='%v'", me.TransformationType)
 	}
-	if me.Prefix == nil && slices.Contains([]string{"REPLACE_BETWEEN"}, string(me.TransformationType)) {
-		return fmt.Errorf("'prefix' must be specified if 'transformation_type' is set to '%v'", me.TransformationType)
+	if (me.MinDigitCount != nil) && (string(me.TransformationType) != "REMOVE_NUMBERS") {
+		return fmt.Errorf("'min_digit_count' must not be specified unless 'transformation_type' is set to 'REMOVE_NUMBERS'; got 'transformation_type'='%v'", me.TransformationType)
 	}
-	if me.ReplacementValue == nil && (string(me.TransformationType) == "REPLACE_BETWEEN") {
-		return fmt.Errorf("'replacement_value' must be specified if 'transformation_type' is set to '%v'", me.TransformationType)
+	if (me.MinDigitCount == nil) && (string(me.TransformationType) == "REMOVE_NUMBERS") {
+		return fmt.Errorf("'min_digit_count' must be specified when 'transformation_type' is set to 'REMOVE_NUMBERS'; got 'transformation_type'='%v'", me.TransformationType)
 	}
-	if me.Suffix == nil && slices.Contains([]string{"BEFORE", "REPLACE_BETWEEN"}, string(me.TransformationType)) {
-		return fmt.Errorf("'suffix' must be specified if 'transformation_type' is set to '%v'", me.TransformationType)
+	if (me.Prefix != nil) && (!slices.Contains([]string{"REPLACE_BETWEEN"}, string(me.TransformationType))) {
+		return fmt.Errorf("'prefix' must not be specified unless 'transformation_type' is one of ['REPLACE_BETWEEN']; got 'transformation_type'='%v'", me.TransformationType)
+	}
+	if (me.ReplacementValue != nil) && (string(me.TransformationType) != "REPLACE_BETWEEN") {
+		return fmt.Errorf("'replacement_value' must not be specified unless 'transformation_type' is set to 'REPLACE_BETWEEN'; got 'transformation_type'='%v'", me.TransformationType)
+	}
+	if (me.Suffix != nil) && (!slices.Contains([]string{"BEFORE", "REPLACE_BETWEEN"}, string(me.TransformationType))) {
+		return fmt.Errorf("'suffix' must not be specified unless 'transformation_type' is one of ['BEFORE', 'REPLACE_BETWEEN']; got 'transformation_type'='%v'", me.TransformationType)
 	}
 	return nil
 }

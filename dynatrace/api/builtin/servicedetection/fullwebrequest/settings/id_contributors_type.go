@@ -22,17 +22,18 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// idContributorsType. Defines which detected values contribute to the Service Id for matching full web requests.
 type IdContributorsType struct {
-	ApplicationID *ServiceIdContributor `json:"applicationId"` // Application identifier
+	ApplicationID *ServiceIdContributor `json:"applicationId"` // Contribute to the Service Id calculation from the detected application identifier.. You can keep the detected value, override it with a constant value, or apply transformations before it contributes to the Service Id.
 	ContextRoot   *ContextIdContributor `json:"contextRoot"`   // The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**.
-	ServerName    *ServiceIdContributor `json:"serverName"`    // Server Name
+	ServerName    *ServiceIdContributor `json:"serverName"`    // Contribute to the Service Id calculation from the detected server name.
 }
 
 func (me *IdContributorsType) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"application_id": {
 			Type:        schema.TypeList,
-			Description: "Application identifier",
+			Description: "Contribute to the Service Id calculation from the detected application identifier.. You can keep the detected value, override it with a constant value, or apply transformations before it contributes to the Service Id.",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(ServiceIdContributor).Schema()},
 			MinItems:    1,
@@ -48,7 +49,7 @@ func (me *IdContributorsType) Schema() map[string]*schema.Schema {
 		},
 		"server_name": {
 			Type:        schema.TypeList,
-			Description: "Server Name",
+			Description: "Contribute to the Service Id calculation from the detected server name.",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(ServiceIdContributor).Schema()},
 			MinItems:    1,
