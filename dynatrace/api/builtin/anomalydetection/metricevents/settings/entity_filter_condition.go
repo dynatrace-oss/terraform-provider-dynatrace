@@ -58,8 +58,8 @@ func (me *EntityFilterConditions) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type EntityFilterCondition struct {
-	Operator EntityFilterOperator `json:"operator"` // Possible Values: `CONTAINS_CASE_INSENSITIVE`, `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_INSENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`
-	Type     EntityFilterType     `json:"type"`     // Possible Values: `CUSTOM_DEVICE_GROUP_NAME`, `ENTITY_ID`, `HOST_GROUP_NAME`, `HOST_NAME`, `MANAGEMENT_ZONE`, `NAME`, `PROCESS_GROUP_ID`, `PROCESS_GROUP_NAME`, `TAG`
+	Operator EntityFilterOperator `json:"operator"` // Possible values: `CONTAINS_CASE_INSENSITIVE`, `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_INSENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`
+	Type     EntityFilterType     `json:"type"`     // Filter type. Possible values: `CUSTOM_DEVICE_GROUP_NAME`, `ENTITY_ID`, `HOST_GROUP_NAME`, `HOST_NAME`, `MANAGEMENT_ZONE`, `NAME`, `PROCESS_GROUP_ID`, `PROCESS_GROUP_NAME`, `TAG`
 	Value    string               `json:"value"`
 }
 
@@ -67,17 +67,17 @@ func (me *EntityFilterCondition) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"operator": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `CONTAINS_CASE_INSENSITIVE`, `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_INSENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`",
+			Description: "Possible values: `CONTAINS_CASE_INSENSITIVE`, `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_INSENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`",
 			Required:    true,
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `CUSTOM_DEVICE_GROUP_NAME`, `ENTITY_ID`, `HOST_GROUP_NAME`, `HOST_NAME`, `MANAGEMENT_ZONE`, `NAME`, `PROCESS_GROUP_ID`, `PROCESS_GROUP_NAME`, `TAG`",
+			Description: "Filter type. Possible values: `CUSTOM_DEVICE_GROUP_NAME`, `ENTITY_ID`, `HOST_GROUP_NAME`, `HOST_NAME`, `MANAGEMENT_ZONE`, `NAME`, `PROCESS_GROUP_ID`, `PROCESS_GROUP_NAME`, `TAG`",
 			Required:    true,
 		},
 		"value": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 	}
