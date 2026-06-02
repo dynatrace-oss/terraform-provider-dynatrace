@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -64,10 +65,10 @@ func (me *InstanceIdSource) MarshalHCL(properties hcl.Properties) error {
 
 func (me *InstanceIdSource) HandlePreconditions() error {
 	if (me.Name != nil) && (me.Property == nil || !slices.Contains([]string{"ENVIRONMENT_VARIABLE", "JAVA_SYS_PROP"}, string(*me.Property))) {
-		return fmt.Errorf("'name' must not be specified unless 'property' is one of ['ENVIRONMENT_VARIABLE', 'JAVA_SYS_PROP']; got 'property'='%v'", me.Property)
+		return fmt.Errorf("'name' must not be specified unless 'property' is one of ['ENVIRONMENT_VARIABLE', 'JAVA_SYS_PROP']; got 'property'='%v'", opt.ValOrNil(me.Property))
 	}
 	if (me.Name == nil) && (me.Property != nil && slices.Contains([]string{"ENVIRONMENT_VARIABLE", "JAVA_SYS_PROP"}, string(*me.Property))) {
-		return fmt.Errorf("'name' must be specified when 'property' is one of ['ENVIRONMENT_VARIABLE', 'JAVA_SYS_PROP']; got 'property'='%v'", me.Property)
+		return fmt.Errorf("'name' must be specified when 'property' is one of ['ENVIRONMENT_VARIABLE', 'JAVA_SYS_PROP']; got 'property'='%v'", opt.ValOrNil(me.Property))
 	}
 	return nil
 }
