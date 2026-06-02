@@ -36,7 +36,7 @@ resource "dynatrace_web_app_javascript_updates" "#name#" {
 
 ### Required
 
-- `javascript_version` (String) Possible Values: `CUSTOM`, `LATEST_IE7_10_SUPPORTED`, `LATEST_STABLE`, `PREVIOUS_STABLE`
+- `javascript_version` (String) Choose version. Possible values: `CUSTOM`, `LATEST_IE11_SUPPORTED`, `LATEST_IE7_10_SUPPORTED`, `LATEST_STABLE`, `PREVIOUS_STABLE`
 
 ### Optional
 

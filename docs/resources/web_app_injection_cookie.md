@@ -38,7 +38,7 @@ resource "dynatrace_web_app_injection_cookie" "#name#" {
 ### Required
 
 - `application_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
-- `same_site_cookie_attribute` (String) Possible Values: `LAX`, `NONE`, `NOTSET`, `STRICT`
+- `same_site_cookie_attribute` (String) Define if your cookie should be restricted to a first-party or same-site context. Learn more about [SameSite cookies and available values](https://dt-url.net/yds1p8u). Possible values: `LAX`, `NONE`, `NOTSET`, `STRICT`
 - `use_secure_cookie_attribute` (Boolean) If your application is only accessible via SSL, you can add the Secure attribute to all cookies set by Dynatrace. This setting prevents the display of warnings from PCI-compliance security scanners. Be aware that with this setting enabled Dynatrace correlation of user actions with server-side web requests is only possible over SSL connections.
 
 ### Optional

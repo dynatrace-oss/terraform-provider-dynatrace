@@ -57,14 +57,14 @@ Required:
 - `rule_name` (String) Rule name
 - `service_name_template` (String) Specify resource attribute placeholders in curly braces, e.g. {service.name} or {k8s.workload.name}.. All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.
 
-All resolved attribute values contribute to the final service ID.
+  All resolved attribute values contribute to the final service ID.
 
 Optional:
 
-- `additional_required_attributes` (Set of String) Define resource attributes that should not be part of the name but are required to detect the service, e.g. service.namespace or k8s.workload.kind.. Attributes specified here are required to apply the rule. If any of them is missing, the rule will not be applied and ruleset evaluation continues.
+- `additional_required_attributes` (Set of String) Add resource attribute keys (e.g. service.namespace or k8s.workload.kind) that also detect unique services but are not included in the displayed service name.. Attributes specified here are required to apply the rule. If any of them is missing, the rule will not be applied and ruleset evaluation continues.
 
-All attribute values contribute to the final service ID.
+  All attribute values contribute to the final service ID.
 - `condition` (String) Limits the scope of the service detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes.. A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.
 
-If empty, the condition will always match.
-- `description` (String) no documentation available
+  If empty, the condition will always match.
+- `description` (String) No documentation available

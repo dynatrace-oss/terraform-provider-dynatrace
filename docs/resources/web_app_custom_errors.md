@@ -80,7 +80,7 @@ resource "dynatrace_web_app_custom_errors" "#name#" {
 ### Required
 
 - `ignore_custom_errors_in_apdex_calculation` (Boolean) (Field has overlap with `dynatrace_application_error_rules`) This setting overrides Apdex settings for individual rules listed below
-- `scope` (String) The scope of this setting (APPLICATION)
+- `scope` (String) The scope of this setting (APPLICATION, environment-default)
 
 ### Optional
 
@@ -103,8 +103,8 @@ Required:
 Required:
 
 - `capture_settings` (Block List, Min: 1, Max: 1) Capture settings (see [below for nested schema](#nestedblock--error_rules--error_rule--capture_settings))
-- `key_matcher` (String) Possible Values: `ALL`, `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
-- `value_matcher` (String) Possible Values: `ALL`, `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
+- `key_matcher` (String) Match key. Possible values: `ALL`, `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
+- `value_matcher` (String) Match value. Possible values: `ALL`, `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
 
 Optional:
 

@@ -48,8 +48,8 @@ resource "dynatrace_web_app_ip_address_exclusion" "#name#" {
 
 - `ip_exclusion_list` (Block List, Max: 1) **Examples:**
 
-   - 84.112.10.5
-   - fe80::10a1:c6b2:5f68:785d (see [below for nested schema](#nestedblock--ip_exclusion_list))
+     - 84.112.10.5
+    - fe80::10a1:c6b2:5f68:785d (see [below for nested schema](#nestedblock--ip_exclusion_list))
 
 ### Read-Only
 

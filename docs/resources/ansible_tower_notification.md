@@ -74,9 +74,7 @@ resource "dynatrace_alerting" "Default" {
 **{Tags}**: Comma separated list of tags that are defined for all impacted entities. To refer to the value of a specific tag, specify the tag's key in square brackets: **{Tags[key]}**. If the tag does not have any assigned value, the placeholder will be replaced by an empty string. The placeholder will not be replaced if the tag key does not exist.
 - `job_template_url` (String) The URL of the target job template.
 
-For example, https://<Ansible server name>/#/templates/job_template/<JobTemplateID>
-
-**Note:** Be sure to select the **Prompt on Launch** option in the Extra Variables section of your job template configuration.
+  **Note:** Be sure to select the **Prompt on Launch** option in the Extra Variables section of your job template configuration.
 - `name` (String) The name of the notification configuration.
 - `profile` (String) The ID of the associated alerting profile.
 - `username` (String) Account username.

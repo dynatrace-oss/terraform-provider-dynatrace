@@ -64,13 +64,13 @@ resource "dynatrace_management_zone_v2" "mzone" {
   }
 }
 
-resource "time_sleep" "wait_for_request_attribute" {
-  depends_on = [dynatrace_request_attribute.attribute]
-  create_duration = "10s"
+resource "time_sleep" "wait_for_creation" {
+  depends_on = [dynatrace_request_attribute.attribute, dynatrace_management_zone_v2.mzone]
+  create_duration = "15s"
 }
 
 resource "dynatrace_calculated_service_metric" "metric" {
-  depends_on = [time_sleep.wait_for_request_attribute]
+  depends_on = [time_sleep.wait_for_creation]
   name             = "#name#"
   enabled          = true
   management_zones = [dynatrace_management_zone_v2.mzone.name]

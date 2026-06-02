@@ -101,12 +101,12 @@ resource "dynatrace_service_full_web_request" "#name#" {
 
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id_contributors` (Block List, Min: 1, Max: 1) Contributors to the Service Identifier calculation. All of the Contributors are always applied. (see [below for nested schema](#nestedblock--id_contributors))
-- `name` (String) Rule name
+- `name` (String) The name of the rule. It is used for identification and has no effect on the rule logic.
 
 ### Optional
 
 - `conditions` (Block List, Max: 1) A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. If there is no condition at all, the rule is always applied. Conditions are evaluated against attributes, but do not modify them. (see [below for nested schema](#nestedblock--conditions))
-- `description` (String) Description
+- `description` (String) A short description of the rule.
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `management_zones` (Set of String) Define a management zone of the process group for which this service detection rule should be created.
 
@@ -119,27 +119,27 @@ resource "dynatrace_service_full_web_request" "#name#" {
 
 Required:
 
-- `application_id` (Block List, Min: 1, Max: 1) Application identifier (see [below for nested schema](#nestedblock--id_contributors--application_id))
+- `application_id` (Block List, Min: 1, Max: 1) Contribute to the Service Id calculation from the detected application identifier.. You can keep the detected value, override it with a constant value, or apply transformations before it contributes to the Service Id. (see [below for nested schema](#nestedblock--id_contributors--application_id))
 - `context_root` (Block List, Min: 1, Max: 1) The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**. (see [below for nested schema](#nestedblock--id_contributors--context_root))
-- `server_name` (Block List, Min: 1, Max: 1) Server Name (see [below for nested schema](#nestedblock--id_contributors--server_name))
+- `server_name` (Block List, Min: 1, Max: 1) Contribute to the Service Id calculation from the detected server name. (see [below for nested schema](#nestedblock--id_contributors--server_name))
 
 <a id="nestedblock--id_contributors--application_id"></a>
 ### Nested Schema for `id_contributors.application_id`
 
 Required:
 
-- `enable_id_contributor` (Boolean) Transform this value before letting it contribute to the Service Id
+- `enable_id_contributor` (Boolean) When enabled, the detected value contributes to the Service Id.
 
 Optional:
 
-- `service_id_contributor` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--id_contributors--application_id--service_id_contributor))
+- `service_id_contributor` (Block List, Max: 1) Choose how to transform the detected value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. (see [below for nested schema](#nestedblock--id_contributors--application_id--service_id_contributor))
 
 <a id="nestedblock--id_contributors--application_id--service_id_contributor"></a>
 ### Nested Schema for `id_contributors.application_id.service_id_contributor`
 
 Required:
 
-- `contribution_type` (String) Possible Values: `OriginalValue`, `OverrideValue`, `TransformValue`
+- `contribution_type` (String) Defines whether the original value should be used or if a transformation set should be used to override a value or transform it. Possible values: `OriginalValue`, `OverrideValue`, `TransformValue`
 
 Optional:
 
@@ -158,19 +158,19 @@ Required:
 
 Required:
 
-- `transformation_type` (String) Possible Values: `AFTER`, `BEFORE`, `BETWEEN`, `REMOVE_CREDIT_CARDS`, `REMOVE_IBANS`, `REMOVE_IPS`, `REMOVE_NUMBERS`, `REPLACE_BETWEEN`, `SPLIT_SELECT`, `TAKE_SEGMENTS`
+- `transformation_type` (String) Defines what kind of transformation will be applied on the original value. Possible values: `AFTER`, `BEFORE`, `BETWEEN`, `REMOVE_CREDIT_CARDS`, `REMOVE_IBANS`, `REMOVE_IPS`, `REMOVE_NUMBERS`, `REPLACE_BETWEEN`, `SPLIT_SELECT`, `TAKE_SEGMENTS`
 
 Optional:
 
-- `include_hex_numbers` (Boolean) include hexadecimal numbers
-- `min_digit_count` (Number) min digit count
-- `prefix` (String) no documentation available
-- `replacement_value` (String) replacement
+- `include_hex_numbers` (Boolean) Whether to also remove hexadecimal numbers (sequences of at least `minDigitCount` hexadecimal digits preceded by '0x'). It is used only when the transformation type is `REMOVE_NUMBERS`.
+- `min_digit_count` (Number) The minimum number of digits that a numeric sequence must have to be removed. It is used only when the transformation type is `REMOVE_NUMBERS`.
+- `prefix` (String) The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.
+- `replacement_value` (String) The text that replaces the part between `prefix` and `suffix`. It is used only when the transformation type is `REPLACE_BETWEEN`.
 - `segment_count` (Number) How many segments should be taken.
-- `select_index` (Number) select index
-- `split_delimiter` (String) split by
-- `suffix` (String) no documentation available
-- `take_from_end` (Boolean) take from end
+- `select_index` (Number) The index of the element to keep after splitting. The index is zero-based. It is used only when the transformation type is `SPLIT_SELECT`.
+- `split_delimiter` (String) The delimiter used for splitting the text. It is used only when the transformation type is `SPLIT_SELECT` or `TAKE_SEGMENTS`.
+- `suffix` (String) The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.
+- `take_from_end` (Boolean) Whether to take segments from the end of the text instead of the beginning. It is used only when the transformation type is `TAKE_SEGMENTS`.
 
 
 
@@ -179,7 +179,7 @@ Optional:
 
 Required:
 
-- `value` (String) no documentation available
+- `value` (String) The value to be used instead of the detected value.
 
 
 
@@ -189,18 +189,18 @@ Required:
 
 Required:
 
-- `enable_id_contributor` (Boolean) Transform this value before letting it contribute to the Service Id
+- `enable_id_contributor` (Boolean) When enabled, the context root contributes to the Service Id.
 
 Optional:
 
-- `service_id_contributor` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--id_contributors--context_root--service_id_contributor))
+- `service_id_contributor` (Block List, Max: 1) Choose how to transform the context root value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. (see [below for nested schema](#nestedblock--id_contributors--context_root--service_id_contributor))
 
 <a id="nestedblock--id_contributors--context_root--service_id_contributor"></a>
 ### Nested Schema for `id_contributors.context_root.service_id_contributor`
 
 Required:
 
-- `contribution_type` (String) Possible Values: `OriginalValue`, `OverrideValue`, `TransformURL`, `TransformValue`
+- `contribution_type` (String) Defines whether the original value should be used or if a transformation set should be used to override a value or transform it. Possible values: `OriginalValue`, `OverrideValue`, `TransformURL`, `TransformValue`
 
 Optional:
 
@@ -220,15 +220,15 @@ Required:
 
 Required:
 
-- `transformation_type` (String) Possible Values: `BEFORE`, `REMOVE_CREDIT_CARDS`, `REMOVE_IBANS`, `REMOVE_IPS`, `REMOVE_NUMBERS`, `REPLACE_BETWEEN`
+- `transformation_type` (String) Defines what kind of transformation will be applied on the original value. Possible values: `BEFORE`, `REMOVE_CREDIT_CARDS`, `REMOVE_IBANS`, `REMOVE_IPS`, `REMOVE_NUMBERS`, `REPLACE_BETWEEN`
 
 Optional:
 
-- `include_hex_numbers` (Boolean) include hexadecimal numbers
-- `min_digit_count` (Number) min digit count
-- `prefix` (String) no documentation available
-- `replacement_value` (String) replacement
-- `suffix` (String) no documentation available
+- `include_hex_numbers` (Boolean) Whether to also remove hexadecimal numbers (sequences of at least `minDigitCount` hexadecimal digits preceded by '0x'). It is used only when the transformation type is `REMOVE_NUMBERS`.
+- `min_digit_count` (Number) The minimum number of digits that a numeric sequence must have to be removed. It is used only when the transformation type is `REMOVE_NUMBERS`.
+- `prefix` (String) The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.
+- `replacement_value` (String) The text that replaces the part between `prefix` and `suffix`. It is used only when the transformation type is `REPLACE_BETWEEN`.
+- `suffix` (String) The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.
 
 
 
@@ -237,7 +237,7 @@ Optional:
 
 Required:
 
-- `value` (String) no documentation available
+- `value` (String) The value to be used instead of the detected value.
 
 
 
@@ -247,18 +247,18 @@ Required:
 
 Required:
 
-- `enable_id_contributor` (Boolean) Transform this value before letting it contribute to the Service Id
+- `enable_id_contributor` (Boolean) When enabled, the detected value contributes to the Service Id.
 
 Optional:
 
-- `service_id_contributor` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--id_contributors--server_name--service_id_contributor))
+- `service_id_contributor` (Block List, Max: 1) Choose how to transform the detected value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. (see [below for nested schema](#nestedblock--id_contributors--server_name--service_id_contributor))
 
 <a id="nestedblock--id_contributors--server_name--service_id_contributor"></a>
 ### Nested Schema for `id_contributors.server_name.service_id_contributor`
 
 Required:
 
-- `contribution_type` (String) Possible Values: `OriginalValue`, `OverrideValue`, `TransformValue`
+- `contribution_type` (String) Defines whether the original value should be used or if a transformation set should be used to override a value or transform it. Possible values: `OriginalValue`, `OverrideValue`, `TransformValue`
 
 Optional:
 
@@ -277,19 +277,19 @@ Required:
 
 Required:
 
-- `transformation_type` (String) Possible Values: `AFTER`, `BEFORE`, `BETWEEN`, `REMOVE_CREDIT_CARDS`, `REMOVE_IBANS`, `REMOVE_IPS`, `REMOVE_NUMBERS`, `REPLACE_BETWEEN`, `SPLIT_SELECT`, `TAKE_SEGMENTS`
+- `transformation_type` (String) Defines what kind of transformation will be applied on the original value. Possible values: `AFTER`, `BEFORE`, `BETWEEN`, `REMOVE_CREDIT_CARDS`, `REMOVE_IBANS`, `REMOVE_IPS`, `REMOVE_NUMBERS`, `REPLACE_BETWEEN`, `SPLIT_SELECT`, `TAKE_SEGMENTS`
 
 Optional:
 
-- `include_hex_numbers` (Boolean) include hexadecimal numbers
-- `min_digit_count` (Number) min digit count
-- `prefix` (String) no documentation available
-- `replacement_value` (String) replacement
+- `include_hex_numbers` (Boolean) Whether to also remove hexadecimal numbers (sequences of at least `minDigitCount` hexadecimal digits preceded by '0x'). It is used only when the transformation type is `REMOVE_NUMBERS`.
+- `min_digit_count` (Number) The minimum number of digits that a numeric sequence must have to be removed. It is used only when the transformation type is `REMOVE_NUMBERS`.
+- `prefix` (String) The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.
+- `replacement_value` (String) The text that replaces the part between `prefix` and `suffix`. It is used only when the transformation type is `REPLACE_BETWEEN`.
 - `segment_count` (Number) How many segments should be taken.
-- `select_index` (Number) select index
-- `split_delimiter` (String) split by
-- `suffix` (String) no documentation available
-- `take_from_end` (Boolean) take from end
+- `select_index` (Number) The index of the element to keep after splitting. The index is zero-based. It is used only when the transformation type is `SPLIT_SELECT`.
+- `split_delimiter` (String) The delimiter used for splitting the text. It is used only when the transformation type is `SPLIT_SELECT` or `TAKE_SEGMENTS`.
+- `suffix` (String) The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.
+- `take_from_end` (Boolean) Whether to take segments from the end of the text instead of the beginning. It is used only when the transformation type is `TAKE_SEGMENTS`.
 
 
 
@@ -298,7 +298,7 @@ Optional:
 
 Required:
 
-- `value` (String) no documentation available
+- `value` (String) The value to be used instead of the detected value.
 
 
 
@@ -316,17 +316,27 @@ Required:
 
 Required:
 
-- `attribute` (String) Take the value of this attribute
-- `compare_operation_type` (String) Apply this operation
+- `attribute` (String) The detected attribute that should be compared with the specified operation.
+- `compare_operation_type` (String) The type of comparison operation that should be applied to the detected attribute.. When using this field over the Settings API, it is stored as a string and must use one of the fixed compare-operation identifiers. The available subset depends on the selected `attribute`.
+
+  - `Exists`, `NotExists`
+ - `BoolIsTrue`, `BoolIsFalse`
+ - `TagEquals`, `TagKeyEquals`
+ - `StringEquals`, `NotStringEquals`, `StringStartsWith`, `NotStringStartsWith`, `StringEndsWith`, `NotStringEndsWith`, `StringContains`, `NotStringContains`
+ - `FrameworkEquals`, `NotFrameworkEquals`
+ - `IpInRange`, `NotIpInRange`
+ - `IntEquals`, `NotIntEquals`, `IntGreaterThan`, `IntLessThan`
 
 Optional:
 
-- `framework` (Set of String) Technology
+- `framework` (Set of String) The technology that should be compared with the detected attribute.
+
+  Select one or more technologies. The condition matches if the detected attribute value equals (for `FrameworkEquals`) or does not equal (for `NotFrameworkEquals`) at least one of the selected technologies. Possible values: `AXIS`, `CXF`, `HESSIAN`, `JAX_WS_RI`, `JBOSS`, `JERSEY`, `PROGRESS`, `RESTEASY`, `RESTLET`, `SPRING`, `TIBCO`, `WEBLOGIC`, `WEBMETHODS`, `WEBSPHERE`, `WINK`
 - `ignore_case` (Boolean) Ignore case sensitivity for texts.
-- `int_value` (Number) Value
-- `int_values` (Set of Number) Values
-- `ip_range_from` (String) From
-- `ip_range_to` (String) To
-- `tag_values` (Set of String) If multiple values are specified, at least one of them must match for the condition to match
+- `int_value` (Number) The integer value to compare the detected attribute with.
+- `int_values` (Set of Number) If multiple values are specified, at least one of them must match for the condition to match.
+- `ip_range_from` (String) The beginning of the IP range. The condition matches if the detected attribute value is greater than or equal to this value (for `IpInRange`) or less than this value (for `NotIpInRange`).
+- `ip_range_to` (String) The end of the IP range. The condition matches if the detected attribute value is less than or equal to this value (for `IpInRange`) or greater than this value (for `NotIpInRange`).
+- `tag_values` (Set of String) If multiple values are specified, at least one of them must match for the condition to match.
 - `text_values` (Set of String) If multiple values are specified, at least one of them must match for the condition to match
  

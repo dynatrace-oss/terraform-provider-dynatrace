@@ -97,8 +97,8 @@ Required:
 Optional:
 
 - `error_rate_auto` (Block List, Max: 1) Alert if the percentage of failing user actions increases by **both** the absolute and relative thresholds: (see [below for nested schema](#nestedblock--error_rate--error_rate_auto))
-- `error_rate_detection_mode` (String) Possible Values: `Auto`, `Fixed`
-- `error_rate_fixed` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--error_rate--error_rate_fixed))
+- `error_rate_detection_mode` (String) Detection strategy for increases in JavaScript errors. Possible values: `auto`, `fixed`
+- `error_rate_fixed` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--error_rate--error_rate_fixed))
 
 <a id="nestedblock--error_rate--error_rate_auto"></a>
 ### Nested Schema for `error_rate.error_rate_auto`
@@ -125,7 +125,7 @@ Required:
 Required:
 
 - `error_rate_req_per_min` (Number) To avoid over-alerting for low traffic applications
-- `error_rate_sensitivity` (String) Possible Values: `Low`, `Medium`, `High`
+- `error_rate_sensitivity` (String) Sensitivity. Possible values: `high`, `low`, `medium`
 - `max_failure_rate_increase` (Number) Alert if this custom error rate threshold is exceeded during any 5-minute-period
 - `minutes_abnormal_state` (Number) Amount of minutes the observed traffic has to stay in abnormal state before alert
 
@@ -140,9 +140,9 @@ Required:
 
 Optional:
 
-- `detection_mode` (String) Possible Values: `Auto`, `Fixed`
-- `response_time_auto` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--response_time--response_time_auto))
-- `response_time_fixed` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--response_time--response_time_fixed))
+- `detection_mode` (String) Detection strategy for key performance metric degradations. Possible values: `auto`, `fixed`
+- `response_time_auto` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--response_time--response_time_auto))
+- `response_time_fixed` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--response_time--response_time_fixed))
 
 <a id="nestedblock--response_time--response_time_auto"></a>
 ### Nested Schema for `response_time.response_time_auto`
@@ -189,7 +189,7 @@ Required:
 - `over_alerting_protection` (Block List, Min: 1, Max: 1) Avoid over-alerting (see [below for nested schema](#nestedblock--response_time--response_time_fixed--over_alerting_protection))
 - `response_time_all` (Block List, Min: 1, Max: 1) Alert if the key performance metric of all requests degrades beyond this threshold: (see [below for nested schema](#nestedblock--response_time--response_time_fixed--response_time_all))
 - `response_time_slowest` (Block List, Min: 1, Max: 1) Alert if the key performance metric of the slowest 10% of requests degrades beyond this threshold: (see [below for nested schema](#nestedblock--response_time--response_time_fixed--response_time_slowest))
-- `sensitivity` (String) Possible Values: `Medium`, `High`, `Low`
+- `sensitivity` (String) Possible values: `high`, `low`, `medium`
 
 <a id="nestedblock--response_time--response_time_fixed--over_alerting_protection"></a>
 ### Nested Schema for `response_time.response_time_fixed.over_alerting_protection`
@@ -229,7 +229,7 @@ Optional:
 
 - `traffic_drops` (Block List, Max: 1) Dynatrace learns your typical application traffic over an observation period of one week.
 
-Depending on this expected value Dynatrace detects abnormal traffic drops within your application. (see [below for nested schema](#nestedblock--traffic_drops--traffic_drops))
+  Depending on this expected value Dynatrace detects abnormal traffic drops within your application. (see [below for nested schema](#nestedblock--traffic_drops--traffic_drops))
 
 <a id="nestedblock--traffic_drops--traffic_drops"></a>
 ### Nested Schema for `traffic_drops.traffic_drops`
@@ -252,7 +252,7 @@ Optional:
 
 - `traffic_spikes` (Block List, Max: 1) Dynatrace learns your typical application traffic over an observation period of one week.
 
-Depending on this expected value Dynatrace detects abnormal traffic spikes within your application. (see [below for nested schema](#nestedblock--traffic_spikes--traffic_spikes))
+  Depending on this expected value Dynatrace detects abnormal traffic spikes within your application. (see [below for nested schema](#nestedblock--traffic_spikes--traffic_spikes))
 
 <a id="nestedblock--traffic_spikes--traffic_spikes"></a>
 ### Nested Schema for `traffic_spikes.traffic_spikes`

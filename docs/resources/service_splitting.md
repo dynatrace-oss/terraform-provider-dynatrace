@@ -69,8 +69,8 @@ Optional:
 
 - `condition` (String) Limits the scope of the service splitting rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes..  A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.
 
-If empty, the condition will always match.
-- `description` (String) no documentation available
+  If empty, the condition will always match.
+- `description` (String) No documentation available
 - `service_splitting_attributes` (Block List, Max: 1) Define the entire set of resource attributes that should split your services in the matching scope.. Each attribute that exists will contribute to the final service ID. (see [below for nested schema](#nestedblock--rule--service_splitting_attributes))
 
 <a id="nestedblock--rule--service_splitting_attributes"></a>

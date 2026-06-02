@@ -25,10 +25,11 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_infraops_app_settings" "#name#" {
-  show_monitoring_candidates = true
-  show_standalone_hosts      = true
+resource "dynatrace_infraops_app_settings" "example" {
+  show_monitoring_candidates     = true
+  show_standalone_hosts          = true
   interface_saturation_threshold = 0.95
+  invex_dql_query_limit          = 1000
 }
 ```
 
@@ -37,14 +38,10 @@ resource "dynatrace_infraops_app_settings" "#name#" {
 
 ### Required
 
-- `show_monitoring_candidates` (Boolean) When set to true, the app will display monitoring candidates in the Hosts table
-- `show_standalone_hosts` (Boolean) When set to true, the app will display app only hosts in the Hosts table
-
-### Optional
-
 - `interface_saturation_threshold` (Number) The threshold at which a network device interface is deemed to be saturated.
 - `invex_dql_query_limit` (Number) Limit the number of results returned from Grail for Host, Network device, and Extensions entities.
-- `invex_dql_sort_limit` (Number) Limit for server-side sorting in Host, Network device and Extensions inventories. Sorting is disabled when the row count exceeds the configured threshold.
+- `show_monitoring_candidates` (Boolean) When set to true, the app will display monitoring candidates in the Hosts table
+- `show_standalone_hosts` (Boolean) When set to true, the app will display app only hosts in the Hosts table
 
 ### Read-Only
 

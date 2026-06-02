@@ -84,15 +84,23 @@ resource "dynatrace_openpipeline_v2_system_events_pipelines" "example1" {
           metric_key = "warning.count"
           dimensions {
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.costcenter"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.product"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.security_context"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name      = "record.category"
               destination_field_name = "warning_category"
             }
@@ -111,15 +119,23 @@ resource "dynatrace_openpipeline_v2_system_events_pipelines" "example1" {
           default_value = 60
           dimensions {
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.costcenter"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.product"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.security_context"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name      = "record.category"
               destination_field_name = "warning_category"
             }
