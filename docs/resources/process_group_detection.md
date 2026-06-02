@@ -1,12 +1,15 @@
 ---
 layout: ""
 page_title: "dynatrace_process_group_detection Resource - terraform-provider-dynatrace"
-subcategory: "Process Group Monitoring"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_process_group_detection` covers configuration for Advanced Process Group Detection Rules
 ---
 
 # dynatrace_process_group_detection (Resource)
+
+~> **Warning** This resource has been deprecated in favor of `dynatrace_process_grouping_rules`.
+Dynatrace environment migration guide: https://docs.dynatrace.com/docs/observe/infrastructure-observability/process-groups/configuration/unified-process-grouping/process-grouping-rules-migration
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
@@ -128,4 +131,3 @@ Optional:
 
 - `from` (String) Delimit from
 - `to` (String) Delimit to
- 

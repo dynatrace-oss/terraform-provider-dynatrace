@@ -45,7 +45,7 @@ resource "dynatrace_rum_provider_breakdown" "#name#" {
 - `domain_name_pattern_list` (Block List, Min: 1, Max: 1) Domain name pattern (see [below for nested schema](#nestedblock--domain_name_pattern_list))
 - `report_public_improvement` (Boolean) Send the patterns of this provider to Dynatrace to help us improve 3rd-party detection.
 - `resource_name` (String) Resource name
-- `resource_type` (String) Possible Values: `FirstParty`, `ThirdParty`, `Cdn`
+- `resource_type` (String) Resource type. Possible values: `Cdn`, `FirstParty`, `ThirdParty`
 
 ### Optional
 

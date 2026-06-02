@@ -189,7 +189,7 @@ resource "dynatrace_openpipeline_v2_davis_events_pipelines" "max-pipeline" {
 - `cost_allocation` (Block List, Max: 1) Cost allocation stage (see [below for nested schema](#nestedblock--cost_allocation))
 - `data_extraction` (Block List, Max: 1) Data extraction stage (see [below for nested schema](#nestedblock--data_extraction))
 - `davis` (Block List, Max: 1) Davis event extraction stage (see [below for nested schema](#nestedblock--davis))
-- `group_role` (String) Group role. Possible values: `compositionPipeline`, `memberPipeline`
+- `group_role` (String) Group role. Possible values: `basePipeline`, `compositionPipeline`, `memberPipeline`
 - `metadata_list` (Block List, Max: 1) Pipeline metadata list (see [below for nested schema](#nestedblock--metadata_list))
 - `metric_extraction` (Block List, Max: 1) Metrics extraction stage (see [below for nested schema](#nestedblock--metric_extraction))
 - `processing` (Block List, Max: 1) Processing stage (see [below for nested schema](#nestedblock--processing))
@@ -223,10 +223,10 @@ Required:
 
 Required:
 
-- `description` (String) no documentation available
+- `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -240,6 +240,7 @@ Optional:
 - `fields_add` (Block List, Max: 1) Fields add processor attributes (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--fields_add))
 - `fields_remove` (Block List, Max: 1) Fields remove processor attributes (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--fields_remove))
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--fields_rename))
+- `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--histogram_metric))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--product_allocation))
@@ -261,7 +262,7 @@ Optional:
 Required:
 
 - `field_extraction` (Block List, Min: 1, Max: 1) Field Extraction (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--azure_log_forwarding--field_extraction))
-- `forwarder_config_id` (String) no documentation available
+- `forwarder_config_id` (String) No documentation available
 
 <a id="nestedblock--cost_allocation--processors--processor--azure_log_forwarding--field_extraction"></a>
 ### Nested Schema for `cost_allocation.processors.processor.azure_log_forwarding.field_extraction`
@@ -293,6 +294,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -389,6 +391,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -465,6 +468,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -474,7 +478,7 @@ Optional:
 
 Required:
 
-- `properties` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--davis--properties))
+- `properties` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--davis--properties))
 
 <a id="nestedblock--cost_allocation--processors--processor--davis--properties"></a>
 ### Nested Schema for `cost_allocation.processors.processor.davis.properties`
@@ -488,8 +492,12 @@ Required:
 
 Required:
 
-- `key` (String) no documentation available
-- `value` (String) no documentation available
+- `key` (String) No documentation available
+
+Optional:
+
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
+- `value` (String) No documentation available
 
 
 
@@ -560,6 +568,19 @@ Required:
 
 
 
+<a id="nestedblock--cost_allocation--processors--processor--geo_lookup"></a>
+### Nested Schema for `cost_allocation.processors.processor.geo_lookup`
+
+Required:
+
+- `ip_field_key` (String) The field key that contains the IP address to be resolved to a geo location.
+
+Optional:
+
+- `geo_field_prefix` (String) Optional prefix for all output geo fields. If specified, output fields will be prefixed as <prefix>.geo.<field>. If omitted, output fields will be geo.<field>.
+- `output_fields` (Set of String) The geo fields to enrich the record with. If empty or not specified, the default fields (city name, country ISO code, country name, location) are used. Possible values: `cityName`, `continentIsoCode`, `continentName`, `countryIsoCode`, `countryName`, `location`, `postalCode`, `regionIsoCode`, `regionName`, `subdivisionIsoCodes`
+
+
 <a id="nestedblock--cost_allocation--processors--processor--histogram_metric"></a>
 ### Nested Schema for `cost_allocation.processors.processor.histogram_metric`
 
@@ -591,6 +612,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -660,6 +682,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -698,6 +721,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -736,6 +760,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -885,6 +910,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -961,6 +987,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -1023,8 +1050,12 @@ Required:
 
 Required:
 
-- `field_name` (String) Field name
 - `referenced_field_name` (String) Referenced field name
+
+Optional:
+
+- `field_name` (String) Field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -1116,6 +1147,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -1142,10 +1174,10 @@ Required:
 
 Required:
 
-- `description` (String) no documentation available
+- `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -1159,6 +1191,7 @@ Optional:
 - `fields_add` (Block List, Max: 1) Fields add processor attributes (see [below for nested schema](#nestedblock--data_extraction--processors--processor--fields_add))
 - `fields_remove` (Block List, Max: 1) Fields remove processor attributes (see [below for nested schema](#nestedblock--data_extraction--processors--processor--fields_remove))
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--data_extraction--processors--processor--fields_rename))
+- `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--data_extraction--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--data_extraction--processors--processor--histogram_metric))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--data_extraction--processors--processor--product_allocation))
@@ -1180,7 +1213,7 @@ Optional:
 Required:
 
 - `field_extraction` (Block List, Min: 1, Max: 1) Field Extraction (see [below for nested schema](#nestedblock--data_extraction--processors--processor--azure_log_forwarding--field_extraction))
-- `forwarder_config_id` (String) no documentation available
+- `forwarder_config_id` (String) No documentation available
 
 <a id="nestedblock--data_extraction--processors--processor--azure_log_forwarding--field_extraction"></a>
 ### Nested Schema for `data_extraction.processors.processor.azure_log_forwarding.field_extraction`
@@ -1212,6 +1245,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -1308,6 +1342,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -1384,6 +1419,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -1393,7 +1429,7 @@ Optional:
 
 Required:
 
-- `properties` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--data_extraction--processors--processor--davis--properties))
+- `properties` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--data_extraction--processors--processor--davis--properties))
 
 <a id="nestedblock--data_extraction--processors--processor--davis--properties"></a>
 ### Nested Schema for `data_extraction.processors.processor.davis.properties`
@@ -1407,8 +1443,12 @@ Required:
 
 Required:
 
-- `key` (String) no documentation available
-- `value` (String) no documentation available
+- `key` (String) No documentation available
+
+Optional:
+
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
+- `value` (String) No documentation available
 
 
 
@@ -1479,6 +1519,19 @@ Required:
 
 
 
+<a id="nestedblock--data_extraction--processors--processor--geo_lookup"></a>
+### Nested Schema for `data_extraction.processors.processor.geo_lookup`
+
+Required:
+
+- `ip_field_key` (String) The field key that contains the IP address to be resolved to a geo location.
+
+Optional:
+
+- `geo_field_prefix` (String) Optional prefix for all output geo fields. If specified, output fields will be prefixed as <prefix>.geo.<field>. If omitted, output fields will be geo.<field>.
+- `output_fields` (Set of String) The geo fields to enrich the record with. If empty or not specified, the default fields (city name, country ISO code, country name, location) are used. Possible values: `cityName`, `continentIsoCode`, `continentName`, `countryIsoCode`, `countryName`, `location`, `postalCode`, `regionIsoCode`, `regionName`, `subdivisionIsoCodes`
+
+
 <a id="nestedblock--data_extraction--processors--processor--histogram_metric"></a>
 ### Nested Schema for `data_extraction.processors.processor.histogram_metric`
 
@@ -1510,6 +1563,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -1579,6 +1633,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -1617,6 +1672,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -1655,6 +1711,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -1804,6 +1861,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -1880,6 +1938,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -1942,8 +2001,12 @@ Required:
 
 Required:
 
-- `field_name` (String) Field name
 - `referenced_field_name` (String) Referenced field name
+
+Optional:
+
+- `field_name` (String) Field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -2035,6 +2098,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -2061,10 +2125,10 @@ Required:
 
 Required:
 
-- `description` (String) no documentation available
+- `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -2078,6 +2142,7 @@ Optional:
 - `fields_add` (Block List, Max: 1) Fields add processor attributes (see [below for nested schema](#nestedblock--davis--processors--processor--fields_add))
 - `fields_remove` (Block List, Max: 1) Fields remove processor attributes (see [below for nested schema](#nestedblock--davis--processors--processor--fields_remove))
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--davis--processors--processor--fields_rename))
+- `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--davis--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--davis--processors--processor--histogram_metric))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--davis--processors--processor--product_allocation))
@@ -2099,7 +2164,7 @@ Optional:
 Required:
 
 - `field_extraction` (Block List, Min: 1, Max: 1) Field Extraction (see [below for nested schema](#nestedblock--davis--processors--processor--azure_log_forwarding--field_extraction))
-- `forwarder_config_id` (String) no documentation available
+- `forwarder_config_id` (String) No documentation available
 
 <a id="nestedblock--davis--processors--processor--azure_log_forwarding--field_extraction"></a>
 ### Nested Schema for `davis.processors.processor.azure_log_forwarding.field_extraction`
@@ -2131,6 +2196,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -2227,6 +2293,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -2303,6 +2370,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -2312,7 +2380,7 @@ Optional:
 
 Required:
 
-- `properties` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--davis--processors--processor--davis--properties))
+- `properties` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--davis--processors--processor--davis--properties))
 
 <a id="nestedblock--davis--processors--processor--davis--properties"></a>
 ### Nested Schema for `davis.processors.processor.davis.properties`
@@ -2326,8 +2394,12 @@ Required:
 
 Required:
 
-- `key` (String) no documentation available
-- `value` (String) no documentation available
+- `key` (String) No documentation available
+
+Optional:
+
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
+- `value` (String) No documentation available
 
 
 
@@ -2398,6 +2470,19 @@ Required:
 
 
 
+<a id="nestedblock--davis--processors--processor--geo_lookup"></a>
+### Nested Schema for `davis.processors.processor.geo_lookup`
+
+Required:
+
+- `ip_field_key` (String) The field key that contains the IP address to be resolved to a geo location.
+
+Optional:
+
+- `geo_field_prefix` (String) Optional prefix for all output geo fields. If specified, output fields will be prefixed as <prefix>.geo.<field>. If omitted, output fields will be geo.<field>.
+- `output_fields` (Set of String) The geo fields to enrich the record with. If empty or not specified, the default fields (city name, country ISO code, country name, location) are used. Possible values: `cityName`, `continentIsoCode`, `continentName`, `countryIsoCode`, `countryName`, `location`, `postalCode`, `regionIsoCode`, `regionName`, `subdivisionIsoCodes`
+
+
 <a id="nestedblock--davis--processors--processor--histogram_metric"></a>
 ### Nested Schema for `davis.processors.processor.histogram_metric`
 
@@ -2429,6 +2514,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -2498,6 +2584,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -2536,6 +2623,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -2574,6 +2662,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -2723,6 +2812,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -2799,6 +2889,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -2861,8 +2952,12 @@ Required:
 
 Required:
 
-- `field_name` (String) Field name
 - `referenced_field_name` (String) Referenced field name
+
+Optional:
+
+- `field_name` (String) Field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -2954,6 +3049,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -3000,10 +3096,10 @@ Required:
 
 Required:
 
-- `description` (String) no documentation available
+- `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -3017,6 +3113,7 @@ Optional:
 - `fields_add` (Block List, Max: 1) Fields add processor attributes (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--fields_add))
 - `fields_remove` (Block List, Max: 1) Fields remove processor attributes (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--fields_remove))
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--fields_rename))
+- `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--histogram_metric))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--product_allocation))
@@ -3038,7 +3135,7 @@ Optional:
 Required:
 
 - `field_extraction` (Block List, Min: 1, Max: 1) Field Extraction (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--azure_log_forwarding--field_extraction))
-- `forwarder_config_id` (String) no documentation available
+- `forwarder_config_id` (String) No documentation available
 
 <a id="nestedblock--metric_extraction--processors--processor--azure_log_forwarding--field_extraction"></a>
 ### Nested Schema for `metric_extraction.processors.processor.azure_log_forwarding.field_extraction`
@@ -3070,6 +3167,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -3166,6 +3264,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -3242,6 +3341,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -3251,7 +3351,7 @@ Optional:
 
 Required:
 
-- `properties` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--davis--properties))
+- `properties` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--davis--properties))
 
 <a id="nestedblock--metric_extraction--processors--processor--davis--properties"></a>
 ### Nested Schema for `metric_extraction.processors.processor.davis.properties`
@@ -3265,8 +3365,12 @@ Required:
 
 Required:
 
-- `key` (String) no documentation available
-- `value` (String) no documentation available
+- `key` (String) No documentation available
+
+Optional:
+
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
+- `value` (String) No documentation available
 
 
 
@@ -3337,6 +3441,19 @@ Required:
 
 
 
+<a id="nestedblock--metric_extraction--processors--processor--geo_lookup"></a>
+### Nested Schema for `metric_extraction.processors.processor.geo_lookup`
+
+Required:
+
+- `ip_field_key` (String) The field key that contains the IP address to be resolved to a geo location.
+
+Optional:
+
+- `geo_field_prefix` (String) Optional prefix for all output geo fields. If specified, output fields will be prefixed as <prefix>.geo.<field>. If omitted, output fields will be geo.<field>.
+- `output_fields` (Set of String) The geo fields to enrich the record with. If empty or not specified, the default fields (city name, country ISO code, country name, location) are used. Possible values: `cityName`, `continentIsoCode`, `continentName`, `countryIsoCode`, `countryName`, `location`, `postalCode`, `regionIsoCode`, `regionName`, `subdivisionIsoCodes`
+
+
 <a id="nestedblock--metric_extraction--processors--processor--histogram_metric"></a>
 ### Nested Schema for `metric_extraction.processors.processor.histogram_metric`
 
@@ -3368,6 +3485,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -3437,6 +3555,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -3475,6 +3594,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -3513,6 +3633,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -3662,6 +3783,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -3738,6 +3860,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -3800,8 +3923,12 @@ Required:
 
 Required:
 
-- `field_name` (String) Field name
 - `referenced_field_name` (String) Referenced field name
+
+Optional:
+
+- `field_name` (String) Field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -3893,6 +4020,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -3919,10 +4047,10 @@ Required:
 
 Required:
 
-- `description` (String) no documentation available
+- `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -3936,6 +4064,7 @@ Optional:
 - `fields_add` (Block List, Max: 1) Fields add processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--fields_add))
 - `fields_remove` (Block List, Max: 1) Fields remove processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--fields_remove))
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--fields_rename))
+- `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--histogram_metric))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--product_allocation))
@@ -3957,7 +4086,7 @@ Optional:
 Required:
 
 - `field_extraction` (Block List, Min: 1, Max: 1) Field Extraction (see [below for nested schema](#nestedblock--processing--processors--processor--azure_log_forwarding--field_extraction))
-- `forwarder_config_id` (String) no documentation available
+- `forwarder_config_id` (String) No documentation available
 
 <a id="nestedblock--processing--processors--processor--azure_log_forwarding--field_extraction"></a>
 ### Nested Schema for `processing.processors.processor.azure_log_forwarding.field_extraction`
@@ -3989,6 +4118,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -4085,6 +4215,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -4161,6 +4292,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -4170,7 +4302,7 @@ Optional:
 
 Required:
 
-- `properties` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--processing--processors--processor--davis--properties))
+- `properties` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--processing--processors--processor--davis--properties))
 
 <a id="nestedblock--processing--processors--processor--davis--properties"></a>
 ### Nested Schema for `processing.processors.processor.davis.properties`
@@ -4184,8 +4316,12 @@ Required:
 
 Required:
 
-- `key` (String) no documentation available
-- `value` (String) no documentation available
+- `key` (String) No documentation available
+
+Optional:
+
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
+- `value` (String) No documentation available
 
 
 
@@ -4256,6 +4392,19 @@ Required:
 
 
 
+<a id="nestedblock--processing--processors--processor--geo_lookup"></a>
+### Nested Schema for `processing.processors.processor.geo_lookup`
+
+Required:
+
+- `ip_field_key` (String) The field key that contains the IP address to be resolved to a geo location.
+
+Optional:
+
+- `geo_field_prefix` (String) Optional prefix for all output geo fields. If specified, output fields will be prefixed as <prefix>.geo.<field>. If omitted, output fields will be geo.<field>.
+- `output_fields` (Set of String) The geo fields to enrich the record with. If empty or not specified, the default fields (city name, country ISO code, country name, location) are used. Possible values: `cityName`, `continentIsoCode`, `continentName`, `countryIsoCode`, `countryName`, `location`, `postalCode`, `regionIsoCode`, `regionName`, `subdivisionIsoCodes`
+
+
 <a id="nestedblock--processing--processors--processor--histogram_metric"></a>
 ### Nested Schema for `processing.processors.processor.histogram_metric`
 
@@ -4287,6 +4436,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -4356,6 +4506,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -4394,6 +4545,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -4432,6 +4584,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -4581,6 +4734,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -4657,6 +4811,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -4719,8 +4874,12 @@ Required:
 
 Required:
 
-- `field_name` (String) Field name
 - `referenced_field_name` (String) Referenced field name
+
+Optional:
+
+- `field_name` (String) Field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -4812,6 +4971,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -4838,10 +4998,10 @@ Required:
 
 Required:
 
-- `description` (String) no documentation available
+- `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -4855,6 +5015,7 @@ Optional:
 - `fields_add` (Block List, Max: 1) Fields add processor attributes (see [below for nested schema](#nestedblock--product_allocation--processors--processor--fields_add))
 - `fields_remove` (Block List, Max: 1) Fields remove processor attributes (see [below for nested schema](#nestedblock--product_allocation--processors--processor--fields_remove))
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--product_allocation--processors--processor--fields_rename))
+- `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--product_allocation--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--product_allocation--processors--processor--histogram_metric))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--product_allocation--processors--processor--product_allocation))
@@ -4876,7 +5037,7 @@ Optional:
 Required:
 
 - `field_extraction` (Block List, Min: 1, Max: 1) Field Extraction (see [below for nested schema](#nestedblock--product_allocation--processors--processor--azure_log_forwarding--field_extraction))
-- `forwarder_config_id` (String) no documentation available
+- `forwarder_config_id` (String) No documentation available
 
 <a id="nestedblock--product_allocation--processors--processor--azure_log_forwarding--field_extraction"></a>
 ### Nested Schema for `product_allocation.processors.processor.azure_log_forwarding.field_extraction`
@@ -4908,6 +5069,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5004,6 +5166,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5080,6 +5243,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5089,7 +5253,7 @@ Optional:
 
 Required:
 
-- `properties` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--product_allocation--processors--processor--davis--properties))
+- `properties` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--product_allocation--processors--processor--davis--properties))
 
 <a id="nestedblock--product_allocation--processors--processor--davis--properties"></a>
 ### Nested Schema for `product_allocation.processors.processor.davis.properties`
@@ -5103,8 +5267,12 @@ Required:
 
 Required:
 
-- `key` (String) no documentation available
-- `value` (String) no documentation available
+- `key` (String) No documentation available
+
+Optional:
+
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
+- `value` (String) No documentation available
 
 
 
@@ -5175,6 +5343,19 @@ Required:
 
 
 
+<a id="nestedblock--product_allocation--processors--processor--geo_lookup"></a>
+### Nested Schema for `product_allocation.processors.processor.geo_lookup`
+
+Required:
+
+- `ip_field_key` (String) The field key that contains the IP address to be resolved to a geo location.
+
+Optional:
+
+- `geo_field_prefix` (String) Optional prefix for all output geo fields. If specified, output fields will be prefixed as <prefix>.geo.<field>. If omitted, output fields will be geo.<field>.
+- `output_fields` (Set of String) The geo fields to enrich the record with. If empty or not specified, the default fields (city name, country ISO code, country name, location) are used. Possible values: `cityName`, `continentIsoCode`, `continentName`, `countryIsoCode`, `countryName`, `location`, `postalCode`, `regionIsoCode`, `regionName`, `subdivisionIsoCodes`
+
+
 <a id="nestedblock--product_allocation--processors--processor--histogram_metric"></a>
 ### Nested Schema for `product_allocation.processors.processor.histogram_metric`
 
@@ -5206,6 +5387,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5275,6 +5457,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5313,6 +5496,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5351,6 +5535,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5500,6 +5685,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5576,6 +5762,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5638,8 +5825,12 @@ Required:
 
 Required:
 
-- `field_name` (String) Field name
 - `referenced_field_name` (String) Referenced field name
+
+Optional:
+
+- `field_name` (String) Field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5731,6 +5922,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5757,10 +5949,10 @@ Required:
 
 Required:
 
-- `description` (String) no documentation available
+- `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -5774,6 +5966,7 @@ Optional:
 - `fields_add` (Block List, Max: 1) Fields add processor attributes (see [below for nested schema](#nestedblock--security_context--processors--processor--fields_add))
 - `fields_remove` (Block List, Max: 1) Fields remove processor attributes (see [below for nested schema](#nestedblock--security_context--processors--processor--fields_remove))
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--security_context--processors--processor--fields_rename))
+- `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--security_context--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--security_context--processors--processor--histogram_metric))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--security_context--processors--processor--product_allocation))
@@ -5795,7 +5988,7 @@ Optional:
 Required:
 
 - `field_extraction` (Block List, Min: 1, Max: 1) Field Extraction (see [below for nested schema](#nestedblock--security_context--processors--processor--azure_log_forwarding--field_extraction))
-- `forwarder_config_id` (String) no documentation available
+- `forwarder_config_id` (String) No documentation available
 
 <a id="nestedblock--security_context--processors--processor--azure_log_forwarding--field_extraction"></a>
 ### Nested Schema for `security_context.processors.processor.azure_log_forwarding.field_extraction`
@@ -5827,6 +6020,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5923,6 +6117,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -5999,6 +6194,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -6008,7 +6204,7 @@ Optional:
 
 Required:
 
-- `properties` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--security_context--processors--processor--davis--properties))
+- `properties` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--security_context--processors--processor--davis--properties))
 
 <a id="nestedblock--security_context--processors--processor--davis--properties"></a>
 ### Nested Schema for `security_context.processors.processor.davis.properties`
@@ -6022,8 +6218,12 @@ Required:
 
 Required:
 
-- `key` (String) no documentation available
-- `value` (String) no documentation available
+- `key` (String) No documentation available
+
+Optional:
+
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
+- `value` (String) No documentation available
 
 
 
@@ -6094,6 +6294,19 @@ Required:
 
 
 
+<a id="nestedblock--security_context--processors--processor--geo_lookup"></a>
+### Nested Schema for `security_context.processors.processor.geo_lookup`
+
+Required:
+
+- `ip_field_key` (String) The field key that contains the IP address to be resolved to a geo location.
+
+Optional:
+
+- `geo_field_prefix` (String) Optional prefix for all output geo fields. If specified, output fields will be prefixed as <prefix>.geo.<field>. If omitted, output fields will be geo.<field>.
+- `output_fields` (Set of String) The geo fields to enrich the record with. If empty or not specified, the default fields (city name, country ISO code, country name, location) are used. Possible values: `cityName`, `continentIsoCode`, `continentName`, `countryIsoCode`, `countryName`, `location`, `postalCode`, `regionIsoCode`, `regionName`, `subdivisionIsoCodes`
+
+
 <a id="nestedblock--security_context--processors--processor--histogram_metric"></a>
 ### Nested Schema for `security_context.processors.processor.histogram_metric`
 
@@ -6125,6 +6338,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -6194,6 +6408,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -6232,6 +6447,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -6270,6 +6486,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -6419,6 +6636,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -6495,6 +6713,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -6557,8 +6776,12 @@ Required:
 
 Required:
 
-- `field_name` (String) Field name
 - `referenced_field_name` (String) Referenced field name
+
+Optional:
+
+- `field_name` (String) Field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -6650,6 +6873,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -6676,10 +6900,10 @@ Required:
 
 Required:
 
-- `description` (String) no documentation available
+- `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -6693,6 +6917,7 @@ Optional:
 - `fields_add` (Block List, Max: 1) Fields add processor attributes (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--fields_add))
 - `fields_remove` (Block List, Max: 1) Fields remove processor attributes (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--fields_remove))
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--fields_rename))
+- `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--histogram_metric))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--product_allocation))
@@ -6714,7 +6939,7 @@ Optional:
 Required:
 
 - `field_extraction` (Block List, Min: 1, Max: 1) Field Extraction (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--azure_log_forwarding--field_extraction))
-- `forwarder_config_id` (String) no documentation available
+- `forwarder_config_id` (String) No documentation available
 
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--azure_log_forwarding--field_extraction"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.azure_log_forwarding.field_extraction`
@@ -6746,6 +6971,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -6842,6 +7068,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -6918,6 +7145,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -6927,7 +7155,7 @@ Optional:
 
 Required:
 
-- `properties` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--davis--properties))
+- `properties` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--davis--properties))
 
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--davis--properties"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.davis.properties`
@@ -6941,8 +7169,12 @@ Required:
 
 Required:
 
-- `key` (String) no documentation available
-- `value` (String) no documentation available
+- `key` (String) No documentation available
+
+Optional:
+
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
+- `value` (String) No documentation available
 
 
 
@@ -7013,6 +7245,19 @@ Required:
 
 
 
+<a id="nestedblock--smartscape_edge_extraction--processors--processor--geo_lookup"></a>
+### Nested Schema for `smartscape_edge_extraction.processors.processor.geo_lookup`
+
+Required:
+
+- `ip_field_key` (String) The field key that contains the IP address to be resolved to a geo location.
+
+Optional:
+
+- `geo_field_prefix` (String) Optional prefix for all output geo fields. If specified, output fields will be prefixed as <prefix>.geo.<field>. If omitted, output fields will be geo.<field>.
+- `output_fields` (Set of String) The geo fields to enrich the record with. If empty or not specified, the default fields (city name, country ISO code, country name, location) are used. Possible values: `cityName`, `continentIsoCode`, `continentName`, `countryIsoCode`, `countryName`, `location`, `postalCode`, `regionIsoCode`, `regionName`, `subdivisionIsoCodes`
+
+
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--histogram_metric"></a>
 ### Nested Schema for `smartscape_edge_extraction.processors.processor.histogram_metric`
 
@@ -7044,6 +7289,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -7113,6 +7359,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -7151,6 +7398,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -7189,6 +7437,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -7338,6 +7587,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -7414,6 +7664,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -7476,8 +7727,12 @@ Required:
 
 Required:
 
-- `field_name` (String) Field name
 - `referenced_field_name` (String) Referenced field name
+
+Optional:
+
+- `field_name` (String) Field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -7569,6 +7824,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -7595,10 +7851,10 @@ Required:
 
 Required:
 
-- `description` (String) no documentation available
+- `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -7612,6 +7868,7 @@ Optional:
 - `fields_add` (Block List, Max: 1) Fields add processor attributes (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--fields_add))
 - `fields_remove` (Block List, Max: 1) Fields remove processor attributes (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--fields_remove))
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--fields_rename))
+- `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--histogram_metric))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--product_allocation))
@@ -7633,7 +7890,7 @@ Optional:
 Required:
 
 - `field_extraction` (Block List, Min: 1, Max: 1) Field Extraction (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--azure_log_forwarding--field_extraction))
-- `forwarder_config_id` (String) no documentation available
+- `forwarder_config_id` (String) No documentation available
 
 <a id="nestedblock--smartscape_node_extraction--processors--processor--azure_log_forwarding--field_extraction"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.azure_log_forwarding.field_extraction`
@@ -7665,6 +7922,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -7761,6 +8019,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -7837,6 +8096,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -7846,7 +8106,7 @@ Optional:
 
 Required:
 
-- `properties` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--davis--properties))
+- `properties` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--davis--properties))
 
 <a id="nestedblock--smartscape_node_extraction--processors--processor--davis--properties"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.davis.properties`
@@ -7860,8 +8120,12 @@ Required:
 
 Required:
 
-- `key` (String) no documentation available
-- `value` (String) no documentation available
+- `key` (String) No documentation available
+
+Optional:
+
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
+- `value` (String) No documentation available
 
 
 
@@ -7932,6 +8196,19 @@ Required:
 
 
 
+<a id="nestedblock--smartscape_node_extraction--processors--processor--geo_lookup"></a>
+### Nested Schema for `smartscape_node_extraction.processors.processor.geo_lookup`
+
+Required:
+
+- `ip_field_key` (String) The field key that contains the IP address to be resolved to a geo location.
+
+Optional:
+
+- `geo_field_prefix` (String) Optional prefix for all output geo fields. If specified, output fields will be prefixed as <prefix>.geo.<field>. If omitted, output fields will be geo.<field>.
+- `output_fields` (Set of String) The geo fields to enrich the record with. If empty or not specified, the default fields (city name, country ISO code, country name, location) are used. Possible values: `cityName`, `continentIsoCode`, `continentName`, `countryIsoCode`, `countryName`, `location`, `postalCode`, `regionIsoCode`, `regionName`, `subdivisionIsoCodes`
+
+
 <a id="nestedblock--smartscape_node_extraction--processors--processor--histogram_metric"></a>
 ### Nested Schema for `smartscape_node_extraction.processors.processor.histogram_metric`
 
@@ -7963,6 +8240,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8032,6 +8310,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8070,6 +8349,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8108,6 +8388,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8257,6 +8538,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8333,6 +8615,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8395,8 +8678,12 @@ Required:
 
 Required:
 
-- `field_name` (String) Field name
 - `referenced_field_name` (String) Referenced field name
+
+Optional:
+
+- `field_name` (String) Field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8488,6 +8775,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8514,10 +8802,10 @@ Required:
 
 Required:
 
-- `description` (String) no documentation available
+- `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -8531,6 +8819,7 @@ Optional:
 - `fields_add` (Block List, Max: 1) Fields add processor attributes (see [below for nested schema](#nestedblock--storage--processors--processor--fields_add))
 - `fields_remove` (Block List, Max: 1) Fields remove processor attributes (see [below for nested schema](#nestedblock--storage--processors--processor--fields_remove))
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--storage--processors--processor--fields_rename))
+- `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--storage--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--storage--processors--processor--histogram_metric))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--storage--processors--processor--product_allocation))
@@ -8552,7 +8841,7 @@ Optional:
 Required:
 
 - `field_extraction` (Block List, Min: 1, Max: 1) Field Extraction (see [below for nested schema](#nestedblock--storage--processors--processor--azure_log_forwarding--field_extraction))
-- `forwarder_config_id` (String) no documentation available
+- `forwarder_config_id` (String) No documentation available
 
 <a id="nestedblock--storage--processors--processor--azure_log_forwarding--field_extraction"></a>
 ### Nested Schema for `storage.processors.processor.azure_log_forwarding.field_extraction`
@@ -8584,6 +8873,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8680,6 +8970,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8756,6 +9047,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8765,7 +9057,7 @@ Optional:
 
 Required:
 
-- `properties` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--storage--processors--processor--davis--properties))
+- `properties` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--storage--processors--processor--davis--properties))
 
 <a id="nestedblock--storage--processors--processor--davis--properties"></a>
 ### Nested Schema for `storage.processors.processor.davis.properties`
@@ -8779,8 +9071,12 @@ Required:
 
 Required:
 
-- `key` (String) no documentation available
-- `value` (String) no documentation available
+- `key` (String) No documentation available
+
+Optional:
+
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
+- `value` (String) No documentation available
 
 
 
@@ -8851,6 +9147,19 @@ Required:
 
 
 
+<a id="nestedblock--storage--processors--processor--geo_lookup"></a>
+### Nested Schema for `storage.processors.processor.geo_lookup`
+
+Required:
+
+- `ip_field_key` (String) The field key that contains the IP address to be resolved to a geo location.
+
+Optional:
+
+- `geo_field_prefix` (String) Optional prefix for all output geo fields. If specified, output fields will be prefixed as <prefix>.geo.<field>. If omitted, output fields will be geo.<field>.
+- `output_fields` (Set of String) The geo fields to enrich the record with. If empty or not specified, the default fields (city name, country ISO code, country name, location) are used. Possible values: `cityName`, `continentIsoCode`, `continentName`, `countryIsoCode`, `countryName`, `location`, `postalCode`, `regionIsoCode`, `regionName`, `subdivisionIsoCodes`
+
+
 <a id="nestedblock--storage--processors--processor--histogram_metric"></a>
 ### Nested Schema for `storage.processors.processor.histogram_metric`
 
@@ -8882,6 +9191,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8951,6 +9261,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -8989,6 +9300,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -9027,6 +9339,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -9176,6 +9489,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -9252,6 +9566,7 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -9314,8 +9629,12 @@ Required:
 
 Required:
 
-- `field_name` (String) Field name
 - `referenced_field_name` (String) Referenced field name
+
+Optional:
+
+- `field_name` (String) Field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
 
@@ -9407,3 +9726,4 @@ Optional:
 - `destination_field_name` (String) Destination field name
 - `extraction_type` (String) Field value extraction type. Possible values: `constant`, `field`
 - `source_field_name` (String) Source field name
+- `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`

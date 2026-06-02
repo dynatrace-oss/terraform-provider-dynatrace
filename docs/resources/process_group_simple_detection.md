@@ -1,12 +1,15 @@
 ---
 layout: ""
 page_title: "dynatrace_process_group_simple_detection Resource - terraform-provider-dynatrace"
-subcategory: "Process Group Monitoring"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_process_group_simple_detection` covers configuration for process group simple detection rules
 ---
 
 # dynatrace_process_group_simple_detection (Resource)
+
+~> **Warning** This resource has been deprecated in favor of `dynatrace_process_grouping_rules`.
+Dynatrace environment migration guide: https://docs.dynatrace.com/docs/observe/infrastructure-observability/process-groups/configuration/unified-process-grouping/process-grouping-rules-migration
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
@@ -54,4 +57,3 @@ The type of variable is the same as selected in 'Property source'.
 ### Read-Only
 
 - `id` (String) The ID of this resource.
- 

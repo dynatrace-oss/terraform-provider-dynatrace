@@ -57,7 +57,7 @@ resource "dynatrace_automation_workflow_jira" "#name#"{
 ### Required
 
 - `name` (String) The name of the Jira connection
-- `type` (String) Possible Values: `Basic`, `Cloud_token`, `Pat`
+- `type` (String) Type of authentication method that should be used. Possible values: `basic`, `cloud-token`, `pat`
 - `url` (String) URL of the Jira server
 
 ### Optional

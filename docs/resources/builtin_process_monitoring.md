@@ -25,19 +25,20 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_builtin_process_monitoring" "#name#" {
-  host_group_id                         = "environment"
-  aspnetcore                            = false
-  cf_appsmanagerjs                      = false
-  container                             = false
-  docker_pauseamd64                     = false
-  exe_bbs                               = false
-  exe_caddy                             = false
-  exe_schedular                         = false
-  exe_silkdaemon                        = false
-  go_static                             = false
-  node_nodegyp                          = false
-  cmd_foreverbinmonitor                 = false
+resource "dynatrace_builtin_process_monitoring" "monitoring" {
+  host_group_id                 = "environment"
+  aspnetcore                    = false
+  cf_appsmanagerjs              = false
+  container                     = false
+  docker_pauseamd64             = false
+  exe_bbs                       = false
+  exe_caddy                     = false
+  exe_schedular                 = false
+  exe_silkdaemon                = false
+  go_static                     = false
+  node_nodegyp                  = false
+  cmd_foreverbinmonitor         = false
+  jmc_activegatecommandlinetool = false
 }
 ```
 
@@ -113,6 +114,7 @@ resource "dynatrace_builtin_process_monitoring" "#name#" {
 - `host_group_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 - `jar_dtibmmqconnector` (Boolean) Rule id: 60 - Do not monitor processes if JAR file name equals 'dynatrace_ibm_mq_connector.jar'
 - `jar_eclipseequinox` (Boolean) Rule id: 57 - Do not monitor processes if Java JAR file begins with 'org.eclipse.equinox.launcher'
+- `jmc_activegatecommandlinetool` (Boolean) Rule id: 85 - Do not monitor process if Java Main class contains 'ActiveGateCommandLineTool'
 - `k8s_cassandraoperator` (Boolean) Rule id: 69 - Do not monitor processes if Kubernetes container name equals 'cassandra-operator'
 - `k8s_containerpod` (Boolean) Rule id: 38 - Do not monitor processes if Kubernetes container name equals 'POD'
 - `k8s_namespace` (Boolean) Rule id: 40 - Do monitor processes if Kubernetes namespace exists

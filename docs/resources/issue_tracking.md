@@ -45,8 +45,8 @@ resource "dynatrace_issue_tracking" "#name#" {
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `issuelabel` (String) Set a label to identify these issues, for example, `release_blocker` or `non-critical`
 - `issuequery` (String) You can use the following placeholders to automatically insert values from the **Release monitoring** page in your query: `{NAME}`, `{VERSION}`, `{STAGE}`, `{PRODUCT}`.
-- `issuetheme` (String) Possible Values: `ERROR`, `INFO`, `RESOLVED`
-- `issuetrackersystem` (String) Possible Values: `GITHUB`, `GITLAB`, `JIRA`, `JIRA_CLOUD`, `JIRA_ON_PREMISE`, `SERVICENOW`
+- `issuetheme` (String) Select the issue type to be displayed. Possible values: `ERROR`, `INFO`, `RESOLVED`
+- `issuetrackersystem` (String) Select the issue-tracking system you want to query. Possible values: `GITHUB`, `GITLAB`, `JIRA`, `JIRA_CLOUD`, `JIRA_ON_PREMISE`, `SERVICENOW`
 - `url` (String) For Jira, use the base URL (for example, https://jira.yourcompany.com); for GitHub, use the repository URL (for example, https://github.com/org/repo); for GitLab, use the specific project API for a single project (for example, https://gitlab.com/api/v4/projects/:projectId), and the specific group API for a multiple projects (for example, https://gitlab.com/api/v4/groups/:groupId); for ServiceNow, use your company instance URL (for example, https://yourinstance.service-now.com/)
 - `username` (String) Username
 

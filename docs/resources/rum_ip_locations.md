@@ -40,7 +40,7 @@ resource "dynatrace_rum_ip_locations" "#name#" {
 
 - `country_code` (String) The country code of the location. 
 
- Use the alpha-2 code of the [ISO 3166-2 standard](https://dt-url.net/iso3166-2), (for example, `AT` for Austria or `PL` for Poland).
+   Use the alpha-2 code of the [ISO 3166-2 standard](https://dt-url.net/iso3166-2), (for example, `AT` for Austria or `PL` for Poland).
 - `ip` (String) Single IP or IP range start address
 
 ### Optional
@@ -51,9 +51,9 @@ resource "dynatrace_rum_ip_locations" "#name#" {
 - `longitude` (Number) Longitude
 - `region_code` (String) The region code of the location. 
 
- For the [USA](https://dt-url.net/iso3166us) or [Canada](https://dt-url.net/iso3166ca) use ISO 3166-2 state codes without `US-` or `CA-` prefix. 
+   For the [USA](https://dt-url.net/iso3166us) or [Canada](https://dt-url.net/iso3166ca) use ISO 3166-2 state codes without `US-` or `CA-` prefix. 
 
- For the rest of the world use [FIPS 10-4 codes](https://dt-url.net/fipscodes) without country prefix.
+   For the rest of the world use [FIPS 10-4 codes](https://dt-url.net/fipscodes) without country prefix.
 
 ### Read-Only
 

@@ -25,14 +25,14 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-variable "PROCESS_GROUP_ID" {
-  type = string
+data "dynatrace_entity" "process_group" {
+  entity_selector = "type(\"PROCESS_GROUP\")"
 }
 
 
 resource "dynatrace_process_group_rum" "rum" {
   enable           = false
-  process_group_id = var.PROCESS_GROUP_ID
+  process_group_id = data.dynatrace_entity.process_group.id
 }
 ```
 
@@ -42,11 +42,11 @@ resource "dynatrace_process_group_rum" "rum" {
 ### Required
 
 - `enable` (Boolean) Allows OneAgent to:
-* automatically inject the RUM JavaScript tag into each page delivered by this process group
-* provide the necessary info to correlate RUM data with server-side PurePaths
-* forward beacons to the cluster
-* deliver the monitoring code
-- `process_group_id` (String) The scope of this setting - PROCESS_GROUP-XXXXXXXXXXXXXXXX
+ * automatically inject the RUM JavaScript tag into each page delivered by this process group
+ * provide the necessary info to correlate RUM data with server-side PurePaths
+ * forward beacons to the cluster
+ * deliver the monitoring code
+- `process_group_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 
 ### Read-Only
 
