@@ -77,6 +77,11 @@
 							"customValidatorId": "only-resource-and-custom-attributes-dql-validator",
 							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "forbidden-attributes-dql-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
 					"description": "Limits the scope of the service splitting rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes.",
@@ -176,6 +181,11 @@
 							"customValidatorId": "only-resource-and-custom-attributes-single-attribute-validator",
 							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "forbidden-attributes-single-attribute-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
 					"default": "",
@@ -204,5 +214,5 @@
 			]
 		}
 	},
-	"version": "0.0.12"
+	"version": "0.0.13"
 }
