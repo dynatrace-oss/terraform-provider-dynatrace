@@ -18,19 +18,21 @@
 package metricevents
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type ModelProperties struct {
-	AlertCondition    AlertCondition `json:"alertCondition"`              // Possible Values: `ABOVE`, `BELOW`, `OUTSIDE`
+	AlertCondition    AlertCondition `json:"alertCondition"`              // Alert condition. Possible values: `ABOVE`, `BELOW`, `OUTSIDE`
 	AlertOnNoData     bool           `json:"alertOnNoData"`               // The ability to set an alert on missing data in a metric. When enabled, missing data samples will be treated as violating samples defined in the advanced model properties. When disabled, missing data is not treated as a violation but will still contribute to dealerting. We recommend disabling alerting on missing data for sparse timeseries to avoid false alerts. To learn more, visit [anomaly detection configuration](https://dt-url.net/lz02mwi).
 	DealertingSamples int            `json:"dealertingSamples"`           // The number of one-minute samples within the evaluation window that must go back to normal to close the event.
 	Samples           int            `json:"samples"`                     // The number of one-minute samples that form the sliding evaluation window.
 	SignalFluctuation *float64       `json:"signalFluctuation,omitempty"` // Controls how many times the signal fluctuation is added to the baseline to produce the actual threshold for alerting
 	Threshold         *float64       `json:"threshold,omitempty"`         // Raise an event if this value is violated
 	Tolerance         *float64       `json:"tolerance,omitempty"`         // Controls the width of the confidence band and larger values lead to a less sensitive model
-	Type              ModelType      `json:"type"`                        // Possible Values: `AUTO_ADAPTIVE_THRESHOLD`, `SEASONAL_BASELINE`, `STATIC_THRESHOLD`
+	Type              ModelType      `json:"type"`                        // Metric-key-based query definitions only support static thresholds. Possible values: `AUTO_ADAPTIVE_THRESHOLD`, `SEASONAL_BASELINE`, `STATIC_THRESHOLD`
 	ViolatingSamples  int            `json:"violatingSamples"`            // The number of one-minute samples within the evaluation window that must violate to trigger an event.
 }
 
@@ -38,7 +40,7 @@ func (me *ModelProperties) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"alert_condition": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `ABOVE`, `BELOW`, `OUTSIDE`",
+			Description: "Alert condition. Possible values: `ABOVE`, `BELOW`, `OUTSIDE`",
 			Required:    true,
 		},
 		"alert_on_no_data": {
@@ -73,7 +75,7 @@ func (me *ModelProperties) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `AUTO_ADAPTIVE_THRESHOLD`, `SEASONAL_BASELINE`, `STATIC_THRESHOLD`",
+			Description: "Metric-key-based query definitions only support static thresholds. Possible values: `AUTO_ADAPTIVE_THRESHOLD`, `SEASONAL_BASELINE`, `STATIC_THRESHOLD`",
 			Required:    true,
 		},
 		"violating_samples": {
@@ -99,14 +101,23 @@ func (me *ModelProperties) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *ModelProperties) HandlePreconditions() error {
-	if me.SignalFluctuation == nil && (string(me.Type) == "AUTO_ADAPTIVE_THRESHOLD") {
+	if (me.SignalFluctuation == nil) && (string(me.Type) == "AUTO_ADAPTIVE_THRESHOLD") {
 		me.SignalFluctuation = new(0.0)
 	}
-	if me.Threshold == nil && (string(me.Type) == "STATIC_THRESHOLD") {
+	if (me.Threshold == nil) && (string(me.Type) == "STATIC_THRESHOLD") {
 		me.Threshold = new(0.0)
 	}
-	if me.Tolerance == nil && (string(me.Type) == "SEASONAL_BASELINE") {
-		me.Tolerance = new(0.0)
+	if (me.SignalFluctuation != nil) && (string(me.Type) != "AUTO_ADAPTIVE_THRESHOLD") {
+		return fmt.Errorf("'signal_fluctuation' must not be specified unless 'type' is set to 'AUTO_ADAPTIVE_THRESHOLD'; got 'type'='%v'", me.Type)
+	}
+	if (me.Threshold != nil) && (string(me.Type) != "STATIC_THRESHOLD") {
+		return fmt.Errorf("'threshold' must not be specified unless 'type' is set to 'STATIC_THRESHOLD'; got 'type'='%v'", me.Type)
+	}
+	if (me.Tolerance != nil) && (string(me.Type) != "SEASONAL_BASELINE") {
+		return fmt.Errorf("'tolerance' must not be specified unless 'type' is set to 'SEASONAL_BASELINE'; got 'type'='%v'", me.Type)
+	}
+	if (me.Tolerance == nil) && (string(me.Type) == "SEASONAL_BASELINE") {
+		return fmt.Errorf("'tolerance' must be specified when 'type' is set to 'SEASONAL_BASELINE'; got 'type'='%v'", me.Type)
 	}
 	return nil
 }
