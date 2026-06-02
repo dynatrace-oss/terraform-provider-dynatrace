@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/integer"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -76,16 +74,12 @@ func (ic *Integer) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(ic.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", ic.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(ic.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", int(opt.Int32(ic.Value))); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   ic.Negate,
+		"operator": ic.Operator,
+		"value":    ic.Value,
+	})
 }
 
 func (ic *Integer) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -104,19 +98,13 @@ func (ic *Integer) UnmarshalHCL(decoder hcl.Decoder) error {
 			ic.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		ic.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		ic.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		ic.Operator = integer.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		ic.Value = new(int32(value.(int)))
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &ic.Type,
+		"negate":   &ic.Negate,
+		"operator": &ic.Operator,
+		"value":    &ic.Value,
+	})
 }
 
 func (ic *Integer) MarshalJSON() ([]byte, error) {

@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -75,16 +75,12 @@ func (oac *OSArchitecture) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(oac.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", oac.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(oac.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", oac.Value.String()); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   oac.Negate,
+		"operator": oac.Operator,
+		"value":    oac.Value,
+	})
 }
 
 func (oac *OSArchitecture) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -103,19 +99,13 @@ func (oac *OSArchitecture) UnmarshalHCL(decoder hcl.Decoder) error {
 			oac.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		oac.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		oac.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		oac.Operator = osarch.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		oac.Value = osarch.Value(value.(string)).Ref()
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &oac.Type,
+		"negate":   &oac.Negate,
+		"operator": &oac.Operator,
+		"value":    &oac.Value,
+	})
 }
 
 func (oac *OSArchitecture) MarshalJSON() ([]byte, error) {

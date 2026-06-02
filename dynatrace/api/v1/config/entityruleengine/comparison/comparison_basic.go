@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -78,13 +78,11 @@ func (bcb *BaseComparison) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(bcb.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", bcb.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("type", string(bcb.Type)); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate": bcb.Negate,
+		"type":   bcb.Type,
+	})
 }
 
 func (bcb *BaseComparison) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -101,13 +99,11 @@ func (bcb *BaseComparison) UnmarshalHCL(decoder hcl.Decoder) error {
 			bcb.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		bcb.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		bcb.Negate = value.(bool)
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"negate": &bcb.Negate,
+		"type":   &bcb.Type,
+	})
 }
 
 func (bcb *BaseComparison) MarshalJSON() ([]byte, error) {

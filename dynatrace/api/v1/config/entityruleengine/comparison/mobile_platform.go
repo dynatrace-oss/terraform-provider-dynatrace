@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -74,16 +74,12 @@ func (mpc *MobilePlatform) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(mpc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", mpc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(mpc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", mpc.Value.String()); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   mpc.Negate,
+		"operator": mpc.Operator,
+		"value":    mpc.Value,
+	})
 }
 
 func (mpc *MobilePlatform) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -102,19 +98,13 @@ func (mpc *MobilePlatform) UnmarshalHCL(decoder hcl.Decoder) error {
 			mpc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		mpc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		mpc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		mpc.Operator = mobile_platform.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		mpc.Value = mobile_platform.Value(value.(string)).Ref()
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &mpc.Type,
+		"negate":   &mpc.Negate,
+		"operator": &mpc.Operator,
+		"value":    &mpc.Value,
+	})
 }
 
 func (mpc *MobilePlatform) MarshalJSON() ([]byte, error) {

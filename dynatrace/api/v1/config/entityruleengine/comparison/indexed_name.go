@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -74,16 +74,12 @@ func (inc *IndexedName) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(inc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", inc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(inc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", inc.Value); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   inc.Negate,
+		"operator": inc.Operator,
+		"value":    inc.Value,
+	})
 }
 
 func (inc *IndexedName) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -102,19 +98,13 @@ func (inc *IndexedName) UnmarshalHCL(decoder hcl.Decoder) error {
 			inc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		inc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		inc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		inc.Operator = indexed_name.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		inc.Value = new(value.(string))
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &inc.Type,
+		"negate":   &inc.Negate,
+		"operator": &inc.Operator,
+		"value":    &inc.Value,
+	})
 }
 
 func (inc *IndexedName) MarshalJSON() ([]byte, error) {

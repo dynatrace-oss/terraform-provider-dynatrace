@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -74,16 +74,12 @@ func (htc *HypervisorType) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(htc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", htc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(htc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", htc.Value.String()); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   htc.Negate,
+		"operator": htc.Operator,
+		"value":    htc.Value,
+	})
 }
 
 func (htc *HypervisorType) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -102,19 +98,13 @@ func (htc *HypervisorType) UnmarshalHCL(decoder hcl.Decoder) error {
 			htc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		htc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		htc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		htc.Operator = hypervisor_type.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		htc.Value = hypervisor_type.Value(value.(string)).Ref()
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &htc.Type,
+		"negate":   &htc.Negate,
+		"operator": &htc.Operator,
+		"value":    &htc.Value,
+	})
 }
 
 func (htc *HypervisorType) MarshalJSON() ([]byte, error) {

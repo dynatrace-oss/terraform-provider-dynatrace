@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -74,16 +74,12 @@ func (ptc *PaasType) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(ptc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", ptc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(ptc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", ptc.Value); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   ptc.Negate,
+		"operator": ptc.Operator,
+		"value":    ptc.Value,
+	})
 }
 
 func (ptc *PaasType) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -102,19 +98,13 @@ func (ptc *PaasType) UnmarshalHCL(decoder hcl.Decoder) error {
 			ptc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		ptc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		ptc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		ptc.Operator = paastype.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		ptc.Value = paastype.Value(value.(string)).Ref()
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &ptc.Type,
+		"negate":   &ptc.Negate,
+		"operator": &ptc.Operator,
+		"value":    &ptc.Value,
+	})
 }
 
 func (ptc *PaasType) MarshalJSON() ([]byte, error) {
