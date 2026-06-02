@@ -396,8 +396,8 @@
 							"type": "LENGTH"
 						},
 						{
-							"customMessage": "Job template URL should be in the format of http(s)://\u003cAnsible server name\u003e/#/templates/job_template/\u003cJobTemplateID\u003e",
-							"pattern": "^.*?/#/templates/job_template/\\d+?$",
+							"customMessage": "Job template URL should be in the format of http(s)://\u003cAnsibleServerName\u003e/#/templates/job_template/\u003cJobTemplateID\u003e or http(s)://\u003cAnsibleServerName\u003e/execution/templates/job-template/\u003cJobTemplateID\u003e",
+							"pattern": "^.*?(/#/templates/job_template|/execution/templates/job-template)/\\d+?$",
 							"type": "PATTERN"
 						},
 						{
@@ -412,7 +412,7 @@
 						}
 					],
 					"default": "",
-					"description": "The URL of the target job template.\n\nFor example, https://\u003cAnsible server name\u003e/#/templates/job_template/\u003cJobTemplateID\u003e\n\n**Note:** Be sure to select the **Prompt on Launch** option in the Extra Variables section of your job template configuration.",
+					"description": "The URL of the target job template.\n\n**Note:** Be sure to select the **Prompt on Launch** option in the Extra Variables section of your job template configuration.",
 					"displayName": "Job template URL",
 					"documentation": "",
 					"forceSecretResubmission": true,
@@ -1964,5 +1964,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.7.3"
+	"version": "1.7.4"
 }
