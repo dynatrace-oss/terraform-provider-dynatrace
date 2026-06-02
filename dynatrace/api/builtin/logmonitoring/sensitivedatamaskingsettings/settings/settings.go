@@ -49,7 +49,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"masking": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(Masking).Schema()},
 			MinItems:    1,
@@ -57,7 +57,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"matchers": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(Matchers).Schema()},
 			MinItems:    1,

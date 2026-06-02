@@ -122,7 +122,7 @@
 		}
 	},
 	"maturity": "OPT_IN_GENERAL_AVAILABILITY",
-	"maxObjects": 256,
+	"maxObjects": 512,
 	"metadata": {
 		"addItemButton": "Add rule",
 		"minAgentVersion": "1.243"
@@ -403,5 +403,5 @@
 			}
 		}
 	},
-	"version": "1.0.18"
+	"version": "1.0.19"
 }
