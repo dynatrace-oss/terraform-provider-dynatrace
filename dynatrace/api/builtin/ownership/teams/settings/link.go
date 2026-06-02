@@ -45,7 +45,7 @@ func (me *Links) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type Link struct {
-	LinkType LinkType `json:"linkType"` // Possible Values: `DASHBOARD`, `DOCUMENTATION`, `HEALTH_APP`, `REPOSITORY`, `RUNBOOK`, `URL`, `WIKI`
+	LinkType LinkType `json:"linkType"` // Type. Possible values: `DASHBOARD`, `DOCUMENTATION`, `HEALTH_APP`, `REPOSITORY`, `RUNBOOK`, `URL`, `WIKI`
 	Url      string   `json:"url"`
 }
 
@@ -53,12 +53,12 @@ func (me *Link) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"link_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `DASHBOARD`, `DOCUMENTATION`, `HEALTH_APP`, `REPOSITORY`, `RUNBOOK`, `URL`, `WIKI`",
+			Description: "Type. Possible values: `DASHBOARD`, `DOCUMENTATION`, `HEALTH_APP`, `REPOSITORY`, `RUNBOOK`, `URL`, `WIKI`",
 			Required:    true,
 		},
 		"url": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 	}

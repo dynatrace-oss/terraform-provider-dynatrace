@@ -60,11 +60,13 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"external_id": {
 			Type:        schema.TypeString,
 			Description: "This field should only be used for the automation purpose when importing team information.",
+			ForceNew:    true,
 			Optional:    true, // nullable
 		},
 		"identifier": {
 			Type:        schema.TypeString,
 			Description: "The team identifier is used to reference the team from any entity in Dynatrace. If you are using Kubernetes labels, keep in mind the 63 character limit that they enforce.",
+			ForceNew:    true,
 			Required:    true,
 		},
 		"links": {

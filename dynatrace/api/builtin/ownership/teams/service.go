@@ -18,15 +18,15 @@
 package teams
 
 import (
-	teams "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/teams/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/teams/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.6"
+const SchemaVersion = "1.0.7"
 const SchemaID = "builtin:ownership.teams"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*teams.Settings] {
-	return settings20.Service[*teams.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }
