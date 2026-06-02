@@ -29,7 +29,7 @@ type AnsibleTower struct {
 	Name      string `json:"-" hcl:"name"`             // The display name within the Dynatrace WebUI
 	ProfileID string `json:"-" hcl:"alerting_profile"` // The ID of the associated alerting profile
 
-	JobTemplateURL string `json:"jobTemplateURL" hcl:"job_template_url"`             // The URL of the target Ansible Tower job template.\n\nFor example, https://<Ansible Tower server name>/#/templates/job_template/<JobTemplateID>\n\n**Note:** Be sure to select the **Prompt on Launch** option in the Extra Variables section of your job template configuration
+	JobTemplateURL string `json:"jobTemplateURL" hcl:"job_template_url"`             // The URL of the target job template.\n\n  **Note:** Be sure to select the **Prompt on Launch** option in the Extra Variables section of your job template configuration.
 	Insecure       bool   `json:"acceptAnyCertificate" hcl:"accept_any_certificate"` // Accept any SSL certificate (including self-signed and invalid certificates)
 	Username       string `json:"username" hcl:"username"`                           // The username of the Ansible Tower account
 	Password       string `json:"password" hcl:"password,secret"`                    // The password for the Ansible Tower account
@@ -77,7 +77,7 @@ func (me *AnsibleTower) Schema() map[string]*schema.Schema {
 		},
 		"job_template_url": {
 			Type:        schema.TypeString,
-			Description: "The URL of the target job template.\n\nFor example, https://<Ansible server name>/#/templates/job_template/<JobTemplateID>\n\n**Note:** Be sure to select the **Prompt on Launch** option in the Extra Variables section of your job template configuration.",
+			Description: "The URL of the target job template.\n\n  **Note:** Be sure to select the **Prompt on Launch** option in the Extra Variables section of your job template configuration.",
 			Required:    true,
 		},
 		"password": {

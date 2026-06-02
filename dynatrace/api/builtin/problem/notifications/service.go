@@ -29,7 +29,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.7.3"
+const SchemaVersion = "1.7.4"
 const SchemaID = "builtin:problem.notifications"
 
 type filter struct {
