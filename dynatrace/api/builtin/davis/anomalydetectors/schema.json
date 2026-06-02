@@ -151,7 +151,7 @@
 							"$ref": "#/types/AnalyzerInputField"
 						}
 					},
-					"maxObjects": 30,
+					"maxObjects": 100,
 					"metadata": {
 						"addItemButton": "Add analyzer input field",
 						"itemDisplayName": "New analyzer input field"
@@ -188,7 +188,7 @@
 			},
 			"summaryPattern": "{name}",
 			"type": "object",
-			"version": "0.0.4",
+			"version": "0.0.5",
 			"versionInfo": ""
 		},
 		"AnalyzerInputField": {
@@ -420,5 +420,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.14"
+	"version": "1.0.15"
 }
