@@ -207,6 +207,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"multiObject": true,
 	"ordered": true,
@@ -214,7 +215,7 @@
 		"conditions": {
 			"description": "A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. If there is no condition at all, the rule is always applied. Conditions are evaluated against attributes, but do not modify them.",
 			"displayName": "Conditions",
-			"documentation": "",
+			"documentation": "Each list item compares one detected attribute with one compare operation. Multiple condition entries are combined with **AND**.",
 			"items": {
 				"description": "",
 				"displayName": "",
@@ -237,7 +238,7 @@
 					"type": "LENGTH"
 				}
 			],
-			"description": "",
+			"description": "A short description of the rule.",
 			"displayName": "Description",
 			"documentation": "",
 			"maxObjects": 1,
@@ -248,7 +249,7 @@
 		},
 		"enabled": {
 			"default": true,
-			"description": "",
+			"description": "If disabled, the rule is skipped during evaluation.",
 			"displayName": "Enabled",
 			"documentation": "",
 			"maxObjects": 1,
@@ -297,7 +298,7 @@
 				}
 			],
 			"default": "New Name",
-			"description": "",
+			"description": "The name of the rule. It is used for identification and has no effect on the rule logic.",
 			"displayName": "Rule name",
 			"documentation": "",
 			"maxObjects": 1,
@@ -315,10 +316,11 @@
 			"constraints": [
 				{
 					"customValidatorId": "ip-validation",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
-			"description": "",
+			"description": "Matches requests by comparing one detected attribute with one operation.",
 			"displayName": "condition",
 			"documentation": "",
 			"properties": {
@@ -339,7 +341,7 @@
 						"validate": true
 					},
 					"default": "PG_Tag",
-					"description": "",
+					"description": "The detected attribute that should be compared with the specified operation.",
 					"displayName": "Take the value of this attribute",
 					"documentation": "",
 					"maxObjects": 1,
@@ -366,10 +368,10 @@
 						"useApiSearch": false,
 						"validate": true
 					},
-					"default": "Exists",
-					"description": "",
+					"default": "TagEquals",
+					"description": "The type of comparison operation that should be applied to the detected attribute.",
 					"displayName": "Apply this operation",
-					"documentation": "",
+					"documentation": "When using this field over the Settings API, it is stored as a string and must use one of the fixed compare-operation identifiers. The available subset depends on the selected `attribute`.\n\n- `Exists`, `NotExists`\n- `BoolIsTrue`, `BoolIsFalse`\n- `TagEquals`, `TagKeyEquals`\n- `StringEquals`, `NotStringEquals`, `StringStartsWith`, `NotStringStartsWith`, `StringEndsWith`, `NotStringEndsWith`, `StringContains`, `NotStringContains`\n- `FrameworkEquals`, `NotFrameworkEquals`\n- `IpInRange`, `NotIpInRange`\n- `IntEquals`, `NotIntEquals`, `IntGreaterThan`, `IntLessThan`",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -377,7 +379,7 @@
 					"type": "text"
 				},
 				"framework": {
-					"description": "",
+					"description": "The technology that should be compared with the detected attribute.\n\nSelect one or more technologies. The condition matches if the detected attribute value equals (for `FrameworkEquals`) or does not equal (for `NotFrameworkEquals`) at least one of the selected technologies.",
 					"displayName": "Technology",
 					"documentation": "",
 					"items": {
@@ -436,7 +438,7 @@
 						}
 					],
 					"default": 0,
-					"description": "",
+					"description": "The integer value to compare the detected attribute with.",
 					"displayName": "Value",
 					"documentation": "",
 					"maxObjects": 1,
@@ -453,7 +455,7 @@
 					"type": "integer"
 				},
 				"intValues": {
-					"description": "",
+					"description": "If multiple values are specified, at least one of them must match for the condition to match.",
 					"displayName": "Values",
 					"documentation": "",
 					"items": {
@@ -485,7 +487,7 @@
 						}
 					],
 					"default": "0.0.0.0",
-					"description": "",
+					"description": "The beginning of the IP range. The condition matches if the detected attribute value is greater than or equal to this value (for `IpInRange`) or less than this value (for `NotIpInRange`).",
 					"displayName": "From",
 					"documentation": "",
 					"maxObjects": 1,
@@ -510,7 +512,7 @@
 						}
 					],
 					"default": "255.255.255.255",
-					"description": "",
+					"description": "The end of the IP range. The condition matches if the detected attribute value is less than or equal to this value (for `IpInRange`) or greater than this value (for `NotIpInRange`).",
 					"displayName": "To",
 					"documentation": "",
 					"maxObjects": 1,
@@ -527,13 +529,14 @@
 					"type": "text"
 				},
 				"tagValues": {
-					"description": "If multiple values are specified, at least one of them must match for the condition to match",
+					"description": "If multiple values are specified, at least one of them must match for the condition to match.",
 					"displayName": "Values",
 					"documentation": "",
 					"items": {
 						"constraints": [
 							{
 								"customValidatorId": "universal-tag-validator",
+								"skipAsyncValidation": false,
 								"type": "CUSTOM_VALIDATOR_REF"
 							},
 							{
@@ -602,13 +605,13 @@
 			"versionInfo": ""
 		},
 		"contextIdContributor": {
-			"description": "",
+			"description": "Enables and configures the context root as a Service Id contributor.",
 			"displayName": "contextIdContributor",
-			"documentation": "",
+			"documentation": "Set `enableIdContributor` to `true` to let the context root contribute to the Service Id and configure the nested `serviceIdContributor` block. If the switch stays `false`, this contributor does not participate in service detection.",
 			"properties": {
 				"enableIdContributor": {
 					"default": false,
-					"description": "",
+					"description": "When enabled, the context root contributes to the Service Id.",
 					"displayName": "Transform this value before letting it contribute to the Service Id",
 					"documentation": "",
 					"maxObjects": 1,
@@ -617,7 +620,7 @@
 					"type": "boolean"
 				},
 				"serviceIdContributor": {
-					"description": "",
+					"description": "Choose how to transform the context root value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one.",
 					"displayName": "",
 					"documentation": "",
 					"maxObjects": 1,
@@ -642,10 +645,11 @@
 			"constraints": [
 				{
 					"customValidatorId": "context-root-transformation-validation",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
-			"description": "",
+			"description": "Configures how the detected URL context root contributes to the Service Id.",
 			"displayName": "contextRoot",
 			"documentation": "",
 			"properties": {
@@ -735,17 +739,18 @@
 				{
 					"customMessage": "At least one service identifier contributor (application identifier, URL context root, server name, web service name or web service namespace) must exist.",
 					"customValidatorId": "at-least-one-service-id-contributor",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
-			"description": "",
+			"description": "Defines which detected values contribute to the Service Id for matching full web services.",
 			"displayName": "idContributorsType",
 			"documentation": "",
 			"properties": {
 				"applicationId": {
-					"description": "",
+					"description": "Contribute to the Service Id calculation from the detected application identifier.",
 					"displayName": "Application identifier",
-					"documentation": "",
+					"documentation": "You can keep the detected value, override it with a constant value, or apply transformations before it contributes to the Service Id.",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -761,7 +766,7 @@
 				"contextRoot": {
 					"description": "The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**.",
 					"displayName": "URL context root",
-					"documentation": "",
+					"documentation": "You can keep the detected context root, replace it with a constant value, copy a configurable number of URL path segments, or apply context-root transformations. If URL segment copying and transformations are both configured, transformations run on the copied value.",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -778,14 +783,14 @@
 					"default": false,
 					"description": "Detect the matching requests as full web services (false) or web request services (true).\n\nSetting this field to true prevents detecting of matching requests as full web services. A web request service is created instead. If you need to further modify the resulting web request service, you need to create a separate [Full web request rule](builtin:service-detection.full-web-request).",
 					"displayName": "Detect as web request service",
-					"documentation": "",
+					"documentation": "When this option is enabled, the contributor settings below are ignored because matching requests are detected as full web request services instead of full web services.",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "boolean"
 				},
 				"serverName": {
-					"description": "",
+					"description": "Contribute to the Service Id calculation from the detected server name.",
 					"displayName": "Server name",
 					"documentation": "",
 					"maxObjects": 1,
@@ -801,7 +806,7 @@
 					}
 				},
 				"webServiceName": {
-					"description": "",
+					"description": "Contribute to the Service Id calculation from the detected web service name.",
 					"displayName": "Web service name",
 					"documentation": "",
 					"maxObjects": 1,
@@ -817,7 +822,7 @@
 					}
 				},
 				"webServiceNamespace": {
-					"description": "",
+					"description": "Contribute to the Service Id calculation from the detected web service namespace.",
 					"displayName": "Web service namespace",
 					"documentation": "",
 					"maxObjects": 1,
@@ -839,13 +844,13 @@
 			"versionInfo": ""
 		},
 		"reducedTransformation": {
-			"description": "",
+			"description": "Transforms a detected context root value before it contributes to the Service Id.",
 			"displayName": "Transformation",
 			"documentation": "",
 			"properties": {
 				"includeHexNumbers": {
 					"default": false,
-					"description": "",
+					"description": "Whether to also remove hexadecimal numbers (sequences of at least `minDigitCount` hexadecimal digits preceded by '0x'). It is used only when the transformation type is `REMOVE_NUMBERS`.",
 					"displayName": "include hexadecimal numbers",
 					"documentation": "",
 					"maxObjects": 1,
@@ -866,7 +871,7 @@
 						}
 					],
 					"default": 1,
-					"description": "",
+					"description": "The minimum number of digits that a numeric sequence must have to be removed. It is used only when the transformation type is `REMOVE_NUMBERS`.",
 					"displayName": "min digit count",
 					"documentation": "",
 					"maxObjects": 1,
@@ -887,7 +892,7 @@
 							"type": "LENGTH"
 						}
 					],
-					"description": "",
+					"description": "The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.",
 					"displayName": "prefix",
 					"documentation": "",
 					"maxObjects": 1,
@@ -910,7 +915,7 @@
 							"type": "LENGTH"
 						}
 					],
-					"description": "",
+					"description": "The text that replaces the part between `prefix` and `suffix`. It is used only when the transformation type is `REPLACE_BETWEEN`.",
 					"displayName": "replacement",
 					"documentation": "",
 					"maxObjects": 1,
@@ -931,7 +936,7 @@
 							"type": "LENGTH"
 						}
 					],
-					"description": "",
+					"description": "The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.",
 					"displayName": "suffix",
 					"documentation": "",
 					"maxObjects": 1,
@@ -966,13 +971,13 @@
 			"versionInfo": ""
 		},
 		"serviceIdContributor": {
-			"description": "",
+			"description": "Enables and configures a Service Id contributor.",
 			"displayName": "serviceIdContributor",
-			"documentation": "",
+			"documentation": "Set `enableIdContributor` to `true` to let the detected value contribute to the Service Id and configure the nested `serviceIdContributor` block. If the switch stays `false`, this contributor does not participate in service detection.",
 			"properties": {
 				"enableIdContributor": {
 					"default": false,
-					"description": "",
+					"description": "When enabled, the detected value contributes to the Service Id.",
 					"displayName": "Transform this value before letting it contribute to the Service Id",
 					"documentation": "",
 					"maxObjects": 1,
@@ -981,7 +986,7 @@
 					"type": "boolean"
 				},
 				"serviceIdContributor": {
-					"description": "",
+					"description": "Choose how to transform the detected value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one.",
 					"displayName": "",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1003,13 +1008,13 @@
 			"versionInfo": ""
 		},
 		"transformation": {
-			"description": "",
+			"description": "Transforms a detected contributor value before it contributes to the Service Id.",
 			"displayName": "Transformation",
 			"documentation": "",
 			"properties": {
 				"includeHexNumbers": {
 					"default": false,
-					"description": "",
+					"description": "Whether to also remove hexadecimal numbers (sequences of at least `minDigitCount` hexadecimal digits preceded by '0x'). It is used only when the transformation type is `REMOVE_NUMBERS`.",
 					"displayName": "include hexadecimal numbers",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1030,7 +1035,7 @@
 						}
 					],
 					"default": 1,
-					"description": "",
+					"description": "The minimum number of digits that a numeric sequence must have to be removed. It is used only when the transformation type is `REMOVE_NUMBERS`.",
 					"displayName": "min digit count",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1051,7 +1056,7 @@
 							"type": "LENGTH"
 						}
 					],
-					"description": "",
+					"description": "The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.",
 					"displayName": "prefix",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1076,7 +1081,7 @@
 							"type": "LENGTH"
 						}
 					],
-					"description": "",
+					"description": "The text that replaces the part between `prefix` and `suffix`. It is used only when the transformation type is `REPLACE_BETWEEN`.",
 					"displayName": "replacement",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1118,7 +1123,7 @@
 						}
 					],
 					"default": 1,
-					"description": "",
+					"description": "The index of the element to keep after splitting. The index is zero-based. It is used only when the transformation type is `SPLIT_SELECT`.",
 					"displayName": "select index",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1139,7 +1144,7 @@
 							"type": "LENGTH"
 						}
 					],
-					"description": "",
+					"description": "The delimiter used for splitting the text. It is used only when the transformation type is `SPLIT_SELECT` or `TAKE_SEGMENTS`.",
 					"displayName": "split by",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1163,7 +1168,7 @@
 							"type": "LENGTH"
 						}
 					],
-					"description": "",
+					"description": "The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.",
 					"displayName": "suffix",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1182,7 +1187,7 @@
 				},
 				"takeFromEnd": {
 					"default": false,
-					"description": "",
+					"description": "Whether to take segments from the end of the text instead of the beginning. It is used only when the transformation type is `TAKE_SEGMENTS`.",
 					"displayName": "take from end",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1214,7 +1219,7 @@
 			"versionInfo": ""
 		},
 		"transformationSet": {
-			"description": "",
+			"description": "Configures how a detected contributor value contributes to the Service Id.",
 			"displayName": "transformationSet",
 			"documentation": "",
 			"properties": {
@@ -1276,9 +1281,9 @@
 			"versionInfo": ""
 		},
 		"valueOverride": {
-			"description": "",
+			"description": "Defines the constant value used when overriding a detected contributor value.",
 			"displayName": "Value override",
-			"documentation": "",
+			"documentation": "Provide the fixed value that should replace the detected one when `contributionType` is `OverrideValue`.",
 			"properties": {
 				"value": {
 					"constraints": [
@@ -1287,7 +1292,7 @@
 						}
 					],
 					"default": "",
-					"description": "",
+					"description": "The value to be used instead of the detected value.",
 					"displayName": "Value",
 					"documentation": "",
 					"maxObjects": 1,
@@ -1338,5 +1343,5 @@
 			]
 		}
 	},
-	"version": "2.1.14"
+	"version": "2.1.15"
 }

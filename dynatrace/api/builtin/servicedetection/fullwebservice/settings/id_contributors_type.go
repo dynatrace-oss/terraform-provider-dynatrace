@@ -24,20 +24,21 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// idContributorsType. Defines which detected values contribute to the Service Id for matching full web services.
 type IdContributorsType struct {
-	ApplicationID             *ServiceIdContributor `json:"applicationId,omitempty"`       // Application identifier
-	ContextRoot               *ContextIdContributor `json:"contextRoot,omitempty"`         // The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**.
-	DetectAsWebRequestService bool                  `json:"detectAsWebRequestService"`     // Detect the matching requests as full web services (false) or web request services (true).\n\nSetting this field to true prevents detecting of matching requests as full web services. A web request service is created instead. If you need to further modify the resulting web request service, you need to create a separate [Full web request rule](builtin:service-detection.full-web-request).
-	ServerName                *ServiceIdContributor `json:"serverName,omitempty"`          // Server name
-	WebServiceName            *ServiceIdContributor `json:"webServiceName,omitempty"`      // Web service name
-	WebServiceNamespace       *ServiceIdContributor `json:"webServiceNamespace,omitempty"` // Web service namespace
+	ApplicationID             *ServiceIdContributor `json:"applicationId,omitempty"`       // Contribute to the Service Id calculation from the detected application identifier.. You can keep the detected value, override it with a constant value, or apply transformations before it contributes to the Service Id.
+	ContextRoot               *ContextIdContributor `json:"contextRoot,omitempty"`         // The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**.. You can keep the detected context root, replace it with a constant value, copy a configurable number of URL path segments, or apply context-root transformations. If URL segment copying and transformations are both configured, transformations run on the copied value.
+	DetectAsWebRequestService bool                  `json:"detectAsWebRequestService"`     // Detect the matching requests as full web services (false) or web request services (true).\n\n  Setting this field to true prevents detecting of matching requests as full web services. A web request service is created instead. If you need to further modify the resulting web request service, you need to create a separate [Full web request rule](builtin:service-detection.full-web-request).. When this option is enabled, the contributor settings below are ignored because matching requests are detected as full web request services instead of full web services.
+	ServerName                *ServiceIdContributor `json:"serverName,omitempty"`          // Contribute to the Service Id calculation from the detected server name.
+	WebServiceName            *ServiceIdContributor `json:"webServiceName,omitempty"`      // Contribute to the Service Id calculation from the detected web service name.
+	WebServiceNamespace       *ServiceIdContributor `json:"webServiceNamespace,omitempty"` // Contribute to the Service Id calculation from the detected web service namespace.
 }
 
 func (me *IdContributorsType) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"application_id": {
 			Type:        schema.TypeList,
-			Description: "Application identifier",
+			Description: "Contribute to the Service Id calculation from the detected application identifier.. You can keep the detected value, override it with a constant value, or apply transformations before it contributes to the Service Id.",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(ServiceIdContributor).Schema()},
 			MinItems:    1,
@@ -45,7 +46,7 @@ func (me *IdContributorsType) Schema() map[string]*schema.Schema {
 		},
 		"context_root": {
 			Type:        schema.TypeList,
-			Description: "The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**.",
+			Description: "The context root is the first segment of the request URL after the Server name. For example, in the `www.dynatrace.com/support/help/dynatrace-api/` URL the context root is `/support`. The context root value can be found on the **Service overview page** under **Properties and tags**.. You can keep the detected context root, replace it with a constant value, copy a configurable number of URL path segments, or apply context-root transformations. If URL segment copying and transformations are both configured, transformations run on the copied value.",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(ContextIdContributor).Schema()},
 			MinItems:    1,
@@ -53,12 +54,12 @@ func (me *IdContributorsType) Schema() map[string]*schema.Schema {
 		},
 		"detect_as_web_request_service": {
 			Type:        schema.TypeBool,
-			Description: "Detect the matching requests as full web services (false) or web request services (true).\n\nSetting this field to true prevents detecting of matching requests as full web services. A web request service is created instead. If you need to further modify the resulting web request service, you need to create a separate [Full web request rule](builtin:service-detection.full-web-request).",
+			Description: "Detect the matching requests as full web services (false) or web request services (true).\n\n  Setting this field to true prevents detecting of matching requests as full web services. A web request service is created instead. If you need to further modify the resulting web request service, you need to create a separate [Full web request rule](builtin:service-detection.full-web-request).. When this option is enabled, the contributor settings below are ignored because matching requests are detected as full web request services instead of full web services.",
 			Required:    true,
 		},
 		"server_name": {
 			Type:        schema.TypeList,
-			Description: "Server name",
+			Description: "Contribute to the Service Id calculation from the detected server name.",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(ServiceIdContributor).Schema()},
 			MinItems:    1,
@@ -66,7 +67,7 @@ func (me *IdContributorsType) Schema() map[string]*schema.Schema {
 		},
 		"web_service_name": {
 			Type:        schema.TypeList,
-			Description: "Web service name",
+			Description: "Contribute to the Service Id calculation from the detected web service name.",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(ServiceIdContributor).Schema()},
 			MinItems:    1,
@@ -74,7 +75,7 @@ func (me *IdContributorsType) Schema() map[string]*schema.Schema {
 		},
 		"web_service_namespace": {
 			Type:        schema.TypeList,
-			Description: "Web service namespace",
+			Description: "Contribute to the Service Id calculation from the detected web service namespace.",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(ServiceIdContributor).Schema()},
 			MinItems:    1,
@@ -95,35 +96,35 @@ func (me *IdContributorsType) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *IdContributorsType) HandlePreconditions() error {
-	if me.ApplicationID == nil && !me.DetectAsWebRequestService {
-		return fmt.Errorf("'application_id' must be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	if (me.ApplicationID != nil) && (me.DetectAsWebRequestService) {
+		return fmt.Errorf("'application_id' must not be specified unless 'detect_as_web_request_service' is set to 'false'; got 'detect_as_web_request_service'='%v'", me.DetectAsWebRequestService)
 	}
-	if me.ApplicationID != nil && me.DetectAsWebRequestService {
-		return fmt.Errorf("'application_id' must not be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	if (me.ApplicationID == nil) && (!me.DetectAsWebRequestService) {
+		return fmt.Errorf("'application_id' must be specified when 'detect_as_web_request_service' is set to 'false'; got 'detect_as_web_request_service'='%v'", me.DetectAsWebRequestService)
 	}
-	if me.ContextRoot == nil && !me.DetectAsWebRequestService {
-		return fmt.Errorf("'context_root' must be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	if (me.ContextRoot != nil) && (me.DetectAsWebRequestService) {
+		return fmt.Errorf("'context_root' must not be specified unless 'detect_as_web_request_service' is set to 'false'; got 'detect_as_web_request_service'='%v'", me.DetectAsWebRequestService)
 	}
-	if me.ContextRoot != nil && me.DetectAsWebRequestService {
-		return fmt.Errorf("'context_root' must not be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	if (me.ContextRoot == nil) && (!me.DetectAsWebRequestService) {
+		return fmt.Errorf("'context_root' must be specified when 'detect_as_web_request_service' is set to 'false'; got 'detect_as_web_request_service'='%v'", me.DetectAsWebRequestService)
 	}
-	if me.ServerName == nil && !me.DetectAsWebRequestService {
-		return fmt.Errorf("'server_name' must be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	if (me.ServerName != nil) && (me.DetectAsWebRequestService) {
+		return fmt.Errorf("'server_name' must not be specified unless 'detect_as_web_request_service' is set to 'false'; got 'detect_as_web_request_service'='%v'", me.DetectAsWebRequestService)
 	}
-	if me.ServerName != nil && me.DetectAsWebRequestService {
-		return fmt.Errorf("'server_name' must not be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	if (me.ServerName == nil) && (!me.DetectAsWebRequestService) {
+		return fmt.Errorf("'server_name' must be specified when 'detect_as_web_request_service' is set to 'false'; got 'detect_as_web_request_service'='%v'", me.DetectAsWebRequestService)
 	}
-	if me.WebServiceName == nil && !me.DetectAsWebRequestService {
-		return fmt.Errorf("'web_service_name' must be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	if (me.WebServiceName != nil) && (me.DetectAsWebRequestService) {
+		return fmt.Errorf("'web_service_name' must not be specified unless 'detect_as_web_request_service' is set to 'false'; got 'detect_as_web_request_service'='%v'", me.DetectAsWebRequestService)
 	}
-	if me.WebServiceName != nil && me.DetectAsWebRequestService {
-		return fmt.Errorf("'web_service_name' must not be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	if (me.WebServiceName == nil) && (!me.DetectAsWebRequestService) {
+		return fmt.Errorf("'web_service_name' must be specified when 'detect_as_web_request_service' is set to 'false'; got 'detect_as_web_request_service'='%v'", me.DetectAsWebRequestService)
 	}
-	if me.WebServiceNamespace == nil && !me.DetectAsWebRequestService {
-		return fmt.Errorf("'web_service_namespace' must be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	if (me.WebServiceNamespace != nil) && (me.DetectAsWebRequestService) {
+		return fmt.Errorf("'web_service_namespace' must not be specified unless 'detect_as_web_request_service' is set to 'false'; got 'detect_as_web_request_service'='%v'", me.DetectAsWebRequestService)
 	}
-	if me.WebServiceNamespace != nil && me.DetectAsWebRequestService {
-		return fmt.Errorf("'web_service_namespace' must not be specified if 'detect_as_web_request_service' is set to '%v'", me.DetectAsWebRequestService)
+	if (me.WebServiceNamespace == nil) && (!me.DetectAsWebRequestService) {
+		return fmt.Errorf("'web_service_namespace' must be specified when 'detect_as_web_request_service' is set to 'false'; got 'detect_as_web_request_service'='%v'", me.DetectAsWebRequestService)
 	}
 	return nil
 }

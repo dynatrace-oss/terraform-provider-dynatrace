@@ -24,11 +24,11 @@ import (
 
 type Settings struct {
 	Conditions      Conditions          `json:"conditions,omitempty"`      // A list of conditions necessary for the rule to take effect. If multiple conditions are specified, they must **all** match a Request for the rule to apply. If there is no condition at all, the rule is always applied. Conditions are evaluated against attributes, but do not modify them.
-	Description     *string             `json:"description,omitempty"`     // Description
+	Description     *string             `json:"description,omitempty"`     // A short description of the rule.
 	Enabled         bool                `json:"enabled"`                   // This setting is enabled (`true`) or disabled (`false`)
 	IdContributors  *IdContributorsType `json:"idContributors"`            // Contributors to the Service Identifier calculation. All of the Contributors are always applied.
 	ManagementZones []string            `json:"managementZones,omitempty"` // Define a management zone of the process group for which this service detection rule should be created.
-	Name            string              `json:"name"`                      // Rule name
+	Name            string              `json:"name"`                      // The name of the rule. It is used for identification and has no effect on the rule logic.
 	InsertAfter     string              `json:"-"`
 }
 
@@ -44,7 +44,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"description": {
 			Type:        schema.TypeString,
-			Description: "Description",
+			Description: "A short description of the rule.",
 			Optional:    true, // nullable
 		},
 		"enabled": {
@@ -68,7 +68,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"name": {
 			Type:        schema.TypeString,
-			Description: "Rule name",
+			Description: "The name of the rule. It is used for identification and has no effect on the rule logic.",
 			Required:    true,
 		},
 		"insert_after": {
