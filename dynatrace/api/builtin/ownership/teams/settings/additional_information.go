@@ -59,12 +59,12 @@ func (me *AdditionalInformation) Schema() map[string]*schema.Schema {
 		},
 		"url": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // nullable
 		},
 		"value": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 	}
