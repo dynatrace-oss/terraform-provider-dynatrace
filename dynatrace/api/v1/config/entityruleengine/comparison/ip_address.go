@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -22,10 +22,9 @@ import (
 	"maps"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/entityruleengine/comparison/ip_address"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -82,19 +81,13 @@ func (iac *IPAddress) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(iac.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", iac.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(iac.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", iac.Value); err != nil {
-		return err
-	}
-	if err := properties.Encode("case_sensitive", opt.Bool(iac.CaseSensitive)); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":         iac.Negate,
+		"operator":       iac.Operator,
+		"value":          iac.Value,
+		"case_sensitive": iac.CaseSensitive,
+	})
 }
 
 func (iac *IPAddress) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -114,23 +107,14 @@ func (iac *IPAddress) UnmarshalHCL(decoder hcl.Decoder) error {
 			iac.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		iac.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		iac.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		iac.Operator = ip_address.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		iac.Value = new(value.(string))
-	}
-	if value, ok := decoder.GetOk("case_sensitive"); ok {
-		iac.CaseSensitive = new(value.(bool))
-	}
 
-	return nil
+	return decoder.DecodeAll(map[string]any{
+		"type":           &iac.Type,
+		"negate":         &iac.Negate,
+		"operator":       &iac.Operator,
+		"value":          &iac.Value,
+		"case_sensitive": &iac.CaseSensitive,
+	})
 }
 
 func (iac *IPAddress) MarshalJSON() ([]byte, error) {

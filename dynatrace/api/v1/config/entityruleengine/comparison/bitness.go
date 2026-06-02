@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -74,16 +74,12 @@ func (bc *Bitness) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(bc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", bc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(bc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", bc.Value.String()); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   bc.Negate,
+		"operator": bc.Operator,
+		"value":    bc.Value,
+	})
 }
 
 func (bc *Bitness) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -102,19 +98,13 @@ func (bc *Bitness) UnmarshalHCL(decoder hcl.Decoder) error {
 			bc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		bc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		bc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		bc.Operator = bitness.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		bc.Value = bitness.Value(value.(string)).Ref()
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &bc.Type,
+		"negate":   &bc.Negate,
+		"operator": &bc.Operator,
+		"value":    &bc.Value,
+	})
 }
 
 func (bc *Bitness) MarshalJSON() ([]byte, error) {

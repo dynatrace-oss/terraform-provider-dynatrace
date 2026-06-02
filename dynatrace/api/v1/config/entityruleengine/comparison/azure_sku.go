@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -74,16 +74,12 @@ func (asc *AzureSku) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(asc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", asc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(asc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", asc.Value.String()); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   asc.Negate,
+		"operator": asc.Operator,
+		"value":    asc.Value,
+	})
 }
 
 func (asc *AzureSku) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -102,19 +98,13 @@ func (asc *AzureSku) UnmarshalHCL(decoder hcl.Decoder) error {
 			asc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		asc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		asc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		asc.Operator = azure_sku.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		asc.Value = azure_sku.Value(value.(string)).Ref()
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &asc.Type,
+		"negate":   &asc.Negate,
+		"operator": &asc.Operator,
+		"value":    &asc.Value,
+	})
 }
 
 func (asc *AzureSku) MarshalJSON() ([]byte, error) {

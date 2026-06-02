@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -57,13 +57,11 @@ func (sht *Host) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(sht.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("type", sht.Type.String()); err != nil {
-		return err
-	}
-	if err := properties.Encode("verbatim_type", sht.VerbatimType); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"type":          sht.Type,
+		"verbatim_type": sht.VerbatimType,
+	})
 }
 
 func (sht *Host) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -80,13 +78,11 @@ func (sht *Host) UnmarshalHCL(decoder hcl.Decoder) error {
 			sht.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		sht.Type = SimpleHostTechType(value.(string)).Ref()
-	}
-	if value, ok := decoder.GetOk("verbatim_type"); ok {
-		sht.VerbatimType = new(value.(string))
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":          &sht.Type,
+		"verbatim_type": &sht.VerbatimType,
+	})
 }
 
 func (sht *Host) MarshalJSON() ([]byte, error) {
@@ -136,14 +132,6 @@ func (sht *Host) UnmarshalJSON(data []byte) error {
 
 // SimpleHostTechType Predefined technology, if technology is not predefined, then the verbatim type must be set
 type SimpleHostTechType string
-
-func (v SimpleHostTechType) Ref() *SimpleHostTechType {
-	return &v
-}
-
-func (v *SimpleHostTechType) String() string {
-	return string(*v)
-}
 
 // SimpleHostTechTypes offers the known enum values
 var SimpleHostTechTypes = struct {

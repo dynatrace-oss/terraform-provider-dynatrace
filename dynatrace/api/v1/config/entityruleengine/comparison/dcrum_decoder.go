@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -74,16 +74,12 @@ func (ddc *DCRumDecoder) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(ddc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", ddc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(ddc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", ddc.Value.String()); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   ddc.Negate,
+		"operator": ddc.Operator,
+		"value":    ddc.Value,
+	})
 }
 
 func (ddc *DCRumDecoder) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -102,19 +98,13 @@ func (ddc *DCRumDecoder) UnmarshalHCL(decoder hcl.Decoder) error {
 			ddc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		ddc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		ddc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		ddc.Operator = dcrum_decoder.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		ddc.Value = dcrum_decoder.Value(value.(string)).Ref()
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &ddc.Type,
+		"negate":   &ddc.Negate,
+		"operator": &ddc.Operator,
+		"value":    &ddc.Value,
+	})
 }
 
 func (ddc *DCRumDecoder) MarshalJSON() ([]byte, error) {

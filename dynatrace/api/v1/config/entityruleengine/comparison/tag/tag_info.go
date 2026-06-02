@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -62,16 +62,12 @@ func (ti *Info) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(ti.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("context", string(ti.Context)); err != nil {
-		return err
-	}
-	if err := properties.Encode("key", ti.Key); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", ti.Value); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"context": ti.Context,
+		"key":     ti.Key,
+		"value":   ti.Value,
+	})
 }
 
 func (ti *Info) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -89,16 +85,12 @@ func (ti *Info) UnmarshalHCL(decoder hcl.Decoder) error {
 			ti.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("context"); ok {
-		ti.Context = Context(value.(string))
-	}
-	if value, ok := decoder.GetOk("key"); ok {
-		ti.Key = value.(string)
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		ti.Value = new(value.(string))
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"context": &ti.Context,
+		"key":     &ti.Key,
+		"value":   &ti.Value,
+	})
 }
 
 // Context The origin of the tag, such as AWS or Cloud Foundry.
