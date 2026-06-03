@@ -521,6 +521,16 @@ var TFAcc = StringEnvVar{
 	DefaultValue: "",
 }
 
+// DTGCPTestUnimpersonableServiceAccount represents a GCP service account that no Dynatrace GCP
+// Principal can impersonate. Used in tests to check API behavior when triggering authorization
+// errors. The key is intentionally the TF_VAR_-prefixed name: the same value populates the
+// Terraform variable of the same name in the test config, so one env var drives both the
+// skip-guard and the .tf input.
+var DTGCPTestUnimpersonableServiceAccount = StringEnvVar{
+	Key:          "TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT",
+	DefaultValue: "",
+}
+
 // --- Migration ---
 
 // Migration enables migration mode.
