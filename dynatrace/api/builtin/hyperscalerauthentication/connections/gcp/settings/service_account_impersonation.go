@@ -33,12 +33,14 @@ func (me *ServiceAccountImpersonation) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Dynatrace integrations that can use this connection. Possible values: `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`",
 			Optional:    true, // minobjects == 0
+			ForceNew:    true, // Changing consumers after creation would lead to validation errors on the API side
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"service_account_id": {
 			Type:        schema.TypeString,
 			Description: "Id of your Service Account",
-			Optional:    true, // nullable
+			Required:    true, // Even though the schema does not require it, we want the user to provide it already on creation
+			ForceNew:    true, // Changing the service account after it has been set once would lead to validation errors on the API side
 		},
 	}
 }
