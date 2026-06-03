@@ -19,15 +19,24 @@ package gcp
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+const DefaultCreateTimeout = 2 * time.Minute
+
 type Settings struct {
 	Name                        string                       `json:"name"` // The name of the connection
 	ServiceAccountImpersonation *ServiceAccountImpersonation `json:"serviceAccountImpersonation,omitempty"`
 	Type                        Type                         `json:"type"` // GCP Authentication mechanism to be used by the connection. Possible values: `serviceAccountImpersonation`
+}
+
+func (me *Settings) Timeouts() *schema.ResourceTimeout {
+	return &schema.ResourceTimeout{
+		Create: schema.DefaultTimeout(DefaultCreateTimeout),
+	}
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {

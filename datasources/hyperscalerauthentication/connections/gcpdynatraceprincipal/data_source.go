@@ -67,6 +67,8 @@ func ensurePrincipalExists(ctx context.Context, credentials *rest.Credentials) (
 			if err = v.Validate(ctx, &ValidConnection); err != nil {
 				return nil, fmt.Errorf("failed to trigger Dynatrace GCP Principal creation. Please reach out to support: %w", err)
 			}
+		} else {
+			return nil, settings.ErrValidatorNotImplemented(gcp.SchemaID)
 		}
 
 		err = retry.RetryContext(ctx, principalCreationTimeout, func() *retry.RetryError {
