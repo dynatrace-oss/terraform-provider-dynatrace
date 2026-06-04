@@ -47,16 +47,6 @@ func TestGcpConnection(t *testing.T) {
 // gcp.RetryableAuthenticationErrorMessage. The Create retry only kicks in on that exact message, so
 // this test binds the asserted message and the message used by the retry together: if the API ever
 // changes the wording, this test fails and forces the constant to be updated in lockstep.
-//
-// KNOWN FLAKE (accepted for now): because the message is classified as retryable, the
-// permanently-failing service account is retried until the create timeout elapses, and the retry
-// budget currently coincides with the resource context deadline. If a request is in-flight when the
-// deadline fires, the final error can be a context-cancellation error instead of the API message,
-// causing ExpectError to miss (~6% of runs). A follow-up PR decouples the retry budget from the
-// context deadline (reserving a buffer so the final attempt completes against a live context),
-// which makes this deterministic. Until then this opt-in test (it requires acceptance env vars plus
-// DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT) is skipped, pending the GCP connection resource being
-// fully wired up in a follow-up PR.
 func TestAccGcpConnectionAuthenticationFailure(t *testing.T) {
 	t.Skip("Enable this test as soon as the GCP connection resource is wired.")
 

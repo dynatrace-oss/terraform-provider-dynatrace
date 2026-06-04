@@ -33,31 +33,38 @@ import (
 // TestDurationUntilDeadlineOrDefault_NoDeadline tests that DurationUntilDeadlineOrDefault returns the default timeout when the context has no deadline.
 func TestDurationUntilDeadlineOrDefault_NoDeadline(t *testing.T) {
 	defaultTimeout := 2 * time.Minute
-	ctx := context.Background()
 
-	retryTimeout := retry.DurationUntilDeadlineOrDefault(ctx, defaultTimeout)
+	retryTimeout := retry.DurationUntilDeadlineOrDefault(t.Context(), defaultTimeout)
 	assert.Equal(t, defaultTimeout, retryTimeout)
 }
 
-// TestDurationUntilDeadlineOrDefault_WithDeadline_Plenty tests that DurationUntilDeadlineOrDefault returns the remaining duration when the context has a deadline set well in the future.
+// TestDurationUntilDeadlineOrDefault_WithDeadline_Plenty tests that DurationUntilDeadlineOrDefault returns the remaining duration minus the reserved buffer when the context has a deadline set well in the future.
 func TestDurationUntilDeadlineOrDefault_WithDeadline_Plenty(t *testing.T) {
-	// caller provides 5 minutes; retryTimeout should be ~5 minutes
-	parent := context.Background()
+	// caller provides 5 minutes; retryTimeout should be ~5 minutes minus the reserved buffer
+	parent := t.Context()
 	deadline := time.Now().Add(5 * time.Minute)
 	ctxWithDL, cancelParent := context.WithDeadline(parent, deadline)
 	defer cancelParent()
 
 	retryTimeout := retry.DurationUntilDeadlineOrDefault(ctxWithDL, 2*time.Minute)
 
-	// expect ~5 minutes
-	expected := 5 * time.Minute
+	// expect ~5 minutes minus the reserved deadline buffer
+	expected := 5*time.Minute - retry.RetryDeadlineBuffer
 	assert.InDelta(t, expected.Milliseconds(), retryTimeout.Milliseconds(), 200, "expected approximately %v, got %v", expected, retryTimeout)
-
 }
 
-// TestDurationUntilDeadlineOrDefault_ExpiredDeadline tests that wDurationUntilDeadlineOrDefault returns zero when the context has an expired deadline.
+// TestDurationUntilDeadlineOrDefault_DeadlineWithinBuffer tests that DurationUntilDeadlineOrDefault returns zero when the time remaining until the deadline is smaller than the reserved buffer, so the retry loop does not start an attempt it cannot let finish before the context is cancelled.
+func TestDurationUntilDeadlineOrDefault_DeadlineWithinBuffer(t *testing.T) {
+	ctxWithDL, cancel := context.WithDeadline(t.Context(), time.Now().Add(retry.RetryDeadlineBuffer/2))
+	defer cancel()
+
+	retryTimeout := retry.DurationUntilDeadlineOrDefault(ctxWithDL, 2*time.Minute)
+	assert.Zero(t, retryTimeout, "expected zero retry timeout when the deadline is within the reserved buffer")
+}
+
+// TestDurationUntilDeadlineOrDefault_ExpiredDeadline tests that DurationUntilDeadlineOrDefault returns zero when the context has an expired deadline.
 func TestDurationUntilDeadlineOrDefault_ExpiredDeadline(t *testing.T) {
-	ctxWithExpiredDL, cancel := context.WithDeadline(context.Background(), time.Now().Add(-time.Second))
+	ctxWithExpiredDL, cancel := context.WithDeadline(t.Context(), time.Now().Add(-time.Second))
 	defer cancel()
 
 	retryTimeout := retry.DurationUntilDeadlineOrDefault(ctxWithExpiredDL, 2*time.Minute)
