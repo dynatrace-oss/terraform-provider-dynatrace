@@ -59,7 +59,7 @@ func (me *Tasks) Schema(prefix string) map[string]*schema.Schema {
 		return map[string]*schema.Schema{
 			"task": {
 				Type:        schema.TypeList,
-				Description: "TODO: No documentation available",
+				Description: "A task within the workflow. Note: the order in which tasks are declared in HCL does not determine their layout - positions are not assigned incrementally based on declaration order. Set `position` explicitly on each task if you need a deterministic layout",
 				MinItems:    1,
 				Optional:    true,
 				Elem:        &schema.Resource{Schema: new(Task).Schema(prefix + ".0.task")},
@@ -69,7 +69,7 @@ func (me *Tasks) Schema(prefix string) map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"task": {
 			Type:        schema.TypeSet,
-			Description: "TODO: No documentation available",
+			Description: "A task within the workflow. Note: the order in which tasks are declared in HCL does not determine their layout - positions are not assigned incrementally based on declaration order. Set `position` explicitly on each task if you need a deterministic layout",
 			MinItems:    1,
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(Task).Schema(prefix + ".0.task")},
