@@ -81,7 +81,7 @@ func (me *service) Create(ctx context.Context, v *slo.Settings) (*api.Stub, erro
 		if err := service.Delete(ctx, *stub.LegacyID); err != nil {
 			return nil, err
 		}
-		return nil, errors.New("SLO creation failed, unable to retrieve ID. Please create a GitHub issue.")
+		return nil, errors.New("SLO creation failed, unable to retrieve ID.")
 	}
 
 	return stub, nil
