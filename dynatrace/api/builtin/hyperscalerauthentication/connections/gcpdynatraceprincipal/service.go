@@ -122,13 +122,7 @@ func (me *service) ensurePrincipalExists(ctx context.Context) (*api.Stub, error)
 // returns the existing stub; otherwise creation is triggered and ensurePrincipalExists polls until
 // the principal appears (or principalCreationTimeout elapses).
 func (me *service) Create(ctx context.Context, _ *gcpprincipalsettings.Settings) (*api.Stub, error) {
-	stub, err := me.ensurePrincipalExists(ctx)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return stub, nil
+	return me.ensurePrincipalExists(ctx)
 }
 
 func (me *service) Update(_ context.Context, _ string, _ *gcpprincipalsettings.Settings) error {
