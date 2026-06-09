@@ -26,17 +26,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 )
 
-// RetryDeadlineBuffer is reserved before the context deadline so the final retry attempt can
-// complete against a still-live context. Without it, the retry budget would coincide with the
-// context deadline: a request in-flight at expiry would be cancelled and surface a generic
-// "context deadline exceeded" error instead of the real, actionable API error (and, for retries
-// driven by eventual consistency, would mask the underlying constraint violation).
+// RetryDeadlineBuffer is reserved before the context deadline so the final retry attempt
+// completes against a live context and returns the real API error, not "context deadline exceeded".
 const RetryDeadlineBuffer = 5 * time.Second
 
-// DurationUntilDeadlineOrDefault computes the retry budget: the duration until the context deadline
-// minus RetryDeadlineBuffer, or the provided defaultTimeout if no deadline is set. Reserving the
-// buffer ensures the retry loop gives up slightly before the context is cancelled, so the last
-// attempt finishes and returns the real error rather than a context-cancellation error.
+// DurationUntilDeadlineOrDefault returns the time until deadline minus RetryDeadlineBuffer,
+// or defaultTimeout if no deadline is set.
 func DurationUntilDeadlineOrDefault(ctx context.Context, defaultTimeout time.Duration) time.Duration {
 	dl, hasDeadline := ctx.Deadline()
 	if !hasDeadline {
