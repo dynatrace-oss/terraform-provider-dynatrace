@@ -29,10 +29,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func TestAccDatasourceGcpPrincipal(t *testing.T) {
-	t.Skip("Enable this test as soon as the dynatrace_gcp_principal datasource is referenced in provider.go")
+func TestAccResourceGcpPrincipal(t *testing.T) {
+	t.Skip("Enable this test as soon as the dynatrace_gcp_principal resource is referenced in provider.go")
 
-	datasourceConfig, _ := api.ReadTfConfig(t, "testdata/datasource.tf")
+	resourceConfig, _ := api.ReadTfConfig(t, "testdata/resource.tf")
 
 	resource.Test(t, resource.TestCase{
 		ProviderFactories: map[string]func() (*schema.Provider, error){
@@ -42,7 +42,7 @@ func TestAccDatasourceGcpPrincipal(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: datasourceConfig,
+				Config: resourceConfig,
 				Check:  resource.TestMatchOutput("records", regexp.MustCompile(`iam\.gserviceaccount\.com$`)),
 			},
 		},

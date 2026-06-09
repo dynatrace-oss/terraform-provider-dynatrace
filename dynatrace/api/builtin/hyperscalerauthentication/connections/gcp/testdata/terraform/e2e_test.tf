@@ -14,14 +14,15 @@ resource "google_service_account" "gcp_service_account" {
   display_name = "#name#"
 }
 
-# Fetch the DT GCP Principal
-data "dynatrace_gcp_principal" "principal" {
+# Provision the DT GCP Principal. This resource takes no input; it triggers creation of the
+# Dynatrace-managed principal (a singleton) and exposes it via the `principal` attribute.
+resource "dynatrace_gcp_principal" "principal" {
 }
 
 # Grant DT GCP Principal access to the service account
 resource "google_service_account_iam_member" "wif_binding" {
   service_account_id = google_service_account.gcp_service_account.name
-  member  = "serviceAccount:${data.dynatrace_gcp_principal.principal.principal}"
+  member  = "serviceAccount:${dynatrace_gcp_principal.principal.principal}"
   role    = "roles/iam.serviceAccountTokenCreator"
 }
 

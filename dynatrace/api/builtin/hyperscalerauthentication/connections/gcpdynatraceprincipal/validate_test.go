@@ -23,9 +23,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/hyperscalerauthentication/connections/gcpdynatraceprincipal"
 	gcpservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcp"
 	gcpsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcp/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcpdynatraceprincipal"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
@@ -33,9 +33,9 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// Guards against schema drift in ValidConnection. The data source triggers Dynatrace GCP
-// Principal creation as a side effect of submitting ValidConnection to the validate endpoint;
-// if the payload is rejected, no principal will ever be created.
+// Guards against schema drift in ValidConnection. The dynatrace_gcp_principal resource triggers
+// Dynatrace GCP Principal creation as a side effect of submitting ValidConnection to the validate
+// endpoint; if the payload is rejected, no principal will ever be created.
 func TestValidateIsSuccessfulForGcpConnection(t *testing.T) {
 	envURL := os.Getenv("DYNATRACE_ENV_URL")
 	apiToken := os.Getenv("DYNATRACE_API_TOKEN")
@@ -50,5 +50,5 @@ func TestValidateIsSuccessfulForGcpConnection(t *testing.T) {
 	require.True(t, ok, "settings20 service must implement settings.Validator")
 
 	err := validator.Validate(t.Context(), &gcpdynatraceprincipal.ValidConnection)
-	assert.NoError(t, err, "ValidConnection in data_source.go was rejected by the API — update the fixture or principal creation might never be triggered.")
+	assert.NoError(t, err, "ValidConnection in service.go was rejected by the API — update the fixture or principal creation might never be triggered.")
 }
