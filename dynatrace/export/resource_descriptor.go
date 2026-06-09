@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/maintenancewindows"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroupingrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
@@ -1882,6 +1883,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 	),
 	ResourceTypes.ProcessGroupingRules: NewResourceDescriptor(processgroupingrules.Service),
+	ResourceTypes.MaintenanceWindows: NewResourceDescriptor(maintenancewindows.Service,
+		Dependencies.ID(ResourceTypes.AutomationSchedulingRule),
+	),
 }
 
 type ResourceExclusion struct {
@@ -2049,7 +2053,6 @@ func genExcludeListedResourceGroups() []ResourceType {
 	}
 	return result
 }
-
 
 func GetExcludeListedResourceGroups() []ResourceExclusionGroup {
 	if envutils.DynatraceEnableExportDashboard.Get() {

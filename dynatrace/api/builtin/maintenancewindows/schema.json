@@ -1,0 +1,337 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Create and configure maintenance-windows",
+	"displayName": "Maintenance Windows",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"TriggerType": {
+			"description": "",
+			"displayName": "TriggerType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Time",
+					"value": "time"
+				},
+				{
+					"displayName": "Once",
+					"value": "once"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maturity": "GENERAL_AVAILABILITY",
+	"maxObjects": 100,
+	"multiObject": true,
+	"ordered": false,
+	"properties": {
+		"autoDelete": {
+			"default": true,
+			"description": "When enabled, this maintenance window configuration will be automatically deleted 30 days after the end of its last execution.",
+			"displayName": "Auto-delete after expiration",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"description": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "",
+			"displayName": "Description",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"filter": {
+			"constraints": [
+				{
+					"customValidatorId": "filter-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "true",
+			"description": "",
+			"displayName": "DQL Filter",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"name": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Name of the maintenance window",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"schedule": {
+			"default": {
+				"duration": 60,
+				"trigger": {
+					"recurring": {
+						"time": "12:00:00"
+					},
+					"type": "time"
+				}
+			},
+			"description": "",
+			"displayName": "Schedule definition",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/types/ScheduleDefinition"
+			}
+		}
+	},
+	"schemaId": "builtin:maintenance-windows",
+	"types": {
+		"OnceTrigger": {
+			"description": "Once trigger definition.",
+			"displayName": "Once Trigger",
+			"documentation": "",
+			"properties": {
+				"date": {
+					"default": "2025-01-01T00:00:00",
+					"description": "Date for the once trigger.",
+					"displayName": "Date",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "local_date_time"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ScheduleDefinition": {
+			"constraints": [
+				{
+					"customValidatorId": "schedule-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "Schedule definition for platform service schedules.",
+			"displayName": "ScheduleDefinition",
+			"documentation": "",
+			"properties": {
+				"duration": {
+					"constraints": [
+						{
+							"customValidatorId": "duration-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": 60,
+					"description": "Duration of the maintenance window in minutes.",
+					"displayName": "Duration",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"timezone": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Time zone",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"trigger": {
+					"default": {
+						"recurring": {
+							"time": "12:00:00"
+						},
+						"type": "time"
+					},
+					"description": "Trigger definition.",
+					"displayName": "Trigger",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/Trigger"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"TimeTrigger": {
+			"description": "Trigger definition.",
+			"displayName": "Trigger",
+			"documentation": "",
+			"properties": {
+				"earliestStart": {
+					"description": "Earliest start date for when the first instance of this maintenance window should be created.",
+					"displayName": "Recurring start date",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "local_date"
+				},
+				"rule": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "Reference to rule which specifies on which days instance of this maintenance window should be created.",
+					"displayName": "Recurrence rule",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"time": {
+					"default": "12:00:00",
+					"description": "Time for the trigger.",
+					"displayName": "Time",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "local_time"
+				},
+				"until": {
+					"description": "Date after which instances of this recurring maintenance window should no longer be created.",
+					"displayName": "Recurring end date",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "local_date"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Trigger": {
+			"description": "Base trigger definition.",
+			"displayName": "Trigger",
+			"documentation": "",
+			"properties": {
+				"once": {
+					"default": {
+						"date": "2025-01-01T00:00:00"
+					},
+					"description": "",
+					"displayName": "Once Trigger",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "once",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/OnceTrigger"
+					}
+				},
+				"recurring": {
+					"default": {
+						"time": "12:00:00"
+					},
+					"description": "",
+					"displayName": "Time trigger",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "time",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/TimeTrigger"
+					}
+				},
+				"type": {
+					"default": "time",
+					"description": "Type of trigger.",
+					"displayName": "Trigger Type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/TriggerType"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1"
+}
