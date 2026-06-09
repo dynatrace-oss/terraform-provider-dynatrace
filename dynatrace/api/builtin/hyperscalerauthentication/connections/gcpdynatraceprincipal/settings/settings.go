@@ -35,8 +35,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"principal": {
 			Type:        schema.TypeString,
 			Description: "Dynatrace GCP Service Account",
-			ForceNew:    true,
-			Required:    true,
+			Computed:    true,
 		},
 	}
 }
