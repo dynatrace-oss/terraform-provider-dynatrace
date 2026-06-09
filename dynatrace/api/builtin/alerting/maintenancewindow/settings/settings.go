@@ -35,6 +35,10 @@ type Settings struct {
 	LegacyID          *string            `json:"-"`
 }
 
+func (me *Settings) Deprecated() string {
+	return "This resource has been deprecated. Please use the `dynatrace_maintenance_windows` resource instead."
+}
+
 func (me *Settings) Name() string {
 	name := me.GeneralProperties.Name
 
