@@ -25,10 +25,10 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_log_events" "#name#" {
+resource "dynatrace_log_events" "events" {
   enabled = false
   query   = "matchesPhrase(content, \"terratest\")"
-  summary = "Created by Terraform"
+  summary = "Created by #name#"
   event_template {
     description = "Created by Terraform"
     event_type  = "INFO"

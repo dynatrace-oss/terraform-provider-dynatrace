@@ -132,7 +132,7 @@ resource "dynatrace_automation_workflow" "workflow_with_davis_event_trigger" {
 
 ### Required
 
-- `tasks` (Block List, Min: 1, Max: 1) The tasks to run for every execution of this workflow (see [below for nested schema](#nestedblock--tasks))
+- `tasks` (Block List, Min: 1, Max: 1) The tasks to run for every execution of this workflow. Note: the order in which tasks are declared in HCL does not determine their layout - positions are not assigned incrementally based on declaration order. Set `position` explicitly on each task if you need a deterministic layout (see [below for nested schema](#nestedblock--tasks))
 - `title` (String) The title / name of the workflow
 
 ### Optional
@@ -159,7 +159,7 @@ resource "dynatrace_automation_workflow" "workflow_with_davis_event_trigger" {
 
 Optional:
 
-- `task` (Block Set) TODO: No documentation available (see [below for nested schema](#nestedblock--tasks--task))
+- `task` (Block Set) A task within the workflow. Note: the order in which tasks are declared in HCL does not determine their layout - positions are not assigned incrementally based on declaration order. Set `position` explicitly on each task if you need a deterministic layout (see [below for nested schema](#nestedblock--tasks--task))
 
 <a id="nestedblock--tasks--task"></a>
 ### Nested Schema for `tasks.task`
