@@ -1909,7 +1909,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.AlertingProfile, "Replaced by dynatrace_alerting"},
 			{ResourceTypes.CustomAnomalies, "Replaced by dynatrace_metric_events"},
 			{ResourceTypes.LogGrail, "Only meant to be used for the initial Logs powered by Grail activation"},
-			{ResourceTypes.MaintenanceWindow, "Replaced by dynatrace_maintenance"},
+			{ResourceTypes.MaintenanceWindow, "Replaced by dynatrace_maintenance_windows"},
 			{ResourceTypes.Notification, "Replaced by dynatrace_<type>_notification"},
 		},
 	},
