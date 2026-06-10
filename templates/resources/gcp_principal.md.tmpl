@@ -1,0 +1,32 @@
+---
+layout: ""
+page_title: "dynatrace_gcp_principal Resource - terraform-provider-dynatrace"
+subcategory: "Connections"
+description: |-
+  The resource `dynatrace_gcp_principal` provisions the Dynatrace GCP Principal
+---
+
+# dynatrace_gcp_principal (Resource)
+
+The Dynatrace GCP Principal resource provisions the Dynatrace GCP Principal (a service account) and exposes it via the `principal` attribute.
+The principal must be granted the `roles/iam.serviceAccountTokenCreator` role on the GCP service account you want to impersonate, so that the `dynatrace_gcp_connection` resource can authenticate via service account impersonation.
+
+-> This resource takes **no input**. The Dynatrace GCP Principal is a tenant-wide singleton that is provisioned by Dynatrace; this resource triggers its creation (if it does not exist yet), waits until it becomes available, and returns it. Creating the resource when a principal already exists is a no-op that simply reads the existing one.
+
+-> `update` and `delete` are no-ops. Because the principal is a Dynatrace-managed singleton, `terraform destroy` removes the resource from state but leaves the principal in place.
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`), and the OAuth scopes **Read settings** (`settings:objects:read`) and **Write settings** (`settings:objects:write`).
+
+~> **Where the write permission applies is counter-intuitive.** Provisioning is triggered by a call against the **GCP connection** schema (`builtin:hyperscaler-authentication.connections.gcp`), so the **Write settings** permission must be granted on **that** schema. Write access on the GCP principal schema (`builtin:hyperscaler-authentication.connections.gcp-dynatrace-principal`) is **not required at all** — a caller who is denied write access on the principal schema can still provision the principal through this resource. This is a Dynatrace API characteristic and cannot be changed by the provider.
+
+## Dynatrace Documentation
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:hyperscaler-authentication.connections.gcp-dynatrace-principal`)
+
+## Resource Example Usage
+
+This example provisions the Dynatrace GCP Principal, grants it access to the impersonated service account, and wires it into a `dynatrace_gcp_connection`.
+
+{{ tffile "dynatrace/api/builtin/hyperscalerauthentication/connections/gcp/examples/full-usage-example.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
