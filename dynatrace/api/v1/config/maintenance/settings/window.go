@@ -30,7 +30,7 @@ import (
 )
 
 func (me *Window) Deprecated() string {
-	return "This resource API endpoint has been deprecated, please use `dynatrace_maintenance` instead."
+	return "This resource API endpoint has been deprecated, please use `dynatrace_maintenance_windows` instead."
 }
 
 // Window Configuration of a maintenance window.
