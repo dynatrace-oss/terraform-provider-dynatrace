@@ -720,6 +720,8 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_usersessions_pipelinegroups":    resources.NewGeneric(export.ResourceTypes.OpenpipelineUsersessionsPipelinegroups).Resource(),
 			"dynatrace_process_grouping_rules":                         resources.NewGeneric(export.ResourceTypes.ProcessGroupingRules).Resource(),
 			"dynatrace_maintenance_windows":                            resources.NewGeneric(export.ResourceTypes.MaintenanceWindows).Resource(),
+			"dynatrace_gcp_connection":                                 resources.NewGeneric(export.ResourceTypes.GCPConnection).Resource(),
+			"dynatrace_gcp_principal":                                  resources.NewGeneric(export.ResourceTypes.GCPPrincipal).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
