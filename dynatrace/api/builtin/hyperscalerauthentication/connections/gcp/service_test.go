@@ -32,14 +32,7 @@ import (
 )
 
 func TestGcpConnection(t *testing.T) {
-	t.Skip("Enable this test as soon as GCP test environment setup is done.")
-
-	api.TestAcc(t, api.TestAccOptions{
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"google": {VersionConstraint: "7.33.0", Source: "hashicorp/google"},
-			"time":   {VersionConstraint: "0.14.0", Source: "hashicorp/time"},
-		},
-	})
+	api.TestAcc(t)
 }
 
 // TestAccGcpConnectionAuthenticationFailure verifies that the Dynatrace API still rejects an
@@ -48,8 +41,6 @@ func TestGcpConnection(t *testing.T) {
 // this test binds the asserted message and the message used by the retry together: if the API ever
 // changes the wording, this test fails and forces the constant to be updated in lockstep.
 func TestAccGcpConnectionAuthenticationFailure(t *testing.T) {
-	t.Skip("Enable this test as soon as the GCP connection resource is wired.")
-
 	if !api.AccEnvsGiven(t) {
 		return
 	}
