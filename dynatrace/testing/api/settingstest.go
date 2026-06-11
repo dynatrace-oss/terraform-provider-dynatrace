@@ -20,8 +20,10 @@
 package api
 
 import (
+	"errors"
 	"os"
 	"path"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -30,6 +32,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/stretchr/testify/require"
 )
 
@@ -102,7 +105,8 @@ func readTestData(t *testing.T) []string {
 	return allFiles
 }
 
-// TestAcc executes all test files in the `testdata` folder ("testdata/*/*.tf").
+// TestAcc executes all test files in the `testdata` folder ("testdata/*/*.tf")
+// and validates all defined "output" to not be empty.
 // Fail conditions could be
 // - API errors during create and cleanup (GET, POST, DELETE)
 // - Inconsistencies (GET after apply)
@@ -205,14 +209,8 @@ func TestAccTestCases(t *testing.T, opts ...TestCaseAccOptions) {
 		t.Run(testCase.Name, func(t *testing.T) {
 			t.Helper()
 
-			providerFactories := map[string]func() (*schema.Provider, error){
-				"dynatrace": func() (*schema.Provider, error) {
-					return provider.Provider(), nil
-				},
-			}
-
 			resource.Test(t, resource.TestCase{
-				ProviderFactories: providerFactories,
+				ProviderFactories: GetProviderFactories(),
 				ExternalProviders: options.ExternalProviders,
 				Steps:             testCase.TestCases,
 			})
@@ -237,11 +235,7 @@ func TestAccTestCase(t *testing.T, folder string, opts ...TestCaseAccOptions) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: map[string]func() (*schema.Provider, error){
-			"dynatrace": func() (*schema.Provider, error) {
-				return provider.Provider(), nil
-			},
-		},
+		ProviderFactories: GetProviderFactories(),
 		ExternalProviders: options.ExternalProviders,
 		Steps:             getTestCase(t, folder, "").TestCases,
 	})
@@ -272,19 +266,33 @@ func TestAccParallel(t *testing.T, opts ...TestAccOptions) {
 
 func createTestCaseWithOptions(t *testing.T, config string, opts []TestAccOptions) resource.TestCase {
 	t.Helper()
-	providerFactories := map[string]func() (*schema.Provider, error){
-		"dynatrace": func() (*schema.Provider, error) {
-			return provider.Provider(), nil
-		},
-	}
 	var options TestAccOptions
 	if len(opts) > 0 {
 		options = opts[0]
 	}
 
 	return resource.TestCase{
-		ProviderFactories: providerFactories,
+		ProviderFactories: GetProviderFactories(),
 		ExternalProviders: options.ExternalProviders,
-		Steps:             []resource.TestStep{{Config: config, ExpectNonEmptyPlan: options.ExpectNonEmptyPlan}},
+		Steps: []resource.TestStep{{
+			Config: config, ExpectNonEmptyPlan: options.ExpectNonEmptyPlan,
+			Check: func(s *terraform.State) error {
+				var errs []error
+				for key := range s.RootModule().Outputs {
+					err := resource.TestMatchOutput(key, regexp.MustCompile(`.+`))(s)
+					errs = append(errs, err)
+				}
+				return errors.Join(errs...)
+			},
+		}},
+	}
+}
+
+// GetProviderFactories returns our provider factory for use in resource.TestCase.
+func GetProviderFactories() map[string]func() (*schema.Provider, error) {
+	return map[string]func() (*schema.Provider, error){
+		"dynatrace": func() (*schema.Provider, error) {
+			return provider.Provider(), nil
+		},
 	}
 }
