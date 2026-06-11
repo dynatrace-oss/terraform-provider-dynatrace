@@ -63,6 +63,7 @@ import (
 	serviceds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/service"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo/objectivetemplates"
+	platformslo "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo/platform"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/locations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/nodes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/tenant"
@@ -254,6 +255,7 @@ func Provider() *schema.Provider {
 			"dynatrace_request_naming":                  requestnaming.DataSource(),
 			"dynatrace_dashboard":                       dashboard.DataSource(),
 			"dynatrace_slo":                             slo.DataSource(),
+			"dynatrace_platform_slo":                    platformslo.DataSource(),
 			"dynatrace_azure_supported_services":        azure_supported_services.DataSource(),
 			"dynatrace_aws_supported_services":          aws_supported_services.DataSource(),
 			"dynatrace_failure_detection_parameters":    failure_detection_parameters.DataSource(),

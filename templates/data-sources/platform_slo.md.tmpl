@@ -1,0 +1,38 @@
+---
+layout: ""
+page_title: "dynatrace_platform_slo Data Source - terraform-provider-dynatrace"
+subcategory: "Service-level Objective"
+description: |-
+  The data source `dynatrace_platform_slo` covers queries for platform service-level objectives.
+---
+
+# dynatrace_platform_slo (Data Source)
+
+-> **Dynatrace SaaS only**
+
+-> This data source requires the OAuth permission **View SLOs** (`slo:slos:read`)
+
+The `dynatrace_platform_slo` data source allows to get an SLO and all its data by its name.
+
+## Dynatrace Documentation
+
+- Service-Level Objectives overview - https://docs.dynatrace.com/docs/deliver/service-level-objectives
+
+## Example Usage
+
+```terraform
+data "dynatrace_platform_slo" "example" {
+  name = "Terraform"
+}
+
+output "id" {
+  value = data.dynatrace_platform_slo.example.id
+}
+
+output "sli" {
+  value = data.dynatrace_platform_slo.example.custom_sli[0].indicator
+}
+
+```
+
+{{ .SchemaMarkdown | trimspace }}
