@@ -30,6 +30,8 @@ test.log
 *.cmd
 *.sh
 .vscode/*
+.claude/*
+.opencode/*
 .DS_Store
 *.env
 __debug_bin*
