@@ -29,13 +29,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 )
 
-const SchemaVersion = "1.0.7"
+const SchemaVersion = "1.0.8"
 const SchemaID = "builtin:failure-detection.environment.parameters"
 const defaultTimeout = 10 * time.Second
 
-// During "create" and potentially "update" there is a "delete"-error happening that is not related to the object that should be created.
-// Seems like the delete-constraint is done at the wrong place, and that there is some eventual consistency.
+// There is a potential "delete"-error happening due to eventual consistency.
 // error: builtin:failure-detection.environment.parameters: Failure detection rule EnvironmentFailureDetectionRules {your-values-here} refers to this parameter ID: <uuid>.
+// The related object is deleted but not propagated to the server node.
 const retryErr = "refers to this parameter"
 
 type service struct {
@@ -46,28 +46,18 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*parameters.Set
 	return &service{settings20.Service[*parameters.Settings](credentials, SchemaID, SchemaVersion)}
 }
 func (me *service) Create(ctx context.Context, v *parameters.Settings) (*api.Stub, error) {
-	var apiStub *api.Stub
-	err := retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
-		var err error
-		apiStub, err = me.service.Create(ctx, v)
-		return settings.ClassifyConstraintRetryError(err, retryErr)
-	})
-
-	if err != nil {
-		return nil, err
-	}
-	return apiStub, nil
+	return me.service.Create(ctx, v)
 }
 
 func (me *service) Update(ctx context.Context, id string, v *parameters.Settings) error {
-	return retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
-		err := me.service.Update(ctx, id, v)
-		return settings.ClassifyConstraintRetryError(err, retryErr)
-	})
+	return me.service.Update(ctx, id, v)
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return me.service.Delete(ctx, id)
+	return retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
+		err := me.service.Delete(ctx, id)
+		return settings.ClassifyConstraintRetryError(err, retryErr)
+	})
 }
 
 func (me *service) Get(ctx context.Context, id string, v *parameters.Settings) error {
