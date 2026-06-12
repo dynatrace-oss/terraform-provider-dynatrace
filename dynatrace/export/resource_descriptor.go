@@ -556,6 +556,7 @@ func AddInsertAfterWeakIDDependencies(resources map[ResourceType]ResourceDescrip
 			continue
 		}
 		descriptor.Dependencies = append(descriptor.Dependencies, Dependencies.WeakID(resType))
+		resources[resType] = descriptor
 	}
 }
 
