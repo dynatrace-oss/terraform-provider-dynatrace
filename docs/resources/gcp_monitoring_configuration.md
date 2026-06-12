@@ -177,7 +177,7 @@ Required:
 Required:
 
 - `auto_discovery_enabled` (Boolean) Whether autodiscovery is enabled for this resource type.
-- `resource_type` (String) GCP resource type, e.g. `cloud_sql`.
+- `resource_type` (String) GCP monitored resource type in the form `<service>.googleapis.com/<Kind>`, e.g. `compute.googleapis.com/Instance`.
 
 Optional:
 

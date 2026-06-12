@@ -36,7 +36,7 @@ func (me *ResourceAutodiscovery) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"resource_type": {
 			Type:        schema.TypeString,
-			Description: "GCP resource type, e.g. `cloud_sql`.",
+			Description: "GCP monitored resource type in the form `<service>.googleapis.com/<Kind>`, e.g. `compute.googleapis.com/Instance`.",
 			Required:    true,
 		},
 		"auto_discovery_enabled": {

@@ -50,7 +50,7 @@ func (me *Credential) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "`FEDERATED` (workload-identity federation) or `SECRET` (client secret). Defaulted from the connection's auth mode when omitted.",
+			Description: "`FEDERATED` (workload-identity federation) or `SECRET` (client secret). Defaults to `FEDERATED` when omitted.",
 			Optional:    true,
 			Computed:    true,
 			ValidateFunc: func(i any, k string) (warnings []string, errs []error) {

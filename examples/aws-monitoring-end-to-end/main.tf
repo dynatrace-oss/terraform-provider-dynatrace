@@ -20,7 +20,6 @@ provider "aws" {
 provider "dynatrace" {
   dt_env_url     = var.dt_env_url
   platform_token = var.dynatrace_platform_token
-  dt_api_token   = var.dynatrace_platform_token
 }
 
 data "aws_caller_identity" "current" {}
