@@ -84,22 +84,26 @@ resource "dynatrace_gcp_monitoring_configuration" "this" {
     "kubernetes_engine_essential",
   ]
 
-  # Optional: filter monitored resources by GCP resource-manager tag
+  # Optional: filter monitored resources by GCP resource-manager tag.
+  # Resource-manager tags are addressed by numeric IDs, not by display name:
+  #   tagKeys/<TAG_KEY_ID>  /  tagValues/<TAG_VALUE_ID>
   tag_filter {
-    key       = "environment"
-    value     = "production"
+    key       = "tagKeys/123456789012"
+    value     = "tagValues/123456789013"
     condition = "INCLUDE"
   }
 
-  # Optional: filter by classic GCP label
+  # Optional: filter by classic GCP label (plain key/value).
   label_filter {
     key       = "team"
     value     = "platform"
     condition = "INCLUDE"
   }
 
-  # Optional: promote GCP tag / label keys onto Dynatrace entities
-  tag_enrichment   = ["owner", "cost-center"]
+  # Optional: promote GCP tag / label keys onto Dynatrace entities.
+  # tag_enrichment uses the same `tagKeys/<ID>` form as tag_filter;
+  # label_enrichment uses plain label keys.
+  tag_enrichment   = ["tagKeys/123456789012"]
   label_enrichment = ["team"]
 }
 ```
