@@ -125,7 +125,6 @@ resource "dynatrace_gcp_monitoring_configuration" "this" {
 
 ### Optional
 
-- `activation_context` (String) Extension activation context. Defaults to `DATA_ACQUISITION`.
 - `enabled` (Boolean) Whether the monitoring configuration is active. Defaults to true.
 - `extension_version` (String) Version of `com.dynatrace.extension.da-gcp` that this configuration targets. Optional — when omitted at create time, the provider picks the highest semver version installed on the tenant (same behavior as `dtctl create gcp monitoring`). The resolved value is persisted to state. On subsequent refreshes the provider reads back whatever version Dynatrace currently reports for this configuration; if the extension was auto-updated (or bumped manually) the new version surfaces as drift in `terraform plan`, but no Terraform-driven update silently re-resolves it. To pin a version, set it explicitly here.
 - `feature_sets` (Set of String) GCP feature sets to enable (e.g. `compute_engine_essential`, `kubernetes_engine_essential`, `sql_essential`). When empty, the extension defaults are used.
@@ -137,7 +136,6 @@ resource "dynatrace_gcp_monitoring_configuration" "this" {
 - `regions` (Set of String) GCP regions (locations) to monitor, e.g. `us-central1`. Empty set = all locations the extension knows about. Maps to `locationFiltering` on the wire.
 - `resource_autodiscovery` (Block List) Per-resource-type autodiscovery override. Repeat the block once per `resource_type` you want to override. (see [below for nested schema](#nestedblock--resource_autodiscovery))
 - `scope` (String) Settings 2.0 scope. Defaults to `integration-gcp`. Changing it forces recreation.
-- `smartscape_enabled` (Boolean) Whether Smartscape topology mapping is enabled. Defaults to true.
 - `tag_enrichment` (Set of String) GCP tag keys whose values are copied as Dynatrace tags on monitored entities.
 - `tag_filter` (Block List) Filter monitored resources by GCP resource-manager tag (`tagKeys/…`). Repeat the block to define multiple filters. (see [below for nested schema](#nestedblock--tag_filter))
 

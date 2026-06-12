@@ -41,6 +41,7 @@ const DefaultScope = "integration-gcp"
 // Wire-level defaults that match dtctl's `create gcp monitoring` behavior.
 const (
 	DefaultActivationContext = "DATA_ACQUISITION"
+	DefaultSmartscapeEnabled = true
 )
 
 // Settings is the typed model exposed to Terraform.
@@ -89,12 +90,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Optional:    true,
 			Default:     DefaultScope,
 			ForceNew:    true,
-		},
-		"activation_context": {
-			Type:        schema.TypeString,
-			Description: "Extension activation context. Defaults to `DATA_ACQUISITION`.",
-			Optional:    true,
-			Default:     DefaultActivationContext,
 		},
 		"feature_sets": {
 			Type:        schema.TypeSet,
@@ -151,12 +146,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
-		"smartscape_enabled": {
-			Type:        schema.TypeBool,
-			Description: "Whether Smartscape topology mapping is enabled. Defaults to true.",
-			Optional:    true,
-			Default:     true,
-		},
 		"observability_scopes_enabled": {
 			Type:        schema.TypeBool,
 			Description: "Whether observability scopes are enabled. Defaults to false.",
@@ -191,14 +180,12 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"enabled":                      me.Enabled,
 		"extension_version":            me.ExtensionVersion,
 		"scope":                        me.Scope,
-		"activation_context":           me.ActivationContext,
 		"feature_sets":                 featureSets,
 		"regions":                      regions,
 		"project_filter":               projects,
 		"folder_filter":                folders,
 		"tag_enrichment":               tagEnrichment,
 		"label_enrichment":             labelEnrichment,
-		"smartscape_enabled":           me.SmartscapeEnabled,
 		"observability_scopes_enabled": me.ObservabilityScopesEnabled,
 	}); err != nil {
 		return err
@@ -221,14 +208,12 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"enabled":                      &me.Enabled,
 		"extension_version":            &me.ExtensionVersion,
 		"scope":                        &me.Scope,
-		"activation_context":           &me.ActivationContext,
 		"feature_sets":                 &me.FeatureSets,
 		"regions":                      &me.Regions,
 		"project_filter":               &me.ProjectFilter,
 		"folder_filter":                &me.FolderFilter,
 		"tag_enrichment":               &me.TagEnrichment,
 		"label_enrichment":             &me.LabelEnrichment,
-		"smartscape_enabled":           &me.SmartscapeEnabled,
 		"observability_scopes_enabled": &me.ObservabilityScopesEnabled,
 	}); err != nil {
 		return err
@@ -250,14 +235,18 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 // applyDefaults backfills attributes that the user did not set so the wire
-// payload always carries a complete, server-accepted configuration.
+// payload always carries a complete, server-accepted configuration. The two
+// extension-internal attributes (activation_context, smartscape_enabled) are
+// intentionally hidden from the user-facing schema and forced to their
+// defaults here — the API may echo back different values, but we always
+// re-send the canonical defaults so plans stay stable and users cannot
+// override them.
 func (me *Settings) applyDefaults() {
 	if me.Scope == "" {
 		me.Scope = DefaultScope
 	}
-	if me.ActivationContext == "" {
-		me.ActivationContext = DefaultActivationContext
-	}
+	me.ActivationContext = DefaultActivationContext
+	me.SmartscapeEnabled = DefaultSmartscapeEnabled
 	for _, c := range me.Credentials {
 		if c == nil {
 			continue

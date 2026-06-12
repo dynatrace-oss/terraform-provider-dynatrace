@@ -132,10 +132,6 @@ resource "dynatrace_azure_monitoring_configuration" "this" {
 
 ### Optional
 
-- `activation_context` (String) Extension activation context. Defaults to `DATA_ACQUISITION`.
-- `configuration_mode` (String) Configuration mode. Defaults to `ADVANCED`.
-- `deployment_mode` (String) Deployment mode. Defaults to `AUTOMATED`.
-- `deployment_scope` (String) Deployment scope. Defaults to `SUBSCRIPTION`. The other observed value is `MANAGEMENT_GROUP`.
 - `dt_label_enrichment` (Block List) Dynatrace labels (`dt.*`) applied to every monitored entity. Each block sets exactly one of `literal` or `tag_key`. (see [below for nested schema](#nestedblock--dt_label_enrichment))
 - `enabled` (Boolean) Whether the monitoring configuration is active. Defaults to true.
 - `extension_version` (String) Version of `com.dynatrace.extension.da-azure` that this configuration targets. Optional — when omitted at create time, the provider picks the highest semver version installed on the tenant (same behavior as `dtctl create azure monitoring`). The resolved value is persisted to state. On subsequent refreshes the provider reads back whatever version Dynatrace currently reports for this configuration; if the extension was auto-updated (or bumped manually) the new version surfaces as drift in `terraform plan`, but no Terraform-driven update silently re-resolves it. To pin a version, set it explicitly here.

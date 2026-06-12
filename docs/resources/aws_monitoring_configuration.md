@@ -73,19 +73,14 @@ resource "dynatrace_aws_monitoring_configuration" "this" {
 
 ### Optional
 
-- `activation_context` (String) Extension activation context. Defaults to `DATA_ACQUISITION`.
 - `cloud_watch_logs` (Block List, Max: 1) CloudWatch Logs ingestion configuration. Omit the block to disable log ingestion. (see [below for nested schema](#nestedblock--cloud_watch_logs))
-- `configuration_mode` (String) Configuration mode. Defaults to `QUICK_START`.
 - `custom_namespace` (Block List) Additional CloudWatch namespaces to ingest (e.g. AWS/GroundStation or your own custom namespace). (see [below for nested schema](#nestedblock--custom_namespace))
-- `deployment_mode` (String) Deployment mode. Defaults to `AUTOMATED`.
 - `deployment_region` (String) AWS region the extension workload runs in. Defaults to the first entry in `regions`.
-- `deployment_scope` (String) Deployment scope. Defaults to `SINGLE_ACCOUNT`.
 - `dt_label_enrichment` (Block List) Dynatrace labels (`dt.*`) applied to every monitored entity. Each block sets exactly one of `literal` or `tag_key`. (see [below for nested schema](#nestedblock--dt_label_enrichment))
 - `enabled` (Boolean) Whether the monitoring configuration is active. Defaults to true.
 - `extension_version` (String) Version of `com.dynatrace.extension.da-aws` that this configuration targets. Optional — when omitted at create time, the provider picks the highest semver version installed on the tenant (same behavior as `dtctl create aws`). The resolved value is persisted to state. On subsequent refreshes the provider reads back whatever version Dynatrace currently reports for this configuration; if the extension was auto-updated (or bumped manually) the new version surfaces as drift in `terraform plan`, but no Terraform-driven update silently re-resolves it. To pin a version, set it explicitly here (typical: `dynatrace_extension.aws.version`).
 - `feature_sets` (Set of String) CloudWatch metric feature sets to enable (e.g. `EC2_essential`). When empty the extension defaults are used.
 - `scope` (String) Settings 2.0 scope. Defaults to `integration-aws`. Changing it forces recreation.
-- `smartscape_enabled` (Boolean) Whether Smartscape topology mapping is enabled. Defaults to true.
 - `tag_enrichment` (Set of String) AWS tag keys whose values are copied as Dynatrace tags on monitored entities.
 - `tag_filter` (Block List) Filter monitored resources by AWS tag. Repeat the block to define multiple filters. (see [below for nested schema](#nestedblock--tag_filter))
 

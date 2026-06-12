@@ -175,12 +175,15 @@ func TestEnumDefaults(t *testing.T) {
 			t.Errorf("aws.%s: got %v, want %v", k, aws[k], want)
 		}
 	}
-	if sm, ok := aws["smartscapeConfiguration"].(map[string]any); !ok || sm["enabled"] != false {
-		// SmartscapeEnabled zero value is false on a fresh struct; schema default
-		// of true only fires through Terraform. Just assert it's a bool.
-		if _, ok := sm["enabled"].(bool); !ok {
-			t.Errorf("smartscapeConfiguration.enabled missing/bad type: %v", sm)
-		}
+	// smartscape_enabled is hidden from the user-facing schema and
+	// force-set to true in applyDefaults; the wire payload must reflect that
+	// regardless of struct zero-value.
+	sm, ok := aws["smartscapeConfiguration"].(map[string]any)
+	if !ok {
+		t.Fatalf("smartscapeConfiguration missing/wrong type: %v", aws["smartscapeConfiguration"])
+	}
+	if sm["enabled"] != true {
+		t.Errorf("smartscapeConfiguration.enabled: got %v, want true (hardcoded)", sm["enabled"])
 	}
 }
 
