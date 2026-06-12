@@ -94,12 +94,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Default:     DefaultScope,
 			ForceNew:    true,
 		},
-		"activation_context": {
-			Type:        schema.TypeString,
-			Description: "Extension activation context. Defaults to `DATA_ACQUISITION`.",
-			Optional:    true,
-			Default:     DefaultActivationContext,
-		},
 		"feature_sets": {
 			Type:        schema.TypeSet,
 			Description: "Azure feature sets to enable (e.g. `microsoft_compute.virtualmachines_essential`). When empty, the extension defaults are used.",
@@ -130,24 +124,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "How to interpret `subscription_filter`. Defaults to `INCLUDE`.",
 			Optional:    true,
 			Default:     DefaultSubscriptionFilteringMode,
-		},
-		"configuration_mode": {
-			Type:        schema.TypeString,
-			Description: "Configuration mode. Defaults to `ADVANCED`.",
-			Optional:    true,
-			Default:     DefaultConfigurationMode,
-		},
-		"deployment_mode": {
-			Type:        schema.TypeString,
-			Description: "Deployment mode. Defaults to `AUTOMATED`.",
-			Optional:    true,
-			Default:     DefaultDeploymentMode,
-		},
-		"deployment_scope": {
-			Type:        schema.TypeString,
-			Description: "Deployment scope. Defaults to `SUBSCRIPTION`. The other observed value is `MANAGEMENT_GROUP`.",
-			Optional:    true,
-			Default:     DefaultDeploymentScope,
 		},
 		"tag_filter": {
 			Type:        schema.TypeList,
@@ -185,14 +161,10 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"enabled":                     me.Enabled,
 		"extension_version":           me.ExtensionVersion,
 		"scope":                       me.Scope,
-		"activation_context":          me.ActivationContext,
 		"feature_sets":                featureSets,
 		"regions":                     regions,
 		"subscription_filter":         subs,
 		"subscription_filtering_mode": me.SubscriptionFilteringMode,
-		"configuration_mode":          me.ConfigurationMode,
-		"deployment_mode":             me.DeploymentMode,
-		"deployment_scope":            me.DeploymentScope,
 		"tag_enrichment":              tagEnrichment,
 	}); err != nil {
 		return err
@@ -212,14 +184,10 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"enabled":                     &me.Enabled,
 		"extension_version":           &me.ExtensionVersion,
 		"scope":                       &me.Scope,
-		"activation_context":          &me.ActivationContext,
 		"feature_sets":                &me.FeatureSets,
 		"regions":                     &me.Regions,
 		"subscription_filter":         &me.SubscriptionFilter,
 		"subscription_filtering_mode": &me.SubscriptionFilteringMode,
-		"configuration_mode":          &me.ConfigurationMode,
-		"deployment_mode":             &me.DeploymentMode,
-		"deployment_scope":            &me.DeploymentScope,
 		"tag_enrichment":              &me.TagEnrichment,
 	}); err != nil {
 		return err
@@ -238,26 +206,23 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 // applyDefaults backfills attributes that the user did not set so the wire
-// payload always carries a complete, server-accepted configuration.
+// payload always carries a complete, server-accepted configuration. The four
+// extension-internal attributes (activation_context, configuration_mode,
+// deployment_mode, deployment_scope) are intentionally hidden from the
+// user-facing schema and forced to their defaults here — the API may echo
+// back different values, but we always re-send the canonical defaults so
+// plans stay stable and users cannot override them.
 func (me *Settings) applyDefaults() {
 	if me.Scope == "" {
 		me.Scope = DefaultScope
 	}
-	if me.ActivationContext == "" {
-		me.ActivationContext = DefaultActivationContext
-	}
-	if me.ConfigurationMode == "" {
-		me.ConfigurationMode = DefaultConfigurationMode
-	}
-	if me.DeploymentMode == "" {
-		me.DeploymentMode = DefaultDeploymentMode
-	}
-	if me.DeploymentScope == "" {
-		me.DeploymentScope = DefaultDeploymentScope
-	}
 	if me.SubscriptionFilteringMode == "" {
 		me.SubscriptionFilteringMode = DefaultSubscriptionFilteringMode
 	}
+	me.ActivationContext = DefaultActivationContext
+	me.ConfigurationMode = DefaultConfigurationMode
+	me.DeploymentMode = DefaultDeploymentMode
+	me.DeploymentScope = DefaultDeploymentScope
 	for _, c := range me.Credentials {
 		if c == nil {
 			continue

@@ -346,11 +346,12 @@ func TestAPIEchoArraysGuard(t *testing.T) {
 	}
 }
 
-// TestSmartscapeDefaultTrue guards the spec §5 gotcha #1: smartscape must
-// default to true. An absent `smartscapeConfiguration` in the response means
-// "on", not "off".
-func TestSmartscapeDefaultTrue(t *testing.T) {
-	// 1. Response with smartscapeConfiguration missing → default true.
+// TestSmartscapeAlwaysTrue guards the hidden-attribute contract: smartscape
+// is intentionally not user-configurable. Whatever the API echoes, and
+// whatever a caller stuffs into the struct, the wire payload must always
+// re-send the canonical {enabled:true} so plans stay stable.
+func TestSmartscapeAlwaysTrue(t *testing.T) {
+	// 1. Response with smartscapeConfiguration missing → forced to true.
 	raw := []byte(`{
 		"scope":"integration-gcp",
 		"value":{
@@ -365,10 +366,10 @@ func TestSmartscapeDefaultTrue(t *testing.T) {
 		t.Fatalf("unmarshal: %v", err)
 	}
 	if !out.SmartscapeEnabled {
-		t.Errorf("smartscape missing in response: got %v, want defaulted true", out.SmartscapeEnabled)
+		t.Errorf("smartscape missing in response: got %v, want forced true", out.SmartscapeEnabled)
 	}
 
-	// 2. Response with smartscapeConfiguration.enabled=false → false.
+	// 2. Response with smartscapeConfiguration.enabled=false → still forced true.
 	raw = []byte(`{
 		"scope":"integration-gcp",
 		"value":{
@@ -383,11 +384,11 @@ func TestSmartscapeDefaultTrue(t *testing.T) {
 	if err := json.Unmarshal(raw, out); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
-	if out.SmartscapeEnabled {
-		t.Errorf("smartscape explicit false: got %v, want false", out.SmartscapeEnabled)
+	if !out.SmartscapeEnabled {
+		t.Errorf("smartscape explicit false echoed by API: got %v, want forced true (hidden-attribute drift guard)", out.SmartscapeEnabled)
 	}
 
-	// 3. Outbound wire payload is always the object form.
+	// 3. Caller stuffs SmartscapeEnabled=false into the struct → wire payload still true.
 	s := &settings.Settings{
 		Name:              "x",
 		ExtensionVersion:  "2.0.0",
@@ -399,8 +400,8 @@ func TestSmartscapeDefaultTrue(t *testing.T) {
 	if !ok {
 		t.Fatalf("smartscapeConfiguration must be an object, got %T", gc["smartscapeConfiguration"])
 	}
-	if sc["enabled"] != false {
-		t.Errorf("smartscapeConfiguration.enabled: got %v, want false", sc["enabled"])
+	if sc["enabled"] != true {
+		t.Errorf("smartscapeConfiguration.enabled: got %v, want true (hardcoded)", sc["enabled"])
 	}
 }
 

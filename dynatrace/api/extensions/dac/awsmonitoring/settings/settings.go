@@ -125,36 +125,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Default:     DefaultScope,
 			ForceNew:    true,
 		},
-		"activation_context": {
-			Type:        schema.TypeString,
-			Description: "Extension activation context. Defaults to `DATA_ACQUISITION`.",
-			Optional:    true,
-			Default:     DefaultActivationContext,
-		},
-		"deployment_scope": {
-			Type:        schema.TypeString,
-			Description: "Deployment scope. Defaults to `SINGLE_ACCOUNT`.",
-			Optional:    true,
-			Default:     DefaultDeploymentScope,
-		},
-		"deployment_mode": {
-			Type:        schema.TypeString,
-			Description: "Deployment mode. Defaults to `AUTOMATED`.",
-			Optional:    true,
-			Default:     DefaultDeploymentMode,
-		},
-		"configuration_mode": {
-			Type:        schema.TypeString,
-			Description: "Configuration mode. Defaults to `QUICK_START`.",
-			Optional:    true,
-			Default:     DefaultConfigurationMode,
-		},
-		"smartscape_enabled": {
-			Type:        schema.TypeBool,
-			Description: "Whether Smartscape topology mapping is enabled. Defaults to true.",
-			Optional:    true,
-			Default:     true,
-		},
 		"tag_filter": {
 			Type:        schema.TypeList,
 			Description: "Filter monitored resources by AWS tag. Repeat the block to define multiple filters.",
@@ -193,22 +163,17 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	featureSets := append([]string(nil), me.FeatureSets...)
 	sort.Strings(featureSets)
 	if err := properties.EncodeAll(map[string]any{
-		"name":               me.Name,
-		"enabled":            me.Enabled,
-		"extension_version":  me.ExtensionVersion,
-		"connection_id":      me.ConnectionID,
-		"account_id":         me.AccountID,
-		"regions":            me.Regions,
-		"feature_sets":       featureSets,
-		"deployment_region":  me.DeploymentRegion,
-		"scope":              me.Scope,
-		"activation_context": me.ActivationContext,
-		"deployment_scope":   me.DeploymentScope,
-		"deployment_mode":    me.DeploymentMode,
-		"configuration_mode": me.ConfigurationMode,
-		"smartscape_enabled": me.SmartscapeEnabled,
-		"tag_enrichment":     me.TagEnrichment,
-		"cloud_watch_logs":   me.CloudWatchLogs,
+		"name":              me.Name,
+		"enabled":           me.Enabled,
+		"extension_version": me.ExtensionVersion,
+		"connection_id":     me.ConnectionID,
+		"account_id":        me.AccountID,
+		"regions":           me.Regions,
+		"feature_sets":      featureSets,
+		"deployment_region": me.DeploymentRegion,
+		"scope":             me.Scope,
+		"tag_enrichment":    me.TagEnrichment,
+		"cloud_watch_logs":  me.CloudWatchLogs,
 	}); err != nil {
 		return err
 	}
@@ -223,22 +188,17 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	if err := decoder.DecodeAll(map[string]any{
-		"name":               &me.Name,
-		"enabled":            &me.Enabled,
-		"extension_version":  &me.ExtensionVersion,
-		"connection_id":      &me.ConnectionID,
-		"account_id":         &me.AccountID,
-		"regions":            &me.Regions,
-		"feature_sets":       &me.FeatureSets,
-		"deployment_region":  &me.DeploymentRegion,
-		"scope":              &me.Scope,
-		"activation_context": &me.ActivationContext,
-		"deployment_scope":   &me.DeploymentScope,
-		"deployment_mode":    &me.DeploymentMode,
-		"configuration_mode": &me.ConfigurationMode,
-		"smartscape_enabled": &me.SmartscapeEnabled,
-		"tag_enrichment":     &me.TagEnrichment,
-		"cloud_watch_logs":   &me.CloudWatchLogs,
+		"name":              &me.Name,
+		"enabled":           &me.Enabled,
+		"extension_version": &me.ExtensionVersion,
+		"connection_id":     &me.ConnectionID,
+		"account_id":        &me.AccountID,
+		"regions":           &me.Regions,
+		"feature_sets":      &me.FeatureSets,
+		"deployment_region": &me.DeploymentRegion,
+		"scope":             &me.Scope,
+		"tag_enrichment":    &me.TagEnrichment,
+		"cloud_watch_logs":  &me.CloudWatchLogs,
 	}); err != nil {
 		return err
 	}
@@ -256,7 +216,12 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 // applyDefaults backfills attributes that the user did not set so the wire
-// payload always carries a complete, server-accepted configuration.
+// payload always carries a complete, server-accepted configuration. The five
+// extension-internal attributes (activation_context, deployment_scope,
+// deployment_mode, configuration_mode, smartscape_enabled) are intentionally
+// hidden from the user-facing schema and forced to their defaults here — the
+// API may echo back different values, but we always re-send the canonical
+// defaults so plans stay stable and users cannot override them.
 func (me *Settings) applyDefaults() {
 	if me.Scope == "" {
 		me.Scope = DefaultScope
@@ -264,18 +229,11 @@ func (me *Settings) applyDefaults() {
 	if me.DeploymentRegion == "" && len(me.Regions) > 0 {
 		me.DeploymentRegion = me.Regions[0]
 	}
-	if me.ActivationContext == "" {
-		me.ActivationContext = DefaultActivationContext
-	}
-	if me.DeploymentScope == "" {
-		me.DeploymentScope = DefaultDeploymentScope
-	}
-	if me.DeploymentMode == "" {
-		me.DeploymentMode = DefaultDeploymentMode
-	}
-	if me.ConfigurationMode == "" {
-		me.ConfigurationMode = DefaultConfigurationMode
-	}
+	me.ActivationContext = DefaultActivationContext
+	me.DeploymentScope = DefaultDeploymentScope
+	me.DeploymentMode = DefaultDeploymentMode
+	me.ConfigurationMode = DefaultConfigurationMode
+	me.SmartscapeEnabled = true
 }
 
 // wirePayload is the on-the-wire shape accepted by
