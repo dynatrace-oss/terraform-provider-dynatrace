@@ -79,11 +79,8 @@ func runExport(cfgGetter config.Getter) (err error) {
 	os.Remove("terraform-provider-dynatrace.export.log")
 	os.Remove("terraform-provider-dynatrace.warnings.log")
 
-	// This ensures that every Settings 2.0 resource
-	// that offers ordering using the `insert_after`
-	// attribute won't produce hardcoded IDs
-	// when exported.
-	export.AddInsertAfterWeakIDDependencies()
+	// Ensure every ordered Settings 2.0 resource (with `insert_after` attribute) won't produce hardcoded IDs when exported.
+	export.AddInsertAfterWeakIDDependencies(export.AllResources)
 
 	var environment *export.Environment
 	if environment, err = export.Initialize(cfgGetter); err != nil {
