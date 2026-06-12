@@ -16,7 +16,7 @@ description: |-
 
 This resource depends on a `dynatrace_aws_connection` (HAS) and the corresponding `dynatrace_aws_connection_role_arn` patch resource. The IAM role referenced from the connection must exist before the monitoring configuration is created — Dynatrace validates the role assumption on creation.
 
-A complete end-to-end Terraform example wiring the IAM role, the HAS connection and the monitoring configuration together is available under [`aws-poc-sample/`](https://github.com/dynatrace-oss/terraform-provider-dynatrace/tree/main/aws-poc-sample) in this fork.
+A complete end-to-end Terraform example wiring the IAM role, the HAS connection and the monitoring configuration together is available under [`examples/aws-monitoring-end-to-end/`](../../examples/aws-monitoring-end-to-end) in this repository.
 
 ## Dynatrace Documentation
 

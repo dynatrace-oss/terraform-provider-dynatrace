@@ -58,7 +58,7 @@ func azureBlock(t *testing.T, s *settings.Settings) map[string]any {
 }
 
 // TestMarshalWireShape pins the on-the-wire JSON shape we send to
-// /platform/extensions/v2/extensions/com.dynatrace.extension.da-azure/monitoring-configurations.
+// /platform/extensions/v2/extensions/com.dynatrace.extension.da-azure/monitoringConfigurations.
 // Shape derived from dtctl pkg/resources/azuremonitoringconfig.
 func TestMarshalWireShape(t *testing.T) {
 	s := base()
