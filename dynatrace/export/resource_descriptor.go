@@ -27,6 +27,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroupingrules"
 	awsmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/dac/awsmonitoring"
 	azuremonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/dac/azuremonitoring"
+	gcpmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/dac/gcpmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
@@ -705,6 +706,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.HubExtensionV2Config:         NewResourceDescriptor(monitoringconfigurations.Service),
 	ResourceTypes.AWSMonitoringConfiguration:   NewResourceDescriptor(awsmonitoring.Service, Dependencies.ID(ResourceTypes.AWSConnection)),
 	ResourceTypes.AzureMonitoringConfiguration: NewResourceDescriptor(azuremonitoring.Service, Dependencies.ID(ResourceTypes.AzureConnection)),
+	ResourceTypes.GCPMonitoringConfiguration:   NewResourceDescriptor(gcpmonitoring.Service, Dependencies.ID(ResourceTypes.GCPConnection)),
 	ResourceTypes.OpenPipelineLogs: NewResourceDescriptor(
 		openpipeline.LogsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
 	ResourceTypes.OpenPipelineEvents: NewResourceDescriptor(
@@ -2110,6 +2112,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.HubExtensionV2Config, ""},
 			{ResourceTypes.AWSMonitoringConfiguration, ""},
 			{ResourceTypes.AzureMonitoringConfiguration, ""},
+			{ResourceTypes.GCPMonitoringConfiguration, ""},
 			{ResourceTypes.PlatformBucket, ""},
 			{ResourceTypes.Segments, ""},
 			{ResourceTypes.PlatformSLO, ""},
