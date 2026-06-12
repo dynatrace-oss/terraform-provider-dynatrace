@@ -18,15 +18,15 @@
 package rules
 
 import (
-	rules "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/rules/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/rules/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.9"
+const SchemaVersion = "1.0.10"
 const SchemaID = "builtin:failure-detection.environment.rules"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*rules.Settings] {
-	return settings20.Service[*rules.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }

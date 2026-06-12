@@ -61,7 +61,7 @@ func (me *DimensionFilters) UnmarshalHCL(decoder hcl.Decoder) error {
 type DimensionFilter struct {
 	DimensionKey   string                   `json:"dimensionKey"`       // Dimension key
 	DimensionValue string                   `json:"dimensionValue"`     // Dimension value
-	Operator       *DimensionFilterOperator `json:"operator,omitempty"` // Possible Values: `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`
+	Operator       *DimensionFilterOperator `json:"operator,omitempty"` // Possible values: `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`
 }
 
 func (me *DimensionFilter) Schema() map[string]*schema.Schema {
@@ -78,7 +78,7 @@ func (me *DimensionFilter) Schema() map[string]*schema.Schema {
 		},
 		"operator": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`",
+			Description: "Possible values: `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`",
 			Optional:    true, // nullable
 		},
 	}

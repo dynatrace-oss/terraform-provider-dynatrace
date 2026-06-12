@@ -7,6 +7,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 20,
 	"multiObject": true,
 	"ordered": true,
@@ -42,11 +43,13 @@
 				{
 					"customMessage": "Value is not a valid regular expression.",
 					"customValidatorId": "validRegex",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
 					"customMessage": "Value breaks regex restriction.",
 					"customValidatorId": "dangerousRegEx-REGEX_BASED_MATCHING_RELAXED",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -85,5 +88,5 @@
 	],
 	"schemaId": "builtin:rum.web.resource-cleanup-rules",
 	"types": {},
-	"version": "1.0.6"
+	"version": "1.0.7"
 }

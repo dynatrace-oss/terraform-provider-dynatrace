@@ -117,13 +117,13 @@ resource "dynatrace_metric_events" "#name#" {
 Required:
 
 - `description` (String) The description of the event to trigger.
-- `event_type` (String) Possible Values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`, `WARNING`
+- `event_type` (String) The event type to trigger. Possible values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`, `WARNING`
 - `title` (String) The title of the event to trigger.
 
 Optional:
 
 - `davis_merge` (Boolean) Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.
-- `metadata` (Block Set) Set of additional key-value properties to be attached to the triggered event. (see [below for nested schema](#nestedblock--event_template--metadata))
+- `metadata` (Block Set) Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). (see [below for nested schema](#nestedblock--event_template--metadata))
 
 <a id="nestedblock--event_template--metadata"></a>
 ### Nested Schema for `event_template.metadata`
@@ -131,7 +131,7 @@ Optional:
 Required:
 
 - `metadata_key` (String) Type 'dt.' for key hints.
-- `metadata_value` (String) no documentation available
+- `metadata_value` (String) No documentation available
 
 
 
@@ -140,11 +140,11 @@ Required:
 
 Required:
 
-- `alert_condition` (String) Possible Values: `ABOVE`, `BELOW`, `OUTSIDE`
+- `alert_condition` (String) Alert condition. Possible values: `ABOVE`, `BELOW`, `OUTSIDE`
 - `alert_on_no_data` (Boolean) The ability to set an alert on missing data in a metric. When enabled, missing data samples will be treated as violating samples defined in the advanced model properties. When disabled, missing data is not treated as a violation but will still contribute to dealerting. We recommend disabling alerting on missing data for sparse timeseries to avoid false alerts. To learn more, visit [anomaly detection configuration](https://dt-url.net/lz02mwi).
 - `dealerting_samples` (Number) The number of one-minute samples within the evaluation window that must go back to normal to close the event.
 - `samples` (Number) The number of one-minute samples that form the sliding evaluation window.
-- `type` (String) Possible Values: `AUTO_ADAPTIVE_THRESHOLD`, `SEASONAL_BASELINE`, `STATIC_THRESHOLD`
+- `type` (String) Metric-key-based query definitions only support static thresholds. Possible values: `AUTO_ADAPTIVE_THRESHOLD`, `SEASONAL_BASELINE`, `STATIC_THRESHOLD`
 - `violating_samples` (Number) The number of one-minute samples within the evaluation window that must violate to trigger an event.
 
 Optional:
@@ -159,11 +159,11 @@ Optional:
 
 Required:
 
-- `type` (String) Possible Values: `METRIC_KEY`, `METRIC_SELECTOR`
+- `type` (String) Possible values: `METRIC_KEY`, `METRIC_SELECTOR`
 
 Optional:
 
-- `aggregation` (String) Possible Values: `AVG`, `COUNT`, `MAX`, `MEDIAN`, `MIN`, `PERCENTILE90`, `SUM`, `VALUE`
+- `aggregation` (String) Possible values: `AVG`, `COUNT`, `MAX`, `MEDIAN`, `MIN`, `PERCENTILE90`, `SUM`, `VALUE`
 - `dimension_filter` (Block List, Max: 1) Dimension filter (see [below for nested schema](#nestedblock--query_definition--dimension_filter))
 - `entity_filter` (Block List, Max: 1) Use rule-based filters to define the scope this event monitors. (see [below for nested schema](#nestedblock--query_definition--entity_filter))
 - `management_zone` (String) The `legacy_id` of a Management Zone (as provided by the resource `dynatrace_management_zone_v2` or the data source `dynatrace_management_zone`)
@@ -188,7 +188,7 @@ Required:
 
 Optional:
 
-- `operator` (String) Possible Values: `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`
+- `operator` (String) Possible values: `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`
 
 
 
@@ -197,7 +197,7 @@ Optional:
 
 Optional:
 
-- `conditions` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--query_definition--entity_filter--conditions))
+- `conditions` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--query_definition--entity_filter--conditions))
 - `dimension_key` (String) Dimension key of entity type to filter
 
 <a id="nestedblock--query_definition--entity_filter--conditions"></a>
@@ -212,7 +212,7 @@ Required:
 
 Required:
 
-- `operator` (String) Possible Values: `CONTAINS_CASE_INSENSITIVE`, `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_INSENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`
-- `type` (String) Possible Values: `CUSTOM_DEVICE_GROUP_NAME`, `ENTITY_ID`, `HOST_GROUP_NAME`, `HOST_NAME`, `MANAGEMENT_ZONE`, `NAME`, `PROCESS_GROUP_ID`, `PROCESS_GROUP_NAME`, `TAG`
-- `value` (String) no documentation available
+- `operator` (String) Possible values: `CONTAINS_CASE_INSENSITIVE`, `CONTAINS_CASE_SENSITIVE`, `DOES_NOT_CONTAIN_CASE_INSENSITIVE`, `DOES_NOT_CONTAIN_CASE_SENSITIVE`, `DOES_NOT_EQUAL`, `DOES_NOT_START_WITH`, `EQUALS`, `STARTS_WITH`
+- `type` (String) Filter type. Possible values: `CUSTOM_DEVICE_GROUP_NAME`, `ENTITY_ID`, `HOST_GROUP_NAME`, `HOST_NAME`, `MANAGEMENT_ZONE`, `NAME`, `PROCESS_GROUP_ID`, `PROCESS_GROUP_NAME`, `TAG`
+- `value` (String) No documentation available
  

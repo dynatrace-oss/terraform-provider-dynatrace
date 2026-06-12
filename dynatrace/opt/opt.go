@@ -17,6 +17,8 @@
 
 package opt
 
+import "fmt"
+
 // Int returns the underlying value of the given pointer or if that pointer is `nil` a zero value
 func Int(v *int) int {
 	if v == nil {
@@ -137,4 +139,11 @@ func Float64(v *float64) float64 {
 		return *new(float64)
 	}
 	return *v
+}
+
+func ValOrNil[T comparable](v *T) string {
+	if v == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("%v", *v)
 }

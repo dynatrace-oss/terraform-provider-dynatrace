@@ -18,15 +18,15 @@
 package rumjavascriptfilename
 
 import (
-	rumjavascriptfilename "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/rumjavascriptfilename/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/rumjavascriptfilename/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.1.5"
+const SchemaVersion = "1.1.6"
 const SchemaID = "builtin:rum.web.rum-javascript-file-name"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*rumjavascriptfilename.Settings] {
-	return settings20.Service[*rumjavascriptfilename.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }

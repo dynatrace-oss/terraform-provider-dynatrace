@@ -26,7 +26,7 @@ import (
 
 type Settings struct {
 	FallbackThresholds *FallbackThresholds `json:"fallbackThresholds,omitempty"` // (Field has overlap with `dynatrace_web_application`) If the selected key performance metric is not detected, the **User action duration** metric is used instead.
-	Kpm                LoadKpm             `json:"kpm"`                          // (Field has overlap with `dynatrace_web_application`) Possible Values: `CUMULATIVE_LAYOUT_SHIFT`, `DOM_INTERACTIVE`, `FIRST_INPUT_DELAY`, `LARGEST_CONTENTFUL_PAINT`, `LOAD_EVENT_END`, `LOAD_EVENT_START`, `RESPONSE_END`, `RESPONSE_START`, `SPEED_INDEX`, `USER_ACTION_DURATION`, `VISUALLY_COMPLETE`
+	Kpm                LoadKpm             `json:"kpm"`                          // (Field has overlap with `dynatrace_web_application`) Key performance metric. Possible values: `CUMULATIVE_LAYOUT_SHIFT`, `DOM_INTERACTIVE`, `FIRST_INPUT_DELAY`, `LARGEST_CONTENTFUL_PAINT`, `LOAD_EVENT_END`, `LOAD_EVENT_START`, `RESPONSE_END`, `RESPONSE_START`, `SPEED_INDEX`, `USER_ACTION_DURATION`, `VISUALLY_COMPLETE`
 	Scope              string              `json:"-" scope:"scope"`              // The scope of this setting (APPLICATION_METHOD, APPLICATION)
 	Thresholds         *Thresholds         `json:"thresholds"`                   // (Field has overlap with `dynatrace_web_application`) Set the Tolerating and Frustrated performance thresholds for this action type.
 }
@@ -47,7 +47,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"kpm": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `CUMULATIVE_LAYOUT_SHIFT`, `DOM_INTERACTIVE`, `FIRST_INPUT_DELAY`, `LARGEST_CONTENTFUL_PAINT`, `LOAD_EVENT_END`, `LOAD_EVENT_START`, `RESPONSE_END`, `RESPONSE_START`, `SPEED_INDEX`, `USER_ACTION_DURATION`, `VISUALLY_COMPLETE`",
+			Description: "Key performance metric. Possible values: `CUMULATIVE_LAYOUT_SHIFT`, `DOM_INTERACTIVE`, `FIRST_INPUT_DELAY`, `LARGEST_CONTENTFUL_PAINT`, `LOAD_EVENT_END`, `LOAD_EVENT_START`, `RESPONSE_END`, `RESPONSE_START`, `SPEED_INDEX`, `USER_ACTION_DURATION`, `VISUALLY_COMPLETE`",
 			Required:    true,
 		},
 		"scope": {
@@ -77,11 +77,11 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Settings) HandlePreconditions() error {
-	if me.FallbackThresholds == nil && (string(me.Kpm) != "USER_ACTION_DURATION") {
-		return fmt.Errorf("'fallback_thresholds' must be specified if 'kpm' is set to '%v'", me.Kpm)
+	if (me.FallbackThresholds != nil) && (string(me.Kpm) == "USER_ACTION_DURATION") {
+		return fmt.Errorf("'fallback_thresholds' must not be specified unless 'kpm' is not set to 'USER_ACTION_DURATION'; got 'kpm'='%v'", me.Kpm)
 	}
-	if me.FallbackThresholds != nil && (string(me.Kpm) == "USER_ACTION_DURATION") {
-		return fmt.Errorf("'fallback_thresholds' must not be specified if 'kpm' is set to '%v'", me.Kpm)
+	if (me.FallbackThresholds == nil) && (string(me.Kpm) != "USER_ACTION_DURATION") {
+		return fmt.Errorf("'fallback_thresholds' must be specified when 'kpm' is not set to 'USER_ACTION_DURATION'; got 'kpm'='%v'", me.Kpm)
 	}
 	return nil
 }

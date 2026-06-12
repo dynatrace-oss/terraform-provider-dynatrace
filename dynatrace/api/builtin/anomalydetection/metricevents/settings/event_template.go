@@ -18,6 +18,8 @@
 package metricevents
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -25,8 +27,8 @@ import (
 type EventTemplate struct {
 	DavisMerge  *bool           `json:"davisMerge,omitempty"` // Davis® AI will try to merge this event into existing problems, otherwise a new problem will always be created.
 	Description string          `json:"description"`          // The description of the event to trigger.
-	EventType   EventTypeEnum   `json:"eventType"`            // Possible Values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`, `WARNING`
-	Metadata    []*MetadataItem `json:"metadata,omitempty"`   // Set of additional key-value properties to be attached to the triggered event.
+	EventType   EventTypeEnum   `json:"eventType"`            // The event type to trigger. Possible values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`, `WARNING`
+	Metadata    []*MetadataItem `json:"metadata,omitempty"`   // Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w).
 	Title       string          `json:"title"`                // The title of the event to trigger.
 }
 
@@ -45,12 +47,12 @@ func (me *EventTemplate) Schema() map[string]*schema.Schema {
 		},
 		"event_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`, `WARNING`",
+			Description: "The event type to trigger. Possible values: `AVAILABILITY`, `CUSTOM_ALERT`, `CUSTOM_ANNOTATION`, `CUSTOM_CONFIGURATION`, `CUSTOM_DEPLOYMENT`, `ERROR`, `INFO`, `MARKED_FOR_TERMINATION`, `RESOURCE`, `SLOWDOWN`, `WARNING`",
 			Required:    true,
 		},
 		"metadata": {
 			Type:        schema.TypeSet,
-			Description: "Set of additional key-value properties to be attached to the triggered event.",
+			Description: "Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w).",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(MetadataItem).Schema()},
 			MinItems:    1,
@@ -76,8 +78,11 @@ func (me *EventTemplate) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *EventTemplate) HandlePreconditions() error {
-	if me.DavisMerge == nil && (string(me.EventType) != "INFO") {
+	if (me.DavisMerge == nil) && (string(me.EventType) != "INFO") {
 		me.DavisMerge = new(false)
+	}
+	if (me.DavisMerge != nil) && (string(me.EventType) == "INFO") {
+		return fmt.Errorf("'davis_merge' must not be specified unless 'event_type' is not set to 'INFO'; got 'event_type'='%v'", me.EventType)
 	}
 	return nil
 }

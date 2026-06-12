@@ -31,7 +31,7 @@ func (me *EntityFilter) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"conditions": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(EntityFilterConditions).Schema()},
 			MinItems:    1,

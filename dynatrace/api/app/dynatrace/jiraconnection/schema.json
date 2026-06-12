@@ -35,6 +35,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"appName": "Jira"
@@ -161,8 +162,8 @@
 		"user": {
 			"constraints": [
 				{
-					"customMessage": "Username or E-Mail address has to be between 1 and 50 characters long",
-					"maxLength": 50,
+					"customMessage": "Username or E-Mail address has to be between 1 and 254 characters long",
+					"maxLength": 254,
 					"minLength": 1,
 					"type": "LENGTH"
 				}
@@ -198,5 +199,5 @@
 	],
 	"schemaId": "app:dynatrace.jira:connection",
 	"types": {},
-	"version": "1.0.3"
+	"version": "1.0.4"
 }

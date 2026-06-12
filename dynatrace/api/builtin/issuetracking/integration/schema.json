@@ -11,6 +11,7 @@
 		{
 			"customMessage": "Cannot create a valid URL from the given target and query.",
 			"customValidatorId": "issueTracker-url-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -72,6 +73,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 20,
 	"metadata": {
 		"addItemButton": "Add issue-tracking query"
@@ -207,6 +209,11 @@
 					"type": "LENGTH"
 				},
 				{
+					"customMessage": "Target URL must start with http:// or https:// and must not contain '?', '#', or whitespace.",
+					"pattern": "^https?://[^\\s#?]+$",
+					"type": "PATTERN"
+				},
+				{
 					"customMessage": "Not a valid URI",
 					"pattern": "^(([^\\s:/?#]+?):){1}((//)?([^\\s/?#]+?)){1}([^\\s?#]*?)(\\?([^\\s#]*?))?(#([^\\s]*?))?$",
 					"type": "PATTERN"
@@ -274,5 +281,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "5.6"
+	"version": "5.7"
 }

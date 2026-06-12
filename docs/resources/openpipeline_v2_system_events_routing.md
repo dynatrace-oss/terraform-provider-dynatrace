@@ -63,7 +63,7 @@ Required:
 
 Required:
 
-- `description` (String) no documentation available
+- `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `matcher` (String) Query which determines whether the record should be routed to the target pipeline of this rule.
 - `pipeline_type` (String) Pipeline Type. Possible values: `builtin`, `custom`

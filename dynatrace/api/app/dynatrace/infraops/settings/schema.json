@@ -7,6 +7,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"metadata": {
 		"appName": "Infrastructure \u0026 Operations"
@@ -38,26 +39,9 @@
 					"type": "RANGE"
 				}
 			],
-			"default": 25000,
+			"default": 1000,
 			"description": "Limit the number of results returned from Grail for Host, Network device, and Extensions entities.",
 			"displayName": "Limit the number of entities in main inventories",
-			"documentation": "",
-			"maxObjects": 1,
-			"modificationPolicy": "DEFAULT",
-			"nullable": false,
-			"type": "integer"
-		},
-		"invex.dql.sort.limit": {
-			"constraints": [
-				{
-					"maximum": 100000,
-					"minimum": 1,
-					"type": "RANGE"
-				}
-			],
-			"default": 25000,
-			"description": "Limit for server-side sorting in Host, Network device and Extensions inventories. Sorting is disabled when the row count exceeds the configured threshold.",
-			"displayName": "Limit the number of sortable rows in inventories",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -87,5 +71,5 @@
 	},
 	"schemaId": "app:dynatrace.infraops:settings",
 	"types": {},
-	"version": "1.4.2"
+	"version": "2"
 }

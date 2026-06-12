@@ -42,12 +42,24 @@ resource "dynatrace_web_app_custom_injection" "APPLICATION-1234567890000000" {
 
 - `application_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `operator` (String) Possible Values: `AllPages`, `Contains`, `Ends`, `Equals`, `Starts`
-- `rule` (String) Possible Values: `AfterSpecificHtml`, `Automatic`, `BeforeSpecificHtml`, `DoNotInject`
+- `operator` (String) **Example**: 
+
+   **For the URL:**  
+  `http://www.example.com:8080/lorem/ipsum.jsp?mode=desktop` 
+
+   A rule can be specified on the URL pattern:  
+  `/lorem/ipsum.jsp` 
+
+   Using the operator:  
+  `URL ends with` 
+
+   **Result:**  
+  If URL ends with .jsp do not inject the JavaScript library. Possible values: `AllPages`, `Contains`, `Ends`, `Equals`, `Starts`
+- `rule` (String) Rule. Possible values: `AfterSpecificHtml`, `Automatic`, `BeforeSpecificHtml`, `DoNotInject`
 
 ### Optional
 
-- `html_pattern` (String) no documentation available
+- `html_pattern` (String) No documentation available
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 - `url_pattern` (String) URL pattern
 

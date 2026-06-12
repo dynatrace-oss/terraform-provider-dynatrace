@@ -26,18 +26,23 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 )
 
-// DurationUntilDeadlineOrDefault computes the duration until the context deadline,
-// or returns the provided defaultTimeout if no deadline is set.
+// RetryDeadlineBuffer is reserved before the context deadline so the final retry attempt
+// completes against a live context and returns the real API error, not "context deadline exceeded".
+const RetryDeadlineBuffer = 5 * time.Second
+
+// DurationUntilDeadlineOrDefault returns the time until deadline minus RetryDeadlineBuffer,
+// or defaultTimeout if no deadline is set.
 func DurationUntilDeadlineOrDefault(ctx context.Context, defaultTimeout time.Duration) time.Duration {
 	dl, hasDeadline := ctx.Deadline()
 	if !hasDeadline {
-		// no deadline: use default
+		// no deadline: use default. There is no external context cancellation to race against, so
+		// no buffer is needed here.
 		return defaultTimeout
 	}
 
-	remaining := time.Until(dl)
+	remaining := time.Until(dl) - RetryDeadlineBuffer
 	if remaining <= 0 {
-		// already expired, no time left
+		// already expired, or too little time left to retry and still reserve the buffer
 		return 0
 	}
 

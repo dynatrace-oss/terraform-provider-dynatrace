@@ -91,14 +91,14 @@ resource "dynatrace_failure_detection_parameters" "parameter" {
 
 ### Required
 
-- `conditions` (Block List, Min: 1, Max: 1) Conditions (see [below for nested schema](#nestedblock--conditions))
+- `conditions` (Block List, Min: 1, Max: 1) A list of conditions for this rule. All conditions must be fulfilled for the rule to match a service. (see [below for nested schema](#nestedblock--conditions))
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
-- `name` (String) Rule name
-- `parameter_id` (String) Failure detection parameters
+- `name` (String) The display name of this failure detection rule.
+- `parameter_id` (String) The ID of the failure detection parameter set to apply when this rule matches. The parameter set must already exist.
 
 ### Optional
 
-- `description` (String) Rule description
+- `description` (String) A short description of this failure detection rule.
 - `insert_after` (String) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 
 ### Read-Only
@@ -117,22 +117,28 @@ Required:
 
 Required:
 
-- `attribute` (String) Possible Values: `PG_NAME`, `PG_TAG`, `SERVICE_MANAGEMENT_ZONE`, `SERVICE_NAME`, `SERVICE_TAG`, `SERVICE_TYPE`
-- `predicate` (Block List, Min: 1, Max: 1) Condition to check the attribute against (see [below for nested schema](#nestedblock--conditions--condition--predicate))
+- `attribute` (String) The attribute to be checked. Possible values: `PG_NAME`, `PG_TAG`, `SERVICE_MANAGEMENT_ZONE`, `SERVICE_NAME`, `SERVICE_TAG`, `SERVICE_TYPE`
+- `predicate` (Block List, Min: 1, Max: 1) The predicate that tests the value of the attribute.
+
+  The actual set of fields depends on the type of the predicate. Find the list of actual objects in the description of the type field or see [Failure detection API - JSON models](https://dt-url.net/9sg3swf). (see [below for nested schema](#nestedblock--conditions--condition--predicate))
 
 <a id="nestedblock--conditions--condition--predicate"></a>
 ### Nested Schema for `conditions.condition.predicate`
 
 Required:
 
-- `predicate_type` (String) Predicate type
+- `predicate_type` (String) The type of predicate to apply. Available types depend on the condition attribute:
+ * `SERVICE_NAME` and `PG_NAME` support `STRING_EQUALS`, `STARTS_WITH`, `ENDS_WITH`, `CONTAINS`;
+ * `SERVICE_TYPE` supports `SERVICE_TYPE_EQUALS`;
+ * `SERVICE_MANAGEMENT_ZONE` supports `MANAGEMENT_ZONES_CONTAINS_ALL`;
+ * `SERVICE_TAG` and `PG_TAG` support `TAG_EQUALS` and `TAG_KEY_EQUALS`.
 
 Optional:
 
-- `case_sensitive` (Boolean) Case sensitive
-- `management_zones` (Set of String) Management zones
-- `service_type` (Set of String) Service types
-- `tag_keys` (Set of String) Tag keys
-- `tags` (Set of String) Tags (exact match)
-- `text_values` (Set of String) Names
+- `case_sensitive` (Boolean) If `true`, the string comparison is case-sensitive. Default: `false`.
+- `management_zones` (Set of String) A set of management zone references. The rule matches if the service belongs to all specified management zones. Only applicable for predicate type `MANAGEMENT_ZONES_CONTAINS_ALL`.
+- `service_type` (Set of String) A set of service types to match against. The rule matches if the service type is contained in this set. Only applicable for predicate type `SERVICE_TYPE_EQUALS`. Possible values: `CICS`, `CICSInteraction`, `CustomApplication`, `Database`, `EnterpriseServiceBus`, `External`, `IMS`, `IMSInteraction`, `Messaging`, `Method`, `Mobile`, `Process`, `QueueInteraction`, `QueueListener`, `RMI`, `RemoteCall`, `SaasVendor`, `WebRequest`, `WebService`, `WebSite`, `zOSConnect`
+- `tag_keys` (Set of String) A set of tag keys to match. The rule matches if the entity has tags with all specified keys, regardless of tag value. Only applicable for predicate type `TAG_KEY_EQUALS`.
+- `tags` (Set of String) A set of tags to match exactly. The rule matches if the entity has all specified tags (both key and value must match). Only applicable for predicate type `TAG_EQUALS`.
+- `text_values` (Set of String) A list of text values to match against. The rule matches if the attribute value matches any of these values according to the predicate type.
  

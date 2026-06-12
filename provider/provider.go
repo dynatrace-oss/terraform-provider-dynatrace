@@ -41,7 +41,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/extensions/active_version"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/extensions/latest_version"
 	failure_detection_parameters "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/failuredetection/parameters"
-	gcpdynatraceprincipal "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/gcpdynatraceprincipal"
 	genericsettingsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/generic/settings"
 	geocities "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/geographicregions/cities"
 	geocountries "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/geographicregions/countries"
@@ -64,6 +63,7 @@ import (
 	serviceds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/service"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo/objectivetemplates"
+	platformslo "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo/platform"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/locations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/synthetic/nodes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/tenant"
@@ -255,6 +255,7 @@ func Provider() *schema.Provider {
 			"dynatrace_request_naming":                  requestnaming.DataSource(),
 			"dynatrace_dashboard":                       dashboard.DataSource(),
 			"dynatrace_slo":                             slo.DataSource(),
+			"dynatrace_platform_slo":                    platformslo.DataSource(),
 			"dynatrace_azure_supported_services":        azure_supported_services.DataSource(),
 			"dynatrace_aws_supported_services":          aws_supported_services.DataSource(),
 			"dynatrace_failure_detection_parameters":    failure_detection_parameters.DataSource(),
@@ -284,7 +285,6 @@ func Provider() *schema.Provider {
 			"dynatrace_platform_slo_template":           objectivetemplates.DataSource(),
 			"dynatrace_hub_extension_v2_active_version": active_version.DataSource(),
 			"dynatrace_hub_extension_v2_latest_version": latest_version.DataSource(),
-			"dynatrace_gcp_dynatrace_principal":         gcpdynatraceprincipal.DataSource(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"dynatrace_custom_service":                                 resources.NewGeneric(export.ResourceTypes.CustomService).Resource(),
@@ -589,7 +589,6 @@ func Provider() *schema.Provider {
 			"dynatrace_hub_extension_v2_config":                        resources.NewGeneric(export.ResourceTypes.HubExtensionV2Config).Resource(),
 			"dynatrace_aws_monitoring_configuration":                   resources.NewGeneric(export.ResourceTypes.AWSMonitoringConfiguration).Resource(),
 			"dynatrace_azure_monitoring_configuration":                 resources.NewGeneric(export.ResourceTypes.AzureMonitoringConfiguration).Resource(),
-			"dynatrace_gcp_connection":                                 resources.NewGeneric(export.ResourceTypes.GCPConnection).Resource(),
 			"dynatrace_gcp_monitoring_configuration":                   resources.NewGeneric(export.ResourceTypes.GCPMonitoringConfiguration).Resource(),
 			"dynatrace_hub_extension_active_version":                   resources.NewGeneric(export.ResourceTypes.HubActiveExtensionVersion).Resource(),
 			"dynatrace_document":                                       resources.NewGeneric(export.ResourceTypes.Documents).Resource(),
@@ -723,6 +722,9 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_user_events_pipelinegroups":     resources.NewGeneric(export.ResourceTypes.OpenpipelineUserEventsPipelinegroups).Resource(),
 			"dynatrace_openpipeline_v2_usersessions_pipelinegroups":    resources.NewGeneric(export.ResourceTypes.OpenpipelineUsersessionsPipelinegroups).Resource(),
 			"dynatrace_process_grouping_rules":                         resources.NewGeneric(export.ResourceTypes.ProcessGroupingRules).Resource(),
+			"dynatrace_maintenance_windows":                            resources.NewGeneric(export.ResourceTypes.MaintenanceWindows).Resource(),
+			"dynatrace_gcp_connection":                                 resources.NewGeneric(export.ResourceTypes.GCPConnection).Resource(),
+			"dynatrace_gcp_principal":                                  resources.NewGeneric(export.ResourceTypes.GCPPrincipal).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

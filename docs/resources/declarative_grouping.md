@@ -1,12 +1,15 @@
 ---
 layout: ""
 page_title: "dynatrace_declarative_grouping Resource - terraform-provider-dynatrace"
-subcategory: "Process Group Monitoring"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_declarative_grouping` covers configuration for declarative process grouping
 ---
 
 # dynatrace_declarative_grouping (Resource)
+
+~> **Warning** This resource has been deprecated in favor of `dynatrace_process_grouping_rules`.
+Dynatrace environment migration guide: https://docs.dynatrace.com/docs/observe/infrastructure-observability/process-groups/configuration/unified-process-grouping/process-grouping-rules-migration
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
@@ -105,4 +108,3 @@ Required:
 
   For more details, see [Declarative process grouping](https://dt-url.net/j142w57).
 - `property` (String) Select process property. Possible values: `commandLine`, `executable`, `executablePath`
- 

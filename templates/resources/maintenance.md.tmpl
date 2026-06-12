@@ -1,12 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_maintenance Resource - terraform-provider-dynatrace"
-subcategory: "Alerting"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_maintenance` covers configuration for maintenance windows
 ---
 
 # dynatrace_maintenance (Resource)
+
+~> **Warning** This resource has been deprecated in favor of [dynatrace_maintenance_windows](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/maintenance_windows).
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
@@ -27,4 +29,3 @@ The full documentation of the export feature is available [here](https://dt-url.
 {{ tffile "dynatrace/api/builtin/alerting/maintenancewindow/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
- 

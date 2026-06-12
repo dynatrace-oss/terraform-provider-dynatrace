@@ -19,17 +19,17 @@ package connection
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"golang.org/x/exp/slices"
 )
 
 type Settings struct {
 	Name        string  `json:"name"`               // The name of the Jira connection
 	Password    *string `json:"password,omitempty"` // Password of the Jira user
 	Token       *string `json:"token,omitempty"`    // Token for the selected authentication type
-	Type        Type    `json:"type"`               // Possible Values: `Basic`, `Cloud_token`, `Pat`
+	Type        Type    `json:"type"`               // Type of authentication method that should be used. Possible values: `basic`, `cloud-token`, `pat`
 	Url         string  `json:"url"`                // URL of the Jira server
 	User        *string `json:"user,omitempty"`     // Username or E-Mail address
 	InsertAfter string  `json:"-"`
@@ -56,7 +56,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Basic`, `Cloud_token`, `Pat`",
+			Description: "Type of authentication method that should be used. Possible values: `basic`, `cloud-token`, `pat`",
 			Required:    true,
 		},
 		"url": {
@@ -92,14 +92,23 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Settings) HandlePreconditions() error {
+	if (me.Password != nil) && (string(me.Type) != "basic") {
+		return fmt.Errorf("'password' must not be specified unless 'type' is set to 'basic'; got 'type'='%v'", me.Type)
+	}
 	if (me.Password == nil) && (string(me.Type) == "basic") {
-		return fmt.Errorf("'password' must be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'password' must be specified when 'type' is set to 'basic'; got 'type'='%v'", me.Type)
+	}
+	if (me.Token != nil) && (!slices.Contains([]string{"pat", "cloud-token"}, string(me.Type))) {
+		return fmt.Errorf("'token' must not be specified unless 'type' is one of ['pat', 'cloud-token']; got 'type'='%v'", me.Type)
 	}
 	if (me.Token == nil) && (slices.Contains([]string{"pat", "cloud-token"}, string(me.Type))) {
-		return fmt.Errorf("'token' must be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'token' must be specified when 'type' is one of ['pat', 'cloud-token']; got 'type'='%v'", me.Type)
+	}
+	if (me.User != nil) && (!slices.Contains([]string{"basic", "cloud-token"}, string(me.Type))) {
+		return fmt.Errorf("'user' must not be specified unless 'type' is one of ['basic', 'cloud-token']; got 'type'='%v'", me.Type)
 	}
 	if (me.User == nil) && (slices.Contains([]string{"basic", "cloud-token"}, string(me.Type))) {
-		return fmt.Errorf("'user' must be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'user' must be specified when 'type' is one of ['basic', 'cloud-token']; got 'type'='%v'", me.Type)
 	}
 	return nil
 }

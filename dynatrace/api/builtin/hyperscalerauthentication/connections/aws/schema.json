@@ -28,10 +28,6 @@
 					"value": "SVC:com.dynatrace.da"
 				},
 				{
-					"displayName": "Cost \u0026 Carbon Optimization",
-					"value": "APP:dynatrace.biz.carbon"
-				},
-				{
 					"displayName": "Business Observability",
 					"value": "SVC:com.dynatrace.bo"
 				},
@@ -58,10 +54,6 @@
 				{
 					"displayName": "AWS Connector",
 					"value": "APP:dynatrace.aws.connector"
-				},
-				{
-					"displayName": "Cost \u0026 Carbon Optimization",
-					"value": "APP:dynatrace.biz.carbon"
 				}
 			],
 			"type": "enum"
@@ -280,5 +272,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.25"
+	"version": "0.0.26"
 }

@@ -22,6 +22,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -97,7 +98,7 @@ func (me *QueryDefinition) Schema() map[string]*schema.Schema {
 		"management_zone": {
 			Type:        schema.TypeString,
 			Description: "The `legacy_id` of a Management Zone (as provided by the resource `dynatrace_management_zone_v2` or the data source `dynatrace_management_zone`)",
-			Optional:    true, // nullable & precondition
+			Optional:    true, // nullable
 		},
 		"metric_key": {
 			Type:        schema.TypeString,
@@ -145,15 +146,15 @@ func (me *QueryDefinition) HandlePreconditions() error {
 	}
 	// Previously unhandled NULL-condition
 	if (len(me.DimensionFilter) > 0) && (string(me.Type) != "METRIC_KEY" || me.MetricKey == nil) {
-		return fmt.Errorf("'dimension_filter' must not be specified unless ('type' is set to 'METRIC_KEY' and 'metric_key' is set); got 'type'='%v', 'metric_key'='%v'", me.Type, me.MetricKey)
+		return fmt.Errorf("'dimension_filter' must not be specified unless ('type' is set to 'METRIC_KEY' and 'metric_key' is set); got 'type'='%v', 'metric_key'='%v'", me.Type, opt.ValOrNil(me.MetricKey))
 	}
 	// Previously unhandled NULL-condition
 	if (me.EntityFilter != nil && !reflect.DeepEqual(EntityFilter{}, *me.EntityFilter)) && (string(me.Type) != "METRIC_KEY" || me.MetricKey == nil) {
-		return fmt.Errorf("'entity_filter' must not be specified unless ('type' is set to 'METRIC_KEY' and 'metric_key' is set); got 'type'='%v', 'metric_key'='%v'", me.Type, me.MetricKey)
+		return fmt.Errorf("'entity_filter' must not be specified unless ('type' is set to 'METRIC_KEY' and 'metric_key' is set); got 'type'='%v', 'metric_key'='%v'", me.Type, opt.ValOrNil(me.MetricKey))
 	}
 	// Previously unhandled NULL-condition
 	if (me.EntityFilter == nil) && (string(me.Type) == "METRIC_KEY" && me.MetricKey != nil) {
-		return fmt.Errorf("'entity_filter' must be specified when ('type' is set to 'METRIC_KEY' and 'metric_key' is set); got 'type'='%v', 'metric_key'='%v'", me.Type, me.MetricKey)
+		return fmt.Errorf("'entity_filter' must be specified when ('type' is set to 'METRIC_KEY' and 'metric_key' is set); got 'type'='%v', 'metric_key'='%v'", me.Type, opt.ValOrNil(me.MetricKey))
 	}
 	if (me.MetricKey != nil) && (string(me.Type) != "METRIC_KEY") {
 		return fmt.Errorf("'metric_key' must not be specified unless 'type' is set to 'METRIC_KEY'; got 'type'='%v'", me.Type)

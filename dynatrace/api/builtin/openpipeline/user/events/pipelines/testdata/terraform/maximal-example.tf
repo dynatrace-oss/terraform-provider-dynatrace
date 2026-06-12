@@ -1,9 +1,9 @@
 resource "dynatrace_openpipeline_v2_user_events_pipelines" "max-pipeline" {
   display_name = "Warning pipeline"
-  custom_id = "pipeline_Warning_pipeline_2773_tf_#name#"
+  custom_id    = "pipeline_Warning_pipeline_2773_tf_#name#"
   metadata_list {
     metadata {
-      entry_key = "environment"
+      entry_key   = "environment"
       entry_value = "production"
     }
   }
@@ -18,15 +18,23 @@ resource "dynatrace_openpipeline_v2_user_events_pipelines" "max-pipeline" {
           metric_key = "warning.count"
           dimensions {
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.costcenter"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.product"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.security_context"
             }
             dimension {
+              extraction_type        = "field"
+              strategy               = "equals"
               source_field_name      = "record.category"
               destination_field_name = "warning_category"
             }
@@ -45,15 +53,23 @@ resource "dynatrace_openpipeline_v2_user_events_pipelines" "max-pipeline" {
           default_value = 60
           dimensions {
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.costcenter"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.cost.product"
             }
             dimension {
+              extraction_type   = "field"
+              strategy          = "equals"
               source_field_name = "dt.security_context"
             }
             dimension {
+              extraction_type        = "field"
+              strategy               = "equals"
               source_field_name      = "record.category"
               destination_field_name = "warning_category"
             }
@@ -87,7 +103,7 @@ resource "dynatrace_openpipeline_v2_user_events_pipelines" "max-pipeline" {
         matcher     = "isNull(dt.security_context)"
         security_context {
           value {
-            type = "multiValueConstant"
+            type                 = "multiValueConstant"
             multi_value_constant = ["ACME1", "ACME2"]
           }
         }

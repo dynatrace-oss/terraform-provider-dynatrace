@@ -22,33 +22,34 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// httpResponseCodes. HTTP response code settings that control which response codes are treated as failures on the server side and client side.
 type HttpResponseCodes struct {
-	ClientSideErrors                    string `json:"clientSideErrors"`                    // HTTP response codes which indicate client side errors
-	FailOnMissingResponseCodeClientSide bool   `json:"failOnMissingResponseCodeClientSide"` // Treat missing HTTP response code as client side error
-	FailOnMissingResponseCodeServerSide bool   `json:"failOnMissingResponseCodeServerSide"` // Treat missing HTTP response code as server side errors
-	ServerSideErrors                    string `json:"serverSideErrors"`                    // HTTP response codes which indicate an error on the server side
+	ClientSideErrors                    string `json:"clientSideErrors"`                    // A list of HTTP response code ranges and individual values that are treated as client-side errors. The format is a comma-separated list of ranges and values (e.g., `400-499, 503, 510-599`). Default: `400-599`.
+	FailOnMissingResponseCodeClientSide bool   `json:"failOnMissingResponseCodeClientSide"` // If `true`, a missing HTTP response code on the client side is treated as a failure. Missing response codes can indicate a fire-and-forget call, a timeout, or an error. Default: `false`.
+	FailOnMissingResponseCodeServerSide bool   `json:"failOnMissingResponseCodeServerSide"` // If `true`, a missing HTTP response code on the server side is treated as a failure. Missing response codes can indicate a fire-and-forget call, a timeout, or an error. Default: `false`.
+	ServerSideErrors                    string `json:"serverSideErrors"`                    // A list of HTTP response code ranges and individual values that are treated as server-side errors. The format is a comma-separated list of ranges and values (e.g., `500-599, 402, 405-499`). Default: `500-599`.
 }
 
 func (me *HttpResponseCodes) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"client_side_errors": {
 			Type:        schema.TypeString,
-			Description: "HTTP response codes which indicate client side errors",
+			Description: "A list of HTTP response code ranges and individual values that are treated as client-side errors. The format is a comma-separated list of ranges and values (e.g., `400-499, 503, 510-599`). Default: `400-599`.",
 			Required:    true,
 		},
 		"fail_on_missing_response_code_client_side": {
 			Type:        schema.TypeBool,
-			Description: "Treat missing HTTP response code as client side error",
+			Description: "If `true`, a missing HTTP response code on the client side is treated as a failure. Missing response codes can indicate a fire-and-forget call, a timeout, or an error. Default: `false`.",
 			Required:    true,
 		},
 		"fail_on_missing_response_code_server_side": {
 			Type:        schema.TypeBool,
-			Description: "Treat missing HTTP response code as server side errors",
+			Description: "If `true`, a missing HTTP response code on the server side is treated as a failure. Missing response codes can indicate a fire-and-forget call, a timeout, or an error. Default: `false`.",
 			Required:    true,
 		},
 		"server_side_errors": {
 			Type:        schema.TypeString,
-			Description: "HTTP response codes which indicate an error on the server side",
+			Description: "A list of HTTP response code ranges and individual values that are treated as server-side errors. The format is a comma-separated list of ranges and values (e.g., `500-599, 402, 405-499`). Default: `500-599`.",
 			Required:    true,
 		},
 	}

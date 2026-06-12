@@ -44,6 +44,7 @@ func (me *Exceptions) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeSlice("custom_handled_exception", me)
 }
 
+// exception. An exception pattern used to match exceptions by class name and/or message content.
 type Exception struct {
 	ClassPattern   *string `json:"classPattern,omitempty"`   // The pattern will match if it is contained within the actual class name.
 	MessagePattern *string `json:"messagePattern,omitempty"` // Optionally, define an exception message pattern. The pattern will match if the actual exception message contains the pattern.

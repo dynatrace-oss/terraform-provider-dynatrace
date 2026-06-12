@@ -1,10 +1,10 @@
 module github.com/dynatrace-oss/terraform-provider-dynatrace
 
-go 1.26.3
+go 1.26.4
 
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
-	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20260511084641-0cbc4edbfda6
+	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20260603140430-e4e946cfe203
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cty v1.5.0
 	github.com/hashicorp/go-hclog v1.6.3
@@ -18,7 +18,7 @@ require (
 	github.com/zclconf/go-cty v1.18.1
 	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67
 	golang.org/x/oauth2 v0.36.0
-	golang.org/x/sync v0.20.0
+	golang.org/x/sync v0.21.0
 )
 
 require (
@@ -75,13 +75,13 @@ require (
 	github.com/yuin/goldmark v1.7.7 // indirect
 	github.com/yuin/goldmark-meta v1.1.0 // indirect
 	go.abhg.dev/goldmark/frontmatter v0.2.0 // indirect
-	golang.org/x/crypto v0.50.0 // indirect
+	golang.org/x/crypto v0.51.0 // indirect
 	golang.org/x/mod v0.35.0 // indirect
-	golang.org/x/net v0.53.0 // indirect
-	golang.org/x/sys v0.43.0 // indirect
-	golang.org/x/text v0.36.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
+	golang.org/x/text v0.37.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
-	golang.org/x/tools v0.43.0 // indirect
+	golang.org/x/tools v0.44.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251202230838-ff82c1b0f217 // indirect
 	google.golang.org/grpc v1.79.3 // indirect

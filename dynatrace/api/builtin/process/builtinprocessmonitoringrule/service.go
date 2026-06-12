@@ -18,15 +18,15 @@
 package builtinprocessmonitoringrule
 
 import (
-	builtinprocessmonitoringrule "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/builtinprocessmonitoringrule/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/builtinprocessmonitoringrule/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.4.6"
+const SchemaVersion = "0.4.7"
 const SchemaID = "builtin:process.built-in-process-monitoring-rule"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*builtinprocessmonitoringrule.Settings] {
-	return settings20.Service[*builtinprocessmonitoringrule.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }

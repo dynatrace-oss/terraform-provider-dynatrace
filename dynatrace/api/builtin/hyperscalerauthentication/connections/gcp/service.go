@@ -15,32 +15,31 @@
 * limitations under the License.
  */
 
-// Package gcpconnection exposes the typed Terraform resource
-// `dynatrace_gcp_connection`, backed by the Settings 2.0 schema
-// `builtin:hyperscaler-authentication.connections.gcp`.
-//
-// Unlike Azure, GCP supports a single authentication mode
-// (service-account impersonation), so the connection collapses into one
-// resource — no separate `_authentication` sibling.
-package gcpconnection
+package gcp
 
 import (
 	"context"
-	"time"
 
-	serviceSettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/dac/gcpconnection/settings"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	serviceSettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcp/settings"
 	retrycommon "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/retry"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
+const SchemaVersion = "0.0.5"
 const SchemaID = "builtin:hyperscaler-authentication.connections.gcp"
-const SchemaVersion = ""
-const DefaultTimeout = 2 * time.Minute
+
+// RetryableAuthenticationErrorMessage is the substring of the constraint-violation message the
+// Dynatrace API returns while the service account impersonation cannot yet authenticate (e.g. the
+// IAM policy change on the GCP side has not propagated yet). Create retries for as long as the API
+// keeps returning this message. The acceptance test asserts on the same constant, binding the
+// retried message and the asserted message together: if the API ever changes the wording, the test
+// fails and forces this constant to be updated in lockstep.
+const RetryableAuthenticationErrorMessage = "GCP authentication failed"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*serviceSettings.Settings] {
 	return &service{
@@ -60,16 +59,29 @@ func (me *service) Get(ctx context.Context, id string, v *serviceSettings.Settin
 	return me.service.Get(ctx, id, v)
 }
 
+func (me *service) Validate(ctx context.Context, v *serviceSettings.Settings) error {
+	if validator, ok := me.service.(settings.Validator[*serviceSettings.Settings]); ok {
+		return validator.Validate(ctx, v)
+	}
+
+	return settings.ErrValidatorNotImplemented(me.SchemaID())
+}
+
 func (me *service) SchemaID() string {
 	return me.service.SchemaID()
 }
 
+// Create is wrapped in a retry: the service account impersonation relies on the provided
+// service account ID, and the corresponding IAM policy changes on the GCP side may not have
+// propagated yet. We retry until they eventually do (or the create timeout elapses).
 func (me *service) Create(ctx context.Context, v *serviceSettings.Settings) (*api.Stub, error) {
 	var stub *api.Stub
-	err := retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, DefaultTimeout), func() *retry.RetryError {
+	err := retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, serviceSettings.DefaultCreateTimeout), func() *retry.RetryError {
 		var err error
 		stub, err = me.service.Create(ctx, v)
-		return retrycommon.ClassifyRetryError(err)
+
+		return settings.ClassifyConstraintRetryError(err, RetryableAuthenticationErrorMessage)
+
 	})
 	if err != nil {
 		return nil, err
@@ -77,10 +89,11 @@ func (me *service) Create(ctx context.Context, v *serviceSettings.Settings) (*ap
 	return stub, nil
 }
 
+// Update only ever changes the connection name; service_account_id and the rest of the
+// impersonation config are ForceNew, so they go through Create/Delete instead. A rename does
+// not depend on IAM propagation, so no retry is needed here.
 func (me *service) Update(ctx context.Context, id string, v *serviceSettings.Settings) error {
-	return retry.RetryContext(ctx, retrycommon.DurationUntilDeadlineOrDefault(ctx, DefaultTimeout), func() *retry.RetryError {
-		return retrycommon.ClassifyRetryError(me.service.Update(ctx, id, v))
-	})
+	return me.service.Update(ctx, id, v)
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {

@@ -18,15 +18,15 @@
 package integration
 
 import (
-	integration "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/issuetracking/integration/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/issuetracking/integration/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "5.5.1"
+const SchemaVersion = "5.7"
 const SchemaID = "builtin:issue-tracking.integration"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*integration.Settings] {
-	return settings20.Service[*integration.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }

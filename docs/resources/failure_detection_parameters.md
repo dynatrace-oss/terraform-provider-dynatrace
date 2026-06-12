@@ -76,13 +76,13 @@ resource "dynatrace_failure_detection_parameters" "#name#" {
 ### Required
 
 - `broken_links` (Block List, Min: 1, Max: 1) HTTP 404 response codes are thrown when a web server can't find a certain page. 404s are classified as broken links on the client side and therefore aren't considered to be service failures. By enabling this setting, you can have 404s treated as server-side service failures. (see [below for nested schema](#nestedblock--broken_links))
-- `exception_rules` (Block List, Min: 1, Max: 1) Customize failure detection for specific exceptions and errors (see [below for nested schema](#nestedblock--exception_rules))
-- `http_response_codes` (Block List, Min: 1, Max: 1) HTTP response codes (see [below for nested schema](#nestedblock--http_response_codes))
-- `name` (String) Name
+- `exception_rules` (Block List, Min: 1, Max: 1) Exception and custom error rules that determine how specific exceptions, handled errors, and request-attribute-based conditions affect failure detection. (see [below for nested schema](#nestedblock--exception_rules))
+- `http_response_codes` (Block List, Min: 1, Max: 1) HTTP response code settings that control which response codes are treated as server-side or client-side errors. (see [below for nested schema](#nestedblock--http_response_codes))
+- `name` (String) The display name of this failure detection parameter set.
 
 ### Optional
 
-- `description` (String) Description
+- `description` (String) A short description of this failure detection parameter set.
 
 ### Read-Only
 
@@ -93,7 +93,7 @@ resource "dynatrace_failure_detection_parameters" "#name#" {
 
 Required:
 
-- `http_404_not_found_failures` (Boolean) Consider 404 HTTP response codes as failures
+- `http_404_not_found_failures` (Boolean) If `true`, HTTP 404 response codes are treated as server-side service failures. Only applicable when 404 is not already in the list of failing server-side HTTP response codes. Default: `false`.
 
 Optional:
 
@@ -105,15 +105,15 @@ Optional:
 
 Required:
 
-- `ignore_all_exceptions` (Boolean) Ignore all exceptions
-- `ignore_span_failure_detection` (Boolean) Ignore span failure detection
+- `ignore_all_exceptions` (Boolean) If `true`, all exceptions are ignored for failure detection. Success forcing exceptions, ignored exceptions, and custom handled exceptions have no effect. Exceptions are still tracked and appear in distributed traces, but requests are not labeled as failed. Default: `false`.
+- `ignore_span_failure_detection` (Boolean) If `true`, span failure detection is ignored. This is specific to OpenTelemetry. Default: `false`.
 
 Optional:
 
 - `custom_error_rules` (Block List, Max: 1) Some custom error situations are only detectable via a return value or other means. To support such cases, [define a request attribute](https://dt-url.net/ys5k0p4y) that captures the required data. Then define a custom error rule that determines if the request has failed based on the value of the request attribute. (see [below for nested schema](#nestedblock--exception_rules--custom_error_rules))
 - `custom_handled_exceptions` (Block List, Max: 1) There may be situations where your application code handles exceptions gracefully in a manner that these failures aren't detected by Dynatrace. Use this setting to define specific gracefully-handled exceptions that should be treated as service failures. (see [below for nested schema](#nestedblock--exception_rules--custom_handled_exceptions))
-- `ignored_exceptions` (Block List, Max: 1) Some exceptions that are thrown by legacy or 3rd-party code indicate a specific response, not an error. Use this setting to instruct Dynatrace to treat such exceptions as non-failed requests.. If an exception matching any of the defined patterns occurs in a request, it will not be considered as a failure. Other exceptions occurring at the same request might still mark the request as failed. (see [below for nested schema](#nestedblock--exception_rules--ignored_exceptions))
-- `success_forcing_exceptions` (Block List, Max: 1) Define exceptions which indicate that a service call should not be considered as failed. E.g. an exception indicating that the client aborted the operation.. If an exception matching any of the defined patterns occurs on the entry node of the service, it will be considered successful. Compared to ignored exceptions, the request will be considered successful even if other exceptions occur in the same request. (see [below for nested schema](#nestedblock--exception_rules--success_forcing_exceptions))
+- `ignored_exceptions` (Block List, Max: 1) Some exceptions that are thrown by legacy or 3rd-party code indicate a specific response, not an error. Use this setting to instruct Dynatrace to treat such exceptions as non-failed requests. If an exception matching any of the defined patterns occurs on the __entry node__ of the service, it will not be considered as a failure. Other exceptions occurring at the same request might still mark the request as failed. (see [below for nested schema](#nestedblock--exception_rules--ignored_exceptions))
+- `success_forcing_exceptions` (Block List, Max: 1) Define exceptions which indicate that an entire service call should not be considered as failed. E.g. an exception indicating that the client aborted the operation. If an exception matching any of the defined patterns occurs on the __entry node__ of the service, it will be considered successful. Compared to ignored exceptions, the request will be considered successful even if other exceptions occur in the same request. (see [below for nested schema](#nestedblock--exception_rules--success_forcing_exceptions))
 
 <a id="nestedblock--exception_rules--custom_error_rules"></a>
 ### Nested Schema for `exception_rules.custom_error_rules`
@@ -127,22 +127,25 @@ Required:
 
 Required:
 
-- `condition` (Block List, Min: 1, Max: 1) Request attribute condition (see [below for nested schema](#nestedblock--exception_rules--custom_error_rules--custom_error_rule--condition))
-- `request_attribute` (String) Request attribute
+- `condition` (Block List, Min: 1, Max: 1) The condition that determines whether the request attribute value indicates a failure. (see [below for nested schema](#nestedblock--exception_rules--custom_error_rules--custom_error_rule--condition))
+- `request_attribute` (String) The ID of the request attribute to check. The request attribute must already be defined.
 
 <a id="nestedblock--exception_rules--custom_error_rules--custom_error_rule--condition"></a>
 ### Nested Schema for `exception_rules.custom_error_rules.custom_error_rule.condition`
 
 Required:
 
-- `compare_operation_type` (String) Apply this comparison
+- `compare_operation_type` (String) The type of comparison to apply. Available types depend on the data type of the request attribute:
+ * String types support `STRING_EXISTS`, `STRING_EQUALS`, `NOT_STRING_EQUALS`, `STARTS_WITH`, `NOT_STARTS_WITH`, `CONTAINS`, `NOT_CONTAINS`, `ENDS_WITH`, `NOT_ENDS_WITH`.
+ * Integer types support `INTEGER_EQUALS` and related comparisons;
+ * Double types support `DOUBLE_EQUALS` and related comparisons.
 
 Optional:
 
-- `case_sensitive` (Boolean) Case sensitive
-- `double_value` (Number) Value
-- `int_value` (Number) Value
-- `text_value` (String) Value
+- `case_sensitive` (Boolean) If `true`, the comparison is case-sensitive. Only applicable for string comparison types. Default: `false`.
+- `double_value` (Number) The floating-point value to compare the request attribute against. Only applicable for double comparison types.
+- `int_value` (Number) The integer value to compare the request attribute against. Only applicable for integer comparison types.
+- `text_value` (String) The text value to compare the request attribute against. Only applicable for string comparison types.
 
 
 
@@ -204,8 +207,8 @@ Optional:
 
 Required:
 
-- `client_side_errors` (String) HTTP response codes which indicate client side errors
-- `fail_on_missing_response_code_client_side` (Boolean) Treat missing HTTP response code as client side error
-- `fail_on_missing_response_code_server_side` (Boolean) Treat missing HTTP response code as server side errors
-- `server_side_errors` (String) HTTP response codes which indicate an error on the server side
+- `client_side_errors` (String) A list of HTTP response code ranges and individual values that are treated as client-side errors. The format is a comma-separated list of ranges and values (e.g., `400-499, 503, 510-599`). Default: `400-599`.
+- `fail_on_missing_response_code_client_side` (Boolean) If `true`, a missing HTTP response code on the client side is treated as a failure. Missing response codes can indicate a fire-and-forget call, a timeout, or an error. Default: `false`.
+- `fail_on_missing_response_code_server_side` (Boolean) If `true`, a missing HTTP response code on the server side is treated as a failure. Missing response codes can indicate a fire-and-forget call, a timeout, or an error. Default: `false`.
+- `server_side_errors` (String) A list of HTTP response code ranges and individual values that are treated as server-side errors. The format is a comma-separated list of ranges and values (e.g., `500-599, 402, 405-499`). Default: `500-599`.
  

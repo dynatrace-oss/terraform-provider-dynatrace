@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -94,10 +95,10 @@ func (me *GroupIdSource) HandlePreconditions() error {
 		return fmt.Errorf("'id' must be specified when 'type' is set to 'CUSTOM'; got 'type'='%v'", me.Type)
 	}
 	if (me.Name != nil) && (me.Property == nil || !slices.Contains([]string{"ENVIRONMENT_VARIABLE", "JAVA_SYS_PROP"}, string(*me.Property))) {
-		return fmt.Errorf("'name' must not be specified unless 'property' is one of ['ENVIRONMENT_VARIABLE', 'JAVA_SYS_PROP']; got 'property'='%v'", me.Property)
+		return fmt.Errorf("'name' must not be specified unless 'property' is one of ['ENVIRONMENT_VARIABLE', 'JAVA_SYS_PROP']; got 'property'='%v'", opt.ValOrNil(me.Property))
 	}
 	if (me.Name == nil) && (me.Property != nil && slices.Contains([]string{"ENVIRONMENT_VARIABLE", "JAVA_SYS_PROP"}, string(*me.Property))) {
-		return fmt.Errorf("'name' must be specified when 'property' is one of ['ENVIRONMENT_VARIABLE', 'JAVA_SYS_PROP']; got 'property'='%v'", me.Property)
+		return fmt.Errorf("'name' must be specified when 'property' is one of ['ENVIRONMENT_VARIABLE', 'JAVA_SYS_PROP']; got 'property'='%v'", opt.ValOrNil(me.Property))
 	}
 	if (me.Property != nil) && (string(me.Type) != "EXISTING") {
 		return fmt.Errorf("'property' must not be specified unless 'type' is set to 'EXISTING'; got 'type'='%v'", me.Type)

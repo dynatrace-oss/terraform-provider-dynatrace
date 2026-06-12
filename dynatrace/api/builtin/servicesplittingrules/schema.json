@@ -10,6 +10,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add rule",
@@ -74,6 +75,11 @@
 						},
 						{
 							"customValidatorId": "only-resource-and-custom-attributes-dql-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "forbidden-attributes-dql-validator",
 							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
@@ -175,6 +181,11 @@
 							"customValidatorId": "only-resource-and-custom-attributes-single-attribute-validator",
 							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "forbidden-attributes-single-attribute-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
 					"default": "",
@@ -203,5 +214,5 @@
 			]
 		}
 	},
-	"version": "0.0.10"
+	"version": "0.0.13"
 }

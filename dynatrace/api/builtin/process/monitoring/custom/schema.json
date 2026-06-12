@@ -444,6 +444,14 @@
 				{
 					"displayName": "Python script path",
 					"value": "PYTHON_SCRIPT_PATH"
+				},
+				{
+					"displayName": "Ruby script path",
+					"value": "RUBY_SCRIPT_PATH"
+				},
+				{
+					"displayName": "Ruby application root path",
+					"value": "RUBY_APP_ROOT_PATH"
 				}
 			],
 			"type": "enum"
@@ -513,6 +521,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"addItemButton": "Add custom rule"
@@ -651,5 +660,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.4.12"
+	"version": "0.4.13"
 }

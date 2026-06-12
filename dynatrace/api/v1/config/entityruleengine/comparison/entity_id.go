@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -74,16 +74,12 @@ func (eic *EntityID) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(eic.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", eic.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(eic.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", eic.Value); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   eic.Negate,
+		"operator": eic.Operator,
+		"value":    eic.Value,
+	})
 }
 
 func (eic *EntityID) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -102,17 +98,14 @@ func (eic *EntityID) UnmarshalHCL(decoder hcl.Decoder) error {
 			eic.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("value"); ok {
-		eic.Value = new(value.(string))
-	}
+
 	eic.Type = ComparisonBasicTypes.EntityID
-	if value, ok := decoder.GetOk("negate"); ok {
-		eic.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		eic.Operator = entity_id.Operator(value.(string))
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"negate":   &eic.Negate,
+		"operator": &eic.Operator,
+		"value":    &eic.Value,
+	})
 }
 
 func (eic *EntityID) MarshalJSON() ([]byte, error) {

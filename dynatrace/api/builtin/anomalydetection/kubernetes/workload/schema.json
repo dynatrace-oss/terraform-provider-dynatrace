@@ -9,6 +9,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"metadata": {
 		"minActiveGateVersion": "1.253"
@@ -782,6 +783,27 @@
 			"displayName": "JobFailureEvents",
 			"documentation": "",
 			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/JobFailureEventsConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
 				"enabled": {
 					"default": false,
 					"description": "",
@@ -794,6 +816,67 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"JobFailureEventsConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "JobFailureEventsConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "events occurred within any",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
 				}
 			},
 			"summaryPattern": "",
@@ -909,6 +992,27 @@
 			"displayName": "OOMKill",
 			"documentation": "",
 			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/OOMKillsConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
 				"enabled": {
 					"default": false,
 					"description": "",
@@ -918,6 +1022,67 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"OOMKillsConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "OOMKillsConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "events occurred within any",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
 				}
 			},
 			"summaryPattern": "",
@@ -1053,6 +1218,27 @@
 			"displayName": "PodBackoffEvents",
 			"documentation": "",
 			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/PodBackoffEventsConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
 				"enabled": {
 					"default": false,
 					"description": "",
@@ -1072,11 +1258,93 @@
 			"version": "0",
 			"versionInfo": ""
 		},
+		"PodBackoffEventsConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "PodBackoffEventsConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "events occurred within any",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"PodEvictionEvents": {
 			"description": "",
 			"displayName": "PodEvictionEvents",
 			"documentation": "",
 			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/PodEvictionEventsConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
 				"enabled": {
 					"default": false,
 					"description": "",
@@ -1096,11 +1364,93 @@
 			"version": "0",
 			"versionInfo": ""
 		},
+		"PodEvictionEventsConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "PodEvictionEventsConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "events occurred within any",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"PodPreemptionEvents": {
 			"description": "",
 			"displayName": "PodPreemptionEvents",
 			"documentation": "",
 			"properties": {
+				"configuration": {
+					"description": "Alert if",
+					"displayName": "",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/PodPreemptionEventsConfig"
+					},
+					"uiCustomization": {
+						"expandable": {
+							"displayName": "Configure"
+						}
+					}
+				},
 				"enabled": {
 					"default": false,
 					"description": "",
@@ -1113,6 +1463,67 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"PodPreemptionEventsConfig": {
+			"constraints": [
+				{
+					"customMessage": "Required sample period must not be longer than the observation period",
+					"properties": [
+						"samplePeriodInMinutes",
+						"observationPeriodInMinutes"
+					],
+					"type": "LESS_THAN_OR_EQUAL"
+				}
+			],
+			"description": "",
+			"displayName": "PodPreemptionEventsConfig",
+			"documentation": "",
+			"properties": {
+				"observationPeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "within the last",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"samplePeriodInMinutes": {
+					"constraints": [
+						{
+							"maximum": 60,
+							"minimum": 1,
+							"type": "RANGE"
+						}
+					],
+					"default": 1,
+					"description": "",
+					"displayName": "events occurred within any",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"suffix": "minutes"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
 				}
 			},
 			"summaryPattern": "",
@@ -1330,5 +1741,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.10.2"
+	"version": "1.11"
 }

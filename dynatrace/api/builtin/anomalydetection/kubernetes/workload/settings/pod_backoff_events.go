@@ -18,16 +18,27 @@
 package workload
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type PodBackoffEvents struct {
-	Enabled bool `json:"enabled"` // This setting is enabled (`true`) or disabled (`false`)
+	Configuration *PodBackoffEventsConfig `json:"configuration,omitempty"` // Alert if
+	Enabled       bool                    `json:"enabled"`                 // This setting is enabled (`true`) or disabled (`false`)
 }
 
 func (me *PodBackoffEvents) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"configuration": {
+			Type:        schema.TypeList,
+			Description: "Alert if",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(PodBackoffEventsConfig).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"enabled": {
 			Type:        schema.TypeBool,
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
@@ -38,12 +49,24 @@ func (me *PodBackoffEvents) Schema() map[string]*schema.Schema {
 
 func (me *PodBackoffEvents) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"enabled": me.Enabled,
+		"configuration": me.Configuration,
+		"enabled":       me.Enabled,
 	})
+}
+
+func (me *PodBackoffEvents) HandlePreconditions() error {
+	if (me.Configuration != nil) && (!me.Enabled) {
+		return fmt.Errorf("'configuration' must not be specified unless 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	if (me.Configuration == nil) && (me.Enabled) {
+		return fmt.Errorf("'configuration' must be specified when 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	return nil
 }
 
 func (me *PodBackoffEvents) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"enabled": &me.Enabled,
+		"configuration": &me.Configuration,
+		"enabled":       &me.Enabled,
 	})
 }

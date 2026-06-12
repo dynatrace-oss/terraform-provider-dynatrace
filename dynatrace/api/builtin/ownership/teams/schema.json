@@ -6,10 +6,11 @@
 		{
 			"customMessage": "The team identifier cannot be part of the supplementary identifiers.",
 			"customValidatorId": "identifier-supIdentifier-validator",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
-	"description": "Set up teams and assign responsibilities to them. Link teams to monitored entities in Dynatrace by referencing the team identifier in entity metadata. [See documentation](https://dt-url.net/ownership)",
+	"description": "Set up teams and assign responsibilities to them. Link teams to monitored entities in Dynatrace by referencing the team identifier in entity metadata. [See documentation](https://dt-url.net/bq238bi)",
 	"displayName": "Ownership teams",
 	"documentation": "",
 	"dynatrace": "1",
@@ -75,6 +76,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add team"
@@ -166,6 +168,7 @@
 				{
 					"customMessage": "Team identifier field can not contain special characters or blank spaces and it must start and end with an alphanumeric character.",
 					"customValidatorId": "team-identifier-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -261,6 +264,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "There cannot be 2 teams with the same identifier.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"identifier"
@@ -656,6 +660,7 @@
 						{
 							"customMessage": "Supplementary identifier field can not contain special characters or blank spaces and it must start and end with an alphanumeric character.",
 							"customValidatorId": "team-identifier-validator",
+							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
@@ -675,5 +680,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.6"
+	"version": "1.0.7"
 }

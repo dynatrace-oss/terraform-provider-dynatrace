@@ -36,7 +36,7 @@ resource "dynatrace_web_app_resource_types" "#name#" {
 
 ### Required
 
-- `primary_resource_type` (String) Possible Values: `CSS`, `IMAGE`, `OTHER`, `SCRIPT`
+- `primary_resource_type` (String) The primary type of the resource. Possible values: `CSS`, `IMAGE`, `OTHER`, `SCRIPT`
 - `regular_expression` (String) The regular expression to detect the resource.
 
 ### Optional

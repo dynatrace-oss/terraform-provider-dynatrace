@@ -38,8 +38,8 @@ resource "dynatrace_web_app_beacon_endpoint" "#name#" {
 
 ### Required
 
-- `application_id` (String) The scope of this setting
-- `type` (String) Possible Values: `ACTIVEGATE`, `DEFAULT_CONFIG`, `ONEAGENT`
+- `application_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
+- `type` (String) Type. Possible values: `ACTIVEGATE`, `DEFAULT_CONFIG`, `ONEAGENT`
 
 ### Optional
 

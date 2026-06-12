@@ -32,6 +32,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"multiObject": true,
 	"ordered": false,
@@ -72,5 +73,5 @@
 	],
 	"schemaId": "builtin:rum.resource-timing-origins",
 	"types": {},
-	"version": "0.0.5"
+	"version": "0.0.6"
 }

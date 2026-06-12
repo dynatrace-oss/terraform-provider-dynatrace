@@ -18,15 +18,15 @@
 package resourcetimingorigins
 
 import (
-	resourcetimingorigins "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/resourcetimingorigins/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/resourcetimingorigins/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.5"
+const SchemaVersion = "0.0.6"
 const SchemaID = "builtin:rum.resource-timing-origins"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*resourcetimingorigins.Settings] {
-	return settings20.Service[*resourcetimingorigins.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }

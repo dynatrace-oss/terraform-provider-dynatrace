@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: "dynatrace_maintenance_windows Resource - terraform-provider-dynatrace"
+subcategory: "Alerting"
+description: |-
+  The resource `dynatrace_maintenance_windows` covers configuration for maintenance windows
+---
+
+# dynatrace_maintenance_windows (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
+
+## Dynatrace Documentation
+
+- Maintenance windows - https://docs.dynatrace.com/docs/analyze-explore-automate/notifications-and-alerting/maintenance-windows/define-maintenance-window
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:maintenance-windows`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_maintenance_windows` downloads all existing maintenance window configuration
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/maintenancewindows/testdata/terraform/example.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

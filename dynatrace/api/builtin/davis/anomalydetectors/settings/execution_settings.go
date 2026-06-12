@@ -31,10 +31,10 @@ type ExecutionSettings struct {
 func (me *ExecutionSettings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"actor": {
-			Type:        schema.TypeString,
-			Description: "UUID of a service user. Queries will be executed on behalf of the service user.",
-			Optional:    true, // diverts from schema. It's actually set automatically if not provided
-			Computed:    true,
+			Type:             schema.TypeString,
+			Description:      "UUID of a service user. Queries will be executed on behalf of the service user.",
+			Optional:         true,                                                                       // diverts from schema. It's actually set automatically if not provided
+			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool { return new == "" }, // suppress diff if not provided, because it will be set automatically
 		},
 		"delay": {
 			Type:        schema.TypeInt,

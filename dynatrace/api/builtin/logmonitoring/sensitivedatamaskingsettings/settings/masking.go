@@ -18,6 +18,8 @@
 package sensitivedatamaskingsettings
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -37,7 +39,7 @@ func (me *Masking) Schema() map[string]*schema.Schema {
 		},
 		"replacement": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 		},
 		"type": {
@@ -59,6 +61,9 @@ func (me *Masking) MarshalHCL(properties hcl.Properties) error {
 func (me *Masking) HandlePreconditions() error {
 	if (me.Replacement == nil) && (string(me.Type) == "STRING") {
 		me.Replacement = new("")
+	}
+	if (me.Replacement != nil) && (string(me.Type) != "STRING") {
+		return fmt.Errorf("'replacement' must not be specified unless 'type' is set to 'STRING'; got 'type'='%v'", me.Type)
 	}
 	return nil
 }

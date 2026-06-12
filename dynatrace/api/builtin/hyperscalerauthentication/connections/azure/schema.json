@@ -60,6 +60,10 @@
 					"value": "SVC:com.dynatrace.grail"
 				},
 				{
+					"displayName": "Business Observability",
+					"value": "SVC:com.dynatrace.bo"
+				},
+				{
 					"displayName": "None",
 					"value": "NONE"
 				}
@@ -341,5 +345,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.15"
+	"version": "0.0.16"
 }

@@ -40,19 +40,17 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Error rate",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(ErrorRate).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(ErrorRate).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"response_time": {
 			Type:        schema.TypeList,
 			Description: "Response time",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(ResponseTime).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(ResponseTime).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"scope": {
 			Type:        schema.TypeString,
@@ -65,19 +63,17 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Detect traffic drops",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(AppTrafficDrops).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(AppTrafficDrops).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"traffic_spikes": {
 			Type:        schema.TypeList,
 			Description: "Detect traffic spikes",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(AppTrafficSpikes).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(AppTrafficSpikes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }

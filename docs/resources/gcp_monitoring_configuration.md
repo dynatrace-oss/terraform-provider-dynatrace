@@ -14,11 +14,11 @@ description: |-
 
 ## Requirements
 
-This resource depends on a `dynatrace_gcp_connection` (HAS, `serviceAccountImpersonation` mode). The customer GCP service account referenced via `credential.service_account` must:
+This resource depends on a [`dynatrace_gcp_connection`](./gcp_connection.md) (Hyperscaler Authentication Service, `serviceAccountImpersonation` mode). The customer GCP service account referenced via `credential.service_account` must:
 
 1. Exist in the target GCP project.
 2. Hold the project-level read role required by the integration (typically `roles/viewer`, optionally augmented with `roles/monitoring.viewer`).
-3. Grant `roles/iam.serviceAccountTokenCreator` to the Dynatrace-side principal returned by the [`dynatrace_gcp_dynatrace_principal`](../data-sources/gcp_dynatrace_principal.md) data source — this is what enables Dynatrace to impersonate the customer SA.
+3. Grant `roles/iam.serviceAccountTokenCreator` to the Dynatrace-managed principal exposed by the [`dynatrace_gcp_principal`](./gcp_principal.md) resource — this is what enables Dynatrace to impersonate the customer SA.
 
 The GCP APIs the extension calls (`compute.googleapis.com`, `monitoring.googleapis.com`, `cloudresourcemanager.googleapis.com`, `iamcredentials.googleapis.com`, plus any service-specific API for the enabled feature sets) must be enabled on the project.
 
@@ -32,7 +32,7 @@ A complete end-to-end Terraform example wiring the customer SA, the IAM bindings
 ## Resource Example Usage
 
 ```terraform
-data "dynatrace_gcp_dynatrace_principal" "this" {}
+resource "dynatrace_gcp_principal" "this" {}
 
 resource "google_service_account" "monitoring" {
   account_id   = "dynatrace-dac"
@@ -49,13 +49,18 @@ resource "google_project_iam_member" "viewer" {
 resource "google_service_account_iam_member" "dynatrace_token_creator" {
   service_account_id = google_service_account.monitoring.name
   role               = "roles/iam.serviceAccountTokenCreator"
-  member             = "serviceAccount:${data.dynatrace_gcp_dynatrace_principal.this.principal}"
+  member             = "serviceAccount:${dynatrace_gcp_principal.this.principal}"
 }
 
 resource "dynatrace_gcp_connection" "this" {
-  name               = "dac-tf-poc-connection"
-  service_account_id = google_service_account.monitoring.email
-  oauth_consumers    = ["SVC:com.dynatrace.da"]
+  name = "dac-tf-poc-connection"
+  type = "serviceAccountImpersonation"
+  service_account_impersonation {
+    service_account_id = google_service_account.monitoring.email
+    consumers          = ["SVC:com.dynatrace.da"]
+  }
+
+  depends_on = [google_service_account_iam_member.dynatrace_token_creator]
 }
 
 resource "dynatrace_gcp_monitoring_configuration" "this" {

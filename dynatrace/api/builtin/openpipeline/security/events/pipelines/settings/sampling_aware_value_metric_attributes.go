@@ -94,7 +94,10 @@ func (me *SamplingAwareValueMetricAttributes) HandlePreconditions() error {
 		me.Field = new("")
 	}
 	if (me.DefaultValue != nil) && (string(me.Measurement) == "duration") {
-		return fmt.Errorf("'default_value' must not be specified if 'measurement' is set to '%v'", me.Measurement)
+		return fmt.Errorf("'default_value' must not be specified unless 'measurement' is not set to 'duration'; got 'measurement'='%v'", me.Measurement)
+	}
+	if (me.Field != nil) && (string(me.Measurement) == "duration") {
+		return fmt.Errorf("'field' must not be specified unless 'measurement' is not set to 'duration'; got 'measurement'='%v'", me.Measurement)
 	}
 	return nil
 }

@@ -106,11 +106,11 @@ Required:
 Required:
 
 - `key` (String) Name
-- `value` (String) no documentation available
+- `value` (String) No documentation available
 
 Optional:
 
-- `url` (String) no documentation available
+- `url` (String) No documentation available
 
 
 
@@ -126,15 +126,15 @@ Required:
 
 Required:
 
-- `integration_type` (String) Possible Values: `EMAIL`, `JIRA`, `MS_TEAMS`, `SLACK`
+- `integration_type` (String) Integration type. Possible values: `EMAIL`, `JIRA`, `MS_TEAMS`, `SLACK`
 
 Optional:
 
-- `email` (String) no documentation available
-- `jira` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--contact_details--contact_detail--jira))
+- `email` (String) No documentation available
+- `jira` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--contact_details--contact_detail--jira))
 - `ms_teams` (String) Team
 - `slack_channel` (String) Channel
-- `url` (String) no documentation available
+- `url` (String) No documentation available
 
 <a id="nestedblock--contact_details--contact_detail--jira"></a>
 ### Nested Schema for `contact_details.contact_detail.jira`
@@ -142,7 +142,7 @@ Optional:
 Required:
 
 - `default_assignee` (String) Default Assignee
-- `project` (String) no documentation available
+- `project` (String) No documentation available
 
 
 
@@ -159,8 +159,8 @@ Required:
 
 Required:
 
-- `link_type` (String) Possible Values: `DASHBOARD`, `DOCUMENTATION`, `HEALTH_APP`, `REPOSITORY`, `RUNBOOK`, `URL`, `WIKI`
-- `url` (String) no documentation available
+- `link_type` (String) Type. Possible values: `DASHBOARD`, `DOCUMENTATION`, `HEALTH_APP`, `REPOSITORY`, `RUNBOOK`, `URL`, `WIKI`
+- `url` (String) No documentation available
 
 
 

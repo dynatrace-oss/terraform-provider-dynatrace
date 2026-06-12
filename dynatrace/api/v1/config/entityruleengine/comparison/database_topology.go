@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -74,16 +74,12 @@ func (dtc *DatabaseTopology) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(dtc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", dtc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(dtc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", dtc.Value.String()); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   dtc.Negate,
+		"operator": dtc.Operator,
+		"value":    dtc.Value,
+	})
 }
 
 func (dtc *DatabaseTopology) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -102,19 +98,13 @@ func (dtc *DatabaseTopology) UnmarshalHCL(decoder hcl.Decoder) error {
 			dtc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		dtc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		dtc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		dtc.Operator = database_topology.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		dtc.Value = database_topology.Value(value.(string)).Ref()
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &dtc.Type,
+		"negate":   &dtc.Negate,
+		"operator": &dtc.Operator,
+		"value":    &dtc.Value,
+	})
 }
 
 func (dtc *DatabaseTopology) MarshalJSON() ([]byte, error) {

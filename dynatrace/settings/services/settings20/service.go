@@ -21,6 +21,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"reflect"
 	"regexp"
 	"strings"
@@ -31,11 +32,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
-
-	"net/url"
 )
-
-
 
 func Service[T settings.Settings](credentials *rest.Credentials, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.ListIDCRUDService[T] {
 	var opts *ServiceOptions[T]
@@ -344,8 +341,28 @@ func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *service[T]) Validate(v T) error {
-	return nil // Settings 2.0 doesn't offer validation
+// Validate submits v to the Settings 2.0 API with validateOnly=true, which runs
+// all synchronous schema validators without persisting any object. It returns an
+// error if the payload violates the schema; nil means the payload is valid.
+func (me *service[T]) Validate(ctx context.Context, v T) error {
+	soc := SettingsObjectCreate{
+		SchemaID:      me.schemaID,
+		SchemaVersion: me.schemaVersion,
+		Scope:         settings.GetScope(v),
+		Value:         v,
+	}
+	if insertAfter := settings.GetInsertAfter(v); insertAfter != nil {
+		soc.InsertAfter = *insertAfter
+	}
+
+	var req rest.Request
+	postUrl := "/api/v2/settings/objects?validateOnly=true"
+	if !me.skipRepairInput() {
+		postUrl = postUrl + "&repairInput=true"
+	}
+	req = me.client.Post(ctx, postUrl, []SettingsObjectCreate{soc}).Expect(200)
+
+	return req.Finish()
 }
 
 func (me *service[T]) Create(ctx context.Context, v T) (*api.Stub, error) {

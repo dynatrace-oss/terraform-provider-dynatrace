@@ -27,5 +27,5 @@ ignore:
   SNYK-GOLANG-GITHUBCOMVMIHAILENCOMSGPACK-15702236: &msg-pack-ignore
     - '*':
         reason: 'Transitive dependency via terraform-plugin-sdk/v2; no fixed version available upstream.'
-        expires: 2026-06-06T00:00:00.000Z
+        expires: 2026-07-06T00:00:00.000Z
   SNYK-GOLANG-GITHUBCOMVMIHAILENCOMSGPACKV5-15702238: *msg-pack-ignore

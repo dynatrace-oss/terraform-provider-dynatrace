@@ -23,29 +23,29 @@ import (
 )
 
 type Rule struct {
-	AdditionalRequiredAttributes []string `json:"additionalRequiredAttributes,omitempty"` // Define resource attributes that should not be part of the name but are required to detect the service, e.g. service.namespace or k8s.workload.kind.. Attributes specified here are required to apply the rule. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\nAll attribute values contribute to the final service ID.
-	Condition                    *string  `json:"condition,omitempty"`                    // Limits the scope of the service detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes.. A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\nIf empty, the condition will always match.
+	AdditionalRequiredAttributes []string `json:"additionalRequiredAttributes,omitempty"` // Add resource attribute keys (e.g. service.namespace or k8s.workload.kind) that also detect unique services but are not included in the displayed service name.. Attributes specified here are required to apply the rule. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\n  All attribute values contribute to the final service ID.
+	Condition                    *string  `json:"condition,omitempty"`                    // Limits the scope of the service detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes.. A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\n  If empty, the condition will always match.
 	Description                  *string  `json:"description,omitempty"`
 	RuleName                     string   `json:"ruleName"`            // Rule name
-	ServiceNameTemplate          string   `json:"serviceNameTemplate"` // Specify resource attribute placeholders in curly braces, e.g. {service.name} or {k8s.workload.name}.. All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\nAll resolved attribute values contribute to the final service ID.
+	ServiceNameTemplate          string   `json:"serviceNameTemplate"` // Specify resource attribute placeholders in curly braces, e.g. {service.name} or {k8s.workload.name}.. All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\n  All resolved attribute values contribute to the final service ID.
 }
 
 func (me *Rule) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"additional_required_attributes": {
 			Type:        schema.TypeSet,
-			Description: "Define resource attributes that should not be part of the name but are required to detect the service, e.g. service.namespace or k8s.workload.kind.. Attributes specified here are required to apply the rule. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\nAll attribute values contribute to the final service ID.",
+			Description: "Add resource attribute keys (e.g. service.namespace or k8s.workload.kind) that also detect unique services but are not included in the displayed service name.. Attributes specified here are required to apply the rule. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\n  All attribute values contribute to the final service ID.",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"condition": {
 			Type:        schema.TypeString,
-			Description: "Limits the scope of the service detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes.. A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\nIf empty, the condition will always match.",
+			Description: "Limits the scope of the service detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on resource attributes.. A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\n  If empty, the condition will always match.",
 			Optional:    true, // nullable
 		},
 		"description": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // nullable
 		},
 		"rule_name": {
@@ -55,7 +55,7 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 		},
 		"service_name_template": {
 			Type:        schema.TypeString,
-			Description: "Specify resource attribute placeholders in curly braces, e.g. {service.name} or {k8s.workload.name}.. All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\nAll resolved attribute values contribute to the final service ID.",
+			Description: "Specify resource attribute placeholders in curly braces, e.g. {service.name} or {k8s.workload.name}.. All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\n  All resolved attribute values contribute to the final service ID.",
 			Required:    true,
 		},
 	}

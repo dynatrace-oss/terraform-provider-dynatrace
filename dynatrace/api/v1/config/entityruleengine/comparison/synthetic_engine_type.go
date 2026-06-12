@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -74,16 +74,12 @@ func (setc *SyntheticEngineType) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(setc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", setc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(setc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", setc.Value.String()); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   setc.Negate,
+		"operator": setc.Operator,
+		"value":    setc.Value,
+	})
 }
 
 func (setc *SyntheticEngineType) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -102,19 +98,13 @@ func (setc *SyntheticEngineType) UnmarshalHCL(decoder hcl.Decoder) error {
 			setc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		setc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		setc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		setc.Operator = synthetic_engine_type.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		setc.Value = synthetic_engine_type.Value(value.(string)).Ref()
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &setc.Type,
+		"negate":   &setc.Negate,
+		"operator": &setc.Operator,
+		"value":    &setc.Value,
+	})
 }
 
 func (setc *SyntheticEngineType) MarshalJSON() ([]byte, error) {

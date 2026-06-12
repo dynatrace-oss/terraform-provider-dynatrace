@@ -104,6 +104,7 @@ type Settings struct {
 	RuleID82    bool    `json:"-82"`                   // Rule id: 82 - Do not monitor processes if EXE name equals 'az'
 	RuleID83    bool    `json:"-83"`                   // Rule id: 83 - Do not monitor processes if EXE name equals 'gcloud'
 	RuleID84    bool    `json:"-84"`                   // Rule id: 84 - Do not monitor processes if command line arguments contain 'forever/bin/monitor'
+	RuleID85    bool    `json:"-85"`                   // Rule id: 85 - Do not monitor process if Java Main class contains 'ActiveGateCommandLineTool'
 }
 
 func (me *Settings) Name() string {
@@ -599,6 +600,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Optional:    true,
 			Default:     true,
 		},
+		"jmc_activegatecommandlinetool": {
+			Type:        schema.TypeBool,
+			Description: "Rule id: 85 - Do not monitor process if Java Main class contains 'ActiveGateCommandLineTool'",
+			Optional:    true, // new required field
+			Default:     true,
+		},
 	}
 }
 
@@ -685,6 +692,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"exe_az":                                me.RuleID82,
 		"exe_gcloud":                            me.RuleID83,
 		"cmd_foreverbinmonitor":                 me.RuleID84,
+		"jmc_activegatecommandlinetool":         me.RuleID85,
 	})
 }
 
@@ -771,5 +779,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"exe_az":                                &me.RuleID82,
 		"exe_gcloud":                            &me.RuleID83,
 		"cmd_foreverbinmonitor":                 &me.RuleID84,
+		"jmc_activegatecommandlinetool":         &me.RuleID85,
 	})
 }

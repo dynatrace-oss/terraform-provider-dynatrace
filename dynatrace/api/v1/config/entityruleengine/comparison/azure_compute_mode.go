@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -74,16 +74,12 @@ func (acmc *AzureComputeMode) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(acmc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", acmc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(acmc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", acmc.Value.String()); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   acmc.Negate,
+		"operator": acmc.Operator,
+		"value":    acmc.Value,
+	})
 }
 
 func (acmc *AzureComputeMode) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -102,19 +98,13 @@ func (acmc *AzureComputeMode) UnmarshalHCL(decoder hcl.Decoder) error {
 			acmc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		acmc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		acmc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		acmc.Operator = azure_compute_mode.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		acmc.Value = azure_compute_mode.Value(value.(string)).Ref()
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &acmc.Type,
+		"negate":   &acmc.Negate,
+		"operator": &acmc.Operator,
+		"value":    &acmc.Value,
+	})
 }
 
 func (acmc *AzureComputeMode) MarshalJSON() ([]byte, error) {

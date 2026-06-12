@@ -28,7 +28,7 @@ type Settings struct {
 	DataExtraction           *Stage          `json:"dataExtraction,omitempty"`           // Data extraction stage
 	Davis                    *Stage          `json:"davis,omitempty"`                    // Davis event extraction stage
 	DisplayName              string          `json:"displayName"`                        // Display name
-	GroupRole                *GroupRole      `json:"groupRole,omitempty"`                // Group role. Possible values: `compositionPipeline`, `memberPipeline`
+	GroupRole                *GroupRole      `json:"groupRole,omitempty"`                // Group role. Possible values: `basePipeline`, `compositionPipeline`, `memberPipeline`
 	MetadataList             MetadataEntries `json:"metadataList,omitempty"`             // Pipeline metadata list
 	MetricExtraction         *Stage          `json:"metricExtraction,omitempty"`         // Metrics extraction stage
 	Processing               *Stage          `json:"processing,omitempty"`               // Processing stage
@@ -79,7 +79,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"group_role": {
 			Type:        schema.TypeString,
-			Description: "Group role. Possible values: `compositionPipeline`, `memberPipeline`",
+			Description: "Group role. Possible values: `basePipeline`, `compositionPipeline`, `memberPipeline`",
 			ForceNew:    true,
 			Optional:    true, // nullable
 		},

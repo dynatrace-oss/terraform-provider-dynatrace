@@ -18,6 +18,9 @@
 package ingestsources
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -45,35 +48,53 @@ func (me *DavisEventProperties) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type DavisEventProperty struct {
-	Key   string `json:"key"`
-	Value string `json:"value"`
+	Key      string                   `json:"key"`
+	Strategy *FieldExtractionStrategy `json:"strategy,omitempty"` // Strategy for field extraction. Possible values: `equals`, `startsWith`
+	Value    *string                  `json:"value,omitempty"`
 }
 
 func (me *DavisEventProperty) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"key": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
+		},
+		"strategy": {
+			Type:        schema.TypeString,
+			Description: "Strategy for field extraction. Possible values: `equals`, `startsWith`",
+			Optional:    true, // nullable
 		},
 		"value": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
-			Required:    true,
+			Description: "No documentation available",
+			Optional:    true, // precondition
 		},
 	}
 }
 
 func (me *DavisEventProperty) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"key":   me.Key,
-		"value": me.Value,
+		"key":      me.Key,
+		"strategy": me.Strategy,
+		"value":    me.Value,
 	})
+}
+
+func (me *DavisEventProperty) HandlePreconditions() error {
+	if (me.Value == nil) && ((me.Strategy != nil && string(*me.Strategy) == "equals") || (me.Strategy == nil)) {
+		me.Value = new("")
+	}
+	if (me.Value != nil) && ((me.Strategy == nil || string(*me.Strategy) != "equals") && (me.Strategy != nil)) {
+		return fmt.Errorf("'value' must not be specified unless ('strategy' is set to 'equals' or 'strategy' is not set); got 'strategy'='%v'", opt.ValOrNil(me.Strategy))
+	}
+	return nil
 }
 
 func (me *DavisEventProperty) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"key":   &me.Key,
-		"value": &me.Value,
+		"key":      &me.Key,
+		"strategy": &me.Strategy,
+		"value":    &me.Value,
 	})
 }

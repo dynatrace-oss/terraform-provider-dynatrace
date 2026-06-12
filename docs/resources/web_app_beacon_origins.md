@@ -36,7 +36,7 @@ resource "dynatrace_web_app_beacon_origins" "#name#" {
 
 ### Required
 
-- `matcher` (String) Possible Values: `CONTAINS`, `ENDS_WITH`, `EQUALS`, `STARTS_WITH`
+- `matcher` (String) Matcher. Possible values: `CONTAINS`, `ENDS_WITH`, `EQUALS`, `STARTS_WITH`
 - `pattern` (String) Pattern
 
 ### Read-Only

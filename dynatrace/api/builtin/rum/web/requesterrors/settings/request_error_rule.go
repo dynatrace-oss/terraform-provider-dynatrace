@@ -58,10 +58,9 @@ func (me *RequestErrorRule) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Capture settings",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(CaptureSettings).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(CaptureSettings).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"consider_csp_violations": {
 			Type:        schema.TypeBool,
@@ -76,16 +75,15 @@ func (me *RequestErrorRule) Schema() map[string]*schema.Schema {
 		"error_codes": {
 			Type:        schema.TypeString,
 			Description: "Match by error code",
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 		"filter_settings": {
 			Type:        schema.TypeList,
 			Description: "Filter settings",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(FilterSettings).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(FilterSettings).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }

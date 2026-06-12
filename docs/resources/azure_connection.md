@@ -167,8 +167,8 @@ resource "dynatrace_azure_connection_authentication" "example" {
 
 ### Optional
 
-- `client_secret` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--client_secret))
-- `federated_identity_credential` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--federated_identity_credential))
+- `client_secret` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--client_secret))
+- `federated_identity_credential` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--federated_identity_credential))
 - `timeouts` (Block, Optional) (see [below for nested schema](#nestedblock--timeouts))
 
 ### Read-Only
@@ -194,7 +194,7 @@ Optional:
 
 Optional:
 
-- `consumers` (List of String) Consumers that can use the connection. Possible values: `APP:dynatrace.microsoft.azure.connector`, `DA`, `NONE`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`
+- `consumers` (List of String) Consumers that can use the connection. Possible values: `APP:dynatrace.microsoft.azure.connector`, `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`
 
 
 <a id="nestedblock--timeouts"></a>

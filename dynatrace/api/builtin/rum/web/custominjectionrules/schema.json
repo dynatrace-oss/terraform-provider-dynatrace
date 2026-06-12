@@ -60,6 +60,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"addItemButton": "Add custom rule"
@@ -177,5 +178,5 @@
 	],
 	"schemaId": "builtin:rum.web.custom-injection-rules",
 	"types": {},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

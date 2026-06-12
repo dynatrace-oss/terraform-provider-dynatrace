@@ -165,7 +165,7 @@ resource "dynatrace_web_app_request_errors" "#name#" {
 ### Required
 
 - `ignore_request_errors_in_apdex_calculation` (Boolean) (Field has overlap with `dynatrace_application_error_rules`) This setting overrides Apdex settings for individual rules listed below
-- `scope` (String) The scope of this setting (APPLICATION)
+- `scope` (String) The scope of this setting (APPLICATION, environment-default)
 
 ### Optional
 
@@ -214,6 +214,6 @@ Optional:
 
 Optional:
 
-- `filter` (String) Possible Values: `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
-- `url` (String) no documentation available
+- `filter` (String) Filter by URL. Possible values: `BEGINS_WITH`, `CONTAINS`, `ENDS_WITH`, `EQUALS`
+- `url` (String) No documentation available
  

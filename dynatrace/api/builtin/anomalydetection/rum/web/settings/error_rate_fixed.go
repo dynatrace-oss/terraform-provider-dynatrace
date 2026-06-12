@@ -24,7 +24,7 @@ import (
 
 type ErrorRateFixed struct {
 	ErrorRateReqPerMin     float64     `json:"errorRateReqPerMin"`     // To avoid over-alerting for low traffic applications
-	ErrorRateSensitivity   Sensitivity `json:"errorRateSensitivity"`   // Possible Values: `Low`, `Medium`, `High`
+	ErrorRateSensitivity   Sensitivity `json:"errorRateSensitivity"`   // Sensitivity. Possible values: `high`, `low`, `medium`
 	MaxFailureRateIncrease float64     `json:"maxFailureRateIncrease"` // Alert if this custom error rate threshold is exceeded during any 5-minute-period
 	MinutesAbnormalState   float64     `json:"minutesAbnormalState"`   // Amount of minutes the observed traffic has to stay in abnormal state before alert
 }
@@ -38,7 +38,7 @@ func (me *ErrorRateFixed) Schema() map[string]*schema.Schema {
 		},
 		"error_rate_sensitivity": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Low`, `Medium`, `High`",
+			Description: "Sensitivity. Possible values: `high`, `low`, `medium`",
 			Required:    true,
 		},
 		"max_failure_rate_increase": {

@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -80,19 +80,13 @@ func (sc *String) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(sc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", sc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(sc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("case_sensitive", sc.CaseSensitive); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", sc.Value); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":         sc.Negate,
+		"operator":       sc.Operator,
+		"case_sensitive": sc.CaseSensitive,
+		"value":          sc.Value,
+	})
 }
 
 func (sc *String) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -107,27 +101,19 @@ func (sc *String) UnmarshalHCL(decoder hcl.Decoder) error {
 		delete(sc.Unknowns, "negate")
 		delete(sc.Unknowns, "operator")
 		delete(sc.Unknowns, "value")
+		delete(sc.Unknowns, "case_sensitive")
 		if len(sc.Unknowns) == 0 {
 			sc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		sc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		sc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		sc.Operator = stringc.Operator(value.(string))
-	}
-	if value, ok := decoder.GetOk("value"); ok {
-		sc.Value = new(value.(string))
-	}
-	if value, ok := decoder.GetOk("case_sensitive"); ok {
-		sc.CaseSensitive = value.(bool)
-	}
 
-	return nil
+	return decoder.DecodeAll(map[string]any{
+		"type":           &sc.Type,
+		"negate":         &sc.Negate,
+		"operator":       &sc.Operator,
+		"case_sensitive": &sc.CaseSensitive,
+		"value":          &sc.Value,
+	})
 }
 
 func (sc *String) MarshalJSON() ([]byte, error) {

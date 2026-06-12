@@ -21,10 +21,12 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/maintenancewindows"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcp"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcpdynatraceprincipal"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroupingrules"
 	awsmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/dac/awsmonitoring"
 	azuremonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/dac/azuremonitoring"
-	gcpconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/dac/gcpconnection"
 	gcpmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/dac/gcpmonitoring"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
@@ -690,7 +692,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.HubExtensionV2Config:         NewResourceDescriptor(monitoringconfigurations.Service),
 	ResourceTypes.AWSMonitoringConfiguration:   NewResourceDescriptor(awsmonitoring.Service, Dependencies.ID(ResourceTypes.AWSConnection)),
 	ResourceTypes.AzureMonitoringConfiguration: NewResourceDescriptor(azuremonitoring.Service, Dependencies.ID(ResourceTypes.AzureConnection)),
-	ResourceTypes.GCPConnection:                NewResourceDescriptor(gcpconnection.Service),
 	ResourceTypes.GCPMonitoringConfiguration:   NewResourceDescriptor(gcpmonitoring.Service, Dependencies.ID(ResourceTypes.GCPConnection)),
 	ResourceTypes.OpenPipelineLogs: NewResourceDescriptor(
 		openpipeline.LogsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
@@ -1669,6 +1670,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.AWSAutomationConnections),
 		Dependencies.ID(ResourceTypes.AWSConnection),
 		Dependencies.ID(ResourceTypes.AzureConnection),
+		Dependencies.ID(ResourceTypes.GCPConnection),
 
 		// OpenPipeline resources
 		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsIngestsources),
@@ -1890,6 +1892,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 	),
 	ResourceTypes.ProcessGroupingRules: NewResourceDescriptor(processgroupingrules.Service),
+	ResourceTypes.MaintenanceWindows: NewResourceDescriptor(maintenancewindows.Service,
+		Dependencies.ID(ResourceTypes.AutomationSchedulingRule),
+	),
+	ResourceTypes.GCPConnection:        NewResourceDescriptor(gcp.Service),
+	ResourceTypes.GCPPrincipal:         NewResourceDescriptor(gcpdynatraceprincipal.Service),
 }
 
 type ResourceExclusion struct {
@@ -1913,7 +1920,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.AlertingProfile, "Replaced by dynatrace_alerting"},
 			{ResourceTypes.CustomAnomalies, "Replaced by dynatrace_metric_events"},
 			{ResourceTypes.LogGrail, "Only meant to be used for the initial Logs powered by Grail activation"},
-			{ResourceTypes.MaintenanceWindow, "Replaced by dynatrace_maintenance"},
+			{ResourceTypes.MaintenanceWindow, "Replaced by dynatrace_maintenance_windows"},
 			{ResourceTypes.Notification, "Replaced by dynatrace_<type>_notification"},
 		},
 	},
@@ -1934,6 +1941,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.ProcessGroupAnomalies, "Replaced by dynatrace_pg_alerting"},
 			{ResourceTypes.ServiceAnomalies, "Replaced by dynatrace_service_anomalies_v2"},
 			{ResourceTypes.SLO, "Replaced by dynatrace_slo_v2"},
+			{ResourceTypes.Maintenance, "Replaced by dynatrace_maintenance_windows"},
 		},
 	},
 	{

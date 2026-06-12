@@ -39,10 +39,9 @@ func (me *ErrorRateAuto) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Avoid over-alerting",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(OverAlertingProtectionAuto).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(OverAlertingProtectionAuto).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"relative_increase": {
 			Type:        schema.TypeFloat,

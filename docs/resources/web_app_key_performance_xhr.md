@@ -45,7 +45,7 @@ resource "dynatrace_web_app_key_performance_xhr" "#name#" {
 
 ### Required
 
-- `kpm` (String) Possible Values: `RESPONSE_END`, `RESPONSE_START`, `USER_ACTION_DURATION`, `VISUALLY_COMPLETE`
+- `kpm` (String) Key performance metric. Possible values: `RESPONSE_END`, `RESPONSE_START`, `USER_ACTION_DURATION`, `VISUALLY_COMPLETE`
 - `scope` (String) The scope of this setting (APPLICATION_METHOD, APPLICATION)
 - `thresholds` (Block List, Min: 1, Max: 1) Set the Tolerating and Frustrated performance thresholds for this action type. (see [below for nested schema](#nestedblock--thresholds))
 

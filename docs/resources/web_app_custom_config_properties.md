@@ -36,7 +36,7 @@ resource "dynatrace_web_app_custom_config_properties" "#name#" {
 
 ### Required
 
-- `application_id` (String) The scope of this setting
+- `application_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 - `custom_property` (String) Custom configuration property
 
 ### Read-Only

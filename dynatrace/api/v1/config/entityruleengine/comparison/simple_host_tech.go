@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -78,16 +78,12 @@ func (shtc *SimpleHostTech) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(shtc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", shtc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(shtc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", shtc.Value); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   shtc.Negate,
+		"operator": shtc.Operator,
+		"value":    shtc.Value,
+	})
 }
 
 func (shtc *SimpleHostTech) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -106,22 +102,13 @@ func (shtc *SimpleHostTech) UnmarshalHCL(decoder hcl.Decoder) error {
 			shtc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		shtc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		shtc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		shtc.Operator = tech.HostOperator(value.(string))
-	}
-	if _, ok := decoder.GetOk("value.#"); ok {
-		shtc.Value = new(tech.Host)
-		if err := shtc.Value.UnmarshalHCL(hcl.NewDecoder(decoder, "value", 0)); err != nil {
-			return err
-		}
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &shtc.Type,
+		"negate":   &shtc.Negate,
+		"operator": &shtc.Operator,
+		"value":    &shtc.Value,
+	})
 }
 
 func (shtc *SimpleHostTech) MarshalJSON() ([]byte, error) {

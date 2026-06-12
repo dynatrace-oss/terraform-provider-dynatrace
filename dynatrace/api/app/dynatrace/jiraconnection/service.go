@@ -18,15 +18,15 @@
 package jiraconnection
 
 import (
-	jiraconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.3"
+const SchemaVersion = "1.0.4"
 const SchemaID = "app:dynatrace.jira:connection"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*jiraconnection.Settings] {
-	return settings20.Service[*jiraconnection.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }

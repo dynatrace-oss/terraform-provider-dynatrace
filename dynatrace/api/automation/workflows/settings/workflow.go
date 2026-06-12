@@ -108,7 +108,7 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 		},
 		"tasks": {
 			Type:        schema.TypeList,
-			Description: "The tasks to run for every execution of this workflow",
+			Description: "The tasks to run for every execution of this workflow. Note: the order in which tasks are declared in HCL does not determine their layout - positions are not assigned incrementally based on declaration order. Set `position` explicitly on each task if you need a deterministic layout",
 			MinItems:    1,
 			MaxItems:    1,
 			Required:    true,

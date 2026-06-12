@@ -50,7 +50,7 @@ resource "dynatrace_data_privacy" "#name#" {
 
 - `data_collection` (Block List, Min: 1, Max: 1) To provide your end users with the ability to decide for themselves if their activities should be tracked to measure application performance and usage, enable opt-in mode. (see [below for nested schema](#nestedblock--data_collection))
 - `do_not_track` (Block List, Min: 1, Max: 1) Most modern web browsers have a privacy feature called ["Do Not Track"](https://dt-url.net/sb3n0pnl) that individual users may have enabled on their devices. Customize how Dynatrace should behave when it encounters this setting. (see [below for nested schema](#nestedblock--do_not_track))
-- `masking` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--masking))
+- `masking` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--masking))
 - `user_tracking` (Block List, Min: 1, Max: 1) User tracking (see [below for nested schema](#nestedblock--user_tracking))
 
 ### Optional
@@ -78,7 +78,7 @@ Required:
 
 Optional:
 
-- `do_not_track` (String) Possible Values: `Anonymous`, `Disable_rum`
+- `do_not_track` (String) Possible values: `anonymous`, `disable-rum`
 
 
 <a id="nestedblock--masking"></a>
@@ -86,23 +86,23 @@ Optional:
 
 Required:
 
-- `personal_data_uri_masking_enabled` (Boolean) Dynatrace captures the URIs and request headers sent from desktop and mobile browsers. Dynatrace also captures full URIs on the server-side to enable detailed performance analysis of your applications. For complete details, visit [Mask personal data in URIs](https://dt-url.net/mask-personal-data-in-URIs).. URIs and request headers contain personal data. When this setting is enabled, Dynatrace automatically detects UUIDs, credit card numbers, email addresses, IP addresses, and other IDs and replaces those values with placeholders. The personal data is then masked in PurePath analysis, error analysis, user action naming for RUM, and elsewhere in Dynatrace.
+- `personal_data_uri_masking_enabled` (Boolean) Dynatrace captures the URIs and request headers sent from desktop and mobile browsers. Dynatrace also captures request data on the server-side to enable detailed performance analysis of your applications. For complete details, visit [Mask personal data in URIs](https://dt-url.net/mask-personal-data-in-URIs).. URIs, query strings, headers, exception messages and data captured for request attributes can contain personal data. When this setting is enabled, Dynatrace automatically detects UUIDs, credit card numbers, email addresses, IP addresses, and other IDs and replaces those values with placeholders. The personal data is then masked in PurePath analysis, error analysis, user action naming for RUM, and elsewhere in Dynatrace.
 - `user_action_masking_enabled` (Boolean) When Dynatrace detects a user action that triggers a page load or an AJAX/XHR action. To learn more about masking user actions, visit [Mask user actions](https://dt-url.net/mask-user-action).. When Dynatrace detects a user action that triggers a page load or an AJAX/XHR action, it constructs a name for the user action based on:
 
-- User event type (click on..., loading of page..., or keypress on...)
-- Title, caption, label, value, ID, className, or other available property of the related HTML element (for example, an image, button, checkbox, or text input field).
+  - User event type (click on..., loading of page..., or keypress on...)
+ - Title, caption, label, value, ID, className, or other available property of the related HTML element (for example, an image, button, checkbox, or text input field).
 
-In most instances, the default approach to user-action naming works well, resulting in user-action names such as:
+  In most instances, the default approach to user-action naming works well, resulting in user-action names such as:
 
-- click on "Search" on page /search.html
-- keypress on "Feedback" on page /contact.html
-- touch on "Homescreen" of page /list.jsf
+  - click on "Search" on page /search.html
+ - keypress on "Feedback" on page /contact.html
+ - touch on "Homescreen" of page /list.jsf
 
-In rare circumstances, confidential data (for example, email addresses, usernames, or account numbers) can be unintentionally included in user action names because the confidential data itself is included in an HTML element label, attribute, or other value (for example, click on "my Account Number: 1231231"...). If such confidential data appears in your application's user action names, enable the Mask user action names setting. This setting replaces specific HTML element names and values with generic HTML element names. With user-action name masking enabled, the user action names listed above appear as:
+  In rare circumstances, confidential data (for example, email addresses, usernames, or account numbers) can be unintentionally included in user action names because the confidential data itself is included in an HTML element label, attribute, or other value (for example, click on "my Account Number: 1231231"...). If such confidential data appears in your application's user action names, enable the Mask user action names setting. This setting replaces specific HTML element names and values with generic HTML element names. With user-action name masking enabled, the user action names listed above appear as:
 
-- click on INPUT on page /search.html
-- keypress on TEXTAREA on page /contact.html
-- touch on DIV of page /list.jsf
+  - click on INPUT on page /search.html
+ - keypress on TEXTAREA on page /contact.html
+ - touch on DIV of page /list.jsf
 
 Optional:
 

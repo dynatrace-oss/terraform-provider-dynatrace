@@ -46,7 +46,7 @@ func (me *CustomProperties) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type CustomProperty struct {
 	CaseInsensitiveNamingEnabled bool          `json:"caseInsensitiveNamingEnabled"` // Field name validation should be case-insensitive
-	FieldDataType                FieldDataType `json:"fieldDataType"`                // Datatype. Possible Values: `BOOLEAN`, `NUMBER`, `STRING`
+	FieldDataType                FieldDataType `json:"fieldDataType"`                // Datatype. Possible values: `BOOLEAN`, `NUMBER`, `STRING`
 	FieldName                    string        `json:"fieldName"`                    // Field name
 }
 
@@ -59,7 +59,7 @@ func (me *CustomProperty) Schema() map[string]*schema.Schema {
 		},
 		"field_data_type": {
 			Type:        schema.TypeString,
-			Description: "Datatype. Possible Values: `BOOLEAN`, `NUMBER`, `STRING`",
+			Description: "Datatype. Possible values: `BOOLEAN`, `NUMBER`, `STRING`",
 			Required:    true,
 		},
 		"field_name": {

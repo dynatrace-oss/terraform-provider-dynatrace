@@ -1,7 +1,7 @@
-resource "dynatrace_log_events" "#name#" {
+resource "dynatrace_log_events" "events" {
   enabled = false
   query   = "matchesPhrase(content, \"terratest\")"
-  summary = "Created by Terraform"
+  summary = "Created by #name#"
   event_template {
     description = "Created by Terraform"
     event_type  = "INFO"

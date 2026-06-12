@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,10 +20,6 @@ package bitness
 // Value The value to compare to.
 type Value string
 
-func (v Value) Ref() *Value {
-	return &v
-}
-
 // Values offers the known enum values
 var Values = struct {
 	V32 Value
@@ -31,8 +27,4 @@ var Values = struct {
 }{
 	"32",
 	"64",
-}
-
-func (bcv *Value) String() string {
-	return string(*bcv)
 }

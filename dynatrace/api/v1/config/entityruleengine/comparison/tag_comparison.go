@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -78,16 +78,12 @@ func (tc *Tag) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(tc.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("negate", tc.Negate); err != nil {
-		return err
-	}
-	if err := properties.Encode("operator", string(tc.Operator)); err != nil {
-		return err
-	}
-	if err := properties.Encode("value", tc.Value); err != nil {
-		return err
-	}
-	return nil
+
+	return properties.EncodeAll(map[string]any{
+		"negate":   tc.Negate,
+		"operator": tc.Operator,
+		"value":    tc.Value,
+	})
 }
 
 func (tc *Tag) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -106,22 +102,13 @@ func (tc *Tag) UnmarshalHCL(decoder hcl.Decoder) error {
 			tc.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("type"); ok {
-		tc.Type = ComparisonBasicType(value.(string))
-	}
-	if value, ok := decoder.GetOk("negate"); ok {
-		tc.Negate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("operator"); ok {
-		tc.Operator = tag.Operator(value.(string))
-	}
-	if _, ok := decoder.GetOk("value.#"); ok {
-		tc.Value = new(tag.Info)
-		if err := tc.Value.UnmarshalHCL(hcl.NewDecoder(decoder, "value", 0)); err != nil {
-			return err
-		}
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"type":     &tc.Type,
+		"negate":   &tc.Negate,
+		"operator": &tc.Operator,
+		"value":    &tc.Value,
+	})
 }
 
 func (tc *Tag) MarshalJSON() ([]byte, error) {

@@ -38,7 +38,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"client_secret": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(ClientSecretConfig).Schema()},
 			MinItems:    1,
@@ -46,7 +46,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"federated_identity_credential": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(FederatedIdentityCredential).Schema()},
 			MinItems:    1,
@@ -83,17 +83,17 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Settings) HandlePreconditions() error {
-	if (me.ClientSecret == nil) && (string(me.Type) == "clientSecret") {
-		return fmt.Errorf("'client_secret' must be specified if 'type' is set to '%v'", me.Type)
-	}
 	if (me.ClientSecret != nil) && (string(me.Type) != "clientSecret") {
-		return fmt.Errorf("'client_secret' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'client_secret' must not be specified unless 'type' is set to 'clientSecret'; got 'type'='%v'", me.Type)
 	}
-	if (me.FederatedIdentityCredential == nil) && (string(me.Type) == "federatedIdentityCredential") {
-		return fmt.Errorf("'federated_identity_credential' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.ClientSecret == nil) && (string(me.Type) == "clientSecret") {
+		return fmt.Errorf("'client_secret' must be specified when 'type' is set to 'clientSecret'; got 'type'='%v'", me.Type)
 	}
 	if (me.FederatedIdentityCredential != nil) && (string(me.Type) != "federatedIdentityCredential") {
-		return fmt.Errorf("'federated_identity_credential' must not be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'federated_identity_credential' must not be specified unless 'type' is set to 'federatedIdentityCredential'; got 'type'='%v'", me.Type)
+	}
+	if (me.FederatedIdentityCredential == nil) && (string(me.Type) == "federatedIdentityCredential") {
+		return fmt.Errorf("'federated_identity_credential' must be specified when 'type' is set to 'federatedIdentityCredential'; got 'type'='%v'", me.Type)
 	}
 	return nil
 }

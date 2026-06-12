@@ -545,9 +545,11 @@ var ResourceTypes = struct {
 	OpenpipelineUserEventsPipelinegroups     ResourceType
 	OpenpipelineUsersessionsPipelinegroups   ResourceType
 	ProcessGroupingRules                     ResourceType
+	MaintenanceWindows                       ResourceType
+	GCPConnection                            ResourceType
+	GCPPrincipal                             ResourceType
 	AWSMonitoringConfiguration               ResourceType
 	AzureMonitoringConfiguration             ResourceType
-	GCPConnection                            ResourceType
 	GCPMonitoringConfiguration               ResourceType
 }{
 	"dynatrace_autotag",
@@ -972,9 +974,11 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v2_user_events_pipelinegroups",
 	"dynatrace_openpipeline_v2_usersessions_pipelinegroups",
 	"dynatrace_process_grouping_rules",
+	"dynatrace_maintenance_windows",
+	"dynatrace_gcp_connection",
+	"dynatrace_gcp_principal",
 	"dynatrace_aws_monitoring_configuration",
 	"dynatrace_azure_monitoring_configuration",
-	"dynatrace_gcp_connection",
 	"dynatrace_gcp_monitoring_configuration",
 }
 

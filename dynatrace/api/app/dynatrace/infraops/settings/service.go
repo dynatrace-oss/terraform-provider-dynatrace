@@ -18,15 +18,15 @@
 package infraopssettings
 
 import (
-	infraopssettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.4.2"
+const SchemaVersion = "2"
 const SchemaID = "app:dynatrace.infraops:settings"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*infraopssettings.Settings] {
-	return settings20.Service[*infraopssettings.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }

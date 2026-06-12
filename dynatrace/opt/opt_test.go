@@ -26,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 )
 
 // TestInt validates `opt.Int(*int)`
@@ -221,4 +222,43 @@ func TestFloat64(t *testing.T) {
 	if got := opt.Float64(&want); got != want {
 		t.Errorf("Float64(*float64) failed, got: %v, want: %v.", got, want)
 	}
+}
+
+// TestValOrNil validates `opt.ValOrNil[T](*T)`
+func TestValOrNil(t *testing.T) {
+	t.Run("nil int pointer returns <nil>", func(t *testing.T) {
+		assert.Equal(t, "<nil>", opt.ValOrNil[int](nil))
+	})
+
+	t.Run("nil string pointer returns <nil>", func(t *testing.T) {
+		assert.Equal(t, "<nil>", opt.ValOrNil[string](nil))
+	})
+
+	t.Run("nil bool pointer returns <nil>", func(t *testing.T) {
+		assert.Equal(t, "<nil>", opt.ValOrNil[bool](nil))
+	})
+
+	t.Run("non-nil int pointer returns formatted value", func(t *testing.T) {
+		assert.Equal(t, "42", opt.ValOrNil(new(42)))
+	})
+
+	t.Run("non-nil string pointer returns underlying value", func(t *testing.T) {
+		assert.Equal(t, "val", opt.ValOrNil(new("val")))
+	})
+
+	t.Run("non-nil string pointer with empty value", func(t *testing.T) {
+		assert.Equal(t, "", opt.ValOrNil(new("")))
+	})
+
+	t.Run("non-nil bool pointer true", func(t *testing.T) {
+		assert.Equal(t, "true", opt.ValOrNil(new(true)))
+	})
+
+	t.Run("non-nil bool pointer false", func(t *testing.T) {
+		assert.Equal(t, "false", opt.ValOrNil(new(false)))
+	})
+
+	t.Run("non-nil float64 pointer", func(t *testing.T) {
+		assert.Equal(t, "3.14", opt.ValOrNil(new(3.14)))
+	})
 }
