@@ -165,7 +165,7 @@ Optional:
 
 - `description` (String) Free-form description for this credential. Defaults to the top-level `name`.
 - `enabled` (Boolean) Per-credential enable flag. Defaults to true. Distinct from the top-level `enabled`.
-- `type` (String) `FEDERATED` (workload-identity federation) or `SECRET` (client secret). Defaulted from the connection's auth mode when omitted.
+- `type` (String) `FEDERATED` (workload-identity federation) or `SECRET` (client secret). Defaults to `FEDERATED` when omitted.
 
 
 <a id="nestedblock--dt_label_enrichment"></a>
