@@ -587,6 +587,9 @@ func Provider() *schema.Provider {
 			"dynatrace_managed_network_zones":                          networkzones.Resource(),
 			"dynatrace_hub_extension_config":                           resources.NewGeneric(export.ResourceTypes.HubExtensionConfig).Resource(),
 			"dynatrace_hub_extension_v2_config":                        resources.NewGeneric(export.ResourceTypes.HubExtensionV2Config).Resource(),
+			"dynatrace_aws_monitoring_configuration":                   resources.NewGeneric(export.ResourceTypes.AWSMonitoringConfiguration).Resource(),
+			"dynatrace_azure_monitoring_configuration":                 resources.NewGeneric(export.ResourceTypes.AzureMonitoringConfiguration).Resource(),
+			"dynatrace_gcp_monitoring_configuration":                   resources.NewGeneric(export.ResourceTypes.GCPMonitoringConfiguration).Resource(),
 			"dynatrace_hub_extension_active_version":                   resources.NewGeneric(export.ResourceTypes.HubActiveExtensionVersion).Resource(),
 			"dynatrace_document":                                       resources.NewGeneric(export.ResourceTypes.Documents).Resource(),
 			"dynatrace_direct_shares":                                  resources.NewGeneric(export.ResourceTypes.DirectShares).Resource(),
@@ -720,6 +723,8 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_usersessions_pipelinegroups":    resources.NewGeneric(export.ResourceTypes.OpenpipelineUsersessionsPipelinegroups).Resource(),
 			"dynatrace_process_grouping_rules":                         resources.NewGeneric(export.ResourceTypes.ProcessGroupingRules).Resource(),
 			"dynatrace_maintenance_windows":                            resources.NewGeneric(export.ResourceTypes.MaintenanceWindows).Resource(),
+			"dynatrace_gcp_connection":                                 resources.NewGeneric(export.ResourceTypes.GCPConnection).Resource(),
+			"dynatrace_gcp_principal":                                  resources.NewGeneric(export.ResourceTypes.GCPPrincipal).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

@@ -546,6 +546,11 @@ var ResourceTypes = struct {
 	OpenpipelineUsersessionsPipelinegroups   ResourceType
 	ProcessGroupingRules                     ResourceType
 	MaintenanceWindows                       ResourceType
+	GCPConnection                            ResourceType
+	GCPPrincipal                             ResourceType
+	AWSMonitoringConfiguration               ResourceType
+	AzureMonitoringConfiguration             ResourceType
+	GCPMonitoringConfiguration               ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -970,6 +975,11 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v2_usersessions_pipelinegroups",
 	"dynatrace_process_grouping_rules",
 	"dynatrace_maintenance_windows",
+	"dynatrace_gcp_connection",
+	"dynatrace_gcp_principal",
+	"dynatrace_aws_monitoring_configuration",
+	"dynatrace_azure_monitoring_configuration",
+	"dynatrace_gcp_monitoring_configuration",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

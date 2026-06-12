@@ -1,7 +1,7 @@
 variable "DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT" {
-    type        = string
-    description = "The service account that should be used for the auth failure test. This service account must not allow impersonation by the DT GCP principal."
-    sensitive = true
+  type        = string
+  description = "The service account that should be used for the auth failure test. This service account must not allow impersonation by the DT GCP principal."
+  sensitive   = true
 }
 
 resource "dynatrace_gcp_connection" "auth_failure" {
