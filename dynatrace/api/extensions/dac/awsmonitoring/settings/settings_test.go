@@ -27,7 +27,7 @@ import (
 )
 
 // TestMarshalWireShape pins the on-the-wire JSON shape we send to
-// /api/v2/extensions/com.dynatrace.extension.da-aws/monitoringConfigurations.
+// /platform/extensions/v2/extensions/com.dynatrace.extension.da-aws/monitoringConfigurations.
 // The shape was extracted from src-knowledge/dtctl/examples/aws_monitoring_config.yaml.
 func TestMarshalWireShape(t *testing.T) {
 	s := &settings.Settings{
