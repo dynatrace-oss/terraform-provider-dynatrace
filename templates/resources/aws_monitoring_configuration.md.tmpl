@@ -16,8 +16,6 @@ description: |-
 
 This resource depends on a `dynatrace_aws_connection` (HAS) and the corresponding `dynatrace_aws_connection_role_arn` patch resource. The IAM role referenced from the connection must exist before the monitoring configuration is created — Dynatrace validates the role assumption on creation.
 
-A complete end-to-end Terraform example wiring the IAM role, the HAS connection and the monitoring configuration together is available under [`examples/aws-monitoring-end-to-end/`](../../examples/aws-monitoring-end-to-end) in this repository.
-
 ## Dynatrace Documentation
 
 - Amazon Web Services integration — https://docs.dynatrace.com/docs/ingest-from/amazon-web-services
@@ -26,26 +24,13 @@ A complete end-to-end Terraform example wiring the IAM role, the HAS connection 
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_aws_connection" "this" {
-  name = "dac-tf-poc-connection"
-  role_based_auth {
-    consumers = ["SVC:com.dynatrace.da"]
-  }
-}
-
-resource "dynatrace_aws_connection_role_arn" "this" {
-  aws_connection_id = dynatrace_aws_connection.this.id
-  role_arn          = aws_iam_role.monitoring.arn
-}
-
 resource "dynatrace_aws_monitoring_configuration" "this" {
-  depends_on = [dynatrace_aws_connection_role_arn.this]
-
+  # Assumes a pre-existing dynatrace_aws_connection + dynatrace_aws_connection_role_arn.
   name              = "dac-tf-poc-monitoring"
   enabled           = true
-  extension_version = "1.0.1" # null → resolve latest installed version on Create
-  connection_id     = dynatrace_aws_connection.this.id
-  account_id        = data.aws_caller_identity.current.account_id
+  extension_version = "1.0.1" # omit to pin the highest version installed on the tenant at Create
+  connection_id     = "vu9U3hXa3q0AAAABACdidWlsdGluOmh5cGVyc2NhbGVyLWF1dGhlbnRpY2F0aW9uOmF3cw"
+  account_id        = "123456789012"
   regions           = ["eu-central-1"]
   feature_sets      = ["EC2_essential", "RDS_essential", "S3_essential"]
 

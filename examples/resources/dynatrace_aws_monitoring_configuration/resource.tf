@@ -1,12 +1,11 @@
 # Minimal example consumed by terraform-plugin-docs to generate
-# docs/resources/aws_monitoring_configuration.md. For the full
-# end-to-end flow (HAS connection -> IAM role + trust -> role-ARN patch
-# -> monitoring config), see examples/aws-monitoring-end-to-end/.
+# docs/resources/aws_monitoring_configuration.md. Assumes a pre-existing
+# dynatrace_aws_connection + dynatrace_aws_connection_role_arn.
 
 resource "dynatrace_aws_monitoring_configuration" "this" {
   name          = "prod-aws-monitoring"
-  connection_id = dynatrace_aws_connection.this.id
-  account_id    = data.aws_caller_identity.current.account_id
+  connection_id = "vu9U3hXa3q0AAAABACdidWlsdGluOmh5cGVyc2NhbGVyLWF1dGhlbnRpY2F0aW9uOmF3cw"
+  account_id    = "123456789012"
   regions       = ["eu-central-1", "us-east-1"]
 
   # extension_version is Optional+Computed: omit it and the provider
