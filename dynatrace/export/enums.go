@@ -562,6 +562,7 @@ var ResourceTypes = struct {
 	OpenpipelineUserEventsDataforwarding     ResourceType
 	OpenpipelineUsersessionsDataforwarding   ResourceType
 	AWSMonitoringConfiguration               ResourceType
+	AzureMonitoringConfiguration             ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -1002,6 +1003,7 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v2_user_events_dataforwarding",
 	"dynatrace_openpipeline_v2_usersessions_dataforwarding",
 	"dynatrace_aws_monitoring_configuration",
+	"dynatrace_azure_monitoring_configuration",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
