@@ -2,6 +2,12 @@
 	"allowedScopes": [
 		"environment"
 	],
+	"deletionConstraints": [
+		{
+			"customValidatorId": "failure-detection-params-delete-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"description": "Failure detection parameters that determine whether a service call is considered successful or failed. Use [failure detection rules](/ui/settings/builtin:failure-detection.environment.rules) to configure which services these parameters apply to.\n\nThese settings are not applied to [Unified services](https://dt-url.net/gy03cmt).\n\nTo programmatically manage these settings, see [API Reference](https://docs.dynatrace.com/docs/shortlink/service-failure-detection#settings-api).",
 	"displayName": "Failure detection parameters",
 	"documentation": "",
@@ -82,13 +88,6 @@
 			"type": "text"
 		}
 	},
-	"schemaConstraints": [
-		{
-			"customValidatorId": "failure-detection-params-delete-validator",
-			"skipAsyncValidation": false,
-			"type": "CUSTOM_VALIDATOR_REF"
-		}
-	],
 	"schemaGroups": [
 		"group:service-monitoring",
 		"group:failure-detection"
@@ -577,5 +576,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.7"
+	"version": "1.0.8"
 }
