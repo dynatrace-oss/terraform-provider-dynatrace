@@ -22,8 +22,6 @@ This resource depends on a `dynatrace_gcp_connection` (HAS, `serviceAccountImper
 
 The GCP APIs the extension calls (`compute.googleapis.com`, `monitoring.googleapis.com`, `cloudresourcemanager.googleapis.com`, `iamcredentials.googleapis.com`, plus any service-specific API for the enabled feature sets) must be enabled on the project.
 
-A complete end-to-end Terraform example wiring the customer SA, the IAM bindings, the HAS connection and the monitoring configuration together is available under [`gcp-poc-sample/`](https://github.com/dynatrace-oss/terraform-provider-dynatrace/tree/main/gcp-poc-sample) in this fork.
-
 ## Dynatrace Documentation
 
 - Google Cloud Platform integration — https://docs.dynatrace.com/docs/ingest-from/google-cloud-platform

@@ -16,8 +16,6 @@ description: |-
 
 This resource depends on a `dynatrace_azure_connection` (HAS) and, when using workload-identity federation, the `dynatrace_azure_connection_authentication` patch resource. The Azure Service Principal referenced via `service_principal_id` must have the required RBAC role assignments (typically `Monitoring Reader` + `Reader` at subscription scope) before the monitoring configuration is created.
 
-A complete end-to-end Terraform example wiring the Entra ID app registration, the federated identity credential, the HAS connection and the monitoring configuration together is available under [`azure-poc-sample/`](https://github.com/dynatrace-oss/terraform-provider-dynatrace/tree/main/azure-poc-sample) in this fork.
-
 ## Dynatrace Documentation
 
 - Microsoft Azure integration — https://docs.dynatrace.com/docs/ingest-from/microsoft-azure

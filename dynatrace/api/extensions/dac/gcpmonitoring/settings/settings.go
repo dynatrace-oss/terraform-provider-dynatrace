@@ -269,7 +269,7 @@ func (me *Settings) applyDefaults() {
 }
 
 // wirePayload is the on-the-wire shape accepted by
-// POST /platform/extensions/v2/extensions/{name}/monitoring-configurations.
+// POST /platform/extensions/v2/extensions/{name}/monitoringConfigurations.
 type wirePayload struct {
 	Scope string         `json:"scope"`
 	Value map[string]any `json:"value"`

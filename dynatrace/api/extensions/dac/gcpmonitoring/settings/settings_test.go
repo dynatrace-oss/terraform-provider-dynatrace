@@ -58,7 +58,7 @@ func googleCloudBlock(t *testing.T, s *settings.Settings) map[string]any {
 }
 
 // TestMarshalWireShape pins the on-the-wire JSON shape we send to
-// /platform/extensions/v2/extensions/com.dynatrace.extension.da-gcp/monitoring-configurations.
+// /platform/extensions/v2/extensions/com.dynatrace.extension.da-gcp/monitoringConfigurations.
 // Shape derived from dtctl pkg/resources/gcpmonitoringconfig.
 func TestMarshalWireShape(t *testing.T) {
 	s := base()
