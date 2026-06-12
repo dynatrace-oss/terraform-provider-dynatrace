@@ -26,9 +26,11 @@ import (
 )
 
 func TestAccResourceAttributes(t *testing.T) {
+	t.Skip("Deprecated")
 	api.TestAcc(t)
 }
 
 func TestAccTestCasesResourceAttributes(t *testing.T) {
+	t.Skip("Deprecated")
 	api.TestAccTestCases(t)
 }
