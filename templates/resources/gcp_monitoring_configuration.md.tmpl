@@ -1,0 +1,115 @@
+---
+layout: ""
+page_title: "dynatrace_gcp_monitoring_configuration Resource - terraform-provider-dynatrace"
+subcategory: "Extensions 2.0"
+description: |-
+  The resource `dynatrace_gcp_monitoring_configuration` manages an Extensions 2.0 monitoring configuration for `com.dynatrace.extension.da-gcp`.
+---
+
+# dynatrace_gcp_monitoring_configuration (Resource)
+
+-> This resource is part of the Dynatrace Application Cloud (DAC) typed-resource set. It wraps an Extensions 2.0 monitoring configuration object (extension `com.dynatrace.extension.da-gcp`) with a strongly-typed schema, mirroring the wire shape produced by `dtctl create gcp monitoring`.
+
+-> This resource requires the platform token scopes **Read settings** (`settings:objects:read`) and **Write settings** (`settings:objects:write`), plus **Read extensions** (`extensions.read`) and **Write extension monitoring configurations** (`extensionConfigurations.write`).
+
+## Requirements
+
+This resource depends on a `dynatrace_gcp_connection` (HAS, `serviceAccountImpersonation` mode). The customer GCP service account referenced via `credential.service_account` must:
+
+1. Exist in the target GCP project.
+2. Hold the project-level read role required by the integration (typically `roles/viewer`, optionally augmented with `roles/monitoring.viewer`).
+3. Grant `roles/iam.serviceAccountTokenCreator` to the Dynatrace-side principal returned by the [`dynatrace_gcp_dynatrace_principal`](../data-sources/gcp_dynatrace_principal.md) data source — this is what enables Dynatrace to impersonate the customer SA.
+
+The GCP APIs the extension calls (`compute.googleapis.com`, `monitoring.googleapis.com`, `cloudresourcemanager.googleapis.com`, `iamcredentials.googleapis.com`, plus any service-specific API for the enabled feature sets) must be enabled on the project.
+
+A complete end-to-end Terraform example wiring the customer SA, the IAM bindings, the HAS connection and the monitoring configuration together is available under [`gcp-poc-sample/`](https://github.com/dynatrace-oss/terraform-provider-dynatrace/tree/main/gcp-poc-sample) in this fork.
+
+## Dynatrace Documentation
+
+- Google Cloud Platform integration — https://docs.dynatrace.com/docs/ingest-from/google-cloud-platform
+- Extensions 2.0 monitoring configurations API — https://docs.dynatrace.com/docs/dynatrace-api/environment-api/extensions-v2
+
+## Resource Example Usage
+
+```terraform
+data "dynatrace_gcp_dynatrace_principal" "this" {}
+
+resource "google_service_account" "monitoring" {
+  account_id   = "dynatrace-dac"
+  display_name = "Dynatrace monitoring account"
+  project      = var.gcp_project_id
+}
+
+resource "google_project_iam_member" "viewer" {
+  project = var.gcp_project_id
+  role    = "roles/viewer"
+  member  = "serviceAccount:${google_service_account.monitoring.email}"
+}
+
+resource "google_service_account_iam_member" "dynatrace_token_creator" {
+  service_account_id = google_service_account.monitoring.name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  member             = "serviceAccount:${data.dynatrace_gcp_dynatrace_principal.this.principal}"
+}
+
+resource "dynatrace_gcp_connection" "this" {
+  name               = "dac-tf-poc-connection"
+  service_account_id = google_service_account.monitoring.email
+  oauth_consumers    = ["SVC:com.dynatrace.da"]
+}
+
+resource "dynatrace_gcp_monitoring_configuration" "this" {
+  depends_on = [
+    google_project_iam_member.viewer,
+    google_service_account_iam_member.dynatrace_token_creator,
+  ]
+
+  name    = "dac-tf-poc-monitoring"
+  enabled = true
+
+  credential {
+    connection_id   = dynatrace_gcp_connection.this.id
+    service_account = google_service_account.monitoring.email
+  }
+
+  regions        = ["us-central1"]
+  project_filter = [var.gcp_project_id]
+
+  feature_sets = [
+    "compute_engine_essential",
+    "sql_essential",
+    "kubernetes_engine_essential",
+  ]
+
+  # Optional: filter monitored resources by GCP resource-manager tag
+  tag_filter {
+    key       = "environment"
+    value     = "production"
+    condition = "INCLUDE"
+  }
+
+  # Optional: filter by classic GCP label
+  label_filter {
+    key       = "team"
+    value     = "platform"
+    condition = "INCLUDE"
+  }
+
+  # Optional: promote GCP tag / label keys onto Dynatrace entities
+  tag_enrichment   = ["owner", "cost-center"]
+  label_enrichment = ["team"]
+}
+```
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_gcp_monitoring_configuration` downloads all existing GCP monitoring configurations.
+
+## Notes
+
+- `extension_version` is **sticky in state**. When omitted on Create, the provider queries the installed extension list and pins the highest version available on the tenant. Updates do not touch the pinned version unless the user changes it explicitly.
+- The GCP integration distinguishes between two GCP concepts that look similar but are distinct: **tags** (resource-manager tags addressed via `tagKeys/…`, modelled by `tag_filter` / `tag_enrichment`) and **labels** (classic per-resource key/value labels, modelled by `label_filter` / `label_enrichment`). Both arrays are written to separate top-level fields on the wire.
+- The wire API echoes `namespaces[]` and `services[]` arrays assembled server-side from the configured feature sets. The provider deliberately ignores those echoes during read to avoid eternal drift — manual per-namespace pinning is not supported.
+- `observability_scopes_enabled` is omitted from the wire payload when false to keep the JSON shape identical to `dtctl create gcp monitoring`.
+
+{{ .SchemaMarkdown | trimspace }}

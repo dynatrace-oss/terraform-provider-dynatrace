@@ -1,0 +1,59 @@
+---
+layout: ""
+page_title: "dynatrace_gcp_connection Resource - terraform-provider-dynatrace"
+subcategory: "Connections"
+description: |-
+  The resource `dynatrace_gcp_connection` covers configuration for GCP connections (Hyperscaler Authentication Service, `serviceAccountImpersonation` mode).
+---
+
+# dynatrace_gcp_connection (Resource)
+
+-> This resource is part of the Dynatrace Application Cloud (DAC) typed-resource set. It writes a `builtin:hyperscaler-authentication.connections.gcp` Settings 2.0 object pinned to `serviceAccountImpersonation`, matching the wire shape produced by `dtctl create gcp connection`.
+
+-> This resource requires the platform token scopes **Read settings** (`settings:objects:read`) and **Write settings** (`settings:objects:write`).
+
+## Requirements
+
+This resource models the HAS-side half of the GCP integration. The customer GCP service account named in `service_account_id` must exist and must grant `roles/iam.serviceAccountTokenCreator` to the Dynatrace-side principal returned by the [`dynatrace_gcp_dynatrace_principal`](../data-sources/gcp_dynatrace_principal.md) data source — otherwise Dynatrace cannot impersonate it.
+
+`oauth_consumers` defaults to `["SVC:com.dynatrace.da"]` (the GCP extension service identifier). Override it only when sharing the connection across additional service identities.
+
+A complete end-to-end example wiring the customer SA, the IAM bindings, the HAS connection and a monitoring configuration together is available under [`gcp-poc-sample/`](https://github.com/dynatrace-oss/terraform-provider-dynatrace/tree/main/gcp-poc-sample) in this fork.
+
+## Dynatrace Documentation
+
+- Google Cloud Platform integration — https://docs.dynatrace.com/docs/ingest-from/google-cloud-platform
+
+- Settings API — https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:hyperscaler-authentication.connections.gcp`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_gcp_connection` downloads all existing GCP connections.
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+```terraform
+data "dynatrace_gcp_dynatrace_principal" "this" {}
+
+resource "google_service_account" "monitoring" {
+  account_id   = "dynatrace-dac"
+  display_name = "Dynatrace monitoring account"
+  project      = var.gcp_project_id
+}
+
+resource "google_service_account_iam_member" "dynatrace_token_creator" {
+  service_account_id = google_service_account.monitoring.name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  member             = "serviceAccount:${data.dynatrace_gcp_dynatrace_principal.this.principal}"
+}
+
+resource "dynatrace_gcp_connection" "this" {
+  name               = "dac-tf-poc-connection"
+  service_account_id = google_service_account.monitoring.email
+  oauth_consumers    = ["SVC:com.dynatrace.da"]
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}
