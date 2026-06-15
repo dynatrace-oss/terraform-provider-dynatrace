@@ -41,7 +41,7 @@ func TestAccResourceGcpPrincipal(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: resourceConfig,
-				Check:  resource.TestMatchOutput("records", regexp.MustCompile(`iam\.gserviceaccount\.com$`)),
+				Check:  resource.TestMatchOutput("principal_output", regexp.MustCompile(`iam\.gserviceaccount\.com$`)),
 			},
 		},
 	})

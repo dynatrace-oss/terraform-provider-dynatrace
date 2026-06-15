@@ -1,5 +1,5 @@
 resource "dynatrace_gcp_principal" "principal" {}
 
-output "records" {
+output "principal_output" {
   value = dynatrace_gcp_principal.principal.principal
 }
