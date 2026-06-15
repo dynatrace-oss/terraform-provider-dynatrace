@@ -1,12 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_maintenance Resource - terraform-provider-dynatrace"
-subcategory: "Alerting"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_maintenance` covers configuration for maintenance windows
 ---
 
 # dynatrace_maintenance (Resource)
+
+~> **Warning** This resource has been deprecated in favor of [dynatrace_maintenance_windows](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/maintenance_windows).
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
@@ -219,4 +221,3 @@ Optional:
 - `entity_tags` (Set of String) Entities which contain all of the configured tags will match this maintenance window.
 - `entity_type` (String) Type of entities this maintenance window should match.. If no entity type is selected all entities regardless of the type will match.
 - `management_zones` (Set of String) Entities which are part of all the configured management zones will match this maintenance window.
- 
