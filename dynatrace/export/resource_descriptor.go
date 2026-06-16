@@ -412,6 +412,7 @@ import (
 	openpipelinedavisproblemspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/problems/pipelinegroups"
 	openpipelinedavisproblemspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/problems/pipelines"
 	openpipelinedavisproblemsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/problems/routing"
+	openpipelineeventsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/dataforwarding"
 	openpipelineeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/ingestsources"
 	openpipelineeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/pipelinegroups"
 	openpipelineeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/pipelines"
@@ -1713,6 +1714,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineDavisEventsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineDavisProblemsDataforwarding),
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsDataforwarding),
 
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
@@ -1927,6 +1929,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelinedavisproblemsdataforwarding.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineDavisProblemsPipelines),
 		Dependencies.ID(ResourceTypes.OpenpipelineDavisProblemsIngestsources),
+	),
+	ResourceTypes.OpenpipelineEventsDataforwarding: NewResourceDescriptor(
+		openpipelineeventsdataforwarding.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsPipelines),
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsIngestsources),
 	),
 }
 
