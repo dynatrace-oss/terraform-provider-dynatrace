@@ -402,6 +402,7 @@ import (
 	openpipelinebizeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelinegroups"
 	openpipelinebizeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelines"
 	openpipelinebizeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/routing"
+	openpipelinedaviseventsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/dataforwarding"
 	openpipelinedaviseventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/ingestsources"
 	openpipelinedaviseventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/pipelinegroups"
 	openpipelinedaviseventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/pipelines"
@@ -1709,6 +1710,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsPipelinegroups),
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelinegroups),
 		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsDataforwarding),
+		Dependencies.ID(ResourceTypes.OpenpipelineDavisEventsDataforwarding),
 
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
@@ -1906,8 +1908,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.MaintenanceWindows: NewResourceDescriptor(maintenancewindows.Service,
 		Dependencies.ID(ResourceTypes.AutomationSchedulingRule),
 	),
-	ResourceTypes.GCPConnection:        NewResourceDescriptor(gcp.Service),
-	ResourceTypes.GCPPrincipal:         NewResourceDescriptor(gcpdynatraceprincipal.Service),
 	ResourceTypes.GCPConnection: NewResourceDescriptor(gcp.Service),
 	ResourceTypes.GCPPrincipal:  NewResourceDescriptor(gcpdynatraceprincipal.Service),
 
@@ -1916,6 +1916,12 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsPipelines),
 		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsIngestsources),
 	),
+	ResourceTypes.OpenpipelineDavisEventsDataforwarding: NewResourceDescriptor(
+		openpipelinedaviseventsdataforwarding.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineDavisEventsPipelines),
+		Dependencies.ID(ResourceTypes.OpenpipelineDavisEventsIngestsources),
+	),
+	ResourceTypes.OpenpipelineDavisProblemsDataforwarding: NewResourceDescriptor(
 }
 
 type ResourceExclusion struct {
