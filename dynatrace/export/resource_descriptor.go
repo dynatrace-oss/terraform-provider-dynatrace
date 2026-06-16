@@ -452,6 +452,7 @@ import (
 	openpipelinesystemeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/pipelinegroups"
 	openpipelinesystemeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/pipelines"
 	openpipelinesystemeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/routing"
+	openpipelineusereventsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/dataforwarding"
 	openpipelineusereventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/ingestsources"
 	openpipelineusereventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/pipelinegroups"
 	openpipelineusereventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/pipelines"
@@ -1729,6 +1730,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineSpansDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsDataforwarding),
+		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsDataforwarding),
 
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
@@ -1983,6 +1985,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelinesystemeventsdataforwarding.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsPipelines),
 		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsIngestsources),
+	),
+	ResourceTypes.OpenpipelineUserEventsDataforwarding: NewResourceDescriptor(
+		openpipelineusereventsdataforwarding.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsPipelines),
+		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsIngestsources),
 	),
 }
 
