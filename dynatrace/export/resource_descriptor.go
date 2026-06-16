@@ -397,6 +397,7 @@ import (
 
 	azureconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure"
 	azureconnectionauthentication "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure/authentication"
+	openpipelinebizeventsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/dataforwarding"
 	openpipelinebizeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/ingestsources"
 	openpipelinebizeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelinegroups"
 	openpipelinebizeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelines"
@@ -1707,6 +1708,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsPipelinegroups),
 		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsPipelinegroups),
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsDataforwarding),
 
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
@@ -1906,6 +1908,14 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.GCPConnection:        NewResourceDescriptor(gcp.Service),
 	ResourceTypes.GCPPrincipal:         NewResourceDescriptor(gcpdynatraceprincipal.Service),
+	ResourceTypes.GCPConnection: NewResourceDescriptor(gcp.Service),
+	ResourceTypes.GCPPrincipal:  NewResourceDescriptor(gcpdynatraceprincipal.Service),
+
+	ResourceTypes.OpenpipelineBizeventsDataforwarding: NewResourceDescriptor(
+		openpipelinebizeventsdataforwarding.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsPipelines),
+		Dependencies.ID(ResourceTypes.OpenpipelineBizeventsIngestsources),
+	),
 }
 
 type ResourceExclusion struct {
