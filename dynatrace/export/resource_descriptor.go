@@ -442,6 +442,7 @@ import (
 	openpipelinesecurityeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelinegroups"
 	openpipelinesecurityeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelines"
 	openpipelinesecurityeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/routing"
+	openpipelinespansdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/dataforwarding"
 	openpipelinespansingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/ingestsources"
 	openpipelinespanspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/pipelinegroups"
 	openpipelinespanspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/pipelines"
@@ -1725,6 +1726,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineLogsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineMetricsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsDataforwarding),
+		Dependencies.ID(ResourceTypes.OpenpipelineSpansDataforwarding),
 
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
@@ -1969,6 +1971,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelinesecurityeventsdataforwarding.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelines),
 		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsIngestsources),
+	),
+	ResourceTypes.OpenpipelineSpansDataforwarding: NewResourceDescriptor(
+		openpipelinespansdataforwarding.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSpansPipelines),
+		Dependencies.ID(ResourceTypes.OpenpipelineSpansIngestsources),
 	),
 }
 

@@ -731,6 +731,7 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_logs_dataforwarding":            resources.NewGeneric(export.ResourceTypes.OpenpipelineLogsDataforwarding).Resource(),
 			"dynatrace_openpipeline_v2_metrics_dataforwarding":         resources.NewGeneric(export.ResourceTypes.OpenpipelineMetricsDataforwarding).Resource(),
 			"dynatrace_openpipeline_v2_security_events_dataforwarding": resources.NewGeneric(export.ResourceTypes.OpenpipelineSecurityEventsDataforwarding).Resource(),
+			"dynatrace_openpipeline_v2_spans_dataforwarding":           resources.NewGeneric(export.ResourceTypes.OpenpipelineSpansDataforwarding).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
