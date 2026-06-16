@@ -1,0 +1,3713 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "data-forwarding-container-validator",
+			"skipAsyncValidation": false,
+			"timeout": 10,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Contains configuration of data forwarding",
+	"displayName": "Data forwarding configuration (metrics)",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Aggregation": {
+			"description": "",
+			"displayName": "Aggregation",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "disabled",
+					"value": "disabled"
+				},
+				{
+					"displayName": "enabled",
+					"value": "enabled"
+				}
+			],
+			"type": "enum"
+		},
+		"AssignmentType": {
+			"description": "",
+			"displayName": "AssignmentType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Constant value assignment",
+					"value": "constant"
+				},
+				{
+					"displayName": "Multi-value constant value assignment",
+					"value": "multiValueConstant"
+				},
+				{
+					"displayName": "Field value assignment",
+					"value": "field"
+				}
+			],
+			"type": "enum"
+		},
+		"CloudVendorType": {
+			"description": "",
+			"displayName": "Cloud Vendor Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "AWS",
+					"value": "aws"
+				},
+				{
+					"displayName": "Azure",
+					"value": "azure"
+				},
+				{
+					"displayName": "GCP",
+					"value": "gcp"
+				}
+			],
+			"type": "enum"
+		},
+		"DataForwardingType": {
+			"description": "",
+			"displayName": "Data Forwarding Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Unprocessed records",
+					"value": "raw"
+				},
+				{
+					"displayName": "Processed records",
+					"value": "processed"
+				}
+			],
+			"type": "enum"
+		},
+		"FieldExtractionStrategy": {
+			"description": "",
+			"displayName": "FieldExtractionStrategy",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Field name must match to be extracted",
+					"value": "equals"
+				},
+				{
+					"displayName": "Field name must start with pattern to be extracted",
+					"value": "startsWith"
+				}
+			],
+			"type": "enum"
+		},
+		"FieldExtractionType": {
+			"description": "",
+			"displayName": "FieldExtractionType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Include only fields that are specified",
+					"value": "include"
+				},
+				{
+					"displayName": "Add all fields of source record excluding those specified",
+					"value": "exclude"
+				},
+				{
+					"displayName": "Include all fields of the source record",
+					"value": "includeAll"
+				}
+			],
+			"type": "enum"
+		},
+		"FieldValueExtractionType": {
+			"description": "",
+			"displayName": "Field value extraction type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Constant literal will be assigned to destination field.",
+					"value": "constant"
+				},
+				{
+					"displayName": "Dynamic value from field or default will be assigned to destination field.",
+					"value": "field"
+				}
+			],
+			"type": "enum"
+		},
+		"GeoOutputField": {
+			"description": "",
+			"displayName": "Geo output field",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "city.name",
+					"value": "cityName"
+				},
+				{
+					"displayName": "country.iso_code",
+					"value": "countryIsoCode"
+				},
+				{
+					"displayName": "country.name",
+					"value": "countryName"
+				},
+				{
+					"displayName": "location",
+					"value": "location"
+				},
+				{
+					"displayName": "continent.iso_code",
+					"value": "continentIsoCode"
+				},
+				{
+					"displayName": "continent.name",
+					"value": "continentName"
+				},
+				{
+					"displayName": "postal_code",
+					"value": "postalCode"
+				},
+				{
+					"displayName": "region.iso_code",
+					"value": "regionIsoCode"
+				},
+				{
+					"displayName": "region.name",
+					"value": "regionName"
+				},
+				{
+					"displayName": "subdivision.iso_codes",
+					"value": "subdivisionIsoCodes"
+				}
+			],
+			"type": "enum"
+		},
+		"Measurement": {
+			"description": "",
+			"displayName": "measurement",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "field",
+					"value": "field"
+				},
+				{
+					"displayName": "duration",
+					"value": "duration"
+				}
+			],
+			"type": "enum"
+		},
+		"ProcessorType": {
+			"description": "",
+			"displayName": "ProcessorType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "fieldsAdd",
+					"value": "fieldsAdd"
+				},
+				{
+					"displayName": "fieldsRemove",
+					"value": "fieldsRemove"
+				},
+				{
+					"displayName": "fieldsRename",
+					"value": "fieldsRename"
+				},
+				{
+					"displayName": "dqlProcessor",
+					"value": "dql"
+				},
+				{
+					"displayName": "technology",
+					"value": "technology"
+				},
+				{
+					"displayName": "drop",
+					"value": "drop"
+				},
+				{
+					"displayName": "bucketAssignment",
+					"value": "bucketAssignment"
+				},
+				{
+					"displayName": "noStorage",
+					"value": "noStorage"
+				},
+				{
+					"displayName": "securityContext",
+					"value": "securityContext"
+				},
+				{
+					"displayName": "counterMetric",
+					"value": "counterMetric"
+				},
+				{
+					"displayName": "samplingAwareCounterMetric",
+					"value": "samplingAwareCounterMetric"
+				},
+				{
+					"displayName": "valueMetric",
+					"value": "valueMetric"
+				},
+				{
+					"displayName": "histogramMetric",
+					"value": "histogramMetric"
+				},
+				{
+					"displayName": "samplingAwareValueMetric",
+					"value": "samplingAwareValueMetric"
+				},
+				{
+					"displayName": "samplingAwareHistogramMetric",
+					"value": "samplingAwareHistogramMetric"
+				},
+				{
+					"displayName": "davis",
+					"value": "davis"
+				},
+				{
+					"displayName": "bizevent",
+					"value": "bizevent"
+				},
+				{
+					"displayName": "sdlcEvent",
+					"value": "sdlcEvent"
+				},
+				{
+					"displayName": "azureLogForwarding",
+					"value": "azureLogForwarding"
+				},
+				{
+					"displayName": "securityEvent",
+					"value": "securityEvent"
+				},
+				{
+					"displayName": "costAllocation",
+					"value": "costAllocation"
+				},
+				{
+					"displayName": "productAllocation",
+					"value": "productAllocation"
+				},
+				{
+					"displayName": "smartscapeNode",
+					"value": "smartscapeNode"
+				},
+				{
+					"displayName": "smartscapeEdge",
+					"value": "smartscapeEdge"
+				},
+				{
+					"displayName": "geoLookup",
+					"value": "geoLookup"
+				}
+			],
+			"type": "enum"
+		},
+		"Sampling": {
+			"description": "",
+			"displayName": "Sampling",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "disabled",
+					"value": "disabled"
+				},
+				{
+					"displayName": "enabled",
+					"value": "enabled"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maturity": "GENERAL_AVAILABILITY",
+	"maxObjects": 1000,
+	"multiObject": true,
+	"ordered": false,
+	"ownerBasedAccessControl": true,
+	"properties": {
+		"awsConnection": {
+			"description": "",
+			"displayName": "AWS Connection",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "aws",
+				"property": "cloudVendorType",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/AwsConnection"
+			}
+		},
+		"azureConnection": {
+			"description": "",
+			"displayName": "Azure Connection",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "azure",
+				"property": "cloudVendorType",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/AzureConnection"
+			}
+		},
+		"builtinIngestSources": {
+			"description": "",
+			"displayName": "List of built-in ingest sources",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 500,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "Ingest source",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"expectedValue": "raw",
+						"property": "dataForwardingType",
+						"type": "EQUALS"
+					}
+				],
+				"type": "AND"
+			},
+			"type": "set"
+		},
+		"builtinPipelines": {
+			"description": "",
+			"displayName": "Built-in pipelines",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 500,
+						"minLength": 1,
+						"type": "LENGTH"
+					}
+				],
+				"description": "",
+				"displayName": "Built-in pipelines",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"expectedValue": "processed",
+						"property": "dataForwardingType",
+						"type": "EQUALS"
+					}
+				],
+				"type": "AND"
+			},
+			"type": "set"
+		},
+		"bulkPattern": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"type": "LENGTH"
+				}
+			],
+			"default": "\u003cbulk-id\u003e.json.gz",
+			"description": "",
+			"displayName": "Segmentation and prefix of the data",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"bulkSize": {
+			"constraints": [
+				{
+					"maximum": 10000,
+					"minimum": 100,
+					"type": "RANGE"
+				}
+			],
+			"description": "",
+			"displayName": "Bulk size for transmission",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "integer"
+		},
+		"cloudVendorType": {
+			"default": "aws",
+			"description": "",
+			"displayName": "Cloud Vendor Type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/CloudVendorType"
+			}
+		},
+		"dataForwardingType": {
+			"default": "raw",
+			"description": "",
+			"displayName": "Pipeline Type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/DataForwardingType"
+			}
+		},
+		"enabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"forwardingName": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Forwarding name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"gcpConnection": {
+			"description": "",
+			"displayName": "GCP Connection",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "gcp",
+				"property": "cloudVendorType",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/GcpConnection"
+			}
+		},
+		"ingestSources": {
+			"description": "",
+			"displayName": "List of ingest sources",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "Ingest source",
+				"documentation": "",
+				"referencedType": "builtin:openpipeline.metrics.ingest-sources",
+				"type": "setting"
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"expectedValue": "raw",
+						"property": "dataForwardingType",
+						"type": "EQUALS"
+					}
+				],
+				"type": "AND"
+			},
+			"type": "set"
+		},
+		"matcher": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 4096,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "",
+			"displayName": "Query which determines whether the record should be routed to the target pipeline of this rule.",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"pipelines": {
+			"description": "",
+			"displayName": "Pipelines",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "Pipelines",
+				"documentation": "",
+				"referencedType": "builtin:openpipeline.metrics.pipelines",
+				"type": "setting"
+			},
+			"maxObjects": 100,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"preconditions": [
+					{
+						"expectedValue": "processed",
+						"property": "dataForwardingType",
+						"type": "EQUALS"
+					}
+				],
+				"type": "AND"
+			},
+			"type": "set"
+		},
+		"processing": {
+			"description": "",
+			"displayName": "Processing",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": {
+				"$ref": "#/types/Stage"
+			}
+		}
+	},
+	"schemaConstraints": [
+		{
+			"flattenCollections": false,
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"forwardingName"
+			]
+		}
+	],
+	"schemaGroups": [
+		"group:openpipeline.all.data-forwarding"
+	],
+	"schemaId": "builtin:openpipeline.metrics.data-forwarding",
+	"types": {
+		"AwsConnection": {
+			"description": "",
+			"displayName": "AwsConnection",
+			"documentation": "",
+			"properties": {
+				"arn": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "S3 Bucket ARN",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"connectionId": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "AWS connection",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"AzureConnection": {
+			"description": "",
+			"displayName": "AzureConnection",
+			"documentation": "",
+			"properties": {
+				"connectionId": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Azure connection",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"containerUrl": {
+					"constraints": [
+						{
+							"customMessage": "Must match pattern https://\u003cstorage-account-name\u003e.blob.core.windows.net/\u003ccontainer-name\u003e",
+							"pattern": "^https://[a-z0-9]{3,24}\\.blob\\.core\\.windows\\.net/[a-z0-9](?:[a-z0-9]|-(?!-))*[a-z0-9]$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Container Connection URL",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"AzureLogForwardingAttributes": {
+			"description": "",
+			"displayName": "AzureLogForwardingAttributes",
+			"documentation": "",
+			"properties": {
+				"fieldExtraction": {
+					"description": "",
+					"displayName": "Field Extraction",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/FieldExtraction"
+					}
+				},
+				"forwarderConfigId": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 256,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "ForwarderConfigId",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"BizeventAttributes": {
+			"description": "",
+			"displayName": "BizeventAttributes",
+			"documentation": "",
+			"properties": {
+				"eventProvider": {
+					"description": "",
+					"displayName": "Event provider",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				},
+				"eventType": {
+					"description": "",
+					"displayName": "Event type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				},
+				"fieldExtraction": {
+					"description": "",
+					"displayName": "Field extraction",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/FieldExtraction"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"BucketAssignmentAttributes": {
+			"description": "",
+			"displayName": "BucketAssignmentAttributes",
+			"documentation": "",
+			"properties": {
+				"bucketName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Bucket name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"CostAllocationAttributes": {
+			"description": "",
+			"displayName": "CostAllocationAttributes",
+			"documentation": "",
+			"properties": {
+				"value": {
+					"description": "",
+					"displayName": "The strategy to set the cost allocation field",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"CounterMetricAttributes": {
+			"description": "",
+			"displayName": "CounterMetricAttributes",
+			"documentation": "",
+			"properties": {
+				"dimensions": {
+					"description": "",
+					"displayName": "List of dimensions",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/FieldExtractionEntry"
+						}
+					},
+					"maxObjects": 50,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"metricKey": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 250,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not start with 'dt.'",
+							"pattern": "^(?![Dd][Tt]\\.).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain at least two, non-empty sections separated by a dot",
+							"pattern": "^[^.]+(\\.[^.]+?)+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain only basic-latin characters, numbers, underscores ('_'), hyphens ('-') and dots ('.')",
+							"pattern": "^[.A-Za-z0-9_\\-]+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Section must not start with a hyphen",
+							"pattern": "^((?!\\.-).)+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "events.",
+					"description": "",
+					"displayName": "Metric key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DavisAttributes": {
+			"description": "",
+			"displayName": "DavisAttributes",
+			"documentation": "",
+			"properties": {
+				"properties": {
+					"constraints": [
+						{
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"strategy",
+								"key"
+							]
+						}
+					],
+					"description": "",
+					"displayName": "Properties",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/DavisEventProperty"
+						}
+					},
+					"maxObjects": 50,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DavisEventProperty": {
+			"description": "",
+			"displayName": "DavisEventProperty",
+			"documentation": "",
+			"properties": {
+				"key": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 100,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not contain '{' or '}'",
+							"pattern": "^[^{}]*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"strategy": {
+					"description": "",
+					"displayName": "Strategy for field extraction",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/FieldExtractionStrategy"
+					}
+				},
+				"value": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 4000,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "equals",
+								"property": "strategy",
+								"type": "EQUALS"
+							},
+							{
+								"property": "strategy",
+								"type": "NULL"
+							}
+						],
+						"type": "OR"
+					},
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{strategy} - {key} - {value}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DqlAttributes": {
+			"description": "",
+			"displayName": "DQL processor attributes",
+			"documentation": "",
+			"properties": {
+				"script": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 8192,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "DQL script",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"FieldExtraction": {
+			"description": "",
+			"displayName": "FieldExtraction",
+			"documentation": "",
+			"properties": {
+				"exclude": {
+					"description": "",
+					"displayName": "Fields",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"maxLength": 256,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 50,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "exclude",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": "set"
+				},
+				"include": {
+					"description": "",
+					"displayName": "Fields",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/FieldExtractionEntry"
+						}
+					},
+					"maxObjects": 50,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "include",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": "set"
+				},
+				"type": {
+					"default": "include",
+					"description": "",
+					"displayName": "Fields Extraction type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/FieldExtractionType"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"FieldExtractionEntry": {
+			"description": "",
+			"displayName": "FieldExtractionEntry",
+			"documentation": "",
+			"properties": {
+				"constantFieldName": {
+					"constraints": [
+						{
+							"maxLength": 350,
+							"type": "LENGTH"
+						},
+						{
+							"type": "NOT_BLANK"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Destination field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"preconditions": [
+									{
+										"expectedValue": "equals",
+										"property": "strategy",
+										"type": "EQUALS"
+									},
+									{
+										"property": "strategy",
+										"type": "NULL"
+									}
+								],
+								"type": "OR"
+							},
+							{
+								"expectedValue": "constant",
+								"property": "extractionType",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": "text"
+				},
+				"constantValue": {
+					"constraints": [
+						{
+							"maxLength": 512,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Constant value to be assigned to field",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"preconditions": [
+									{
+										"expectedValue": "equals",
+										"property": "strategy",
+										"type": "EQUALS"
+									},
+									{
+										"property": "strategy",
+										"type": "NULL"
+									}
+								],
+								"type": "OR"
+							},
+							{
+								"expectedValue": "constant",
+								"property": "extractionType",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": "text"
+				},
+				"defaultValue": {
+					"constraints": [
+						{
+							"maxLength": 512,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Default value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"preconditions": [
+							{
+								"preconditions": [
+									{
+										"expectedValue": "equals",
+										"property": "strategy",
+										"type": "EQUALS"
+									},
+									{
+										"property": "strategy",
+										"type": "NULL"
+									}
+								],
+								"type": "OR"
+							},
+							{
+								"expectedValue": "field",
+								"property": "extractionType",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": "text"
+				},
+				"destinationFieldName": {
+					"constraints": [
+						{
+							"maxLength": 350,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"type": "NOT_BLANK"
+						}
+					],
+					"description": "",
+					"displayName": "Destination field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"preconditions": [
+							{
+								"preconditions": [
+									{
+										"expectedValue": "equals",
+										"property": "strategy",
+										"type": "EQUALS"
+									},
+									{
+										"property": "strategy",
+										"type": "NULL"
+									}
+								],
+								"type": "OR"
+							},
+							{
+								"expectedValue": "field",
+								"property": "extractionType",
+								"type": "EQUALS"
+							}
+						],
+						"type": "AND"
+					},
+					"type": "text"
+				},
+				"extractionType": {
+					"default": "field",
+					"description": "",
+					"displayName": "Field value extraction type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "equals",
+								"property": "strategy",
+								"type": "EQUALS"
+							},
+							{
+								"property": "strategy",
+								"type": "NULL"
+							}
+						],
+						"type": "OR"
+					},
+					"type": {
+						"$ref": "#/enums/FieldValueExtractionType"
+					}
+				},
+				"sourceFieldName": {
+					"constraints": [
+						{
+							"maxLength": 256,
+							"type": "LENGTH"
+						},
+						{
+							"type": "NOT_BLANK"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Source field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "field",
+								"property": "extractionType",
+								"type": "EQUALS"
+							},
+							{
+								"expectedValue": "startsWith",
+								"property": "strategy",
+								"type": "EQUALS"
+							}
+						],
+						"type": "OR"
+					},
+					"type": "text"
+				},
+				"strategy": {
+					"description": "",
+					"displayName": "Strategy for field extraction",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/FieldExtractionStrategy"
+					}
+				}
+			},
+			"summaryPattern": "{strategy} - {extractionType} - {sourceFieldName} - {destinationFieldName} - {defaultValue} - {constantFieldName} - {constantValue}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"FieldsAddAttributes": {
+			"description": "",
+			"displayName": "FieldsAddAttributes",
+			"documentation": "",
+			"properties": {
+				"fields": {
+					"description": "",
+					"displayName": "Fields to Add",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/FieldsAddAttributesEntry"
+						}
+					},
+					"maxObjects": 50,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"FieldsAddAttributesEntry": {
+			"description": "",
+			"displayName": "FieldsAddAttributesEntry",
+			"documentation": "",
+			"properties": {
+				"name": {
+					"constraints": [
+						{
+							"maxLength": 256,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Fields's name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"value": {
+					"constraints": [
+						{
+							"maxLength": 512,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Field's value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{name}-{value}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"FieldsRemoveAttributes": {
+			"description": "",
+			"displayName": "FieldsRemoveAttributes",
+			"documentation": "",
+			"properties": {
+				"fields": {
+					"description": "",
+					"displayName": "Fields to remove",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"maxLength": 256,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 50,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"FieldsRenameAttributes": {
+			"description": "",
+			"displayName": "FieldsRenameAttributes",
+			"documentation": "",
+			"properties": {
+				"fields": {
+					"description": "",
+					"displayName": "Fields to rename",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/FieldsRenameAttributesEntry"
+						}
+					},
+					"maxObjects": 50,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"FieldsRenameAttributesEntry": {
+			"description": "",
+			"displayName": "FieldsRenameAttributesEntry",
+			"documentation": "",
+			"properties": {
+				"fromName": {
+					"constraints": [
+						{
+							"maxLength": 256,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Fields's name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"toName": {
+					"constraints": [
+						{
+							"maxLength": 256,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "New field's name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{fromName}-{toName}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"GcpConnection": {
+			"description": "",
+			"displayName": "GcpConnection",
+			"documentation": "",
+			"properties": {
+				"bucketName": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "GCS Bucket Name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"connectionId": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "GCP connection",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"GenericValueAssignment": {
+			"description": "",
+			"displayName": "GenericValueAssignment",
+			"documentation": "",
+			"properties": {
+				"constant": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 1024,
+							"type": "LENGTH"
+						}
+					],
+					"default": "constantValue",
+					"description": "",
+					"displayName": "Constant value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "constant",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"field": {
+					"description": "",
+					"displayName": "Value from field",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "field",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/ValueAssignmentFromFieldEntry"
+					}
+				},
+				"multiValueConstant": {
+					"description": "",
+					"displayName": "Constant multi value",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"type": "NOT_BLANK"
+							},
+							{
+								"maxLength": 256,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 50,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "multiValueConstant",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": "list"
+				},
+				"type": {
+					"default": "constant",
+					"description": "",
+					"displayName": "Type of value assignment",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/AssignmentType"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"GeoLookupAttributes": {
+			"description": "",
+			"displayName": "GeoLookupAttributes",
+			"documentation": "",
+			"properties": {
+				"geoFieldPrefix": {
+					"constraints": [
+						{
+							"maxLength": 255,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "Optional prefix for all output geo fields. If specified, output fields will be prefixed as \u003cprefix\u003e.geo.\u003cfield\u003e. If omitted, output fields will be geo.\u003cfield\u003e.",
+					"displayName": "Geo field prefix",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"ipFieldKey": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 255,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The field key that contains the IP address to be resolved to a geo location.",
+					"displayName": "IP field key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"outputFields": {
+					"description": "The geo fields to enrich the record with. If empty or not specified, the default fields (city name, country ISO code, country name, location) are used.",
+					"displayName": "Output fields",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/enums/GeoOutputField"
+						}
+					},
+					"maxObjects": 10,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"HistogramMetricAttributes": {
+			"description": "",
+			"displayName": "HistogramMetricAttributes",
+			"documentation": "",
+			"properties": {
+				"defaultValue": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Default value with metric value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"dimensions": {
+					"description": "",
+					"displayName": "List of dimensions",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/FieldExtractionEntry"
+						}
+					},
+					"maxObjects": 50,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"field": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 100,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not be 'span_id'",
+							"pattern": "^(?!span_id$).+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'trace_id'",
+							"pattern": "^(?!trace_id$).+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "fieldName",
+					"description": "",
+					"displayName": "Field with metric value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"metricKey": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 250,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not start with 'dt.'",
+							"pattern": "^(?![Dd][Tt]\\.).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain at least two, non-empty sections separated by a dot",
+							"pattern": "^[^.]+(\\.[^.]+?)+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain only basic-latin characters, numbers, underscores ('_'), hyphens ('-') and dots ('.')",
+							"pattern": "^[.A-Za-z0-9_\\-]+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Section must not start with a hyphen",
+							"pattern": "^((?!\\.-).)+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "events.",
+					"description": "",
+					"displayName": "Metric key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Processor": {
+			"description": "Processor definition",
+			"displayName": "Processor",
+			"documentation": "",
+			"properties": {
+				"azureLogForwarding": {
+					"description": "",
+					"displayName": "Azure log forwarding processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "azureLogForwarding",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/AzureLogForwardingAttributes"
+					}
+				},
+				"bizevent": {
+					"description": "",
+					"displayName": "Bizevent extraction processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "bizevent",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/BizeventAttributes"
+					}
+				},
+				"bucketAssignment": {
+					"description": "",
+					"displayName": "Bucket assignment processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "bucketAssignment",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/BucketAssignmentAttributes"
+					}
+				},
+				"costAllocation": {
+					"description": "",
+					"displayName": "Cost allocation processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "costAllocation",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/CostAllocationAttributes"
+					}
+				},
+				"counterMetric": {
+					"description": "",
+					"displayName": "Counter metric processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "counterMetric",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/CounterMetricAttributes"
+					}
+				},
+				"davis": {
+					"description": "",
+					"displayName": "Davis event extraction processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "davis",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/DavisAttributes"
+					}
+				},
+				"description": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 512,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Description",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"dql": {
+					"description": "",
+					"displayName": "DQL processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "dql",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/DqlAttributes"
+					}
+				},
+				"enabled": {
+					"default": true,
+					"description": "",
+					"displayName": "Enabled",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"fieldsAdd": {
+					"description": "",
+					"displayName": "Fields add processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "fieldsAdd",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/FieldsAddAttributes"
+					}
+				},
+				"fieldsRemove": {
+					"description": "",
+					"displayName": "Fields remove processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "fieldsRemove",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/FieldsRemoveAttributes"
+					}
+				},
+				"fieldsRename": {
+					"description": "",
+					"displayName": "Fields rename processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "fieldsRename",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/FieldsRenameAttributes"
+					}
+				},
+				"geoLookup": {
+					"description": "",
+					"displayName": "Geo lookup processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "geoLookup",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/GeoLookupAttributes"
+					}
+				},
+				"histogramMetric": {
+					"description": "",
+					"displayName": "Histogram metric processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "histogramMetric",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/HistogramMetricAttributes"
+					}
+				},
+				"id": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 100,
+							"minLength": 4,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not start with 'dt.' or 'dynatrace.'",
+							"pattern": "^(?![Dd][Tt]\\.|[Dd][Yy][Nn][Aa][Tt][Rr][Aa][Cc][Ee]\\.).*$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Processor identifier",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"matcher": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 4096,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "[See our documentation](https://dt-url.net/bp234rv)",
+					"displayName": "Matcher (DQL)",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "technology",
+							"property": "type",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"subType": "multiline",
+					"type": "text"
+				},
+				"productAllocation": {
+					"description": "",
+					"displayName": "Product allocation processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "productAllocation",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/ProductAllocationAttributes"
+					}
+				},
+				"sampleData": {
+					"constraints": [
+						{
+							"maxLength": 8192,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Sample data",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"samplingAwareCounterMetric": {
+					"description": "",
+					"displayName": "Sampling-aware counter metric processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "samplingAwareCounterMetric",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SamplingAwareCounterMetricAttributes"
+					}
+				},
+				"samplingAwareHistogramMetric": {
+					"description": "",
+					"displayName": "Sampling aware histogram metric processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "samplingAwareHistogramMetric",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SamplingAwareHistogramMetricAttributes"
+					}
+				},
+				"samplingAwareValueMetric": {
+					"description": "",
+					"displayName": "Sampling aware value metric processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "samplingAwareValueMetric",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SamplingAwareValueMetricAttributes"
+					}
+				},
+				"sdlcEvent": {
+					"description": "",
+					"displayName": "SdlcEvent extraction processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "sdlcEvent",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SdlcEventAttributes"
+					}
+				},
+				"securityContext": {
+					"description": "",
+					"displayName": "Security context processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "securityContext",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SecurityContextAttributes"
+					}
+				},
+				"securityEvent": {
+					"description": "",
+					"displayName": "Security event extraction processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "securityEvent",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SecurityEventAttributes"
+					}
+				},
+				"smartscapeEdge": {
+					"description": "",
+					"displayName": "Smartscape edge extraction processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "smartscapeEdge",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SmartscapeEdgeAttributes"
+					}
+				},
+				"smartscapeNode": {
+					"description": "",
+					"displayName": "Smartscape node extraction processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "smartscapeNode",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SmartscapeNodeAttributes"
+					}
+				},
+				"technology": {
+					"description": "",
+					"displayName": "Technology processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "technology",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/TechnologyAttributes"
+					}
+				},
+				"type": {
+					"default": "dql",
+					"description": "Processor type",
+					"displayName": "Type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/ProcessorType"
+					}
+				},
+				"valueMetric": {
+					"description": "",
+					"displayName": "Value metric processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "valueMetric",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/ValueMetricAttributes"
+					}
+				}
+			},
+			"summaryPattern": "{type} - {id}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ProductAllocationAttributes": {
+			"description": "",
+			"displayName": "ProductAllocationAttributes",
+			"documentation": "",
+			"properties": {
+				"value": {
+					"description": "",
+					"displayName": "The strategy to set product allocation field",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SamplingAwareCounterMetricAttributes": {
+			"description": "",
+			"displayName": "SamplingAwareCounterMetricAttributes",
+			"documentation": "",
+			"properties": {
+				"aggregation": {
+					"description": "",
+					"displayName": "Aggregation",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/Aggregation"
+					}
+				},
+				"dimensions": {
+					"description": "",
+					"displayName": "List of dimensions",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/FieldExtractionEntry"
+						}
+					},
+					"maxObjects": 50,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"metricKey": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 250,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not start with 'dt.'",
+							"pattern": "^(?![Dd][Tt]\\.).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain at least two, non-empty sections separated by a dot",
+							"pattern": "^[^.]+(\\.[^.]+?)+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain only basic-latin characters, numbers, underscores ('_'), hyphens ('-') and dots ('.')",
+							"pattern": "^[.A-Za-z0-9_\\-]+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Section must not start with a hyphen",
+							"pattern": "^((?!\\.-).)+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "events.",
+					"description": "",
+					"displayName": "Metric key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"sampling": {
+					"description": "",
+					"displayName": "Sampling",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/Sampling"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SamplingAwareHistogramMetricAttributes": {
+			"description": "",
+			"displayName": "SamplingAwareHistogramMetricAttributes",
+			"documentation": "",
+			"properties": {
+				"aggregation": {
+					"description": "",
+					"displayName": "Aggregation",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/Aggregation"
+					}
+				},
+				"defaultValue": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Default value with metric value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "duration",
+							"property": "measurement",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				},
+				"dimensions": {
+					"description": "",
+					"displayName": "List of dimensions",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/FieldExtractionEntry"
+						}
+					},
+					"maxObjects": 50,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"field": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 100,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not be 'span_id'",
+							"pattern": "^(?!span_id$).+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'trace_id'",
+							"pattern": "^(?!trace_id$).+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "fieldName",
+					"description": "",
+					"displayName": "Field with metric value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "duration",
+							"property": "measurement",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				},
+				"measurement": {
+					"default": "field",
+					"description": "",
+					"displayName": "Measurement",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/Measurement"
+					}
+				},
+				"metricKey": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 250,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not start with 'dt.'",
+							"pattern": "^(?![Dd][Tt]\\.).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain at least two, non-empty sections separated by a dot",
+							"pattern": "^[^.]+(\\.[^.]+?)+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain only basic-latin characters, numbers, underscores ('_'), hyphens ('-') and dots ('.')",
+							"pattern": "^[.A-Za-z0-9_\\-]+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Section must not start with a hyphen",
+							"pattern": "^((?!\\.-).)+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "events.",
+					"description": "",
+					"displayName": "Metric key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"sampling": {
+					"description": "",
+					"displayName": "Sampling",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/Sampling"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SamplingAwareValueMetricAttributes": {
+			"description": "",
+			"displayName": "SamplingAwareValueMetricAttributes",
+			"documentation": "",
+			"properties": {
+				"aggregation": {
+					"description": "",
+					"displayName": "Aggregation",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/Aggregation"
+					}
+				},
+				"defaultValue": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Default value with metric value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "duration",
+							"property": "measurement",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				},
+				"dimensions": {
+					"description": "",
+					"displayName": "List of dimensions",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/FieldExtractionEntry"
+						}
+					},
+					"maxObjects": 50,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"field": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 100,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not be 'span_id'",
+							"pattern": "^(?!span_id$).+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'trace_id'",
+							"pattern": "^(?!trace_id$).+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "fieldName",
+					"description": "",
+					"displayName": "Field with metric value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"precondition": {
+							"expectedValue": "duration",
+							"property": "measurement",
+							"type": "EQUALS"
+						},
+						"type": "NOT"
+					},
+					"type": "text"
+				},
+				"measurement": {
+					"default": "field",
+					"description": "",
+					"displayName": "Measurement",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/Measurement"
+					}
+				},
+				"metricKey": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 250,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not start with 'dt.'",
+							"pattern": "^(?![Dd][Tt]\\.).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain at least two, non-empty sections separated by a dot",
+							"pattern": "^[^.]+(\\.[^.]+?)+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain only basic-latin characters, numbers, underscores ('_'), hyphens ('-') and dots ('.')",
+							"pattern": "^[.A-Za-z0-9_\\-]+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Section must not start with a hyphen",
+							"pattern": "^((?!\\.-).)+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "events.",
+					"description": "",
+					"displayName": "Metric key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"sampling": {
+					"description": "",
+					"displayName": "Sampling",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/Sampling"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SdlcEventAttributes": {
+			"description": "",
+			"displayName": "SdlcEventAttributes",
+			"documentation": "",
+			"properties": {
+				"eventCategory": {
+					"description": "",
+					"displayName": "Event category",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				},
+				"eventProvider": {
+					"description": "",
+					"displayName": "Event provider",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				},
+				"eventStatus": {
+					"description": "",
+					"displayName": "Event status",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				},
+				"eventType": {
+					"description": "",
+					"displayName": "Event type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				},
+				"fieldExtraction": {
+					"description": "",
+					"displayName": "Field extraction",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/FieldExtraction"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SecurityContextAttributes": {
+			"description": "",
+			"displayName": "SecurityContextAttributes",
+			"documentation": "",
+			"properties": {
+				"value": {
+					"description": "",
+					"displayName": "Security context value assignment",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SecurityEventAttributes": {
+			"description": "",
+			"displayName": "SecurityEventAttributes",
+			"documentation": "",
+			"properties": {
+				"fieldExtraction": {
+					"description": "",
+					"displayName": "Field Extraction",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/FieldExtraction"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SmartscapeEdgeAttributes": {
+			"description": "",
+			"displayName": "SmartscapeEdgeAttributes",
+			"documentation": "",
+			"properties": {
+				"edgeType": {
+					"constraints": [
+						{
+							"customMessage": "Edge type must match the pattern [a-z][a-z0-9._]{0,31}",
+							"pattern": "^[a-z][a-z0-9._]{0,31}$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not start with 'dt.' or 'dynatrace.'",
+							"pattern": "^(?![Dd][Tt]\\.|[Dd][Yy][Nn][Aa][Tt][Rr][Aa][Cc][Ee]\\.).*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Edge type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"sourceIdFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Source ID field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"sourceType": {
+					"constraints": [
+						{
+							"customMessage": "Source type must match the pattern [A-Z][A-Z0-9_]{0,249}",
+							"pattern": "^[A-Z][A-Z0-9_]{0,249}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Source type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"targetIdFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Target ID field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"targetType": {
+					"constraints": [
+						{
+							"customMessage": "Target type must match the pattern [A-Z][A-Z0-9_]{0,249}",
+							"pattern": "^[A-Z][A-Z0-9_]{0,249}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Target type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SmartscapeFieldExtractionEntry": {
+			"description": "",
+			"displayName": "SmartscapeFieldExtractionEntry",
+			"documentation": "",
+			"properties": {
+				"fieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"customMessage": "Must not start with '._ :/\\'",
+							"pattern": "^[^._ :/\\\\].*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'name'",
+							"pattern": "^(?![Nn][Aa][Mm][Ee]$).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'lifetime'",
+							"pattern": "^(?![Ll][Ii][Ff][Ee][Tt][Ii][Mm][Ee]$).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'type'",
+							"pattern": "^(?![Tt][Yy][Pp][Ee]$).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'id'",
+							"pattern": "^(?![Ii][Dd]$).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'tags'",
+							"pattern": "^(?![Tt][Aa][Gg][Ss]$).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not start with 'dt.system.'",
+							"pattern": "^(?![Dd][Tt]\\.[Ss][Yy][Ss][Tt][Ee][Mm]\\.).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not start with 'dt.smartscape.'",
+							"pattern": "^(?![Dd][Tt]\\.[Ss][Mm][Aa][Rr][Tt][Ss][Cc][Aa][Pp][Ee]\\.).*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"expectedValue": "equals",
+								"property": "strategy",
+								"type": "EQUALS"
+							},
+							{
+								"property": "strategy",
+								"type": "NULL"
+							}
+						],
+						"type": "OR"
+					},
+					"type": "text"
+				},
+				"referencedFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Referenced field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"strategy": {
+					"description": "",
+					"displayName": "Strategy for field extraction",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/FieldExtractionStrategy"
+					}
+				}
+			},
+			"summaryPattern": "{strategy} - {fieldName} - {referencedFieldName}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SmartscapeIdComponentsEntry": {
+			"description": "",
+			"displayName": "SmartscapeIdComponentsEntry",
+			"documentation": "",
+			"properties": {
+				"idComponent": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "ID component",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"referencedFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Referenced field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{idComponent} - {referencedFieldName}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SmartscapeNodeAttributes": {
+			"description": "",
+			"displayName": "SmartscapeNodeAttributes",
+			"documentation": "",
+			"properties": {
+				"extractNode": {
+					"default": false,
+					"description": "",
+					"displayName": "Extract node",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"fieldsToExtract": {
+					"constraints": [
+						{
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"strategy",
+								"fieldName",
+								"referencedFieldName"
+							]
+						}
+					],
+					"description": "",
+					"displayName": "Fields to extract",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/SmartscapeFieldExtractionEntry"
+						}
+					},
+					"maxObjects": 32,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "extractNode",
+						"type": "EQUALS"
+					},
+					"type": "list"
+				},
+				"idComponents": {
+					"constraints": [
+						{
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"idComponent"
+							]
+						}
+					],
+					"description": "",
+					"displayName": "ID components",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/SmartscapeIdComponentsEntry"
+						}
+					},
+					"maxObjects": 10,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				},
+				"nodeIdFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Node ID field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"nodeName": {
+					"description": "",
+					"displayName": "Node name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "extractNode",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
+					}
+				},
+				"nodeType": {
+					"constraints": [
+						{
+							"customMessage": "Node type must match the pattern [A-Z][A-Z0-9_]{0,249}",
+							"pattern": "^[A-Z][A-Z0-9_]{0,249}$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'CUSTOM_DEVICE'",
+							"pattern": "^(?!CUSTOM_DEVICE$).*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Node type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"staticEdgesToExtract": {
+					"description": "",
+					"displayName": "Static edges to extract",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/SmartscapeStaticEdgeExtractionEntry"
+						}
+					},
+					"maxObjects": 16,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": true,
+						"property": "extractNode",
+						"type": "EQUALS"
+					},
+					"type": "list"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SmartscapeStaticEdgeExtractionEntry": {
+			"description": "",
+			"displayName": "SmartscapeStaticEdgeExtractionEntry",
+			"documentation": "",
+			"properties": {
+				"edgeType": {
+					"constraints": [
+						{
+							"customMessage": "Edge type must match the pattern [a-z][a-z0-9._]{0,31}",
+							"pattern": "^[a-z][a-z0-9._]{0,31}$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not start with 'dt.' or 'dynatrace.'",
+							"pattern": "^(?![Dd][Tt]\\.|[Dd][Yy][Nn][Aa][Tt][Rr][Aa][Cc][Ee]\\.).*$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Edge type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"targetIdFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Target ID field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"targetType": {
+					"constraints": [
+						{
+							"customMessage": "Target type must match the pattern [A-Z][A-Z0-9_]{0,249}",
+							"pattern": "^[A-Z][A-Z0-9_]{0,249}$",
+							"type": "PATTERN"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Target type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{edgeType} - {targetType} - {targetIdFieldName}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"Stage": {
+			"description": "",
+			"displayName": "Stage",
+			"documentation": "",
+			"properties": {
+				"processors": {
+					"constraints": [
+						{
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"id"
+							]
+						}
+					],
+					"description": "",
+					"displayName": "Processors of stage",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/Processor"
+						}
+					},
+					"maxObjects": 1000,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"TechnologyAttributes": {
+			"description": "",
+			"displayName": "Technology processor attributes",
+			"documentation": "",
+			"properties": {
+				"customMatcher": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 4096,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "Custom matching condition which should be used instead of technology matcher.",
+					"displayName": "Custom matcher",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"technologyId": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "00000000-0000-0000-0000-000000000000",
+					"description": "",
+					"displayName": "Technology ID",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ValueAssignmentFromFieldEntry": {
+			"description": "",
+			"displayName": "ValueAssignmentFromFieldEntry",
+			"documentation": "",
+			"properties": {
+				"defaultValue": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Default value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"sourceFieldName": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 256,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Source field name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{sourceFieldName} - {defaultValue}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"ValueMetricAttributes": {
+			"description": "",
+			"displayName": "ValueMetricAttributes",
+			"documentation": "",
+			"properties": {
+				"defaultValue": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "",
+					"displayName": "Default value with metric value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"dimensions": {
+					"description": "",
+					"displayName": "List of dimensions",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/FieldExtractionEntry"
+						}
+					},
+					"maxObjects": 50,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "set"
+				},
+				"field": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 100,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not be 'span_id'",
+							"pattern": "^(?!span_id$).+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must not be 'trace_id'",
+							"pattern": "^(?!trace_id$).+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "fieldName",
+					"description": "",
+					"displayName": "Field with metric value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"metricKey": {
+					"constraints": [
+						{
+							"type": "NOT_EMPTY"
+						},
+						{
+							"maxLength": 250,
+							"type": "LENGTH"
+						},
+						{
+							"customMessage": "Must not start with 'dt.'",
+							"pattern": "^(?![Dd][Tt]\\.).*$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain at least two, non-empty sections separated by a dot",
+							"pattern": "^[^.]+(\\.[^.]+?)+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Must contain only basic-latin characters, numbers, underscores ('_'), hyphens ('-') and dots ('.')",
+							"pattern": "^[.A-Za-z0-9_\\-]+$",
+							"type": "PATTERN"
+						},
+						{
+							"customMessage": "Section must not start with a hyphen",
+							"pattern": "^((?!\\.-).)+$",
+							"type": "PATTERN"
+						}
+					],
+					"default": "events.",
+					"description": "",
+					"displayName": "Metric key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.65"
+}
