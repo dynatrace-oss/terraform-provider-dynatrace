@@ -560,6 +560,7 @@ var ResourceTypes = struct {
 	OpenpipelineSpansDataforwarding          ResourceType
 	OpenpipelineSystemEventsDataforwarding   ResourceType
 	OpenpipelineUserEventsDataforwarding     ResourceType
+	OpenpipelineUsersessionsDataforwarding   ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -998,6 +999,7 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_spans_dataforwarding",
 	"dynatrace_openpipeline_system_events_dataforwarding",
 	"dynatrace_openpipeline_user_events_dataforwarding",
+	"dynatrace_openpipeline_usersessions_dataforwarding",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
