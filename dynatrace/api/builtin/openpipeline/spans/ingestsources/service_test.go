@@ -26,7 +26,7 @@ import (
 )
 
 func TestOpenPipelineSpansIngestSources(t *testing.T) {
-	t.Skip("Feature not enabled")
+	t.Skip("Custom ingest sources not allowed")
 
 	api.TestAcc(t)
 }
