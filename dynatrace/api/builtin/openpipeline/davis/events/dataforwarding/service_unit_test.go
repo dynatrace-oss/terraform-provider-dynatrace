@@ -1,0 +1,58 @@
+//go:build unit
+
+/**
+* @license
+* Copyright 2025 Dynatrace LLC
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+ */
+
+package dataforwarding_test
+
+import (
+	"testing"
+
+	dataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/davis/events/dataforwarding/settings"
+	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+func TestOpenPipelineDavisEventsDataForwardingUnmarshal(t *testing.T) {
+	entries := new(dataforwarding.FieldExtractionEntries)
+	validEntries := []*dataforwarding.FieldExtractionEntry{
+		{
+			DefaultValue: new("value"),
+		},
+		{
+			DestinationFieldName: new("value"),
+		},
+		{
+			SourceFieldName: new("value"),
+		},
+		{
+			DefaultValue:         new("value1"),
+			DestinationFieldName: new("value2"),
+			SourceFieldName:      new("value3"),
+		},
+		{
+			ExtractionType: &dataforwarding.FieldValueExtractionTypes.Field,
+		},
+	}
+	validWithEmpty := dataforwarding.FieldExtractionEntries{{}}
+	validWithEmpty = append(validWithEmpty, validEntries...)
+	err := entries.UnmarshalHCL(testing2.MockDecoder{Elements: map[string]any{"field_extraction_entry": validWithEmpty}})
+	require.NoError(t, err)
+	assert.Len(t, *entries, len(validEntries))
+	assert.ElementsMatch(t, *entries, validEntries)
+}
