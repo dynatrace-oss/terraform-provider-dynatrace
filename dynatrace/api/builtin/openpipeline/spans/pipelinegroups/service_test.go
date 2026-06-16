@@ -25,6 +25,5 @@ import (
 )
 
 func TestAccSpansPipelineGroups(t *testing.T) {
-	t.Skip("Feature not enabled")
 	api.TestAcc(t)
 }
