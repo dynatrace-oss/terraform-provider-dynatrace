@@ -21,9 +21,9 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/maintenancewindows"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcp"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcpdynatraceprincipal"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/maintenancewindows"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroupingrules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
@@ -457,6 +457,7 @@ import (
 	openpipelineusereventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/pipelinegroups"
 	openpipelineusereventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/pipelines"
 	openpipelineusereventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/routing"
+	openpipelineusersessionsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/dataforwarding"
 	openpipelineusersessionsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/ingestsources"
 	openpipelineusersessionspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/pipelinegroups"
 	openpipelineusersessionspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/pipelines"
@@ -1731,6 +1732,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineSpansDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsDataforwarding),
+		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsDataforwarding),
 
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
@@ -1990,6 +1992,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelineusereventsdataforwarding.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsPipelines),
 		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsIngestsources),
+	),
+	ResourceTypes.OpenpipelineUsersessionsDataforwarding: NewResourceDescriptor(
+		openpipelineusersessionsdataforwarding.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
+		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsIngestsources),
 	),
 }
 
