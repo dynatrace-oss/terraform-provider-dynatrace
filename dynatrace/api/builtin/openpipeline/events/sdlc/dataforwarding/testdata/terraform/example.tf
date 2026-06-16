@@ -1,0 +1,90 @@
+resource "dynatrace_openpipeline_v2_events_sdlc_dataforwarding" "example" {
+  forwarding_name = "#name#"
+  enabled = false
+  matcher = "true"
+  cloud_vendor_type = "aws"
+  aws_connection {
+    arn           = "arn:aws:iam::aws:role/#name#"
+    connection_id = dynatrace_aws_connection.test-aws-connection.id
+  }
+  data_forwarding_type = "processed"
+  pipelines = [dynatrace_openpipeline_v2_events_sdlc_pipelines.pipeline.id]
+  bulk_pattern = "<YYYYMMDD>/<HH>/<HHmmss.SSSS>_<bulk-id>.json.gz"
+  processing {
+    processors {
+      processor {
+        type        = "drop"
+        id          = "processor_Drop_unnecessary_records_3802"
+        description = "Drop unnecessary records"
+        matcher     = "not matchesPhrase(record.name, \"Warning\")"
+        enabled     = true
+      }
+      processor {
+        type        = "fieldsAdd"
+        id          = "processor_Add_warning_flag_5434"
+        description = "Add warning flag"
+        matcher     = "matchesPhrase(record.name, \"Warning\")"
+        sample_data = "{\n  \"record.name\": \"Warning record\" \n}"
+        fields_add {
+          fields {
+            field {
+              name  = "is_warning"
+              value = "true"
+            }
+          }
+        }
+        enabled = true
+      }
+      processor {
+        type        = "fieldsRemove"
+        id          = "processor_Remove_details_field_8539"
+        description = "Remove details field"
+        sample_data = "{\n  \"record.name\": \"Warning\",\n  \"record.details\": \"some record details\"\n}"
+        matcher     = "isNotNull(record.details)"
+        fields_remove {
+          fields = ["record.details"]
+        }
+        enabled = true
+      }
+      processor {
+        type        = "fieldsRename"
+        id          = "processor_Rename_name_to_title_8530"
+        description = "Rename name to title"
+        sample_data = "{\n  \"record.name\": \"Warning\"\n}"
+        matcher     = "true"
+        fields_rename {
+          fields {
+            field {
+              from_name = "record.name"
+              to_name   = "record.title"
+            }
+          }
+        }
+        enabled = true
+      }
+      processor {
+        type        = "dql"
+        id          = "processor_Combine_title_and_summary_to_name_8808"
+        description = "Combine title and summary to name"
+        sample_data = "{\n  \"record.title\": \"Warning\",\n  \"record.summary\": \"Request failed\"\n}"
+        matcher     = "true"
+        dql {
+          script = "fieldsAdd record.name = concat(record.title, \" - \", record.summary)"
+        }
+        enabled = true
+      }
+    }
+  }
+}
+
+resource "dynatrace_openpipeline_v2_events_sdlc_pipelines" "pipeline" {
+  display_name = "Minimal pipeline"
+  custom_id = "pipeline_Minimal_pipeline_1234_tf_#name#"
+}
+
+resource "dynatrace_aws_connection" "test-aws-connection" {
+  name = "#name#"
+  role_based_auth {
+    consumers = ["SVC:com.dynatrace.openpipeline"]
+  }
+}
