@@ -548,6 +548,7 @@ var ResourceTypes = struct {
 	MaintenanceWindows                       ResourceType
 	GCPConnection                            ResourceType
 	GCPPrincipal                             ResourceType
+	OpenpipelineBizeventsDataforwarding      ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -974,6 +975,7 @@ var ResourceTypes = struct {
 	"dynatrace_maintenance_windows",
 	"dynatrace_gcp_connection",
 	"dynatrace_gcp_principal",
+	"dynatrace_openpipeline_bizevents_dataforwarding",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
