@@ -437,6 +437,7 @@ import (
 	openpipelinemetricspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/pipelinegroups"
 	openpipelinemetricspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/pipelines"
 	openpipelinemetricsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/routing"
+	openpipelinesecurityeventsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/dataforwarding"
 	openpipelinesecurityeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/ingestsources"
 	openpipelinesecurityeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelinegroups"
 	openpipelinesecurityeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelines"
@@ -1723,6 +1724,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineEventsSecurityDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineLogsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineMetricsDataforwarding),
+		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsDataforwarding),
 
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
@@ -1962,6 +1964,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelinemetricsdataforwarding.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineMetricsPipelines),
 		Dependencies.ID(ResourceTypes.OpenpipelineMetricsIngestsources),
+	),
+	ResourceTypes.OpenpipelineSecurityEventsDataforwarding: NewResourceDescriptor(
+		openpipelinesecurityeventsdataforwarding.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelines),
+		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsIngestsources),
 	),
 }
 
