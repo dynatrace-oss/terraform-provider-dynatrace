@@ -422,6 +422,7 @@ import (
 	openpipelineeventssdlcpipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/pipelinegroups"
 	openpipelineeventssdlcpipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/pipelines"
 	openpipelineeventssdlcrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/sdlc/routing"
+	openpipelineeventssecuritydataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/dataforwarding"
 	openpipelineeventssecurityingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/ingestsources"
 	openpipelineeventssecuritypipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/pipelinegroups"
 	openpipelineeventssecuritypipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/events/security/pipelines"
@@ -1717,6 +1718,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineDavisProblemsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineEventsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineEventsSdlcDataforwarding),
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsSecurityDataforwarding),
 
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
@@ -1941,6 +1943,11 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelineeventssdlcdataforwarding.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineEventsSdlcPipelines),
 		Dependencies.ID(ResourceTypes.OpenpipelineEventsSdlcIngestsources),
+	),
+	ResourceTypes.OpenpipelineEventsSecurityDataforwarding: NewResourceDescriptor(
+		openpipelineeventssecuritydataforwarding.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsSecurityPipelines),
+		Dependencies.ID(ResourceTypes.OpenpipelineEventsSecurityIngestsources),
 	),
 }
 
