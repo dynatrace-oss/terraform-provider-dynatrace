@@ -24,7 +24,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	managementzonessrv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/managementzones"
 	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/managementzones/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -75,7 +74,7 @@ func DataSourceReadMultiple(ctx context.Context, d *schema.ResourceData, m any) 
 		return diag.FromErr(err)
 	}
 
-	service := cache.Read[*managementzones.Settings](managementzonessrv.Service(creds), true)
+	service := managementzonessrv.Service(creds)
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)

@@ -27,7 +27,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 
 	dashboards "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/settings"
 	sharing "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/sharing/settings"
@@ -39,7 +38,7 @@ const SchemaID = "v1:config:dashboards:sharing"
 func Service(credentials *rest.Credentials) settings.CRUDService[*sharing.DashboardSharing] {
 	return &service{
 		client:           rest.APITokenClient(credentials),
-		dashboardService: cache.CRUD(jsondashboards.Service(credentials), true),
+		dashboardService: jsondashboards.Service(credentials),
 	}
 }
 

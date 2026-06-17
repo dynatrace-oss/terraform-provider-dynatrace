@@ -22,7 +22,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 )
 
 type Filter[T settings.Settings] interface {
@@ -84,10 +83,6 @@ func (me *FilterService[T]) SchemaID() string {
 	return me.Service.SchemaID() + ":" + me.Filter.Suffix()
 }
 
-func (me *FilterService[T]) NoCache() bool {
-	return true
-}
-
 func Service[T settings.Settings](service settings.CRUDService[T], f Filter[T]) settings.CRUDService[T] {
-	return &FilterService[T]{Service: cache.CRUD(service), Filter: f}
+	return &FilterService[T]{Service: service, Filter: f}
 }

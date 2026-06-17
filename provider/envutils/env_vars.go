@@ -101,38 +101,6 @@ var DynatraceDisableOrderingSupport = BoolEnvVar{
 	DefaultValue: false,
 }
 
-// --- Cache ---
-
-// DTCacheFolder sets the path to the cache folder.
-var DTCacheFolder = StringEnvVar{
-	Key:          "DT_CACHE_FOLDER",
-	DefaultValue: "",
-}
-
-// CacheOfflineMode enables offline mode using cached data.
-var CacheOfflineMode = BoolEnvVar{
-	Key:          "CACHE_OFFLINE_MODE",
-	DefaultValue: false,
-}
-
-// DTCacheDeleteOnLaunch enables deleting the cache on provider launch.
-var DTCacheDeleteOnLaunch = BoolEnvVar{
-	Key:          "DT_CACHE_DELETE_ON_LAUNCH",
-	DefaultValue: false,
-}
-
-// DTNoCacheCleanup specifies whether to skip automatic cache cleanup on provider shutdown.
-var DTNoCacheCleanup = BoolEnvVar{
-	Key:          "DT_NO_CACHE_CLEANUP",
-	DefaultValue: false,
-}
-
-// DynatraceInMemoryTarFolders uses in-memory tar archives for cache folders.
-var DynatraceInMemoryTarFolders = BoolEnvVar{
-	Key:          "DYNATRACE_IN_MEMORY_TAR_FOLDERS",
-	DefaultValue: false,
-}
-
 // --- Backwards Compatibility ---
 
 // DTBackwardsCompatibility enables backwards compatibility mode.

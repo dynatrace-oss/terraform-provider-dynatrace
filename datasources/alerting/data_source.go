@@ -25,8 +25,6 @@ import (
 	alertingsrv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/profile"
 	alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/alerting/profile/settings"
 	managementzonessrv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/managementzones"
-	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/managementzones/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -87,12 +85,12 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	service := cache.Read[*alerting.Profile](alertingsrv.Service(creds), true)
+	service := alertingsrv.Service(creds)
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)
 	}
-	mgmzService := cache.Read[*managementzones.Settings](managementzonessrv.Service(creds), true)
+	mgmzService := managementzonessrv.Service(creds)
 	var mgmzStubs api.Stubs
 	if mgmzStubs, err = mgmzService.List(ctx); err != nil {
 		return diag.FromErr(err)

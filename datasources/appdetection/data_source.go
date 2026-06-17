@@ -23,7 +23,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	appdetectionsrv "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/appdetection"
 	appdetection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/web/appdetection/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -73,7 +72,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		return diag.FromErr(err)
 	}
 
-	service := cache.Read[*appdetection.Settings](appdetectionsrv.Service(creds), true)
+	service := appdetectionsrv.Service(creds)
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)

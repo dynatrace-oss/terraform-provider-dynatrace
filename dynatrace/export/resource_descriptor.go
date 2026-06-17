@@ -338,7 +338,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo"
 	v2monitors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/synthetic/monitors"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 
 	v2managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/managementzones"
 
@@ -467,7 +466,7 @@ import (
 func NewResourceDescriptor[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
 		Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
-			return &settings.GenericCRUDService[T]{Service: cache.CRUD(fn(credentials))}
+			return &settings.GenericCRUDService[T]{Service: fn(credentials)}
 		},
 		protoType:    newSettings(fn),
 		Dependencies: dependencies,
@@ -477,7 +476,7 @@ func NewResourceDescriptor[T settings.Settings](fn func(credentials *rest.Creden
 func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], folderName string, dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
 		Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
-			return &settings.GenericCRUDService[T]{Service: cache.CRUD(fn(credentials))}
+			return &settings.GenericCRUDService[T]{Service: fn(credentials)}
 		},
 		protoType:    newSettings(fn),
 		Dependencies: dependencies,
@@ -488,7 +487,7 @@ func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(creden
 func NewChildResourceDescriptor[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], parent ResourceType, dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
 		Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
-			return &settings.GenericCRUDService[T]{Service: cache.CRUD(fn(credentials))}
+			return &settings.GenericCRUDService[T]{Service: fn(credentials)}
 		},
 		protoType:    newSettings(fn),
 		Dependencies: dependencies,
@@ -1733,7 +1732,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsDataforwarding),
-
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
 	),
