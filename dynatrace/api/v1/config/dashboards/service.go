@@ -23,7 +23,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 
 	dashboards "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/jsondashboards"
@@ -32,15 +31,11 @@ import (
 const SchemaID = "v1:config:dashboards"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*dashboards.Dashboard] {
-	return &service{service: cache.CRUD(jsondashboards.Service(credentials), true)}
+	return &service{service: jsondashboards.Service(credentials)}
 }
 
 type service struct {
 	service settings.CRUDService[*dashboards.JSONDashboard]
-}
-
-func (me *service) NoCache() bool {
-	return true
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {

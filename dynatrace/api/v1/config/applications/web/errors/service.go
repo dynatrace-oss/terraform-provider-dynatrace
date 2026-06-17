@@ -26,7 +26,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 
 	webservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web"
 	errors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/errors/settings"
@@ -38,7 +37,7 @@ const SchemaID = "v1:config:applications:web:errors"
 func Service(credentials *rest.Credentials) settings.CRUDService[*errors.Rules] {
 	return &service{
 		client:        rest.APITokenClient(credentials),
-		webAppService: cache.CRUD(webservice.Service(credentials), true)}
+		webAppService: webservice.Service(credentials)}
 }
 
 type service struct {

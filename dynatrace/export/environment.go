@@ -39,7 +39,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity"
 	entitysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
@@ -47,7 +46,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/spf13/afero"
 )
-
 
 type Environment struct {
 	mu                    sync.Mutex
@@ -91,7 +89,7 @@ func (me *Environment) DataSource(id string, kind DataSourceKind, excepts ...Res
 	case DataSourceKindEntity:
 		return me.FetchEntity(id)
 	case DataSourceKindPolicy:
-		service := cache.CRUD(policies.Service(me.Credentials))
+		service := policies.Service(me.Credentials)
 		var policy policysettings.Policy
 		if err := service.Get(context.Background(), id, &policy); err == nil {
 			terraformName := toTerraformName(policy.Name)
@@ -119,7 +117,7 @@ func (me *Environment) DataSource(id string, kind DataSourceKind, excepts ...Res
 }
 
 func (me *Environment) FetchEntity(id string) *DataSource {
-	service := cache.Read(entity.DataSourceService(me.Credentials))
+	service := entity.DataSourceService(me.Credentials)
 	var entity entitysettings.Entity
 	if err := service.Get(context.Background(), id, &entity); err == nil {
 		return &DataSource{ID: *entity.EntityId, Name: *entity.DisplayName, Type: *entity.Type, Kind: DataSourceKindEntity}
@@ -1104,17 +1102,9 @@ func (me *Environment) executeTF(cmd *exec.Cmd) (err error) {
 	cmd.Stdout = &outb
 	cmd.Stderr = &errb
 	cmd.Dir = me.OutputFolder
-	var cacheFolder string
-	if cacheFolder, err = filepath.Abs(cache.GetCacheFolder()); err != nil {
-		return err
-	}
 
 	// pass all existing environment variables but set or overwrite some specifc ones when executing terraform commands
 	cmd.Env = append(os.Environ(),
-		"DT_CACHE_FOLDER="+cacheFolder,
-		"CACHE_OFFLINE_MODE=true",
-		"DT_CACHE_DELETE_ON_LAUNCH=false",
-		"DT_NO_CACHE_CLEANUP=true",
 		"DT_TERRAFORM_IMPORT=true",
 	)
 

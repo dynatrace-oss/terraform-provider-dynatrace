@@ -27,13 +27,6 @@ type GenericCRUDService[T Settings] struct {
 	Service CRUDService[T]
 }
 
-func (me *GenericCRUDService[T]) NoCache() bool {
-	if ncs, ok := me.Service.(NoCacheService); ok {
-		return ncs.NoCache()
-	}
-	return false
-}
-
 func (me *GenericCRUDService[T]) List(ctx context.Context) (api.Stubs, error) {
 	return me.Service.List(ctx)
 }

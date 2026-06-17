@@ -17,15 +17,11 @@
 
 package clean
 
-import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
-
 type cleanUp struct {
 	finalizers []func()
 }
 
-var CleanUp = &cleanUp{finalizers: []func(){
-	cache.Cleanup,
-}}
+var CleanUp = &cleanUp{finalizers: []func(){}}
 
 func (me *cleanUp) Finish() {
 	for _, finalizer := range me.finalizers {

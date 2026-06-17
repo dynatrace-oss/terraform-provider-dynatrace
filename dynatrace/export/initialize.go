@@ -28,7 +28,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
@@ -56,7 +55,6 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 
 	settings.ExportRunning = true
 	os.Setenv("dynatrace.secrets", "true")
-	cache.Enable()
 	resArgs := map[string][]string{}
 	if flags.Exclude {
 		for resourceType := range AllResources {

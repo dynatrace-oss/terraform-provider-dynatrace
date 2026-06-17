@@ -27,13 +27,6 @@ type GenericRService[T Settings] struct {
 	Service RService[T]
 }
 
-func (me *GenericRService[T]) NoCache() bool {
-	if ncs, ok := me.Service.(NoCacheService); ok {
-		return ncs.NoCache()
-	}
-	return false
-}
-
 func (me *GenericRService[T]) List(ctx context.Context) (api.Stubs, error) {
 	return me.Service.List(ctx)
 }

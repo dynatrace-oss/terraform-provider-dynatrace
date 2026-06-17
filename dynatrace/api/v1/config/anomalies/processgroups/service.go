@@ -25,7 +25,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 
 	processgroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/processgroups/settings"
 	entities "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities"
@@ -102,7 +101,7 @@ func (me *service) Get(ctx context.Context, id string, v *processgroups.AnomalyD
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	srv := cache.Read(entities.Service("PROCESS_GROUP", "", "", "", "", me.credentials), true)
+	srv := entities.Service("PROCESS_GROUP", "", "", "", "", me.credentials)
 	v := new(entitiesSettings.Settings)
 	if err := srv.Get(ctx, "", v); err != nil {
 		return nil, err
