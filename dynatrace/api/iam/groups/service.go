@@ -28,6 +28,7 @@ import (
 	groups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/google/uuid"
 )
 
@@ -97,7 +98,7 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 	var responseBytes []byte
 
 	client := iam.NewIAMClient(ctx, me)
-	if responseBytes, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups", me.endpointURL, me.AccountID()), []*groups.Group{group}, 201, false); err != nil {
+	if responseBytes, err = client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups", me.AccountID()), []*groups.Group{group}, rest2.RequestOptions{}, 201); err != nil {
 		return nil, err
 	}
 
@@ -109,7 +110,7 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 	groupName := responseGroups[0].Name
 
 	if len(group.Permissions) > 0 {
-		if _, err = client.PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, me.AccountID(), groupID), group.Permissions, 200, false); err != nil {
+		if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), groupID), group.Permissions, rest2.RequestOptions{}, 200); err != nil {
 			return nil, err
 		}
 	}
@@ -127,7 +128,7 @@ func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *gr
 	var err error
 
 	client := iam.NewIAMClient(ctx, me)
-	if _, err = client.PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s", me.endpointURL, me.AccountID(), uuid), group, 200, false); err != nil {
+	if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", me.AccountID(), uuid), group, rest2.RequestOptions{}, 200); err != nil {
 		return err
 	}
 
@@ -136,7 +137,7 @@ func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *gr
 	if len(group.Permissions) > 0 {
 		permissions = group.Permissions
 	}
-	if _, err = client.PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, me.AccountID(), uuid), permissions, 200, false); err != nil {
+	if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), uuid), permissions, rest2.RequestOptions{}, 200); err != nil {
 		return err
 	}
 
@@ -160,7 +161,11 @@ func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	client := iam.NewIAMClient(ctx, me)
 	var groupStubs ListGroupsResponse
 	accountID := me.AccountID()
-	if err := iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups", me.endpointURL, accountID), 200, false, &groupStubs); err != nil {
+	responseBytes, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups", accountID), rest2.RequestOptions{}, 200)
+	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(responseBytes, &groupStubs); err != nil {
 		return nil, err
 	}
 
@@ -175,7 +180,11 @@ func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Grou
 	var groupStub ListGroup
 	accountID := me.AccountID()
 	client := iam.NewIAMClient(ctx, me)
-	if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, accountID, id), 200, false, &groupStub); err != nil {
+	responseBytes, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", accountID, id), rest2.RequestOptions{}, 200)
+	if err != nil {
+		return err
+	}
+	if err = json.Unmarshal(responseBytes, &groupStub); err != nil {
 		return err
 	}
 
@@ -187,7 +196,7 @@ func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Grou
 }
 
 func (me *GroupServiceClient) Delete(ctx context.Context, id string) error {
-	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s", me.endpointURL, me.AccountID(), id), 200, false)
+	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", me.AccountID(), id), rest2.RequestOptions{}, 200)
 
 	// data sources MAY have cached a list of group IDs
 	// Updating the (publicly available) revision signals to them that either a CREATE or DELETE has happened since

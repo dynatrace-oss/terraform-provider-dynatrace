@@ -18,10 +18,12 @@ package environments
 
 import (
 	"context"
+	"encoding/json"
 	"net/url"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 const baseURL = "/env/v2/accounts"
@@ -76,16 +78,20 @@ type Response struct {
 }
 
 func (ec *environmentsService) Get(ctx context.Context) ([]Environment, error) {
-	u, err := url.JoinPath(ec.endpointURL, baseURL, ec.AccountID(), "environments")
+	u, err := url.JoinPath(baseURL, ec.AccountID(), "environments")
 
 	if err != nil {
 		return nil, err
 	}
 
 	client := iam.NewIAMClient(ctx, ec)
-	var result Response
-	err = iam.GET(client, ctx, u, 200, false, &result)
+	responseBytes, err := client.GET(ctx, u, rest2.RequestOptions{}, 200)
 	if err != nil {
+		return nil, err
+	}
+
+	var result Response
+	if err = json.Unmarshal(responseBytes, &result); err != nil {
 		return nil, err
 	}
 

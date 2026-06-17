@@ -19,6 +19,7 @@ package v2bindings
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"maps"
 	"net/url"
@@ -30,6 +31,7 @@ import (
 	bindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/v2bindings/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 type BindingServiceClient struct {
@@ -133,7 +135,11 @@ func (me *BindingServiceClient) getGroupPolicyBindingUUIDs(ctx context.Context, 
 		PolicyUuids []string `json:"policyUuids"`
 	}
 	var policyBindings groupPolicyBindings
-	if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/groups/%s", me.endpointURL, levelType, levelID, groupID), 200, false, &policyBindings); err != nil {
+	var responseBytes []byte
+	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), rest2.RequestOptions{}, 200); err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(responseBytes, &policyBindings); err != nil {
 		return nil, err
 	}
 	return policyBindings.PolicyUuids, nil
@@ -161,7 +167,11 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 
 	for _, policyID := range policyIDs {
 		var bindingsResponse BindingsResponse
-		if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyID, groupID), 200, false, &bindingsResponse); err != nil {
+		var responseBytes []byte
+		if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyID, groupID), rest2.RequestOptions{}, 200); err != nil {
+			return err
+		}
+		if err = json.Unmarshal(responseBytes, &bindingsResponse); err != nil {
 			return err
 		}
 		if len(bindingsResponse.PolicyBindings) == 0 {
@@ -234,7 +244,7 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindin
 			Metadata:   desiredPolicy.Metadata,
 			Boundaries: desiredPolicy.Boundaries,
 		}
-		if _, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s", me.endpointURL, levelType, levelID, policyUUID, groupID), payload, 204, false); err != nil {
+		if _, err = client.POST(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyUUID, groupID), payload, rest2.RequestOptions{}, 204); err != nil {
 			return err
 		}
 	}
@@ -269,7 +279,11 @@ func (me *BindingServiceClient) FetchAccountBindings(ctx context.Context) chan *
 		var response ListPolicyBindingsResponse
 		client := iam.NewIAMClient(ctx, me)
 
-		if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/account/%s/bindings", me.endpointURL, me.AccountID()), 200, false, &response); err != nil {
+		var responseBytes []byte
+		if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/bindings", me.AccountID()), rest2.RequestOptions{}, 200); err != nil {
+			return
+		}
+		if err = json.Unmarshal(responseBytes, &response); err != nil {
 			return
 		}
 
@@ -308,7 +322,11 @@ func (me *BindingServiceClient) FetchEnvironmentBindings(ctx context.Context) ch
 		var stubs api.Stubs
 		for _, environmentID := range environmentIDs {
 			var response ListPolicyBindingsResponse
-			if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/environment/%s/bindings", me.endpointURL, environmentID), 200, false, &response); err != nil {
+			var responseBytes []byte
+			if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/environment/%s/bindings", environmentID), rest2.RequestOptions{}, 200); err != nil {
+				return
+			}
+			if err = json.Unmarshal(responseBytes, &response); err != nil {
 				return
 			}
 
@@ -384,7 +402,7 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 		"forceMultiple": []string{"true"},
 	}
 	for policyUUID := range policyUUIDs {
-		if _, err = iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/bindings/%s/%s?%s", me.endpointURL, levelType, levelID, policyUUID, groupID, queryParams.Encode()), 204, false); err != nil {
+		if _, err = iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyUUID, groupID), rest2.RequestOptions{QueryParams: queryParams}, 204); err != nil {
 			return err
 		}
 	}

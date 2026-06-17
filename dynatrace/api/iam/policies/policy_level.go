@@ -19,6 +19,7 @@ package policies
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"sync"
@@ -26,6 +27,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 var cachedEnvironmentIDs []string
@@ -54,11 +56,15 @@ func CheckPolicyExists(ctx context.Context, auth iam.Authenticator, levelType st
 		Name string `json:"name"`
 	}{}
 	client := iam.NewIAMClient(ctx, auth)
-	if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", auth.EndpointURL(), levelType, levelID, policyUUID), 200, false, &response); err != nil {
+	var responseBytes []byte
+	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, policyUUID), rest2.RequestOptions{}, 200); err != nil {
 		// TODO: this is dirty. The IAM client unfortunately doesn't produce special kinds errors. string compare is the only option atm
 		if strings.HasPrefix(err.Error(), "response code 404") {
 			return false, "", nil
 		}
+		return false, "", err
+	}
+	if err = json.Unmarshal(responseBytes, &response); err != nil {
 		return false, "", err
 	}
 	return true, response.Name, nil
@@ -227,7 +233,11 @@ func fetchGlobalPolicies(ctx context.Context, auth iam.Authenticator) (results c
 		}()
 
 		var response ListPoliciesResponse
-		if err := iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/repo/global/global/policies", auth.EndpointURL()), 200, false, &response); err != nil {
+		responseBytes, err := client.GET(ctx, "/iam/v1/repo/global/global/policies", rest2.RequestOptions{}, 200)
+		if err != nil {
+			return
+		}
+		if err := json.Unmarshal(responseBytes, &response); err != nil {
 			return
 		}
 
@@ -310,7 +320,11 @@ func getEnvironmentIDs(ctx context.Context, auth iam.Authenticator) ([]string, e
 	var err error
 
 	var envResponse ListEnvResponse
-	if err = iam.GET(client, ctx, fmt.Sprintf("%s/env/v2/accounts/%s/environments", auth.EndpointURL(), auth.AccountID()), 200, false, &envResponse); err != nil {
+	var responseBytes []byte
+	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", auth.AccountID()), rest2.RequestOptions{}, 200); err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(responseBytes, &envResponse); err != nil {
 		return nil, err
 	}
 

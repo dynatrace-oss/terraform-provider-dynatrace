@@ -28,6 +28,7 @@ import (
 	users "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 type UserServiceClient struct {
@@ -75,7 +76,7 @@ func (me *UserServiceClient) Create(ctx context.Context, user *users.User) (*api
 	var err error
 
 	client := iam.NewIAMClient(ctx, me)
-	if _, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users", me.endpointURL, me.AccountID()), user, 201, false); err != nil {
+	if _, err = client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.AccountID()), user, rest2.RequestOptions{}, 201); err != nil {
 		if err.Error() == "User already exists" {
 			if err = me.Update(ctx, user.Email, user); err != nil {
 				return nil, err
@@ -89,7 +90,7 @@ func (me *UserServiceClient) Create(ctx context.Context, user *users.User) (*api
 	if len(user.Groups) > 0 {
 		groups = user.Groups
 	}
-	if _, err = client.PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users/%s/groups", me.endpointURL, me.AccountID(), user.Email), groups, 200, false); err != nil {
+	if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.AccountID(), user.Email), groups, rest2.RequestOptions{}, 200); err != nil {
 		return nil, err
 	}
 
@@ -112,7 +113,7 @@ func (me *UserServiceClient) Get(ctx context.Context, email string, v *users.Use
 
 	client := iam.NewIAMClient(ctx, me)
 
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users/%s", me.endpointURL, me.AccountID(), email), 200, false); err != nil {
+	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.AccountID(), email), rest2.RequestOptions{}, 200); err != nil {
 		if err != nil && strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
 			return rest.Error{Code: 404, Message: err.Error()}
 		}
@@ -140,7 +141,7 @@ func (me *UserServiceClient) Update(ctx context.Context, email string, user *use
 	if len(user.Groups) > 0 {
 		groups = user.Groups
 	}
-	if _, err = iam.NewIAMClient(ctx, me).PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users/%s/groups", me.endpointURL, me.AccountID(), user.Email), groups, 200, false); err != nil {
+	if _, err = iam.NewIAMClient(ctx, me).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.AccountID(), user.Email), groups, rest2.RequestOptions{}, 200); err != nil {
 		return err
 	}
 
@@ -161,7 +162,7 @@ func (me *UserServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var responseBytes []byte
 
-	if responseBytes, err = iam.NewIAMClient(ctx, me).GET(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users", me.endpointURL, me.AccountID()), 200, false); err != nil {
+	if responseBytes, err = iam.NewIAMClient(ctx, me).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.AccountID()), rest2.RequestOptions{}, 200); err != nil {
 		return nil, err
 	}
 
@@ -177,7 +178,7 @@ func (me *UserServiceClient) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (me *UserServiceClient) Delete(ctx context.Context, email string) error {
-	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users/%s", me.endpointURL, me.AccountID(), email), 200, false)
+	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.AccountID(), email), rest2.RequestOptions{}, 200)
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
 		return nil
 	}

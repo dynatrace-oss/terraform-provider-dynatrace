@@ -31,6 +31,7 @@ import (
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 type PermissionServiceClient struct {
@@ -95,7 +96,7 @@ func (me *PermissionServiceClient) Create(ctx context.Context, permission *permi
 		ScopeType: scopeType,
 		Name:      permission.Name,
 	}}
-	if _, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, me.AccountID(), permission.GroupID), payload, 201, false); err != nil {
+	if _, err = client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), permission.GroupID), payload, rest2.RequestOptions{}, 201); err != nil {
 		return nil, err
 	}
 
@@ -121,7 +122,7 @@ func (me *PermissionServiceClient) Get(ctx context.Context, id string, v *permis
 	scope := parts[2]
 	scopeType := parts[3]
 
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, me.AccountID(), groupID), 200, false); err != nil {
+	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), groupID), rest2.RequestOptions{}, 200); err != nil {
 		return err
 	}
 
@@ -171,7 +172,11 @@ func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) 
 		accountID := me.AccountID()
 
 		var response GetGroupPermissionsResponse
-		if err = iam.GET(client, ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions", me.endpointURL, accountID, groupID), 200, false, &response); err != nil {
+		responseBytes, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", accountID, groupID), rest2.RequestOptions{}, 200)
+		if err != nil {
+			return nil, err
+		}
+		if err = json.Unmarshal(responseBytes, &response); err != nil {
 			return nil, err
 		}
 
@@ -196,7 +201,12 @@ func (me *PermissionServiceClient) Delete(ctx context.Context, id string) error 
 	scope := parts[2]
 	scopeType := parts[3]
 
-	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/groups/%s/permissions?scope=%s&permission-name=%s&scope-type=%s", me.endpointURL, me.AccountID(), groupID, url.QueryEscape(scope), url.QueryEscape(name), url.QueryEscape(scopeType)), 200, false)
+	queryParams := url.Values{}
+	queryParams.Set("scope", scope)
+	queryParams.Set("permission-name", name)
+	queryParams.Set("scope-type", scopeType)
+
+	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), groupID), rest2.RequestOptions{QueryParams: queryParams}, 200)
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("Permission %s not found", id)) {
 		return nil
 	}

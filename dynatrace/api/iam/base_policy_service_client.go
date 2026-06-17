@@ -21,6 +21,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 type BasePolicyServiceClient struct {
@@ -60,7 +62,7 @@ func (me *BasePolicyServiceClient) CREATE(ctx context.Context, level PolicyLevel
 	var responseBytes []byte
 
 	client := NewIAMClient(ctx, me)
-	if responseBytes, err = client.POST(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies", me.endpointURL, level, levelID), policy, 201, false); err != nil {
+	if responseBytes, err = client.POST(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies", level, levelID), policy, rest2.RequestOptions{}, 201); err != nil {
 		return "", err
 	}
 
@@ -77,7 +79,7 @@ func (me *BasePolicyServiceClient) GET(ctx context.Context, level PolicyLevel, l
 
 	client := NewIAMClient(ctx, me)
 
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, level, levelID, uuid), 200, false); err != nil {
+	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", level, levelID, uuid), rest2.RequestOptions{}, 200); err != nil {
 		return nil, err
 	}
 
@@ -93,7 +95,7 @@ func (me *BasePolicyServiceClient) UPDATE(ctx context.Context, level PolicyLevel
 
 	client := NewIAMClient(ctx, me)
 
-	if _, err = client.PUT(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, level, levelID, uuid), policy, 200, false); err != nil {
+	if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", level, levelID, uuid), policy, rest2.RequestOptions{}, 200); err != nil {
 		return err
 	}
 	return nil
@@ -113,7 +115,7 @@ func (me *BasePolicyServiceClient) List(ctx context.Context, level PolicyLevel, 
 	var err error
 	var responseBytes []byte
 
-	if responseBytes, err = NewIAMClient(ctx, me).GET(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies", me.endpointURL, level, levelID), 200, false); err != nil {
+	if responseBytes, err = NewIAMClient(ctx, me).GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies", level, levelID), rest2.RequestOptions{}, 200); err != nil {
 		return nil, err
 	}
 
@@ -139,6 +141,6 @@ func (me *BasePolicyServiceClient) LIST(ctx context.Context, level PolicyLevel, 
 }
 
 func (me *BasePolicyServiceClient) DELETE(ctx context.Context, level PolicyLevel, levelID string, uuid string) error {
-	_, err := NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("%s/iam/v1/repo/%s/%s/policies/%s", me.endpointURL, level, levelID, uuid), 204, false)
+	_, err := NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", level, levelID, uuid), rest2.RequestOptions{}, 204)
 	return err
 }

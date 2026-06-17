@@ -38,12 +38,12 @@ import (
 )
 
 type IAMClient interface {
-	POST(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
-	PUT(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
-	PUT_MULTI_RESPONSE(ctx context.Context, url string, payload any, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error)
-	GET(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
-	DELETE(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error)
-	DELETE_MULTI_RESPONSE(ctx context.Context, url string, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error)
+	POST(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error)
+	PUT(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error)
+	PUT_MULTI_RESPONSE(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCodes []int) ([]byte, error)
+	GET(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error)
+	DELETE(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error)
+	DELETE_MULTI_RESPONSE(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCodes []int) ([]byte, error)
 }
 
 type iamClient struct {
@@ -72,71 +72,77 @@ func NewIAMClient(ctx context.Context, a Authenticator) IAMClient {
 	}
 	eUrl, _ := url.Parse(a.EndpointURL())
 	client := rest2.NewClient(eUrl, httpClient, opts...)
+	client.SetHeader("User-Agent", version.UserAgent())
 	return &iamClient{a, client}
 }
 
-func (me *iamClient) POST(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(ctx, url, http.MethodPost, []int{expectedResponseCode}, forceNewBearer, 0, payload, map[string]string{"Content-Type": "application/json"})
-}
-
-func (me *iamClient) PUT(ctx context.Context, url string, payload any, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(ctx, url, http.MethodPut, []int{expectedResponseCode}, forceNewBearer, 0, payload, map[string]string{"Content-Type": "application/json"})
-}
-
-func (me *iamClient) PUT_MULTI_RESPONSE(ctx context.Context, url string, payload any, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error) {
-	return me.request(ctx, url, http.MethodPut, expectedResponseCodes, forceNewBearer, 0, payload, map[string]string{"Content-Type": "application/json"})
-}
-
-func (me *iamClient) GET(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(ctx, url, http.MethodGet, []int{expectedResponseCode}, forceNewBearer, 0, nil, nil)
-}
-
-func (me *iamClient) DELETE(ctx context.Context, url string, expectedResponseCode int, forceNewBearer bool) ([]byte, error) {
-	return me.request(ctx, url, http.MethodDelete, []int{expectedResponseCode}, forceNewBearer, 0, nil, nil)
-}
-
-func (me *iamClient) DELETE_MULTI_RESPONSE(ctx context.Context, url string, expectedResponseCodes []int, forceNewBearer bool) ([]byte, error) {
-	return me.request(ctx, url, http.MethodDelete, expectedResponseCodes, forceNewBearer, 0, nil, nil)
-}
-
-func (me *iamClient) request(ctx context.Context, u string, method string, expectedResponseCodes []int, forceNewBearer bool, forceNewBearerRetryCount int, payload any, headers map[string]string) ([]byte, error) {
-	var err error
-	var httpRequest *http.Request
-	var httpResponse *http.Response
-	var responseBytes []byte
-	var requestBody []byte
-
-	if requestBody, err = json.Marshal(payload); err != nil {
+func (me *iamClient) POST(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+	body, err := marshalPayload(payload)
+	if err != nil {
 		return nil, err
 	}
+	return handleResponse(me.client.POST(ctx, url, body, options))([]int{expectedResponseCode})
+}
 
-	var body io.Reader
-
-	if payload != nil {
-		body = bytes.NewReader(requestBody)
-	}
-
-	if httpRequest, err = http.NewRequest(method, u, body); err != nil {
+func (me *iamClient) PUT(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+	body, err := marshalPayload(payload)
+	if err != nil {
 		return nil, err
 	}
+	return handleResponse(me.client.PUT(ctx, url, body, options))([]int{expectedResponseCode})
+}
 
-	for k, v := range headers {
-		httpRequest.Header.Add(k, v)
-	}
-
-	httpRequest.Header.Set("User-Agent", version.UserAgent())
-
-	if httpResponse, err = me.client.Do(httpRequest); err != nil {
+func (me *iamClient) PUT_MULTI_RESPONSE(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCodes []int) ([]byte, error) {
+	body, err := marshalPayload(payload)
+	if err != nil {
 		return nil, err
 	}
+	return handleResponse(me.client.PUT(ctx, url, body, options))(expectedResponseCodes)
+}
 
-	if responseBytes, err = io.ReadAll(httpResponse.Body); err != nil {
+func (me *iamClient) GET(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+	return handleResponse(me.client.GET(ctx, url, options))([]int{expectedResponseCode})
+}
+
+func (me *iamClient) DELETE(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+	return handleResponse(me.client.DELETE(ctx, url, options))([]int{expectedResponseCode})
+}
+
+func (me *iamClient) DELETE_MULTI_RESPONSE(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCodes []int) ([]byte, error) {
+	return handleResponse(me.client.DELETE(ctx, url, options))(expectedResponseCodes)
+}
+
+// marshalPayload serializes a request payload to a JSON body. A nil payload yields a nil body.
+func marshalPayload(payload any) (io.Reader, error) {
+	if payload == nil {
+		return nil, nil
+	}
+	requestBody, err := json.Marshal(payload)
+	if err != nil {
 		return nil, err
 	}
+	return bytes.NewReader(requestBody), nil
+}
 
-	if slices.Contains(expectedResponseCodes, httpResponse.StatusCode) {
-		return responseBytes, nil
+// handleResponse reads the response body and validates the status code against the expected
+// codes. It is curried so it can wrap a rest client call directly, e.g.
+// handleResponse(client.GET(...))(expectedResponseCodes).
+func handleResponse(response *http.Response, err error) func(expectedResponseCodes []int) ([]byte, error) {
+	return func(expectedResponseCodes []int) ([]byte, error) {
+		if err != nil {
+			return nil, err
+		}
+		defer response.Body.Close()
+
+		responseBytes, err := io.ReadAll(response.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		if slices.Contains(expectedResponseCodes, response.StatusCode) {
+			return responseBytes, nil
+		}
+
+		return nil, rest.Error{Code: response.StatusCode, Message: fmt.Sprintf("response code %d (expected: %d)", response.StatusCode, expectedResponseCodes)}
 	}
-
-	return nil, rest.Error{Code: httpResponse.StatusCode, Message: fmt.Sprintf("response code %d (expected: %d)", httpResponse.StatusCode, expectedResponseCodes)}
 }
