@@ -21,12 +21,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	serviceusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/serviceusers/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 type ServiceUserService interface {
@@ -73,7 +75,6 @@ func (me *iamClientGetterImp) New(ctx context.Context) iam.IAMClient {
 type serviceUserServiceClient struct {
 	iamClientGetter iamClientGetter
 	accountID       string
-	endpointURL     string
 }
 
 func NewService(credentials *rest.Credentials) ServiceUserService {
@@ -85,8 +86,7 @@ func NewService(credentials *rest.Credentials) ServiceUserService {
 			tokenURL:     credentials.IAM.TokenURL,
 			endpointURL:  credentials.IAM.EndpointURL,
 		},
-		accountID:   credentials.IAM.AccountID,
-		endpointURL: credentials.IAM.EndpointURL,
+		accountID: credentials.IAM.AccountID,
 	}
 }
 
@@ -106,7 +106,7 @@ type createResponse struct {
 }
 
 func (me *serviceUserServiceClient) Create(ctx context.Context, serviceUser *serviceusers.ServiceUser) (*api.Stub, error) {
-	responseBytes, err := me.iamClientGetter.New(ctx).POST(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users", me.endpointURL, me.accountID), serviceUser, 201, false)
+	responseBytes, err := me.iamClientGetter.New(ctx).POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users", me.accountID), serviceUser, rest2.RequestOptions{}, 201)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ type getServiceUserResponse struct {
 }
 
 func (me *serviceUserServiceClient) Get(ctx context.Context, id string, v *serviceusers.ServiceUser) error {
-	responseBytes, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, me.accountID, id), 200, false)
+	responseBytes, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, id), rest2.RequestOptions{}, 200)
 	if err != nil {
 		return err
 	}
@@ -170,7 +170,7 @@ type getUserPartialResponse struct {
 }
 
 func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email string) ([]string, error) {
-	responseBytes, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users/%s", me.endpointURL, me.accountID, email), 200, false)
+	responseBytes, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.accountID, email), rest2.RequestOptions{}, 200)
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +190,7 @@ func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email str
 
 func (me *serviceUserServiceClient) Update(ctx context.Context, id string, serviceUser *serviceusers.ServiceUser) error {
 	// Update the service user details
-	if _, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, me.accountID, id), serviceUser, 200, false); err != nil {
+	if _, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, id), serviceUser, rest2.RequestOptions{}, 200); err != nil {
 		return err
 	}
 
@@ -203,7 +203,7 @@ func (me *serviceUserServiceClient) updateGroupAssignments(ctx context.Context, 
 	if groups == nil {
 		groups = []string{}
 	}
-	_, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/users/%s/groups", me.endpointURL, me.accountID, serviceUserEmail), groups, 200, false)
+	_, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.accountID, serviceUserEmail), groups, rest2.RequestOptions{}, 200)
 	return err
 }
 
@@ -226,10 +226,11 @@ func (me *serviceUserServiceClient) GetAll(ctx context.Context) ([]ServiceUserSt
 	client := me.iamClientGetter.New(ctx)
 
 	var stubs []ServiceUserStub
-	url := fmt.Sprintf("%s/iam/v1/accounts/%s/service-users", me.endpointURL, me.accountID)
+	endpoint := fmt.Sprintf("/iam/v1/accounts/%s/service-users", me.accountID)
+	options := rest2.RequestOptions{}
 
 	for {
-		responseBytes, err := client.GET(ctx, url, 200, false)
+		responseBytes, err := client.GET(ctx, endpoint, options, 200)
 		if err != nil {
 			return nil, err
 		}
@@ -245,7 +246,7 @@ func (me *serviceUserServiceClient) GetAll(ctx context.Context) ([]ServiceUserSt
 		if response.NextPage == "" {
 			break
 		}
-		url = fmt.Sprintf("%s/iam/v1/accounts/%s/service-users?nextPageKey=%s", me.endpointURL, me.accountID, response.NextPage)
+		options.QueryParams = url.Values{"nextPageKey": {response.NextPage}}
 	}
 
 	return stubs, nil
@@ -269,6 +270,6 @@ func (me *serviceUserServiceClient) List(ctx context.Context) (api.Stubs, error)
 }
 
 func (me *serviceUserServiceClient) Delete(ctx context.Context, uid string) error {
-	_, err := me.iamClientGetter.New(ctx).DELETE(ctx, fmt.Sprintf("%s/iam/v1/accounts/%s/service-users/%s", me.endpointURL, me.accountID, uid), 200, false)
+	_, err := me.iamClientGetter.New(ctx).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, uid), rest2.RequestOptions{}, 200)
 	return err
 }

@@ -23,26 +23,22 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"strconv"
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-const (
-	testAccountID   = "test-account-id"
-	testEndpointURL = "https://api.dynatrace.com"
-)
+const testAccountID = "test-account-id"
 
 func newTestClient(mock iam.IAMClient) *BoundaryServiceClient {
 	return &BoundaryServiceClient{
 		iamClientGetter: &testing2.MockIAMClientGetter{Client: mock},
 		accountID:       testAccountID,
-		endpointURL:     testEndpointURL,
 	}
 }
 
@@ -51,17 +47,20 @@ func boundaryPageResponse(items []PolicyBoundary) []byte {
 	return data
 }
 
-func pageURL(page int) string {
-	params := url.Values{}
-	params.Set("size", strconv.Itoa(maxPageSize))
-	params.Set("page", strconv.Itoa(page))
-	return fmt.Sprintf("%s/iam/v1/repo/account/%s/boundaries?%s", testEndpointURL, testAccountID, params.Encode())
+func boundariesPath() string {
+	return fmt.Sprintf("/iam/v1/repo/account/%s/boundaries", testAccountID)
+}
+
+func assertPageRequest(t *testing.T, reqURL string, options rest2.RequestOptions, page int) {
+	assert.Equal(t, boundariesPath(), reqURL)
+	assert.Equal(t, strconv.Itoa(maxPageSize), options.QueryParams.Get("size"))
+	assert.Equal(t, strconv.Itoa(page), options.QueryParams.Get("page"))
 }
 
 func TestBoundaryServiceClient_List(t *testing.T) {
 	t.Run("Returns error on GET failure", func(t *testing.T) {
 		mock := &testing2.MockIAMClient{
-			GETFunc: func(_ context.Context, _ string, _ int, _ bool) ([]byte, error) {
+			GETFunc: func(_ context.Context, _ string, _ rest2.RequestOptions, _ int) ([]byte, error) {
 				return nil, assert.AnError
 			},
 		}
@@ -71,7 +70,7 @@ func TestBoundaryServiceClient_List(t *testing.T) {
 
 	t.Run("Returns error on invalid JSON response", func(t *testing.T) {
 		mock := &testing2.MockIAMClient{
-			GETFunc: func(_ context.Context, _ string, _ int, _ bool) ([]byte, error) {
+			GETFunc: func(_ context.Context, _ string, _ rest2.RequestOptions, _ int) ([]byte, error) {
 				return []byte("not-json"), nil
 			},
 		}
@@ -82,7 +81,7 @@ func TestBoundaryServiceClient_List(t *testing.T) {
 
 	t.Run("Returns empty stubs for empty response", func(t *testing.T) {
 		mock := &testing2.MockIAMClient{
-			GETFunc: func(_ context.Context, _ string, _ int, _ bool) ([]byte, error) {
+			GETFunc: func(_ context.Context, _ string, _ rest2.RequestOptions, _ int) ([]byte, error) {
 				return boundaryPageResponse(nil), nil
 			},
 		}
@@ -98,9 +97,9 @@ func TestBoundaryServiceClient_List(t *testing.T) {
 		}
 		callCount := 0
 		mock := &testing2.MockIAMClient{
-			GETFunc: func(_ context.Context, reqURL string, _ int, _ bool) ([]byte, error) {
+			GETFunc: func(_ context.Context, reqURL string, options rest2.RequestOptions, _ int) ([]byte, error) {
 				callCount++
-				assert.Equal(t, pageURL(1), reqURL)
+				assertPageRequest(t, reqURL, options, 1)
 				return boundaryPageResponse(items), nil
 			},
 		}
@@ -127,14 +126,14 @@ func TestBoundaryServiceClient_List(t *testing.T) {
 
 		callCount := 0
 		mock := &testing2.MockIAMClient{
-			GETFunc: func(_ context.Context, reqURL string, _ int, _ bool) ([]byte, error) {
+			GETFunc: func(_ context.Context, reqURL string, options rest2.RequestOptions, _ int) ([]byte, error) {
 				callCount++
 				switch callCount {
 				case 1:
-					assert.Equal(t, pageURL(1), reqURL)
+					assertPageRequest(t, reqURL, options, 1)
 					return boundaryPageResponse(fullPage), nil
 				case 2:
-					assert.Equal(t, pageURL(2), reqURL)
+					assertPageRequest(t, reqURL, options, 2)
 					return boundaryPageResponse(page2), nil
 				default:
 					return nil, fmt.Errorf("unexpected page request %d", callCount)
@@ -152,7 +151,7 @@ func TestBoundaryServiceClient_List(t *testing.T) {
 		fullPage := make([]PolicyBoundary, maxPageSize)
 		callCount := 0
 		mock := &testing2.MockIAMClient{
-			GETFunc: func(_ context.Context, _ string, _ int, _ bool) ([]byte, error) {
+			GETFunc: func(_ context.Context, _ string, _ rest2.RequestOptions, _ int) ([]byte, error) {
 				callCount++
 				if callCount == 1 {
 					return boundaryPageResponse(fullPage), nil
