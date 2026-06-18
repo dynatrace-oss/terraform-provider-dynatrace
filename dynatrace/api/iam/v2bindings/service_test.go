@@ -26,12 +26,20 @@ import (
 )
 
 func TestAccTestCasesV2Bindings(t *testing.T) {
+	setAccountEnv(t)
+	api.TestAccTestCases(t)
+}
+
+func TestAccV2Bindings(t *testing.T) {
+	setAccountEnv(t)
+	api.TestAcc(t)
+}
+
+func setAccountEnv(t *testing.T) {
 	accountID := os.Getenv("DT_ACCOUNT_ID")
 	//fallback to DYNATRACE_ACCOUNT_ID
 	if accountID == "" {
 		accountID = os.Getenv("DYNATRACE_ACCOUNT_ID")
 	}
 	t.Setenv("TF_VAR_ACCOUNT_ID", accountID)
-
-	api.TestAccTestCases(t)
 }
