@@ -66,7 +66,7 @@ func NewIAMClient(ctx context.Context, a Authenticator) IAMClient {
 			DelayAfterRetry: time.Second * 60,
 			MaxRetries:      10,
 			ShouldRetryFunc: func(resp *http.Response) bool {
-				return resp.StatusCode == 429 || resp.StatusCode == 504
+				return rest2.RetryIfTooManyRequestsOrServiceUnavailable(resp) || resp.StatusCode == http.StatusBadGateway || resp.StatusCode == http.StatusGatewayTimeout
 			},
 		}),
 	}
