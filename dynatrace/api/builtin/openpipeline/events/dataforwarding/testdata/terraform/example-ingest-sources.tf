@@ -2,10 +2,10 @@ resource "dynatrace_openpipeline_v2_events_dataforwarding" "example" {
   forwarding_name   = "#name#"
   enabled           = false
   matcher           = "true"
-  cloud_vendor_type = "aws"
-  aws_connection {
-    arn           = "arn:aws:iam::aws:role/#name#"
-    connection_id = dynatrace_aws_connection.test-aws-connection.id
+  cloud_vendor_type = "gcp"
+  gcp_connection {
+    bucket_name   = "my-bucket"
+    connection_id = dynatrace_gcp_connection.connection.id
   }
   data_forwarding_type = "raw"
   ingest_sources       = [dynatrace_openpipeline_v2_events_ingestsources.source.id]
@@ -84,9 +84,20 @@ resource "dynatrace_openpipeline_v2_events_ingestsources" "source" {
 }
 
 
-resource "dynatrace_aws_connection" "test-aws-connection" {
+# Create GCP connection
+variable "DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT" {
+  type        = string
+  description = "The service account that should be used for the GCP connection setup end-to-end test."
+  sensitive   = true
+}
+
+resource "dynatrace_gcp_connection" "connection" {
   name = "#name#"
-  role_based_auth {
-    consumers = ["SVC:com.dynatrace.openpipeline"]
+  type = "serviceAccountImpersonation"
+  service_account_impersonation {
+    service_account_id = var.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT
+    consumers = [
+      "SVC:com.dynatrace.openpipeline"
+    ]
   }
 }
