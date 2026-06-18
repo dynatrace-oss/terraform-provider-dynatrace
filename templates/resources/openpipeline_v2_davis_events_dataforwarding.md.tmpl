@@ -1,12 +1,12 @@
 ---
 layout: ""
-page_title: "dynatrace_openpipeline_v2_spans_dataforwarding Resource - terraform-provider-dynatrace"
+page_title: "dynatrace_openpipeline_v2_davis_events_dataforwarding Resource - terraform-provider-dynatrace"
 subcategory: "OpenPipeline V2"
 description: |-
-  The resource `dynatrace_openpipeline_v2_spans_dataforwarding` covers configuration of OpenPipeline for spans data forwarding
+  The resource `dynatrace_openpipeline_v2_davis_events_dataforwarding` covers configuration of OpenPipeline for davis events data forwarding
 ---
 
-# dynatrace_openpipeline_v2_spans_dataforwarding (Resource)
+# dynatrace_openpipeline_v2_davis_events_dataforwarding (Resource)
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
@@ -30,15 +30,16 @@ In case an API token is needed, we recommend setting `DYNATRACE_HTTP_OAUTH_PREFE
 ## Dynatrace Documentation
 
 - OpenPipeline - https://docs.dynatrace.com/docs/platform/openpipeline
+- Forwarding - https://docs.dynatrace.com/docs/platform/openpipeline/concepts/forwarding
 
 ## Export Example Usage
 
-- `terraform-provider-dynatrace -export dynatrace_openpipeline_v2_spans_dataforwarding` downloads all existing OpenPipeline definitions for spans data forwarding
+- `terraform-provider-dynatrace -export dynatrace_openpipeline_v2_davis_events_dataforwarding` downloads all existing OpenPipeline definitions for davis events data forwarding
 
 The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
 
-{{ tffile "dynatrace/api/builtin/openpipeline/spans/dataforwarding/testdata/terraform/example.tf" }}
+{{ tffile "dynatrace/api/builtin/openpipeline/davis/events/dataforwarding/testdata/terraform/example.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
