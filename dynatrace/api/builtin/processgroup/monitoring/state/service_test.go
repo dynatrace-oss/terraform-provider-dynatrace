@@ -1,4 +1,4 @@
-//go:build sequential_integration
+//go:build sequential_integration && monitored
 
 /**
 * @license
