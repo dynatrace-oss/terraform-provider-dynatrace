@@ -25,8 +25,10 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
-func TestOpenPipelineSpansPipelines(t *testing.T) {
-	t.Skip("Feature not enabled")
-
+func TestAccOpenPipelineSpansPipelines(t *testing.T) {
 	api.TestAcc(t)
+}
+
+func TestAccTestCasesOpenPipelineSpansPipelines(t *testing.T) {
+	api.TestAccTestCases(t)
 }

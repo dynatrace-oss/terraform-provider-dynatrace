@@ -548,6 +548,19 @@ var ResourceTypes = struct {
 	MaintenanceWindows                       ResourceType
 	GCPConnection                            ResourceType
 	GCPPrincipal                             ResourceType
+	OpenpipelineBizeventsDataforwarding      ResourceType
+	OpenpipelineDavisEventsDataforwarding    ResourceType
+	OpenpipelineDavisProblemsDataforwarding  ResourceType
+	OpenpipelineEventsDataforwarding         ResourceType
+	OpenpipelineEventsSdlcDataforwarding     ResourceType
+	OpenpipelineEventsSecurityDataforwarding ResourceType
+	OpenpipelineLogsDataforwarding           ResourceType
+	OpenpipelineMetricsDataforwarding        ResourceType
+	OpenpipelineSecurityEventsDataforwarding ResourceType
+	OpenpipelineSpansDataforwarding          ResourceType
+	OpenpipelineSystemEventsDataforwarding   ResourceType
+	OpenpipelineUserEventsDataforwarding     ResourceType
+	OpenpipelineUsersessionsDataforwarding   ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -974,6 +987,19 @@ var ResourceTypes = struct {
 	"dynatrace_maintenance_windows",
 	"dynatrace_gcp_connection",
 	"dynatrace_gcp_principal",
+	"dynatrace_openpipeline_bizevents_dataforwarding",
+	"dynatrace_openpipeline_davis_events_dataforwarding",
+	"dynatrace_openpipeline_davis_problems_dataforwarding",
+	"dynatrace_openpipeline_events_dataforwarding",
+	"dynatrace_openpipeline_events_sdlc_dataforwarding",
+	"dynatrace_openpipeline_events_security_dataforwarding",
+	"dynatrace_openpipeline_logs_dataforwarding",
+	"dynatrace_openpipeline_metrics_dataforwarding",
+	"dynatrace_openpipeline_security_events_dataforwarding",
+	"dynatrace_openpipeline_spans_dataforwarding",
+	"dynatrace_openpipeline_system_events_dataforwarding",
+	"dynatrace_openpipeline_user_events_dataforwarding",
+	"dynatrace_openpipeline_usersessions_dataforwarding",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
