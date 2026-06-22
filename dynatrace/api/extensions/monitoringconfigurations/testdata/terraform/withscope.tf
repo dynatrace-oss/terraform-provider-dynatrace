@@ -2,21 +2,20 @@ data "dynatrace_entities" "hosts" {
   type = "HOST"
 }
 
-resource "dynatrace_hub_extension_v2_config" "com_dynatrace_extension_jmx-weblogic-cp" {
-  name  = "com.dynatrace.extension.jmx-weblogic-cp"
+resource "dynatrace_hub_extension_v2_config" "com_dynatrace_extension_wmi_iis" {
+  name = "com.dynatrace.extension.wmi.iis"
   scope = data.dynatrace_entities.hosts.entities[0].entity_id // or "environment"
   value = jsonencode(
     {
-      "activationContext" : "LOCAL",
-      "activationTags" : [],
-      "enabled" : true,
-      "description" : "my description",
-      "version" : "2.1.1",
-      "featureSets" : [
-        "cache",
-        "connections",
-        "capacity"
-      ]
+      "enabled": true,
+      "description": "my description",
+      "version": "1.1.1",
+      "featureSets": [
+        "IIS Extended Request Metrics"
+      ],
+      "vars": {},
+      "activationContext": "LOCAL",
+      "activationTags": []
     }
   )
 }

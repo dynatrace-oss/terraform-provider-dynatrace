@@ -1,4 +1,4 @@
-resource "dynatrace_hub_extension_active_version" "jmx-weblogic-cp" {
-  name    = "com.dynatrace.extension.jmx-weblogic-cp"
-  version = "2.1.1"
+resource "dynatrace_hub_extension_active_version" "com_dynatrace_extension_wmi_iis" {
+  name    = "com.dynatrace.extension.wmi.iis"
+  version = "2.0.1"
 }
