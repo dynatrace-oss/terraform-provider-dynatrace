@@ -1,5 +1,5 @@
 data "dynatrace_hub_extension_v2_latest_version" "latest_version" {
-  name = "com.dynatrace.extension.jmx-weblogic-cp"
+  name = "com.dynatrace.extension.wmi.iis"
 }
 
 output "latest_version" {

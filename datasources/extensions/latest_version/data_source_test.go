@@ -39,7 +39,7 @@ func TestAccExtensionsLatestVersion(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: datasourceConfig,
-				Check:  resource.TestCheckOutput("latest_version", "2.1.1"),
+				Check:  resource.TestCheckOutput("latest_version", "2.0.1"),
 			},
 		},
 	})
