@@ -27,6 +27,7 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/stretchr/testify/assert"
@@ -60,8 +61,8 @@ func assertPageRequest(t *testing.T, reqURL string, options rest2.RequestOptions
 func TestBoundaryServiceClient_List(t *testing.T) {
 	t.Run("Returns error on GET failure", func(t *testing.T) {
 		mock := &testing2.MockIAMClient{
-			GETFunc: func(_ context.Context, _ string, _ rest2.RequestOptions, _ int) ([]byte, error) {
-				return nil, assert.AnError
+			GETFunc: func(_ context.Context, _ string, _ rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, assert.AnError
 			},
 		}
 		_, err := newTestClient(mock).List(t.Context())
@@ -70,8 +71,8 @@ func TestBoundaryServiceClient_List(t *testing.T) {
 
 	t.Run("Returns error on invalid JSON response", func(t *testing.T) {
 		mock := &testing2.MockIAMClient{
-			GETFunc: func(_ context.Context, _ string, _ rest2.RequestOptions, _ int) ([]byte, error) {
-				return []byte("not-json"), nil
+			GETFunc: func(_ context.Context, _ string, _ rest2.RequestOptions) (api.Response, error) {
+				return api.Response{Data: []byte("not-json")}, nil
 			},
 		}
 		_, err := newTestClient(mock).List(t.Context())
@@ -81,8 +82,8 @@ func TestBoundaryServiceClient_List(t *testing.T) {
 
 	t.Run("Returns empty stubs for empty response", func(t *testing.T) {
 		mock := &testing2.MockIAMClient{
-			GETFunc: func(_ context.Context, _ string, _ rest2.RequestOptions, _ int) ([]byte, error) {
-				return boundaryPageResponse(nil), nil
+			GETFunc: func(_ context.Context, _ string, _ rest2.RequestOptions) (api.Response, error) {
+				return api.Response{Data: boundaryPageResponse(nil)}, nil
 			},
 		}
 		stubs, err := newTestClient(mock).List(t.Context())
@@ -97,10 +98,10 @@ func TestBoundaryServiceClient_List(t *testing.T) {
 		}
 		callCount := 0
 		mock := &testing2.MockIAMClient{
-			GETFunc: func(_ context.Context, reqURL string, options rest2.RequestOptions, _ int) ([]byte, error) {
+			GETFunc: func(_ context.Context, reqURL string, options rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				assertPageRequest(t, reqURL, options, 1)
-				return boundaryPageResponse(items), nil
+				return api.Response{Data: boundaryPageResponse(items)}, nil
 			},
 		}
 
@@ -126,17 +127,17 @@ func TestBoundaryServiceClient_List(t *testing.T) {
 
 		callCount := 0
 		mock := &testing2.MockIAMClient{
-			GETFunc: func(_ context.Context, reqURL string, options rest2.RequestOptions, _ int) ([]byte, error) {
+			GETFunc: func(_ context.Context, reqURL string, options rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				switch callCount {
 				case 1:
 					assertPageRequest(t, reqURL, options, 1)
-					return boundaryPageResponse(fullPage), nil
+					return api.Response{Data: boundaryPageResponse(fullPage)}, nil
 				case 2:
 					assertPageRequest(t, reqURL, options, 2)
-					return boundaryPageResponse(page2), nil
+					return api.Response{Data: boundaryPageResponse(page2)}, nil
 				default:
-					return nil, fmt.Errorf("unexpected page request %d", callCount)
+					return api.Response{}, fmt.Errorf("unexpected page request %d", callCount)
 				}
 			},
 		}
@@ -151,12 +152,12 @@ func TestBoundaryServiceClient_List(t *testing.T) {
 		fullPage := make([]PolicyBoundary, maxPageSize)
 		callCount := 0
 		mock := &testing2.MockIAMClient{
-			GETFunc: func(_ context.Context, _ string, _ rest2.RequestOptions, _ int) ([]byte, error) {
+			GETFunc: func(_ context.Context, _ string, _ rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				if callCount == 1 {
-					return boundaryPageResponse(fullPage), nil
+					return api.Response{Data: boundaryPageResponse(fullPage)}, nil
 				}
-				return nil, assert.AnError
+				return api.Response{}, assert.AnError
 			},
 		}
 

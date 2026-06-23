@@ -21,12 +21,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"strings"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
@@ -49,25 +49,23 @@ func GetEnvironmentIDs(ctx context.Context, auth iam.Authenticator) ([]string, e
 // and `levelID` it returns false, without returning an error
 // An error is returned ONLY if querying for the existence of the policy failed for another reason than `404 Not Found`
 func CheckPolicyExists(ctx context.Context, auth iam.Authenticator, levelType string, levelID string, policyUUID string) (bool, string, error) {
-	var err error
-
-	response := struct {
+	levelPolicy := struct {
 		UUID string `json:"uuid"`
 		Name string `json:"name"`
 	}{}
 	client := iam.NewIAMClient(ctx, auth)
-	var responseBytes []byte
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, policyUUID), rest2.RequestOptions{}, 200); err != nil {
-		// TODO: this is dirty. The IAM client unfortunately doesn't produce special kinds errors. string compare is the only option atm
-		if strings.HasPrefix(err.Error(), "response code 404") {
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, policyUUID), rest2.RequestOptions{})
+	if err != nil {
+		// A 404 Not Found means the policy is not defined at the given level - that is not an error here
+		if coreapi.IsNotFoundError(err) {
 			return false, "", nil
 		}
 		return false, "", err
 	}
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
+	if err = json.Unmarshal(response.Data, &levelPolicy); err != nil {
 		return false, "", err
 	}
-	return true, response.Name, nil
+	return true, levelPolicy.Name, nil
 }
 
 // FetchPolicyLevel determines the `levelType` and `levelID` of a policy identified by its UUID
@@ -232,16 +230,16 @@ func fetchGlobalPolicies(ctx context.Context, auth iam.Authenticator) (results c
 			defer close(results)
 		}()
 
-		var response ListPoliciesResponse
-		responseBytes, err := client.GET(ctx, "/iam/v1/repo/global/global/policies", rest2.RequestOptions{}, 200)
+		var policyList ListPoliciesResponse
+		response, err := client.GET(ctx, "/iam/v1/repo/global/global/policies", rest2.RequestOptions{})
 		if err != nil {
 			return
 		}
-		if err := json.Unmarshal(responseBytes, &response); err != nil {
+		if err := json.Unmarshal(response.Data, &policyList); err != nil {
 			return
 		}
 
-		for _, policy := range response.Policies {
+		for _, policy := range policyList.Policies {
 			results <- &api.Stub{ID: fmt.Sprintf("%s#-#%s#-#%s", policy.UUID, "global", "global"), Name: policy.Name}
 		}
 	}()
@@ -317,14 +315,12 @@ func fetchAllPolicyLevels(ctx context.Context, auth iam.Authenticator) (m map[st
 func getEnvironmentIDs(ctx context.Context, auth iam.Authenticator) ([]string, error) {
 	client := iam.NewIAMClient(ctx, auth)
 
-	var err error
-
 	var envResponse ListEnvResponse
-	var responseBytes []byte
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", auth.AccountID()), rest2.RequestOptions{}, 200); err != nil {
+	response, err := client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", auth.AccountID()), rest2.RequestOptions{})
+	if err != nil {
 		return nil, err
 	}
-	if err = json.Unmarshal(responseBytes, &envResponse); err != nil {
+	if err = json.Unmarshal(response.Data, &envResponse); err != nil {
 		return nil, err
 	}
 

@@ -21,11 +21,9 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
-	"slices"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -33,17 +31,19 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"golang.org/x/oauth2/clientcredentials"
 
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
+// IAMClient performs HTTP requests against the IAM REST API. Each method returns an api.Response
+// for any successful (2xx) response. Any non-2xx response is returned as an api.APIError, which
+// call sites can inspect (e.g. via errors.AsType) when a specific non-2xx code is expected.
 type IAMClient interface {
-	POST(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error)
-	PUT(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error)
-	PUT_MULTI_RESPONSE(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCodes []int) ([]byte, error)
-	GET(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error)
-	DELETE(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error)
-	DELETE_MULTI_RESPONSE(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCodes []int) ([]byte, error)
+	POST(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error)
+	PUT(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error)
+	GET(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
+	DELETE(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
 }
 
 type iamClient struct {
@@ -76,40 +76,45 @@ func NewIAMClient(ctx context.Context, a Authenticator) IAMClient {
 	return &iamClient{a, client}
 }
 
-func (me *iamClient) POST(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+func (me *iamClient) POST(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 	body, err := marshalPayload(payload)
 	if err != nil {
-		return nil, err
+		return api.Response{}, err
 	}
-	return handleResponse(me.client.POST(ctx, url, body, options))([]int{expectedResponseCode})
+	httpResponse, err := me.client.POST(ctx, url, body, options)
+	if err != nil {
+		return api.Response{}, err
+	}
+	return api.NewResponseFromHTTPResponse(httpResponse)
+
 }
 
-func (me *iamClient) PUT(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+func (me *iamClient) PUT(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 	body, err := marshalPayload(payload)
 	if err != nil {
-		return nil, err
+		return api.Response{}, err
 	}
-	return handleResponse(me.client.PUT(ctx, url, body, options))([]int{expectedResponseCode})
-}
-
-func (me *iamClient) PUT_MULTI_RESPONSE(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCodes []int) ([]byte, error) {
-	body, err := marshalPayload(payload)
+	httpResponse, err := me.client.PUT(ctx, url, body, options)
 	if err != nil {
-		return nil, err
+		return api.Response{}, err
 	}
-	return handleResponse(me.client.PUT(ctx, url, body, options))(expectedResponseCodes)
+	return api.NewResponseFromHTTPResponse(httpResponse)
 }
 
-func (me *iamClient) GET(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-	return handleResponse(me.client.GET(ctx, url, options))([]int{expectedResponseCode})
+func (me *iamClient) GET(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+	httpResponse, err := me.client.GET(ctx, url, options)
+	if err != nil {
+		return api.Response{}, err
+	}
+	return api.NewResponseFromHTTPResponse(httpResponse)
 }
 
-func (me *iamClient) DELETE(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-	return handleResponse(me.client.DELETE(ctx, url, options))([]int{expectedResponseCode})
-}
-
-func (me *iamClient) DELETE_MULTI_RESPONSE(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCodes []int) ([]byte, error) {
-	return handleResponse(me.client.DELETE(ctx, url, options))(expectedResponseCodes)
+func (me *iamClient) DELETE(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+	httpResponse, err := me.client.DELETE(ctx, url, options)
+	if err != nil {
+		return api.Response{}, err
+	}
+	return api.NewResponseFromHTTPResponse(httpResponse)
 }
 
 // marshalPayload serializes a request payload to a JSON body. A nil payload yields a nil body.
@@ -122,27 +127,4 @@ func marshalPayload(payload any) (io.Reader, error) {
 		return nil, err
 	}
 	return bytes.NewReader(requestBody), nil
-}
-
-// handleResponse reads the response body and validates the status code against the expected
-// codes. It is curried so it can wrap a rest client call directly, e.g.
-// handleResponse(client.GET(...))(expectedResponseCodes).
-func handleResponse(response *http.Response, err error) func(expectedResponseCodes []int) ([]byte, error) {
-	return func(expectedResponseCodes []int) ([]byte, error) {
-		if err != nil {
-			return nil, err
-		}
-		defer response.Body.Close()
-
-		responseBytes, err := io.ReadAll(response.Body)
-		if err != nil {
-			return nil, err
-		}
-
-		if slices.Contains(expectedResponseCodes, response.StatusCode) {
-			return responseBytes, nil
-		}
-
-		return nil, rest.Error{Code: response.StatusCode, Message: fmt.Sprintf("response code %d (expected: %d)", response.StatusCode, expectedResponseCodes)}
-	}
 }

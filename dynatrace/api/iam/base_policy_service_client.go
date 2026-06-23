@@ -58,44 +58,38 @@ func NewBasePolicyService(clientID string, accountID string, clientSecret string
 }
 
 func (me *BasePolicyServiceClient) CREATE(ctx context.Context, level PolicyLevel, levelID string, policy *Policy) (string, error) {
-	var err error
-	var responseBytes []byte
-
 	client := NewIAMClient(ctx, me)
-	if responseBytes, err = client.POST(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies", level, levelID), policy, rest2.RequestOptions{}, 201); err != nil {
+	response, err := client.POST(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies", level, levelID), policy, rest2.RequestOptions{})
+	if err != nil {
 		return "", err
 	}
 
 	stub := PolicyStub{}
-	if err = json.Unmarshal(responseBytes, &stub); err != nil {
+	if err = json.Unmarshal(response.Data, &stub); err != nil {
 		return "", err
 	}
 	return stub.UUID, nil
 }
 
 func (me *BasePolicyServiceClient) GET(ctx context.Context, level PolicyLevel, levelID string, uuid string) (*Policy, error) {
-	var err error
-	var responseBytes []byte
-
 	client := NewIAMClient(ctx, me)
 
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", level, levelID, uuid), rest2.RequestOptions{}, 200); err != nil {
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", level, levelID, uuid), rest2.RequestOptions{})
+	if err != nil {
 		return nil, err
 	}
 
-	var response Policy
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
+	var policyResponse Policy
+	if err = json.Unmarshal(response.Data, &policyResponse); err != nil {
 		return nil, err
 	}
-	return &response, nil
+	return &policyResponse, nil
 }
 
 func (me *BasePolicyServiceClient) UPDATE(ctx context.Context, level PolicyLevel, levelID string, policy *Policy, uuid string) error {
-	var err error
-
 	client := NewIAMClient(ctx, me)
 
-	if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", level, levelID, uuid), policy, rest2.RequestOptions{}, 200); err != nil {
+	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", level, levelID, uuid), policy, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 	return nil
@@ -112,25 +106,21 @@ type ListPoliciesResponse struct {
 }
 
 func (me *BasePolicyServiceClient) List(ctx context.Context, level PolicyLevel, levelID string) ([]PolicyStub, error) {
-	var err error
-	var responseBytes []byte
-
-	if responseBytes, err = NewIAMClient(ctx, me).GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies", level, levelID), rest2.RequestOptions{}, 200); err != nil {
+	response, err := NewIAMClient(ctx, me).GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies", level, levelID), rest2.RequestOptions{})
+	if err != nil {
 		return nil, err
 	}
 
-	var response ListPoliciesResponse
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
+	var policiesResponse ListPoliciesResponse
+	if err = json.Unmarshal(response.Data, &policiesResponse); err != nil {
 		return nil, err
 	}
-	return response.Items, nil
+	return policiesResponse.Items, nil
 }
 
 func (me *BasePolicyServiceClient) LIST(ctx context.Context, level PolicyLevel, levelID string) ([]string, error) {
-	var err error
-
-	var userStubs []PolicyStub
-	if userStubs, err = me.List(ctx, level, levelID); err != nil {
+	userStubs, err := me.List(ctx, level, levelID)
+	if err != nil {
 		return nil, err
 	}
 	ids := []string{}
@@ -141,6 +131,6 @@ func (me *BasePolicyServiceClient) LIST(ctx context.Context, level PolicyLevel, 
 }
 
 func (me *BasePolicyServiceClient) DELETE(ctx context.Context, level PolicyLevel, levelID string, uuid string) error {
-	_, err := NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", level, levelID, uuid), rest2.RequestOptions{}, 204)
+	_, err := NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", level, levelID, uuid), rest2.RequestOptions{})
 	return err
 }

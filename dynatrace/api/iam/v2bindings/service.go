@@ -80,8 +80,7 @@ type PolicyCreateResponse struct {
 
 func (me *BindingServiceClient) Create(ctx context.Context, v *bindings.PolicyBinding) (*api.Stub, error) {
 	id := joinID(v)
-	var err error
-	if err = me.Update(ctx, id, v); err != nil {
+	if err := me.Update(ctx, id, v); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: id, Name: "PolicyV2Bindings-" + id}, nil
@@ -135,12 +134,13 @@ func (me *BindingServiceClient) getGroupPolicyBindings(ctx context.Context, id s
 	client := iam.NewIAMClient(ctx, me)
 
 	var policyBindings GroupPolicyBindings
-	var responseBytes []byte
+
 	queryParams := url.Values{"details": []string{"true"}}
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), rest2.RequestOptions{QueryParams: queryParams}, 200); err != nil {
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), rest2.RequestOptions{QueryParams: queryParams})
+	if err != nil {
 		return GroupPolicyBindings{}, err
 	}
-	if err = json.Unmarshal(responseBytes, &policyBindings); err != nil {
+	if err = json.Unmarshal(response.Data, &policyBindings); err != nil {
 		return GroupPolicyBindings{}, err
 	}
 	return policyBindings, nil
@@ -249,7 +249,7 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindin
 			Metadata:   desiredPolicy.Metadata,
 			Boundaries: desiredPolicy.Boundaries,
 		}
-		if _, err = client.POST(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyUUID, groupID), payload, rest2.RequestOptions{}, 204); err != nil {
+		if _, err = client.POST(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyUUID, groupID), payload, rest2.RequestOptions{}); err != nil {
 			return err
 		}
 	}
@@ -272,21 +272,20 @@ func (me *BindingServiceClient) FetchAccountBindings(ctx context.Context) chan *
 			close(results)
 		}()
 
-		var err error
-		var response ListPolicyBindingsResponse
+		var policyBindings ListPolicyBindingsResponse
 		client := iam.NewIAMClient(ctx, me)
 
-		var responseBytes []byte
-		if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/bindings", me.AccountID()), rest2.RequestOptions{}, 200); err != nil {
+		response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/bindings", me.AccountID()), rest2.RequestOptions{})
+		if err != nil {
 			return
 		}
-		if err = json.Unmarshal(responseBytes, &response); err != nil {
+		if err = json.Unmarshal(response.Data, &policyBindings); err != nil {
 			return
 		}
 
 		var stubs api.Stubs
 		groupIds := map[string]bool{}
-		for _, policy := range response.PolicyBindings {
+		for _, policy := range policyBindings.PolicyBindings {
 			for _, group := range policy.Groups {
 				if _, exists := groupIds[group]; !exists {
 					id := fmt.Sprintf("%s#-#%s#-#%s", group, "account", me.AccountID())
@@ -308,27 +307,26 @@ func (me *BindingServiceClient) FetchEnvironmentBindings(ctx context.Context) ch
 		defer func() {
 			close(results)
 		}()
-		var err error
 		client := iam.NewIAMClient(ctx, me)
 
-		var environmentIDs []string
-		if environmentIDs, err = policies.GetEnvironmentIDs(ctx, me); err != nil {
+		environmentIDs, err := policies.GetEnvironmentIDs(ctx, me)
+		if err != nil {
 			return
 		}
 
 		var stubs api.Stubs
 		for _, environmentID := range environmentIDs {
-			var response ListPolicyBindingsResponse
-			var responseBytes []byte
-			if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/environment/%s/bindings", environmentID), rest2.RequestOptions{}, 200); err != nil {
+			var policyBindings ListPolicyBindingsResponse
+			response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/environment/%s/bindings", environmentID), rest2.RequestOptions{})
+			if err != nil {
 				return
 			}
-			if err = json.Unmarshal(responseBytes, &response); err != nil {
+			if err = json.Unmarshal(response.Data, &policyBindings); err != nil {
 				return
 			}
 
 			groupIds := map[string]bool{}
-			for _, policy := range response.PolicyBindings {
+			for _, policy := range policyBindings.PolicyBindings {
 				for _, group := range policy.Groups {
 					if _, exists := groupIds[group]; !exists {
 						id := fmt.Sprintf("%s#-#%s#-#%s", group, "environment", environmentID)
@@ -394,7 +392,7 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 	groupBindings := groupPolicyBindingsUpdate{
 		PolicyUuids: make([]string, 0),
 	}
-	_, err = iam.NewIAMClient(ctx, me).PUT(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), groupBindings, rest2.RequestOptions{}, 204)
+	_, err = iam.NewIAMClient(ctx, me).PUT(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), groupBindings, rest2.RequestOptions{})
 	return err
 }
 

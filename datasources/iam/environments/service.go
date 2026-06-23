@@ -79,21 +79,20 @@ type Response struct {
 
 func (ec *environmentsService) Get(ctx context.Context) ([]Environment, error) {
 	u, err := url.JoinPath(baseURL, ec.AccountID(), "environments")
-
 	if err != nil {
 		return nil, err
 	}
 
 	client := iam.NewIAMClient(ctx, ec)
-	responseBytes, err := client.GET(ctx, u, rest2.RequestOptions{}, 200)
+	response, err := client.GET(ctx, u, rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
 
-	var result Response
-	if err = json.Unmarshal(responseBytes, &result); err != nil {
+	var environmentResponse Response
+	if err = json.Unmarshal(response.Data, &environmentResponse); err != nil {
 		return nil, err
 	}
 
-	return result.Data, nil
+	return environmentResponse.Data, nil
 }
