@@ -75,8 +75,6 @@ func (me *PermissionServiceClient) Name() string {
 }
 
 func (me *PermissionServiceClient) Create(ctx context.Context, permission *permissions.Permission) (*api.Stub, error) {
-	var err error
-
 	client := iam.NewIAMClient(ctx, me)
 	scope := ""
 	scopeType := ""
@@ -96,7 +94,7 @@ func (me *PermissionServiceClient) Create(ctx context.Context, permission *permi
 		ScopeType: scopeType,
 		Name:      permission.Name,
 	}}
-	if _, err = client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), permission.GroupID), payload, rest2.RequestOptions{}, 201); err != nil {
+	if _, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), permission.GroupID), payload, rest2.RequestOptions{}); err != nil {
 		return nil, err
 	}
 
@@ -108,30 +106,24 @@ type GetGroupPermissionsResponse struct {
 }
 
 func (me *PermissionServiceClient) Get(ctx context.Context, id string, v *permissions.Permission) error {
-	var err error
-	var responseBytes []byte
-
 	client := iam.NewIAMClient(ctx, me)
 
-	parts := strings.Split(id, "#-#")
-	if len(parts) < 4 {
-		return fmt.Errorf("'%s' is not a valid permission ID", id)
-	}
-	groupID := parts[0]
-	name := parts[1]
-	scope := parts[2]
-	scopeType := parts[3]
-
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), groupID), rest2.RequestOptions{}, 200); err != nil {
+	groupID, name, scope, scopeType, err := splitID(id)
+	if err != nil {
 		return err
 	}
 
-	var response GetGroupPermissionsResponse
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), groupID), rest2.RequestOptions{})
+	if err != nil {
 		return err
 	}
-	if len(response.Permissions) > 0 {
-		for _, permission := range response.Permissions {
+
+	var groupPermissionsResponse GetGroupPermissionsResponse
+	if err = json.Unmarshal(response.Data, &groupPermissionsResponse); err != nil {
+		return err
+	}
+	if len(groupPermissionsResponse.Permissions) > 0 {
+		for _, permission := range groupPermissionsResponse.Permissions {
 			permissionID := permission.ToID(groupID)
 			if permissionID == id {
 				v.GroupID = groupID
@@ -171,17 +163,17 @@ func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) 
 
 		accountID := me.AccountID()
 
-		var response GetGroupPermissionsResponse
-		responseBytes, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", accountID, groupID), rest2.RequestOptions{}, 200)
+		var groupPermissionsResponse GetGroupPermissionsResponse
+		response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", accountID, groupID), rest2.RequestOptions{})
 		if err != nil {
 			return nil, err
 		}
-		if err = json.Unmarshal(responseBytes, &response); err != nil {
+		if err = json.Unmarshal(response.Data, &groupPermissionsResponse); err != nil {
 			return nil, err
 		}
 
-		if len(response.Permissions) > 0 {
-			for _, permission := range response.Permissions {
+		if len(groupPermissionsResponse.Permissions) > 0 {
+			for _, permission := range groupPermissionsResponse.Permissions {
 				permissionID := strings.Join([]string{groupID, permission.Name, permission.Scope, permission.ScopeType}, "#-#")
 				stubs = append(stubs, &api.Stub{ID: permissionID, Name: permissionID})
 			}
@@ -192,23 +184,27 @@ func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) 
 }
 
 func (me *PermissionServiceClient) Delete(ctx context.Context, id string) error {
-	parts := strings.Split(id, "#-#")
-	if len(parts) < 4 {
-		return fmt.Errorf("'%s' is not a valid permission ID", id)
+	groupID, name, scope, scopeType, err := splitID(id)
+	if err != nil {
+		return err
 	}
-	groupID := parts[0]
-	name := parts[1]
-	scope := parts[2]
-	scopeType := parts[3]
 
 	queryParams := url.Values{}
 	queryParams.Set("scope", scope)
 	queryParams.Set("permission-name", name)
 	queryParams.Set("scope-type", scopeType)
 
-	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), groupID), rest2.RequestOptions{QueryParams: queryParams}, 200)
+	_, err = iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.AccountID(), groupID), rest2.RequestOptions{QueryParams: queryParams})
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("Permission %s not found", id)) {
 		return nil
 	}
 	return err
+}
+
+func splitID(id string) (groupID string, name string, scope string, scopeType string, err error) {
+	parts := strings.Split(id, "#-#")
+	if len(parts) < 4 {
+		return "", "", "", "", fmt.Errorf("'%s' is not a valid permission ID", id)
+	}
+	return parts[0], parts[1], parts[2], parts[3], nil
 }

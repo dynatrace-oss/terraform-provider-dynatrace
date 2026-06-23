@@ -73,10 +73,8 @@ func (me *UserServiceClient) SchemaID() string {
 }
 
 func (me *UserServiceClient) Create(ctx context.Context, user *users.User) (*api.Stub, error) {
-	var err error
-
 	client := iam.NewIAMClient(ctx, me)
-	if _, err = client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.AccountID()), user, rest2.RequestOptions{}, 201); err != nil {
+	if _, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.AccountID()), user, rest2.RequestOptions{}); err != nil {
 		if err.Error() == "User already exists" {
 			if err = me.Update(ctx, user.Email, user); err != nil {
 				return nil, err
@@ -90,7 +88,7 @@ func (me *UserServiceClient) Create(ctx context.Context, user *users.User) (*api
 	if len(user.Groups) > 0 {
 		groups = user.Groups
 	}
-	if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.AccountID(), user.Email), groups, rest2.RequestOptions{}, 200); err != nil {
+	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.AccountID(), user.Email), groups, rest2.RequestOptions{}); err != nil {
 		return nil, err
 	}
 
@@ -108,26 +106,24 @@ type GetUserGroupsResponse struct {
 }
 
 func (me *UserServiceClient) Get(ctx context.Context, email string, v *users.User) error {
-	var err error
-	var responseBytes []byte
-
 	client := iam.NewIAMClient(ctx, me)
 
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.AccountID(), email), rest2.RequestOptions{}, 200); err != nil {
-		if err != nil && strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.AccountID(), email), rest2.RequestOptions{})
+	if err != nil {
+		if strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
 			return rest.Error{Code: 404, Message: err.Error()}
 		}
 		return err
 	}
 
-	var response GetUserGroupsResponse
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
+	var userGroups GetUserGroupsResponse
+	if err = json.Unmarshal(response.Data, &userGroups); err != nil {
 		return err
 	}
 	v.Email = email
 	v.Groups = []string{}
-	v.UID = response.UID
-	for _, group := range response.Groups {
+	v.UID = userGroups.UID
+	for _, group := range userGroups.Groups {
 		v.Groups = append(v.Groups, group.UUID)
 	}
 
@@ -135,13 +131,11 @@ func (me *UserServiceClient) Get(ctx context.Context, email string, v *users.Use
 }
 
 func (me *UserServiceClient) Update(ctx context.Context, email string, user *users.User) error {
-	var err error
-
 	groups := []string{}
 	if len(user.Groups) > 0 {
 		groups = user.Groups
 	}
-	if _, err = iam.NewIAMClient(ctx, me).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.AccountID(), user.Email), groups, rest2.RequestOptions{}, 200); err != nil {
+	if _, err := iam.NewIAMClient(ctx, me).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.AccountID(), user.Email), groups, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 
@@ -159,26 +153,24 @@ type ListUsersResponse struct {
 }
 
 func (me *UserServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	var err error
-	var responseBytes []byte
-
-	if responseBytes, err = iam.NewIAMClient(ctx, me).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.AccountID()), rest2.RequestOptions{}, 200); err != nil {
+	response, err := iam.NewIAMClient(ctx, me).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.AccountID()), rest2.RequestOptions{})
+	if err != nil {
 		return nil, err
 	}
 
-	var response ListUsersResponse
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
+	var listResp ListUsersResponse
+	if err = json.Unmarshal(response.Data, &listResp); err != nil {
 		return nil, err
 	}
 	var stubs api.Stubs
-	for _, item := range response.Items {
+	for _, item := range listResp.Items {
 		stubs = append(stubs, &api.Stub{ID: item.Email, Name: item.Email})
 	}
 	return stubs, nil
 }
 
 func (me *UserServiceClient) Delete(ctx context.Context, email string) error {
-	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.AccountID(), email), rest2.RequestOptions{}, 200)
+	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.AccountID(), email), rest2.RequestOptions{})
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
 		return nil
 	}

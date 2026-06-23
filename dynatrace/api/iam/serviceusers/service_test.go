@@ -27,6 +27,7 @@ import (
 
 	serviceusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/serviceusers/settings"
 	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 
 	"github.com/stretchr/testify/assert"
@@ -46,13 +47,13 @@ func createTestServiceUserServiceClient(client *testing2.MockIAMClient) *service
 func TestService_Create(t *testing.T) {
 	t.Run("successful creation", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users", testAccountID), url)
-				return []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`), nil
+				return api.Response{Data: []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`)}, nil
 			},
-			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", testAccountID, "test@example.com"), url)
-				return nil, nil
+				return api.Response{}, nil
 			},
 		}
 
@@ -71,14 +72,14 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("successful creation with empty groups", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users", testAccountID), url)
-				return []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`), nil
+				return api.Response{Data: []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`)}, nil
 			},
-			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", testAccountID, "test@example.com"), url)
 				assert.Equal(t, []string{}, payload)
-				return nil, nil
+				return api.Response{}, nil
 			},
 		}
 
@@ -96,8 +97,8 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("creation fails on POST", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return nil, errors.New("POST failed")
+			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, errors.New("POST failed")
 			},
 		}
 
@@ -112,14 +113,14 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("creation fails on group assignment and cleanup succeeds", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`), nil
+			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{Data: []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`)}, nil
 			},
-			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return nil, errors.New("group assignment failed")
+			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, errors.New("group assignment failed")
 			},
-			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return nil, nil
+			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, nil
 			},
 		}
 
@@ -135,14 +136,14 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("creation fails on group assignment and cleanup fails", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`), nil
+			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{Data: []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`)}, nil
 			},
-			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return nil, errors.New("group assignment failed")
+			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, errors.New("group assignment failed")
 			},
-			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return nil, errors.New("delete failed")
+			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, errors.New("delete failed")
 			},
 		}
 
@@ -158,8 +159,8 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("creation fails on invalid JSON response", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return []byte(`{invalid json`), nil
+			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{Data: []byte(`{invalid json`)}, nil
 			},
 		}
 
@@ -178,18 +179,18 @@ func TestService_Get(t *testing.T) {
 	t.Run("successful get with groups", func(t *testing.T) {
 		getCallCount := 0
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				getCallCount++
 				if getCallCount == 1 {
 					assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", testAccountID, "test-uid"), url)
-					return []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User","description":"Test description"}`), nil
+					return api.Response{Data: []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User","description":"Test description"}`)}, nil
 				}
 				if getCallCount == 2 {
 					assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", testAccountID, "test@example.com"), url)
-					return []byte(`{"uid":"test-uid","groups":[{"uuid":"group-1","groupName":"Group 1"},{"uuid":"group-2","groupName":"Group 2"}]}`), nil
+					return api.Response{Data: []byte(`{"uid":"test-uid","groups":[{"uuid":"group-1","groupName":"Group 1"},{"uuid":"group-2","groupName":"Group 2"}]}`)}, nil
 				}
 				assert.FailNow(t, "unexpected call to GET")
-				return nil, errors.New("unexpected call to GET")
+				return api.Response{}, errors.New("unexpected call to GET")
 			},
 		}
 
@@ -208,18 +209,18 @@ func TestService_Get(t *testing.T) {
 	t.Run("successful get without groups", func(t *testing.T) {
 		getCallCount := 0
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				getCallCount++
 				if getCallCount == 1 {
 					assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", testAccountID, "test-uid"), url)
-					return []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User","description":"Test description"}`), nil
+					return api.Response{Data: []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User","description":"Test description"}`)}, nil
 				}
 				if getCallCount == 2 {
 					assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", testAccountID, "test@example.com"), url)
-					return []byte(`{"uid":"test-uid","groups":[]}`), nil
+					return api.Response{Data: []byte(`{"uid":"test-uid","groups":[]}`)}, nil
 				}
 				assert.FailNow(t, "unexpected call to GET")
-				return nil, errors.New("unexpected call to GET")
+				return api.Response{}, errors.New("unexpected call to GET")
 			},
 		}
 
@@ -235,8 +236,8 @@ func TestService_Get(t *testing.T) {
 
 	t.Run("get fails on service user fetch", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return nil, errors.New("GET failed")
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, errors.New("GET failed")
 			},
 		}
 
@@ -250,16 +251,16 @@ func TestService_Get(t *testing.T) {
 	t.Run("get fails on user groups fetch", func(t *testing.T) {
 		getCallCount := 0
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				getCallCount++
 				if getCallCount == 1 {
-					return []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User","description":"Test description"}`), nil
+					return api.Response{Data: []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User","description":"Test description"}`)}, nil
 				}
 				if getCallCount == 2 {
-					return nil, errors.New("groups fetch failed")
+					return api.Response{}, errors.New("groups fetch failed")
 				}
 				assert.FailNow(t, "unexpected call to GET")
-				return nil, errors.New("unexpected call to GET")
+				return api.Response{}, errors.New("unexpected call to GET")
 			},
 		}
 
@@ -272,8 +273,8 @@ func TestService_Get(t *testing.T) {
 
 	t.Run("get returns error when service user not found", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return nil, errors.New("Service user test-uid does not exist")
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, errors.New("Service user test-uid does not exist")
 			},
 		}
 
@@ -286,8 +287,8 @@ func TestService_Get(t *testing.T) {
 
 	t.Run("get fails on invalid JSON for service user", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return []byte(`{invalid json`), nil
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{Data: []byte(`{invalid json`)}, nil
 			},
 		}
 
@@ -301,16 +302,16 @@ func TestService_Get(t *testing.T) {
 	t.Run("get fails on invalid JSON for user groups", func(t *testing.T) {
 		getCallCount := 0
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				getCallCount++
 				if getCallCount == 1 {
-					return []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User","description":"Test description"}`), nil
+					return api.Response{Data: []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User","description":"Test description"}`)}, nil
 				}
 				if getCallCount == 2 {
-					return []byte(`{invalid json`), nil
+					return api.Response{Data: []byte(`{invalid json`)}, nil
 				}
 				assert.FailNow(t, "unexpected call to GET")
-				return nil, errors.New("unexpected call to GET")
+				return api.Response{}, errors.New("unexpected call to GET")
 			},
 		}
 
@@ -325,15 +326,15 @@ func TestService_Get(t *testing.T) {
 func TestService_GetAll(t *testing.T) {
 	t.Run("successful get all without pagination", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users", testAccountID), url)
-				return []byte(`{
+				return api.Response{Data: []byte(`{
 					"count": 2,
 					"results": [
 						{"uid": "uid-1", "email": "user1@example.com", "name": "User 1", "description": "Desc 1"},
 						{"uid": "uid-2", "email": "user2@example.com", "name": "User 2", "description": "Desc 2"}
 					]
-				}`), nil
+				}`)}, nil
 			},
 		}
 
@@ -354,30 +355,30 @@ func TestService_GetAll(t *testing.T) {
 	t.Run("successful get all with pagination", func(t *testing.T) {
 		callCount := 0
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				if callCount == 1 {
 					assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users", testAccountID), url)
-					return []byte(`{
+					return api.Response{Data: []byte(`{
 						"count": 2,
 						"results": [
 							{"uid": "uid-1", "email": "user1@example.com", "name": "User 1", "description": "Desc 1"}
 						],
 						"nextPageKey": "page2"
-					}`), nil
+					}`)}, nil
 				}
 				if callCount == 2 {
 					assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users", testAccountID), url)
 					assert.Equal(t, "page2", options.QueryParams.Get("nextPageKey"))
-					return []byte(`{
+					return api.Response{Data: []byte(`{
 						"count": 2,
 						"results": [
 							{"uid": "uid-2", "email": "user2@example.com", "name": "User 2", "description": "Desc 2"}
 						]
-					}`), nil
+					}`)}, nil
 				}
 				assert.FailNow(t, "unexpected call to GET")
-				return nil, errors.New("unexpected call to GET")
+				return api.Response{}, errors.New("unexpected call to GET")
 			},
 		}
 
@@ -393,30 +394,30 @@ func TestService_GetAll(t *testing.T) {
 	t.Run("successful get all with multiple pagination pages", func(t *testing.T) {
 		callCount := 0
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				if callCount == 1 {
-					return []byte(`{
+					return api.Response{Data: []byte(`{
 						"count": 3,
 						"results": [{"uid": "uid-1", "email": "user1@example.com", "name": "User 1", "description": ""}],
 						"nextPageKey": "page2"
-					}`), nil
+					}`)}, nil
 				}
 				if callCount == 2 {
-					return []byte(`{
+					return api.Response{Data: []byte(`{
 						"count": 3,
 						"results": [{"uid": "uid-2", "email": "user2@example.com", "name": "User 2", "description": ""}],
 						"nextPageKey": "page3"
-					}`), nil
+					}`)}, nil
 				}
 				if callCount == 3 {
-					return []byte(`{
+					return api.Response{Data: []byte(`{
 						"count": 3,
 						"results": [{"uid": "uid-3", "email": "user3@example.com", "name": "User 3", "description": ""}]
-					}`), nil
+					}`)}, nil
 				}
 				assert.FailNow(t, "unexpected call to GET")
-				return nil, errors.New("unexpected call to GET")
+				return api.Response{}, errors.New("unexpected call to GET")
 			},
 		}
 
@@ -429,8 +430,8 @@ func TestService_GetAll(t *testing.T) {
 
 	t.Run("get all fails", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return nil, errors.New("GET failed")
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, errors.New("GET failed")
 			},
 		}
 
@@ -442,16 +443,16 @@ func TestService_GetAll(t *testing.T) {
 	t.Run("get all fails on second page", func(t *testing.T) {
 		callCount := 0
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				if callCount == 1 {
-					return []byte(`{
+					return api.Response{Data: []byte(`{
 						"count": 2,
 						"results": [{"uid": "uid-1", "email": "user1@example.com", "name": "User 1", "description": ""}],
 						"nextPageKey": "page2"
-					}`), nil
+					}`)}, nil
 				}
-				return nil, errors.New("pagination failed")
+				return api.Response{}, errors.New("pagination failed")
 			},
 		}
 
@@ -462,11 +463,11 @@ func TestService_GetAll(t *testing.T) {
 
 	t.Run("get all empty", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return []byte(`{
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{Data: []byte(`{
 					"count": 0,
 					"results": []
-				}`), nil
+				}`)}, nil
 			},
 		}
 
@@ -478,8 +479,8 @@ func TestService_GetAll(t *testing.T) {
 
 	t.Run("get all fails on invalid JSON response", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return []byte(`{invalid json`), nil
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{Data: []byte(`{invalid json`)}, nil
 			},
 		}
 
@@ -491,16 +492,16 @@ func TestService_GetAll(t *testing.T) {
 	t.Run("get all fails on invalid JSON response on second page", func(t *testing.T) {
 		callCount := 0
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				if callCount == 1 {
-					return []byte(`{
+					return api.Response{Data: []byte(`{
 						"count": 2,
 						"results": [{"uid": "uid-1", "email": "user1@example.com", "name": "User 1", "description": ""}],
 						"nextPageKey": "page2"
-					}`), nil
+					}`)}, nil
 				}
-				return []byte(`{invalid json`), nil
+				return api.Response{Data: []byte(`{invalid json`)}, nil
 			},
 		}
 
@@ -513,14 +514,14 @@ func TestService_GetAll(t *testing.T) {
 func TestService_List(t *testing.T) {
 	t.Run("successful list without pagination", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return []byte(`{
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{Data: []byte(`{
 					"count": 2,
 					"results": [
 						{"uid": "uid-1", "email": "user1@example.com", "name": "User 1"},
 						{"uid": "uid-2", "email": "user2@example.com", "name": "User 2"}
 					]
-				}`), nil
+				}`)}, nil
 			},
 		}
 
@@ -537,30 +538,30 @@ func TestService_List(t *testing.T) {
 	t.Run("successful list with pagination", func(t *testing.T) {
 		callCount := 0
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				if callCount == 1 {
 					assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users", testAccountID), url)
-					return []byte(`{
+					return api.Response{Data: []byte(`{
 						"count": 2,
 						"results": [
 							{"uid": "uid-1", "email": "user1@example.com", "name": "User 1"}
 						],
 						"nextPageKey": "page2"
-					}`), nil
+					}`)}, nil
 				}
 				if callCount == 2 {
 					assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users", testAccountID), url)
 					assert.Equal(t, "page2", options.QueryParams.Get("nextPageKey"))
-					return []byte(`{
+					return api.Response{Data: []byte(`{
 					"count": 2,
 					"results": [
 						{"uid": "uid-2", "email": "user2@example.com", "name": "User 2"}
 					]
-				}`), nil
+				}`)}, nil
 				}
 				assert.FailNow(t, "unexpected call to GET")
-				return nil, errors.New("unexpected call to GET")
+				return api.Response{}, errors.New("unexpected call to GET")
 			},
 		}
 
@@ -573,8 +574,8 @@ func TestService_List(t *testing.T) {
 
 	t.Run("list fails", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return nil, errors.New("GET failed")
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, errors.New("GET failed")
 			},
 		}
 
@@ -585,11 +586,11 @@ func TestService_List(t *testing.T) {
 
 	t.Run("list empty", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return []byte(`{
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{Data: []byte(`{
 					"count": 0,
 					"results": []
-				}`), nil
+				}`)}, nil
 			},
 		}
 
@@ -601,8 +602,8 @@ func TestService_List(t *testing.T) {
 
 	t.Run("list fails on invalid JSON response", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return []byte(`{invalid json`), nil
+			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{Data: []byte(`{invalid json`)}, nil
 			},
 		}
 
@@ -616,20 +617,20 @@ func TestService_Update(t *testing.T) {
 	t.Run("successful update", func(t *testing.T) {
 		putCallCount := 0
 		mockClient := &testing2.MockIAMClient{
-			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				putCallCount++
 				if putCallCount == 1 {
 					assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", testAccountID, "test-uid"), url)
-					return nil, nil
+					return api.Response{}, nil
 				}
 
 				if putCallCount == 2 {
 					assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", testAccountID, "test@example.com"), url)
-					return nil, nil
+					return api.Response{}, nil
 				}
 
 				assert.FailNow(t, "unexpected call to PUT")
-				return nil, errors.New("unexpected call to PUT")
+				return api.Response{}, errors.New("unexpected call to PUT")
 			},
 		}
 
@@ -648,8 +649,8 @@ func TestService_Update(t *testing.T) {
 
 	t.Run("update fails on user details", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return nil, errors.New("PUT failed")
+			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, errors.New("PUT failed")
 			},
 		}
 
@@ -666,18 +667,18 @@ func TestService_Update(t *testing.T) {
 	t.Run("update fails on group assignment", func(t *testing.T) {
 		putCallCount := 0
 		mockClient := &testing2.MockIAMClient{
-			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				putCallCount++
 				if putCallCount == 1 {
 					assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", testAccountID, "test-uid"), url)
-					return nil, nil
+					return api.Response{}, nil
 				}
 				if putCallCount == 2 {
 					assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", testAccountID, "test@example.com"), url)
-					return nil, errors.New("group assignment failed")
+					return api.Response{}, errors.New("group assignment failed")
 				}
 				assert.FailNow(t, "unexpected call to PUT")
-				return nil, errors.New("unexpected call to PUT")
+				return api.Response{}, errors.New("unexpected call to PUT")
 			},
 		}
 
@@ -696,9 +697,9 @@ func TestService_Update(t *testing.T) {
 func TestService_Delete(t *testing.T) {
 	t.Run("successful delete", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
+			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", testAccountID, "test-uid"), url)
-				return nil, nil
+				return api.Response{}, nil
 			},
 		}
 
@@ -709,8 +710,8 @@ func TestService_Delete(t *testing.T) {
 
 	t.Run("delete fails", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return nil, errors.New("DELETE failed")
+			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, errors.New("DELETE failed")
 			},
 		}
 
@@ -721,8 +722,8 @@ func TestService_Delete(t *testing.T) {
 
 	t.Run("delete errors if service user does not exist", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
-			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions, expectedResponseCode int) ([]byte, error) {
-				return nil, errors.New("User test-uid does not exist")
+			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
+				return api.Response{}, errors.New("User test-uid does not exist")
 			},
 		}
 

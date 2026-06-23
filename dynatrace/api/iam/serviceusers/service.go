@@ -106,25 +106,25 @@ type createResponse struct {
 }
 
 func (me *serviceUserServiceClient) Create(ctx context.Context, serviceUser *serviceusers.ServiceUser) (*api.Stub, error) {
-	responseBytes, err := me.iamClientGetter.New(ctx).POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users", me.accountID), serviceUser, rest2.RequestOptions{}, 201)
+	response, err := me.iamClientGetter.New(ctx).POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users", me.accountID), serviceUser, rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
 
-	var response createResponse
-	if err := json.Unmarshal(responseBytes, &response); err != nil {
+	var createResp createResponse
+	if err := json.Unmarshal(response.Data, &createResp); err != nil {
 		return nil, err
 	}
 
-	if err := me.updateGroupAssignments(ctx, response.Email, serviceUser.Groups); err != nil {
-		deleteErr := me.Delete(ctx, response.UID)
+	if err := me.updateGroupAssignments(ctx, createResp.Email, serviceUser.Groups); err != nil {
+		deleteErr := me.Delete(ctx, createResp.UID)
 		if deleteErr != nil {
 			return nil, fmt.Errorf("failed to create service user: %v; additionally failed to clean up service user: %v", err, deleteErr)
 		}
 		return nil, err
 	}
 
-	return &api.Stub{ID: response.UID, Name: response.Name}, nil
+	return &api.Stub{ID: createResp.UID, Name: createResp.Name}, nil
 }
 
 // getServiceUserResponse represents the response from getting a service user
@@ -136,24 +136,24 @@ type getServiceUserResponse struct {
 }
 
 func (me *serviceUserServiceClient) Get(ctx context.Context, id string, v *serviceusers.ServiceUser) error {
-	responseBytes, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, id), rest2.RequestOptions{}, 200)
+	response, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, id), rest2.RequestOptions{})
 	if err != nil {
 		return err
 	}
 
-	var response getServiceUserResponse
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
+	var getResp getServiceUserResponse
+	if err = json.Unmarshal(response.Data, &getResp); err != nil {
 		return err
 	}
 
-	groups, err := me.getUserGroups(ctx, response.Email)
+	groups, err := me.getUserGroups(ctx, getResp.Email)
 	if err != nil {
 		return err
 	}
 
-	v.Email = response.Email
-	v.Name = response.Name
-	v.Description = response.Description
+	v.Email = getResp.Email
+	v.Name = getResp.Name
+	v.Description = getResp.Description
 	v.Groups = groups
 
 	return nil
@@ -170,18 +170,18 @@ type getUserPartialResponse struct {
 }
 
 func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email string) ([]string, error) {
-	responseBytes, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.accountID, email), rest2.RequestOptions{}, 200)
+	response, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.accountID, email), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
 
-	var response getUserPartialResponse
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
+	var getResp getUserPartialResponse
+	if err = json.Unmarshal(response.Data, &getResp); err != nil {
 		return nil, err
 	}
 
-	groups := make([]string, 0, len(response.Groups))
-	for _, group := range response.Groups {
+	groups := make([]string, 0, len(getResp.Groups))
+	for _, group := range getResp.Groups {
 		groups = append(groups, group.UUID)
 	}
 
@@ -190,7 +190,7 @@ func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email str
 
 func (me *serviceUserServiceClient) Update(ctx context.Context, id string, serviceUser *serviceusers.ServiceUser) error {
 	// Update the service user details
-	if _, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, id), serviceUser, rest2.RequestOptions{}, 200); err != nil {
+	if _, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, id), serviceUser, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 
@@ -203,7 +203,7 @@ func (me *serviceUserServiceClient) updateGroupAssignments(ctx context.Context, 
 	if groups == nil {
 		groups = []string{}
 	}
-	_, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.accountID, serviceUserEmail), groups, rest2.RequestOptions{}, 200)
+	_, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.accountID, serviceUserEmail), groups, rest2.RequestOptions{})
 	return err
 }
 
@@ -230,23 +230,23 @@ func (me *serviceUserServiceClient) GetAll(ctx context.Context) ([]ServiceUserSt
 	options := rest2.RequestOptions{}
 
 	for {
-		responseBytes, err := client.GET(ctx, endpoint, options, 200)
+		response, err := client.GET(ctx, endpoint, options)
 		if err != nil {
 			return nil, err
 		}
 
-		var response listServiceUsersResponse
-		if err := json.Unmarshal(responseBytes, &response); err != nil {
+		var listResp listServiceUsersResponse
+		if err := json.Unmarshal(response.Data, &listResp); err != nil {
 			return nil, err
 		}
 
-		stubs = append(stubs, response.Items...)
+		stubs = append(stubs, listResp.Items...)
 
 		// Handle pagination
-		if response.NextPage == "" {
+		if listResp.NextPage == "" {
 			break
 		}
-		options.QueryParams = url.Values{"nextPageKey": {response.NextPage}}
+		options.QueryParams = url.Values{"nextPageKey": {listResp.NextPage}}
 	}
 
 	return stubs, nil
@@ -270,6 +270,6 @@ func (me *serviceUserServiceClient) List(ctx context.Context) (api.Stubs, error)
 }
 
 func (me *serviceUserServiceClient) Delete(ctx context.Context, uid string) error {
-	_, err := me.iamClientGetter.New(ctx).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, uid), rest2.RequestOptions{}, 200)
+	_, err := me.iamClientGetter.New(ctx).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, uid), rest2.RequestOptions{})
 	return err
 }

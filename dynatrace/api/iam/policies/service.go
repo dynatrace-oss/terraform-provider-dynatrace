@@ -20,7 +20,6 @@ package policies
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -31,6 +30,7 @@ import (
 	policies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	api2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
@@ -87,21 +87,19 @@ type PolicyCreateResponse struct {
 }
 
 func (me *PolicyServiceClient) Create(ctx context.Context, v *policies.Policy) (*api.Stub, error) {
-	var err error
-	var responseBytes []byte
-
 	levelType, levelID := getLevel(v)
 
 	client := iam.NewIAMClient(ctx, me)
-	if responseBytes, err = client.POST(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies", levelType, levelID), v, rest2.RequestOptions{}, 201); err != nil {
+	response, err := client.POST(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies", levelType, levelID), v, rest2.RequestOptions{})
+	if err != nil {
 		return nil, err
 	}
 	var pcr PolicyCreateResponse
-	if err = json.Unmarshal(responseBytes, &pcr); err != nil {
+	if err = json.Unmarshal(response.Data, &pcr); err != nil {
 		return nil, err
 	}
 	v.UUID = pcr.UUID
-	RegisterPolicyLevel(ctx, me, PolicyLevel{UUID: v.UUID, LevelType: levelType, LevelID: levelID})
+	_ = RegisterPolicyLevel(ctx, me, PolicyLevel{UUID: v.UUID, LevelType: levelType, LevelID: levelID})
 	return &api.Stub{ID: joinID(pcr.UUID, v), Name: v.Name}, nil
 }
 
@@ -140,26 +138,26 @@ func (me *PolicyServiceClient) get(ctx context.Context, id string, v *policies.P
 		return nil
 	}
 
-	var responseBytes []byte
-	if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), rest2.RequestOptions{}, 200); err != nil {
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), rest2.RequestOptions{})
+	if err != nil {
 		return err
 	}
-	if err = json.Unmarshal(responseBytes, v); err != nil {
+	if err = json.Unmarshal(response.Data, v); err != nil {
 		return err
 	}
 	if levelType == "account" {
 		v.Account = levelID
 		if len(levelID) == 0 {
-			return errors.New(fmt.Sprintf("Policy `%s` has level type `%s`, but level id is empty", id, levelType))
+			return fmt.Errorf("Policy `%s` has level type `%s`, but level id is empty", id, levelType)
 		}
 	} else if levelType == "environment" {
 		v.Environment = levelID
 		if len(levelID) == 0 {
-			return errors.New(fmt.Sprintf("Policy `%s` has level type `%s`, but level id is empty", id, levelType))
+			return fmt.Errorf("Policy `%s` has level type `%s`, but level id is empty", id, levelType)
 		}
 	}
 	v.UUID = uuid
-	RegisterPolicyLevel(ctx, me, PolicyLevel{UUID: v.UUID, LevelType: levelType, LevelID: levelID})
+	_ = RegisterPolicyLevel(ctx, me, PolicyLevel{UUID: v.UUID, LevelType: levelType, LevelID: levelID})
 	return nil
 }
 
@@ -176,7 +174,7 @@ func (me *PolicyServiceClient) Update(ctx context.Context, id string, user *poli
 	}
 	client := iam.NewIAMClient(ctx, me)
 
-	if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), user, rest2.RequestOptions{}, 204); err != nil {
+	if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), user, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 	return nil
@@ -206,16 +204,16 @@ func listForEnvironment(ctx context.Context, auth iam.Authenticator, environment
 		defer close(results)
 		client := iam.NewIAMClient(ctx, auth)
 
-		var response ListPoliciesResponse
-		var responseBytes []byte
-		if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/environment/%s/policies", environmentID), rest2.RequestOptions{}, 200); err != nil {
+		var response api2.Response
+		if response, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/environment/%s/policies", environmentID), rest2.RequestOptions{}); err != nil {
 			return
 		}
-		if err = json.Unmarshal(responseBytes, &response); err != nil {
+		var policiesResponse ListPoliciesResponse
+		if err = json.Unmarshal(response.Data, &policiesResponse); err != nil {
 			return
 		}
 
-		for _, policy := range response.Policies {
+		for _, policy := range policiesResponse.Policies {
 			results <- &api.Stub{ID: Join(policy.UUID, "environment", environmentID), Name: policy.Name}
 		}
 	}()
@@ -224,8 +222,8 @@ func listForEnvironment(ctx context.Context, auth iam.Authenticator, environment
 
 func listForEnvironments(ctx context.Context, auth iam.Authenticator) (results chan *api.Stub, err error) {
 	results = make(chan *api.Stub)
-	var environmentIDs []string
-	if environmentIDs, err = GetEnvironmentIDs(ctx, auth); err != nil {
+	environmentIDs, err := GetEnvironmentIDs(ctx, auth)
+	if err != nil {
 		return nil, err
 	}
 	var wg sync.WaitGroup
@@ -259,16 +257,18 @@ func listForAccount(ctx context.Context, auth iam.Authenticator) (results chan *
 	results = make(chan *api.Stub)
 	go func() {
 		defer close(results)
-		var response ListPoliciesResponse
-		var responseBytes []byte
-		if responseBytes, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/policies", auth.AccountID()), rest2.RequestOptions{}, 200); err != nil {
-			return
-		}
-		if err = json.Unmarshal(responseBytes, &response); err != nil {
+
+		var response api2.Response
+		if response, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/policies", auth.AccountID()), rest2.RequestOptions{}); err != nil {
 			return
 		}
 
-		for _, policy := range response.Policies {
+		var policiesResponse ListPoliciesResponse
+		if err = json.Unmarshal(response.Data, &policiesResponse); err != nil {
+			return
+		}
+
+		for _, policy := range policiesResponse.Policies {
 			results <- &api.Stub{ID: Join(policy.UUID, "account", auth.AccountID()), Name: policy.Name}
 		}
 	}()
@@ -353,21 +353,16 @@ func (me *PolicyServiceClient) ListWithGlobals(ctx context.Context) (api.Stubs, 
 }
 
 func (me *PolicyServiceClient) Delete(ctx context.Context, id string) error {
-	var levelType string
-	var levelID string
-	var err error
-	var uuid string
-
-	uuid, _, _, err = SplitIDNoDefaults(id)
+	uuid, _, _, err := SplitIDNoDefaults(id)
 	if err != nil {
 		return err
 	}
-	levelType, levelID, _, err = ResolvePolicyLevel(ctx, me, uuid)
+	levelType, levelID, _, err := ResolvePolicyLevel(ctx, me, uuid)
 	if err != nil {
 		return err
 	}
 
-	_, err = iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), rest2.RequestOptions{}, 204)
+	_, err = iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), rest2.RequestOptions{})
 	return err
 }
 

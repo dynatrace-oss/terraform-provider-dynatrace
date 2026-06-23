@@ -99,21 +99,21 @@ func (me *BoundaryServiceClient) List(ctx context.Context) (api.Stubs, error) {
 
 	for page := 1; ; page++ {
 		params.Set("page", strconv.Itoa(page))
-		responseBytes, err := client.GET(ctx, endpoint, rest2.RequestOptions{QueryParams: params}, 200)
+		response, err := client.GET(ctx, endpoint, rest2.RequestOptions{QueryParams: params})
 		if err != nil {
 			return nil, err
 		}
 
-		var response ListPolicyBoundariesResponse
-		if err = json.Unmarshal(responseBytes, &response); err != nil {
+		var policyBoundariesResponse ListPolicyBoundariesResponse
+		if err = json.Unmarshal(response.Data, &policyBoundariesResponse); err != nil {
 			return nil, err
 		}
 
-		for _, boundary := range response.PolicyBoundaries {
+		for _, boundary := range policyBoundariesResponse.PolicyBoundaries {
 			stubs = append(stubs, &api.Stub{ID: boundary.UUID, Name: boundary.Name})
 		}
 
-		if len(response.PolicyBoundaries) < maxPageSize {
+		if len(policyBoundariesResponse.PolicyBoundaries) < maxPageSize {
 			break
 		}
 	}
@@ -122,12 +122,12 @@ func (me *BoundaryServiceClient) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (me *BoundaryServiceClient) Get(ctx context.Context, id string, v *boundaries.PolicyBoundary) error {
-	responseBytes, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.accountID, id), rest2.RequestOptions{}, 200)
+	response, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.accountID, id), rest2.RequestOptions{})
 	if err != nil {
 		return err
 	}
 
-	return json.Unmarshal(responseBytes, v)
+	return json.Unmarshal(response.Data, v)
 }
 
 func (me *BoundaryServiceClient) SchemaID() string {
@@ -135,36 +135,34 @@ func (me *BoundaryServiceClient) SchemaID() string {
 }
 
 func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.PolicyBoundary) (*api.Stub, error) {
-	responseBytes, err := me.iamClientGetter.New(ctx).POST(
+	response, err := me.iamClientGetter.New(ctx).POST(
 		ctx,
 		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries", me.accountID),
 		v,
 		rest2.RequestOptions{},
-		201,
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	response := struct {
+	uuidNameResponse := struct {
 		UUID string `json:"uuid"`
 		Name string `json:"name"`
 	}{}
 
-	if err = json.Unmarshal(responseBytes, &response); err != nil {
+	if err = json.Unmarshal(response.Data, &uuidNameResponse); err != nil {
 		return nil, err
 	}
 
-	return &api.Stub{ID: response.UUID, Name: response.Name}, nil
+	return &api.Stub{ID: uuidNameResponse.UUID, Name: uuidNameResponse.Name}, nil
 }
 
 func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *boundaries.PolicyBoundary) error {
-	_, err := me.iamClientGetter.New(ctx).PUT_MULTI_RESPONSE(
+	_, err := me.iamClientGetter.New(ctx).PUT(
 		ctx,
 		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.accountID, id),
 		v,
 		rest2.RequestOptions{},
-		[]int{201, 204},
 	)
 	return err
 }
@@ -175,7 +173,6 @@ func (me *BoundaryServiceClient) Delete(ctx context.Context, id string) error {
 		ctx,
 		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.accountID, id),
 		rest2.RequestOptions{},
-		204,
 	)
 	if err != nil {
 		if strings.Contains(err.Error(), "Policy boundary is in use") {
@@ -184,7 +181,6 @@ func (me *BoundaryServiceClient) Delete(ctx context.Context, id string) error {
 					ctx,
 					fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.accountID, id),
 					rest2.RequestOptions{},
-					204,
 				)
 			})
 			return nil
