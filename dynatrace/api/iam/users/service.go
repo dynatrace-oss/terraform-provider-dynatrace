@@ -75,12 +75,6 @@ func (me *UserServiceClient) SchemaID() string {
 func (me *UserServiceClient) Create(ctx context.Context, user *users.User) (*api.Stub, error) {
 	client := iam.NewIAMClient(ctx, me)
 	if _, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.AccountID()), user, rest2.RequestOptions{}); err != nil {
-		if err.Error() == "User already exists" {
-			if err = me.Update(ctx, user.Email, user); err != nil {
-				return nil, err
-			}
-			return &api.Stub{ID: user.Email, Name: user.Email}, nil
-		}
 		return nil, err
 	}
 
