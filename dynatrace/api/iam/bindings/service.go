@@ -111,8 +111,9 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 		v.Environment = levelID
 	}
 	v.GroupID = groupID
+
 	for idx, policyID := range v.PolicyIDs {
-		v.PolicyIDs[idx] = fmt.Sprintf("%s#-#%s#-#%s", policyID, levelType, levelID)
+		v.PolicyIDs[idx] = policies.Join(policyID, levelType, levelID)
 	}
 	return nil
 }
@@ -207,7 +208,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	for _, policy := range policyBindingsResponse.PolicyBindings {
 		for _, group := range policy.Groups {
 			if _, exists := groupIds[group]; !exists {
-				id := fmt.Sprintf("%s#-#%s#-#%s", group, "account", me.AccountID())
+				id := join(group, "account", me.AccountID())
 				stubs = append(stubs, &api.Stub{ID: id, Name: "PolicyBindings-" + id})
 				groupIds[group] = true
 			}
@@ -229,7 +230,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 		for _, policy := range policyBindingsResponse.PolicyBindings {
 			for _, group := range policy.Groups {
 				if _, exists := groupIds[group]; !exists {
-					id := fmt.Sprintf("%s#-#%s#-#%s", group, "environment", environment.ID)
+					id := join(group, "environment", environment.ID)
 					stubs = append(stubs, &api.Stub{ID: id, Name: "PolicyBindings-" + id})
 					groupIds[group] = true
 				}
@@ -269,14 +270,18 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 func splitID(id string) (groupID string, levelType string, levelID string, err error) {
 	parts := strings.Split(id, "#-#")
 	if len(parts) != 3 {
-		return "", "", "", fmt.Errorf("%s is not a valid ID for a policy", id)
+		return "", "", "", fmt.Errorf("%s is not a valid ID for a policy binding", id)
 	}
 	return parts[0], parts[1], parts[2], nil
 }
 
 func joinID(binding *bindings.PolicyBinding) string {
 	levelType, levelID := getLevel(binding)
-	return fmt.Sprintf("%s#-#%s#-#%s", binding.GroupID, levelType, levelID)
+	return join(binding.GroupID, levelType, levelID)
+}
+
+func join(groupID string, levelType string, levelID string) string {
+	return fmt.Sprintf("%s#-#%s#-#%s", groupID, levelType, levelID)
 }
 
 func getLevel(binding *bindings.PolicyBinding) (string, string) {
