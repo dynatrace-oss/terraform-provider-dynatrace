@@ -44,18 +44,31 @@ type IAMClient interface {
 	PUT(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error)
 	GET(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
 	DELETE(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
+	// AccountID returns the account the client is scoped to. The provider only supports a single
+	// account, so it is held here rather than being repeated by every service.
+	AccountID() string
 }
 
 type iamClient struct {
-	auth   Authenticator
-	client *rest2.Client
+	accountID string
+	client    *rest2.Client
 }
 
+// NewIAMClient builds an IAM client from anything that can supply the OAuth credentials.
 func NewIAMClient(ctx context.Context, a Authenticator) IAMClient {
+	return newIAMClient(ctx, a.ClientID(), a.AccountID(), a.ClientSecret(), a.TokenURL(), a.EndpointURL())
+}
+
+// NewIAMClientForCredentials builds an IAM client directly from the IAM section of the provider credentials.
+func NewIAMClientForCredentials(ctx context.Context, credentials *rest.Credentials) IAMClient {
+	return newIAMClient(ctx, credentials.IAM.ClientID, credentials.IAM.AccountID, credentials.IAM.ClientSecret, credentials.IAM.TokenURL, credentials.IAM.EndpointURL)
+}
+
+func newIAMClient(ctx context.Context, clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) IAMClient {
 	oauthConfig := clientcredentials.Config{
-		ClientID:     a.ClientID(),
-		ClientSecret: a.ClientSecret(),
-		TokenURL:     a.TokenURL(),
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
+		TokenURL:     tokenURL,
 	}
 	httpClient := auth.NewOAuthClient(rest.NewContextWithOAuthRetryClient(ctx), &oauthConfig)
 
@@ -70,10 +83,14 @@ func NewIAMClient(ctx context.Context, a Authenticator) IAMClient {
 			},
 		}),
 	}
-	eUrl, _ := url.Parse(a.EndpointURL())
+	eUrl, _ := url.Parse(endpointURL)
 	client := rest2.NewClient(eUrl, httpClient, opts...)
 	client.SetHeader("User-Agent", version.UserAgent())
-	return &iamClient{a, client}
+	return &iamClient{accountID: accountID, client: client}
+}
+
+func (me *iamClient) AccountID() string {
+	return me.accountID
 }
 
 func (me *iamClient) POST(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
