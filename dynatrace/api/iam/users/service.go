@@ -39,11 +39,6 @@ func newUserService(client iam.IAMClient) *UserServiceClient {
 	return &UserServiceClient{client: client}
 }
 
-func NewUserService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *UserServiceClient {
-	auth := iam.NewBasePolicyService(clientID, accountID, clientSecret, tokenURL, endpointURL)
-	return newUserService(iam.NewIAMClient(context.Background(), auth))
-}
-
 func Service(credentials *rest.Credentials) settings.CRUDService[*users.User] {
 	return newUserService(iam.NewIAMClientForCredentials(context.Background(), credentials))
 }

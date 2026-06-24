@@ -54,11 +54,6 @@ type iamClient struct {
 	client    *rest2.Client
 }
 
-// NewIAMClient builds an IAM client from anything that can supply the OAuth credentials.
-func NewIAMClient(ctx context.Context, a Authenticator) IAMClient {
-	return newIAMClient(ctx, a.ClientID(), a.AccountID(), a.ClientSecret(), a.TokenURL(), a.EndpointURL())
-}
-
 // NewIAMClientForCredentials builds an IAM client directly from the IAM section of the provider credentials.
 func NewIAMClientForCredentials(ctx context.Context, credentials *rest.Credentials) IAMClient {
 	return newIAMClient(ctx, credentials.IAM.ClientID, credentials.IAM.AccountID, credentials.IAM.ClientSecret, credentials.IAM.TokenURL, credentials.IAM.EndpointURL)

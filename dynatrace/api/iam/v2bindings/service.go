@@ -42,11 +42,6 @@ func newBindingService(client iam.IAMClient) *BindingServiceClient {
 	return &BindingServiceClient{client: client}
 }
 
-func NewPolicyService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *BindingServiceClient {
-	auth := iam.NewBasePolicyService(clientID, accountID, clientSecret, tokenURL, endpointURL)
-	return newBindingService(iam.NewIAMClient(context.Background(), auth))
-}
-
 func Service(credentials *rest.Credentials) settings.CRUDService[*bindings.PolicyBinding] {
 	return newBindingService(iam.NewIAMClientForCredentials(context.Background(), credentials))
 }

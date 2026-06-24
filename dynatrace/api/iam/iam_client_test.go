@@ -29,27 +29,10 @@ import (
 
 const testAccountID = "test-account-id"
 
-// stubAuthenticator is a minimal iam.Authenticator used to verify that the account ID
-// supplied at construction time is the one the client reports.
-type stubAuthenticator struct {
-	accountID string
-}
-
-func (stubAuthenticator) ClientID() string     { return "client-id" }
-func (s stubAuthenticator) AccountID() string  { return s.accountID }
-func (stubAuthenticator) ClientSecret() string { return "client-secret" }
-func (stubAuthenticator) TokenURL() string     { return "https://token.example.com" }
-func (stubAuthenticator) EndpointURL() string  { return "https://api.example.com" }
-
 func TestNewIAMClientForCredentials_AccountID(t *testing.T) {
 	credentials := &rest.Credentials{}
 	credentials.IAM.AccountID = testAccountID
 
 	client := iam.NewIAMClientForCredentials(t.Context(), credentials)
-	assert.Equal(t, testAccountID, client.AccountID())
-}
-
-func TestNewIAMClient_AccountID(t *testing.T) {
-	client := iam.NewIAMClient(t.Context(), stubAuthenticator{accountID: testAccountID})
 	assert.Equal(t, testAccountID, client.AccountID())
 }

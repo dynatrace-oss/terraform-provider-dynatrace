@@ -42,11 +42,6 @@ func newPolicyService(client iam.IAMClient) *PolicyServiceClient {
 	return &PolicyServiceClient{client: client}
 }
 
-func NewPolicyService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *PolicyServiceClient {
-	auth := iam.NewBasePolicyService(clientID, accountID, clientSecret, tokenURL, endpointURL)
-	return newPolicyService(iam.NewIAMClient(context.Background(), auth))
-}
-
 func Service(credentials *rest.Credentials) settings.CRUDService[*policies.Policy] {
 	return newPolicyServiceFromCredentials(credentials)
 }
