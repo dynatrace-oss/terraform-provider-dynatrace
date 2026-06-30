@@ -45,6 +45,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -57,7 +58,7 @@
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
-			"description": "Kubernetes Telemetry Enrichment empowers you to effectively tag your telemetry data using Kubernetes labels and annotations. Additionally, it enables you to tag it for cost allocation and permission purposes.\n\nEnrichment Options:\n\n- **Primary Grail Tags:** Tag your telemetry data with existing Kubernetes labels or annotations. These will be made available as domain-specific fields (e.g., `k8s.namespace.label.your_key`). This allows for flexible pipeline routing, bucket selection, segmentation, and filtering.\n\n- **Security Context and Cost Allocation:** Leverage existing Kubernetes labels or annotations  as the basis for security context or cost allocation. This provides granular control over permissions and facilitates chargeback functionalities.\n\nAdditional Information:\n\n- You can define up to 20 enrichment rules.\n\n- New rules may take up to 45 minutes to become effective.\n\n- After the rules are applied, pod restarts are required to ensure the changes take effect.\n\nTo learn more, please refer to our [documentation](https://dt-url.net/pn22sye).",
+			"description": "Kubernetes Telemetry Enrichment empowers you to effectively tag your telemetry data using Kubernetes namespace labels and annotations. Additionally, it enables you to tag it for cost allocation and permission purposes.\n\nEnrichment Options:\n\n- **Enrich telemetry with label/annotation directly:** Tag your telemetry data with existing Kubernetes namespace labels or annotations. These will be made available as domain-specific fields (e.g., `k8s.namespace.label.your_key`). This allows for flexible pipeline routing, bucket selection, segmentation, and filtering.\n\n- **Security Context and Cost Allocation:** Leverage existing Kubernetes namespace labels or annotations  as the basis for security context or cost allocation. This provides granular control over permissions and facilitates chargeback functionalities.\n\nAdditional Information:\n\n- Only namespace-level labels or annotations can be used as source.\n\n- You can define up to 20 enrichment rules.\n\n- New rules may take up to 45 minutes to take effect.\n\n- Pod restarts are required after the 45 mins to ensure the changes take effect.\n\nTo learn more, please refer to our [documentation](https://dt-url.net/pn22sye).",
 			"displayName": "",
 			"documentation": "",
 			"items": {
@@ -90,8 +91,8 @@
 			"properties": {
 				"primaryGrailTag": {
 					"description": "",
-					"displayName": "Use as Primary Grail Tag",
-					"documentation": "Uses the key of the annotation or label as field name",
+					"displayName": "Enrich telemetry with label/annotation directly",
+					"documentation": "Uses the key of the annotation or label as field name directly",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
@@ -160,11 +161,11 @@
 					}
 				}
 			},
-			"summaryPattern": "{type} {source} --\u003e {target}",
+			"summaryPattern": "{type} {source} --\u003e **{primaryGrailTag, select, true {k8s.namespace.{type | toLowerCase}.{source}} other {{target}}}**",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
 		}
 	},
-	"version": "1.4"
+	"version": "1.5"
 }
