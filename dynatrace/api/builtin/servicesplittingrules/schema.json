@@ -186,6 +186,11 @@
 							"customValidatorId": "forbidden-attributes-single-attribute-validator",
 							"skipAsyncValidation": false,
 							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "key-value-pair-warning-single-attribute-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
 						}
 					],
 					"default": "",
@@ -214,5 +219,5 @@
 			]
 		}
 	},
-	"version": "0.0.13"
+	"version": "0.0.15"
 }
