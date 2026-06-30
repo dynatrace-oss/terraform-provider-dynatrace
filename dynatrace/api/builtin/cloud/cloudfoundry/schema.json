@@ -13,6 +13,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"addItemButton": "Connect new foundation"
@@ -59,8 +60,9 @@
 					"type": "TRIMMED"
 				},
 				{
-					"customMessage": "Cloud Foundry API Target must not contain the characters '?' or '#'.",
+					"customMessage": "Cloud Foundry API Target is not allowed. Ensure the URL is correctly formatted and does not target private or internal network addresses.",
 					"customValidatorId": "cloudfoundry-valid-endpoint-url",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
@@ -141,8 +143,9 @@
 					"type": "TRIMMED"
 				},
 				{
-					"customMessage": "Cloud Foundry Authentication Endpoint must not contain the characters '?' or '#'.",
+					"customMessage": "Cloud Foundry Authentication Endpoint is not allowed. Ensure the URL is correctly formatted and does not target private or internal network addresses.",
 					"customValidatorId": "cloudfoundry-valid-endpoint-url",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
@@ -234,6 +237,7 @@
 	"schemaConstraints": [
 		{
 			"customMessage": "Specified name already exists. Please provide different name.",
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"label"
@@ -242,11 +246,13 @@
 		{
 			"customMessage": "Specified URL is already used in another configuration.",
 			"customValidatorId": "cloudfoundry-unique-api-url",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		},
 		{
 			"customMessage": "Specified URL is already used in another configuration.",
 			"customValidatorId": "cloudfoundry-unique-login-url",
+			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -255,5 +261,5 @@
 	],
 	"schemaId": "builtin:cloud.cloudfoundry",
 	"types": {},
-	"version": "1.1"
+	"version": "1.1.1"
 }
