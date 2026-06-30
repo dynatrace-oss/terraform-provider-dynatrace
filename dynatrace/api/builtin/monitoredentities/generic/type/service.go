@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.2"
+const SchemaVersion = "1.5"
 const SchemaID = "builtin:monitoredentities.generic.type"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
