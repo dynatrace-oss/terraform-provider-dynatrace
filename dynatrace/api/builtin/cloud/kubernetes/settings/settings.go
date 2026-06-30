@@ -192,25 +192,39 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Settings) HandlePreconditions() error {
-	if me.CertificateCheckEnabled == nil && !me.ClusterIdEnabled {
+	if (me.CertificateCheckEnabled == nil) && (!me.ClusterIdEnabled) {
 		me.CertificateCheckEnabled = new(false)
 	}
-	if me.HostnameVerificationEnabled == nil && !me.ClusterIdEnabled {
+	if (me.HostnameVerificationEnabled == nil) && (!me.ClusterIdEnabled) {
 		me.HostnameVerificationEnabled = new(false)
 	}
-	if me.ActiveGateGroup == nil && !me.ClusterIdEnabled {
-		return fmt.Errorf("'active_gate_group' must be specified if 'cluster_id_enabled' is set to '%v'", me.ClusterIdEnabled)
+	if (me.ActiveGateGroup != nil) && (me.ClusterIdEnabled) {
+		return fmt.Errorf("'active_gate_group' must not be specified unless 'cluster_id_enabled' is set to 'false'; got 'cluster_id_enabled'='%v'", me.ClusterIdEnabled)
 	}
-	if me.AuthToken == nil && !me.ClusterIdEnabled {
-		return fmt.Errorf("'auth_token' must be specified if 'cluster_id_enabled' is set to '%v'", me.ClusterIdEnabled)
+	if (me.AuthToken != nil) && (me.ClusterIdEnabled) {
+		return fmt.Errorf("'auth_token' must not be specified unless 'cluster_id_enabled' is set to 'false'; got 'cluster_id_enabled'='%v'", me.ClusterIdEnabled)
 	}
-	if me.ClusterID == nil && me.ClusterIdEnabled {
-		return fmt.Errorf("'cluster_id' must be specified if 'cluster_id_enabled' is set to '%v'", me.ClusterIdEnabled)
+	if (me.AuthToken == nil) && (!me.ClusterIdEnabled) {
+		return fmt.Errorf("'auth_token' must be specified when 'cluster_id_enabled' is set to 'false'; got 'cluster_id_enabled'='%v'", me.ClusterIdEnabled)
 	}
-	if me.EndpointUrl == nil && !me.ClusterIdEnabled {
-		return fmt.Errorf("'endpoint_url' must be specified if 'cluster_id_enabled' is set to '%v'", me.ClusterIdEnabled)
+	if (me.CertificateCheckEnabled != nil) && (me.ClusterIdEnabled) {
+		return fmt.Errorf("'certificate_check_enabled' must not be specified unless 'cluster_id_enabled' is set to 'false'; got 'cluster_id_enabled'='%v'", me.ClusterIdEnabled)
 	}
-	// ---- EventPatterns EventComplexTypes -> {"expectedValue":true,"property":"filterEvents","type":"EQUALS"}
+	if (me.ClusterID != nil) && (!me.ClusterIdEnabled) {
+		return fmt.Errorf("'cluster_id' must not be specified unless 'cluster_id_enabled' is set to 'true'; got 'cluster_id_enabled'='%v'", me.ClusterIdEnabled)
+	}
+	if (me.ClusterID == nil) && (me.ClusterIdEnabled) {
+		return fmt.Errorf("'cluster_id' must be specified when 'cluster_id_enabled' is set to 'true'; got 'cluster_id_enabled'='%v'", me.ClusterIdEnabled)
+	}
+	if (me.EndpointUrl != nil) && (me.ClusterIdEnabled) {
+		return fmt.Errorf("'endpoint_url' must not be specified unless 'cluster_id_enabled' is set to 'false'; got 'cluster_id_enabled'='%v'", me.ClusterIdEnabled)
+	}
+	if (me.EndpointUrl == nil) && (!me.ClusterIdEnabled) {
+		return fmt.Errorf("'endpoint_url' must be specified when 'cluster_id_enabled' is set to 'false'; got 'cluster_id_enabled'='%v'", me.ClusterIdEnabled)
+	}
+	if (me.HostnameVerificationEnabled != nil) && (me.ClusterIdEnabled) {
+		return fmt.Errorf("'hostname_verification_enabled' must not be specified unless 'cluster_id_enabled' is set to 'false'; got 'cluster_id_enabled'='%v'", me.ClusterIdEnabled)
+	}
 	return nil
 }
 
