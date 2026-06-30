@@ -24,7 +24,7 @@ import (
 
 type Settings struct {
 	Enabled bool    `json:"enabled"`         // This setting is enabled (`true`) or disabled (`false`)
-	Scope   *string `json:"-" scope:"scope"` // The scope of this setting (PROCESS_GROUP, CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER). Omit this property if you want to cover the whole environment.
+	Scope   *string `json:"-" scope:"scope"` // The scope of this setting (PROCESS_GROUP, CLOUD_APPLICATION, CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 }
 
 func (me *Settings) Name() string {
@@ -40,7 +40,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"scope": {
 			Type:        schema.TypeString,
-			Description: "The scope of this setting (PROCESS_GROUP, CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER). Omit this property if you want to cover the whole environment.",
+			Description: "The scope of this setting (PROCESS_GROUP, CLOUD_APPLICATION, CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.",
 			Optional:    true,
 			Default:     "environment",
 		},
