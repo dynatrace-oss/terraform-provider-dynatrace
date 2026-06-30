@@ -76,11 +76,11 @@ func (me *SourceFilter) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *SourceFilter) HandlePreconditions() error {
-	if (me.Condition == nil) && (!slices.Contains([]string{"Logs", "Spans", "Topology", "Business Events"}, string(me.SourceType))) {
-		return fmt.Errorf("'condition' must be specified if 'source_type' is set to '%v'", me.SourceType)
-	}
 	if (me.Condition != nil) && (slices.Contains([]string{"Logs", "Spans", "Topology", "Business Events"}, string(me.SourceType))) {
-		return fmt.Errorf("'condition' must not be specified if 'source_type' is set to '%v'", me.SourceType)
+		return fmt.Errorf("'condition' must not be specified unless 'source_type' is not one of ['Logs', 'Spans', 'Topology', 'Business Events']; got 'source_type'='%v'", me.SourceType)
+	}
+	if (me.Condition == nil) && (!slices.Contains([]string{"Logs", "Spans", "Topology", "Business Events"}, string(me.SourceType))) {
+		return fmt.Errorf("'condition' must be specified when 'source_type' is not one of ['Logs', 'Spans', 'Topology', 'Business Events']; got 'source_type'='%v'", me.SourceType)
 	}
 	return nil
 }

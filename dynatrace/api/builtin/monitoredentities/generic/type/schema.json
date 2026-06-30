@@ -169,7 +169,7 @@
 					"$ref": "#/types/ExtractionRule"
 				}
 			},
-			"maxObjects": 10,
+			"maxObjects": 20,
 			"metadata": {
 				"addItemButton": "Add extraction rule",
 				"itemDisplayName": "New rule"
@@ -594,5 +594,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2"
+	"version": "1.5"
 }
