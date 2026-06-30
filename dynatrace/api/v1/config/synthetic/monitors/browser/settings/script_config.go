@@ -57,6 +57,7 @@ func (me *ScriptConfig) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "Capture performance metrics for pages loaded in frames",
 			Optional:    true,
+			Default:     true,
 		},
 		"user_agent": {
 			Type:        schema.TypeString,
