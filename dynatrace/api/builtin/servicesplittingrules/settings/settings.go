@@ -24,9 +24,9 @@ import (
 
 type Settings struct {
 	Enabled     bool    `json:"enabled"`         // This setting is enabled (`true`) or disabled (`false`)
+	InsertAfter *string `json:"-"`               // Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 	Rule        *Rule   `json:"rule"`            // Rule
 	Scope       *string `json:"-" scope:"scope"` // The scope of this setting (CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
-	InsertAfter string  `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -43,6 +43,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Computed:    true,
+			Optional:    true,
+		},
 		"rule": {
 			Type:        schema.TypeList,
 			Description: "Rule",
@@ -57,29 +63,23 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Optional:    true,
 			Default:     "environment",
 		},
-		"insert_after": {
-			Type:        schema.TypeString,
-			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
-			Optional:    true,
-			Computed:    true,
-		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"enabled":      me.Enabled,
+		"insert_after": me.InsertAfter,
 		"rule":         me.Rule,
 		"scope":        me.Scope,
-		"insert_after": me.InsertAfter,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"enabled":      &me.Enabled,
+		"insert_after": &me.InsertAfter,
 		"rule":         &me.Rule,
 		"scope":        &me.Scope,
-		"insert_after": &me.InsertAfter,
 	})
 }
