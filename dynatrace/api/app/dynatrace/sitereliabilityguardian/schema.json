@@ -15,15 +15,17 @@
 	"dynatrace": "1",
 	"enums": {
 		"ComparisonOperator": {
-			"description": "",
+			"description": "Pass/fail direction: use ≥ when higher values are better, ≤ when lower values are better.",
 			"displayName": "Comparison operator",
 			"documentation": "",
 			"items": [
 				{
+					"description": "Use when a higher measured value indicates better performance, e.g. availability or throughput.",
 					"displayName": "Greater than or equal",
 					"value": "GREATER_THAN_OR_EQUAL"
 				},
 				{
+					"description": "Use when a lower measured value indicates better performance, e.g. response time or error rate.",
 					"displayName": "Less than or equal",
 					"value": "LESS_THAN_OR_EQUAL"
 				}
@@ -31,15 +33,17 @@
 			"type": "enum"
 		},
 		"EventKind": {
-			"description": "",
+			"description": "Controls where validation events are stored: BIZ_EVENT for Grail bizevents, SDLC_EVENT for the SDLC pipeline.",
 			"displayName": "Event kind",
 			"documentation": "",
 			"items": [
 				{
+					"description": "Store validation results as business events in Grail. Default for business guardians.",
 					"displayName": "Biz events",
 					"value": "BIZ_EVENT"
 				},
 				{
+					"description": "Store validation results as SDLC events. Intended for software delivery lifecycle pipelines.",
 					"displayName": "SDLC events",
 					"value": "SDLC_EVENT"
 				}
@@ -47,15 +51,17 @@
 			"type": "enum"
 		},
 		"ObjectiveType": {
-			"description": "",
+			"description": "How the objective value is computed: via a DQL query or an existing SLO metric.",
 			"displayName": "Objective type",
 			"documentation": "",
 			"items": [
 				{
+					"description": "Run a DQL query; the first numeric result becomes the indicator value.",
 					"displayName": "DQL",
 					"value": "DQL"
 				},
 				{
+					"description": "Use an existing SLO metric as the indicator. The metric key must start with 'func:slo.'.",
 					"displayName": "Reference SLO",
 					"value": "REFERENCE_SLO"
 				}
@@ -63,6 +69,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add Site Reliability Guardian",
@@ -79,7 +86,7 @@
 					"type": "LENGTH"
 				}
 			],
-			"description": "",
+			"description": "Optional explanation of this guardian's purpose and scope.",
 			"displayName": "Description",
 			"documentation": "",
 			"maxObjects": 1,
@@ -107,7 +114,7 @@
 				}
 			],
 			"default": "New reliability guardian",
-			"description": "",
+			"description": "Unique display name for this guardian.",
 			"displayName": "Name",
 			"documentation": "",
 			"maxObjects": 1,
@@ -125,7 +132,7 @@
 					]
 				}
 			],
-			"description": "",
+			"description": "The validation criteria evaluated each time this guardian is executed.",
 			"displayName": "Objectives",
 			"documentation": "",
 			"items": {
@@ -227,7 +234,7 @@
 	"schemaId": "app:dynatrace.site.reliability.guardian:guardians",
 	"types": {
 		"DisplayUnit": {
-			"description": "",
+			"description": "Defines unit conversion and decimal formatting applied when showing a DQL result in the UI.",
 			"displayName": "Display Unit",
 			"documentation": "",
 			"properties": {
@@ -240,7 +247,7 @@
 						}
 					],
 					"default": "None",
-					"description": "",
+					"description": "Unit the DQL query returns its result in. Source unit for conversion.",
 					"displayName": "Base Unit",
 					"documentation": "",
 					"maxObjects": 1,
@@ -257,7 +264,7 @@
 						}
 					],
 					"default": 2,
-					"description": "",
+					"description": "Number of decimal places (0-4) used when formatting the displayed value.",
 					"displayName": "Decimals",
 					"documentation": "",
 					"maxObjects": 1,
@@ -274,7 +281,7 @@
 						}
 					],
 					"default": "Default",
-					"description": "",
+					"description": "Unit to display the value in after conversion. Use Default to show the base unit as-is.",
 					"displayName": "display as unit",
 					"documentation": "",
 					"maxObjects": 1,
@@ -289,12 +296,12 @@
 			"versionInfo": ""
 		},
 		"Objective": {
-			"description": "",
+			"description": "A single validation criterion evaluated each guardian run. Result is pass, warning, fail, or info depending on thresholds and the comparison operator.",
 			"displayName": "Objective",
 			"documentation": "",
 			"properties": {
 				"autoAdaptiveThresholdEnabled": {
-					"description": "",
+					"description": "Dynamically computes thresholds from 30 days of history.",
 					"displayName": "Enable auto adaptive threshold",
 					"documentation": "",
 					"maxObjects": 1,
@@ -309,7 +316,7 @@
 				},
 				"comparisonOperator": {
 					"default": "GREATER_THAN_OR_EQUAL",
-					"description": "",
+					"description": "Pass/fail direction: use ≥ when higher values are better, ≤ when lower values are better.",
 					"displayName": "Comparison operator",
 					"documentation": "",
 					"maxObjects": 1,
@@ -327,7 +334,7 @@
 							"type": "LENGTH"
 						}
 					],
-					"description": "",
+					"description": "Optional short explanation of what this objective measures.",
 					"displayName": "Description",
 					"documentation": "",
 					"maxObjects": 1,
@@ -336,7 +343,7 @@
 					"type": "text"
 				},
 				"displayUnit": {
-					"description": "",
+					"description": "Optional unit conversion and decimal formatting applied when displaying the DQL result in the UI.",
 					"displayName": "Display Unit",
 					"documentation": "",
 					"maxObjects": 1,
@@ -360,7 +367,7 @@
 						}
 					],
 					"default": "",
-					"description": "",
+					"description": "DQL query to execute. The first numeric result becomes the objective value. Supports $variable interpolation.",
 					"displayName": "DQL query",
 					"documentation": "",
 					"maxObjects": 1,
@@ -404,7 +411,7 @@
 						}
 					],
 					"default": "New objective name",
-					"description": "",
+					"description": "Unique name within this guardian. Included in every emitted validation event as the objective identifier.",
 					"displayName": "Objective name",
 					"documentation": "",
 					"maxObjects": 1,
@@ -414,7 +421,7 @@
 				},
 				"objectiveType": {
 					"default": "DQL",
-					"description": "",
+					"description": "How the objective value is computed: via a DQL query or an existing SLO metric.",
 					"displayName": "Objective type",
 					"documentation": "",
 					"maxObjects": 1,
@@ -447,7 +454,7 @@
 					"type": "text"
 				},
 				"segments": {
-					"description": "",
+					"description": "Optional Grail segments to scope the DQL query to specific data.",
 					"displayName": "Segments",
 					"documentation": "",
 					"items": {
@@ -465,7 +472,7 @@
 					"type": "list"
 				},
 				"target": {
-					"description": "",
+					"description": "Hard pass/fail threshold. Missing this value yields FAIL. If unset with no warning, status is always INFO.",
 					"displayName": "Target",
 					"documentation": "",
 					"maxObjects": 1,
@@ -474,7 +481,7 @@
 					"type": "float"
 				},
 				"warning": {
-					"description": "",
+					"description": "Soft threshold. Results between warning and target yield WARNING. When set alone, yields PASS or WARNING.",
 					"displayName": "Warning",
 					"documentation": "",
 					"maxObjects": 1,
@@ -489,7 +496,7 @@
 			"versionInfo": ""
 		},
 		"ObjectiveLink": {
-			"description": "",
+			"description": "An external HTTPS URL with optional display text attached to an objective for contextual reference.",
 			"displayName": "Objective Link",
 			"documentation": "",
 			"properties": {
@@ -547,7 +554,7 @@
 			"versionInfo": ""
 		},
 		"Segment": {
-			"description": "",
+			"description": "A Grail segment reference that scopes a DQL objective query to a subset of observability data.",
 			"displayName": "Segment",
 			"documentation": "",
 			"properties": {
@@ -560,7 +567,7 @@
 						}
 					],
 					"default": "",
-					"description": "",
+					"description": "Dynatrace Grail segment ID that scopes the DQL query to data within the segment.",
 					"displayName": "Segment ID",
 					"documentation": "",
 					"maxObjects": 1,
@@ -569,7 +576,7 @@
 					"type": "text"
 				},
 				"variables": {
-					"description": "",
+					"description": "Variables to parameterize the segment filter.",
 					"displayName": "Segment Variables",
 					"documentation": "",
 					"items": {
@@ -593,7 +600,7 @@
 			"versionInfo": ""
 		},
 		"SegmentVariable": {
-			"description": "",
+			"description": "A named variable within a segment used to parameterize the segment filter.",
 			"displayName": "Segment Variable",
 			"documentation": "",
 			"properties": {
@@ -606,7 +613,7 @@
 						}
 					],
 					"default": "",
-					"description": "",
+					"description": "Name of the variable within the segment definition.",
 					"displayName": "Variable Name",
 					"documentation": "",
 					"maxObjects": 1,
@@ -615,7 +622,7 @@
 					"type": "text"
 				},
 				"values": {
-					"description": "",
+					"description": "One or more values for the variable, enabling multi-value filter expansion.",
 					"displayName": "Variable Values",
 					"documentation": "",
 					"items": {
@@ -644,7 +651,7 @@
 			"versionInfo": ""
 		},
 		"Variable": {
-			"description": "",
+			"description": "Named placeholder referenced as $name in DQL queries. Default value is used unless overridden via execution context.",
 			"displayName": "Variable",
 			"documentation": "",
 			"properties": {
@@ -657,7 +664,7 @@
 						}
 					],
 					"default": "",
-					"description": "",
+					"description": "Default value substituted for $name in DQL queries. Can be overridden at runtime via execution context.",
 					"displayName": "Value",
 					"documentation": "",
 					"maxObjects": 1,
@@ -678,7 +685,7 @@
 						}
 					],
 					"default": "",
-					"description": "",
+					"description": "Alphanumeric/underscore identifier referenced in DQL queries as $name. Must be unique within the guardian.",
 					"displayName": "Name",
 					"documentation": "",
 					"maxObjects": 1,
@@ -693,5 +700,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.9"
+	"version": "1.9.1"
 }

@@ -23,10 +23,10 @@ import (
 )
 
 type Settings struct {
-	Description *string    `json:"description,omitempty"` // Description
+	Description *string    `json:"description,omitempty"` // Optional explanation of this guardian's purpose and scope.
 	EventKind   *EventKind `json:"eventKind,omitempty"`   // If set to null/'BIZ_EVENT' validation events stored as bizevents in Grail. If set to 'SDLC_EVENT' validation events stored as SDLC events. Possible values: `BIZ_EVENT`, `SDLC_EVENT`
-	Name        string     `json:"name"`                  // Name
-	Objectives  Objectives `json:"objectives"`            // Objectives
+	Name        string     `json:"name"`                  // Unique display name for this guardian.
+	Objectives  Objectives `json:"objectives"`            // The validation criteria evaluated each time this guardian is executed.
 	Tags        []string   `json:"tags,omitempty"`        // Define key/value pairs that further describe this guardian.
 	Variables   Variables  `json:"variables,omitempty"`   // Define variables for dynamically defining DQL queries
 }
@@ -35,7 +35,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"description": {
 			Type:        schema.TypeString,
-			Description: "Description",
+			Description: "Optional explanation of this guardian's purpose and scope.",
 			Optional:    true, // nullable
 		},
 		"event_kind": {
@@ -45,12 +45,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"name": {
 			Type:        schema.TypeString,
-			Description: "Name",
+			Description: "Unique display name for this guardian.",
 			Required:    true,
 		},
 		"objectives": {
 			Type:        schema.TypeList,
-			Description: "Objectives",
+			Description: "The validation criteria evaluated each time this guardian is executed.",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(Objectives).Schema()},
 			MinItems:    1,

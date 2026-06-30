@@ -44,21 +44,22 @@ func (me *Variables) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeSlice("variable", me)
 }
 
+// Variable. Named placeholder referenced as $name in DQL queries. Default value is used unless overridden via execution context.
 type Variable struct {
-	Definition string `json:"definition"` // Value
-	Name       string `json:"name"`
+	Definition string `json:"definition"` // Default value substituted for $name in DQL queries. Can be overridden at runtime via execution context.
+	Name       string `json:"name"`       // Alphanumeric/underscore identifier referenced in DQL queries as $name. Must be unique within the guardian.
 }
 
 func (me *Variable) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"definition": {
 			Type:        schema.TypeString,
-			Description: "Value",
+			Description: "Default value substituted for $name in DQL queries. Can be overridden at runtime via execution context.",
 			Required:    true,
 		},
 		"name": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "Alphanumeric/underscore identifier referenced in DQL queries as $name. Must be unique within the guardian.",
 			Required:    true,
 		},
 	}
