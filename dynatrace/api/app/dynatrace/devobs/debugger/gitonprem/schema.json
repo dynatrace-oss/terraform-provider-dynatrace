@@ -32,6 +32,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 10,
 	"metadata": {
 		"appName": "Live Debugger"
@@ -74,13 +75,19 @@
 					"type": "PATTERN"
 				},
 				{
+					"customMessage": "The server URL must be an HTTPS base URL without a path (for example https://git.example.com).",
+					"customValidatorId": "validate-git-on-prem-url",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
 					"maxLength": 500,
 					"minLength": 1,
 					"type": "LENGTH"
 				}
 			],
 			"default": "",
-			"description": "An HTTP/HTTPS URL of your server",
+			"description": "An HTTPS URL of your server (HTTP not supported)\nProvide only the base URL of the server, not a path to a specific project or repository (For instance, https://git.example.com)",
 			"displayName": "Server URL",
 			"documentation": "",
 			"maxObjects": 1,
@@ -91,5 +98,5 @@
 	},
 	"schemaId": "app:dynatrace.devobs.debugger:git.on.prem",
 	"types": {},
-	"version": "0.3"
+	"version": "0.5"
 }
