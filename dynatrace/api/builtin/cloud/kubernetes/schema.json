@@ -14,6 +14,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"metadata": {
 		"reloadUiContext": "enabled"
@@ -111,6 +112,7 @@
 				{
 					"customMessage": "This Kubernetes cluster ID is already being used.",
 					"customValidatorId": "kubernetes-unique-cluster-id",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
@@ -163,8 +165,9 @@
 					"type": "NOT_BLANK"
 				},
 				{
-					"customMessage": "Kubernetes API URL Target must not contain the characters '?' or '#'.",
+					"customMessage": "Kubernetes API URL Target is not allowed. Ensure the URL is correctly formatted and does not target private or internal network addresses.",
 					"customValidatorId": "kubernetes-valid-endpoint-url",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
@@ -247,6 +250,7 @@
 		{
 			"customMessage": "Maximum number of monitored Kubernetes clusters reached. Please disable monitoring of some clusters.",
 			"customValidatorId": "kubernetes-max-scopes",
+			"skipAsyncValidation": false,
 			"type": "MULTI_SCOPE_CUSTOM_VALIDATOR_REF"
 		}
 	],
@@ -274,5 +278,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "3.1"
+	"version": "3.1.1"
 }
