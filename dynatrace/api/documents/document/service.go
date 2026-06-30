@@ -20,6 +20,7 @@ package documents
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
@@ -32,10 +33,15 @@ import (
 	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document/settings"
 )
 
+var supportedDocumentTypes = []docclient.DocumentType{
+	docclient.Dashboard,
+	docclient.Notebook,
+	docclient.Launchpad,
+}
+
 func Service(credentials *rest.Credentials) settings.CRUDService[*documents.Document] {
 	return &service{credentials}
 }
-
 
 type service struct {
 	credentials *rest.Credentials
@@ -106,7 +112,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	if cl == nil {
 		return api.Stubs{}, nil
 	}
-	listResponse, err := cl.List(ctx, "")
+	listResponse, err := cl.List(ctx, getSupportedDocumentsFilter())
 	if err != nil {
 		return nil, err
 	}
@@ -116,6 +122,26 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	}
 
 	return stubs, nil
+}
+
+// getSupportedDocumentsFilter returns a filter string for supported documents, those of known types and not created by apps or extensions.
+func getSupportedDocumentsFilter() string {
+	filterBuilder := strings.Builder{}
+
+	// exclude readmade documents created by apps or extensions
+	filterBuilder.WriteString("not (originAppId exists) and not (originExtensionId exists) and ")
+
+	// add filter for the supported document types
+	filterBuilder.WriteString("type in (")
+	for i, documentType := range supportedDocumentTypes {
+		if i > 0 {
+			filterBuilder.WriteString(", ")
+		}
+		filterBuilder.WriteString(fmt.Sprintf("'%s'", documentType))
+	}
+	filterBuilder.WriteString(")")
+
+	return filterBuilder.String()
 }
 
 func (me *service) Validate(_ *documents.Document) error {
