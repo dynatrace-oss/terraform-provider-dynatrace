@@ -25,10 +25,10 @@ import (
 )
 
 type Rule struct {
-	Condition            *string         `json:"condition,omitempty"` // Limits the scope of the endpoint detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on span and resource attributes.. A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\nIf empty, the condition will always match.
+	Condition            *string         `json:"condition,omitempty"` // Limits the scope of the endpoint detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on span and resource attributes.. A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\n  If empty, the condition will always match.
 	Description          *string         `json:"description,omitempty"`
-	EndpointNameTemplate *string         `json:"endpointNameTemplate,omitempty"` // Specify attribute placeholders in curly braces, e.g. {http.route} or {rpc.method}.. Attribute value placeholders should be specified in curly braces, e.g. {http.route}, {rpc.method}. All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\nIf the resolved endpoint name on a given span is empty, the request will be ignored.
-	IfConditionMatches   ActionToPerform `json:"ifConditionMatches"`             // If condition matches. Possible Values: `DETECT_REQUEST_ON_ENDPOINT`, `SUPPRESS_REQUEST`
+	EndpointNameTemplate *string         `json:"endpointNameTemplate,omitempty"` // Specify attribute placeholders in curly braces, e.g. {http.route} or {rpc.method}.. Attribute value placeholders should be specified in curly braces, e.g. {http.route}, {rpc.method}. All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\n  If the resolved endpoint name on a given span is empty, the request will be ignored.
+	IfConditionMatches   ActionToPerform `json:"ifConditionMatches"`             // If condition matches. Possible values: `DETECT_REQUEST_ON_ENDPOINT`, `SUPPRESS_REQUEST`
 	RuleName             string          `json:"ruleName"`                       // Rule name
 }
 
@@ -36,22 +36,22 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"condition": {
 			Type:        schema.TypeString,
-			Description: "Limits the scope of the endpoint detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on span and resource attributes.. A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\nIf empty, the condition will always match.",
+			Description: "Limits the scope of the endpoint detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on span and resource attributes.. A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.\n\n  If empty, the condition will always match.",
 			Optional:    true, // nullable
 		},
 		"description": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // nullable
 		},
 		"endpoint_name_template": {
 			Type:        schema.TypeString,
-			Description: "Specify attribute placeholders in curly braces, e.g. {http.route} or {rpc.method}.. Attribute value placeholders should be specified in curly braces, e.g. {http.route}, {rpc.method}. All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\nIf the resolved endpoint name on a given span is empty, the request will be ignored.",
+			Description: "Specify attribute placeholders in curly braces, e.g. {http.route} or {rpc.method}.. Attribute value placeholders should be specified in curly braces, e.g. {http.route}, {rpc.method}. All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.\n\n  If the resolved endpoint name on a given span is empty, the request will be ignored.",
 			Optional:    true, // precondition
 		},
 		"if_condition_matches": {
 			Type:        schema.TypeString,
-			Description: "If condition matches. Possible Values: `DETECT_REQUEST_ON_ENDPOINT`, `SUPPRESS_REQUEST`",
+			Description: "If condition matches. Possible values: `DETECT_REQUEST_ON_ENDPOINT`, `SUPPRESS_REQUEST`",
 			Required:    true,
 		},
 		"rule_name": {
@@ -73,11 +73,11 @@ func (me *Rule) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Rule) HandlePreconditions() error {
-	if (me.EndpointNameTemplate == nil) && (string(me.IfConditionMatches) == "DETECT_REQUEST_ON_ENDPOINT") {
-		return fmt.Errorf("'endpoint_name_template' must be specified if 'if_condition_matches' is set to '%v'", me.IfConditionMatches)
-	}
 	if (me.EndpointNameTemplate != nil) && (string(me.IfConditionMatches) != "DETECT_REQUEST_ON_ENDPOINT") {
-		return fmt.Errorf("'endpoint_name_template' must not be specified if 'if_condition_matches' is set to '%v'", me.IfConditionMatches)
+		return fmt.Errorf("'endpoint_name_template' must not be specified unless 'if_condition_matches' is set to 'DETECT_REQUEST_ON_ENDPOINT'; got 'if_condition_matches'='%v'", me.IfConditionMatches)
+	}
+	if (me.EndpointNameTemplate == nil) && (string(me.IfConditionMatches) == "DETECT_REQUEST_ON_ENDPOINT") {
+		return fmt.Errorf("'endpoint_name_template' must be specified when 'if_condition_matches' is set to 'DETECT_REQUEST_ON_ENDPOINT'; got 'if_condition_matches'='%v'", me.IfConditionMatches)
 	}
 	return nil
 }
