@@ -18,7 +18,6 @@
 package keyrequests
 
 import (
-	// toposervices "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/services"
 	"context"
 	"fmt"
 
@@ -30,23 +29,22 @@ import (
 	entity "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/cache"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
+const SchemaVersion = "0.1.9"
 const SchemaID = "builtin:settings.subscriptions.service"
-const SchemaVersion = "0.1.8"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*keyrequests.KeyRequest] {
+func Service(credentials *rest.Credentials) settings.CRUDService[*keyrequests.Settings] {
 	var topologyService settings.RService[*entity.Entity]
 	if settings.ExportRunning {
-		topologyService = cache.Read(toposervices.DataSourceService(credentials))
+		topologyService = toposervices.DataSourceService(credentials)
 	} else {
-		topologyService = cache.Read(toposervices.Service(credentials))
+		topologyService = toposervices.Service(credentials)
 	}
 	return &service{
-		service: settings20.Service[*keyrequests.KeyRequest](credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*keyrequests.KeyRequest]{
-			Name: func(ctx context.Context, id string, v *keyrequests.KeyRequest) (string, error) {
+		service: settings20.Service[*keyrequests.Settings](credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*keyrequests.Settings]{
+			Name: func(ctx context.Context, id string, v *keyrequests.Settings) (string, error) {
 				service := settings.NewSettings(topologyService)
 				if err := topologyService.Get(ctx, v.ServiceID, service); err != nil {
 					return "", err
@@ -60,43 +58,49 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*keyrequests.Ke
 }
 
 type service struct {
-	service     settings.CRUDService[*keyrequests.KeyRequest]
+	service     settings.CRUDService[*keyrequests.Settings]
 	credentials *rest.Credentials
 	client      rest.Client
 }
 
-func (me *service) Create(ctx context.Context, v *keyrequests.KeyRequest) (*api.Stub, error) {
+func (me *service) Create(ctx context.Context, v *keyrequests.Settings) (*api.Stub, error) {
 	return me.service.Create(ctx, v)
 }
 
-func (me *service) Update(ctx context.Context, id string, v *keyrequests.KeyRequest) error {
+func (me *service) Update(ctx context.Context, id string, v *keyrequests.Settings) error {
 	return me.service.Update(ctx, id, v)
 }
 
-func (me *service) Get(ctx context.Context, id string, v *keyrequests.KeyRequest) error {
+func (me *service) Get(ctx context.Context, id string, v *keyrequests.Settings) error {
 	if err := me.service.Get(ctx, id, v); err != nil {
 		return err
 	}
 
+	v.KeyRequestIDs = me.getKeyRequestIDs(ctx, v.ServiceID, v.Names)
+
+	return nil
+}
+
+// getKeyRequestIDs fetches the service_method of a given service and maps via the given names the IDs to a map {name: ID}
+// if the request errors the state value is returned
+func (me *service) getKeyRequestIDs(ctx context.Context, serviceID string, names []string) map[string]string {
 	var entitySettings entities.Settings
-	service := srv.Service("", "", fmt.Sprintf("type(\"SERVICE_METHOD\"),fromRelationships.isServiceMethodOf(type(\"SERVICE_METHOD_GROUP\"),fromRelationships.isGroupOf(type(\"SERVICE\"),entityId(\"%s\")))", v.ServiceID), "", "", me.credentials)
+	service := srv.Service("", "", fmt.Sprintf("type(\"SERVICE_METHOD\"),fromRelationships.isServiceMethodOf(type(\"SERVICE_METHOD_GROUP\"),fromRelationships.isGroupOf(type(\"SERVICE\"),entityId(\"%s\")))", serviceID), "", "", me.credentials)
 	if err := service.Get(ctx, service.SchemaID(), &entitySettings); err == nil {
 		keyRequestIDs := map[string]string{}
-		for _, name := range v.Names {
+		for _, name := range names {
 			for _, entity := range entitySettings.Entities {
 				if entity.DisplayName != nil && *entity.DisplayName == name {
 					keyRequestIDs[*entity.DisplayName] = *entity.EntityId
 				}
 			}
 		}
-		v.KeyRequestIDs = keyRequestIDs
-	} else {
-		cfg := ctx.Value(settings.ContextKeyStateConfig)
-		if keyRequestConfig, ok := cfg.(*keyrequests.KeyRequest); ok && keyRequestConfig != nil {
-			v.KeyRequestIDs = keyRequestConfig.KeyRequestIDs
-		}
+		return keyRequestIDs
 	}
-
+	cfg := ctx.Value(settings.ContextKeyStateConfig)
+	if keyRequestConfig, ok := cfg.(*keyrequests.Settings); ok && keyRequestConfig != nil {
+		return keyRequestConfig.KeyRequestIDs
+	}
 	return nil
 }
 

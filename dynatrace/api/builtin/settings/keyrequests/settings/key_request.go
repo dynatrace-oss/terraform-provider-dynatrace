@@ -19,22 +19,20 @@ package keyrequests
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// KeyRequest has no documentation
-type KeyRequest struct {
-	Names         []string          `json:"keyRequestNames,omitempty"`
-	ServiceID     string            `json:"-" scope:"serviceId"`
+type Settings struct {
 	KeyRequestIDs map[string]string `json:"-"`
+	Names         []string          `json:"keyRequestNames,omitempty"` // Key request names
+	ServiceID     string            `json:"-" scope:"serviceId"`       // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 }
 
-func (me *KeyRequest) Name() string {
+func (me *Settings) Name() string {
 	return "Key Requests for " + me.ServiceID
 }
 
-func (me *KeyRequest) Schema() map[string]*schema.Schema {
+func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"service": {
 			Type:        schema.TypeString,
@@ -59,7 +57,7 @@ func (me *KeyRequest) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (me *KeyRequest) MarshalHCL(properties hcl.Properties) error {
+func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"names":           me.Names,
 		"service":         me.ServiceID,
@@ -67,7 +65,7 @@ func (me *KeyRequest) MarshalHCL(properties hcl.Properties) error {
 	})
 }
 
-func (me *KeyRequest) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"names":           &me.Names,
 		"service":         &me.ServiceID,
