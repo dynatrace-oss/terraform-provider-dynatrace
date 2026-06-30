@@ -18,14 +18,16 @@
 package gitonprem
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type Settings struct {
 	IncludeCredentials *bool     `json:"IncludeCredentials,omitempty"` // If turned on, requests to your Gitlab server will have the `credentials` option set to `include`. Otherwise, it will be set to `omit`.
-	Provider           Providers `json:"Provider"`                     // Possible Values: `AzureOnPrem`, `BitbucketOnPrem`, `GithubOnPrem`, `GitlabOnPrem`
-	Url                string    `json:"Url"`                          // An HTTP/HTTPS URL of your server
+	Provider           Providers `json:"Provider"`                     // The git service provider for this server. Possible values: `AzureOnPrem`, `BitbucketOnPrem`, `GithubOnPrem`, `GitlabOnPrem`
+	Url                string    `json:"Url"`                          // An HTTPS URL of your server (HTTP not supported)\n Provide only the base URL of the server, not a path to a specific project or repository (For instance, https://git.example.com)
 }
 
 func (me *Settings) Name() string {
@@ -41,12 +43,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"git_provider": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `AzureOnPrem`, `BitbucketOnPrem`, `GithubOnPrem`, `GitlabOnPrem`",
+			Description: "The git service provider for this server. Possible values: `AzureOnPrem`, `BitbucketOnPrem`, `GithubOnPrem`, `GitlabOnPrem`",
 			Required:    true,
 		},
 		"url": {
 			Type:        schema.TypeString,
-			Description: "An HTTP/HTTPS URL of your server",
+			Description: "An HTTPS URL of your server (HTTP not supported)\n Provide only the base URL of the server, not a path to a specific project or repository (For instance, https://git.example.com)",
 			Required:    true,
 		},
 	}
@@ -63,6 +65,9 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 func (me *Settings) HandlePreconditions() error {
 	if (me.IncludeCredentials == nil) && (string(me.Provider) == "GitlabOnPrem") {
 		me.IncludeCredentials = new(false)
+	}
+	if (me.IncludeCredentials != nil) && (string(me.Provider) != "GitlabOnPrem") {
+		return fmt.Errorf("'include_credentials' must not be specified unless 'git_provider' is set to 'GitlabOnPrem'; got 'git_provider'='%v'", me.Provider)
 	}
 	return nil
 }
