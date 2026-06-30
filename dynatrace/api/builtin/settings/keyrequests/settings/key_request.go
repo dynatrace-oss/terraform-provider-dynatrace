@@ -38,8 +38,8 @@ func (me *KeyRequest) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"service": {
 			Type:        schema.TypeString,
+			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
 			Required:    true,
-			Description: "ID of Dynatrace Service, eg. SERVICE-123ABC45678EFGH",
 			ForceNew:    true,
 		},
 		"names": {
