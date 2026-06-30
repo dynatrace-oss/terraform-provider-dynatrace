@@ -389,10 +389,6 @@
 					"displayName": "Execution delay",
 					"documentation": "",
 					"maxObjects": 1,
-					"metadata": {
-						"featureFlag": "com.compuware.alerting.enableCustomExecutionDelay.feature",
-						"maturity": "IN_DEVELOPMENT"
-					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": true,
 					"type": "integer"
@@ -420,5 +416,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.15"
+	"version": "1.0.16"
 }
