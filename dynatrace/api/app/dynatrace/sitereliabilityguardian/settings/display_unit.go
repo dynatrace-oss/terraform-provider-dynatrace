@@ -22,27 +22,28 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// Display Unit. Defines unit conversion and decimal formatting applied when showing a DQL result in the UI.
 type DisplayUnit struct {
-	Base     string `json:"base"`     // Base Unit
-	Decimals int    `json:"decimals"` // Decimals
-	Display  string `json:"display"`  // display as unit
+	Base     string `json:"base"`     // Unit the DQL query returns its result in. Source unit for conversion.
+	Decimals int    `json:"decimals"` // Number of decimal places (0-4) used when formatting the displayed value.
+	Display  string `json:"display"`  // Unit to display the value in after conversion. Use Default to show the base unit as-is.
 }
 
 func (me *DisplayUnit) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"base": {
 			Type:        schema.TypeString,
-			Description: "Base Unit",
+			Description: "Unit the DQL query returns its result in. Source unit for conversion.",
 			Required:    true,
 		},
 		"decimals": {
 			Type:        schema.TypeInt,
-			Description: "Decimals",
+			Description: "Number of decimal places (0-4) used when formatting the displayed value.",
 			Required:    true,
 		},
 		"display": {
 			Type:        schema.TypeString,
-			Description: "display as unit",
+			Description: "Unit to display the value in after conversion. Use Default to show the base unit as-is.",
 			Required:    true,
 		},
 	}

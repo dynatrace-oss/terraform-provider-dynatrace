@@ -44,6 +44,7 @@ func (me *ObjectiveLinks) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeSlice("link", me)
 }
 
+// Objective Link. An external HTTPS URL with optional display text attached to an objective for contextual reference.
 type ObjectiveLink struct {
 	Label *string `json:"label,omitempty"` // Short description for the link.
 	Url   string  `json:"url"`             // HTTPS link associated with this objective.

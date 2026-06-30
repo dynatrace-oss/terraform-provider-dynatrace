@@ -44,21 +44,22 @@ func (me *SegmentVariables) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeSlice("variable", me)
 }
 
+// Segment Variable. A named variable within a segment used to parameterize the segment filter.
 type SegmentVariable struct {
-	Name   string   `json:"name"`             // Variable Name
-	Values []string `json:"values,omitempty"` // Variable Values
+	Name   string   `json:"name"`             // Name of the variable within the segment definition.
+	Values []string `json:"values,omitempty"` // One or more values for the variable, enabling multi-value filter expansion.
 }
 
 func (me *SegmentVariable) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
 			Type:        schema.TypeString,
-			Description: "Variable Name",
+			Description: "Name of the variable within the segment definition.",
 			Required:    true,
 		},
 		"values": {
 			Type:        schema.TypeList,
-			Description: "Variable Values",
+			Description: "One or more values for the variable, enabling multi-value filter expansion.",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},

@@ -44,21 +44,22 @@ func (me *Segments) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeSlice("segment", me)
 }
 
+// Segment. A Grail segment reference that scopes a DQL objective query to a subset of observability data.
 type Segment struct {
-	ID        string           `json:"id"`                  // Segment ID
-	Variables SegmentVariables `json:"variables,omitempty"` // Segment Variables
+	ID        string           `json:"id"`                  // Dynatrace Grail segment ID that scopes the DQL query to data within the segment.
+	Variables SegmentVariables `json:"variables,omitempty"` // Variables to parameterize the segment filter.
 }
 
 func (me *Segment) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"id": {
 			Type:        schema.TypeString,
-			Description: "Segment ID",
+			Description: "Dynatrace Grail segment ID that scopes the DQL query to data within the segment.",
 			Required:    true,
 		},
 		"variables": {
 			Type:        schema.TypeList,
-			Description: "Segment Variables",
+			Description: "Variables to parameterize the segment filter.",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(SegmentVariables).Schema()},
 			MinItems:    1,

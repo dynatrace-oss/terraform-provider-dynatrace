@@ -46,41 +46,42 @@ func (me *Objectives) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeSlice("objective", me)
 }
 
+// Objective. A single validation criterion evaluated each guardian run. Result is pass, warning, fail, or info depending on thresholds and the comparison operator.
 type Objective struct {
-	AutoAdaptiveThresholdEnabled *bool              `json:"autoAdaptiveThresholdEnabled,omitempty"` // Enable auto adaptive threshold
-	ComparisonOperator           ComparisonOperator `json:"comparisonOperator"`                     // Comparison operator. Possible values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`
-	Description                  *string            `json:"description,omitempty"`
-	DisplayUnit                  *DisplayUnit       `json:"displayUnit,omitempty"`  // Display Unit
-	DqlQuery                     *string            `json:"dqlQuery,omitempty"`     // DQL query
-	Links                        ObjectiveLinks     `json:"links,omitempty"`        // Fields for adding relevant links to this objective.
-	Name                         string             `json:"name"`                   // Objective name
-	ObjectiveType                ObjectiveType      `json:"objectiveType"`          // Objective type. Possible values: `DQL`, `REFERENCE_SLO`
-	ReferenceSlo                 *string            `json:"referenceSlo,omitempty"` // Please enter the metric key of your desired SLO. SLO metric keys have to start with 'func:slo.'
-	Segments                     Segments           `json:"segments,omitempty"`
-	Target                       *float64           `json:"target,omitempty"`
-	Warning                      *float64           `json:"warning,omitempty"`
+	AutoAdaptiveThresholdEnabled *bool              `json:"autoAdaptiveThresholdEnabled,omitempty"` // Dynamically computes thresholds from 30 days of history.
+	ComparisonOperator           ComparisonOperator `json:"comparisonOperator"`                     // Pass/fail direction: use ≥ when higher values are better, ≤ when lower values are better. Possible values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`
+	Description                  *string            `json:"description,omitempty"`                  // Optional short explanation of what this objective measures.
+	DisplayUnit                  *DisplayUnit       `json:"displayUnit,omitempty"`                  // Optional unit conversion and decimal formatting applied when displaying the DQL result in the UI.
+	DqlQuery                     *string            `json:"dqlQuery,omitempty"`                     // DQL query to execute. The first numeric result becomes the objective value. Supports $variable interpolation.
+	Links                        ObjectiveLinks     `json:"links,omitempty"`                        // Fields for adding relevant links to this objective.
+	Name                         string             `json:"name"`                                   // Unique name within this guardian. Included in every emitted validation event as the objective identifier.
+	ObjectiveType                ObjectiveType      `json:"objectiveType"`                          // How the objective value is computed: via a DQL query or an existing SLO metric. Possible values: `DQL`, `REFERENCE_SLO`
+	ReferenceSlo                 *string            `json:"referenceSlo,omitempty"`                 // Please enter the metric key of your desired SLO. SLO metric keys have to start with 'func:slo.'
+	Segments                     Segments           `json:"segments,omitempty"`                     // Optional Grail segments to scope the DQL query to specific data.
+	Target                       *float64           `json:"target,omitempty"`                       // Hard pass/fail threshold. Missing this value yields FAIL. If unset with no warning, status is always INFO.
+	Warning                      *float64           `json:"warning,omitempty"`                      // Soft threshold. Results between warning and target yield WARNING. When set alone, yields PASS or WARNING.
 }
 
 func (me *Objective) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"auto_adaptive_threshold_enabled": {
 			Type:        schema.TypeBool,
-			Description: "Enable auto adaptive threshold",
+			Description: "Dynamically computes thresholds from 30 days of history.",
 			Optional:    true, // nullable & precondition
 		},
 		"comparison_operator": {
 			Type:        schema.TypeString,
-			Description: "Comparison operator. Possible values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`",
+			Description: "Pass/fail direction: use ≥ when higher values are better, ≤ when lower values are better. Possible values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`",
 			Required:    true,
 		},
 		"description": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "Optional short explanation of what this objective measures.",
 			Optional:    true, // nullable
 		},
 		"display_unit": {
 			Type:        schema.TypeList,
-			Description: "Display Unit",
+			Description: "Optional unit conversion and decimal formatting applied when displaying the DQL result in the UI.",
 			Optional:    true, // nullable & precondition
 			Elem:        &schema.Resource{Schema: new(DisplayUnit).Schema()},
 			MinItems:    1,
@@ -88,7 +89,7 @@ func (me *Objective) Schema() map[string]*schema.Schema {
 		},
 		"dql_query": {
 			Type:        schema.TypeString,
-			Description: "DQL query",
+			Description: "DQL query to execute. The first numeric result becomes the objective value. Supports $variable interpolation.",
 			Optional:    true, // precondition
 		},
 		"links": {
@@ -101,12 +102,12 @@ func (me *Objective) Schema() map[string]*schema.Schema {
 		},
 		"name": {
 			Type:        schema.TypeString,
-			Description: "Objective name",
+			Description: "Unique name within this guardian. Included in every emitted validation event as the objective identifier.",
 			Required:    true,
 		},
 		"objective_type": {
 			Type:        schema.TypeString,
-			Description: "Objective type. Possible values: `DQL`, `REFERENCE_SLO`",
+			Description: "How the objective value is computed: via a DQL query or an existing SLO metric. Possible values: `DQL`, `REFERENCE_SLO`",
 			Required:    true,
 		},
 		"reference_slo": {
@@ -116,7 +117,7 @@ func (me *Objective) Schema() map[string]*schema.Schema {
 		},
 		"segments": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "Optional Grail segments to scope the DQL query to specific data.",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Resource{Schema: new(Segments).Schema()},
 			MinItems:    1,
@@ -124,12 +125,12 @@ func (me *Objective) Schema() map[string]*schema.Schema {
 		},
 		"target": {
 			Type:        schema.TypeFloat,
-			Description: "no documentation available",
+			Description: "Hard pass/fail threshold. Missing this value yields FAIL. If unset with no warning, status is always INFO.",
 			Optional:    true, // nullable
 		},
 		"warning": {
 			Type:        schema.TypeFloat,
-			Description: "no documentation available",
+			Description: "Soft threshold. Results between warning and target yield WARNING. When set alone, yields PASS or WARNING.",
 			Optional:    true, // nullable
 		},
 	}
@@ -156,20 +157,23 @@ func (me *Objective) HandlePreconditions() error {
 	if (me.AutoAdaptiveThresholdEnabled == nil) && (string(me.ObjectiveType) == "DQL") {
 		me.AutoAdaptiveThresholdEnabled = new(false)
 	}
-	if (me.DisplayUnit != nil) && (string(me.ObjectiveType) != "DQL") {
-		return fmt.Errorf("'display_unit' must not be specified if 'objective_type' is set to '%v'", me.ObjectiveType)
+	if (me.AutoAdaptiveThresholdEnabled != nil) && (string(me.ObjectiveType) != "DQL") {
+		return fmt.Errorf("'auto_adaptive_threshold_enabled' must not be specified unless 'objective_type' is set to 'DQL'; got 'objective_type'='%v'", me.ObjectiveType)
 	}
-	if (me.DqlQuery == nil) && (string(me.ObjectiveType) == "DQL") {
-		return fmt.Errorf("'dql_query' must be specified if 'objective_type' is set to '%v'", me.ObjectiveType)
+	if (me.DisplayUnit != nil) && (string(me.ObjectiveType) != "DQL") {
+		return fmt.Errorf("'display_unit' must not be specified unless 'objective_type' is set to 'DQL'; got 'objective_type'='%v'", me.ObjectiveType)
 	}
 	if (me.DqlQuery != nil) && (string(me.ObjectiveType) != "DQL") {
-		return fmt.Errorf("'dql_query' must not be specified if 'objective_type' is set to '%v'", me.ObjectiveType)
+		return fmt.Errorf("'dql_query' must not be specified unless 'objective_type' is set to 'DQL'; got 'objective_type'='%v'", me.ObjectiveType)
 	}
-	if (me.ReferenceSlo == nil) && (string(me.ObjectiveType) == "REFERENCE_SLO") {
-		return fmt.Errorf("'reference_slo' must be specified if 'objective_type' is set to '%v'", me.ObjectiveType)
+	if (me.DqlQuery == nil) && (string(me.ObjectiveType) == "DQL") {
+		return fmt.Errorf("'dql_query' must be specified when 'objective_type' is set to 'DQL'; got 'objective_type'='%v'", me.ObjectiveType)
 	}
 	if (me.ReferenceSlo != nil) && (string(me.ObjectiveType) != "REFERENCE_SLO") {
-		return fmt.Errorf("'reference_slo' must not be specified if 'objective_type' is set to '%v'", me.ObjectiveType)
+		return fmt.Errorf("'reference_slo' must not be specified unless 'objective_type' is set to 'REFERENCE_SLO'; got 'objective_type'='%v'", me.ObjectiveType)
+	}
+	if (me.ReferenceSlo == nil) && (string(me.ObjectiveType) == "REFERENCE_SLO") {
+		return fmt.Errorf("'reference_slo' must be specified when 'objective_type' is set to 'REFERENCE_SLO'; got 'objective_type'='%v'", me.ObjectiveType)
 	}
 	return nil
 }

@@ -18,15 +18,15 @@
 package sitereliabilityguardian
 
 import (
-	sitereliabilityguardian "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/sitereliabilityguardian/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/sitereliabilityguardian/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.9"
+const SchemaVersion = "1.9.1"
 const SchemaID = "app:dynatrace.site.reliability.guardian:guardians"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*sitereliabilityguardian.Settings] {
-	return settings20.Service[*sitereliabilityguardian.Settings](credentials, SchemaID, SchemaVersion)
+func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
 }
