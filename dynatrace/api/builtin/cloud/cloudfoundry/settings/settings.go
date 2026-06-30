@@ -43,6 +43,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"api_url": {
 			Type:        schema.TypeString,
 			Description: "Cloud Foundry API Target",
+			ForceNew:    true,
 			Required:    true,
 		},
 		"enabled": {
@@ -58,6 +59,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"login_url": {
 			Type:        schema.TypeString,
 			Description: "Cloud Foundry Authentication Endpoint",
+			ForceNew:    true,
 			Required:    true,
 		},
 		"password": {
