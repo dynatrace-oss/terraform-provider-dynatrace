@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.65"
+const SchemaVersion = "1.68"
 const SchemaID = "builtin:openpipeline.usersessions.data-forwarding"
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
