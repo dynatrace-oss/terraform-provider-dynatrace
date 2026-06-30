@@ -18,6 +18,9 @@
 package enrichment
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -45,60 +48,61 @@ func (me *Rules) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type Rule struct {
-	Enabled         *bool        `json:"enabled,omitempty"`         // This setting is enabled (`true`) or disabled (`false`)
-	Source          string       `json:"source"`                    // The source must follow the syntax of Kubernetes annotation/label keys as defined in the [Kubernetes documentation](https://dt-url.net/2c02sbn).\n\n`source := (prefix/)?name`\n\n`prefix := [a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*`\n\n`name := ([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]`\n\nAdditionally, the name can have at most 63 characters, and the overall length of the source must not exceed 75 characters.
-	Target          TargetOption `json:"target,omitempty"`          // Required when `primary_grail_tag` is omitted or `false`. Possible Values: `dt.cost.costcenter``, `dt.cost.product``, `dt.security_context
-	Type            MetadataType `json:"type"`                      // Possible Values: `ANNOTATION`, `LABEL`
-	PrimaryGrailTag *bool        `json:"primaryGrailTag,omitempty"` // Uses the key of the annotation or label as field name
+	PrimaryGrailTag *bool         `json:"primaryGrailTag,omitempty"` // Uses the key of the annotation or label as field name directly
+	Source          string        `json:"source"`                    // The source must follow the syntax of Kubernetes annotation/label keys as defined in the [Kubernetes documentation](https://dt-url.net/2c02sbn).\n\n  `source := (prefix/)?name`\n\n  `prefix := [a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*`\n\n  `name := ([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]`\n\n  Additionally, the name can have at most 63 characters, and the overall length of the source must not exceed 75 characters.
+	Target          *TargetOption `json:"target,omitempty"`          // Possible values: `dt.cost.costcenter`, `dt.cost.product`, `dt.security_context`
+	Type            MetadataType  `json:"type"`                      // Metadata type. Possible values: `ANNOTATION`, `LABEL`
 }
 
 func (me *Rule) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"enabled": {
+		"primary_grail_tag": {
 			Type:        schema.TypeBool,
-			Description: "This setting is enabled (`true`) or disabled (`false`)",
-			Optional:    true,
-			Deprecated:  "Attribute no longer exists in the schema.",
+			Description: "Uses the key of the annotation or label as field name directly",
+			Optional:    true, // nullable
 		},
 		"source": {
 			Type:        schema.TypeString,
-			Description: "The source must follow the syntax of Kubernetes annotation/label keys as defined in the [Kubernetes documentation](https://dt-url.net/2c02sbn).\n\n`source := (prefix/)?name`\n\n`prefix := [a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*`\n\n`name := ([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]`\n\nAdditionally, the name can have at most 63 characters, and the overall length of the source must not exceed 75 characters.",
+			Description: "The source must follow the syntax of Kubernetes annotation/label keys as defined in the [Kubernetes documentation](https://dt-url.net/2c02sbn).\n\n  `source := (prefix/)?name`\n\n  `prefix := [a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*`\n\n  `name := ([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]`\n\n  Additionally, the name can have at most 63 characters, and the overall length of the source must not exceed 75 characters.",
 			Required:    true,
 		},
 		"target": {
 			Type:        schema.TypeString,
-			Description: "Required when `primary_grail_tag` is omitted or `false`. Possible Values: `dt.cost.costcenter``, `dt.cost.product``, `dt.security_context",
-			Optional:    true,
+			Description: "Possible values: `dt.cost.costcenter`, `dt.cost.product`, `dt.security_context`",
+			Optional:    true, // precondition
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `ANNOTATION`, `LABEL`",
+			Description: "Metadata type. Possible values: `ANNOTATION`, `LABEL`",
 			Required:    true,
-		},
-		"primary_grail_tag": {
-			Type:        schema.TypeBool,
-			Description: "Uses the key of the annotation or label as field name",
-			Optional:    true, // nullable
 		},
 	}
 }
 
 func (me *Rule) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"enabled":           me.Enabled,
+		"primary_grail_tag": me.PrimaryGrailTag,
 		"source":            me.Source,
 		"target":            me.Target,
 		"type":              me.Type,
-		"primary_grail_tag": me.PrimaryGrailTag,
 	})
+}
+
+func (me *Rule) HandlePreconditions() error {
+	if (me.Target != nil) && ((me.PrimaryGrailTag != nil) && (me.PrimaryGrailTag == nil || *me.PrimaryGrailTag)) {
+		return fmt.Errorf("'target' must not be specified unless ('primary_grail_tag' is not set or 'primary_grail_tag' is set to 'false'); got 'primary_grail_tag'='%v'", opt.ValOrNil(me.PrimaryGrailTag))
+	}
+	if (me.Target == nil) && ((me.PrimaryGrailTag == nil) || (me.PrimaryGrailTag != nil && !*me.PrimaryGrailTag)) {
+		return fmt.Errorf("'target' must be specified when ('primary_grail_tag' is not set or 'primary_grail_tag' is set to 'false'); got 'primary_grail_tag'='%v'", opt.ValOrNil(me.PrimaryGrailTag))
+	}
+	return nil
 }
 
 func (me *Rule) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"enabled":           &me.Enabled,
+		"primary_grail_tag": &me.PrimaryGrailTag,
 		"source":            &me.Source,
 		"target":            &me.Target,
 		"type":              &me.Type,
-		"primary_grail_tag": &me.PrimaryGrailTag,
 	})
 }
