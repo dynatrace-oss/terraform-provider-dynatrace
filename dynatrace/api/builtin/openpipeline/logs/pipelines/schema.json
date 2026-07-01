@@ -301,6 +301,10 @@
 				{
 					"displayName": "geoLookup",
 					"value": "geoLookup"
+				},
+				{
+					"displayName": "inlineLookup",
+					"value": "inlineLookup"
 				}
 			],
 			"type": "enum"
@@ -1688,6 +1692,90 @@
 			"version": "0",
 			"versionInfo": ""
 		},
+		"InlineLookupAttributes": {
+			"description": "",
+			"displayName": "InlineLookupAttributes",
+			"documentation": "",
+			"properties": {
+				"defaultValue": {
+					"constraints": [
+						{
+							"maxLength": 1024,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "The value to write to the destination field when no lookup key matches. If absent, the destination field is left unchanged when no key matches.",
+					"displayName": "Default value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "text"
+				},
+				"destinationField": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 256,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The field key to write the matched lookup value to.",
+					"displayName": "Destination field",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"inlineLookupTable": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 1572864,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The key-value pairs of the inline lookup table, encoded as a compact JSON string: [[[\"key1\",\"key2\"],\"value1\"],[[\"key3\"],\"value2\"]].",
+					"displayName": "Lookup entries",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"sourceField": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 256,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "The field key whose value is looked up in the lookup table.",
+					"displayName": "Source field",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{sourceField} -\u003e {destinationField}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"MetadataEntry": {
 			"description": "",
 			"displayName": "MetadataEntry",
@@ -1986,6 +2074,22 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "text"
+				},
+				"inlineLookup": {
+					"description": "",
+					"displayName": "Inline lookup processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "inlineLookup",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/InlineLookupAttributes"
+					}
 				},
 				"matcher": {
 					"constraints": [
@@ -2781,13 +2885,8 @@
 				"edgeType": {
 					"constraints": [
 						{
-							"customMessage": "Edge type must match the pattern [a-z][a-z0-9._]{0,31}",
-							"pattern": "^[a-z][a-z0-9._]{0,31}$",
-							"type": "PATTERN"
-						},
-						{
-							"customMessage": "Must not start with 'dt.' or 'dynatrace.'",
-							"pattern": "^(?![Dd][Tt]\\.|[Dd][Yy][Nn][Aa][Tt][Rr][Aa][Cc][Ee]\\.).*$",
+							"customMessage": "Edge type must match the pattern [a-z][a-z0-9_]{0,31}",
+							"pattern": "^[a-z][a-z0-9_]{0,31}$",
 							"type": "PATTERN"
 						},
 						{
@@ -3230,13 +3329,8 @@
 				"edgeType": {
 					"constraints": [
 						{
-							"customMessage": "Edge type must match the pattern [a-z][a-z0-9._]{0,31}",
-							"pattern": "^[a-z][a-z0-9._]{0,31}$",
-							"type": "PATTERN"
-						},
-						{
-							"customMessage": "Must not start with 'dt.' or 'dynatrace.'",
-							"pattern": "^(?![Dd][Tt]\\.|[Dd][Yy][Nn][Aa][Tt][Rr][Aa][Cc][Ee]\\.).*$",
+							"customMessage": "Edge type must match the pattern [a-z][a-z0-9_]{0,31}",
+							"pattern": "^[a-z][a-z0-9_]{0,31}$",
 							"type": "PATTERN"
 						},
 						{
@@ -3548,5 +3642,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.65"
+	"version": "1.68"
 }
