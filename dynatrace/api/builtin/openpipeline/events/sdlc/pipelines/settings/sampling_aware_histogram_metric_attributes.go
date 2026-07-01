@@ -90,14 +90,14 @@ func (me *SamplingAwareHistogramMetricAttributes) MarshalHCL(properties hcl.Prop
 }
 
 func (me *SamplingAwareHistogramMetricAttributes) HandlePreconditions() error {
-	if (me.Field == nil) && (string(me.Measurement) != "duration") {
-		me.Field = new("")
-	}
 	if (me.DefaultValue != nil) && (string(me.Measurement) == "duration") {
 		return fmt.Errorf("'default_value' must not be specified unless 'measurement' is not set to 'duration'; got 'measurement'='%v'", me.Measurement)
 	}
 	if (me.Field != nil) && (string(me.Measurement) == "duration") {
 		return fmt.Errorf("'field' must not be specified unless 'measurement' is not set to 'duration'; got 'measurement'='%v'", me.Measurement)
+	}
+	if (me.Field == nil) && (string(me.Measurement) != "duration") {
+		return fmt.Errorf("'field' must be specified when 'measurement' is not set to 'duration'; got 'measurement'='%v'", me.Measurement)
 	}
 	return nil
 }

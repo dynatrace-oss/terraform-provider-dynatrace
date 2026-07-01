@@ -135,6 +135,7 @@ var ProcessorTypes = struct {
 	Fieldsrename                 ProcessorType
 	Geolookup                    ProcessorType
 	Histogrammetric              ProcessorType
+	Inlinelookup                 ProcessorType
 	Nostorage                    ProcessorType
 	Productallocation            ProcessorType
 	Samplingawarecountermetric   ProcessorType
@@ -161,6 +162,7 @@ var ProcessorTypes = struct {
 	"fieldsRename",
 	"geoLookup",
 	"histogramMetric",
+	"inlineLookup",
 	"noStorage",
 	"productAllocation",
 	"samplingAwareCounterMetric",

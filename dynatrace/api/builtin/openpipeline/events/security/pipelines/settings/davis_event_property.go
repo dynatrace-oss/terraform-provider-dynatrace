@@ -82,11 +82,11 @@ func (me *DavisEventProperty) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *DavisEventProperty) HandlePreconditions() error {
-	if (me.Value == nil) && ((me.Strategy != nil && string(*me.Strategy) == "equals") || (me.Strategy == nil)) {
-		me.Value = new("")
-	}
 	if (me.Value != nil) && ((me.Strategy == nil || string(*me.Strategy) != "equals") && (me.Strategy != nil)) {
 		return fmt.Errorf("'value' must not be specified unless ('strategy' is set to 'equals' or 'strategy' is not set); got 'strategy'='%v'", opt.ValOrNil(me.Strategy))
+	}
+	if (me.Value == nil) && ((me.Strategy != nil && string(*me.Strategy) == "equals") || (me.Strategy == nil)) {
+		return fmt.Errorf("'value' must be specified when ('strategy' is set to 'equals' or 'strategy' is not set); got 'strategy'='%v'", opt.ValOrNil(me.Strategy))
 	}
 	return nil
 }
