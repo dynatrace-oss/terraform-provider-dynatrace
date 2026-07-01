@@ -29,41 +29,13 @@ import (
 const baseURL = "/env/v2/accounts"
 
 type environmentsService struct {
-	clientID     string
-	accountID    string
-	clientSecret string
-	tokenURL     string
-	endpointURL  string
+	client iam.IAMClient
 }
 
 func newEnvironmentService(credentials *rest.Credentials) *environmentsService {
 	return &environmentsService{
-		clientID:     credentials.IAM.ClientID,
-		accountID:    credentials.IAM.AccountID,
-		clientSecret: credentials.IAM.ClientSecret,
-		tokenURL:     credentials.IAM.TokenURL,
-		endpointURL:  credentials.IAM.EndpointURL,
+		client: iam.NewIAMClientForCredentials(context.Background(), credentials),
 	}
-}
-
-func (ec *environmentsService) ClientID() string {
-	return ec.clientID
-}
-
-func (ec *environmentsService) AccountID() string {
-	return ec.accountID
-}
-
-func (ec *environmentsService) ClientSecret() string {
-	return ec.clientSecret
-}
-
-func (ec *environmentsService) TokenURL() string {
-	return ec.tokenURL
-}
-
-func (ec *environmentsService) EndpointURL() string {
-	return ec.endpointURL
 }
 
 type Environment struct {
@@ -78,13 +50,12 @@ type Response struct {
 }
 
 func (ec *environmentsService) Get(ctx context.Context) ([]Environment, error) {
-	u, err := url.JoinPath(baseURL, ec.AccountID(), "environments")
+	u, err := url.JoinPath(baseURL, ec.client.AccountID(), "environments")
 	if err != nil {
 		return nil, err
 	}
 
-	client := iam.NewIAMClient(ctx, ec)
-	response, err := client.GET(ctx, u, rest2.RequestOptions{})
+	response, err := ec.client.GET(ctx, u, rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}

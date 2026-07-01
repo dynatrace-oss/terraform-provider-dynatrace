@@ -19,16 +19,20 @@ package testing
 import (
 	"context"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 type MockIAMClient struct {
-	POSTFunc   func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error)
-	PUTFunc    func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error)
-	GETFunc    func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
-	DELETEFunc func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
+	AccountIDValue string
+	POSTFunc       func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error)
+	PUTFunc        func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error)
+	GETFunc        func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
+	DELETEFunc     func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
+}
+
+func (me *MockIAMClient) AccountID() string {
+	return me.AccountIDValue
 }
 
 func (me *MockIAMClient) POST(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
@@ -45,12 +49,4 @@ func (me *MockIAMClient) GET(ctx context.Context, url string, options rest2.Requ
 
 func (me *MockIAMClient) DELETE(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 	return me.DELETEFunc(ctx, url, options)
-}
-
-type MockIAMClientGetter struct {
-	Client iam.IAMClient
-}
-
-func (me *MockIAMClientGetter) New(_ context.Context) iam.IAMClient {
-	return me.Client
 }

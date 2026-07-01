@@ -38,64 +38,20 @@ const maxPageSize = 10000
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*boundaries.PolicyBoundary] {
 	return &BoundaryServiceClient{
-		iamClientGetter: &iamClientGetterImp{
-			clientID:     credentials.IAM.ClientID,
-			accountID:    credentials.IAM.AccountID,
-			clientSecret: credentials.IAM.ClientSecret,
-			tokenURL:     credentials.IAM.TokenURL,
-			endpointURL:  credentials.IAM.EndpointURL,
-		},
-		accountID: credentials.IAM.AccountID,
+		client: iam.NewIAMClientForCredentials(context.Background(), credentials),
 	}
 }
 
-type iamClientGetter interface {
-	New(ctx context.Context) iam.IAMClient
-}
-
-type iamClientGetterImp struct {
-	clientID     string
-	accountID    string
-	clientSecret string
-	tokenURL     string
-	endpointURL  string
-}
-
-func (me *iamClientGetterImp) ClientID() string {
-	return me.clientID
-}
-
-func (me *iamClientGetterImp) AccountID() string {
-	return me.accountID
-}
-
-func (me *iamClientGetterImp) ClientSecret() string {
-	return me.clientSecret
-}
-
-func (me *iamClientGetterImp) TokenURL() string {
-	return me.tokenURL
-}
-
-func (me *iamClientGetterImp) EndpointURL() string {
-	return me.endpointURL
-}
-
-func (me *iamClientGetterImp) New(ctx context.Context) iam.IAMClient {
-	return iam.NewIAMClient(ctx, me)
-}
-
 type BoundaryServiceClient struct {
-	iamClientGetter iamClientGetter
-	accountID       string
+	client iam.IAMClient
 }
 
 func (me *BoundaryServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	client := me.iamClientGetter.New(ctx)
+	client := me.client
 	stubs := api.Stubs{}
 	params := url.Values{}
 	params.Set("size", strconv.Itoa(maxPageSize))
-	endpoint := fmt.Sprintf("/iam/v1/repo/account/%s/boundaries", me.accountID)
+	endpoint := fmt.Sprintf("/iam/v1/repo/account/%s/boundaries", me.client.AccountID())
 
 	for page := 1; ; page++ {
 		params.Set("page", strconv.Itoa(page))
@@ -122,7 +78,7 @@ func (me *BoundaryServiceClient) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (me *BoundaryServiceClient) Get(ctx context.Context, id string, v *boundaries.PolicyBoundary) error {
-	response, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.accountID, id), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.client.AccountID(), id), rest2.RequestOptions{})
 	if err != nil {
 		return err
 	}
@@ -135,9 +91,9 @@ func (me *BoundaryServiceClient) SchemaID() string {
 }
 
 func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.PolicyBoundary) (*api.Stub, error) {
-	response, err := me.iamClientGetter.New(ctx).POST(
+	response, err := me.client.POST(
 		ctx,
-		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries", me.accountID),
+		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries", me.client.AccountID()),
 		v,
 		rest2.RequestOptions{},
 	)
@@ -158,9 +114,9 @@ func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.Polic
 }
 
 func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *boundaries.PolicyBoundary) error {
-	_, err := me.iamClientGetter.New(ctx).PUT(
+	_, err := me.client.PUT(
 		ctx,
-		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.accountID, id),
+		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.client.AccountID(), id),
 		v,
 		rest2.RequestOptions{},
 	)
@@ -168,10 +124,10 @@ func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *bound
 }
 
 func (me *BoundaryServiceClient) Delete(ctx context.Context, id string) error {
-	client := me.iamClientGetter.New(ctx)
+	client := me.client
 	_, err := client.DELETE(
 		ctx,
-		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.accountID, id),
+		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.client.AccountID(), id),
 		rest2.RequestOptions{},
 	)
 	if err != nil {
@@ -179,7 +135,7 @@ func (me *BoundaryServiceClient) Delete(ctx context.Context, id string) error {
 			clean.CleanUp.Register(func() {
 				client.DELETE(
 					ctx,
-					fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.accountID, id),
+					fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.client.AccountID(), id),
 					rest2.RequestOptions{},
 				)
 			})

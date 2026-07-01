@@ -35,25 +35,24 @@ var envIDFetcMutex sync.Mutex
 
 // GetEnvironmentIDs retrieves all environmentIDs reachable via the given accountID
 // The operation is guarded by a mutex
-func GetEnvironmentIDs(ctx context.Context, auth iam.Authenticator) ([]string, error) {
+func GetEnvironmentIDs(ctx context.Context, client iam.IAMClient) ([]string, error) {
 	envIDFetcMutex.Lock()
 	defer envIDFetcMutex.Unlock()
 	if cachedEnvironmentIDs != nil {
 		return cachedEnvironmentIDs, nil
 	}
-	return getEnvironmentIDs(ctx, auth)
+	return getEnvironmentIDs(ctx, client)
 }
 
 // CheckPolicyExists attempts to fetch the details of a policy, identified by the given `policyUUID`
 // and the presumed `levelType` and `levelID`. If the policy is not defined at the given `levelType`
 // and `levelID` it returns false, without returning an error
 // An error is returned ONLY if querying for the existence of the policy failed for another reason than `404 Not Found`
-func CheckPolicyExists(ctx context.Context, auth iam.Authenticator, levelType string, levelID string, policyUUID string) (bool, string, error) {
+func CheckPolicyExists(ctx context.Context, client iam.IAMClient, levelType string, levelID string, policyUUID string) (bool, string, error) {
 	levelPolicy := struct {
 		UUID string `json:"uuid"`
 		Name string `json:"name"`
 	}{}
-	client := iam.NewIAMClient(ctx, auth)
 	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, policyUUID), rest2.RequestOptions{})
 	if err != nil {
 		// A 404 Not Found means the policy is not defined at the given level - that is not an error here
@@ -78,10 +77,10 @@ func CheckPolicyExists(ctx context.Context, auth iam.Authenticator, levelType st
 // # If all attempts fail the returned error contains the UUID in its message
 //
 // This operation is guarded by a mutex
-func FetchPolicyLevel(ctx context.Context, auth iam.Authenticator, uuid string) (levelType string, levelID string, name string, err error) {
+func FetchPolicyLevel(ctx context.Context, client iam.IAMClient, uuid string) (levelType string, levelID string, name string, err error) {
 	allPoliciesMutex.Lock()
 	defer allPoliciesMutex.Unlock()
-	return fetchPolicyLevel(ctx, auth, uuid)
+	return fetchPolicyLevel(ctx, client, uuid)
 }
 
 // fetchPolicyLevel determines the `levelType` and `levelID` of a policy identified by its UUID
@@ -94,28 +93,28 @@ func FetchPolicyLevel(ctx context.Context, auth iam.Authenticator, uuid string) 
 // # If all attempts fail the returned error contains the UUID in its message
 //
 // This operation is NOT guarded by a mutex. See `FetchPolicyLevel` for a guarded version
-func fetchPolicyLevel(ctx context.Context, auth iam.Authenticator, uuid string) (levelType string, levelID string, name string, err error) {
+func fetchPolicyLevel(ctx context.Context, client iam.IAMClient, uuid string) (levelType string, levelID string, name string, err error) {
 	var exists bool
-	if exists, name, err = CheckPolicyExists(ctx, auth, "global", "global", uuid); err != nil {
+	if exists, name, err = CheckPolicyExists(ctx, client, "global", "global", uuid); err != nil {
 		return "", "", "", err
 	}
 	if exists {
 		return "global", "global", name, nil
 	}
 
-	if exists, name, err = CheckPolicyExists(ctx, auth, "account", auth.AccountID(), uuid); err != nil {
+	if exists, name, err = CheckPolicyExists(ctx, client, "account", client.AccountID(), uuid); err != nil {
 		return "", "", name, err
 	}
 	if exists {
-		return "account", auth.AccountID(), name, nil
+		return "account", client.AccountID(), name, nil
 	}
 
 	var environmentIDs []string
-	if environmentIDs, err = GetEnvironmentIDs(ctx, auth); err != nil {
+	if environmentIDs, err = GetEnvironmentIDs(ctx, client); err != nil {
 		return "", "", name, err
 	}
 	for _, environmentID := range environmentIDs {
-		if exists, name, err = CheckPolicyExists(ctx, auth, "environment", environmentID, uuid); err != nil {
+		if exists, name, err = CheckPolicyExists(ctx, client, "environment", environmentID, uuid); err != nil {
 			return "", "", name, err
 		}
 		if exists {
@@ -132,10 +131,10 @@ func fetchPolicyLevel(ctx context.Context, auth iam.Authenticator, uuid string) 
 //     resolved using trial and error (see `fetchPolicyLevel`)
 //
 // This operation is guarded by a mutex
-func ResolvePolicyLevel(ctx context.Context, auth iam.Authenticator, uuid string) (levelType string, levelID string, name string, err error) {
+func ResolvePolicyLevel(ctx context.Context, client iam.IAMClient, uuid string) (levelType string, levelID string, name string, err error) {
 	allPoliciesMutex.Lock()
 	defer allPoliciesMutex.Unlock()
-	return resolvePolicyLevel(ctx, auth, uuid)
+	return resolvePolicyLevel(ctx, client, uuid)
 }
 
 // ResolvePolicyLevel determines the `levelType` and `levelID` of a policy using different strategies
@@ -144,8 +143,8 @@ func ResolvePolicyLevel(ctx context.Context, auth iam.Authenticator, uuid string
 //     resolved using trial and error (see `fetchPolicyLevel`)
 //
 // This operation is NOT guarded by a mutex. See `ResolvePolicyLevel` for a guarded version
-func resolvePolicyLevel(ctx context.Context, auth iam.Authenticator, uuid string) (levelType string, levelID string, name string, err error) {
-	allPolicyLevels, err := fetchAllPolicyLevels(ctx, auth)
+func resolvePolicyLevel(ctx context.Context, client iam.IAMClient, uuid string) (levelType string, levelID string, name string, err error) {
+	allPolicyLevels, err := fetchAllPolicyLevels(ctx, client)
 	if err != nil {
 		return "", "", "", err
 	}
@@ -153,8 +152,8 @@ func resolvePolicyLevel(ctx context.Context, auth iam.Authenticator, uuid string
 	if found {
 		return pl.LevelType, pl.LevelID, pl.Name, nil
 	}
-	if levelType, levelID, name, err = fetchPolicyLevel(ctx, auth, uuid); err == nil {
-		if err2 := registerPolicyLevel(ctx, auth, PolicyLevel{UUID: uuid, LevelType: levelType, LevelID: levelID, Name: name}); err2 != nil {
+	if levelType, levelID, name, err = fetchPolicyLevel(ctx, client, uuid); err == nil {
+		if err2 := registerPolicyLevel(ctx, client, PolicyLevel{UUID: uuid, LevelType: levelType, LevelID: levelID, Name: name}); err2 != nil {
 			return levelType, levelID, name, err2
 		}
 	}
@@ -179,10 +178,10 @@ var allPoliciesMutex sync.Mutex
 // # An error will be returned in case loading all known polices from the REST API fails for some reason
 //
 // This operation is guarded by a mutex.
-func RegisterPolicyLevel(ctx context.Context, auth iam.Authenticator, level PolicyLevel) error {
+func RegisterPolicyLevel(ctx context.Context, client iam.IAMClient, level PolicyLevel) error {
 	allPoliciesMutex.Lock()
 	defer allPoliciesMutex.Unlock()
-	return registerPolicyLevel(ctx, auth, level)
+	return registerPolicyLevel(ctx, client, level)
 }
 
 // registerPolicyLevel notes down the `levelType` and `levelID` of the policy identified by the given `uuid`.
@@ -193,15 +192,9 @@ func RegisterPolicyLevel(ctx context.Context, auth iam.Authenticator, level Poli
 // # An error will be returned in case loading all known polices from the REST API fails for some reason
 //
 // This operation is NOT guarded by a mutex. See `RegisterPolicyLevel` for a guarded version
-func registerPolicyLevel(ctx context.Context, auth iam.Authenticator, level PolicyLevel) error {
-	// fmt.Println("[POLICY-LEVEL]", "[REGISTER]", "["+level.UUID+"]", "BEGIN")
-	// start := time.Now()
-	// defer func() {
-	// 	fmt.Println("[POLICY-LEVEL]", "[REGISTER]", "["+level.UUID+"]", fmt.Sprintf("... LASTED %v seconds", int64(time.Since(start).Seconds())))
-	// }()
-
+func registerPolicyLevel(ctx context.Context, client iam.IAMClient, level PolicyLevel) error {
 	if globalAllPolicyLevels == nil {
-		_, err := fetchAllPolicyLevels(ctx, auth)
+		_, err := fetchAllPolicyLevels(ctx, client)
 		if err != nil {
 			return err
 		}
@@ -216,14 +209,13 @@ func registerPolicyLevel(ctx context.Context, auth iam.Authenticator, level Poli
 // # You should use `ResolvePolicyLevel` to look up the `levelType` and `levelID` of a policy identifed by a UUID only
 //
 // This operation is guarded by a mutext
-func FetchAllPolicyLevels(ctx context.Context, auth iam.Authenticator) (map[string]PolicyLevel, error) {
+func FetchAllPolicyLevels(ctx context.Context, client iam.IAMClient) (map[string]PolicyLevel, error) {
 	allPoliciesMutex.Lock()
 	defer allPoliciesMutex.Unlock()
-	return fetchAllPolicyLevels(ctx, auth)
+	return fetchAllPolicyLevels(ctx, client)
 }
 
-func fetchGlobalPolicies(ctx context.Context, auth iam.Authenticator) (results chan *api.Stub) {
-	client := iam.NewIAMClient(ctx, auth)
+func fetchGlobalPolicies(ctx context.Context, client iam.IAMClient) (results chan *api.Stub) {
 	results = make(chan *api.Stub)
 	go func() {
 		defer func() {
@@ -253,19 +245,15 @@ func fetchGlobalPolicies(ctx context.Context, auth iam.Authenticator) (results c
 // # You should use `ResolvePolicyLevel` to look up the `levelType` and `levelID` of a policy identifed by a UUID only
 //
 // This operation is NOT guarded by a mutext. See `FetchAllPolicyLevels` for a guarded version
-func fetchAllPolicyLevels(ctx context.Context, auth iam.Authenticator) (m map[string]PolicyLevel, err error) {
+func fetchAllPolicyLevels(ctx context.Context, client iam.IAMClient) (m map[string]PolicyLevel, err error) {
 	if globalAllPolicyLevels != nil {
 		return globalAllPolicyLevels, nil
 	}
-	// start := time.Now()
-	// defer func() {
-	// 	fmt.Println("[POLICY-LEVEL]", "[FETCH-ALL]", fmt.Sprintf("... LASTED %v seconds", int64(time.Since(start).Seconds())))
-	// }()
-	nonGlobalStubs, err := list(ctx, auth)
+	nonGlobalStubs, err := list(ctx, client)
 	if err != nil {
 		return nil, err
 	}
-	globalStubs := fetchGlobalPolicies(ctx, auth)
+	globalStubs := fetchGlobalPolicies(ctx, client)
 
 	m = map[string]PolicyLevel{}
 
@@ -310,13 +298,11 @@ func fetchAllPolicyLevels(ctx context.Context, auth iam.Authenticator) (m map[st
 
 }
 
-// GetEnvironmentIDs retrieves all environmentIDs reachable via the given IAM Client
+// getEnvironmentIDs retrieves all environmentIDs reachable via the given IAM Client
 // The operation is NOT guarded by a mutex. See `GetEnvironmentIDs` for a guarded version
-func getEnvironmentIDs(ctx context.Context, auth iam.Authenticator) ([]string, error) {
-	client := iam.NewIAMClient(ctx, auth)
-
+func getEnvironmentIDs(ctx context.Context, client iam.IAMClient) ([]string, error) {
 	var envResponse ListEnvResponse
-	response, err := client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", auth.AccountID()), rest2.RequestOptions{})
+	response, err := client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", client.AccountID()), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}

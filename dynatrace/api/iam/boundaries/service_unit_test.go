@@ -26,9 +26,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -36,11 +35,9 @@ import (
 
 const testAccountID = "test-account-id"
 
-func newTestClient(mock iam.IAMClient) *BoundaryServiceClient {
-	return &BoundaryServiceClient{
-		iamClientGetter: &testing2.MockIAMClientGetter{Client: mock},
-		accountID:       testAccountID,
-	}
+func newTestClient(mock *testing2.MockIAMClient) *BoundaryServiceClient {
+	mock.AccountIDValue = testAccountID
+	return &BoundaryServiceClient{client: mock}
 }
 
 func boundaryPageResponse(items []PolicyBoundary) []byte {

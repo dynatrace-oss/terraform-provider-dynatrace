@@ -36,57 +36,13 @@ type ServiceUserService interface {
 	GetAll(ctx context.Context) ([]ServiceUserStub, error)
 }
 
-type iamClientGetter interface {
-	New(ctx context.Context) iam.IAMClient
-}
-
-type iamClientGetterImp struct {
-	clientID     string
-	accountID    string
-	clientSecret string
-	tokenURL     string
-	endpointURL  string
-}
-
-func (me *iamClientGetterImp) ClientID() string {
-	return me.clientID
-}
-
-func (me *iamClientGetterImp) AccountID() string {
-	return me.accountID
-}
-
-func (me *iamClientGetterImp) ClientSecret() string {
-	return me.clientSecret
-}
-
-func (me *iamClientGetterImp) TokenURL() string {
-	return me.tokenURL
-}
-
-func (me *iamClientGetterImp) EndpointURL() string {
-	return me.endpointURL
-}
-
-func (me *iamClientGetterImp) New(ctx context.Context) iam.IAMClient {
-	return iam.NewIAMClient(ctx, me)
-}
-
 type serviceUserServiceClient struct {
-	iamClientGetter iamClientGetter
-	accountID       string
+	client iam.IAMClient
 }
 
 func NewService(credentials *rest.Credentials) ServiceUserService {
 	return &serviceUserServiceClient{
-		iamClientGetter: &iamClientGetterImp{
-			clientID:     credentials.IAM.ClientID,
-			accountID:    credentials.IAM.AccountID,
-			clientSecret: credentials.IAM.ClientSecret,
-			tokenURL:     credentials.IAM.TokenURL,
-			endpointURL:  credentials.IAM.EndpointURL,
-		},
-		accountID: credentials.IAM.AccountID,
+		client: iam.NewIAMClientForCredentials(context.Background(), credentials),
 	}
 }
 
@@ -106,7 +62,7 @@ type createResponse struct {
 }
 
 func (me *serviceUserServiceClient) Create(ctx context.Context, serviceUser *serviceusers.ServiceUser) (*api.Stub, error) {
-	response, err := me.iamClientGetter.New(ctx).POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users", me.accountID), serviceUser, rest2.RequestOptions{})
+	response, err := me.client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users", me.client.AccountID()), serviceUser, rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +92,7 @@ type getServiceUserResponse struct {
 }
 
 func (me *serviceUserServiceClient) Get(ctx context.Context, id string, v *serviceusers.ServiceUser) error {
-	response, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, id), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.client.AccountID(), id), rest2.RequestOptions{})
 	if err != nil {
 		return err
 	}
@@ -170,7 +126,7 @@ type getUserPartialResponse struct {
 }
 
 func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email string) ([]string, error) {
-	response, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.accountID, email), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.client.AccountID(), email), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +146,7 @@ func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email str
 
 func (me *serviceUserServiceClient) Update(ctx context.Context, id string, serviceUser *serviceusers.ServiceUser) error {
 	// Update the service user details
-	if _, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, id), serviceUser, rest2.RequestOptions{}); err != nil {
+	if _, err := me.client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.client.AccountID(), id), serviceUser, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 
@@ -203,7 +159,7 @@ func (me *serviceUserServiceClient) updateGroupAssignments(ctx context.Context, 
 	if groups == nil {
 		groups = []string{}
 	}
-	_, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.accountID, serviceUserEmail), groups, rest2.RequestOptions{})
+	_, err := me.client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.client.AccountID(), serviceUserEmail), groups, rest2.RequestOptions{})
 	return err
 }
 
@@ -223,10 +179,10 @@ type listServiceUsersResponse struct {
 }
 
 func (me *serviceUserServiceClient) GetAll(ctx context.Context) ([]ServiceUserStub, error) {
-	client := me.iamClientGetter.New(ctx)
+	client := me.client
 
 	var stubs []ServiceUserStub
-	endpoint := fmt.Sprintf("/iam/v1/accounts/%s/service-users", me.accountID)
+	endpoint := fmt.Sprintf("/iam/v1/accounts/%s/service-users", me.client.AccountID())
 	options := rest2.RequestOptions{}
 
 	for {
@@ -270,6 +226,6 @@ func (me *serviceUserServiceClient) List(ctx context.Context) (api.Stubs, error)
 }
 
 func (me *serviceUserServiceClient) Delete(ctx context.Context, uid string) error {
-	_, err := me.iamClientGetter.New(ctx).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, uid), rest2.RequestOptions{})
+	_, err := me.client.DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.client.AccountID(), uid), rest2.RequestOptions{})
 	return err
 }
