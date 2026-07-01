@@ -121,17 +121,14 @@ func (me *FieldExtractionEntry) HandlePreconditions() error {
 		// ignore empty item, else it will error on missing conditional required fields
 		return nil
 	}
-	if (me.ConstantFieldName == nil) && (((me.Strategy != nil && string(*me.Strategy) == "equals") || (me.Strategy == nil)) && (me.ExtractionType != nil && string(*me.ExtractionType) == "constant")) {
-		me.ConstantFieldName = new("")
-	}
 	if (me.ConstantValue == nil) && (((me.Strategy != nil && string(*me.Strategy) == "equals") || (me.Strategy == nil)) && (me.ExtractionType != nil && string(*me.ExtractionType) == "constant")) {
 		me.ConstantValue = new("")
 	}
-	if (me.SourceFieldName == nil) && ((me.ExtractionType != nil && string(*me.ExtractionType) == "field") || (me.Strategy != nil && string(*me.Strategy) == "startsWith")) {
-		me.SourceFieldName = new("")
-	}
 	if (me.ConstantFieldName != nil) && (((me.Strategy == nil || string(*me.Strategy) != "equals") && (me.Strategy != nil)) || (me.ExtractionType == nil || string(*me.ExtractionType) != "constant")) {
 		return fmt.Errorf("'constant_field_name' must not be specified unless (('strategy' is set to 'equals' or 'strategy' is not set) and 'extraction_type' is set to 'constant'); got 'strategy'='%v', 'extraction_type'='%v'", opt.ValOrNil(me.Strategy), opt.ValOrNil(me.ExtractionType))
+	}
+	if (me.ConstantFieldName == nil) && (((me.Strategy != nil && string(*me.Strategy) == "equals") || (me.Strategy == nil)) && (me.ExtractionType != nil && string(*me.ExtractionType) == "constant")) {
+		return fmt.Errorf("'constant_field_name' must be specified when (('strategy' is set to 'equals' or 'strategy' is not set) and 'extraction_type' is set to 'constant'); got 'strategy'='%v', 'extraction_type'='%v'", opt.ValOrNil(me.Strategy), opt.ValOrNil(me.ExtractionType))
 	}
 	if (me.ConstantValue != nil) && (((me.Strategy == nil || string(*me.Strategy) != "equals") && (me.Strategy != nil)) || (me.ExtractionType == nil || string(*me.ExtractionType) != "constant")) {
 		return fmt.Errorf("'constant_value' must not be specified unless (('strategy' is set to 'equals' or 'strategy' is not set) and 'extraction_type' is set to 'constant'); got 'strategy'='%v', 'extraction_type'='%v'", opt.ValOrNil(me.Strategy), opt.ValOrNil(me.ExtractionType))
@@ -150,6 +147,9 @@ func (me *FieldExtractionEntry) HandlePreconditions() error {
 	}
 	if (me.SourceFieldName != nil) && ((me.ExtractionType == nil || string(*me.ExtractionType) != "field") && (me.Strategy == nil || string(*me.Strategy) != "startsWith")) {
 		return fmt.Errorf("'source_field_name' must not be specified unless ('extraction_type' is set to 'field' or 'strategy' is set to 'startsWith'); got 'extraction_type'='%v', 'strategy'='%v'", opt.ValOrNil(me.ExtractionType), opt.ValOrNil(me.Strategy))
+	}
+	if (me.SourceFieldName == nil) && ((me.ExtractionType != nil && string(*me.ExtractionType) == "field") || (me.Strategy != nil && string(*me.Strategy) == "startsWith")) {
+		return fmt.Errorf("'source_field_name' must be specified when ('extraction_type' is set to 'field' or 'strategy' is set to 'startsWith'); got 'extraction_type'='%v', 'strategy'='%v'", opt.ValOrNil(me.ExtractionType), opt.ValOrNil(me.Strategy))
 	}
 	return nil
 }
