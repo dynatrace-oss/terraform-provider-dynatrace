@@ -27,6 +27,25 @@ import (
 	api2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 )
 
+func Envelope(data []byte, url string, method string) error {
+	if len(data) == 0 {
+		return nil
+	}
+
+	var env errorEnvelope
+	if err := json.Unmarshal(data, &env); err == nil && env.Error != nil {
+		return Error{Code: env.Error.Code, Method: method, URL: url, Message: env.Error.Message, ConstraintViolations: env.Error.ConstraintViolations}
+	}
+
+	var envs []errorEnvelope
+	if err := json.Unmarshal(data, &envs); err == nil && len(envs) > 0 {
+		env = envs[0]
+		return Error{Code: env.Error.Code, Method: method, URL: url, Message: env.Error.Message, ConstraintViolations: env.Error.ConstraintViolations}
+	}
+
+	return nil
+}
+
 type errorEnvelope struct {
 	Error *Error `json:"error"`
 }
@@ -166,15 +185,3 @@ Specifying a Platform Token:
 
 - environment variable 'DYNATRACE_PLATFORM_TOKEN'
 - provider configuration attribute 'platform_token'`)
-
-var NoClusterURLError = errors.New(`No Cluster URL has been specified.
-
-Specifying an Cluster URL:
-- environment variable 'DYNATRACE_CLUSTER_URL'
-- provider configuration attribute 'dt_cluster_url'`)
-
-var NoClusterTokenError = errors.New(`No Cluster Token has been specified.
-
-Specifying an Cluster Token:
-- environment variable 'DYNATRACE_CLUSTER_API_TOKEN'
-- provider configuration attribute 'dt_cluster_api_token'`)

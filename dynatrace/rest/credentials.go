@@ -66,14 +66,6 @@ func (c *Credentials) ContainsAPIToken() bool {
 	return len(c.Token) > 0
 }
 
-func (c *Credentials) ContainsClusterURL() bool {
-	return len(c.Cluster.URL) > 0
-}
-
-func (c *Credentials) ContainsClusterToken() bool {
-	return len(c.Cluster.Token) > 0
-}
-
 func (c *Credentials) ContainsOAuthOrPlatformToken() bool {
 	return c.ContainsOAuth() || c.ContainsPlatformToken()
 }
