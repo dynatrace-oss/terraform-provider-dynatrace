@@ -44,7 +44,7 @@ resource "dynatrace_devobs_agent_optin" "optin" {
 
 ### Optional
 
-- `scope` (String) The scope of this setting (PROCESS_GROUP, CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER). Omit this property if you want to cover the whole environment.
+- `scope` (String) The scope of this setting (PROCESS_GROUP, CLOUD_APPLICATION, CLOUD_APPLICATION_NAMESPACE, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
 ### Read-Only
 

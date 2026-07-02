@@ -65,15 +65,15 @@ resource "dynatrace_endpoint_detection_rules" "second-instance" {
 
 Required:
 
-- `if_condition_matches` (String) If condition matches. Possible Values: `DETECT_REQUEST_ON_ENDPOINT`, `SUPPRESS_REQUEST`
+- `if_condition_matches` (String) If condition matches. Possible values: `DETECT_REQUEST_ON_ENDPOINT`, `SUPPRESS_REQUEST`
 - `rule_name` (String) Rule name
 
 Optional:
 
 - `condition` (String) Limits the scope of the endpoint detection rule using [DQL matcher](https://dt-url.net/l603wby) conditions on span and resource attributes.. A rule is applied only if the condition matches, otherwise the ruleset evaluation continues.
 
-If empty, the condition will always match.
-- `description` (String) no documentation available
+  If empty, the condition will always match.
+- `description` (String) No documentation available
 - `endpoint_name_template` (String) Specify attribute placeholders in curly braces, e.g. {http.route} or {rpc.method}.. Attribute value placeholders should be specified in curly braces, e.g. {http.route}, {rpc.method}. All attributes used in the placeholder are required for the rule to apply. If any of them is missing, the rule will not be applied and ruleset evaluation continues.
 
-If the resolved endpoint name on a given span is empty, the request will be ignored.
+  If the resolved endpoint name on a given span is empty, the request will be ignored.
