@@ -49,21 +49,9 @@ var DynatraceHTTPInsecure = BoolEnvVar{
 	DefaultValue: false,
 }
 
-// DynatraceHTTPLegacy uses the legacy HTTP client.
-var DynatraceHTTPLegacy = BoolEnvVar{
-	Key:          "DYNATRACE_HTTP_LEGACY",
-	DefaultValue: false,
-}
-
 // DynatraceHTTPOAuthPreference prefers OAuth over API token authentication when both are available.
 var DynatraceHTTPOAuthPreference = BoolEnvVar{
 	Key:          "DYNATRACE_HTTP_OAUTH_PREFERENCE",
-	DefaultValue: false,
-}
-
-// DynatraceHTTPResponse logs HTTP responses.
-var DynatraceHTTPResponse = BoolEnvVar{
-	Key:          "DYNATRACE_HTTP_RESPONSE",
 	DefaultValue: false,
 }
 

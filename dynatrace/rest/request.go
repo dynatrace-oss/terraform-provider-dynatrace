@@ -44,6 +44,8 @@ type Request interface {
 	SetHeader(name string, value string)
 }
 
+type statuscodes []int
+
 type request struct {
 	id         string
 	ctx        context.Context

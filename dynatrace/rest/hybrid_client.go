@@ -18,10 +18,11 @@
 package rest
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"context"
 	"errors"
 	"net/http"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"github.com/google/uuid"
 )
@@ -79,17 +80,6 @@ func (me *hybrid_request) Finish(optionalTarget ...any) error {
 	}
 
 	credentials := me.client.Credentials()
-
-	if envutils.DynatraceHTTPLegacy.Get() {
-		if !credentials.ContainsAPIToken() {
-			return NoAPITokenError
-		}
-		legacyRequest := legacy_request(*me)
-		if credentials.URL == TestCaseEnvURL {
-			return errors.New("legacy")
-		}
-		return legacyRequest.Finish(optionalTarget...)
-	}
 
 	if !credentials.ContainsAPIToken() && !credentials.ContainsOAuthOrPlatformToken() {
 		if isOAuthPreferred {
