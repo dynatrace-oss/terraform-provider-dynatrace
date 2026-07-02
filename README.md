@@ -21,9 +21,12 @@ Please check the documentation within the [Terraform Registry](https://registry.
 
 Additional information can be found under [Dynatrace Configuration as Code via Terraform](https://www.dynatrace.com/support/help/manage/configuration-as-code/terraform).
 
+Environment variables for troubleshooting are described [here](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#how-can-i-troubleshoot-the-dynatrace-terraform-provider).
+
+
 ## Exporting existing configuration from a Dynatrace Environment
 
 In addition to acting as a Terraform Provider Plugin the executable `terraform-provider-dynatrace` (`terraform-provider-dynatrace.exe` on Windows) can also get directly invoked.
 The utility then reaches out to the Dynatrace Environment specified by the command line arguments and fetches all currently supported configuration items. These results will then automatically get transformed into HCL (the configuration language to be used for `.tf` files) and places each configuration item into its own `.tf` file).
 
-Please check out the documentation within the [Terraform Registry](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#exporting-existing-configuration-from-a-dynatrace-environment) for detailed information about how to use that functionality.
+Please check out [the documentation](https://dt-url.net/h203qmc) for detailed information about using the export functionality.
