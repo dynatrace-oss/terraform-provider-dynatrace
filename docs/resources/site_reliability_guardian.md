@@ -65,12 +65,12 @@ resource "dynatrace_site_reliability_guardian" "#name#" {
 
 ### Required
 
-- `name` (String) Name
-- `objectives` (Block List, Min: 1, Max: 1) Objectives (see [below for nested schema](#nestedblock--objectives))
+- `name` (String) Unique display name for this guardian.
+- `objectives` (Block List, Min: 1, Max: 1) The validation criteria evaluated each time this guardian is executed. (see [below for nested schema](#nestedblock--objectives))
 
 ### Optional
 
-- `description` (String) Description
+- `description` (String) Optional explanation of this guardian's purpose and scope.
 - `event_kind` (String) If set to null/'BIZ_EVENT' validation events stored as bizevents in Grail. If set to 'SDLC_EVENT' validation events stored as SDLC events. Possible values: `BIZ_EVENT`, `SDLC_EVENT`
 - `tags` (Set of String) Define key/value pairs that further describe this guardian.
 - `variables` (Block List, Max: 1) Define variables for dynamically defining DQL queries (see [below for nested schema](#nestedblock--variables))
@@ -91,30 +91,30 @@ Required:
 
 Required:
 
-- `comparison_operator` (String) Comparison operator. Possible values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`
-- `name` (String) Objective name
-- `objective_type` (String) Objective type. Possible values: `DQL`, `REFERENCE_SLO`
+- `comparison_operator` (String) Pass/fail direction: use ≥ when higher values are better, ≤ when lower values are better. Possible values: `GREATER_THAN_OR_EQUAL`, `LESS_THAN_OR_EQUAL`
+- `name` (String) Unique name within this guardian. Included in every emitted validation event as the objective identifier.
+- `objective_type` (String) How the objective value is computed: via a DQL query or an existing SLO metric. Possible values: `DQL`, `REFERENCE_SLO`
 
 Optional:
 
-- `auto_adaptive_threshold_enabled` (Boolean) Enable auto adaptive threshold
-- `description` (String) no documentation available
-- `display_unit` (Block List, Max: 1) Display Unit (see [below for nested schema](#nestedblock--objectives--objective--display_unit))
-- `dql_query` (String) DQL query
+- `auto_adaptive_threshold_enabled` (Boolean) Dynamically computes thresholds from 30 days of history.
+- `description` (String) Optional short explanation of what this objective measures.
+- `display_unit` (Block List, Max: 1) Optional unit conversion and decimal formatting applied when displaying the DQL result in the UI. (see [below for nested schema](#nestedblock--objectives--objective--display_unit))
+- `dql_query` (String) DQL query to execute. The first numeric result becomes the objective value. Supports $variable interpolation.
 - `links` (Block List, Max: 1) Fields for adding relevant links to this objective. (see [below for nested schema](#nestedblock--objectives--objective--links))
 - `reference_slo` (String) Please enter the metric key of your desired SLO. SLO metric keys have to start with 'func:slo.'
-- `segments` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--objectives--objective--segments))
-- `target` (Number) no documentation available
-- `warning` (Number) no documentation available
+- `segments` (Block List, Max: 1) Optional Grail segments to scope the DQL query to specific data. (see [below for nested schema](#nestedblock--objectives--objective--segments))
+- `target` (Number) Hard pass/fail threshold. Missing this value yields FAIL. If unset with no warning, status is always INFO.
+- `warning` (Number) Soft threshold. Results between warning and target yield WARNING. When set alone, yields PASS or WARNING.
 
 <a id="nestedblock--objectives--objective--display_unit"></a>
 ### Nested Schema for `objectives.objective.display_unit`
 
 Required:
 
-- `base` (String) Base Unit
-- `decimals` (Number) Decimals
-- `display` (String) display as unit
+- `base` (String) Unit the DQL query returns its result in. Source unit for conversion.
+- `decimals` (Number) Number of decimal places (0-4) used when formatting the displayed value.
+- `display` (String) Unit to display the value in after conversion. Use Default to show the base unit as-is.
 
 
 <a id="nestedblock--objectives--objective--links"></a>
@@ -149,11 +149,11 @@ Required:
 
 Required:
 
-- `id` (String) Segment ID
+- `id` (String) Dynatrace Grail segment ID that scopes the DQL query to data within the segment.
 
 Optional:
 
-- `variables` (Block List, Max: 1) Segment Variables (see [below for nested schema](#nestedblock--objectives--objective--segments--segment--variables))
+- `variables` (Block List, Max: 1) Variables to parameterize the segment filter. (see [below for nested schema](#nestedblock--objectives--objective--segments--segment--variables))
 
 <a id="nestedblock--objectives--objective--segments--segment--variables"></a>
 ### Nested Schema for `objectives.objective.segments.segment.variables`
@@ -167,11 +167,11 @@ Required:
 
 Required:
 
-- `name` (String) Variable Name
+- `name` (String) Name of the variable within the segment definition.
 
 Optional:
 
-- `values` (List of String) Variable Values
+- `values` (List of String) One or more values for the variable, enabling multi-value filter expansion.
 
 
 
@@ -191,5 +191,5 @@ Required:
 
 Required:
 
-- `definition` (String) Value
-- `name` (String) no documentation available
+- `definition` (String) Default value substituted for $name in DQL queries. Can be overridden at runtime via execution context.
+- `name` (String) Alphanumeric/underscore identifier referenced in DQL queries as $name. Must be unique within the guardian.

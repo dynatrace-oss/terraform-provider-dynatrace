@@ -3,7 +3,7 @@ layout: ""
 page_title: "Resource - terraform-provider-dynatrace"
 subcategory: "Documents"
 description: |-
-  The resource `dynatrace_document` covers configuration of Documents (dashboards and notebooks) in Dynatrace.
+  The resource `dynatrace_document` covers configuration of Documents (dashboards, notebooks and launchpads) in Dynatrace.
 ---
 
 # dynatrace_document (Resource)
@@ -12,7 +12,7 @@ description: |-
 
 -> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client including the following permissions: **Create and edit documents** (`document:documents:write`), **View documents** (`document:documents:read`), **Delete documents** (`document:documents:delete`), and  **Delete documents from trash** (`document:trash.documents:delete`).
 
--> This resource is excluded by default in the export utility, please explicitly specify the resource to retrieve existing configuration.
+-> This resource is excluded by default in the export utility, please explicitly specify the resource to retrieve existing documents. Ready-made documents, created and automatically distributed by Dynatrace as examples and templates, are excluded and cannot be managed by Terraform.
 
 ## Dynatrace Documentation
 

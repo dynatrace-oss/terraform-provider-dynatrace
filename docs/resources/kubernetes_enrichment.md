@@ -69,44 +69,25 @@ resource "dynatrace_kubernetes_enrichment" "#name#" {
 
 ### Optional
 
-- `rules` (Block List, Max: 1) Dynatrace allows to use metadata defined on Kubernetes nodes, namespaces, and pods to set security and cost allocation attributes and dimensions for metrics, events, log, spans, and entities associated with the respective Kubernetes resource. 
+- `rules` (Block List, Max: 1) Kubernetes Telemetry Enrichment empowers you to effectively tag your telemetry data using Kubernetes namespace labels and annotations. Additionally, it enables you to tag it for cost allocation and permission purposes.
 
- The following annotation keys are considered: 
- * `metadata.dynatrace.com/dt.security_context` 
- * `metadata.dynatrace.com/dt.cost.product` 
- * `metadata.dynatrace.com/dt.cost.costcenter` 
+  Enrichment Options:
 
- Pod annotations determine the attributes of data associated with the pod itself, and containers belonging to the pod. 
+  - **Enrich telemetry with label/annotation directly:** Tag your telemetry data with existing Kubernetes namespace labels or annotations. These will be made available as domain-specific fields (e.g., `k8s.namespace.label.your_key`). This allows for flexible pipeline routing, bucket selection, segmentation, and filtering.
 
-Namespace annotations determine the attributes of data associated with the namespace itself, workloads, services, and - if not overwritten on pod level - pods, and containers belonging to the namespace. 
+  - **Security Context and Cost Allocation:** Leverage existing Kubernetes namespace labels or annotations  as the basis for security context or cost allocation. This provides granular control over permissions and facilitates chargeback functionalities.
 
-Node annotations determine the attributes of data associated with only the node. 
+  Additional Information:
 
- Depending on your specific use case and environment, you have the following enrichment options: 
+  - Only namespace-level labels or annotations can be used as source.
 
- **Manual annotation:** 
+  - You can define up to 20 enrichment rules.
 
- Use the aforementioned annotation keys when annotating your namespaces and pods to enrich your Kubernetes data with security and cost allocation attributes.
+  - New rules may take up to 45 minutes to take effect.
 
-With Dynatrace Operator version 1.3.0, the aforementioned namespace annotations are copied down to pods in the namespace, if they are not yet set on the respective pod. 
+  - Pod restarts are required after the 45 mins to ensure the changes take effect.
 
- **Rule-based annotation:**
-
-If you already have labels or annotations defined on your namespaces, and you want to reuse them for enrichment, you can do so with the help of rules definable here. 
-
-**Example:**
-
- * Namespace label:
-   * `label/example: test-value`
-
- * Rule: 
-   * `Label` 
- `label/example --> dt.security_context`
-
- * Pod annotation: 
-   * `metadata.dynatrace.com/dt.security_context: test-value`
-
-A maximum of 5 rules can be defined. The first applicable rule will be applied. Preexisting annotations will not be overwritten. For a detailed description of this feature, have a look at our [documentation](https://dt-url.net/pn22sye). (see [below for nested schema](#nestedblock--rules))
+  To learn more, please refer to our [documentation](https://dt-url.net/pn22sye). (see [below for nested schema](#nestedblock--rules))
 - `scope` (String) The scope of this setting (KUBERNETES_CLUSTER). Omit this property if you want to cover the whole environment.
 
 ### Read-Only
@@ -127,18 +108,17 @@ Required:
 
 - `source` (String) The source must follow the syntax of Kubernetes annotation/label keys as defined in the [Kubernetes documentation](https://dt-url.net/2c02sbn).
 
-`source := (prefix/)?name`
+  `source := (prefix/)?name`
 
-`prefix := [a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*`
+  `prefix := [a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*`
 
-`name := ([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]`
+  `name := ([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]`
 
-Additionally, the name can have at most 63 characters, and the overall length of the source must not exceed 75 characters.
-- `type` (String) Possible Values: `ANNOTATION`, `LABEL`
+  Additionally, the name can have at most 63 characters, and the overall length of the source must not exceed 75 characters.
+- `type` (String) Metadata type. Possible values: `ANNOTATION`, `LABEL`
 
 Optional:
 
-- `enabled` (Boolean, Deprecated) This setting is enabled (`true`) or disabled (`false`)
-- `primary_grail_tag` (Boolean) Uses the key of the annotation or label as field name
-- `target` (String) Required when `primary_grail_tag` is omitted or `false`. Possible Values: `dt.cost.costcenter``, `dt.cost.product``, `dt.security_context
+- `primary_grail_tag` (Boolean) Uses the key of the annotation or label as field name directly
+- `target` (String) Possible values: `dt.cost.costcenter`, `dt.cost.product`, `dt.security_context`
  

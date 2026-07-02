@@ -36,8 +36,9 @@ resource "dynatrace_devobs_git_onprem" "onprem" {
 
 ### Required
 
-- `git_provider` (String) Possible Values: `AzureOnPrem`, `BitbucketOnPrem`, `GithubOnPrem`, `GitlabOnPrem`
-- `url` (String) An HTTP/HTTPS URL of your server
+- `git_provider` (String) The git service provider for this server. Possible values: `AzureOnPrem`, `BitbucketOnPrem`, `GithubOnPrem`, `GitlabOnPrem`
+- `url` (String) An HTTPS URL of your server (HTTP not supported)
+ Provide only the base URL of the server, not a path to a specific project or repository (For instance, https://git.example.com)
 
 ### Optional
 

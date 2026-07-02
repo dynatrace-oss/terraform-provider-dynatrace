@@ -312,7 +312,7 @@ Required:
 - `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -328,6 +328,7 @@ Optional:
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--fields_rename))
 - `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--histogram_metric))
+- `inline_lookup` (Block List, Max: 1) Inline lookup processor attributes (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--inline_lookup))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--cost_allocation--processors--processor--product_allocation))
 - `sample_data` (String) Sample data
@@ -701,6 +702,20 @@ Optional:
 - `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
+
+
+<a id="nestedblock--cost_allocation--processors--processor--inline_lookup"></a>
+### Nested Schema for `cost_allocation.processors.processor.inline_lookup`
+
+Required:
+
+- `destination_field` (String) The field key to write the matched lookup value to.
+- `inline_lookup_table` (String) The key-value pairs of the inline lookup table, encoded as a compact JSON string: [[["key1","key2"],"value1"],[["key3"],"value2"]].
+- `source_field` (String) The field key whose value is looked up in the lookup table.
+
+Optional:
+
+- `default_value` (String) The value to write to the destination field when no lookup key matches. If absent, the destination field is left unchanged when no key matches.
 
 
 <a id="nestedblock--cost_allocation--processors--processor--product_allocation"></a>
@@ -1263,7 +1278,7 @@ Required:
 - `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -1279,6 +1294,7 @@ Optional:
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--data_extraction--processors--processor--fields_rename))
 - `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--data_extraction--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--data_extraction--processors--processor--histogram_metric))
+- `inline_lookup` (Block List, Max: 1) Inline lookup processor attributes (see [below for nested schema](#nestedblock--data_extraction--processors--processor--inline_lookup))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--data_extraction--processors--processor--product_allocation))
 - `sample_data` (String) Sample data
@@ -1652,6 +1668,20 @@ Optional:
 - `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
+
+
+<a id="nestedblock--data_extraction--processors--processor--inline_lookup"></a>
+### Nested Schema for `data_extraction.processors.processor.inline_lookup`
+
+Required:
+
+- `destination_field` (String) The field key to write the matched lookup value to.
+- `inline_lookup_table` (String) The key-value pairs of the inline lookup table, encoded as a compact JSON string: [[["key1","key2"],"value1"],[["key3"],"value2"]].
+- `source_field` (String) The field key whose value is looked up in the lookup table.
+
+Optional:
+
+- `default_value` (String) The value to write to the destination field when no lookup key matches. If absent, the destination field is left unchanged when no key matches.
 
 
 <a id="nestedblock--data_extraction--processors--processor--product_allocation"></a>
@@ -2214,7 +2244,7 @@ Required:
 - `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -2230,6 +2260,7 @@ Optional:
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--davis--processors--processor--fields_rename))
 - `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--davis--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--davis--processors--processor--histogram_metric))
+- `inline_lookup` (Block List, Max: 1) Inline lookup processor attributes (see [below for nested schema](#nestedblock--davis--processors--processor--inline_lookup))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--davis--processors--processor--product_allocation))
 - `sample_data` (String) Sample data
@@ -2603,6 +2634,20 @@ Optional:
 - `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
+
+
+<a id="nestedblock--davis--processors--processor--inline_lookup"></a>
+### Nested Schema for `davis.processors.processor.inline_lookup`
+
+Required:
+
+- `destination_field` (String) The field key to write the matched lookup value to.
+- `inline_lookup_table` (String) The key-value pairs of the inline lookup table, encoded as a compact JSON string: [[["key1","key2"],"value1"],[["key3"],"value2"]].
+- `source_field` (String) The field key whose value is looked up in the lookup table.
+
+Optional:
+
+- `default_value` (String) The value to write to the destination field when no lookup key matches. If absent, the destination field is left unchanged when no key matches.
 
 
 <a id="nestedblock--davis--processors--processor--product_allocation"></a>
@@ -3185,7 +3230,7 @@ Required:
 - `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -3201,6 +3246,7 @@ Optional:
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--fields_rename))
 - `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--histogram_metric))
+- `inline_lookup` (Block List, Max: 1) Inline lookup processor attributes (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--inline_lookup))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--metric_extraction--processors--processor--product_allocation))
 - `sample_data` (String) Sample data
@@ -3574,6 +3620,20 @@ Optional:
 - `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
+
+
+<a id="nestedblock--metric_extraction--processors--processor--inline_lookup"></a>
+### Nested Schema for `metric_extraction.processors.processor.inline_lookup`
+
+Required:
+
+- `destination_field` (String) The field key to write the matched lookup value to.
+- `inline_lookup_table` (String) The key-value pairs of the inline lookup table, encoded as a compact JSON string: [[["key1","key2"],"value1"],[["key3"],"value2"]].
+- `source_field` (String) The field key whose value is looked up in the lookup table.
+
+Optional:
+
+- `default_value` (String) The value to write to the destination field when no lookup key matches. If absent, the destination field is left unchanged when no key matches.
 
 
 <a id="nestedblock--metric_extraction--processors--processor--product_allocation"></a>
@@ -4136,7 +4196,7 @@ Required:
 - `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -4152,6 +4212,7 @@ Optional:
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--fields_rename))
 - `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--histogram_metric))
+- `inline_lookup` (Block List, Max: 1) Inline lookup processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--inline_lookup))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--product_allocation))
 - `sample_data` (String) Sample data
@@ -4525,6 +4586,20 @@ Optional:
 - `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
+
+
+<a id="nestedblock--processing--processors--processor--inline_lookup"></a>
+### Nested Schema for `processing.processors.processor.inline_lookup`
+
+Required:
+
+- `destination_field` (String) The field key to write the matched lookup value to.
+- `inline_lookup_table` (String) The key-value pairs of the inline lookup table, encoded as a compact JSON string: [[["key1","key2"],"value1"],[["key3"],"value2"]].
+- `source_field` (String) The field key whose value is looked up in the lookup table.
+
+Optional:
+
+- `default_value` (String) The value to write to the destination field when no lookup key matches. If absent, the destination field is left unchanged when no key matches.
 
 
 <a id="nestedblock--processing--processors--processor--product_allocation"></a>
@@ -5087,7 +5162,7 @@ Required:
 - `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -5103,6 +5178,7 @@ Optional:
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--product_allocation--processors--processor--fields_rename))
 - `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--product_allocation--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--product_allocation--processors--processor--histogram_metric))
+- `inline_lookup` (Block List, Max: 1) Inline lookup processor attributes (see [below for nested schema](#nestedblock--product_allocation--processors--processor--inline_lookup))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--product_allocation--processors--processor--product_allocation))
 - `sample_data` (String) Sample data
@@ -5476,6 +5552,20 @@ Optional:
 - `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
+
+
+<a id="nestedblock--product_allocation--processors--processor--inline_lookup"></a>
+### Nested Schema for `product_allocation.processors.processor.inline_lookup`
+
+Required:
+
+- `destination_field` (String) The field key to write the matched lookup value to.
+- `inline_lookup_table` (String) The key-value pairs of the inline lookup table, encoded as a compact JSON string: [[["key1","key2"],"value1"],[["key3"],"value2"]].
+- `source_field` (String) The field key whose value is looked up in the lookup table.
+
+Optional:
+
+- `default_value` (String) The value to write to the destination field when no lookup key matches. If absent, the destination field is left unchanged when no key matches.
 
 
 <a id="nestedblock--product_allocation--processors--processor--product_allocation"></a>
@@ -6038,7 +6128,7 @@ Required:
 - `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -6054,6 +6144,7 @@ Optional:
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--security_context--processors--processor--fields_rename))
 - `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--security_context--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--security_context--processors--processor--histogram_metric))
+- `inline_lookup` (Block List, Max: 1) Inline lookup processor attributes (see [below for nested schema](#nestedblock--security_context--processors--processor--inline_lookup))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--security_context--processors--processor--product_allocation))
 - `sample_data` (String) Sample data
@@ -6427,6 +6518,20 @@ Optional:
 - `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
+
+
+<a id="nestedblock--security_context--processors--processor--inline_lookup"></a>
+### Nested Schema for `security_context.processors.processor.inline_lookup`
+
+Required:
+
+- `destination_field` (String) The field key to write the matched lookup value to.
+- `inline_lookup_table` (String) The key-value pairs of the inline lookup table, encoded as a compact JSON string: [[["key1","key2"],"value1"],[["key3"],"value2"]].
+- `source_field` (String) The field key whose value is looked up in the lookup table.
+
+Optional:
+
+- `default_value` (String) The value to write to the destination field when no lookup key matches. If absent, the destination field is left unchanged when no key matches.
 
 
 <a id="nestedblock--security_context--processors--processor--product_allocation"></a>
@@ -6989,7 +7094,7 @@ Required:
 - `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -7005,6 +7110,7 @@ Optional:
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--fields_rename))
 - `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--histogram_metric))
+- `inline_lookup` (Block List, Max: 1) Inline lookup processor attributes (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--inline_lookup))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--smartscape_edge_extraction--processors--processor--product_allocation))
 - `sample_data` (String) Sample data
@@ -7378,6 +7484,20 @@ Optional:
 - `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
+
+
+<a id="nestedblock--smartscape_edge_extraction--processors--processor--inline_lookup"></a>
+### Nested Schema for `smartscape_edge_extraction.processors.processor.inline_lookup`
+
+Required:
+
+- `destination_field` (String) The field key to write the matched lookup value to.
+- `inline_lookup_table` (String) The key-value pairs of the inline lookup table, encoded as a compact JSON string: [[["key1","key2"],"value1"],[["key3"],"value2"]].
+- `source_field` (String) The field key whose value is looked up in the lookup table.
+
+Optional:
+
+- `default_value` (String) The value to write to the destination field when no lookup key matches. If absent, the destination field is left unchanged when no key matches.
 
 
 <a id="nestedblock--smartscape_edge_extraction--processors--processor--product_allocation"></a>
@@ -7940,7 +8060,7 @@ Required:
 - `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -7956,6 +8076,7 @@ Optional:
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--fields_rename))
 - `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--histogram_metric))
+- `inline_lookup` (Block List, Max: 1) Inline lookup processor attributes (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--inline_lookup))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--smartscape_node_extraction--processors--processor--product_allocation))
 - `sample_data` (String) Sample data
@@ -8329,6 +8450,20 @@ Optional:
 - `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
+
+
+<a id="nestedblock--smartscape_node_extraction--processors--processor--inline_lookup"></a>
+### Nested Schema for `smartscape_node_extraction.processors.processor.inline_lookup`
+
+Required:
+
+- `destination_field` (String) The field key to write the matched lookup value to.
+- `inline_lookup_table` (String) The key-value pairs of the inline lookup table, encoded as a compact JSON string: [[["key1","key2"],"value1"],[["key3"],"value2"]].
+- `source_field` (String) The field key whose value is looked up in the lookup table.
+
+Optional:
+
+- `default_value` (String) The value to write to the destination field when no lookup key matches. If absent, the destination field is left unchanged when no key matches.
 
 
 <a id="nestedblock--smartscape_node_extraction--processors--processor--product_allocation"></a>
@@ -8891,7 +9026,7 @@ Required:
 - `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -8907,6 +9042,7 @@ Optional:
 - `fields_rename` (Block List, Max: 1) Fields rename processor attributes (see [below for nested schema](#nestedblock--storage--processors--processor--fields_rename))
 - `geo_lookup` (Block List, Max: 1) Geo lookup processor attributes (see [below for nested schema](#nestedblock--storage--processors--processor--geo_lookup))
 - `histogram_metric` (Block List, Max: 1) Histogram metric processor attributes (see [below for nested schema](#nestedblock--storage--processors--processor--histogram_metric))
+- `inline_lookup` (Block List, Max: 1) Inline lookup processor attributes (see [below for nested schema](#nestedblock--storage--processors--processor--inline_lookup))
 - `matcher` (String) [See our documentation](https://dt-url.net/bp234rv)
 - `product_allocation` (Block List, Max: 1) Product allocation processor attributes (see [below for nested schema](#nestedblock--storage--processors--processor--product_allocation))
 - `sample_data` (String) Sample data
@@ -9280,6 +9416,20 @@ Optional:
 - `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
 
+
+
+<a id="nestedblock--storage--processors--processor--inline_lookup"></a>
+### Nested Schema for `storage.processors.processor.inline_lookup`
+
+Required:
+
+- `destination_field` (String) The field key to write the matched lookup value to.
+- `inline_lookup_table` (String) The key-value pairs of the inline lookup table, encoded as a compact JSON string: [[["key1","key2"],"value1"],[["key3"],"value2"]].
+- `source_field` (String) The field key whose value is looked up in the lookup table.
+
+Optional:
+
+- `default_value` (String) The value to write to the destination field when no lookup key matches. If absent, the destination field is left unchanged when no key matches.
 
 
 <a id="nestedblock--storage--processors--processor--product_allocation"></a>

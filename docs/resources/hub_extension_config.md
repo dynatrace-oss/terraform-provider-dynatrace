@@ -57,21 +57,20 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_hub_extension_config" "com_dynatrace_extension_jmx-weblogic-cp" {
-  name = "com.dynatrace.extension.jmx-weblogic-cp"
+resource "dynatrace_hub_extension_config" "com_dynatrace_extension_wmi_iis" {
+  name  = "com.dynatrace.extension.wmi.iis"
   scope = "environment"
-    value = jsonencode(
+  value = jsonencode(
     {
-      "activationContext": "LOCAL",
-      "activationTags": [],
       "enabled" : true,
-      "description" : "jj",
-      "version" : "2.0.4",
+      "description" : "my description",
+      "version" : "1.1.1",
       "featureSets" : [
-        "cache",
-        "connections",
-        "capacity"
-      ]
+        "IIS Extended Request Metrics"
+      ],
+      "vars" : {},
+      "activationContext" : "LOCAL",
+      "activationTags" : []
     }
   )
 }

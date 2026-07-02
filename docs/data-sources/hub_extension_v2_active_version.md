@@ -21,7 +21,7 @@ The `dynatrace_hub_extension_v2_active_version` data source retrieves the active
 
 ```terraform
 data "dynatrace_hub_extension_v2_active_version" "active_version" {
-  name = "com.dynatrace.extension.jmx-weblogic-cp"
+  name = "com.dynatrace.extension.wmi.iis"
 }
 
 output "active_version" {
