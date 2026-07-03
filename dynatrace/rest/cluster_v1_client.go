@@ -56,7 +56,7 @@ func (me *cluster_v1_client) Get(ctx context.Context, url string, expectedStatus
 }
 
 func (me *cluster_v1_client) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload, headers: Headers.ContentType.ApplicationJSON}
+	req := &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload, headers: headers.ContentType.ApplicationJSON}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
@@ -64,7 +64,7 @@ func (me *cluster_v1_client) Post(ctx context.Context, url string, payload any, 
 }
 
 func (me *cluster_v1_client) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload, headers: Headers.ContentType.ApplicationJSON}
+	req := &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload, headers: headers.ContentType.ApplicationJSON}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
@@ -85,7 +85,7 @@ var clusterV1ClientCache = map[string]*rest.Client{}
 
 var clusterV1ClientCacheMutex sync.Mutex
 
-func clusterV1Client(baseURL string, apiToken string) (*rest.Client, error) {
+func createClusterV1Client(baseURL string, apiToken string) (*rest.Client, error) {
 	clusterV1ClientCacheMutex.Lock()
 	defer clusterV1ClientCacheMutex.Unlock()
 
@@ -118,7 +118,7 @@ func (me *cluster_v1_request) Finish(optionalTarget ...any) error {
 
 	clusterURL := strings.TrimSuffix(me.client.Credentials().Cluster.URL, "/") + "/api/v1.0/onpremise"
 
-	client, err := clusterV1Client(clusterURL, me.client.Credentials().Cluster.Token)
+	client, err := createClusterV1Client(clusterURL, me.client.Credentials().Cluster.Token)
 	if err != nil {
 		return err
 	}

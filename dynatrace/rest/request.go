@@ -26,7 +26,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"strings"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
@@ -59,17 +58,6 @@ type request struct {
 	onResponse func(resp *http.Response)
 }
 
-func (me request) evalClassicURL() string {
-	envURL := strings.TrimSuffix(strings.TrimSpace(me.client.Credentials().URL), "/")
-	if len(envURL) == 0 {
-		return envURL
-	}
-	envURL = strings.ReplaceAll(envURL, ".dev.apps.dynatracelabs.", ".dev.dynatracelabs.")
-	envURL = strings.ReplaceAll(envURL, ".sprint.apps.dynatracelabs.", ".sprint.dynatracelabs.")
-	envURL = strings.ReplaceAll(envURL, ".apps.dynatrace.", ".live.dynatrace.")
-	return envURL
-}
-
 func PreRequest() {
 	preRequestMutex.Lock()
 	defer preRequestMutex.Unlock()
@@ -92,7 +80,7 @@ func readerFromPayload(payload any) (io.Reader, error) {
 	return bytes.NewBuffer(data), nil
 }
 
-func UnmarshalError(method string, url string, data []byte, response *http.Response) (err error) {
+func unmarshalError(method string, url string, data []byte, response *http.Response) (err error) {
 	if response == nil {
 		return nil
 	}
@@ -162,7 +150,7 @@ func (me request) HandleResponse(client *rest.Client, u *url.URL, target any) (e
 		}
 	}
 
-	if err = UnmarshalError(me.method, u.String(), data, response); err != nil {
+	if err = unmarshalError(me.method, u.String(), data, response); err != nil {
 		return err
 	}
 
@@ -175,7 +163,7 @@ func (me request) HandleResponse(client *rest.Client, u *url.URL, target any) (e
 	return nil
 }
 
-var Headers = struct {
+var headers = struct {
 	ContentType struct{ ApplicationJSON map[string]string }
 }{
 	ContentType: struct{ ApplicationJSON map[string]string }{ApplicationJSON: map[string]string{"Content-Type": "application/json"}},

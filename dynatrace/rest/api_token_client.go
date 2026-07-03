@@ -22,6 +22,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strings"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
@@ -115,7 +116,7 @@ var classicClientCache = map[string]*rest.Client{}
 
 var classicClientCacheMutex sync.Mutex
 
-func CreateClassicClient(classicURL string, apiToken string) (*rest.Client, error) {
+func createClassicClient(classicURL string, apiToken string) (*rest.Client, error) {
 	if classicURL == "" {
 		// sanity check - this should not be empty anymore at this point
 		return nil, NoClassicURLDefinedErr
@@ -153,9 +154,9 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 
 	PreRequest()
 
-	classicURL := request(*me).evalClassicURL()
+	classicURL := evalClassicURL(me.client.Credentials().URL)
 
-	client, err := CreateClassicClient(classicURL, me.client.Credentials().Token)
+	client, err := createClassicClient(classicURL, me.client.Credentials().Token)
 	if err != nil {
 		return err
 	}
@@ -169,4 +170,15 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 	}
 
 	return request(*me).HandleResponse(client, pathURL, target)
+}
+
+func evalClassicURL(envURL string) string {
+	envURL = strings.TrimSuffix(strings.TrimSpace(envURL), "/")
+	if len(envURL) == 0 {
+		return envURL
+	}
+	envURL = strings.ReplaceAll(envURL, ".dev.apps.dynatracelabs.", ".dev.dynatracelabs.")
+	envURL = strings.ReplaceAll(envURL, ".sprint.apps.dynatracelabs.", ".sprint.dynatracelabs.")
+	envURL = strings.ReplaceAll(envURL, ".apps.dynatrace.", ".live.dynatrace.")
+	return envURL
 }
