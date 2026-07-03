@@ -49,7 +49,7 @@ func configureCommonRestClient(restClient *rest.Client) (*rest.Client, error) {
 	return restClient, nil
 }
 
-func CreatePlatformOAuthClient(ctx context.Context, u string, credentials *Credentials) (*rest.Client, error) {
+func createPlatformOAuthClient(ctx context.Context, u string, credentials *Credentials) (*rest.Client, error) {
 	parsedURL, err := url.Parse(u)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse URL %q: %w", u, err)
@@ -70,7 +70,7 @@ func CreatePlatformOAuthClient(ctx context.Context, u string, credentials *Crede
 	return configureCommonRestClient(rest.NewClient(parsedURL, httpClient, opts...))
 }
 
-func CreatePlatformTokenClient(u string, credentials *Credentials) (*rest.Client, error) {
+func createPlatformTokenClient(u string, credentials *Credentials) (*rest.Client, error) {
 	parsedURL, err := url.Parse(u)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse URL %q: %w", u, err)
@@ -91,9 +91,9 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 	var client *rest.Client
 	var err error
 	if credentials.ContainsPlatformToken() {
-		client, err = CreatePlatformTokenClient(platformURL, credentials)
+		client, err = createPlatformTokenClient(platformURL, credentials)
 	} else if credentials.ContainsOAuth() {
-		client, err = CreatePlatformOAuthClient(NewContextWithOAuthRetryClient(ctx), platformURL, credentials)
+		client, err = createPlatformOAuthClient(NewContextWithOAuthRetryClient(ctx), platformURL, credentials)
 	} else {
 		return nil, NoPlatformCredentialsErr
 	}
@@ -112,7 +112,7 @@ func (me *platform_request) Finish(optionalTarget ...any) error {
 
 	PreRequest()
 
-	platformURL := me.evalPlatformURL()
+	platformURL := me.evalPlatformURL(me.client.Credentials().URL)
 
 	client, err := CreatePlatformClient(me.ctx, platformURL, me.client.Credentials())
 	if err != nil {
@@ -137,8 +137,8 @@ func (me *platform_request) Finish(optionalTarget ...any) error {
 	return request(*me).HandleResponse(client, fullURL, target)
 }
 
-func (me *platform_request) evalPlatformURL() string {
-	envURL := strings.TrimSuffix(strings.TrimSpace(me.client.Credentials().URL), "/")
+func (me *platform_request) evalPlatformURL(envURL string) string {
+	envURL = strings.TrimSuffix(strings.TrimSpace(envURL), "/")
 	if len(envURL) == 0 {
 		return envURL
 	}

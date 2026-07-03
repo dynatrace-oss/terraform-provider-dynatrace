@@ -48,7 +48,7 @@ func (me *hybrid_client) Get(ctx context.Context, url string, expectedStatusCode
 }
 
 func (me *hybrid_client) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload, headers: Headers.ContentType.ApplicationJSON}
+	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload, headers: headers.ContentType.ApplicationJSON}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
@@ -56,7 +56,7 @@ func (me *hybrid_client) Post(ctx context.Context, url string, payload any, expe
 }
 
 func (me *hybrid_client) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload, headers: Headers.ContentType.ApplicationJSON}
+	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload, headers: headers.ContentType.ApplicationJSON}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
