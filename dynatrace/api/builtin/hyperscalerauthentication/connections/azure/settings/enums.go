@@ -24,8 +24,6 @@ var ConsumersOfClientSecrets = struct {
 	None              ConsumersOfClientSecret
 	SvcComDynatraceDa ConsumersOfClientSecret
 }{
-	"DA",
-	"NONE",
 	"SVC:com.dynatrace.da",
 }
 
@@ -41,8 +39,6 @@ var ConsumersOfFederatedIdentityCredentials = struct {
 	SvcComDynatraceOpenpipeline         ConsumersOfFederatedIdentityCredential
 }{
 	"APP:dynatrace.microsoft.azure.connector",
-	"DA",
-	"NONE",
 	"SVC:com.dynatrace.bo",
 	"SVC:com.dynatrace.da",
 	"SVC:com.dynatrace.grail",

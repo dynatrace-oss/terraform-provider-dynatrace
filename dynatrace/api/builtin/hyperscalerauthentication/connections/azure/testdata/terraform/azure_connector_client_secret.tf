@@ -36,7 +36,7 @@ resource "dynatrace_azure_connection" "example" {
     application_id = azuread_application_registration.example.client_id
     directory_id   = var.azure_tenant_id
     consumers = [
-      "DA"
+      "SVC:com.dynatrace.da"
     ]
   }
 }

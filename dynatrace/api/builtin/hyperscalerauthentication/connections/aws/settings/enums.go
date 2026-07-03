@@ -27,8 +27,6 @@ var ConsumersOfAwsRoleBasedAuthentications = struct {
 	SvcComDynatraceGrail        ConsumersOfAwsRoleBasedAuthentication
 	SvcComDynatraceOpenpipeline ConsumersOfAwsRoleBasedAuthentication
 }{
-	"DA",
-	"NONE",
 	"SVC:com.dynatrace.bo",
 	"SVC:com.dynatrace.da",
 	"SVC:com.dynatrace.grail",

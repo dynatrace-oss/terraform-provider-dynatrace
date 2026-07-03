@@ -20,16 +20,8 @@
 			"documentation": "",
 			"items": [
 				{
-					"displayName": "(Deprecated) Data Acquisition",
-					"value": "DA"
-				},
-				{
 					"displayName": "Data Acquisition",
 					"value": "SVC:com.dynatrace.da"
-				},
-				{
-					"displayName": "None",
-					"value": "NONE"
 				}
 			],
 			"type": "enum"
@@ -39,10 +31,6 @@
 			"displayName": "Consumers",
 			"documentation": "",
 			"items": [
-				{
-					"displayName": "(Deprecated) Data Acquisition",
-					"value": "DA"
-				},
 				{
 					"displayName": "Data Acquisition",
 					"value": "SVC:com.dynatrace.da"
@@ -62,10 +50,6 @@
 				{
 					"displayName": "Business Observability",
 					"value": "SVC:com.dynatrace.bo"
-				},
-				{
-					"displayName": "None",
-					"value": "NONE"
 				}
 			],
 			"type": "enum"

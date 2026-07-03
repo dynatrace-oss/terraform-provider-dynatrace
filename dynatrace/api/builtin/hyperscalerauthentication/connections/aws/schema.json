@@ -20,10 +20,6 @@
 			"documentation": "",
 			"items": [
 				{
-					"displayName": "(Deprecated) Data Acquisition",
-					"value": "DA"
-				},
-				{
 					"displayName": "Data Acquisition",
 					"value": "SVC:com.dynatrace.da"
 				},
@@ -38,10 +34,6 @@
 				{
 					"displayName": "Grail",
 					"value": "SVC:com.dynatrace.grail"
-				},
-				{
-					"displayName": "None",
-					"value": "NONE"
 				}
 			],
 			"type": "enum"

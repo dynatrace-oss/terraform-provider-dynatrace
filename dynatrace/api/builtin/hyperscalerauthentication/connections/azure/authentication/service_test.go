@@ -58,7 +58,7 @@ func TestService_List(t *testing.T) {
 
 		mockConn1 := &azure.Settings{
 			Type:                        azure.Types.Federatedidentitycredential,
-			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"DA"}},
+			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"SVC:com.dynatrace.da"}},
 			Name:                        "Federated Identity Credential Connection 1",
 		}
 
@@ -70,7 +70,7 @@ func TestService_List(t *testing.T) {
 
 		mockConn3 := &azure.Settings{
 			Type:                        azure.Types.Federatedidentitycredential,
-			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"DA"}},
+			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"SVC:com.dynatrace.da"}},
 			Name:                        "Federated Identity Credential Connection 2",
 		}
 
@@ -149,7 +149,7 @@ func TestService_Get(t *testing.T) {
 
 		mockConn := &azure.Settings{
 			Type:                        azure.Types.Federatedidentitycredential,
-			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"DA"}},
+			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"SVC:com.dynatrace.da"}},
 			Name:                        "Federated Identity Credential Connection 2",
 		}
 
@@ -220,7 +220,7 @@ func TestService_Create(t *testing.T) {
 	t.Run("success configuring federated identity credentials", func(t *testing.T) {
 		mockConn := &azure.Settings{
 			Type:                        azure.Types.Federatedidentitycredential,
-			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"DA"}},
+			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"SVC:com.dynatrace.da"}},
 			Name:                        name,
 		}
 		mock := &mockCRUDService{
@@ -269,7 +269,7 @@ func TestService_Create(t *testing.T) {
 	t.Run("federated identity credentials already set", func(t *testing.T) {
 		mockConn := &azure.Settings{
 			Type:                        azure.Types.Federatedidentitycredential,
-			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"DA"}, ApplicationID: &applicationID, DirectoryID: &directoryID},
+			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"SVC:com.dynatrace.da"}, ApplicationID: &applicationID, DirectoryID: &directoryID},
 			Name:                        name,
 		}
 		mock := &mockCRUDService{
@@ -292,7 +292,7 @@ func TestService_Create(t *testing.T) {
 	t.Run("federated identity credentials already set but equal", func(t *testing.T) {
 		mockConn := &azure.Settings{
 			Type:                        azure.Types.Federatedidentitycredential,
-			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"DA"}, ApplicationID: &applicationID, DirectoryID: &directoryID},
+			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"SVC:com.dynatrace.da"}, ApplicationID: &applicationID, DirectoryID: &directoryID},
 			Name:                        name,
 		}
 		mock := &mockCRUDService{
@@ -328,7 +328,7 @@ func TestService_Create(t *testing.T) {
 	t.Run("connService.Update error", func(t *testing.T) {
 		mockConn := &azure.Settings{
 			Type:                        azure.Types.Federatedidentitycredential,
-			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"DA"}},
+			FederatedIdentityCredential: &azure.FederatedIdentityCredential{Consumers: []azure.ConsumersOfFederatedIdentityCredential{"SVC:com.dynatrace.da"}},
 			Name:                        name,
 		}
 		mock := &mockCRUDService{
