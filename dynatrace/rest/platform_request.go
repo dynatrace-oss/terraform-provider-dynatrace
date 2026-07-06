@@ -20,9 +20,6 @@ package rest
 import (
 	"context"
 	"errors"
-	"fmt"
-	"maps"
-	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
@@ -31,8 +28,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"golang.org/x/oauth2/clientcredentials"
 
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 )
 
 var eligiblePlatformRequests = map[string]string{
@@ -44,64 +41,34 @@ type platform_request request
 
 var NoPlatformCredentialsErr = errors.New("neither oauth credentials nor platform token present")
 
-func configureCommonRestClient(restClient *rest.Client) (*rest.Client, error) {
-	restClient.SetHeader("User-Agent", version.UserAgent())
-	return restClient, nil
-}
-
-func createPlatformOAuthClient(ctx context.Context, u string, credentials *Credentials) (*rest.Client, error) {
-	parsedURL, err := url.Parse(u)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse URL %q: %w", u, err)
-	}
-	oauthConfig := clientcredentials.Config{
-		ClientID:     credentials.OAuth.ClientID,
-		ClientSecret: credentials.OAuth.ClientSecret,
-		TokenURL:     evalTokenURL(parsedURL.String()),
-	}
-	httpClient := auth.NewOAuthClient(ctx, &oauthConfig)
-
-	opts := []rest.Option{
-		rest.WithHTTPListener(logging.HTTPListener("platform")),
-		rest.WithRateLimiter(),
-		rest.WithRetryOptions(defaultRetryOptions),
-	}
-
-	return configureCommonRestClient(rest.NewClient(parsedURL, httpClient, opts...))
-}
-
-func createPlatformTokenClient(u string, credentials *Credentials) (*rest.Client, error) {
-	parsedURL, err := url.Parse(u)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse URL %q: %w", u, err)
-	}
-
-	opts := []rest.Option{
-		rest.WithHTTPListener(logging.HTTPListener("plat/tok")),
-		rest.WithRateLimiter(),
-		rest.WithRetryOptions(defaultRetryOptions),
-	}
-
-	return configureCommonRestClient(rest.NewClient(parsedURL, NewBearerTokenBasedClient(credentials.OAuth.PlatformToken), opts...))
-}
-
 func CreatePlatformClient(ctx context.Context, platformURL string, credentials *Credentials) (*rest.Client, error) {
 	PreRequest()
 
-	var client *rest.Client
-	var err error
+	factory := clients.Factory().
+		WithPlatformURL(platformURL).
+		WithRateLimiter(true).
+		WithRetryOptions(defaultRetryOptions).
+		WithUserAgent(version.UserAgent())
+
 	if credentials.ContainsPlatformToken() {
-		client, err = createPlatformTokenClient(platformURL, credentials)
-	} else if credentials.ContainsOAuth() {
-		client, err = createPlatformOAuthClient(NewContextWithOAuthRetryClient(ctx), platformURL, credentials)
-	} else {
-		return nil, NoPlatformCredentialsErr
-	}
-	if err != nil {
-		return nil, err
+		return factory.
+			WithHTTPListener(logging.HTTPListener("plat/tok")).
+			WithPlatformToken(credentials.OAuth.PlatformToken).
+			CreatePlatformClient(ctx)
 	}
 
-	return client, err
+	if credentials.ContainsOAuth() {
+		return factory.
+			WithHTTPListener(logging.HTTPListener("platform")).
+			WithOAuthCredentials(clientcredentials.Config{
+				ClientID:     credentials.OAuth.ClientID,
+				ClientSecret: credentials.OAuth.ClientSecret,
+				TokenURL:     evalTokenURL(platformURL),
+			}).
+			CreatePlatformClient(NewContextWithOAuthRetryClient(ctx))
+	}
+
+	return nil, NoPlatformCredentialsErr
 }
 
 func (me *platform_request) Finish(optionalTarget ...any) error {
@@ -164,48 +131,4 @@ func evalTokenURL(dtEnvURL string) string {
 		return DevTokenURL
 	}
 	return ""
-}
-
-// NewBearerTokenBasedClient creates a new HTTP client with token-based authentication.
-// It takes a token string as an argument and returns an instance of *http.Client.
-func NewBearerTokenBasedClient(token string) *http.Client {
-	// Create a new tokenAuthTransport and initialize it with the provided token.
-	return &http.Client{Transport: newBearerTokenAuthTransport(nil, token)}
-}
-
-// bearerTokenAuthTransport is a custom transport that adds token-based authentication headers to HTTP requests.
-type bearerTokenAuthTransport struct {
-	http.RoundTripper
-	header http.Header
-}
-
-// newBearerTokenAuthTransport creates a new instance of tokenAuthTransport.
-// It takes a baseTransport (an existing HTTP transport) and a token string as arguments,
-// and returns a pointer to the newly created tokenAuthTransport instance.
-func newBearerTokenAuthTransport(baseTransport http.RoundTripper, token string) *bearerTokenAuthTransport {
-	// If no baseTransport is provided, use the default HTTP transport.
-	if baseTransport == nil {
-		baseTransport = http.DefaultTransport
-	}
-
-	// Create a new tokenAuthTransport instance and initialize it.
-	t := &bearerTokenAuthTransport{
-		RoundTripper: baseTransport,
-		header:       http.Header{},
-	}
-
-	// Set the "Authorization" header with the provided token.
-	t.header.Set("Authorization", "Bearer "+token)
-	return t
-}
-
-// RoundTrip implements the http.RoundTripper interface's RoundTrip method.
-// It adds the authentication headers from the tokenAuthTransport instance to the request's headers
-// and delegates the actual round trip to the underlying transport.
-func (t *bearerTokenAuthTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	// Copy authentication headers from tokenAuthTransport to the request.
-	maps.Copy(req.Header, t.header)
-
-	// Perform the actual HTTP request using the underlying transport.
-	return t.RoundTripper.RoundTrip(req)
 }
