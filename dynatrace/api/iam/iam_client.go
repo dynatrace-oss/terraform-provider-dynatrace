@@ -23,7 +23,6 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-	"net/url"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -32,8 +31,8 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
-	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/auth"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 )
 
 // IAMClient performs HTTP requests against the IAM REST API. Each method returns an api.Response
@@ -57,23 +56,23 @@ func NewIAMClient(ctx context.Context, a Authenticator) IAMClient {
 		ClientSecret: a.ClientSecret(),
 		TokenURL:     a.TokenURL(),
 	}
-	httpClient := auth.NewOAuthClient(rest.NewContextWithOAuthRetryClient(ctx), &oauthConfig)
 
-	opts := []rest2.Option{
-		rest2.WithHTTPListener(logging.HTTPListener("iam")),
-		rest2.WithRateLimiter(),
-		rest2.WithRetryOptions(&rest2.RetryOptions{
+	client, _ := clients.Factory().
+		WithHTTPListener(logging.HTTPListener("iam")).
+		WithOAuthCredentials(oauthConfig).
+		WithUserAgent(version.UserAgent()).
+		WithRateLimiter(true).
+		WithRetryOptions(&rest2.RetryOptions{
 			DelayAfterRetry: time.Second * 60,
 			MaxRetries:      10,
 			ShouldRetryFunc: func(resp *http.Response) bool {
 				return rest2.RetryIfTooManyRequestsOrServiceUnavailable(resp) || resp.StatusCode == http.StatusBadGateway || resp.StatusCode == http.StatusGatewayTimeout
 			},
-		}),
-	}
-	eUrl, _ := url.Parse(a.EndpointURL())
-	client := rest2.NewClient(eUrl, httpClient, opts...)
-	client.SetHeader("User-Agent", version.UserAgent())
-	return &iamClient{a, client}
+		}).
+		WithAccountURL(a.EndpointURL()).
+		AccountRestClient(rest.NewContextWithOAuthRetryClient(ctx))
+
+	return &iamClient{auth: a, client: client}
 }
 
 func (me *iamClient) POST(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
@@ -86,7 +85,6 @@ func (me *iamClient) POST(ctx context.Context, url string, payload any, options 
 		return api.Response{}, err
 	}
 	return api.NewResponseFromHTTPResponse(httpResponse)
-
 }
 
 func (me *iamClient) PUT(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
