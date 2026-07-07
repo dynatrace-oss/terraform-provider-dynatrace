@@ -46,8 +46,7 @@ type IAMClient interface {
 }
 
 type iamClient struct {
-	credentials *rest.Credentials
-	client      *rest2.Client
+	client *rest2.Client
 }
 
 func NewIAMClient(ctx context.Context, credentials *rest.Credentials) IAMClient {
@@ -72,7 +71,7 @@ func NewIAMClient(ctx context.Context, credentials *rest.Credentials) IAMClient 
 		WithAccountURL(credentials.IAM.EndpointURL).
 		AccountRestClient(rest.NewContextWithOAuthRetryClient(ctx))
 
-	return &iamClient{credentials: credentials, client: client}
+	return &iamClient{client: client}
 }
 
 func (me *iamClient) POST(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
