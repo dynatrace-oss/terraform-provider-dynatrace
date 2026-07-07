@@ -32,40 +32,11 @@ import (
 )
 
 type UserServiceClient struct {
-	clientID     string
-	accountID    string
-	clientSecret string
-	tokenURL     string
-	endpointURL  string
-}
-
-func (me *UserServiceClient) ClientID() string {
-	return me.clientID
-}
-
-func (me *UserServiceClient) AccountID() string {
-	return me.accountID
-}
-
-func (me *UserServiceClient) ClientSecret() string {
-	return me.clientSecret
-}
-
-func (me *UserServiceClient) TokenURL() string {
-	return me.tokenURL
-}
-
-func (me *UserServiceClient) EndpointURL() string {
-	return me.endpointURL
-}
-
-func NewUserService(clientID string, accountID string, clientSecret string, tokenURL string, endpointURL string) *UserServiceClient {
-	return &UserServiceClient{clientID: clientID, accountID: accountID, clientSecret: clientSecret, tokenURL: tokenURL, endpointURL: endpointURL}
+	credentials *rest.Credentials
 }
 
 func Service(credentials *rest.Credentials) settings.CRUDService[*users.User] {
-
-	return &UserServiceClient{clientID: credentials.IAM.ClientID, accountID: credentials.IAM.AccountID, clientSecret: credentials.IAM.ClientSecret, tokenURL: credentials.IAM.TokenURL, endpointURL: credentials.IAM.EndpointURL}
+	return &UserServiceClient{credentials: credentials}
 }
 
 func (me *UserServiceClient) SchemaID() string {
@@ -73,8 +44,8 @@ func (me *UserServiceClient) SchemaID() string {
 }
 
 func (me *UserServiceClient) Create(ctx context.Context, user *users.User) (*api.Stub, error) {
-	client := iam.NewIAMClient(ctx, me)
-	if _, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.AccountID()), user, rest2.RequestOptions{}); err != nil {
+	client := iam.NewIAMClient(ctx, me.credentials)
+	if _, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.credentials.IAM.AccountID), user, rest2.RequestOptions{}); err != nil {
 		return nil, err
 	}
 
@@ -82,7 +53,7 @@ func (me *UserServiceClient) Create(ctx context.Context, user *users.User) (*api
 	if len(user.Groups) > 0 {
 		groups = user.Groups
 	}
-	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.AccountID(), user.Email), groups, rest2.RequestOptions{}); err != nil {
+	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.credentials.IAM.AccountID, user.Email), groups, rest2.RequestOptions{}); err != nil {
 		return nil, err
 	}
 
@@ -100,9 +71,9 @@ type GetUserGroupsResponse struct {
 }
 
 func (me *UserServiceClient) Get(ctx context.Context, email string, v *users.User) error {
-	client := iam.NewIAMClient(ctx, me)
+	client := iam.NewIAMClient(ctx, me.credentials)
 
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.AccountID(), email), rest2.RequestOptions{})
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.credentials.IAM.AccountID, email), rest2.RequestOptions{})
 	if err != nil {
 		if strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
 			return rest.Error{Code: 404, Message: err.Error()}
@@ -129,7 +100,7 @@ func (me *UserServiceClient) Update(ctx context.Context, email string, user *use
 	if len(user.Groups) > 0 {
 		groups = user.Groups
 	}
-	if _, err := iam.NewIAMClient(ctx, me).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.AccountID(), user.Email), groups, rest2.RequestOptions{}); err != nil {
+	if _, err := iam.NewIAMClient(ctx, me.credentials).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.credentials.IAM.AccountID, user.Email), groups, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 
@@ -147,7 +118,7 @@ type ListUsersResponse struct {
 }
 
 func (me *UserServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	response, err := iam.NewIAMClient(ctx, me).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.AccountID()), rest2.RequestOptions{})
+	response, err := iam.NewIAMClient(ctx, me.credentials).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.credentials.IAM.AccountID), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +135,7 @@ func (me *UserServiceClient) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (me *UserServiceClient) Delete(ctx context.Context, email string) error {
-	_, err := iam.NewIAMClient(ctx, me).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.AccountID(), email), rest2.RequestOptions{})
+	_, err := iam.NewIAMClient(ctx, me.credentials).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.credentials.IAM.AccountID, email), rest2.RequestOptions{})
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
 		return nil
 	}

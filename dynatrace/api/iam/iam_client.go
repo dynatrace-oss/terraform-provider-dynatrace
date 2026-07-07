@@ -46,22 +46,20 @@ type IAMClient interface {
 }
 
 type iamClient struct {
-	auth   Authenticator
-	client *rest2.Client
+	credentials *rest.Credentials
+	client      *rest2.Client
 }
 
-func NewIAMClient(ctx context.Context, a Authenticator) IAMClient {
+func NewIAMClient(ctx context.Context, credentials *rest.Credentials) IAMClient {
 	rest.PreRequest()
-
-	oauthConfig := clientcredentials.Config{
-		ClientID:     a.ClientID(),
-		ClientSecret: a.ClientSecret(),
-		TokenURL:     a.TokenURL(),
-	}
 
 	client, _ := clients.Factory().
 		WithHTTPListener(logging.HTTPListener("iam")).
-		WithOAuthCredentials(oauthConfig).
+		WithOAuthCredentials(clientcredentials.Config{
+			ClientID:     credentials.IAM.ClientID,
+			ClientSecret: credentials.IAM.ClientSecret,
+			TokenURL:     credentials.IAM.TokenURL,
+		}).
 		WithUserAgent(version.UserAgent()).
 		WithRateLimiter(true).
 		WithRetryOptions(&rest2.RetryOptions{
@@ -71,10 +69,10 @@ func NewIAMClient(ctx context.Context, a Authenticator) IAMClient {
 				return rest2.RetryIfTooManyRequestsOrServiceUnavailable(resp) || resp.StatusCode == http.StatusBadGateway || resp.StatusCode == http.StatusGatewayTimeout
 			},
 		}).
-		WithAccountURL(a.EndpointURL()).
+		WithAccountURL(credentials.IAM.EndpointURL).
 		AccountRestClient(rest.NewContextWithOAuthRetryClient(ctx))
 
-	return &iamClient{auth: a, client: client}
+	return &iamClient{credentials: credentials, client: client}
 }
 
 func (me *iamClient) POST(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {

@@ -41,35 +41,11 @@ type iamClientGetter interface {
 }
 
 type iamClientGetterImp struct {
-	clientID     string
-	accountID    string
-	clientSecret string
-	tokenURL     string
-	endpointURL  string
-}
-
-func (me *iamClientGetterImp) ClientID() string {
-	return me.clientID
-}
-
-func (me *iamClientGetterImp) AccountID() string {
-	return me.accountID
-}
-
-func (me *iamClientGetterImp) ClientSecret() string {
-	return me.clientSecret
-}
-
-func (me *iamClientGetterImp) TokenURL() string {
-	return me.tokenURL
-}
-
-func (me *iamClientGetterImp) EndpointURL() string {
-	return me.endpointURL
+	credentials *rest.Credentials
 }
 
 func (me *iamClientGetterImp) New(ctx context.Context) iam.IAMClient {
-	return iam.NewIAMClient(ctx, me)
+	return iam.NewIAMClient(ctx, me.credentials)
 }
 
 type serviceUserServiceClient struct {
@@ -80,11 +56,7 @@ type serviceUserServiceClient struct {
 func NewService(credentials *rest.Credentials) ServiceUserService {
 	return &serviceUserServiceClient{
 		iamClientGetter: &iamClientGetterImp{
-			clientID:     credentials.IAM.ClientID,
-			accountID:    credentials.IAM.AccountID,
-			clientSecret: credentials.IAM.ClientSecret,
-			tokenURL:     credentials.IAM.TokenURL,
-			endpointURL:  credentials.IAM.EndpointURL,
+			credentials: credentials,
 		},
 		accountID: credentials.IAM.AccountID,
 	}
