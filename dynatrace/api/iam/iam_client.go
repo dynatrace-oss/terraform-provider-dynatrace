@@ -51,6 +51,8 @@ type iamClient struct {
 }
 
 func NewIAMClient(ctx context.Context, a Authenticator) IAMClient {
+	rest.PreRequest()
+
 	oauthConfig := clientcredentials.Config{
 		ClientID:     a.ClientID(),
 		ClientSecret: a.ClientSecret(),
