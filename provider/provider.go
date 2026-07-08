@@ -81,7 +81,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/customtags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/environments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/generic"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/goldenstate"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/internetproxy"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/networkzones"
 	mgmzperm "github.com/dynatrace-oss/terraform-provider-dynatrace/resources/permissions/mgmz"
@@ -616,7 +615,6 @@ func Provider() *schema.Provider {
 			"dynatrace_devobs_agent_optin":                             resources.NewGeneric(export.ResourceTypes.DevObsAgentOptin).Resource(),
 			"dynatrace_devobs_data_masking":                            resources.NewGeneric(export.ResourceTypes.DevObsDataMasking).Resource(),
 			"dynatrace_davis_copilot":                                  resources.NewGeneric(export.ResourceTypes.DavisCoPilot).Resource(),
-			"dynatrace_golden_state":                                   goldenstate.Resource(),
 			"dynatrace_openpipeline_logs":                              resources.NewGeneric(export.ResourceTypes.OpenPipelineLogs).Resource(),
 			"dynatrace_openpipeline_events":                            resources.NewGeneric(export.ResourceTypes.OpenPipelineEvents).Resource(),
 			"dynatrace_openpipeline_security_events":                   resources.NewGeneric(export.ResourceTypes.OpenPipelineSecurityEvents).Resource(),
