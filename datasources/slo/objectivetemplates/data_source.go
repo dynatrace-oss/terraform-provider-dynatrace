@@ -54,7 +54,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		return diag.FromErr(err)
 	}
 
-	restClient, _ := rest.CreatePlatformClient(ctx, creds.OAuth.EnvironmentURL, creds)
+	restClient, _ := rest.CreatePlatformClient(ctx, creds.Platform.EnvironmentURL, creds)
 
 	client := NewClient(restClient)
 

@@ -46,7 +46,7 @@ func (me *ServiceImpl) getClient(ctx context.Context) (permissions.PermissionCli
 	if me.Client != nil {
 		return me.Client, nil
 	}
-	restClient, err := rest.CreatePlatformClient(ctx, me.Credentials.OAuth.EnvironmentURL, me.Credentials)
+	restClient, err := rest.CreatePlatformClient(ctx, me.Credentials.Platform.EnvironmentURL, me.Credentials)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (me *ServiceImpl) getSettingsClient(ctx context.Context) (PlatformSettingsC
 	if me.SettingsClient != nil {
 		return me.SettingsClient, nil
 	}
-	restClient, err := rest.CreatePlatformClient(ctx, me.Credentials.OAuth.EnvironmentURL, me.Credentials)
+	restClient, err := rest.CreatePlatformClient(ctx, me.Credentials.Platform.EnvironmentURL, me.Credentials)
 	if err != nil {
 		return nil, err
 	}

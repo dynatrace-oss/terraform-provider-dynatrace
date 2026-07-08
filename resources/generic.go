@@ -183,7 +183,7 @@ func (me *Generic) createCredentials(m any) (*rest.Credentials, error) {
 		Token: conf.APIToken,
 		URL:   conf.EnvironmentURL,
 		IAM:   conf.IAM,
-		OAuth: conf.Automation,
+		Platform: conf.Platform,
 	}, nil
 }
 

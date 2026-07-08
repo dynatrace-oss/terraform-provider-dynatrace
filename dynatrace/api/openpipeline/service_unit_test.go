@@ -45,7 +45,7 @@ func TestList(t *testing.T) {
 		}))
 		defer server.Close()
 		_, err := openpipeline.EventsService(&rest.Credentials{
-			OAuth: rest.OAuthCredentials{
+			Platform: rest.PlatformCredentials{
 				EnvironmentURL: server.URL,
 				PlatformToken:  "token",
 			},
@@ -60,7 +60,7 @@ func TestList(t *testing.T) {
 		defer server.Close()
 
 		configs, err := openpipeline.EventsService(&rest.Credentials{
-			OAuth: rest.OAuthCredentials{
+			Platform: rest.PlatformCredentials{
 				EnvironmentURL: server.URL,
 				PlatformToken:  "token",
 			},

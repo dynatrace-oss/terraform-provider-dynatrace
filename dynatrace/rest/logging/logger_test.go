@@ -64,7 +64,7 @@ func TestProviderLogging(t *testing.T) {
 			credentials: func(url string) *rest.Credentials {
 				return &rest.Credentials{
 					URL: url,
-					OAuth: rest.OAuthCredentials{
+					Platform: rest.PlatformCredentials{
 						PlatformToken: "my-token",
 					},
 				}

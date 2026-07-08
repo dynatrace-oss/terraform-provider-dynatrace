@@ -53,7 +53,7 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 	if credentials.ContainsPlatformToken() {
 		return factory.
 			WithHTTPListener(logging.HTTPListener("plat/tok")).
-			WithPlatformToken(credentials.OAuth.PlatformToken).
+			WithPlatformToken(credentials.Platform.PlatformToken).
 			CreatePlatformClient(ctx)
 	}
 
@@ -61,8 +61,8 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 		return factory.
 			WithHTTPListener(logging.HTTPListener("platform")).
 			WithOAuthCredentials(clientcredentials.Config{
-				ClientID:     credentials.OAuth.ClientID,
-				ClientSecret: credentials.OAuth.ClientSecret,
+				ClientID:     credentials.Platform.ClientID,
+				ClientSecret: credentials.Platform.ClientSecret,
 				TokenURL:     evalTokenURL(platformURL),
 			}).
 			CreatePlatformClient(NewContextWithOAuthRetryClient(ctx))
