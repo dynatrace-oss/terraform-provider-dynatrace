@@ -48,7 +48,7 @@ type service struct {
 }
 
 func (me *service) client(ctx context.Context) (*docclient.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.OAuth.EnvironmentURL, me.credentials)
+	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials)
 	if err != nil {
 		return nil, err
 	}

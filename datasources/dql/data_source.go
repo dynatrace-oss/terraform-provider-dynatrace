@@ -109,7 +109,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		return diag.FromErr(err)
 	}
 
-	restClient, err := rest.CreatePlatformClient(ctx, creds.OAuth.EnvironmentURL, creds)
+	restClient, err := rest.CreatePlatformClient(ctx, creds.Platform.EnvironmentURL, creds)
 	if err != nil {
 		return diag.FromErr(err)
 	}

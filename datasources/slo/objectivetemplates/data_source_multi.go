@@ -65,7 +65,7 @@ func DataSourceMultiRead(ctx context.Context, d *schema.ResourceData, m any) dia
 		return diag.FromErr(err)
 	}
 
-	restClient, _ := rest.CreatePlatformClient(ctx, creds.OAuth.EnvironmentURL, creds)
+	restClient, _ := rest.CreatePlatformClient(ctx, creds.Platform.EnvironmentURL, creds)
 
 	client := NewClient(restClient)
 

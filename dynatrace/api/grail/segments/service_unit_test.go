@@ -52,7 +52,7 @@ func TestList(t *testing.T) {
 		defer server.Close()
 
 		result, err := segments.Service(&rest.Credentials{
-			OAuth: rest.OAuthCredentials{
+			Platform: rest.PlatformCredentials{
 				EnvironmentURL: server.URL,
 				PlatformToken:  "token",
 			},

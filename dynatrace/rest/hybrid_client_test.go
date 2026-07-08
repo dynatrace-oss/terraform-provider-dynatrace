@@ -38,12 +38,12 @@ const mockToken = "########"
 var credential_repo = map[string]Credentials{
 	"unconfigured":                           {URL: TestCaseEnvURL},
 	"api-token":                              {URL: TestCaseEnvURL, Token: mockToken},
-	"oauth":                                  {URL: TestCaseEnvURL, OAuth: OAuthCredentials{ClientID: mockToken, ClientSecret: mockToken}},
-	"platform-token":                         {URL: TestCaseEnvURL, OAuth: OAuthCredentials{PlatformToken: mockToken}},
-	"api-token-and-oauth":                    {URL: TestCaseEnvURL, Token: mockToken, OAuth: OAuthCredentials{ClientID: mockToken, ClientSecret: mockToken}},
-	"api-token-and-platform-token":           {URL: TestCaseEnvURL, Token: mockToken, OAuth: OAuthCredentials{PlatformToken: mockToken}},
-	"oauth-and-platform-token":               {URL: TestCaseEnvURL, OAuth: OAuthCredentials{ClientID: mockToken, ClientSecret: mockToken, PlatformToken: mockToken}},
-	"api-token-and-oauth-and-platform-token": {URL: TestCaseEnvURL, Token: mockToken, OAuth: OAuthCredentials{PlatformToken: mockToken, ClientID: mockToken, ClientSecret: mockToken}},
+	"oauth":                                  {URL: TestCaseEnvURL, Platform: PlatformCredentials{ClientID: mockToken, ClientSecret: mockToken}},
+	"platform-token":                         {URL: TestCaseEnvURL, Platform: PlatformCredentials{PlatformToken: mockToken}},
+	"api-token-and-oauth":                    {URL: TestCaseEnvURL, Token: mockToken, Platform: PlatformCredentials{ClientID: mockToken, ClientSecret: mockToken}},
+	"api-token-and-platform-token":           {URL: TestCaseEnvURL, Token: mockToken, Platform: PlatformCredentials{PlatformToken: mockToken}},
+	"oauth-and-platform-token":               {URL: TestCaseEnvURL, Platform: PlatformCredentials{ClientID: mockToken, ClientSecret: mockToken, PlatformToken: mockToken}},
+	"api-token-and-oauth-and-platform-token": {URL: TestCaseEnvURL, Token: mockToken, Platform: PlatformCredentials{PlatformToken: mockToken, ClientID: mockToken, ClientSecret: mockToken}},
 }
 
 type testcase struct {
