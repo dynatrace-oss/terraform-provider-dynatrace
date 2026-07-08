@@ -20,10 +20,10 @@
 package config_test
 
 import (
-	"context"
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/stretchr/testify/assert"
 )
 
 type mockResourceData map[string]any
@@ -33,15 +33,13 @@ func (mrd mockResourceData) Get(k string) any {
 }
 
 func TestProviderConfigure(t *testing.T) {
-	ctx := context.Background()
 	d := mockResourceData{
 		"dt_env_url":   "https://something.live.dynatrace.com",
 		"dt_api_token": "faketoken",
 	}
 
-	result, _ := config.ProviderConfigureGeneric(ctx, d)
+	result, _ := config.ProviderConfigureGeneric(t.Context(), d)
 	configuration := result.(*config.ProviderConfiguration)
-	if configuration.DTenvURL != "https://something.live.dynatrace.com/api/config/v1" {
-		t.Fail()
-	}
+	assert.Equal(t, "https://something.live.dynatrace.com", configuration.EnvironmentURL)
+
 }
