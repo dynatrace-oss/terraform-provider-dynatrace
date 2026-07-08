@@ -78,7 +78,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		docType = v.(string)
 	}
 
-	creds, err := config.Credentials(m, config.CredValAutomation)
+	creds, err := config.Credentials(m, config.CredValPlatform)
 	if err != nil {
 		return diag.FromErr(err)
 	}

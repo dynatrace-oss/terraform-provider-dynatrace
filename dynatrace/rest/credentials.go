@@ -29,7 +29,7 @@ const (
 
 const TestCaseEnvURL = "go-test"
 
-type OAuthCredentials struct {
+type PlatformCredentials struct {
 	ClientID       string
 	ClientSecret   string
 	TokenURL       string
@@ -47,19 +47,19 @@ type Credentials struct {
 		TokenURL     string
 		EndpointURL  string
 	}
-	OAuth   OAuthCredentials
-	Cluster struct {
+	Platform PlatformCredentials
+	Cluster  struct {
 		URL   string
 		Token string
 	}
 }
 
 func (c *Credentials) ContainsOAuth() bool {
-	return len(c.OAuth.ClientID) > 0 && len(c.OAuth.ClientSecret) > 0
+	return len(c.Platform.ClientID) > 0 && len(c.Platform.ClientSecret) > 0
 }
 
 func (c *Credentials) ContainsPlatformToken() bool {
-	return len(c.OAuth.PlatformToken) > 0
+	return len(c.Platform.PlatformToken) > 0
 }
 
 func (c *Credentials) ContainsAPIToken() bool {

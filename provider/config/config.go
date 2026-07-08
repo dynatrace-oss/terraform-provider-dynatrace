@@ -42,7 +42,7 @@ const (
 	CredValDefault = iota
 	CredValIAM
 	CredValCluster
-	CredValAutomation
+	CredValPlatform
 	CredValNone
 	CredValExport
 	CredValExportIAM
@@ -82,24 +82,24 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 		if len(conf.ClusterAPIV2URL) == 0 {
 			return fmt.Errorf(" No Cluster URL has been specified. Use either the environment variable `DT_CLUSTER_URL` or the configuration attribute `dt_cluster_url` of the provider for that")
 		}
-	case CredValAutomation:
-		if len(conf.Automation.ClientID) == 0 {
+	case CredValPlatform:
+		if len(conf.Platform.ClientID) == 0 {
 			return fmt.Errorf(" No OAuth Client ID for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_ID` or the configuration attribute `automation_client_id` of the provider for that")
 		}
-		if len(conf.Automation.ClientSecret) == 0 {
+		if len(conf.Platform.ClientSecret) == 0 {
 			return fmt.Errorf(" No OAuth Client Secret for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_SECRET` or the configuration attribute `automation_client_secret` of the provider for that")
 		}
-		if len(conf.Automation.TokenURL) == 0 {
+		if len(conf.Platform.TokenURL) == 0 {
 			return fmt.Errorf(" No Token URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_TOKEN_URL` or the configuration attribute `automation_token_url` of the provider for that")
 		}
-		if len(conf.Automation.EnvironmentURL) == 0 {
+		if len(conf.Platform.EnvironmentURL) == 0 {
 			return fmt.Errorf(" No Environment URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_ENVIRONMENT_URL` or the configuration attribute `automation_env_url` of the provider for that")
 		}
 	case CredValExport:
 		if len(conf.EnvironmentURL) == 0 {
 			return fmt.Errorf(" No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
 		}
-		if len(conf.APIToken) == 0 && len(conf.Automation.PlatformToken) == 0 && validateCredentials(conf, CredValAutomation) != nil {
+		if len(conf.APIToken) == 0 && len(conf.Platform.PlatformToken) == 0 && validateCredentials(conf, CredValPlatform) != nil {
 			return fmt.Errorf(" No API Token, Platform Token, or OAuth has been specified for export. More detailed information can be found in the documentation at https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#configure-the-dynatrace-provider")
 		}
 	case CredValExportIAM:
@@ -118,10 +118,10 @@ func Credentials(m any, CredentialValidation int) (*rest.Credentials, error) {
 		return nil, err
 	}
 	return &rest.Credentials{
-		Token: conf.APIToken,
-		URL:   conf.EnvironmentURL,
-		IAM:   conf.IAM,
-		OAuth: conf.Automation,
+		Token:    conf.APIToken,
+		URL:      conf.EnvironmentURL,
+		IAM:      conf.IAM,
+		Platform: conf.Platform,
 		Cluster: struct {
 			URL   string
 			Token string
@@ -139,7 +139,7 @@ type ProviderConfiguration struct {
 	ClusterAPIToken string
 	APIToken        string
 	IAM             IAM
-	Automation      rest.OAuthCredentials
+	Platform        rest.PlatformCredentials
 }
 
 type Getter interface {
@@ -155,6 +155,7 @@ var regexpSprintTenant = regexp.MustCompile(`https:\/\/(.*).sprint(?:\.apps)?.dy
 var regexpDevTenant = regexp.MustCompile(`https:\/\/(.*).dev(?:\.apps)?.dynatracelabs.com`)
 
 func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnostics) {
+
 	dtEnvURL := d.Get("dt_env_url").(string)
 	apiToken := d.Get("dt_api_token").(string)
 	clusterAPIToken := getString(d, "dt_cluster_api_token")
@@ -175,20 +176,20 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 
 	clusterURL = strings.TrimSuffix(strings.TrimSuffix(clusterURL, " "), "/")
 
-	automation_environment_url := getString(d, "automation_env_url")
-	automation_token_url := getString(d, "automation_token_url")
-	if len(automation_environment_url) == 0 {
+	platformEnvironmentURL := getString(d, "automation_env_url")
+	platformTokenURL := getString(d, "automation_token_url")
+	if len(platformEnvironmentURL) == 0 {
 		if match := regexpSaasTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			automation_environment_url = fmt.Sprintf("https://%s.apps.dynatrace.com", match[1])
-			automation_token_url = rest.ProdTokenURL
+			platformEnvironmentURL = fmt.Sprintf("https://%s.apps.dynatrace.com", match[1])
+			platformTokenURL = rest.ProdTokenURL
 		}
 		if match := regexpSprintTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			automation_environment_url = fmt.Sprintf("https://%s.sprint.apps.dynatracelabs.com", match[1])
-			automation_token_url = rest.SprintTokenURL
+			platformEnvironmentURL = fmt.Sprintf("https://%s.sprint.apps.dynatracelabs.com", match[1])
+			platformTokenURL = rest.SprintTokenURL
 		}
 		if match := regexpDevTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			automation_environment_url = fmt.Sprintf("https://%s.dev.apps.dynatracelabs.com", match[1])
-			automation_token_url = rest.DevTokenURL
+			platformEnvironmentURL = fmt.Sprintf("https://%s.dev.apps.dynatracelabs.com", match[1])
+			platformTokenURL = rest.DevTokenURL
 		}
 	}
 
@@ -213,22 +214,22 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	iam_token_url := strings.TrimSuffix(strings.TrimSpace(getString(d, "iam_token_url")), "/")
 	iam_endpoint_url := strings.TrimSuffix(strings.TrimSpace(getString(d, "iam_endpoint_url")), "/")
 
-	automation_client_id := getString(d, "automation_client_id")
-	if len(automation_client_id) == 0 {
-		automation_client_id = client_id
+	platformClientID := getString(d, "automation_client_id")
+	if len(platformClientID) == 0 {
+		platformClientID = client_id
 	}
-	automation_client_secret := getString(d, "automation_client_secret")
-	if len(automation_client_secret) == 0 {
-		automation_client_secret = client_secret
+	platformClientSecret := getString(d, "automation_client_secret")
+	if len(platformClientSecret) == 0 {
+		platformClientSecret = client_secret
 	}
 
-	automation_client_id = streamlineOAuthCreds(automation_client_id, client_id, iam_client_id)
-	automation_client_secret = streamlineOAuthCreds(automation_client_secret, client_secret, iam_client_secret)
-	automation_token_url = streamlineOAuthCreds(automation_token_url, token_url, iam_token_url, rest.ProdTokenURL)
+	platformClientID = streamlineOAuthCreds(platformClientID, client_id, iam_client_id)
+	platformClientSecret = streamlineOAuthCreds(platformClientSecret, client_secret, iam_client_secret)
+	platformTokenURL = streamlineOAuthCreds(platformTokenURL, token_url, iam_token_url, rest.ProdTokenURL)
 
-	iam_client_id = streamlineOAuthCreds(iam_client_id, client_id, automation_client_id)
-	iam_client_secret = streamlineOAuthCreds(iam_client_secret, client_secret, automation_client_secret)
-	iam_token_url = streamlineOAuthCreds(iam_token_url, token_url, automation_token_url, rest.ProdTokenURL)
+	iam_client_id = streamlineOAuthCreds(iam_client_id, client_id, platformClientID)
+	iam_client_secret = streamlineOAuthCreds(iam_client_secret, client_secret, platformClientSecret)
+	iam_token_url = streamlineOAuthCreds(iam_token_url, token_url, platformTokenURL, rest.ProdTokenURL)
 	iam_account_id = streamlineOAuthCreds(iam_account_id, account_id)
 	iam_endpoint_url = streamlineOAuthCreds(iam_endpoint_url, oauth_endpoint_url, rest.ProdIAMEndpointURL)
 
@@ -248,12 +249,12 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 			TokenURL:     iam_token_url,
 			EndpointURL:  iam_endpoint_url,
 		},
-		Automation: rest.OAuthCredentials{
+		Platform: rest.PlatformCredentials{
 			PlatformToken:  platform_token,
-			ClientID:       automation_client_id,
-			ClientSecret:   automation_client_secret,
-			TokenURL:       automation_token_url,
-			EnvironmentURL: automation_environment_url,
+			ClientID:       platformClientID,
+			ClientSecret:   platformClientSecret,
+			TokenURL:       platformTokenURL,
+			EnvironmentURL: platformEnvironmentURL,
 		},
 	}
 	return pc, diags

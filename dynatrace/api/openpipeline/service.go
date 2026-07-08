@@ -86,7 +86,7 @@ type service struct {
 }
 
 func (s *service) createClient(ctx context.Context) (*caclib.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, s.credentials.OAuth.EnvironmentURL, s.credentials)
+	platformClient, err := rest.CreatePlatformClient(ctx, s.credentials.Platform.EnvironmentURL, s.credentials)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +117,7 @@ func (s *service) Get(ctx context.Context, id string, v *openpipeline.Configurat
 	if err != nil {
 		apiErr := cacapi.APIError{}
 		if errors.As(err, &apiErr) {
-			return rest.Envelope(apiErr.Body, s.credentials.OAuth.EnvironmentURL, "GET")
+			return rest.Envelope(apiErr.Body, s.credentials.Platform.EnvironmentURL, "GET")
 		}
 		return err
 	}

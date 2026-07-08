@@ -44,7 +44,7 @@ type service struct {
 }
 
 func (me *service) client(ctx context.Context) (*bucket.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.OAuth.EnvironmentURL, me.credentials)
+	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func (me *service) get(ctx context.Context, id string, v *buckets.Bucket) (err e
 	if result, err = client.Get(ctx, id); err != nil {
 		apiErr := coreapi.APIError{}
 		if errors.As(err, &apiErr) {
-			return rest.Envelope(apiErr.Body, me.credentials.OAuth.EnvironmentURL, "GET")
+			return rest.Envelope(apiErr.Body, me.credentials.Platform.EnvironmentURL, "GET")
 		}
 		return err
 	}
@@ -128,7 +128,7 @@ func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stu
 	if _, err = client.Create(ctx, v.Name, data); err != nil {
 		apiErr := coreapi.APIError{}
 		if errors.As(err, &apiErr) {
-			return nil, rest.Envelope(apiErr.Body, me.credentials.OAuth.EnvironmentURL, "POST")
+			return nil, rest.Envelope(apiErr.Body, me.credentials.Platform.EnvironmentURL, "POST")
 		}
 		return nil, err
 	}
@@ -180,7 +180,7 @@ func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (er
 	if err != nil {
 		apiErr := coreapi.APIError{}
 		if errors.As(err, &apiErr) {
-			return rest.Envelope(apiErr.Body, me.credentials.OAuth.EnvironmentURL, "PUT")
+			return rest.Envelope(apiErr.Body, me.credentials.Platform.EnvironmentURL, "PUT")
 		}
 		return err
 	}

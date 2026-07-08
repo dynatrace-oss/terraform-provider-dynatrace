@@ -70,7 +70,7 @@ func ServiceWithClientGetter(clientGetter func(ctx context.Context, credentials 
 }
 
 func createCoreClient(ctx context.Context, credentials *rest.Credentials) (ExtensionClient, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, credentials.OAuth.EnvironmentURL, credentials)
+	platformClient, err := rest.CreatePlatformClient(ctx, credentials.Platform.EnvironmentURL, credentials)
 	if err != nil {
 		return nil, err
 	}

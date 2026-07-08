@@ -53,7 +53,7 @@ func TestIAMClientID(t *testing.T) {
 			if !assert.Equal(iam_client_id, credentials.IAM.ClientID, "credentials.IAM.ClientID") {
 				return
 			}
-			if !assert.Equal(iam_client_id, credentials.OAuth.ClientID, "credentials.Automation.ClientID") {
+			if !assert.Equal(iam_client_id, credentials.Platform.ClientID, "credentials.Automation.ClientID") {
 				return
 			}
 		})
@@ -83,7 +83,7 @@ func TestIAMClientSecret(t *testing.T) {
 			if !assert.Equal(iam_client_secret, credentials.IAM.ClientSecret, "credentials.IAM.ClientSecret") {
 				return
 			}
-			if !assert.Equal(iam_client_secret, credentials.OAuth.ClientSecret, "credentials.Automation.ClientSecret") {
+			if !assert.Equal(iam_client_secret, credentials.Platform.ClientSecret, "credentials.Automation.ClientSecret") {
 				return
 			}
 		})
@@ -107,9 +107,8 @@ func TestSSOTokenURL(t *testing.T) {
 		"https://foo.apps.dynatrace.com/ ",
 	} {
 		t.Run(envURL, func(t *testing.T) {
-			os.Setenv("DYNATRACE_ENV_URL", envURL)
-			defer os.Unsetenv("DYNATRACE_ENV_URL")
-
+			t.Setenv("DYNATRACE_ENV_URL", envURL)
+	
 			credentials := createCredentials(&config.ConfigGetter{Provider: provider})
 			if credentials == nil {
 				return
@@ -120,7 +119,7 @@ func TestSSOTokenURL(t *testing.T) {
 			if !assert.Equal(rest.ProdIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
 				return
 			}
-			if !assert.Equal(rest.ProdTokenURL, credentials.OAuth.TokenURL, "credentials.Automation.TokenURL") {
+			if !assert.Equal(rest.ProdTokenURL, credentials.Platform.TokenURL, "credentials.Automation.TokenURL") {
 				return
 			}
 		})
@@ -149,7 +148,7 @@ func TestSSOTokenURL(t *testing.T) {
 			if !assert.Equal(rest.SprintIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
 				return
 			}
-			if !assert.Equal(rest.SprintTokenURL, credentials.OAuth.TokenURL, "credentials.Automation.TokenURL") {
+			if !assert.Equal(rest.SprintTokenURL, credentials.Platform.TokenURL, "credentials.Automation.TokenURL") {
 				return
 			}
 		})
@@ -178,7 +177,7 @@ func TestSSOTokenURL(t *testing.T) {
 			if !assert.Equal(rest.DevIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
 				return
 			}
-			if !assert.Equal(rest.DevTokenURL, credentials.OAuth.TokenURL, "credentials.Automation.TokenURL") {
+			if !assert.Equal(rest.DevTokenURL, credentials.Platform.TokenURL, "credentials.Automation.TokenURL") {
 				return
 			}
 		})
