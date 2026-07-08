@@ -18,17 +18,17 @@
 package config
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"context"
 	"fmt"
 	"regexp"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
-
 
 type IAM struct {
 	ClientID     string
@@ -134,15 +134,12 @@ func Credentials(m any, CredentialValidation int) (*rest.Credentials, error) {
 
 // ProviderConfiguration contains the initialized API clients to communicate with the Dynatrace API
 type ProviderConfiguration struct {
-	EnvironmentURL    string
-	DTenvURL          string
-	DTNonConfigEnvURL string
-	DTApiV2URL        string
-	ClusterAPIV2URL   string
-	ClusterAPIToken   string
-	APIToken          string
-	IAM               IAM
-	Automation        rest.OAuthCredentials
+	EnvironmentURL  string
+	ClusterAPIV2URL string
+	ClusterAPIToken string
+	APIToken        string
+	IAM             IAM
+	Automation      rest.OAuthCredentials
 }
 
 type Getter interface {
@@ -177,10 +174,6 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	}
 
 	clusterURL = strings.TrimSuffix(strings.TrimSuffix(clusterURL, " "), "/")
-
-	fullURL := dtEnvURL + "/api/config/v1"
-	fullNonConfigURL := dtEnvURL + "/api/v1"
-	fullApiV2URL := dtEnvURL + "/api/v2"
 
 	automation_environment_url := getString(d, "automation_env_url")
 	automation_token_url := getString(d, "automation_token_url")
@@ -244,13 +237,10 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	var diags diag.Diagnostics
 
 	pc := &ProviderConfiguration{
-		EnvironmentURL:    dtEnvURL,
-		DTenvURL:          fullURL,
-		DTApiV2URL:        fullApiV2URL,
-		DTNonConfigEnvURL: fullNonConfigURL,
-		APIToken:          apiToken,
-		ClusterAPIToken:   clusterAPIToken,
-		ClusterAPIV2URL:   clusterURL,
+		EnvironmentURL:  dtEnvURL,
+		APIToken:        apiToken,
+		ClusterAPIToken: clusterAPIToken,
+		ClusterAPIV2URL: clusterURL,
 		IAM: IAM{
 			ClientID:     iam_client_id,
 			AccountID:    iam_account_id,
