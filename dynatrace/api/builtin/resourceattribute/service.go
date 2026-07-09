@@ -19,14 +19,14 @@ package resourceattribute
 
 import (
 	resourceattribute "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/resourceattribute/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "builtin:resource-attribute"
 const SchemaVersion = "1.0.29"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*resourceattribute.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*resourceattribute.Settings] {
 	return settings20.Service[*resourceattribute.Settings](credentials, SchemaID, SchemaVersion)
 }

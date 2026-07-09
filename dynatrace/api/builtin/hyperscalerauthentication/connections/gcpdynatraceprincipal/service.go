@@ -29,9 +29,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.3"
@@ -48,7 +48,7 @@ var ValidConnection = gcpconnection.Settings{
 	}),
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*gcpprincipalsettings.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*gcpprincipalsettings.Settings] {
 	return &service{
 		principalService:  settings20.Service[*gcpprincipalsettings.Settings](credentials, SchemaID, SchemaVersion),
 		connectionService: gcp.Service(credentials),

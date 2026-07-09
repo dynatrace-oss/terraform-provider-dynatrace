@@ -19,8 +19,8 @@ package applications
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	applications "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/applications/settings"
 )
@@ -30,7 +30,7 @@ const EndpointURL = "/api/config/v1/anomalyDetection/applications"
 const StaticID = "a7a73377-9452-43b1-ae09-a9f695a61572"
 const StaticName = "application_anomalies"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*applications.AnomalyDetection] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*applications.AnomalyDetection] {
 	return settings.APITokenStaticService[*applications.AnomalyDetection](
 		credentials,
 		SchemaID,

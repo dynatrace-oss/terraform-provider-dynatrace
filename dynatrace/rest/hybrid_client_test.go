@@ -35,7 +35,14 @@ import (
 
 const mockToken = "########"
 
-var credential_repo = map[string]Credentials{
+// testCredentials mirrors the connection details a hybrid client is built from.
+type testCredentials struct {
+	URL      string
+	Token    string
+	Platform PlatformCredentials
+}
+
+var credential_repo = map[string]testCredentials{
 	"unconfigured":                           {URL: TestCaseEnvURL},
 	"api-token":                              {URL: TestCaseEnvURL, Token: mockToken},
 	"oauth":                                  {URL: TestCaseEnvURL, Platform: PlatformCredentials{ClientID: mockToken, ClientSecret: mockToken}},
@@ -52,8 +59,8 @@ type testcase struct {
 	Expected         error
 }
 
-func (t testcase) Credentials() *Credentials {
-	return &t.credentials.Credentials
+func (t testcase) Credentials() testCredentials {
+	return t.credentials.Credentials
 }
 
 var expectedAPITokenError = errors.New("No API Token has been specified")
@@ -63,7 +70,7 @@ var platformChosen = errors.New("platform")
 
 type creds_with_name struct {
 	Name        string
-	Credentials Credentials
+	Credentials testCredentials
 }
 
 func credentials(name string) creds_with_name {
@@ -162,7 +169,8 @@ func TestHybridClient(t *testing.T) {
 		t.Run(testCaseName, func(t *testing.T) {
 			t.Parallel()
 			ctx := context.WithValue(t.Context(), "DYNATRACE_HTTP_OAUTH_PREFERENCE", testcase.IsOAuthPreferred)
-			expect(t, testcase.Expected, HybridClient(testcase.Credentials()).Get(ctx, "").Finish())
+			creds := testcase.Credentials()
+			expect(t, testcase.Expected, HybridClient(creds.URL, creds.Token, creds.Platform).Get(ctx, "").Finish())
 		})
 	}
 }
@@ -185,8 +193,8 @@ func TestApiTokenClient(t *testing.T) {
 		activeGateURL, err := url.JoinPath(server.URL, activeGatePostfix)
 		require.NoError(t, err)
 
-		cred := Credentials{URL: activeGateURL, Token: mockToken}
-		client := HybridClient(&cred)
+		cred := testCredentials{URL: activeGateURL, Token: mockToken}
+		client := HybridClient(cred.URL, cred.Token, cred.Platform)
 
 		req := client.Get(t.Context(), endpoint)
 		err = req.Finish()
@@ -194,8 +202,8 @@ func TestApiTokenClient(t *testing.T) {
 	})
 
 	t.Run("Errors on empty env URL", func(t *testing.T) {
-		cred := Credentials{URL: "", Token: mockToken}
-		client := HybridClient(&cred)
+		cred := testCredentials{URL: "", Token: mockToken}
+		client := HybridClient(cred.URL, cred.Token, cred.Platform)
 
 		req := client.Get(t.Context(), endpoint)
 		err := req.Finish()
@@ -203,8 +211,8 @@ func TestApiTokenClient(t *testing.T) {
 	})
 
 	t.Run("Errors on invalid path", func(t *testing.T) {
-		cred := Credentials{URL: "my-url", Token: mockToken}
-		client := HybridClient(&cred)
+		cred := testCredentials{URL: "my-url", Token: mockToken}
+		client := HybridClient(cred.URL, cred.Token, cred.Platform)
 
 		req := client.Get(t.Context(), ":/invalid-url")
 		err := req.Finish()
@@ -227,8 +235,8 @@ func TestApiTokenClient(t *testing.T) {
 		activeGateURL, err := url.JoinPath(server.URL, activeGatePostfix)
 		require.NoError(t, err)
 
-		cred := Credentials{URL: activeGateURL, Token: mockToken}
-		client := HybridClient(&cred)
+		cred := testCredentials{URL: activeGateURL, Token: mockToken}
+		client := HybridClient(cred.URL, cred.Token, cred.Platform)
 
 		req := client.Get(t.Context(), endpoint)
 		req.SetHeader(customHeaderName, customHeaderValue)

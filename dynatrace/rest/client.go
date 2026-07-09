@@ -26,5 +26,14 @@ type Client interface {
 	Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request
 	Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request
 	Delete(ctx context.Context, url string, expectedStatusCodes ...int) Request
-	Credentials() *Credentials
+}
+
+// environmentClient is implemented by the environment-scoped clients (API-token and hybrid) that
+// share the classic_request / platform_request implementations. It exposes the connection details
+// those requests need without the removed Credentials accessor.
+type environmentClient interface {
+	Client
+	environmentURL() string
+	apiToken() string
+	platformCredentials() PlatformCredentials
 }

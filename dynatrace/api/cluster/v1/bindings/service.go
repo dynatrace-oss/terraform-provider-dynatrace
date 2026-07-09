@@ -27,11 +27,12 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "accounts:policy-bindings"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*bindings.PolicyBinding] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*bindings.PolicyBinding] {
 	return &service{
 		serviceClient: NewPolicyService(credentials),
 	}
@@ -65,8 +66,8 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func NewPolicyService(credentials *rest.Credentials) *BindingServiceClient {
-	return &BindingServiceClient{client: rest.ClusterV2Client(credentials)}
+func NewPolicyService(credentials *config.ProviderConfiguration) *BindingServiceClient {
+	return &BindingServiceClient{client: rest.ClusterV2Client(credentials.ClusterAPIV2URL, credentials.ClusterAPIToken)}
 }
 
 type service struct {

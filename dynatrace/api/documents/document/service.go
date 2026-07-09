@@ -26,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	docclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/documents"
@@ -39,16 +40,16 @@ var supportedDocumentTypes = []docclient.DocumentType{
 	docclient.Launchpad,
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*documents.Document] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*documents.Document] {
 	return &service{credentials}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
 func (me *service) client(ctx context.Context) (*docclient.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials)
+	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials.Platform)
 	if err != nil {
 		return nil, err
 	}

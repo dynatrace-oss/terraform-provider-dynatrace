@@ -22,6 +22,7 @@ import (
 
 	internetproxy "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/internetproxy/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 // ServiceClient TODO: documentation
@@ -32,8 +33,8 @@ type ServiceClient struct {
 // NewService creates a new Service Client
 // baseURL should look like this: "https://siz65484.live.dynatrace.com/api/config/v1"
 // token is an API Token
-func NewService(credentials *rest.Credentials) *ServiceClient {
-	return &ServiceClient{client: rest.ClusterV1Client(credentials)}
+func NewService(credentials *config.ProviderConfiguration) *ServiceClient {
+	return &ServiceClient{client: rest.ClusterV1Client(credentials.ClusterAPIV2URL, credentials.ClusterAPIToken)}
 }
 
 // Create TODO: documentation

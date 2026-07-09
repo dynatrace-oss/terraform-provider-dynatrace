@@ -26,16 +26,16 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	retrycommon "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/retry"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.18"
 const SchemaID = "builtin:hyperscaler-authentication.connections.azure"
 const DefaultTimeout = 2 * time.Minute
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*serviceSettings.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*serviceSettings.Settings] {
 	return &service{
 		service: settings20.Service[*serviceSettings.Settings](credentials, SchemaID, SchemaVersion),
 	}

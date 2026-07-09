@@ -26,11 +26,11 @@ import (
 	azureconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure"
 	connectionauthentication_settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure/authentication/settings"
 	azureconnection_settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*connectionauthentication_settings.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*connectionauthentication_settings.Settings] {
 	return &service{
 		connService: azureconnection.Service(credentials),
 	}

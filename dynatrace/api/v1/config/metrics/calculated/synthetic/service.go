@@ -25,17 +25,18 @@ import (
 	mysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/synthetic/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "v1:config:calculated-metrics-synthetic"
 const BasePath = "/api/config/v1/calculatedMetrics/synthetic"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*mysettings.CalculatedSyntheticMetric] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*mysettings.CalculatedSyntheticMetric] {
 	return &service{service: settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*mysettings.CalculatedSyntheticMetric](BasePath),
-	), client: rest.APITokenClient(credentials)}
+	), client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken)}
 }
 
 type service struct {

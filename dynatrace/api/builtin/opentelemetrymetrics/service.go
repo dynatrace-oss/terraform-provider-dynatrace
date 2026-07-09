@@ -30,15 +30,16 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.6.2"
 const SchemaID = "builtin:opentelemetry-metrics"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*opentelemetrymetrics.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*opentelemetrymetrics.Settings] {
 	return &service{
 		service: settings20.Service[*opentelemetrymetrics.Settings](credentials, SchemaID, SchemaVersion),
-		client:  rest.HybridClient(credentials),
+		client:  rest.HybridClient(credentials.EnvironmentURL, credentials.APIToken, credentials.Platform),
 	}
 }
 

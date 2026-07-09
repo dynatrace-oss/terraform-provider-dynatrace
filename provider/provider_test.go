@@ -184,9 +184,9 @@ func TestSSOTokenURL(t *testing.T) {
 	}
 }
 
-func createCredentials(getter config.Getter) *rest.Credentials {
+func createCredentials(getter config.Getter) *config.ProviderConfiguration {
 	configResult, _ := config.ProviderConfigureGeneric(context.Background(), getter)
-	creds, _ := config.Credentials(configResult, config.CredValNone)
+	creds, _ := config.Validate(configResult, config.CredValNone)
 	return creds
 }
 

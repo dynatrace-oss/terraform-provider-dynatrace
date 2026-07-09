@@ -26,12 +26,13 @@ import (
 	networkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/networkzones/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/google/uuid"
 )
 
 const SchemaID = "cluster:networkzones"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*networkzones.NetworkZone] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*networkzones.NetworkZone] {
 	return &service{
 		serviceClient: NewService(credentials),
 	}
@@ -69,8 +70,8 @@ func (cs *ServiceClient) SchemaID() string {
 	return SchemaID
 }
 
-func NewService(credentials *rest.Credentials) *ServiceClient {
-	return &ServiceClient{client: rest.ClusterV2Client(credentials)}
+func NewService(credentials *config.ProviderConfiguration) *ServiceClient {
+	return &ServiceClient{client: rest.ClusterV2Client(credentials.ClusterAPIV2URL, credentials.ClusterAPIToken)}
 }
 
 type service struct {

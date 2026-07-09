@@ -18,9 +18,9 @@
 package contextpropagation
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	contextpropagation "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/contextpropagation/settings"
 )
@@ -28,6 +28,6 @@ import (
 const SchemaID = "builtin:span-context-propagation"
 const SchemaVersion = "0.1.18"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*contextpropagation.PropagationSetting] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*contextpropagation.PropagationSetting] {
 	return settings20.Service[*contextpropagation.PropagationSetting](credentials, SchemaID, SchemaVersion)
 }

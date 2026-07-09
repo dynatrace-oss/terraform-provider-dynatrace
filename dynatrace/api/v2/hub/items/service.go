@@ -26,6 +26,7 @@ import (
 	items "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/items/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "v2:environment:hubitems"
@@ -34,8 +35,8 @@ type Options struct {
 	Type string
 }
 
-func Service(credentials *rest.Credentials, opts Options) settings.RService[*items.HubItemList] {
-	return &service{client: rest.APITokenClient(credentials), opts: opts}
+func Service(credentials *config.ProviderConfiguration, opts Options) settings.RService[*items.HubItemList] {
+	return &service{client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken), opts: opts}
 }
 
 type service struct {

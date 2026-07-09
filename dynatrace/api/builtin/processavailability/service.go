@@ -23,15 +23,15 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	processavailability "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processavailability/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.1.18"
 const SchemaID = "builtin:processavailability"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*processavailability.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*processavailability.Settings] {
 	return settings20.Service[*processavailability.Settings](credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*processavailability.Settings]{Duplicates: Duplicates})
 }
 

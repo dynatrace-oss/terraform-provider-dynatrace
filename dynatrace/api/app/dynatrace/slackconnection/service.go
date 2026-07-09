@@ -19,14 +19,14 @@ package slackconnection
 
 import (
 	slackconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/slackconnection/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.1.1"
 const SchemaID = "app:dynatrace.slack:connection"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*slackconnection.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*slackconnection.Settings] {
 	return settings20.Service[*slackconnection.Settings](credentials, SchemaID, SchemaVersion)
 }

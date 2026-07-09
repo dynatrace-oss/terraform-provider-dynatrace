@@ -26,18 +26,19 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 )
 
 var ExportRunning = false
 
-func NewAPITokenService[T Settings](credentials *rest.Credentials, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
-	return &defaultService[T]{schemaID: schemaID, client: rest.APITokenClient(credentials), options: options}
+func NewAPITokenService[T Settings](credentials *config.ProviderConfiguration, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
+	return &defaultService[T]{schemaID: schemaID, client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken), options: options}
 }
 
-func NewHybridService[T Settings](credentials *rest.Credentials, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
-	return &defaultService[T]{schemaID: schemaID, client: rest.HybridClient(credentials), options: options}
+func NewHybridService[T Settings](credentials *config.ProviderConfiguration, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
+	return &defaultService[T]{schemaID: schemaID, client: rest.HybridClient(credentials.EnvironmentURL, credentials.APIToken, credentials.Platform), options: options}
 }
 
 type defaultService[T Settings] struct {

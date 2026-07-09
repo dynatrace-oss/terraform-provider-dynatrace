@@ -25,6 +25,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	requestnaming "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming/settings"
 )
@@ -32,12 +33,12 @@ import (
 const SchemaID = "v1:config:service:request-naming"
 const BasePath = "/api/config/v1/service/requestNaming"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*requestnaming.RequestNaming] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*requestnaming.RequestNaming] {
 	return &service{service: settings.NewAPITokenService(
 		credentials,
 		SchemaID,
 		settings.DefaultServiceOptions[*requestnaming.RequestNaming](BasePath),
-	), client: rest.APITokenClient(credentials)}
+	), client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken)}
 }
 
 type service struct {

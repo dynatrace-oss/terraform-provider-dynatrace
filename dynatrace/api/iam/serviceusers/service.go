@@ -26,8 +26,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	serviceusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/serviceusers/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
@@ -41,7 +41,7 @@ type iamClientGetter interface {
 }
 
 type iamClientGetterImp struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
 func (me *iamClientGetterImp) New(ctx context.Context) iam.IAMClient {
@@ -53,7 +53,7 @@ type serviceUserServiceClient struct {
 	accountID       string
 }
 
-func NewService(credentials *rest.Credentials) ServiceUserService {
+func NewService(credentials *config.ProviderConfiguration) ServiceUserService {
 	return &serviceUserServiceClient{
 		iamClientGetter: &iamClientGetterImp{
 			credentials: credentials,
@@ -62,7 +62,7 @@ func NewService(credentials *rest.Credentials) ServiceUserService {
 	}
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*serviceusers.ServiceUser] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*serviceusers.ServiceUser] {
 	return NewService(credentials)
 }
 

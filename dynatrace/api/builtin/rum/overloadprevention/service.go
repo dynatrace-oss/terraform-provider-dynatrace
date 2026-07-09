@@ -19,14 +19,14 @@ package overloadprevention
 
 import (
 	overloadprevention "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/overloadprevention/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1"
 const SchemaID = "builtin:rum.overload-prevention"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*overloadprevention.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*overloadprevention.Settings] {
 	return settings20.Service[*overloadprevention.Settings](credentials, SchemaID, SchemaVersion)
 }

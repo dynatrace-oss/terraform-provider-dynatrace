@@ -19,14 +19,14 @@ package permissions
 
 import (
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/hub/manage/permissions/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.6"
 const SchemaID = "app:dynatrace.hub:manage.permissions"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*permissions.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*permissions.Settings] {
 	return settings20.Service[*permissions.Settings](credentials, SchemaID, SchemaVersion)
 }

@@ -22,17 +22,17 @@ import (
 	"net/url"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 const baseURL = "/env/v2/accounts"
 
 type environmentsService struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
-func newEnvironmentService(credentials *rest.Credentials) *environmentsService {
+func newEnvironmentService(credentials *config.ProviderConfiguration) *environmentsService {
 	return &environmentsService{
 		credentials: credentials,
 	}

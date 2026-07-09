@@ -35,17 +35,20 @@ import (
 
 var NoClassicURLDefinedErr = errors.New("no Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
 
-func APITokenClient(credentials *Credentials) Client {
-	return &api_token_client{credentials: credentials}
+func APITokenClient(envURL, apiToken string) Client {
+	return &api_token_client{envURL: envURL, apiTokenValue: apiToken}
 }
 
 type api_token_client struct {
-	credentials *Credentials
+	envURL        string
+	apiTokenValue string
 }
 
-func (me *api_token_client) Credentials() *Credentials {
-	return me.credentials
-}
+func (me *api_token_client) environmentURL() string { return me.envURL }
+
+func (me *api_token_client) apiToken() string { return me.apiTokenValue }
+
+func (me *api_token_client) platformCredentials() PlatformCredentials { return PlatformCredentials{} }
 
 func (me *api_token_client) Get(ctx context.Context, url string, expectedStatusCodes ...int) Request {
 	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodGet}
@@ -80,12 +83,12 @@ func (me *api_token_client) Delete(ctx context.Context, url string, expectedStat
 }
 
 func (me *api_token_request) Finish(vs ...any) error {
-	credentials := me.client.Credentials()
-	if !credentials.ContainsAPIToken() {
+	client := me.client.(environmentClient)
+	if !containsAPIToken(client.apiToken()) {
 		return NoAPITokenError
 	}
 	classicRequest := classic_request(*me)
-	if credentials.URL == TestCaseEnvURL {
+	if client.environmentURL() == TestCaseEnvURL {
 		return errors.New("classic")
 	}
 	return classicRequest.Finish(vs...)
@@ -154,9 +157,10 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 
 	PreRequest()
 
-	classicURL := evalClassicURL(me.client.Credentials().URL)
+	envClient := me.client.(environmentClient)
+	classicURL := evalClassicURL(envClient.environmentURL())
 
-	client, err := createClassicClient(classicURL, me.client.Credentials().Token)
+	client, err := createClassicClient(classicURL, envClient.apiToken())
 	if err != nil {
 		return err
 	}

@@ -24,14 +24,15 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	nodes "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/nodes/settings"
 )
 
 const SchemaID = "v1:synthetic:nodes:all"
 
-func Service(credentials *rest.Credentials) settings.RService[*nodes.Settings] {
-	return &service{client: rest.APITokenClient(credentials)}
+func Service(credentials *config.ProviderConfiguration) settings.RService[*nodes.Settings] {
+	return &service{client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken)}
 }
 
 type service struct {

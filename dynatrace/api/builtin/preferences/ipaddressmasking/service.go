@@ -19,14 +19,14 @@ package ipaddressmasking
 
 import (
 	ipaddressmasking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/preferences/ipaddressmasking/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1"
 const SchemaID = "builtin:preferences.ipaddressmasking"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*ipaddressmasking.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*ipaddressmasking.Settings] {
 	return settings20.Service[*ipaddressmasking.Settings](credentials, SchemaID, SchemaVersion)
 }

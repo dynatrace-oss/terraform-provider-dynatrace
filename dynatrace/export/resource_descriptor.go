@@ -30,7 +30,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 	settingsPermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	msentraidconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection"
@@ -463,9 +463,9 @@ import (
 	openpipelineusersessionsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/routing"
 )
 
-func NewResourceDescriptor[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], dependencies ...Dependency) ResourceDescriptor {
+func NewResourceDescriptor[T settings.Settings](fn func(credentials *config.ProviderConfiguration) settings.CRUDService[T], dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
-		Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
+		Service: func(credentials *config.ProviderConfiguration) settings.CRUDService[settings.Settings] {
 			return &settings.GenericCRUDService[T]{Service: fn(credentials)}
 		},
 		protoType:    newSettings(fn),
@@ -473,9 +473,9 @@ func NewResourceDescriptor[T settings.Settings](fn func(credentials *rest.Creden
 	}
 }
 
-func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], folderName string, dependencies ...Dependency) ResourceDescriptor {
+func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(credentials *config.ProviderConfiguration) settings.CRUDService[T], folderName string, dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
-		Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
+		Service: func(credentials *config.ProviderConfiguration) settings.CRUDService[settings.Settings] {
 			return &settings.GenericCRUDService[T]{Service: fn(credentials)}
 		},
 		protoType:    newSettings(fn),
@@ -484,9 +484,9 @@ func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(creden
 	}
 }
 
-func NewChildResourceDescriptor[T settings.Settings](fn func(credentials *rest.Credentials) settings.CRUDService[T], parent ResourceType, dependencies ...Dependency) ResourceDescriptor {
+func NewChildResourceDescriptor[T settings.Settings](fn func(credentials *config.ProviderConfiguration) settings.CRUDService[T], parent ResourceType, dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
-		Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
+		Service: func(credentials *config.ProviderConfiguration) settings.CRUDService[settings.Settings] {
 			return &settings.GenericCRUDService[T]{Service: fn(credentials)}
 		},
 		protoType:    newSettings(fn),
@@ -495,14 +495,14 @@ func NewChildResourceDescriptor[T settings.Settings](fn func(credentials *rest.C
 	}
 }
 
-func newSettings[T settings.Settings](sfn func(credentials *rest.Credentials) settings.CRUDService[T]) T {
+func newSettings[T settings.Settings](sfn func(credentials *config.ProviderConfiguration) settings.CRUDService[T]) T {
 	var proto T
 	return reflect.New(reflect.TypeOf(proto).Elem()).Interface().(T)
 }
 
 type ResourceDescriptor struct {
 	Dependencies []Dependency
-	Service      func(credentials *rest.Credentials) settings.CRUDService[settings.Settings]
+	Service      func(credentials *config.ProviderConfiguration) settings.CRUDService[settings.Settings]
 	protoType    settings.Settings
 	except       func(id string, name string) bool
 	Parent       *ResourceType
@@ -562,7 +562,7 @@ func ContainsInsertAfterAttribute(protoType settings.Settings, schemaID string) 
 // `Dependencies.WeakID` takes care of that.
 func AddInsertAfterWeakIDDependencies(resources map[ResourceType]ResourceDescriptor) {
 	for resType, descriptor := range resources {
-		schemaID := descriptor.Service(&rest.Credentials{}).SchemaID()
+		schemaID := descriptor.Service(&config.ProviderConfiguration{}).SchemaID()
 		if !ContainsInsertAfterAttribute(descriptor.protoType, schemaID) {
 			continue
 		}
@@ -2193,10 +2193,10 @@ func GetExcludeListedResources() []ResourceType {
 
 }
 
-func Service(credentials *rest.Credentials, resourceType ResourceType) settings.CRUDService[settings.Settings] {
+func Service(credentials *config.ProviderConfiguration, resourceType ResourceType) settings.CRUDService[settings.Settings] {
 	return AllResources[resourceType].Service(credentials)
 }
 
-// func DSService(credentials *rest.Credentials, dataSourceType DataSourceType) settings.RService[settings.Settings] {
+// func DSService(credentials *config.ProviderConfiguration, dataSourceType DataSourceType) settings.RService[settings.Settings] {
 // 	return AllDataSources[dataSourceType].Service(credentials)
 // }

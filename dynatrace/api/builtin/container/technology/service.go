@@ -19,14 +19,14 @@ package technology
 
 import (
 	technology "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/technology/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.8"
 const SchemaID = "builtin:container.technology"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*technology.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*technology.Settings] {
 	return settings20.Service[*technology.Settings](credentials, SchemaID, SchemaVersion)
 }

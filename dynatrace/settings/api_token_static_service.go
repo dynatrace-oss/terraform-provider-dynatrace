@@ -22,6 +22,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 type staticService[T Settings] struct {
@@ -31,10 +32,10 @@ type staticService[T Settings] struct {
 	stub     api.Stub
 }
 
-func APITokenStaticService[T Settings](credentials *rest.Credentials, schemaID string, url string, stub api.Stub) Service[T] {
+func APITokenStaticService[T Settings](credentials *config.ProviderConfiguration, schemaID string, url string, stub api.Stub) Service[T] {
 	return &staticService[T]{
 		schemaID: schemaID,
-		client:   rest.APITokenClient(credentials),
+		client:   rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken),
 		url:      url,
 		stub:     stub,
 	}

@@ -23,15 +23,15 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	declarativegrouping "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/declarativegrouping/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.1.29"
 const SchemaID = "builtin:declarativegrouping"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*declarativegrouping.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*declarativegrouping.Settings] {
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*declarativegrouping.Settings]{Duplicates: Duplicates})
 }
 

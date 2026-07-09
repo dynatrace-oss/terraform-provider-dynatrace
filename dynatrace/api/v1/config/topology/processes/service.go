@@ -19,14 +19,14 @@ package processes
 
 import (
 	processgroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/processes/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "v1:environment:processes"
 const BasePath = "/api/v1/entity/infrastructure/processes"
 
-func Service(credentials *rest.Credentials) settings.RService[*processgroups.Process] {
+func Service(credentials *config.ProviderConfiguration) settings.RService[*processgroups.Process] {
 	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,

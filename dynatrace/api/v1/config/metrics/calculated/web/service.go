@@ -31,6 +31,7 @@ import (
 	mysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/web/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 )
 
@@ -46,8 +47,8 @@ const (
 
 var createErrs = []string{"Unable to create", "already exists"}
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*mysettings.CalculatedWebMetric] {
-	return &service{client: rest.APITokenClient(credentials)}
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*mysettings.CalculatedWebMetric] {
+	return &service{client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken)}
 }
 
 type service struct {

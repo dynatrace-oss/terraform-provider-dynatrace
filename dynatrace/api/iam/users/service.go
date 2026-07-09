@@ -28,14 +28,15 @@ import (
 	users "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 type UserServiceClient struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*users.User] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*users.User] {
 	return &UserServiceClient{credentials: credentials}
 }
 

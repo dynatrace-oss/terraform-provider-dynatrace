@@ -25,6 +25,7 @@ import (
 	workflows "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows/settings"
 	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	cacapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
@@ -41,20 +42,20 @@ type AutomationClient interface {
 }
 
 type service struct {
-	credentials  *tfrest.Credentials
-	clientGetter func(ctx context.Context, credentials *tfrest.Credentials) (AutomationClient, error)
+	credentials  *config.ProviderConfiguration
+	clientGetter func(ctx context.Context, credentials *config.ProviderConfiguration) (AutomationClient, error)
 }
 
-func Service(credentials *tfrest.Credentials) settings.CRUDService[*workflows.Workflow] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*workflows.Workflow] {
 	return &service{credentials: credentials, clientGetter: createCoreClient}
 }
 
-func ServiceWithClientGetter(clientGetter func(ctx context.Context, credentials *tfrest.Credentials) (AutomationClient, error), credentials *tfrest.Credentials) settings.CRUDService[*workflows.Workflow] {
+func ServiceWithClientGetter(clientGetter func(ctx context.Context, credentials *config.ProviderConfiguration) (AutomationClient, error), credentials *config.ProviderConfiguration) settings.CRUDService[*workflows.Workflow] {
 	return &service{credentials: credentials, clientGetter: clientGetter}
 }
 
-func createCoreClient(ctx context.Context, credentials *tfrest.Credentials) (AutomationClient, error) {
-	platformClient, err := tfrest.CreatePlatformClient(ctx, credentials.Platform.EnvironmentURL, credentials)
+func createCoreClient(ctx context.Context, credentials *config.ProviderConfiguration) (AutomationClient, error) {
+	platformClient, err := tfrest.CreatePlatformClient(ctx, credentials.Platform.EnvironmentURL, credentials.Platform)
 	if err != nil {
 		return nil, err
 	}

@@ -19,14 +19,14 @@ package notificationintegration
 
 import (
 	notificationintegration "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationintegration/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.4.10"
 const SchemaID = "builtin:appsec.notification-integration"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*notificationintegration.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*notificationintegration.Settings] {
 	return settings20.Service[*notificationintegration.Settings](credentials, SchemaID, SchemaVersion)
 }

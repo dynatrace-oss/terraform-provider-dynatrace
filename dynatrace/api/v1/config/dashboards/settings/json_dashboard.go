@@ -39,7 +39,6 @@ type JSONDashboard struct {
 	Contents string
 }
 
-
 func denullslice(s []any) []any {
 	if len(s) == 0 {
 		return s

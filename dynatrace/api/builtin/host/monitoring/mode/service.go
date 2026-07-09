@@ -29,23 +29,24 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 const SchemaVersion = "1.3"
 const SchemaID = "builtin:host.monitoring.mode"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*mode.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*mode.Settings] {
 	return &service{
 		service:     settings20.Service[*mode.Settings](credentials, SchemaID, SchemaVersion),
 		credentials: credentials,
-		client:      rest.APITokenClient(credentials),
+		client:      rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken),
 	}
 }
 
 type service struct {
 	service     settings.CRUDService[*mode.Settings]
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 	client      rest.Client
 }
 

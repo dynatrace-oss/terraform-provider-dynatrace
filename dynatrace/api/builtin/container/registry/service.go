@@ -19,14 +19,14 @@ package registry
 
 import (
 	registry "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/container/registry/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1"
 const SchemaID = "builtin:container-registry"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*registry.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*registry.Settings] {
 	return settings20.Service[*registry.Settings](credentials, SchemaID, SchemaVersion)
 }

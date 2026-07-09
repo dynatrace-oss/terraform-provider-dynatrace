@@ -19,14 +19,14 @@ package updates
 
 import (
 	updates "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/deployment/oneagent/updates/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:deployment.oneagent.updates"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*updates.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*updates.Settings] {
 	return settings20.Service[*updates.Settings](credentials, SchemaID, SchemaVersion)
 }

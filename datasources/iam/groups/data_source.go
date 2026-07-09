@@ -57,7 +57,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
-	creds, err := config.Credentials(m, config.CredValIAM)
+	creds, err := config.Validate(m, config.CredValIAM)
 	if err != nil {
 		return diag.FromErr(err)
 	}

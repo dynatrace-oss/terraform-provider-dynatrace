@@ -27,17 +27,18 @@ import (
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	cacapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	permissions2 "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/settings/permissions"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*permissions.SettingPermissions] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*permissions.SettingPermissions] {
 	return &ServiceImpl{Credentials: credentials}
 }
 
 type ServiceImpl struct {
-	Credentials    *rest.Credentials
+	Credentials    *config.ProviderConfiguration
 	Client         permissions.PermissionClient
 	SettingsClient PlatformSettingsClient
 }
@@ -46,7 +47,7 @@ func (me *ServiceImpl) getClient(ctx context.Context) (permissions.PermissionCli
 	if me.Client != nil {
 		return me.Client, nil
 	}
-	restClient, err := rest.CreatePlatformClient(ctx, me.Credentials.Platform.EnvironmentURL, me.Credentials)
+	restClient, err := rest.CreatePlatformClient(ctx, me.Credentials.Platform.EnvironmentURL, me.Credentials.Platform)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +60,7 @@ func (me *ServiceImpl) getSettingsClient(ctx context.Context) (PlatformSettingsC
 	if me.SettingsClient != nil {
 		return me.SettingsClient, nil
 	}
-	restClient, err := rest.CreatePlatformClient(ctx, me.Credentials.Platform.EnvironmentURL, me.Credentials)
+	restClient, err := rest.CreatePlatformClient(ctx, me.Credentials.Platform.EnvironmentURL, me.Credentials.Platform)
 	if err != nil {
 		return nil, err
 	}

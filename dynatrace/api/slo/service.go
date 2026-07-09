@@ -24,21 +24,22 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	sloclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/slo"
 
 	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/slo/settings"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*slo.SLO] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*slo.SLO] {
 	return &service{credentials}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
 func (me *service) client(ctx context.Context) (*sloclient.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials)
+	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials.Platform)
 	if err != nil {
 		return nil, err
 	}

@@ -19,14 +19,14 @@ package logsongrailactivate
 
 import (
 	logsongrailactivate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logsongrailactivate/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.4"
 const SchemaID = "builtin:logmonitoring.logs-on-grail-activate"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*logsongrailactivate.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*logsongrailactivate.Settings] {
 	return settings20.Service[*logsongrailactivate.Settings](credentials, SchemaID, SchemaVersion)
 }

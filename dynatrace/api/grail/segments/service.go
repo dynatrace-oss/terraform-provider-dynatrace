@@ -24,22 +24,23 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	segmentsclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/segments"
 
 	segments "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments/settings"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*segments.Segment] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*segments.Segment] {
 	return &service{credentials}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
 func (me *service) client(ctx context.Context) (*segmentsclient.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials)
+	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials.Platform)
 	if err != nil {
 		return nil, err
 	}

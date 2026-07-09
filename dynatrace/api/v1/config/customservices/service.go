@@ -26,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	customservices "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customservices/settings"
 )
@@ -36,8 +37,8 @@ type service struct {
 	client rest.Client
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*customservices.CustomService] {
-	return &service{client: rest.APITokenClient(credentials)}
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*customservices.CustomService] {
+	return &service{client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken)}
 }
 
 func (me *service) Get(ctx context.Context, id string, v *customservices.CustomService) error {

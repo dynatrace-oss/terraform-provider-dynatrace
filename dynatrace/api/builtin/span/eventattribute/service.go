@@ -30,6 +30,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	eventattribute "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/eventattribute/settings"
 
@@ -42,12 +43,12 @@ import (
 const SchemaID = "builtin:span-event-attribute"
 const SchemaVersion = "1.0.17"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*eventattribute.Settings] {
-	return &service{credentials: credentials, client: rest.HybridClient(credentials)}
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*eventattribute.Settings] {
+	return &service{credentials: credentials, client: rest.HybridClient(credentials.EnvironmentURL, credentials.APIToken, credentials.Platform)}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 	client      rest.Client
 }
 

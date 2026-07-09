@@ -25,16 +25,16 @@ import (
 	role_arn "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/aws/role_arn/settings"
 	awsconnection_settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/aws/settings"
 	retrycommon "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/retry"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 )
 
 const SchemaID = "builtin:hyperscaler-authentication.connections.aws"
 const SchemaVersion = "0.0.24"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*role_arn.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*role_arn.Settings] {
 	return &service{
 		service: settings20.Service[*role_arn.Settings](credentials, SchemaID, SchemaVersion),
 		// We don't reuse awsconnection.Service(credentials), as this one contains custom update logic

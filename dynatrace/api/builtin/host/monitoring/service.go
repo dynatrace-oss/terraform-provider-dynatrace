@@ -19,14 +19,14 @@ package monitoring
 
 import (
 	monitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.3"
 const SchemaID = "builtin:host.monitoring"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*monitoring.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*monitoring.Settings] {
 	return settings20.Service[*monitoring.Settings](credentials, SchemaID, SchemaVersion)
 }

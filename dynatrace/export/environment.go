@@ -38,8 +38,8 @@ import (
 	policysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity"
 	entitysettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
@@ -50,7 +50,7 @@ import (
 type Environment struct {
 	mu                    sync.Mutex
 	OutputFolder          string
-	Credentials           *rest.Credentials
+	Credentials           *config.ProviderConfiguration
 	Modules               map[ResourceType]*Module
 	Flags                 Flags
 	ResArgs               map[string][]string
@@ -65,15 +65,15 @@ type Environment struct {
 
 func (me *Environment) TenantID() string {
 	var tenant string
-	if strings.Contains(me.Credentials.URL, "/e/") {
-		idx := strings.Index(me.Credentials.URL, "/e/")
-		tenant = strings.TrimSuffix(strings.TrimPrefix(me.Credentials.URL[idx:], "/e/"), "/")
-	} else if after, ok := strings.CutPrefix(me.Credentials.URL, "http://"); ok {
+	if strings.Contains(me.Credentials.EnvironmentURL, "/e/") {
+		idx := strings.Index(me.Credentials.EnvironmentURL, "/e/")
+		tenant = strings.TrimSuffix(strings.TrimPrefix(me.Credentials.EnvironmentURL[idx:], "/e/"), "/")
+	} else if after, ok := strings.CutPrefix(me.Credentials.EnvironmentURL, "http://"); ok {
 		tenant = after
 		if idx := strings.Index(tenant, "."); idx != -1 {
 			tenant = tenant[:idx]
 		}
-	} else if after, ok := strings.CutPrefix(me.Credentials.URL, "https://"); ok {
+	} else if after, ok := strings.CutPrefix(me.Credentials.EnvironmentURL, "https://"); ok {
 		tenant = after
 		if idx := strings.Index(tenant, "."); idx != -1 {
 			tenant = tenant[:idx]

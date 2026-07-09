@@ -19,14 +19,14 @@ package environment
 
 import (
 	environment "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/remote/environment/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.7"
 const SchemaID = "builtin:remote.environment"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*environment.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*environment.Settings] {
 	return settings20.Service[*environment.Settings](credentials, SchemaID, SchemaVersion)
 }

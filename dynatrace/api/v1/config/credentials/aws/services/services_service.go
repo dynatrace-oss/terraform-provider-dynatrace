@@ -23,6 +23,7 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const ServiceSchemaID = "v1:config:credentials:aws:services:all"
@@ -39,10 +40,10 @@ type SupportedService struct {
 
 var supportedServicesRepo = map[string]map[string]*SupportedService{}
 
-func NewSupportedServicesService(credentials *rest.Credentials) *SupportedServicesService {
+func NewSupportedServicesService(credentials *config.ProviderConfiguration) *SupportedServicesService {
 	return &SupportedServicesService{
-		url:    credentials.URL,
-		client: rest.APITokenClient(credentials),
+		url:    credentials.EnvironmentURL,
+		client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken),
 	}
 }
 

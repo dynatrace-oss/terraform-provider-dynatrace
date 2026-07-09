@@ -19,14 +19,14 @@ package urlbasedsampling
 
 import (
 	urlbasedsampling "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/urlbasedsampling/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.3"
 const SchemaID = "builtin:url-based-sampling"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*urlbasedsampling.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*urlbasedsampling.Settings] {
 	return settings20.Service[*urlbasedsampling.Settings](credentials, SchemaID, SchemaVersion)
 }

@@ -26,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	web "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/settings"
@@ -33,8 +34,7 @@ import (
 
 const SchemaID = "v1:config:applications:web"
 
-
-func Service(credentials *rest.Credentials) settings.CRUDService[*web.Application] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*web.Application] {
 	return &service{
 		service: settings.NewAPITokenService(
 			credentials,
@@ -46,7 +46,7 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*web.Applicatio
 				Duplicates:    Duplicates,
 			},
 		),
-		client: rest.APITokenClient(credentials),
+		client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken),
 	}
 }
 

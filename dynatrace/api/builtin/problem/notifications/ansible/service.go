@@ -19,10 +19,10 @@ package ansible
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*notifications.Notification] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*notifications.Notification] {
 	return notifications.Service(credentials, notifications.Types.AnsibleTower)
 }

@@ -25,10 +25,11 @@ import (
 	order "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/order/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
-func Service(credentials *rest.Credentials, schemaID string, staticID string, staticName string, basePath string) settings.CRUDService[*order.Settings] {
-	return &service{client: rest.APITokenClient(credentials), schemaID: schemaID, StaticID: staticID, StaticName: staticName, BasePath: basePath}
+func Service(credentials *config.ProviderConfiguration, schemaID string, staticID string, staticName string, basePath string) settings.CRUDService[*order.Settings] {
+	return &service{client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken), schemaID: schemaID, StaticID: staticID, StaticName: staticName, BasePath: basePath}
 }
 
 type service struct {

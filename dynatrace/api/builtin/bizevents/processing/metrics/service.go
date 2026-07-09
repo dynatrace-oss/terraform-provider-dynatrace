@@ -19,14 +19,14 @@ package metrics
 
 import (
 	metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/bizevents/processing/metrics/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:bizevents-processing-metrics.rule"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*metrics.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*metrics.Settings] {
 	return settings20.Service[*metrics.Settings](credentials, SchemaID, SchemaVersion)
 }

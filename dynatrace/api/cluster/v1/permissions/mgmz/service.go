@@ -27,11 +27,12 @@ import (
 	mgmz "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/permissions/mgmz/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "accounts:groups-mgmz"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*mgmz.Permission] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*mgmz.Permission] {
 	return &service{
 		serviceClient: NewService(credentials),
 	}
@@ -73,8 +74,8 @@ func (cs *ServiceClient) SchemaID() string {
 // NewService creates a new Service Client
 // baseURL should look like this: "https://#######.live.dynatrace.com/api/config/v1"
 // token is an API Token
-func NewService(credentials *rest.Credentials) *ServiceClient {
-	return &ServiceClient{client: rest.ClusterV1Client(credentials)}
+func NewService(credentials *config.ProviderConfiguration) *ServiceClient {
+	return &ServiceClient{client: rest.ClusterV1Client(credentials.ClusterAPIV2URL, credentials.ClusterAPIToken)}
 }
 
 type service struct {

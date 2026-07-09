@@ -19,14 +19,14 @@ package failuredetectionrulesets
 
 import (
 	failuredetectionrulesets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetectionrulesets/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.7"
 const SchemaID = "builtin:failure-detection-rulesets"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*failuredetectionrulesets.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*failuredetectionrulesets.Settings] {
 	return settings20.Service[*failuredetectionrulesets.Settings](credentials, SchemaID, SchemaVersion)
 }

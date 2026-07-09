@@ -23,14 +23,15 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	order "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/requestnaming/order/settings"
 )
 
 const SchemaID = "v1:config:service:request-naming:order"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*order.Order] {
-	return &service{client: rest.APITokenClient(credentials)}
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*order.Order] {
+	return &service{client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken)}
 }
 
 type service struct {

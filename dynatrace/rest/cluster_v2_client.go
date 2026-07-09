@@ -32,19 +32,16 @@ import (
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 )
 
-func ClusterV2Client(credentials *Credentials) Client {
-	creds := *credentials
-	creds.URL = strings.TrimSuffix(credentials.Cluster.URL, "/") + "/api/cluster/v2"
-	creds.Token = credentials.Cluster.Token
-	return &cluster_v2_client{credentials: &creds}
+func ClusterV2Client(clusterURL, clusterToken string) Client {
+	return &cluster_v2_client{
+		baseURL: strings.TrimSuffix(clusterURL, "/") + "/api/cluster/v2",
+		token:   clusterToken,
+	}
 }
 
 type cluster_v2_client struct {
-	credentials *Credentials
-}
-
-func (me *cluster_v2_client) Credentials() *Credentials {
-	return me.credentials
+	baseURL string
+	token   string
 }
 
 func (me *cluster_v2_client) Get(ctx context.Context, url string, expectedStatusCodes ...int) Request {
@@ -116,9 +113,9 @@ func (me *cluster_v2_request) Finish(optionalTarget ...any) error {
 
 	PreRequest()
 
-	clusterV2URL := strings.TrimSuffix(me.client.Credentials().Cluster.URL, "/") + "/api/cluster/v2"
+	clusterClient := me.client.(*cluster_v2_client)
 
-	client, err := createClusterV2Client(clusterV2URL, me.client.Credentials().Cluster.Token)
+	client, err := createClusterV2Client(clusterClient.baseURL, clusterClient.token)
 	if err != nil {
 		return err
 	}

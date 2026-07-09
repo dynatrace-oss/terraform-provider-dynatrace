@@ -19,14 +19,14 @@ package mqfilters
 
 import (
 	mqfilters "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/mqfilters/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "builtin:mainframe.mqfilters"
 const SchemaVersion = "1.0.3"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*mqfilters.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*mqfilters.Settings] {
 	return settings20.Service[*mqfilters.Settings](credentials, SchemaID, SchemaVersion)
 }

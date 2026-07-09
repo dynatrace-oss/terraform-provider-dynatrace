@@ -26,8 +26,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	groups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/google/uuid"
 )
@@ -44,10 +44,10 @@ func GetRevision() string {
 }
 
 type GroupServiceClient struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*groups.Group] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*groups.Group] {
 	return &GroupServiceClient{credentials: credentials}
 }
 

@@ -21,7 +21,6 @@ import (
 	"context"
 	"os"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	restlogging "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -48,12 +47,8 @@ func XResource() *schema.Resource {
 	}
 }
 
-func createCredentials(m any) *rest.Credentials {
-	conf := m.(*config.ProviderConfiguration)
-	return &rest.Credentials{
-		Token: conf.APIToken,
-		URL:   conf.EnvironmentURL,
-	}
+func createCredentials(m any) *config.ProviderConfiguration {
+	return m.(*config.ProviderConfiguration)
 }
 
 func Settings() settings.Settings {

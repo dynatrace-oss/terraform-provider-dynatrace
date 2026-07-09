@@ -30,12 +30,13 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.1.9"
 const SchemaID = "builtin:settings.subscriptions.service"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*keyrequests.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*keyrequests.Settings] {
 	var topologyService settings.RService[*entity.Entity]
 	if settings.ExportRunning {
 		topologyService = toposervices.DataSourceService(credentials)
@@ -53,13 +54,13 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*keyrequests.Se
 			},
 		}),
 		credentials: credentials,
-		client:      rest.HybridClient(credentials),
+		client:      rest.HybridClient(credentials.EnvironmentURL, credentials.APIToken, credentials.Platform),
 	}
 }
 
 type service struct {
 	service     settings.CRUDService[*keyrequests.Settings]
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 	client      rest.Client
 }
 

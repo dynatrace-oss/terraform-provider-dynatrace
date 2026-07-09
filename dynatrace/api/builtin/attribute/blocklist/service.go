@@ -19,14 +19,14 @@ package blocklist
 
 import (
 	blocklist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/blocklist/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.2"
 const SchemaID = "builtin:attribute-block-list"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*blocklist.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*blocklist.Settings] {
 	return settings20.Service[*blocklist.Settings](credentials, SchemaID, SchemaVersion)
 }

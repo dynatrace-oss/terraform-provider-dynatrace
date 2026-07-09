@@ -19,14 +19,14 @@ package attackprotectionallowlistconfig
 
 import (
 	attackprotectionallowlistconfig "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/attackprotectionallowlistconfig/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "2.0.3"
 const SchemaID = "builtin:appsec.attack-protection-allowlist-config"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*attackprotectionallowlistconfig.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*attackprotectionallowlistconfig.Settings] {
 	return settings20.Service[*attackprotectionallowlistconfig.Settings](credentials, SchemaID, SchemaVersion)
 }

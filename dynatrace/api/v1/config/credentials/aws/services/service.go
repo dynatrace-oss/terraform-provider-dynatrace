@@ -28,6 +28,7 @@ import (
 	services "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/aws/services/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "v1:config:credentials:aws:services"
@@ -35,9 +36,9 @@ const BasePath = "/api/config/v1/aws/credentials"
 
 var smu sync.Mutex
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*services.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*services.Settings] {
 	return &service{
-		client:     rest.APITokenClient(credentials),
+		client:     rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken),
 		supService: NewSupportedServicesService(credentials),
 	}
 }

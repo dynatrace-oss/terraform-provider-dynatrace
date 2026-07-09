@@ -22,9 +22,9 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	awsconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/aws/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.26"
@@ -36,7 +36,7 @@ type service struct {
 
 // An update should only happen when the role ARN is added or the name is modified. Otherwise, all attributes and subresources
 // are flagged as "forceNew", meaning instead of an update, the resource is destroyed and created from scratch
-func Service(credentials *rest.Credentials) settings.CRUDService[*awsconnection.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*awsconnection.Settings] {
 	return &service{service: settings20.Service[*awsconnection.Settings](credentials, SchemaID, SchemaVersion)}
 }
 

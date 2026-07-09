@@ -19,14 +19,14 @@ package hosts
 
 import (
 	hosts "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/topology/hosts/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "v1:environment:hosts"
 const BasePath = "/api/v1/entity/infrastructure/hosts"
 
-func Service(credentials *rest.Credentials) settings.RService[*hosts.Host] {
+func Service(credentials *config.ProviderConfiguration) settings.RService[*hosts.Host] {
 	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,

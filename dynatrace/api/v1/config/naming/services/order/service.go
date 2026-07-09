@@ -18,8 +18,8 @@
 package servicenaming_order
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	order "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/order"
 	order_settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/naming/order/settings"
@@ -30,6 +30,6 @@ const StaticID = "f99fed70-ef81-488d-a8d6-1787719c5e46"
 const StaticName = "service_naming_order"
 const BasePath = "/api/config/v1/conditionalNaming/service"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*order_settings.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*order_settings.Settings] {
 	return order.Service(credentials, SchemaID, StaticID, StaticName, BasePath)
 }

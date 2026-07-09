@@ -26,7 +26,6 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
@@ -157,7 +156,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		os.RemoveAll(targetFolder)
 	}
 
-	var credentials *rest.Credentials
+	var credentials *config.ProviderConfiguration
 	configResult, _ := config.ProviderConfigureGeneric(context.Background(), cfgGetter)
 
 	dwValidationStrategy := config.CredValExport
@@ -168,7 +167,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		}
 	}
 
-	if credentials, err = config.Credentials(configResult, dwValidationStrategy); err != nil {
+	if credentials, err = config.Validate(configResult, dwValidationStrategy); err != nil {
 		return nil, err
 	}
 

@@ -30,6 +30,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	attribute "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/attribute/settings"
 
@@ -42,15 +43,15 @@ import (
 const SchemaID = "builtin:span-attribute"
 const SchemaVersion = "0.0.42"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*attribute.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*attribute.Settings] {
 	return &service{
 		credentials: credentials,
-		client:      rest.HybridClient(credentials),
+		client:      rest.HybridClient(credentials.EnvironmentURL, credentials.APIToken, credentials.Platform),
 	}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 	client      rest.Client
 }
 

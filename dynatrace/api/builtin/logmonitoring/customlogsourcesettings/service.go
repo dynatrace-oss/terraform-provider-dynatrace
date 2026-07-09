@@ -26,16 +26,17 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.1.2"
 const SchemaID = "builtin:logmonitoring.custom-log-source-settings"
 
 // The custom service below was created to gracefully deal with the breaking change from attribute `values` to `values-and-enrichment` introduced in v292.
-func Service(credentials *rest.Credentials) settings.CRUDService[*customlogsourcesettings.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*customlogsourcesettings.Settings] {
 	return &service{
 		service: settings20.Service[*customlogsourcesettings.Settings](credentials, SchemaID, SchemaVersion),
-		client:  rest.HybridClient(credentials),
+		client:  rest.HybridClient(credentials.EnvironmentURL, credentials.APIToken, credentials.Platform),
 	}
 }
 

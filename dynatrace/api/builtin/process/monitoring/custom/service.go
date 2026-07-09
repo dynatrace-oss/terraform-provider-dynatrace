@@ -23,15 +23,15 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.4.13"
 const SchemaID = "builtin:process.custom-process-monitoring-rule"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*customprocessmonitoring.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*customprocessmonitoring.Settings] {
 	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*customprocessmonitoring.Settings]{Duplicates: Duplicates})
 }
 

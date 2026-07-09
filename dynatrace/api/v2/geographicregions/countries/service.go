@@ -23,14 +23,15 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	countries "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/geographicregions/countries/settings"
 )
 
 const SchemaID = "v2:geographicregions:countries"
 
-func Service(credentials *rest.Credentials) settings.RService[*countries.Settings] {
-	return &service{client: rest.APITokenClient(credentials)}
+func Service(credentials *config.ProviderConfiguration) settings.RService[*countries.Settings] {
+	return &service{client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken)}
 }
 
 type service struct {

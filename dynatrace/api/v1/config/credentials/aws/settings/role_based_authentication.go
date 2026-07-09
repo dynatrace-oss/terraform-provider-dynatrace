@@ -17,9 +17,10 @@
 
 package aws
 
-import "maps"
-
-import "encoding/json"
+import (
+	"encoding/json"
+	"maps"
+)
 
 // RoleBasedAuthentication The credentials for the role-based authentication.
 type RoleBasedAuthentication struct {

@@ -25,21 +25,22 @@ import (
 	business_calendars "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/business_calendars/settings"
 	tfrest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	cacapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
 )
 
-func Service(credentials *tfrest.Credentials) settings.CRUDService[*business_calendars.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*business_calendars.Settings] {
 	return &service{credentials}
 }
 
 type service struct {
-	credentials *tfrest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
 func (me *service) client(ctx context.Context) (*automation.Client, error) {
-	platformClient, err := tfrest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials)
+	platformClient, err := tfrest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials.Platform)
 	if err != nil {
 		return nil, err
 	}

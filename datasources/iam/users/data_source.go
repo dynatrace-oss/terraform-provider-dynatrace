@@ -62,7 +62,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	}
 	d.SetId(email)
 
-	creds, err := config.Credentials(m, config.CredValIAM)
+	creds, err := config.Validate(m, config.CredValIAM)
 	if err != nil {
 		return diag.FromErr(err)
 	}

@@ -27,13 +27,14 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	dashboards "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards/settings"
 )
 
 const SchemaID = "v1:config:json-dashboards"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*dashboards.JSONDashboard] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*dashboards.JSONDashboard] {
 	return &service{settings.NewAPITokenService(
 		credentials,
 		SchemaID,

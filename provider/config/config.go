@@ -174,24 +174,30 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 	return nil
 }
 
-func Credentials(m any, CredentialValidation int) (*rest.Credentials, error) {
+// Validate asserts that m is a *ProviderConfiguration, runs the requested credential validation and
+// returns the configuration so callers can use it directly to construct clients.
+func Validate(m any, CredentialValidation int) (*ProviderConfiguration, error) {
 	conf := m.(*ProviderConfiguration)
 	if err := validateCredentials(conf, CredentialValidation); err != nil {
 		return nil, err
 	}
-	return &rest.Credentials{
-		Token:    conf.APIToken,
-		URL:      conf.EnvironmentURL,
-		IAM:      conf.IAM,
-		Platform: conf.Platform,
-		Cluster: struct {
-			URL   string
-			Token string
-		}{
-			URL:   conf.ClusterAPIV2URL,
-			Token: conf.ClusterAPIToken,
-		},
-	}, nil
+	return conf, nil
+}
+
+// ContainsOAuth reports whether Platform OAuth client credentials have been provided.
+func (c *ProviderConfiguration) ContainsOAuth() bool {
+	return len(c.Platform.ClientID) > 0 && len(c.Platform.ClientSecret) > 0
+}
+
+// ContainsPlatformToken reports whether a platform token has been provided.
+func (c *ProviderConfiguration) ContainsPlatformToken() bool {
+	return len(c.Platform.PlatformToken) > 0
+}
+
+// ContainsOAuthOrPlatformToken reports whether either Platform OAuth credentials or a platform token
+// have been provided.
+func (c *ProviderConfiguration) ContainsOAuthOrPlatformToken() bool {
+	return c.ContainsOAuth() || c.ContainsPlatformToken()
 }
 
 func getClassicEnvironmentURL(d Getter) string {

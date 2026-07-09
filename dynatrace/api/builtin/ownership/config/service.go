@@ -19,14 +19,14 @@ package config
 
 import (
 	config "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ownership/config/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	providerconfig "github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:ownership.config"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*config.Settings] {
+func Service(credentials *providerconfig.ProviderConfiguration) settings.CRUDService[*config.Settings] {
 	return settings20.Service[*config.Settings](credentials, SchemaID, SchemaVersion)
 }

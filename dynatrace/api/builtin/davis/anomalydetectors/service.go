@@ -25,12 +25,13 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.16"
 const SchemaID = "builtin:davis.anomaly-detectors"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*anomalydetectors.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*anomalydetectors.Settings] {
 	return &service{
 		credentials: credentials,
 		service:     settings20.Service[*anomalydetectors.Settings](credentials, SchemaID, SchemaVersion),
@@ -38,7 +39,7 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*anomalydetecto
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 	service     settings.CRUDService[*anomalydetectors.Settings]
 }
 

@@ -25,11 +25,12 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	activegatetokens "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/activegatetokens/settings"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*activegatetokens.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*activegatetokens.Settings] {
 	return &service{credentials}
 }
 
@@ -44,13 +45,13 @@ type TenantTokenResponse struct {
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
 func (me *service) Get(ctx context.Context, id string, v *activegatetokens.Settings) error {
 	var err error
 
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	req := client.Get(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id))).Expect(200)
 	if err = req.Finish(v); err != nil {
 		return err
@@ -80,7 +81,7 @@ func (me *service) Create(ctx context.Context, v *activegatetokens.Settings) (*a
 	var err error
 
 	response := TokenCreateResponse{}
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	if err = client.Post(ctx, "/api/v2/activeGateTokens", v, 201).Finish(&response); err != nil {
 		return nil, err
 	}
@@ -101,7 +102,7 @@ func (me *service) Update(ctx context.Context, id string, v *activegatetokens.Se
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return rest.APITokenClient(me.credentials).Delete(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id)), 204).Finish()
+	return rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken).Delete(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id)), 204).Finish()
 }
 
 func (me *service) New() *activegatetokens.Settings {

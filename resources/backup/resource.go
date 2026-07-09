@@ -23,7 +23,6 @@ import (
 
 	backup "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/backup"
 	backup_settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/backup/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/confighcl"
@@ -47,17 +46,13 @@ func Resource() *schema.Resource {
 }
 
 func NewService(m any) *backup.ServiceClient {
-	conf := m.(*config.ProviderConfiguration)
-	credentials := &rest.Credentials{}
-	credentials.Cluster.URL = conf.ClusterAPIV2URL
-	credentials.Cluster.Token = conf.ClusterAPIToken
-	apiService := backup.NewService(credentials)
+	apiService := backup.NewService(m.(*config.ProviderConfiguration))
 	return apiService
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.Validate(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -90,7 +85,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.Validate(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -122,7 +117,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.Validate(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}

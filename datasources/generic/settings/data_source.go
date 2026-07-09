@@ -78,7 +78,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	d.SetId(fmt.Sprintf("generic_settings[%s][%s][%s]", query.Schema, query.Scope, query.Filter))
 
-	creds, err := config.Credentials(m, config.CredValDefault)
+	creds, err := config.Validate(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}

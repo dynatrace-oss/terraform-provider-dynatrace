@@ -19,14 +19,14 @@ package rumcustomcrashrateincrease
 
 import (
 	crashrate "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom/crashrate/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:anomaly-detection.rum-custom-crash-rate-increase"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*crashrate.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*crashrate.Settings] {
 	return settings20.Service[*crashrate.Settings](credentials, SchemaID, SchemaVersion)
 }

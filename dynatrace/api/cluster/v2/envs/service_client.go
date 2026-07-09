@@ -25,6 +25,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 // ServiceClient TODO: documentation
@@ -35,8 +36,8 @@ type ServiceClient struct {
 // NewService creates a new Service Client
 // baseURL should look like this: "https://siz65484.live.dynatrace.com/api/config/v1"
 // token is an API Token
-func NewService(credentials *rest.Credentials) *ServiceClient {
-	return &ServiceClient{client: rest.ClusterV2Client(credentials)}
+func NewService(credentials *config.ProviderConfiguration) *ServiceClient {
+	return &ServiceClient{client: rest.ClusterV2Client(credentials.ClusterAPIV2URL, credentials.ClusterAPIToken)}
 }
 
 func evalRetry(rerr *rest.Error, environment *Environment) bool {

@@ -28,20 +28,21 @@ import (
 	items_settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/items/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*active_version.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*active_version.Settings] {
 	return &service{credentials: credentials, itemsService: items.Service(credentials, items.Options{Type: "EXTENSION2"})}
 }
 
 type service struct {
-	credentials  *rest.Credentials
+	credentials  *config.ProviderConfiguration
 	itemsService settings.RService[*items_settings.HubItemList]
 }
 
 func (me *service) Get(ctx context.Context, id string, v *active_version.Settings) error {
 	var response GetActiveEnvironmentConfigurationResponse
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	if err := client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/environmentConfiguration", url.PathEscape(id)), 200).Finish(&response); err != nil {
 		return err
 	}
@@ -77,7 +78,7 @@ func (me *service) Create(ctx context.Context, v *active_version.Settings) (*api
 	if err := me.ensureInstalled(ctx, name, version); err != nil {
 		return nil, err
 	}
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	createResponse := SetActiveEnvironmentConfigurationResponse{}
 	retry := 10
 	for retry > 0 {
@@ -91,7 +92,7 @@ func (me *service) Create(ctx context.Context, v *active_version.Settings) (*api
 }
 
 func (me *service) ensureInstalled(ctx context.Context, name string, version string) error {
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	response := struct {
 		Name    string `json:"extensionName"`
 		Version string `json:"extensionVersion"`

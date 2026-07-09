@@ -19,14 +19,14 @@ package simpledetectionrule
 
 import (
 	simpledetectionrule "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/simpledetectionrule/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.5"
 const SchemaID = "builtin:process-group.simple-detection-rule"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*simpledetectionrule.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*simpledetectionrule.Settings] {
 	return settings20.Service[*simpledetectionrule.Settings](credentials, SchemaID, SchemaVersion)
 }

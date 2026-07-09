@@ -40,7 +40,7 @@ type platform_request request
 
 var NoPlatformCredentialsErr = errors.New("neither oauth credentials nor platform token present")
 
-func CreatePlatformClient(ctx context.Context, platformURL string, credentials *Credentials) (*rest.Client, error) {
+func CreatePlatformClient(ctx context.Context, platformURL string, platform PlatformCredentials) (*rest.Client, error) {
 	PreRequest()
 
 	factory := clients.Factory().
@@ -49,20 +49,20 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 		WithRetryOptions(defaultRetryOptions).
 		WithUserAgent(version.UserAgent())
 
-	if credentials.ContainsPlatformToken() {
+	if containsPlatformToken(platform) {
 		return factory.
 			WithHTTPListener(logging.HTTPListener("plat/tok")).
-			WithPlatformToken(credentials.Platform.PlatformToken).
+			WithPlatformToken(platform.PlatformToken).
 			CreatePlatformClient(ctx)
 	}
 
-	if credentials.ContainsOAuth() {
+	if containsOAuth(platform) {
 		return factory.
 			WithHTTPListener(logging.HTTPListener("platform")).
 			WithOAuthCredentials(clientcredentials.Config{
-				ClientID:     credentials.Platform.ClientID,
-				ClientSecret: credentials.Platform.ClientSecret,
-				TokenURL:     credentials.Platform.TokenURL,
+				ClientID:     platform.ClientID,
+				ClientSecret: platform.ClientSecret,
+				TokenURL:     platform.TokenURL,
 			}).
 			CreatePlatformClient(NewContextWithOAuthRetryClient(ctx))
 	}
@@ -78,9 +78,10 @@ func (me *platform_request) Finish(optionalTarget ...any) error {
 
 	PreRequest()
 
-	platformURL := me.evalPlatformURL(me.client.Credentials().URL)
+	envClient := me.client.(environmentClient)
+	platformURL := me.evalPlatformURL(envClient.environmentURL())
 
-	client, err := CreatePlatformClient(me.ctx, platformURL, me.client.Credentials())
+	client, err := CreatePlatformClient(me.ctx, platformURL, envClient.platformCredentials())
 	if err != nil {
 		return err
 	}

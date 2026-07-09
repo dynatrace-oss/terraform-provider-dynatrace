@@ -27,6 +27,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"golang.org/x/oauth2/clientcredentials"
 
@@ -49,7 +50,7 @@ type iamClient struct {
 	client *rest2.Client
 }
 
-func NewIAMClient(ctx context.Context, credentials *rest.Credentials) IAMClient {
+func NewIAMClient(ctx context.Context, credentials *config.ProviderConfiguration) IAMClient {
 	rest.PreRequest()
 
 	client, _ := clients.Factory().

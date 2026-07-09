@@ -29,17 +29,17 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	bindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 type BindingServiceClient struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*bindings.PolicyBinding] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*bindings.PolicyBinding] {
 	return &BindingServiceClient{credentials: credentials}
 }
 

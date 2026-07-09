@@ -25,6 +25,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	metricevents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/metricevents/settings"
 )
@@ -32,7 +33,7 @@ import (
 const SchemaID = "v1:config:anomaly-detection:metric-events"
 const BasePath = "/api/config/v1/anomalyDetection/metricEvents"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*metricevents.MetricEvent] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*metricevents.MetricEvent] {
 	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,

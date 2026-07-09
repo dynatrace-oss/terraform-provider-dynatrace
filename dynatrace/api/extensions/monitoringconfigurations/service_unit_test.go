@@ -25,7 +25,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations"
 	serviceSettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -61,14 +61,14 @@ func (m *mockExtensionClient) DeleteMonitoringConfiguration(ctx context.Context,
 	return m.deleteMonitoringConfigurationFn(ctx, extensionName, configurationID)
 }
 
-func mockClientGetter(client *mockExtensionClient) func(ctx context.Context, credentials *rest.Credentials) (monitoringconfigurations.ExtensionClient, error) {
-	return func(ctx context.Context, credentials *rest.Credentials) (monitoringconfigurations.ExtensionClient, error) {
+func mockClientGetter(client *mockExtensionClient) func(ctx context.Context, credentials *config.ProviderConfiguration) (monitoringconfigurations.ExtensionClient, error) {
+	return func(ctx context.Context, credentials *config.ProviderConfiguration) (monitoringconfigurations.ExtensionClient, error) {
 		return client, nil
 	}
 }
 
-func failingClientGetter(err error) func(ctx context.Context, credentials *rest.Credentials) (monitoringconfigurations.ExtensionClient, error) {
-	return func(ctx context.Context, credentials *rest.Credentials) (monitoringconfigurations.ExtensionClient, error) {
+func failingClientGetter(err error) func(ctx context.Context, credentials *config.ProviderConfiguration) (monitoringconfigurations.ExtensionClient, error) {
+	return func(ctx context.Context, credentials *config.ProviderConfiguration) (monitoringconfigurations.ExtensionClient, error) {
 		return nil, err
 	}
 }
@@ -81,7 +81,7 @@ func pagedResponse(objects ...[]byte) coreapi.PagedListResponse {
 
 func TestService_Get(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
-		svc := monitoringconfigurations.ServiceWithClientGetter(failingClientGetter(assert.AnError), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(failingClientGetter(assert.AnError), &config.ProviderConfiguration{})
 		err := svc.Get(t.Context(), "com.example.ext#-#cfg-1", &serviceSettings.Settings{})
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -92,7 +92,7 @@ func TestService_Get(t *testing.T) {
 				return coreapi.Response{}, assert.AnError
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Get(t.Context(), "com.example.ext#-#cfg-1", &serviceSettings.Settings{})
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -103,7 +103,7 @@ func TestService_Get(t *testing.T) {
 				return coreapi.Response{Data: []byte("not-json")}, nil
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Get(t.Context(), "com.example.ext#-#cfg-1", &serviceSettings.Settings{})
 		assert.Error(t, err)
 	})
@@ -121,7 +121,7 @@ func TestService_Get(t *testing.T) {
 				return coreapi.Response{Data: responseData}, nil
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		v := &serviceSettings.Settings{}
 		err := svc.Get(t.Context(), "com.example.ext#-#cfg-1", v)
 		require.NoError(t, err)
@@ -134,7 +134,7 @@ func TestService_Get(t *testing.T) {
 
 func TestService_List(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
-		svc := monitoringconfigurations.ServiceWithClientGetter(failingClientGetter(assert.AnError), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(failingClientGetter(assert.AnError), &config.ProviderConfiguration{})
 		_, err := svc.List(t.Context())
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -145,7 +145,7 @@ func TestService_List(t *testing.T) {
 				return nil, assert.AnError
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.List(t.Context())
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -156,7 +156,7 @@ func TestService_List(t *testing.T) {
 				return pagedResponse([]byte("bad-json")), nil
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.List(t.Context())
 		assert.Error(t, err)
 	})
@@ -171,7 +171,7 @@ func TestService_List(t *testing.T) {
 				return nil, assert.AnError
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.List(t.Context())
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -186,7 +186,7 @@ func TestService_List(t *testing.T) {
 				return pagedResponse([]byte("bad-json")), nil
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.List(t.Context())
 		assert.Error(t, err)
 	})
@@ -210,7 +210,7 @@ func TestService_List(t *testing.T) {
 				return pagedResponse(), nil
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stubs, err := svc.List(t.Context())
 		require.NoError(t, err)
 		require.Len(t, stubs, 2)
@@ -226,7 +226,7 @@ func TestService_List(t *testing.T) {
 				return pagedResponse(), nil
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stubs, err := svc.List(t.Context())
 		require.NoError(t, err)
 		assert.Empty(t, stubs)
@@ -242,7 +242,7 @@ func TestService_List(t *testing.T) {
 				return pagedResponse(), nil
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stubs, err := svc.List(t.Context())
 		require.NoError(t, err)
 		assert.Empty(t, stubs)
@@ -251,7 +251,7 @@ func TestService_List(t *testing.T) {
 
 func TestService_Create(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
-		svc := monitoringconfigurations.ServiceWithClientGetter(failingClientGetter(assert.AnError), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(failingClientGetter(assert.AnError), &config.ProviderConfiguration{})
 		_, err := svc.Create(t.Context(), &serviceSettings.Settings{Name: "com.example.ext"})
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -262,7 +262,7 @@ func TestService_Create(t *testing.T) {
 				return coreapi.Response{}, assert.AnError
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.Create(t.Context(), &serviceSettings.Settings{
 			Name:  "com.example.ext",
 			Scope: "HOST-ABC123",
@@ -276,7 +276,7 @@ func TestService_Create(t *testing.T) {
 				return coreapi.Response{Data: []byte("bad-json")}, nil
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.Create(t.Context(), &serviceSettings.Settings{
 			Name:  "com.example.ext",
 			Scope: "HOST-ABC123",
@@ -296,7 +296,7 @@ func TestService_Create(t *testing.T) {
 				return coreapi.Response{Data: respJSON}, nil
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stub, err := svc.Create(t.Context(), &serviceSettings.Settings{
 			Name:  "com.example.ext",
 			Scope: "HOST-ABC123",
@@ -311,7 +311,7 @@ func TestService_Create(t *testing.T) {
 
 func TestService_Update(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
-		svc := monitoringconfigurations.ServiceWithClientGetter(failingClientGetter(assert.AnError), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(failingClientGetter(assert.AnError), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "com.example.ext#-#cfg-1", &serviceSettings.Settings{})
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -322,7 +322,7 @@ func TestService_Update(t *testing.T) {
 				return coreapi.Response{}, assert.AnError
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "com.example.ext#-#cfg-1", &serviceSettings.Settings{})
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -339,7 +339,7 @@ func TestService_Update(t *testing.T) {
 				return coreapi.Response{}, nil
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "com.example.ext#-#cfg-1", &serviceSettings.Settings{
 			Scope: "HOST-ABC123",
 			Value: map[string]any{"key": "val"},
@@ -353,7 +353,7 @@ func TestService_Update(t *testing.T) {
 
 func TestService_Delete(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
-		svc := monitoringconfigurations.ServiceWithClientGetter(failingClientGetter(assert.AnError), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(failingClientGetter(assert.AnError), &config.ProviderConfiguration{})
 		err := svc.Delete(t.Context(), "com.example.ext#-#cfg-1")
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -364,7 +364,7 @@ func TestService_Delete(t *testing.T) {
 				return assert.AnError
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Delete(t.Context(), "com.example.ext#-#cfg-1")
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -378,7 +378,7 @@ func TestService_Delete(t *testing.T) {
 				return nil
 			},
 		}
-		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := monitoringconfigurations.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Delete(t.Context(), "com.example.ext#-#cfg-1")
 		require.NoError(t, err)
 		assert.Equal(t, "com.example.ext", capturedExtName)

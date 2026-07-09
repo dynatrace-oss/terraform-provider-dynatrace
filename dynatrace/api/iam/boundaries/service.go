@@ -29,14 +29,14 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	boundaries "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/boundaries/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/clean"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 const maxPageSize = 10000
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*boundaries.PolicyBoundary] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*boundaries.PolicyBoundary] {
 	return &BoundaryServiceClient{
 		iamClientGetter: &iamClientGetterImp{
 			credentials: credentials,
@@ -50,7 +50,7 @@ type iamClientGetter interface {
 }
 
 type iamClientGetterImp struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
 func (me *iamClientGetterImp) New(ctx context.Context) iam.IAMClient {

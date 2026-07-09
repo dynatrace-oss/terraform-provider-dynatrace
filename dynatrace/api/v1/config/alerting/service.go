@@ -19,14 +19,14 @@ package alerting
 
 import (
 	alerting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "v1:config:alerting"
 const BasePath = "/api/config/v1/alertingProfiles"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*alerting.Profile] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*alerting.Profile] {
 	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,

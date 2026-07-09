@@ -18,8 +18,8 @@
 package diskevents
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	diskevents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/diskevents/settings"
 )
@@ -27,7 +27,7 @@ import (
 const SchemaID = "v1:config:anomaly-detection:disk-events"
 const BasePath = "/api/config/v1/anomalyDetection/diskEvents"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*diskevents.AnomalyDetection] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*diskevents.AnomalyDetection] {
 	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,

@@ -22,8 +22,8 @@ import (
 	"context"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -81,8 +81,8 @@ func (me *mockSchema) UnmarshalHCL(properties hcl.Decoder) error {
 	return properties.Decode("name", &me.Name)
 }
 
-func MockService(stub *api.Stub, err error) func(credentials *rest.Credentials) settings.CRUDService[*mockSchema] {
-	return func(credentials *rest.Credentials) settings.CRUDService[*mockSchema] {
+func MockService(stub *api.Stub, err error) func(credentials *config.ProviderConfiguration) settings.CRUDService[*mockSchema] {
+	return func(credentials *config.ProviderConfiguration) settings.CRUDService[*mockSchema] {
 		return &service{
 			Err:  err,
 			Stub: stub,

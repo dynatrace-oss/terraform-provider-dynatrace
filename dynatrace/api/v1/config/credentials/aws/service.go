@@ -27,6 +27,7 @@ import (
 	aws "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/credentials/aws/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "v1:config:credentials:aws"
@@ -34,7 +35,7 @@ const BasePath = "/api/config/v1/aws/credentials"
 
 var mu sync.Mutex
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*aws.AWSCredentialsConfig] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*aws.AWSCredentialsConfig] {
 	return &service{
 		service: settings.NewAPITokenService(
 			credentials,
@@ -85,7 +86,7 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*aws.AWSCredent
 					return nil
 				}),
 		),
-		client: rest.APITokenClient(credentials),
+		client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken),
 	}
 }
 

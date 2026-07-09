@@ -26,17 +26,18 @@ import (
 	policies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 type PolicyServiceClient struct {
 	client rest.Client
 }
 
-func NewPolicyService(credentials *rest.Credentials) *PolicyServiceClient {
-	return &PolicyServiceClient{client: rest.ClusterV2Client(credentials)}
+func NewPolicyService(credentials *config.ProviderConfiguration) *PolicyServiceClient {
+	return &PolicyServiceClient{client: rest.ClusterV2Client(credentials.ClusterAPIV2URL, credentials.ClusterAPIToken)}
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*policies.Policy] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*policies.Policy] {
 	return &service{
 		serviceClient: NewPolicyService(credentials),
 	}

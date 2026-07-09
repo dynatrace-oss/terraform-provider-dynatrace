@@ -19,14 +19,14 @@ package processvisibility
 
 import (
 	processvisibility "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processvisibility/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1"
 const SchemaID = "builtin:process-visibility"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*processvisibility.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*processvisibility.Settings] {
 	return settings20.Service[*processvisibility.Settings](credentials, SchemaID, SchemaVersion)
 }

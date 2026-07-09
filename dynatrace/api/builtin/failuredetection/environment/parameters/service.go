@@ -23,9 +23,9 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	parameters "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/environment/parameters/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 )
 
@@ -42,7 +42,7 @@ type service struct {
 	service settings.CRUDService[*parameters.Settings]
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*parameters.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*parameters.Settings] {
 	return &service{settings20.Service[*parameters.Settings](credentials, SchemaID, SchemaVersion)}
 }
 func (me *service) Create(ctx context.Context, v *parameters.Settings) (*api.Stub, error) {

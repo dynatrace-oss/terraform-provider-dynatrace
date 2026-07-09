@@ -19,14 +19,14 @@ package golang
 
 import (
 	golang "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/go/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.3"
 const SchemaID = "builtin:monitored-technologies.go"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*golang.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*golang.Settings] {
 	return settings20.Service[*golang.Settings](credentials, SchemaID, SchemaVersion)
 }

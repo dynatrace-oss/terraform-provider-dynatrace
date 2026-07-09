@@ -26,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	webservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web"
 	errors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/web/errors/settings"
@@ -34,9 +35,9 @@ import (
 
 const SchemaID = "v1:config:applications:web:errors"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*errors.Rules] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*errors.Rules] {
 	return &service{
-		client:        rest.APITokenClient(credentials),
+		client:        rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken),
 		webAppService: webservice.Service(credentials)}
 }
 

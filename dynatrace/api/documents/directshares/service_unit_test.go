@@ -28,7 +28,7 @@ import (
 	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 
 	serviceSettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/directshares/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -65,14 +65,14 @@ func (m *mockDirectSharesClient) RemoveRecipients(ctx context.Context, id string
 	return m.removeRecipientsFn(ctx, id, data)
 }
 
-func mockClientGetter(client *mockDirectSharesClient) func(ctx context.Context, credentials *rest.Credentials) (directSharesClient, error) {
-	return func(ctx context.Context, credentials *rest.Credentials) (directSharesClient, error) {
+func mockClientGetter(client *mockDirectSharesClient) func(ctx context.Context, credentials *config.ProviderConfiguration) (directSharesClient, error) {
+	return func(ctx context.Context, credentials *config.ProviderConfiguration) (directSharesClient, error) {
 		return client, nil
 	}
 }
 
-func failingClientGetter(err error) func(ctx context.Context, credentials *rest.Credentials) (directSharesClient, error) {
-	return func(ctx context.Context, credentials *rest.Credentials) (directSharesClient, error) {
+func failingClientGetter(err error) func(ctx context.Context, credentials *config.ProviderConfiguration) (directSharesClient, error) {
+	return func(ctx context.Context, credentials *config.ProviderConfiguration) (directSharesClient, error) {
 		return nil, err
 	}
 }
@@ -86,7 +86,7 @@ func pagedResponse(objects ...[]byte) coreapi.PagedListResponse {
 func TestService_Get(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
 		clientErr := errors.New("client creation failed")
-		svc := ServiceWithClientGetter(failingClientGetter(clientErr), &rest.Credentials{})
+		svc := ServiceWithClientGetter(failingClientGetter(clientErr), &config.ProviderConfiguration{})
 		v := &serviceSettings.DirectShare{}
 		err := svc.Get(t.Context(), "id-1", v)
 		assert.ErrorIs(t, err, clientErr)
@@ -99,7 +99,7 @@ func TestService_Get(t *testing.T) {
 				return coreapi.Response{}, getErr
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		v := &serviceSettings.DirectShare{}
 		err := svc.Get(t.Context(), "id-1", v)
 		assert.ErrorIs(t, err, getErr)
@@ -111,7 +111,7 @@ func TestService_Get(t *testing.T) {
 				return coreapi.Response{Data: []byte("not-json")}, nil
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		v := &serviceSettings.DirectShare{}
 		err := svc.Get(t.Context(), "id-1", v)
 		assert.Error(t, err)
@@ -128,7 +128,7 @@ func TestService_Get(t *testing.T) {
 				return nil, recipientsErr
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		v := &serviceSettings.DirectShare{}
 		err := svc.Get(t.Context(), "id-1", v)
 		assert.ErrorIs(t, err, recipientsErr)
@@ -144,7 +144,7 @@ func TestService_Get(t *testing.T) {
 				return pagedResponse([]byte("bad-json")), nil
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		v := &serviceSettings.DirectShare{}
 		err := svc.Get(t.Context(), "id-1", v)
 		assert.Error(t, err)
@@ -163,7 +163,7 @@ func TestService_Get(t *testing.T) {
 				return pagedResponse(recipientJSON), nil
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		v := &serviceSettings.DirectShare{}
 		err := svc.Get(t.Context(), "id-1", v)
 		require.NoError(t, err)
@@ -179,7 +179,7 @@ func TestService_Get(t *testing.T) {
 func TestService_List(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
 		clientErr := errors.New("client creation failed")
-		svc := ServiceWithClientGetter(failingClientGetter(clientErr), &rest.Credentials{})
+		svc := ServiceWithClientGetter(failingClientGetter(clientErr), &config.ProviderConfiguration{})
 		_, err := svc.List(t.Context())
 		assert.ErrorIs(t, err, clientErr)
 	})
@@ -191,7 +191,7 @@ func TestService_List(t *testing.T) {
 				return nil, listErr
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.List(t.Context())
 		assert.ErrorIs(t, err, listErr)
 	})
@@ -202,7 +202,7 @@ func TestService_List(t *testing.T) {
 				return pagedResponse([]byte("bad-json")), nil
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.List(t.Context())
 		assert.Error(t, err)
 	})
@@ -215,7 +215,7 @@ func TestService_List(t *testing.T) {
 				return pagedResponse(ds1, ds2), nil
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stubs, err := svc.List(t.Context())
 		require.NoError(t, err)
 		require.Len(t, stubs, 2)
@@ -231,7 +231,7 @@ func TestService_List(t *testing.T) {
 				return pagedResponse(), nil
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stubs, err := svc.List(t.Context())
 		require.NoError(t, err)
 		assert.Nil(t, stubs)
@@ -241,7 +241,7 @@ func TestService_List(t *testing.T) {
 func TestService_Create(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
 		clientErr := errors.New("client creation failed")
-		svc := ServiceWithClientGetter(failingClientGetter(clientErr), &rest.Credentials{})
+		svc := ServiceWithClientGetter(failingClientGetter(clientErr), &config.ProviderConfiguration{})
 		_, err := svc.Create(t.Context(), &serviceSettings.DirectShare{})
 		assert.ErrorIs(t, err, clientErr)
 	})
@@ -253,7 +253,7 @@ func TestService_Create(t *testing.T) {
 				return coreapi.Response{}, createErr
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.Create(t.Context(), &serviceSettings.DirectShare{
 			DocumentId: "doc-1",
 			Access:     "read",
@@ -267,7 +267,7 @@ func TestService_Create(t *testing.T) {
 				return coreapi.Response{Data: []byte("bad-json")}, nil
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.Create(t.Context(), &serviceSettings.DirectShare{
 			DocumentId: "doc-1",
 			Access:     "read",
@@ -285,7 +285,7 @@ func TestService_Create(t *testing.T) {
 				return coreapi.Response{Data: respJSON}, nil
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stub, err := svc.Create(t.Context(), &serviceSettings.DirectShare{
 			DocumentId: "doc-1",
 			Access:     "read",
@@ -310,7 +310,7 @@ func TestService_Create(t *testing.T) {
 func TestService_Update(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
 		clientErr := errors.New("client creation failed")
-		svc := ServiceWithClientGetter(failingClientGetter(clientErr), &rest.Credentials{})
+		svc := ServiceWithClientGetter(failingClientGetter(clientErr), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "id-1", &serviceSettings.DirectShare{})
 		assert.ErrorIs(t, err, clientErr)
 	})
@@ -322,7 +322,7 @@ func TestService_Update(t *testing.T) {
 				return nil, recipientsErr
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "id-1", &serviceSettings.DirectShare{})
 		assert.ErrorIs(t, err, recipientsErr)
 	})
@@ -344,7 +344,7 @@ func TestService_Update(t *testing.T) {
 				return json.Unmarshal(data, &removedPayload)
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "id-1", &serviceSettings.DirectShare{
 			Recipients: serviceSettings.Recipients{
 				{ID: "existing-user", Type: "user"},
@@ -375,7 +375,7 @@ func TestService_Update(t *testing.T) {
 				return nil
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "id-1", &serviceSettings.DirectShare{
 			Recipients: serviceSettings.Recipients{
 				{ID: "user-1", Type: "user"},
@@ -399,7 +399,7 @@ func TestService_Update(t *testing.T) {
 				return nil
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "id-1", &serviceSettings.DirectShare{
 			Recipients: serviceSettings.Recipients{
 				{ID: "new-user", Type: "user"},
@@ -419,7 +419,7 @@ func TestService_Update(t *testing.T) {
 				return addErr
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "id-1", &serviceSettings.DirectShare{
 			Recipients: serviceSettings.Recipients{
 				{ID: "user-1", Type: "user"},
@@ -442,7 +442,7 @@ func TestService_Update(t *testing.T) {
 				return removeErr
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "id-1", &serviceSettings.DirectShare{})
 		assert.ErrorIs(t, err, removeErr)
 	})
@@ -451,7 +451,7 @@ func TestService_Update(t *testing.T) {
 func TestService_Delete(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
 		clientErr := errors.New("client creation failed")
-		svc := ServiceWithClientGetter(failingClientGetter(clientErr), &rest.Credentials{})
+		svc := ServiceWithClientGetter(failingClientGetter(clientErr), &config.ProviderConfiguration{})
 		err := svc.Delete(t.Context(), "id-1")
 		assert.ErrorIs(t, err, clientErr)
 	})
@@ -463,7 +463,7 @@ func TestService_Delete(t *testing.T) {
 				return deleteErr
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Delete(t.Context(), "id-1")
 		assert.ErrorIs(t, err, deleteErr)
 	})
@@ -476,7 +476,7 @@ func TestService_Delete(t *testing.T) {
 				return nil
 			},
 		}
-		svc := ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Delete(t.Context(), "id-1")
 		require.NoError(t, err)
 		assert.Equal(t, "id-1", capturedID)

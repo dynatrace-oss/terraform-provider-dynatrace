@@ -19,14 +19,14 @@ package state
 
 import (
 	state "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/monitoring/state/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.4"
 const SchemaID = "builtin:process-group.monitoring.state"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*state.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*state.Settings] {
 	return settings20.Service[*state.Settings](credentials, SchemaID, SchemaVersion)
 }

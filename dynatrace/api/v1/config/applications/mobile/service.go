@@ -27,13 +27,14 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	mobile "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/applications/mobile/settings"
 )
 
 const SchemaID = "v1:config:applications:mobile"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*mobile.Application] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*mobile.Application] {
 	return settings.NewAPITokenService(
 		credentials,
 		SchemaID,

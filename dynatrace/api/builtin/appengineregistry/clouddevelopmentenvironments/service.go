@@ -19,14 +19,14 @@ package clouddevelopmentenvironments
 
 import (
 	clouddevelopmentenvironments "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appengineregistry/clouddevelopmentenvironments/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.1"
 const SchemaID = "builtin:app-engine-registry.cloud-development-environments"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*clouddevelopmentenvironments.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*clouddevelopmentenvironments.Settings] {
 	return settings20.Service[*clouddevelopmentenvironments.Settings](credentials, SchemaID, SchemaVersion)
 }

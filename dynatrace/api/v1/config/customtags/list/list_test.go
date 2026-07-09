@@ -28,6 +28,7 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
@@ -60,7 +61,7 @@ func (client *TestClient) Put(ctx context.Context, url string, payload any, expe
 func (client *TestClient) Delete(ctx context.Context, url string, expectedStatusCodes ...int) rest.Request {
 	panic("unsupported operation")
 }
-func (client *TestClient) Credentials() *rest.Credentials {
+func (client *TestClient) Credentials() *config.ProviderConfiguration {
 	panic("unsupported operation")
 }
 

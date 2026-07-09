@@ -19,14 +19,14 @@ package query
 
 import (
 	query "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/metric/query/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "4.0.3"
 const SchemaID = "builtin:metric.query"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*query.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*query.Settings] {
 	return settings20.Service[*query.Settings](credentials, SchemaID, SchemaVersion)
 }

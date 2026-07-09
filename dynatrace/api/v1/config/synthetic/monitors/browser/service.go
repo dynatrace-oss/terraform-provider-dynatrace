@@ -21,8 +21,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors"
 	browser "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/browser/settings"
@@ -30,7 +30,7 @@ import (
 
 const SchemaID = "v1:synthetic:monitors:browser"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*browser.SyntheticMonitor] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*browser.SyntheticMonitor] {
 	return settings.NewAPITokenService(credentials, SchemaID, &settings.ServiceOptions[*browser.SyntheticMonitor]{
 		Get:            settings.Path("/api/v1/synthetic/monitors/%s"),
 		List:           settings.Path("/api/v1/synthetic/monitors?type=BROWSER"),

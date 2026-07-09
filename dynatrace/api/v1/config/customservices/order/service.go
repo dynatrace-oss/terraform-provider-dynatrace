@@ -26,6 +26,7 @@ import (
 	order "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customservices/order/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "v1:config:custom-services:order"
@@ -33,8 +34,8 @@ const StaticID = "a67b38c9-1e0b-4c5f-8320-f1713df613d3"
 const StaticName = "custom_service_order"
 const BasePath = "/api/config/v1/service/customServices/%s"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*order.Settings] {
-	return &service{client: rest.APITokenClient(credentials)}
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*order.Settings] {
+	return &service{client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken)}
 }
 
 type service struct {

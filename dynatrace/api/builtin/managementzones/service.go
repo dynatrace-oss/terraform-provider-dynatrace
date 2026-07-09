@@ -26,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/managementzones/settings"
@@ -36,10 +37,10 @@ import (
 const SchemaID = "builtin:management-zones"
 const SchemaVersion = "1.0.13"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*managementzones.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*managementzones.Settings] {
 	return &service{
 		service:     settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*managementzones.Settings]{LegacyID: settings.LegacyLongDecode}),
-		client:      rest.HybridClient(credentials),
+		client:      rest.HybridClient(credentials.EnvironmentURL, credentials.APIToken, credentials.Platform),
 		credentials: credentials,
 	}
 }
@@ -47,7 +48,7 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*managementzone
 type service struct {
 	service     settings.ListIDCRUDService[*managementzones.Settings]
 	client      rest.Client
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
 func (me *service) Create(ctx context.Context, v *managementzones.Settings) (*api.Stub, error) {

@@ -29,7 +29,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations"
 	locsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 func TestSyntheticLocations(t *testing.T) {
@@ -39,7 +39,7 @@ func TestSyntheticLocations(t *testing.T) {
 		t.Skip("Environment Variables DYNATRACE_ENV_URL and DYNATRACE_API_TOKEN must be specified")
 		return
 	}
-	credentials := &rest.Credentials{URL: envURL, Token: apiToken}
+	credentials := &config.ProviderConfiguration{EnvironmentURL: envURL, APIToken: apiToken}
 	service := locations.Service(credentials)
 	var stubs api.Stubs
 	var err error

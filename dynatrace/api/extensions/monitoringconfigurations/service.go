@@ -27,6 +27,7 @@ import (
 	serviceSettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
@@ -57,20 +58,20 @@ type ExtensionClient interface {
 }
 
 type service struct {
-	clientGetter func(ctx context.Context, credentials *rest.Credentials) (ExtensionClient, error)
-	credentials  *rest.Credentials
+	clientGetter func(ctx context.Context, credentials *config.ProviderConfiguration) (ExtensionClient, error)
+	credentials  *config.ProviderConfiguration
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*serviceSettings.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*serviceSettings.Settings] {
 	return &service{clientGetter: createCoreClient, credentials: credentials}
 }
 
-func ServiceWithClientGetter(clientGetter func(ctx context.Context, credentials *rest.Credentials) (ExtensionClient, error), credentials *rest.Credentials) settings.CRUDService[*serviceSettings.Settings] {
+func ServiceWithClientGetter(clientGetter func(ctx context.Context, credentials *config.ProviderConfiguration) (ExtensionClient, error), credentials *config.ProviderConfiguration) settings.CRUDService[*serviceSettings.Settings] {
 	return &service{clientGetter: clientGetter, credentials: credentials}
 }
 
-func createCoreClient(ctx context.Context, credentials *rest.Credentials) (ExtensionClient, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, credentials.Platform.EnvironmentURL, credentials)
+func createCoreClient(ctx context.Context, credentials *config.ProviderConfiguration) (ExtensionClient, error) {
+	platformClient, err := rest.CreatePlatformClient(ctx, credentials.Platform.EnvironmentURL, credentials.Platform)
 	if err != nil {
 		return nil, err
 	}

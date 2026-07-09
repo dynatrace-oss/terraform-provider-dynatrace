@@ -29,16 +29,17 @@ import (
 	extension_config "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/hub/extension/config/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*extension_config.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*extension_config.Settings] {
 	return &service{credentials}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
 func (me *service) Get(ctx context.Context, id string, v *extension_config.Settings) error {
@@ -48,7 +49,7 @@ func (me *service) Get(ctx context.Context, id string, v *extension_config.Setti
 	name, configurationID := splitID(id)
 
 	var response GetMonitoringConfigurationResponse
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 
 	urlPath := fmt.Sprintf(
 		"/api/v2/extensions/%s/monitoringConfigurations/%s",
@@ -95,7 +96,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
 
 	var extensionsList ExtensionsList
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 
 	nextPageKey := "first"
 	for len(nextPageKey) > 0 {
@@ -143,7 +144,7 @@ func (me *service) Create(ctx context.Context, v *extension_config.Settings) (*a
 	if err := me.ensureInstalled(ctx, name, version); err != nil {
 		return nil, err
 	}
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	createResponse := []CreateMonitoringConfigResponse{}
 	retry := 10
 	for retry > 0 {
@@ -166,7 +167,7 @@ func (me *service) Create(ctx context.Context, v *extension_config.Settings) (*a
 }
 
 func (me *service) ensureInstalled(ctx context.Context, name string, version string) error {
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	if strings.HasPrefix(name, "custom:") {
 		request := client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/%s", url.PathEscape(name), url.QueryEscape(version)), 200)
 		request.SetHeader("Accept", "application/json; charset=utf-8")
@@ -197,7 +198,7 @@ func (me *service) Update(ctx context.Context, id string, v *extension_config.Se
 	if err := me.ensureInstalled(ctx, name, version); err != nil {
 		return err
 	}
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	createResponse := CreateMonitoringConfigResponse{}
 	payload := MonitoringConfigCreateDto{Value: []byte(v.Value)}
 	if err := client.Put(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configID)), &payload, 200).Finish(&createResponse); err != nil {
@@ -211,7 +212,7 @@ func (me *service) Update(ctx context.Context, id string, v *extension_config.Se
 
 func (me *service) Delete(ctx context.Context, id string) error {
 	name, configID := splitID(id)
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	if err := client.Delete(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configID)), 200).Finish(nil); err != nil {
 		// Potential response when the configuration contains
 		//    import {

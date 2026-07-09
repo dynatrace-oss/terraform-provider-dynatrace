@@ -19,14 +19,14 @@ package advanced
 
 import (
 	advanced "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/advanced/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.2"
 const SchemaID = "builtin:host.monitoring.advanced"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*advanced.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*advanced.Settings] {
 	return settings20.Service[*advanced.Settings](credentials, SchemaID, SchemaVersion)
 }

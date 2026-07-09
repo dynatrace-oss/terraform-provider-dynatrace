@@ -19,14 +19,14 @@ package node
 
 import (
 	node "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/kubernetes/node/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.3.1"
 const SchemaID = "builtin:anomaly-detection.kubernetes.node"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*node.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*node.Settings] {
 	return settings20.Service[*node.Settings](credentials, SchemaID, SchemaVersion)
 }

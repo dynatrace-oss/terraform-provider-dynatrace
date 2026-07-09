@@ -19,14 +19,14 @@ package custom
 
 import (
 	custom "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/rum/custom/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:anomaly-detection.rum-custom"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*custom.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*custom.Settings] {
 	return settings20.Service[*custom.Settings](credentials, SchemaID, SchemaVersion)
 }

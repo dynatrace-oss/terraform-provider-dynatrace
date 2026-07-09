@@ -19,14 +19,14 @@ package nginx
 
 import (
 	nginx "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/nginx/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.2"
 const SchemaID = "builtin:monitored-technologies.nginx"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*nginx.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*nginx.Settings] {
 	return settings20.Service[*nginx.Settings](credentials, SchemaID, SchemaVersion)
 }

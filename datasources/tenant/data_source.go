@@ -39,24 +39,24 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(d *schema.ResourceData, m any) error {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	creds, err := config.Validate(m, config.CredValDefault)
 	if err != nil {
 		return err
 	}
-	if len(creds.URL) == 0 {
+	if len(creds.EnvironmentURL) == 0 {
 		d.SetId("")
 		return nil
 	}
 	var tenant string
-	if strings.Contains(creds.URL, "/e/") {
-		idx := strings.Index(creds.URL, "/e/")
-		tenant = strings.TrimSuffix(strings.TrimPrefix(creds.URL[idx:], "/e/"), "/")
-	} else if after, ok := strings.CutPrefix(creds.URL, "http://"); ok {
+	if strings.Contains(creds.EnvironmentURL, "/e/") {
+		idx := strings.Index(creds.EnvironmentURL, "/e/")
+		tenant = strings.TrimSuffix(strings.TrimPrefix(creds.EnvironmentURL[idx:], "/e/"), "/")
+	} else if after, ok := strings.CutPrefix(creds.EnvironmentURL, "http://"); ok {
 		tenant = after
 		if idx := strings.Index(tenant, "."); idx != -1 {
 			tenant = tenant[:idx]
 		}
-	} else if after, ok := strings.CutPrefix(creds.URL, "https://"); ok {
+	} else if after, ok := strings.CutPrefix(creds.EnvironmentURL, "https://"); ok {
 		tenant = after
 		if idx := strings.Index(tenant, "."); idx != -1 {
 			tenant = tenant[:idx]

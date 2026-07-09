@@ -27,17 +27,21 @@ import (
 	"github.com/google/uuid"
 )
 
-func HybridClient(credentials *Credentials) Client {
-	return &hybrid_client{credentials: credentials}
+func HybridClient(envURL, apiToken string, platform PlatformCredentials) Client {
+	return &hybrid_client{envURL: envURL, apiTokenValue: apiToken, platform: platform}
 }
 
 type hybrid_client struct {
-	credentials *Credentials
+	envURL        string
+	apiTokenValue string
+	platform      PlatformCredentials
 }
 
-func (me *hybrid_client) Credentials() *Credentials {
-	return me.credentials
-}
+func (me *hybrid_client) environmentURL() string { return me.envURL }
+
+func (me *hybrid_client) apiToken() string { return me.apiTokenValue }
+
+func (me *hybrid_client) platformCredentials() PlatformCredentials { return me.platform }
 
 func (me *hybrid_client) Get(ctx context.Context, url string, expectedStatusCodes ...int) Request {
 	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodGet}
@@ -79,35 +83,32 @@ func (me *hybrid_request) Finish(optionalTarget ...any) error {
 		}
 	}
 
-	credentials := me.client.Credentials()
+	client := me.client.(environmentClient)
 
-	if !credentials.ContainsAPIToken() && !credentials.ContainsOAuthOrPlatformToken() {
+	isAPITokenPossible := containsAPIToken(client.apiToken())
+	isOAuthPossible := containsOAuthOrPlatformToken(client.platformCredentials())
+
+	if !isAPITokenPossible && !isOAuthPossible {
 		if isOAuthPreferred {
 			return NoOAuthCredentialsError
 		}
 		return NoAPITokenError
 	}
 
-	isAPITokenPossible := credentials.ContainsAPIToken()
-	isOAuthPossible := credentials.ContainsOAuthOrPlatformToken()
-
 	if (isAPITokenPossible && !isOAuthPossible) || (isAPITokenPossible && !isOAuthPreferred) {
-		if !credentials.ContainsAPIToken() {
-			return NoAPITokenError
-		}
 		classicRequest := classic_request(*me)
-		if credentials.URL == TestCaseEnvURL {
+		if client.environmentURL() == TestCaseEnvURL {
 			return errors.New("classic")
 		}
 		return classicRequest.Finish(optionalTarget...)
 	}
 
-	if !credentials.ContainsOAuthOrPlatformToken() {
+	if !isOAuthPossible {
 		return NoOAuthCredentialsError
 	}
 
 	platformRequest := platform_request(*me)
-	if credentials.URL == TestCaseEnvURL {
+	if client.environmentURL() == TestCaseEnvURL {
 		return errors.New("platform")
 	}
 	return platformRequest.Finish(optionalTarget...)

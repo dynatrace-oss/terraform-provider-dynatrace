@@ -18,15 +18,15 @@
 package locations
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	locations "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/private/settings"
 )
 
 const SchemaID = "v1:synthetic:locations"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*locations.PrivateSyntheticLocation] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*locations.PrivateSyntheticLocation] {
 	return settings.NewAPITokenService(credentials, SchemaID, &settings.ServiceOptions[*locations.PrivateSyntheticLocation]{
 		Get:            settings.Path("/api/v1/synthetic/locations/%s"),
 		List:           settings.Path("/api/v1/synthetic/locations?type=PRIVATE"),

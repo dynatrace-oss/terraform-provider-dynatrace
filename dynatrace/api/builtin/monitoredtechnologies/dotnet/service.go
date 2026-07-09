@@ -19,14 +19,14 @@ package dotnet
 
 import (
 	dotnet "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoredtechnologies/dotnet/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.2"
 const SchemaID = "builtin:monitored-technologies.dotnet"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*dotnet.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*dotnet.Settings] {
 	return settings20.Service[*dotnet.Settings](credentials, SchemaID, SchemaVersion)
 }

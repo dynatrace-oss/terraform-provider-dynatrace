@@ -27,25 +27,25 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags/list"
 	customtags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags/settings"
 )
 
-
-func Service(credentials *rest.Credentials) settings.CRUDService[*customtags.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*customtags.Settings] {
 	return &service{credentials: credentials}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
 var entityIdSelectorRegexp = regexp.MustCompile("entityId\\((.*)\\)")
 
 func (me *service) Get(ctx context.Context, selector string, v *customtags.Settings) (err error) {
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	if err = client.Get(ctx, fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(selector)), 200).Finish(v); err != nil {
 		return err
 	}
@@ -71,7 +71,7 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return list.List(ctx, rest.APITokenClient(me.credentials))
+	return list.List(ctx, rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken))
 }
 
 func (me *service) Validate(ctx context.Context, v *customtags.Settings) error {
@@ -89,7 +89,7 @@ func (me *service) Update(ctx context.Context, id string, v *customtags.Settings
 	var err error
 
 	var settingsObj customtags.Settings
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	if err = client.Post(ctx, fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(v.EntitySelector)), v, 200).Finish(&settingsObj); err != nil {
 		return err
 	}
@@ -107,7 +107,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 }
 
 func (me *service) DeleteValue(ctx context.Context, v *customtags.Settings) error {
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	for _, tag := range v.Tags {
 		if tag.Value == nil || len(*tag.Value) == 0 {
 			if err := client.Delete(ctx, fmt.Sprintf("/api/v2/tags?key=%s&entitySelector=%s", url.QueryEscape(tag.Key), url.QueryEscape(v.EntitySelector)), 200).Finish(); err != nil {

@@ -27,14 +27,15 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	entities "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities/settings"
 )
 
 const SchemaID = "v2:environment:entities"
 
-func Service(entityType string, entityName string, entitySelector string, from string, to string, credentials *rest.Credentials) settings.RService[*entities.Settings] {
-	return &service{entityType: entityType, entityName: entityName, entitySelector: entitySelector, from: from, to: to, client: rest.APITokenClient(credentials)}
+func Service(entityType string, entityName string, entitySelector string, from string, to string, credentials *config.ProviderConfiguration) settings.RService[*entities.Settings] {
+	return &service{entityType: entityType, entityName: entityName, entitySelector: entitySelector, from: from, to: to, client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken)}
 }
 
 type service struct {

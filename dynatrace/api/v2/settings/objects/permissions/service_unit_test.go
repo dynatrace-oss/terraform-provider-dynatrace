@@ -28,6 +28,7 @@ import (
 	permissionService "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -159,7 +160,7 @@ func TestService(t *testing.T) {
 
 		t.Run("It errors during client creation", func(t *testing.T) {
 			service := permissionService.ServiceImpl{
-				Credentials: &rest.Credentials{},
+				Credentials: &config.ProviderConfiguration{},
 			}
 			err := service.Get(t.Context(), "objectID", &permissions.SettingPermissions{})
 			assert.ErrorIs(t, rest.NoPlatformCredentialsErr, err)
@@ -220,7 +221,7 @@ func TestService(t *testing.T) {
 
 		t.Run("Returns error if getSettingsClient fails", func(t *testing.T) {
 			service := permissionService.ServiceImpl{
-				Credentials: &rest.Credentials{},
+				Credentials: &config.ProviderConfiguration{},
 			}
 			stubs, err := service.List(t.Context())
 			assert.ErrorIs(t, err, rest.NoPlatformCredentialsErr)
@@ -306,7 +307,7 @@ func TestService(t *testing.T) {
 
 		t.Run("It errors during client creation", func(t *testing.T) {
 			service := permissionService.ServiceImpl{
-				Credentials: &rest.Credentials{},
+				Credentials: &config.ProviderConfiguration{},
 			}
 			_, err := service.Create(t.Context(), &permissions.SettingPermissions{})
 			assert.ErrorIs(t, rest.NoPlatformCredentialsErr, err)
@@ -316,7 +317,7 @@ func TestService(t *testing.T) {
 	t.Run("Update", func(t *testing.T) {
 		t.Run("It errors during client creation", func(t *testing.T) {
 			service := permissionService.ServiceImpl{
-				Credentials: &rest.Credentials{},
+				Credentials: &config.ProviderConfiguration{},
 			}
 			err := service.Update(t.Context(), "", &permissions.SettingPermissions{})
 			assert.ErrorIs(t, rest.NoPlatformCredentialsErr, err)

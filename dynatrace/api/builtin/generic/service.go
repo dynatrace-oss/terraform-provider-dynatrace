@@ -31,21 +31,22 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const settingsObjectEndpoint = "/api/v2/settings/objects"
 const settingsSchemaEndpoint = "/api/v2/settings/schemas"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*generic.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*generic.Settings] {
 	return &service{credentials: credentials}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
 func (me *service) Client() rest.Client {
-	return rest.HybridClient(me.credentials)
+	return rest.HybridClient(me.credentials.EnvironmentURL, me.credentials.APIToken, me.credentials.Platform)
 }
 
 func (me *service) Get(ctx context.Context, id string, v *generic.Settings) error {

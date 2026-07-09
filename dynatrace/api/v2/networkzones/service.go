@@ -28,6 +28,7 @@ import (
 	enablesettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/networkzones/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/google/uuid"
 
 	networkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/networkzones/settings"
@@ -35,12 +36,12 @@ import (
 
 const SchemaID = "v2:environment:network-zones"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*networkzones.NetworkZone] {
-	return &service{client: rest.APITokenClient(credentials), credentials: credentials}
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*networkzones.NetworkZone] {
+	return &service{client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken), credentials: credentials}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 	client      rest.Client
 }
 

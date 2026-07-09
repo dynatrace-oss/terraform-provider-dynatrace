@@ -73,7 +73,7 @@ func DataSourceSingleRead(ctx context.Context, d *schema.ResourceData, m any) di
 		global = LevelID("*")
 	}
 
-	creds, err := config.Credentials(m, config.CredValIAM)
+	creds, err := config.Validate(m, config.CredValIAM)
 	if err != nil {
 		return diag.FromErr(err)
 	}

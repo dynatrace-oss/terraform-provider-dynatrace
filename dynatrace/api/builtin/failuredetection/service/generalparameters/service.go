@@ -19,14 +19,14 @@ package generalparameters
 
 import (
 	generalparameters "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetection/service/generalparameters/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:failure-detection.service.general-parameters"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*generalparameters.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*generalparameters.Settings] {
 	return settings20.Service[*generalparameters.Settings](credentials, SchemaID, SchemaVersion)
 }

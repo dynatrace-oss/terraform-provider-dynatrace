@@ -31,10 +31,11 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
-func Service[T settings.Settings](credentials *rest.Credentials, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.ListIDCRUDService[T] {
+func Service[T settings.Settings](credentials *config.ProviderConfiguration, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.ListIDCRUDService[T] {
 	var opts *ServiceOptions[T]
 	if len(options) > 0 {
 		opts = options[0]
@@ -42,7 +43,7 @@ func Service[T settings.Settings](credentials *rest.Credentials, schemaID string
 	return &service[T]{
 		schemaID: schemaID,
 		// schemaVersion: schemaVersion,
-		client:  rest.HybridClient(credentials),
+		client:  rest.HybridClient(credentials.EnvironmentURL, credentials.APIToken, credentials.Platform),
 		options: opts,
 	}
 }

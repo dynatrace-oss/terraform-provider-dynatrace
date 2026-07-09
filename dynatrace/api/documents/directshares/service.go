@@ -29,13 +29,14 @@ import (
 	serviceSettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/directshares/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*serviceSettings.DirectShare] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*serviceSettings.DirectShare] {
 	return &service{clientGetter: createCoreClient, credentials: credentials}
 }
 
-func ServiceWithClientGetter(clientGetter func(ctx context.Context, credentials *rest.Credentials) (directSharesClient, error), credentials *rest.Credentials) settings.CRUDService[*serviceSettings.DirectShare] {
+func ServiceWithClientGetter(clientGetter func(ctx context.Context, credentials *config.ProviderConfiguration) (directSharesClient, error), credentials *config.ProviderConfiguration) settings.CRUDService[*serviceSettings.DirectShare] {
 	return &service{clientGetter: clientGetter, credentials: credentials}
 }
 
@@ -51,8 +52,8 @@ type directSharesClient interface {
 }
 
 type service struct {
-	clientGetter func(ctx context.Context, credentials *rest.Credentials) (directSharesClient, error)
-	credentials  *rest.Credentials
+	clientGetter func(ctx context.Context, credentials *config.ProviderConfiguration) (directSharesClient, error)
+	credentials  *config.ProviderConfiguration
 }
 
 type directShareDTO struct {
@@ -80,8 +81,8 @@ type removeDirectShareRecipientsDTO struct {
 	Ids []string `json:"ids"`
 }
 
-func createCoreClient(ctx context.Context, credentials *rest.Credentials) (directSharesClient, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, credentials.Platform.EnvironmentURL, credentials)
+func createCoreClient(ctx context.Context, credentials *config.ProviderConfiguration) (directSharesClient, error) {
+	platformClient, err := rest.CreatePlatformClient(ctx, credentials.Platform.EnvironmentURL, credentials.Platform)
 	if err != nil {
 		return nil, err
 	}

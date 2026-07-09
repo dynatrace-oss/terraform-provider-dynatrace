@@ -27,6 +27,7 @@ import (
 	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaID = "v2:environment:credentials"
@@ -34,7 +35,7 @@ const BasePath = "/api/v2/credentials"
 
 var mu sync.Mutex
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*vault.Credentials] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*vault.Credentials] {
 	return &service{
 		service: settings.NewAPITokenService(
 			credentials,

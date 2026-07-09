@@ -19,14 +19,14 @@ package disks
 
 import (
 	disks "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/anomalydetection/infrastructure/disks/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "3"
 const SchemaID = "builtin:anomaly-detection.infrastructure-disks"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*disks.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*disks.Settings] {
 	return settings20.Service[*disks.Settings](credentials, SchemaID, SchemaVersion)
 }

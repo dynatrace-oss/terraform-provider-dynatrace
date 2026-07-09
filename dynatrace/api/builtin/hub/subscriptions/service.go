@@ -19,14 +19,14 @@ package subscriptions
 
 import (
 	subscriptions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hub/subscriptions/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:hub-channel.subscriptions"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*subscriptions.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*subscriptions.Settings] {
 	return settings20.Service[*subscriptions.Settings](credentials, SchemaID, SchemaVersion)
 }

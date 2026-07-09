@@ -34,18 +34,19 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/google/uuid"
 )
 
 const SchemaVersion = "6.0.14"
 const SchemaID = "builtin:monitoring.slo"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*slo.Settings] {
-	return &service{credentials: credentials, client: rest.HybridClient(credentials)}
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*slo.Settings] {
+	return &service{credentials: credentials, client: rest.HybridClient(credentials.EnvironmentURL, credentials.APIToken, credentials.Platform)}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 	client      rest.Client
 }
 
@@ -175,7 +176,7 @@ func (me *service) get(ctx context.Context, id string, v *slo.Settings) error {
 
 	slo := new(sloGet)
 
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.credentials.EnvironmentURL, me.credentials.APIToken)
 	req := client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(legacyId)), 200)
 	if err := req.Finish(slo); err != nil {
 		return err

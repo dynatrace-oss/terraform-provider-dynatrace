@@ -19,14 +19,14 @@ package preferences
 
 import (
 	preferences "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/preferences/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.5"
 const SchemaID = "builtin:attributes-preferences"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*preferences.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*preferences.Settings] {
 	return settings20.Service[*preferences.Settings](credentials, SchemaID, SchemaVersion)
 }

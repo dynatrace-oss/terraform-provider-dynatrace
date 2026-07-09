@@ -31,14 +31,15 @@ import (
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 type PermissionServiceClient struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*permissions.Permission] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*permissions.Permission] {
 	return &PermissionServiceClient{credentials: credentials}
 }
 

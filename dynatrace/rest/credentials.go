@@ -27,35 +27,23 @@ type PlatformCredentials struct {
 	PlatformToken  string
 }
 
-type Credentials struct {
-	URL   string
-	Token string
-	IAM   struct {
-		ClientID     string
-		AccountID    string
-		ClientSecret string
-		TokenURL     string
-		EndpointURL  string
-	}
-	Platform PlatformCredentials
-	Cluster  struct {
-		URL   string
-		Token string
-	}
+// containsOAuth reports whether the given platform credentials carry an OAuth client ID/secret pair.
+func containsOAuth(platform PlatformCredentials) bool {
+	return len(platform.ClientID) > 0 && len(platform.ClientSecret) > 0
 }
 
-func (c *Credentials) ContainsOAuth() bool {
-	return len(c.Platform.ClientID) > 0 && len(c.Platform.ClientSecret) > 0
+// containsPlatformToken reports whether the given platform credentials carry a platform token.
+func containsPlatformToken(platform PlatformCredentials) bool {
+	return len(platform.PlatformToken) > 0
 }
 
-func (c *Credentials) ContainsPlatformToken() bool {
-	return len(c.Platform.PlatformToken) > 0
+// containsAPIToken reports whether an API token has been provided.
+func containsAPIToken(apiToken string) bool {
+	return len(apiToken) > 0
 }
 
-func (c *Credentials) ContainsAPIToken() bool {
-	return len(c.Token) > 0
-}
-
-func (c *Credentials) ContainsOAuthOrPlatformToken() bool {
-	return c.ContainsOAuth() || c.ContainsPlatformToken()
+// containsOAuthOrPlatformToken reports whether the given platform credentials carry either OAuth
+// credentials or a platform token.
+func containsOAuthOrPlatformToken(platform PlatformCredentials) bool {
+	return containsOAuth(platform) || containsPlatformToken(platform)
 }

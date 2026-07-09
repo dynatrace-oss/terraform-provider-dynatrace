@@ -28,21 +28,21 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	policies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	api2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 type PolicyServiceClient struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*policies.Policy] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*policies.Policy] {
 	return &PolicyServiceClient{credentials: credentials}
 }
 
-func ServiceWithGloabals(credentials *rest.Credentials) *PolicyServiceClient {
+func ServiceWithGloabals(credentials *config.ProviderConfiguration) *PolicyServiceClient {
 	return &PolicyServiceClient{credentials: credentials}
 }
 
@@ -170,7 +170,7 @@ type ListPoliciesResponse struct {
 	Policies []PolicyStub `json:"policies"`
 }
 
-func listForEnvironment(ctx context.Context, credentials *rest.Credentials, environmentID string) (results chan *api.Stub, err error) {
+func listForEnvironment(ctx context.Context, credentials *config.ProviderConfiguration, environmentID string) (results chan *api.Stub, err error) {
 	results = make(chan *api.Stub)
 	go func() {
 		defer close(results)
@@ -192,7 +192,7 @@ func listForEnvironment(ctx context.Context, credentials *rest.Credentials, envi
 	return results, nil
 }
 
-func listForEnvironments(ctx context.Context, credentials *rest.Credentials) (results chan *api.Stub, err error) {
+func listForEnvironments(ctx context.Context, credentials *config.ProviderConfiguration) (results chan *api.Stub, err error) {
 	results = make(chan *api.Stub)
 	environmentIDs, err := GetEnvironmentIDs(ctx, credentials)
 	if err != nil {
@@ -223,7 +223,7 @@ func listForEnvironments(ctx context.Context, credentials *rest.Credentials) (re
 	return results, nil
 }
 
-func listForAccount(ctx context.Context, credentials *rest.Credentials) (results chan *api.Stub, err error) {
+func listForAccount(ctx context.Context, credentials *config.ProviderConfiguration) (results chan *api.Stub, err error) {
 	client := iam.NewIAMClient(ctx, credentials)
 
 	results = make(chan *api.Stub)
@@ -247,7 +247,7 @@ func listForAccount(ctx context.Context, credentials *rest.Credentials) (results
 	return results, nil
 }
 
-func list(ctx context.Context, credentials *rest.Credentials) (results chan *api.Stub, err error) {
+func list(ctx context.Context, credentials *config.ProviderConfiguration) (results chan *api.Stub, err error) {
 	results = make(chan *api.Stub)
 
 	var envChan chan *api.Stub

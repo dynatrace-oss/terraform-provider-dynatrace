@@ -25,6 +25,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	processgroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/processgroups/settings"
 	entities "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities"
@@ -34,12 +35,12 @@ import (
 const SchemaID = "v1:config:anomaly-detection:process-groups"
 const BasePath = "/api/config/v1/anomalyDetection/processGroups"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*processgroups.AnomalyDetection] {
-	return &service{client: rest.APITokenClient(credentials), credentials: credentials}
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*processgroups.AnomalyDetection] {
+	return &service{client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken), credentials: credentials}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 	client      rest.Client
 }
 

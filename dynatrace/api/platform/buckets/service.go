@@ -29,22 +29,23 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	bucket "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/buckets"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*buckets.Bucket] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*buckets.Bucket] {
 	return &service{credentials}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	credentials *config.ProviderConfiguration
 }
 
 func (me *service) client(ctx context.Context) (*bucket.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials)
+	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials.Platform)
 	if err != nil {
 		return nil, err
 	}

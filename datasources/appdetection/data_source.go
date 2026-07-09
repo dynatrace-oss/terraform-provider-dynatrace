@@ -67,7 +67,7 @@ func DataSource() *schema.Resource {
 
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	d.SetId("dynatrace_application_detection_rules")
-	creds, err := config.Credentials(m, config.CredValDefault)
+	creds, err := config.Validate(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}

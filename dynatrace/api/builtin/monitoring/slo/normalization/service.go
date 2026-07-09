@@ -19,14 +19,14 @@ package normalization
 
 import (
 	normalization "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo/normalization/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.6.1"
 const SchemaID = "builtin:monitoring.slo.normalization"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*normalization.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*normalization.Settings] {
 	return settings20.Service[*normalization.Settings](credentials, SchemaID, SchemaVersion)
 }

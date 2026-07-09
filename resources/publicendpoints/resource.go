@@ -45,7 +45,7 @@ func Resource() *schema.Resource {
 }
 
 func NewService(m any) (*publicendpoints.ServiceClient, error) {
-	creds, err := config.Credentials(m, config.CredValCluster)
+	creds, err := config.Validate(m, config.CredValCluster)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func NewService(m any) (*publicendpoints.ServiceClient, error) {
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.Validate(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -88,7 +88,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.Validate(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -119,7 +119,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.Validate(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}

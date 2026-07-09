@@ -19,14 +19,14 @@ package rulesettings
 
 import (
 	rulesettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/rulesettings/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "1.0.8"
 const SchemaID = "builtin:appsec.rule-settings"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*rulesettings.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*rulesettings.Settings] {
 	return settings20.Service[*rulesettings.Settings](credentials, SchemaID, SchemaVersion)
 }

@@ -19,14 +19,14 @@ package detectionflags
 
 import (
 	detectionflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/processgroup/detectionflags/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 const SchemaVersion = "0.0.15"
 const SchemaID = "builtin:process-group.detection-flags"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*detectionflags.Settings] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*detectionflags.Settings] {
 	return settings20.Service[*detectionflags.Settings](credentials, SchemaID, SchemaVersion)
 }

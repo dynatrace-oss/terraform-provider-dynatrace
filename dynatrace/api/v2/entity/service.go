@@ -27,6 +27,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	entity "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entity/settings"
@@ -34,8 +35,8 @@ import (
 
 const SchemaID = "v2:environment:entity"
 
-func Service(credentials *rest.Credentials) settings.RService[*entity.Entity] {
-	return &service{client: rest.APITokenClient(credentials)}
+func Service(credentials *config.ProviderConfiguration) settings.RService[*entity.Entity] {
+	return &service{client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken)}
 }
 
 type service struct {
@@ -54,8 +55,8 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
 }
 
-func DataSourceService(credentials *rest.Credentials) settings.RService[*entity.Entity] {
-	return &dataSourceService{client: rest.APITokenClient(credentials)}
+func DataSourceService(credentials *config.ProviderConfiguration) settings.RService[*entity.Entity] {
+	return &dataSourceService{client: rest.APITokenClient(credentials.EnvironmentURL, credentials.APIToken)}
 }
 
 type dataSourceService struct {

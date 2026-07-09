@@ -18,9 +18,9 @@
 package queuemanagers
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 
 	queuemanagers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ibmmq/queuemanagers/settings"
 )
@@ -28,6 +28,6 @@ import (
 const SchemaID = "builtin:ibmmq.queue-managers"
 const SchemaVersion = "1"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*queuemanagers.QueueManager] {
+func Service(credentials *config.ProviderConfiguration) settings.CRUDService[*queuemanagers.QueueManager] {
 	return settings20.Service[*queuemanagers.QueueManager](credentials, SchemaID, SchemaVersion)
 }
