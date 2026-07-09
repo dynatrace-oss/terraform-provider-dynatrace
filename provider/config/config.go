@@ -38,6 +38,24 @@ type IAM struct {
 	EndpointURL  string
 }
 
+// ProviderConfiguration contains the initialized API clients to communicate with the Dynatrace API
+type ProviderConfiguration struct {
+	EnvironmentURL  string
+	ClusterAPIV2URL string
+	ClusterAPIToken string
+	APIToken        string
+	IAM             IAM
+	Platform        rest.PlatformCredentials
+}
+
+type Getter interface {
+	Get(key string) any
+}
+
+type ConfigGetter struct {
+	Provider *schema.Provider
+}
+
 const (
 	CredValDefault = iota
 	CredValIAM
@@ -47,6 +65,50 @@ const (
 	CredValExport
 	CredValExportIAM
 )
+
+const (
+	ProdTokenURL   = "https://sso.dynatrace.com/sso/oauth2/token"
+	SprintTokenURL = "https://sso-sprint.dynatracelabs.com/sso/oauth2/token"
+	DevTokenURL    = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
+
+	ProdIAMEndpointURL   = "https://api.dynatrace.com"
+	SprintIAMEndpointURL = "https://api-hardening.internal.dynatracelabs.com"
+	DevIAMEndpointURL    = "https://api-dev.internal.dynatracelabs.com"
+)
+
+var regexpSaasTenant = regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
+
+var regexpSprintTenant = regexp.MustCompile(`https:\/\/(.*).sprint(?:\.apps)?.dynatracelabs.com`)
+
+var regexpDevTenant = regexp.MustCompile(`https:\/\/(.*).dev(?:\.apps)?.dynatracelabs.com`)
+
+func ProviderConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
+	return ProviderConfigureGeneric(ctx, d)
+}
+
+func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnostics) {
+	pc := &ProviderConfiguration{
+		EnvironmentURL:  getClassicEnvironmentURL(d),
+		APIToken:        getString(d, "dt_api_token"),
+		ClusterAPIToken: getString(d, "dt_cluster_api_token"),
+		ClusterAPIV2URL: cleanURL(getString(d, "dt_cluster_url")),
+		IAM: IAM{
+			ClientID:     getIAMClientID(d),
+			AccountID:    getAccountID(d),
+			ClientSecret: getIAMClientSecret(d),
+			TokenURL:     getIAMTokenURL(d),
+			EndpointURL:  getIAMEndpointURL(d),
+		},
+		Platform: rest.PlatformCredentials{
+			PlatformToken:  getString(d, "platform_token"),
+			ClientID:       getPlatformClientID(d),
+			ClientSecret:   getPlatformClientSecret(d),
+			TokenURL:       getPlatformTokenURL(d),
+			EnvironmentURL: getPlatformEnvironmentURL(d),
+		},
+	}
+	return pc, diag.Diagnostics{}
+}
 
 func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) error {
 	switch CredentialValidation {
@@ -132,144 +194,179 @@ func Credentials(m any, CredentialValidation int) (*rest.Credentials, error) {
 	}, nil
 }
 
-// ProviderConfiguration contains the initialized API clients to communicate with the Dynatrace API
-type ProviderConfiguration struct {
-	EnvironmentURL  string
-	ClusterAPIV2URL string
-	ClusterAPIToken string
-	APIToken        string
-	IAM             IAM
-	Platform        rest.PlatformCredentials
+func getClassicEnvironmentURL(d Getter) string {
+	return ensureClassicEnvironmentURL(cleanURL(getString(d, "dt_env_url")))
 }
 
-type Getter interface {
-	Get(key string) any
+func getPlatformEnvironmentURL(d Getter) string {
+	if platformEnvironmentURL := cleanURL(getString(d, "automation_env_url")); platformEnvironmentURL != "" {
+		return platformEnvironmentURL
+	}
+	return ensurePlatformEnvironmentURL(getClassicEnvironmentURL(d))
 }
 
-func ProviderConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
-	return ProviderConfigureGeneric(ctx, d)
+func getIAMEndpointURL(d Getter) string {
+	if iamEndpointURL := cleanURL(getString(d, "iam_endpoint_url")); iamEndpointURL != "" {
+		return iamEndpointURL
+	}
+	return getIAMEndpointURLForEnvironment(getClassicEnvironmentURL(d))
 }
 
-var regexpSaasTenant = regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
-var regexpSprintTenant = regexp.MustCompile(`https:\/\/(.*).sprint(?:\.apps)?.dynatracelabs.com`)
-var regexpDevTenant = regexp.MustCompile(`https:\/\/(.*).dev(?:\.apps)?.dynatracelabs.com`)
-
-func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnostics) {
-
-	dtEnvURL := d.Get("dt_env_url").(string)
-	apiToken := d.Get("dt_api_token").(string)
-	clusterAPIToken := getString(d, "dt_cluster_api_token")
-	clusterURL := getString(d, "dt_cluster_url")
-
-	dtEnvURL = strings.TrimSuffix(strings.TrimSuffix(dtEnvURL, " "), "/")
-	if len(dtEnvURL) != 0 {
-		if match := regexpSaasTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			dtEnvURL = fmt.Sprintf("https://%s.live.dynatrace.com", match[1])
-		}
-		if match := regexpSprintTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			dtEnvURL = fmt.Sprintf("https://%s.sprint.dynatracelabs.com", match[1])
-		}
-		if match := regexpDevTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			dtEnvURL = fmt.Sprintf("https://%s.dev.dynatracelabs.com", match[1])
-		}
+func getIAMTokenURL(d Getter) string {
+	if iamTokenURL := cleanURL(getString(d, "iam_token_url")); iamTokenURL != "" {
+		return iamTokenURL
 	}
 
-	clusterURL = strings.TrimSuffix(strings.TrimSuffix(clusterURL, " "), "/")
+	if tokenURL := cleanURL(getString(d, "token_url")); tokenURL != "" {
+		return tokenURL
+	}
+	return getPlatformTokenURL(d)
+}
 
-	platformEnvironmentURL := getString(d, "automation_env_url")
-	platformTokenURL := getString(d, "automation_token_url")
-	if len(platformEnvironmentURL) == 0 {
-		if match := regexpSaasTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			platformEnvironmentURL = fmt.Sprintf("https://%s.apps.dynatrace.com", match[1])
-			platformTokenURL = rest.ProdTokenURL
-		}
-		if match := regexpSprintTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			platformEnvironmentURL = fmt.Sprintf("https://%s.sprint.apps.dynatracelabs.com", match[1])
-			platformTokenURL = rest.SprintTokenURL
-		}
-		if match := regexpDevTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-			platformEnvironmentURL = fmt.Sprintf("https://%s.dev.apps.dynatracelabs.com", match[1])
-			platformTokenURL = rest.DevTokenURL
-		}
+func getIAMClientID(d Getter) string {
+	iamClientID := getString(d, "iam_client_id")
+	if iamClientID == "" {
+		iamClientID = getString(d, "client_id")
+	}
+	if iamClientID == "" {
+		iamClientID = getString(d, "automation_client_id")
+	}
+	return iamClientID
+}
+
+func getIAMClientSecret(d Getter) string {
+	iamClientSecret := getString(d, "iam_client_secret")
+	if iamClientSecret == "" {
+		iamClientSecret = getString(d, "client_secret")
+	}
+	if iamClientSecret == "" {
+		iamClientSecret = getString(d, "automation_client_secret")
+	}
+	return iamClientSecret
+}
+
+func getAccountID(d Getter) string {
+	iamAccountID := getString(d, "iam_account_id")
+	if iamAccountID == "" {
+		iamAccountID = getString(d, "account_id")
 	}
 
-	client_id := getString(d, "client_id")
-	client_secret := getString(d, "client_secret")
-	account_id := getString(d, "account_id")
-	token_url := getString(d, "token_url")
-	platform_token := getString(d, "platform_token")
+	return strings.TrimPrefix(iamAccountID, "urn:dtaccount:")
+}
 
-	oauth_endpoint_url := "https://api.dynatrace.com"
-	if strings.Contains(dtEnvURL, ".live.dynatrace.com") || strings.Contains(dtEnvURL, ".apps.dynatrace.com") {
-		oauth_endpoint_url = rest.ProdIAMEndpointURL
-	} else if strings.Contains(dtEnvURL, ".sprint.dynatracelabs.com") || strings.Contains(dtEnvURL, ".sprint.apps.dynatracelabs.com") {
-		oauth_endpoint_url = rest.SprintIAMEndpointURL
-	} else if strings.Contains(dtEnvURL, ".dev.dynatracelabs.com") || strings.Contains(dtEnvURL, ".dev.apps.dynatracelabs.com") {
-		oauth_endpoint_url = rest.DevIAMEndpointURL
-	}
-
-	iam_client_id := getString(d, "iam_client_id")
-	iam_account_id := getString(d, "iam_account_id")
-	iam_client_secret := getString(d, "iam_client_secret")
-	iam_token_url := strings.TrimSuffix(strings.TrimSpace(getString(d, "iam_token_url")), "/")
-	iam_endpoint_url := strings.TrimSuffix(strings.TrimSpace(getString(d, "iam_endpoint_url")), "/")
-
+func getPlatformClientID(d Getter) string {
 	platformClientID := getString(d, "automation_client_id")
-	if len(platformClientID) == 0 {
-		platformClientID = client_id
+	if platformClientID == "" {
+		platformClientID = getString(d, "client_id")
 	}
-	platformClientSecret := getString(d, "automation_client_secret")
-	if len(platformClientSecret) == 0 {
-		platformClientSecret = client_secret
+	if platformClientID == "" {
+		platformClientID = getString(d, "iam_client_id")
 	}
-
-	platformClientID = streamlineOAuthCreds(platformClientID, client_id, iam_client_id)
-	platformClientSecret = streamlineOAuthCreds(platformClientSecret, client_secret, iam_client_secret)
-	platformTokenURL = streamlineOAuthCreds(platformTokenURL, token_url, iam_token_url, rest.ProdTokenURL)
-
-	iam_client_id = streamlineOAuthCreds(iam_client_id, client_id, platformClientID)
-	iam_client_secret = streamlineOAuthCreds(iam_client_secret, client_secret, platformClientSecret)
-	iam_token_url = streamlineOAuthCreds(iam_token_url, token_url, platformTokenURL, rest.ProdTokenURL)
-	iam_account_id = streamlineOAuthCreds(iam_account_id, account_id)
-	iam_endpoint_url = streamlineOAuthCreds(iam_endpoint_url, oauth_endpoint_url, rest.ProdIAMEndpointURL)
-
-	iam_account_id = strings.TrimPrefix(iam_account_id, "urn:dtaccount:")
-
-	var diags diag.Diagnostics
-
-	pc := &ProviderConfiguration{
-		EnvironmentURL:  dtEnvURL,
-		APIToken:        apiToken,
-		ClusterAPIToken: clusterAPIToken,
-		ClusterAPIV2URL: clusterURL,
-		IAM: IAM{
-			ClientID:     iam_client_id,
-			AccountID:    iam_account_id,
-			ClientSecret: iam_client_secret,
-			TokenURL:     iam_token_url,
-			EndpointURL:  iam_endpoint_url,
-		},
-		Platform: rest.PlatformCredentials{
-			PlatformToken:  platform_token,
-			ClientID:       platformClientID,
-			ClientSecret:   platformClientSecret,
-			TokenURL:       platformTokenURL,
-			EnvironmentURL: platformEnvironmentURL,
-		},
-	}
-	return pc, diags
+	return platformClientID
 }
 
-func streamlineOAuthCreds(values ...string) string {
-	if len(values) == 0 {
+func getPlatformClientSecret(d Getter) string {
+	platformClientSecret := getString(d, "automation_client_secret")
+	if platformClientSecret == "" {
+		platformClientSecret = getString(d, "client_secret")
+	}
+	if platformClientSecret == "" {
+		platformClientSecret = getString(d, "iam_client_secret")
+	}
+	return platformClientSecret
+}
+
+func getPlatformTokenURL(d Getter) string {
+	if platformTokenURL := getString(d, "automation_token_url"); platformTokenURL != "" {
+		return platformTokenURL
+	}
+	return getTokenURLForEnvironment(getClassicEnvironmentURL(d))
+}
+
+func ensureClassicEnvironmentURL(dtEnvURL string) string {
+	dtEnvURL = strings.TrimSuffix(strings.TrimSuffix(dtEnvURL, " "), "/")
+	if dtEnvURL == "" {
 		return ""
 	}
-	for _, value := range values {
-		if len(value) != 0 {
-			return value
-		}
+
+	if envID, ok := extractSaasEnvironmentID(dtEnvURL); ok {
+		return fmt.Sprintf("https://%s.live.dynatrace.com", envID)
 	}
-	return ""
+
+	if envID, ok := extractSprintEnvironmentID(dtEnvURL); ok {
+		return fmt.Sprintf("https://%s.sprint.dynatracelabs.com", envID)
+	}
+
+	if envID, ok := extractDevEnvironmentID(dtEnvURL); ok {
+		return fmt.Sprintf("https://%s.dev.dynatracelabs.com", envID)
+	}
+
+	return dtEnvURL
+}
+
+func ensurePlatformEnvironmentURL(dtEnvURL string) string {
+	if envID, ok := extractSaasEnvironmentID(dtEnvURL); ok {
+		return fmt.Sprintf("https://%s.apps.dynatrace.com", envID)
+	}
+	if envID, ok := extractSprintEnvironmentID(dtEnvURL); ok {
+		return fmt.Sprintf("https://%s.sprint.apps.dynatracelabs.com", envID)
+	}
+	if envID, ok := extractDevEnvironmentID(dtEnvURL); ok {
+		return fmt.Sprintf("https://%s.dev.apps.dynatracelabs.com", envID)
+	}
+
+	return dtEnvURL
+}
+
+func getTokenURLForEnvironment(dtEnvURL string) string {
+	if _, ok := extractSaasEnvironmentID(dtEnvURL); ok {
+		return ProdTokenURL
+	}
+	if _, ok := extractSprintEnvironmentID(dtEnvURL); ok {
+		return SprintTokenURL
+	}
+	if _, ok := extractDevEnvironmentID(dtEnvURL); ok {
+		return DevTokenURL
+	}
+	return ProdTokenURL
+}
+
+func getIAMEndpointURLForEnvironment(dtEnvURL string) string {
+	if _, ok := extractSaasEnvironmentID(dtEnvURL); ok {
+		return ProdIAMEndpointURL
+	}
+	if _, ok := extractSprintEnvironmentID(dtEnvURL); ok {
+		return SprintIAMEndpointURL
+	}
+	if _, ok := extractDevEnvironmentID(dtEnvURL); ok {
+		return DevIAMEndpointURL
+	}
+	return ProdIAMEndpointURL
+}
+
+func extractSaasEnvironmentID(envURL string) (string, bool) {
+	if match := regexpSaasTenant.FindStringSubmatch(envURL); len(match) > 0 {
+		return match[1], true
+	}
+	return "", false
+}
+
+func extractSprintEnvironmentID(envURL string) (string, bool) {
+	if match := regexpSprintTenant.FindStringSubmatch(envURL); len(match) > 0 {
+		return match[1], true
+	}
+	return "", false
+}
+
+func extractDevEnvironmentID(envURL string) (string, bool) {
+	if match := regexpDevTenant.FindStringSubmatch(envURL); len(match) > 0 {
+		return match[1], true
+	}
+	return "", false
+}
+
+func cleanURL(url string) string {
+	return strings.TrimSuffix(strings.TrimSpace(url), "/")
 }
 
 func getString(d Getter, key string) string {
@@ -277,10 +374,6 @@ func getString(d Getter, key string) string {
 		return value.(string)
 	}
 	return ""
-}
-
-type ConfigGetter struct {
-	Provider *schema.Provider
 }
 
 func (me ConfigGetter) Get(key string) any {

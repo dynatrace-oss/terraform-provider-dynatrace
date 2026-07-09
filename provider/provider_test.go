@@ -108,18 +108,18 @@ func TestSSOTokenURL(t *testing.T) {
 	} {
 		t.Run(envURL, func(t *testing.T) {
 			t.Setenv("DYNATRACE_ENV_URL", envURL)
-	
+
 			credentials := createCredentials(&config.ConfigGetter{Provider: provider})
 			if credentials == nil {
 				return
 			}
-			if !assert.Equal(rest.ProdTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
+			if !assert.Equal(config.ProdTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
 				return
 			}
-			if !assert.Equal(rest.ProdIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
+			if !assert.Equal(config.ProdIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
 				return
 			}
-			if !assert.Equal(rest.ProdTokenURL, credentials.Platform.TokenURL, "credentials.Automation.TokenURL") {
+			if !assert.Equal(config.ProdTokenURL, credentials.Platform.TokenURL, "credentials.Automation.TokenURL") {
 				return
 			}
 		})
@@ -142,13 +142,13 @@ func TestSSOTokenURL(t *testing.T) {
 			if credentials == nil {
 				return
 			}
-			if !assert.Equal(rest.SprintTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
+			if !assert.Equal(config.SprintTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
 				return
 			}
-			if !assert.Equal(rest.SprintIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
+			if !assert.Equal(config.SprintIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
 				return
 			}
-			if !assert.Equal(rest.SprintTokenURL, credentials.Platform.TokenURL, "credentials.Automation.TokenURL") {
+			if !assert.Equal(config.SprintTokenURL, credentials.Platform.TokenURL, "credentials.Automation.TokenURL") {
 				return
 			}
 		})
@@ -171,13 +171,13 @@ func TestSSOTokenURL(t *testing.T) {
 			if credentials == nil {
 				return
 			}
-			if !assert.Equal(rest.DevTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
+			if !assert.Equal(config.DevTokenURL, credentials.IAM.TokenURL, "credentials.IAM.TokenURL") {
 				return
 			}
-			if !assert.Equal(rest.DevIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
+			if !assert.Equal(config.DevIAMEndpointURL, credentials.IAM.EndpointURL, "credentials.IAM.EndpointURL") {
 				return
 			}
-			if !assert.Equal(rest.DevTokenURL, credentials.Platform.TokenURL, "credentials.Automation.TokenURL") {
+			if !assert.Equal(config.DevTokenURL, credentials.Platform.TokenURL, "credentials.Automation.TokenURL") {
 				return
 			}
 		})
