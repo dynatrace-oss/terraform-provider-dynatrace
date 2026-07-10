@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:failure-detection.service.general-parameters"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*generalparameters.Settings] {
-	return settings20.Service[*generalparameters.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*generalparameters.Settings] {
+	return settings20.Service[*generalparameters.Settings](clientSet, SchemaID, SchemaVersion)
 }

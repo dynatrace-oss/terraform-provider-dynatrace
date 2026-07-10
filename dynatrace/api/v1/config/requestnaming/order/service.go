@@ -29,8 +29,8 @@ import (
 
 const SchemaID = "v1:config:service:request-naming:order"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*order.Order] {
-	return &service{client: rest.APITokenClient(credentials)}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*order.Order] {
+	return &service{client: rest.APITokenClient(clientSet.Credentials())}
 }
 
 type service struct {

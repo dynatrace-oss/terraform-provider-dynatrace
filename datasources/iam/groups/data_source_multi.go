@@ -41,12 +41,12 @@ func DataSourceMulti() *schema.Resource {
 }
 
 func DataSourceMultiRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValIAM)
+	clientSet, err := config.ClientSet(m, config.CredValIAM)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	service := groups.Service(creds)
+	service := groups.Service(clientSet)
 	stubs, err := service.List(ctx)
 	if err != nil {
 		return diag.FromErr(err)

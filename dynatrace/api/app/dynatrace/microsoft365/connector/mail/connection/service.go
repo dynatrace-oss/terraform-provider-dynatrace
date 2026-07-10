@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.2"
 const SchemaID = "app:dynatrace.microsoft365.connector:mail.connection"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
-	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

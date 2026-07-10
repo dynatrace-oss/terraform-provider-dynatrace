@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.15"
 const SchemaID = "builtin:process-group.detection-flags"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*detectionflags.Settings] {
-	return settings20.Service[*detectionflags.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*detectionflags.Settings] {
+	return settings20.Service[*detectionflags.Settings](clientSet, SchemaID, SchemaVersion)
 }

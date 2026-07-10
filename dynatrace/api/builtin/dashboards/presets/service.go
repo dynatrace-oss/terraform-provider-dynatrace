@@ -39,8 +39,8 @@ const retryErr = "Invalid value in datasource"
 
 var mu sync.Mutex
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*presets.Settings] {
-	return &service{settings20.Service[*presets.Settings](credentials, SchemaID, SchemaVersion)}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*presets.Settings] {
+	return &service{settings20.Service[*presets.Settings](clientSet, SchemaID, SchemaVersion)}
 }
 
 type service struct {

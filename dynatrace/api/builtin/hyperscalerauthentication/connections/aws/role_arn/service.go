@@ -34,11 +34,11 @@ import (
 const SchemaID = "builtin:hyperscaler-authentication.connections.aws"
 const SchemaVersion = "0.0.24"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*role_arn.Settings] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*role_arn.Settings] {
 	return &service{
-		service: settings20.Service[*role_arn.Settings](credentials, SchemaID, SchemaVersion),
+		service: settings20.Service[*role_arn.Settings](clientSet, SchemaID, SchemaVersion),
 		// We don't reuse awsconnection.Service(credentials), as this one contains custom update logic
-		connService: settings20.Service[*awsconnection_settings.Settings](credentials, SchemaID, SchemaVersion),
+		connService: settings20.Service[*awsconnection_settings.Settings](clientSet, SchemaID, SchemaVersion),
 	}
 }
 

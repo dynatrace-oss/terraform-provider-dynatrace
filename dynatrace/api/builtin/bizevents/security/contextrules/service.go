@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.3"
 const SchemaID = "builtin:bizevents-security-context-rules"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*contextrules.Settings] {
-	return settings20.Service[*contextrules.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*contextrules.Settings] {
+	return settings20.Service[*contextrules.Settings](clientSet, SchemaID, SchemaVersion)
 }

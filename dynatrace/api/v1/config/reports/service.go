@@ -26,9 +26,9 @@ import (
 const SchemaID = "v1:config:reports"
 const BasePath = "/api/config/v1/reports"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*reports.Settings] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*reports.Settings] {
 	return settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*reports.Settings](BasePath).WithStubs(new(reports.ReportStubList)),
 	)

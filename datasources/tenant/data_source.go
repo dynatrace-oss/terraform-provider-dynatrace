@@ -39,24 +39,24 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(d *schema.ResourceData, m any) error {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return err
 	}
-	if len(creds.URL) == 0 {
+	if len(clientSet.Credentials().URL) == 0 {
 		d.SetId("")
 		return nil
 	}
 	var tenant string
-	if strings.Contains(creds.URL, "/e/") {
-		idx := strings.Index(creds.URL, "/e/")
-		tenant = strings.TrimSuffix(strings.TrimPrefix(creds.URL[idx:], "/e/"), "/")
-	} else if after, ok := strings.CutPrefix(creds.URL, "http://"); ok {
+	if strings.Contains(clientSet.Credentials().URL, "/e/") {
+		idx := strings.Index(clientSet.Credentials().URL, "/e/")
+		tenant = strings.TrimSuffix(strings.TrimPrefix(clientSet.Credentials().URL[idx:], "/e/"), "/")
+	} else if after, ok := strings.CutPrefix(clientSet.Credentials().URL, "http://"); ok {
 		tenant = after
 		if idx := strings.Index(tenant, "."); idx != -1 {
 			tenant = tenant[:idx]
 		}
-	} else if after, ok := strings.CutPrefix(creds.URL, "https://"); ok {
+	} else if after, ok := strings.CutPrefix(clientSet.Credentials().URL, "https://"); ok {
 		tenant = after
 		if idx := strings.Index(tenant, "."); idx != -1 {
 			tenant = tenant[:idx]

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.5"
 const SchemaID = "builtin:settings.mutedrequests"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*mutedrequests.Settings] {
-	return settings20.Service[*mutedrequests.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*mutedrequests.Settings] {
+	return settings20.Service[*mutedrequests.Settings](clientSet, SchemaID, SchemaVersion)
 }

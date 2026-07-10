@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.5"
 const SchemaID = "builtin:eec.local"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*local.Settings] {
-	return settings20.Service[*local.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*local.Settings] {
+	return settings20.Service[*local.Settings](clientSet, SchemaID, SchemaVersion)
 }

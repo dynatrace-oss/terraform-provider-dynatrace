@@ -35,10 +35,10 @@ import (
 
 const SchemaID = "v1:config:dashboards:sharing"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*sharing.DashboardSharing] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*sharing.DashboardSharing] {
 	return &service{
-		client:           rest.APITokenClient(credentials),
-		dashboardService: jsondashboards.Service(credentials),
+		client:           rest.APITokenClient(clientSet.Credentials()),
+		dashboardService: jsondashboards.Service(clientSet),
 	}
 }
 

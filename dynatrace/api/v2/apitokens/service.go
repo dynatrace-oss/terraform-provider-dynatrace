@@ -28,18 +28,18 @@ import (
 	apitokens "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/apitokens/settings"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*apitokens.APIToken] {
-	return &service{credentials}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*apitokens.APIToken] {
+	return &service{clientSet}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	clientSet rest.ClientSet
 }
 
 func (me *service) Get(ctx context.Context, id string, v *apitokens.APIToken) error {
 	var err error
 
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.clientSet.Credentials())
 	req := client.Get(ctx, fmt.Sprintf("/api/v2/apiTokens/%s", id)).Expect(200)
 	if err = req.Finish(v); err != nil {
 		return err
@@ -55,7 +55,7 @@ func (me *service) SchemaID() string {
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.clientSet.Credentials())
 	req := client.Get(ctx, "/api/v2/apiTokens?pageSize=10000&fields=%2Bscopes%2C%2BexpirationDate%2C%2BpersonalAccessToken&sort=-creationDate").Expect(200)
 	var tokenlist apitokens.TokenList
 	if err = req.Finish(&tokenlist); err != nil {
@@ -77,7 +77,7 @@ func (me *service) Create(ctx context.Context, v *apitokens.APIToken) (*api.Stub
 	var err error
 
 	resultToken := apitokens.APIToken{}
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.clientSet.Credentials())
 	if err = client.Post(ctx, "/api/v2/apiTokens", v, 201).Finish(&resultToken); err != nil {
 		return nil, err
 	}
@@ -96,11 +96,11 @@ func (me *service) Create(ctx context.Context, v *apitokens.APIToken) (*api.Stub
 }
 
 func (me *service) Update(ctx context.Context, id string, v *apitokens.APIToken) error {
-	return rest.APITokenClient(me.credentials).Put(ctx, fmt.Sprintf("/api/v2/apiTokens/%s", id), v, 204).Finish()
+	return rest.APITokenClient(me.clientSet.Credentials()).Put(ctx, fmt.Sprintf("/api/v2/apiTokens/%s", id), v, 204).Finish()
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return rest.APITokenClient(me.credentials).Delete(ctx, fmt.Sprintf("/api/v2/apiTokens/%s", id), 204).Finish()
+	return rest.APITokenClient(me.clientSet.Credentials()).Delete(ctx, fmt.Sprintf("/api/v2/apiTokens/%s", id), 204).Finish()
 }
 
 func (me *service) New() *apitokens.APIToken {

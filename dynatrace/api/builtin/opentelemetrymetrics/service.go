@@ -35,10 +35,10 @@ import (
 const SchemaVersion = "1.6.2"
 const SchemaID = "builtin:opentelemetry-metrics"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*opentelemetrymetrics.Settings] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*opentelemetrymetrics.Settings] {
 	return &service{
-		service: settings20.Service[*opentelemetrymetrics.Settings](credentials, SchemaID, SchemaVersion),
-		client:  rest.HybridClient(credentials),
+		service: settings20.Service[*opentelemetrymetrics.Settings](clientSet, SchemaID, SchemaVersion),
+		client:  rest.HybridClient(clientSet.Credentials()),
 	}
 }
 

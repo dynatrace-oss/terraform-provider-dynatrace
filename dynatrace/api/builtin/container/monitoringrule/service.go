@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.2"
 const SchemaID = "builtin:container.monitoring-rule"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*monitoringrule.Settings] {
-	return settings20.Service[*monitoringrule.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*monitoringrule.Settings] {
+	return settings20.Service[*monitoringrule.Settings](clientSet, SchemaID, SchemaVersion)
 }

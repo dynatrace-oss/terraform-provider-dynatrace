@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.5.2"
 const SchemaID = "builtin:devobs.sensitive.data.masking"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
-	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

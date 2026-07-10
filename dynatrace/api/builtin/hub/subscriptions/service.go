@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:hub-channel.subscriptions"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*subscriptions.Settings] {
-	return settings20.Service[*subscriptions.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*subscriptions.Settings] {
+	return settings20.Service[*subscriptions.Settings](clientSet, SchemaID, SchemaVersion)
 }

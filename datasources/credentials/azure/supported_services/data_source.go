@@ -59,11 +59,11 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 			theID = theID + ":" + el
 		}
 	}
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	srvc := services.NewSupportedServicesService(creds)
+	srvc := services.NewSupportedServicesService(clientSet)
 	all, err := srvc.List(ctx)
 	if err != nil {
 		return diag.FromErr(err)

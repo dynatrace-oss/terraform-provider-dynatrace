@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.1"
 const SchemaID = "builtin:activegate-token"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*activegatetoken.Settings] {
-	return settings20.Service[*activegatetoken.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*activegatetoken.Settings] {
+	return settings20.Service[*activegatetoken.Settings](clientSet, SchemaID, SchemaVersion)
 }

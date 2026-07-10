@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:geo-settings"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*geosettings.Settings] {
-	return settings20.Service[*geosettings.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*geosettings.Settings] {
+	return settings20.Service[*geosettings.Settings](clientSet, SchemaID, SchemaVersion)
 }

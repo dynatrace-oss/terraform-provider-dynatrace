@@ -34,13 +34,13 @@ const BasePath = "/api/config/v1/azure/credentials"
 
 var mu sync.Mutex
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*azure.AzureCredentials] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*azure.AzureCredentials] {
 	return &service{service: settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*azure.AzureCredentials](BasePath).
 			WithMutex(mu.Lock, mu.Unlock),
-	), client: rest.APITokenClient(credentials)}
+	), client: rest.APITokenClient(clientSet.Credentials())}
 }
 
 type service struct {

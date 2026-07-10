@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:anomaly-detection.rum-custom"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*custom.Settings] {
-	return settings20.Service[*custom.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*custom.Settings] {
+	return settings20.Service[*custom.Settings](clientSet, SchemaID, SchemaVersion)
 }

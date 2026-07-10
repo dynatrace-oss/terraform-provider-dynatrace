@@ -34,8 +34,8 @@ import (
 
 const SchemaID = "v2:environment:entity"
 
-func Service(credentials *rest.Credentials) settings.RService[*entity.Entity] {
-	return &service{client: rest.APITokenClient(credentials)}
+func Service(clientSet rest.ClientSet) settings.RService[*entity.Entity] {
+	return &service{client: rest.APITokenClient(clientSet.Credentials())}
 }
 
 type service struct {
@@ -54,8 +54,8 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	return api.Stubs{&api.Stub{ID: me.SchemaID(), Name: me.SchemaID()}}, nil
 }
 
-func DataSourceService(credentials *rest.Credentials) settings.RService[*entity.Entity] {
-	return &dataSourceService{client: rest.APITokenClient(credentials)}
+func DataSourceService(clientSet rest.ClientSet) settings.RService[*entity.Entity] {
+	return &dataSourceService{client: rest.APITokenClient(clientSet.Credentials())}
 }
 
 type dataSourceService struct {

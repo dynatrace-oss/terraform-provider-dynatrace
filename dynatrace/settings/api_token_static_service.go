@@ -31,10 +31,10 @@ type staticService[T Settings] struct {
 	stub     api.Stub
 }
 
-func APITokenStaticService[T Settings](credentials *rest.Credentials, schemaID string, url string, stub api.Stub) Service[T] {
+func APITokenStaticService[T Settings](clientSet rest.ClientSet, schemaID string, url string, stub api.Stub) Service[T] {
 	return &staticService[T]{
 		schemaID: schemaID,
-		client:   rest.APITokenClient(credentials),
+		client:   rest.APITokenClient(clientSet.Credentials()),
 		url:      url,
 		stub:     stub,
 	}

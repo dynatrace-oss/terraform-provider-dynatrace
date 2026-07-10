@@ -48,10 +48,10 @@ var ValidConnection = gcpconnection.Settings{
 	}),
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*gcpprincipalsettings.Settings] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*gcpprincipalsettings.Settings] {
 	return &service{
-		principalService:  settings20.Service[*gcpprincipalsettings.Settings](credentials, SchemaID, SchemaVersion),
-		connectionService: gcp.Service(credentials),
+		principalService:  settings20.Service[*gcpprincipalsettings.Settings](clientSet, SchemaID, SchemaVersion),
+		connectionService: gcp.Service(clientSet),
 	}
 }
 

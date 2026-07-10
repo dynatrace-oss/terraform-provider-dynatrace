@@ -35,11 +35,11 @@ import (
 )
 
 type PermissionServiceClient struct {
-	credentials *rest.Credentials
+	clientSet rest.ClientSet
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*permissions.Permission] {
-	return &PermissionServiceClient{credentials: credentials}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*permissions.Permission] {
+	return &PermissionServiceClient{clientSet: clientSet}
 }
 
 func (me *PermissionServiceClient) SchemaID() string {
@@ -51,7 +51,7 @@ func (me *PermissionServiceClient) Name() string {
 }
 
 func (me *PermissionServiceClient) Create(ctx context.Context, permission *permissions.Permission) (*api.Stub, error) {
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := iam.NewIAMClient(ctx, me.clientSet.Credentials())
 	scope := ""
 	scopeType := ""
 	if len(permission.Account) > 0 {
@@ -70,7 +70,7 @@ func (me *PermissionServiceClient) Create(ctx context.Context, permission *permi
 		ScopeType: scopeType,
 		Name:      permission.Name,
 	}}
-	if _, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.credentials.IAM.AccountID, permission.GroupID), payload, rest2.RequestOptions{}); err != nil {
+	if _, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.clientSet.Credentials().IAM.AccountID, permission.GroupID), payload, rest2.RequestOptions{}); err != nil {
 		return nil, err
 	}
 
@@ -82,14 +82,14 @@ type GetGroupPermissionsResponse struct {
 }
 
 func (me *PermissionServiceClient) Get(ctx context.Context, id string, v *permissions.Permission) error {
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := iam.NewIAMClient(ctx, me.clientSet.Credentials())
 
 	groupID, name, scope, scopeType, err := splitID(id)
 	if err != nil {
 		return err
 	}
 
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.credentials.IAM.AccountID, groupID), rest2.RequestOptions{})
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.clientSet.Credentials().IAM.AccountID, groupID), rest2.RequestOptions{})
 	if err != nil {
 		return err
 	}
@@ -125,7 +125,7 @@ func (me *PermissionServiceClient) Update(ctx context.Context, email string, per
 }
 
 func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	groupsService := groups.Service(me.credentials)
+	groupsService := groups.Service(me.clientSet)
 	groupStubs, err := groupsService.List(ctx)
 	if err != nil {
 		return nil, err
@@ -133,11 +133,11 @@ func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) 
 
 	var stubs api.Stubs
 
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := iam.NewIAMClient(ctx, me.clientSet.Credentials())
 	for _, groupStub := range groupStubs {
 		groupID := groupStub.ID
 
-		accountID := me.credentials.IAM.AccountID
+		accountID := me.clientSet.Credentials().IAM.AccountID
 
 		var groupPermissionsResponse GetGroupPermissionsResponse
 		response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", accountID, groupID), rest2.RequestOptions{})
@@ -170,7 +170,7 @@ func (me *PermissionServiceClient) Delete(ctx context.Context, id string) error 
 	queryParams.Set("permission-name", name)
 	queryParams.Set("scope-type", scopeType)
 
-	_, err = iam.NewIAMClient(ctx, me.credentials).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.credentials.IAM.AccountID, groupID), rest2.RequestOptions{QueryParams: queryParams})
+	_, err = iam.NewIAMClient(ctx, me.clientSet.Credentials()).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.clientSet.Credentials().IAM.AccountID, groupID), rest2.RequestOptions{QueryParams: queryParams})
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("Permission %s not found", id)) {
 		return nil
 	}

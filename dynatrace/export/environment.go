@@ -50,7 +50,7 @@ import (
 type Environment struct {
 	mu                    sync.Mutex
 	OutputFolder          string
-	Credentials           *rest.Credentials
+	ClientSet             rest.ClientSet
 	Modules               map[ResourceType]*Module
 	Flags                 Flags
 	ResArgs               map[string][]string
@@ -65,15 +65,15 @@ type Environment struct {
 
 func (me *Environment) TenantID() string {
 	var tenant string
-	if strings.Contains(me.Credentials.URL, "/e/") {
-		idx := strings.Index(me.Credentials.URL, "/e/")
-		tenant = strings.TrimSuffix(strings.TrimPrefix(me.Credentials.URL[idx:], "/e/"), "/")
-	} else if after, ok := strings.CutPrefix(me.Credentials.URL, "http://"); ok {
+	if strings.Contains(me.ClientSet.Credentials().URL, "/e/") {
+		idx := strings.Index(me.ClientSet.Credentials().URL, "/e/")
+		tenant = strings.TrimSuffix(strings.TrimPrefix(me.ClientSet.Credentials().URL[idx:], "/e/"), "/")
+	} else if after, ok := strings.CutPrefix(me.ClientSet.Credentials().URL, "http://"); ok {
 		tenant = after
 		if idx := strings.Index(tenant, "."); idx != -1 {
 			tenant = tenant[:idx]
 		}
-	} else if after, ok := strings.CutPrefix(me.Credentials.URL, "https://"); ok {
+	} else if after, ok := strings.CutPrefix(me.ClientSet.Credentials().URL, "https://"); ok {
 		tenant = after
 		if idx := strings.Index(tenant, "."); idx != -1 {
 			tenant = tenant[:idx]
@@ -89,7 +89,7 @@ func (me *Environment) DataSource(id string, kind DataSourceKind, excepts ...Res
 	case DataSourceKindEntity:
 		return me.FetchEntity(id)
 	case DataSourceKindPolicy:
-		service := policies.Service(me.Credentials)
+		service := policies.Service(me.ClientSet)
 		var policy policysettings.Policy
 		if err := service.Get(context.Background(), id, &policy); err == nil {
 			terraformName := toTerraformName(policy.Name)
@@ -117,7 +117,7 @@ func (me *Environment) DataSource(id string, kind DataSourceKind, excepts ...Res
 }
 
 func (me *Environment) FetchEntity(id string) *DataSource {
-	service := entity.DataSourceService(me.Credentials)
+	service := entity.DataSourceService(me.ClientSet)
 	var entity entitysettings.Entity
 	if err := service.Get(context.Background(), id, &entity); err == nil {
 		return &DataSource{ID: *entity.EntityId, Name: *entity.DisplayName, Type: *entity.Type, Kind: DataSourceKindEntity}

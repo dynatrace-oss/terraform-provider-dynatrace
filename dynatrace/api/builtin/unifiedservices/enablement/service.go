@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.10"
 const SchemaID = "builtin:unified-services-enablement"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*enablement.Settings] {
-	return settings20.Service[*enablement.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*enablement.Settings] {
+	return settings20.Service[*enablement.Settings](clientSet, SchemaID, SchemaVersion)
 }

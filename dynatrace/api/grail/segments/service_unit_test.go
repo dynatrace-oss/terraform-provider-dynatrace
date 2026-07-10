@@ -26,13 +26,16 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestList(t *testing.T) {
 	t.Run("Returns an error if the client creation fails", func(t *testing.T) {
-		_, err := segments.Service(&rest.Credentials{}).List(t.Context())
+		_, err := segments.Service(&config.ProviderConfiguration{
+			Platform: rest.PlatformCredentials{},
+		}).List(t.Context())
 		assert.ErrorIs(t, err, rest.NoPlatformCredentialsErr)
 	})
 
@@ -51,7 +54,7 @@ func TestList(t *testing.T) {
 		}))
 		defer server.Close()
 
-		result, err := segments.Service(&rest.Credentials{
+		result, err := segments.Service(&config.ProviderConfiguration{
 			Platform: rest.PlatformCredentials{
 				EnvironmentURL: server.URL,
 				PlatformToken:  "token",

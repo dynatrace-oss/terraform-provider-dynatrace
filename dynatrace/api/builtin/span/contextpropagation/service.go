@@ -28,6 +28,6 @@ import (
 const SchemaID = "builtin:span-context-propagation"
 const SchemaVersion = "0.1.18"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*contextpropagation.PropagationSetting] {
-	return settings20.Service[*contextpropagation.PropagationSetting](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*contextpropagation.PropagationSetting] {
+	return settings20.Service[*contextpropagation.PropagationSetting](clientSet, SchemaID, SchemaVersion)
 }

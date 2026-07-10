@@ -50,11 +50,11 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	creds, err := cfg.Credentials(m, cfg.CredValDefault)
+	clientSet, err := cfg.ClientSet(m, cfg.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	objStub, err := apitokens.Service(creds).Create(ctx, config)
+	objStub, err := apitokens.Service(clientSet).Create(ctx, config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -80,12 +80,12 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
 	}
-	creds, err := cfg.Credentials(m, cfg.CredValDefault)
+	clientSet, err := cfg.ClientSet(m, cfg.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	if err := apitokens.Service(creds).Update(ctx, d.Id(), config); err != nil {
+	if err := apitokens.Service(clientSet).Update(ctx, d.Id(), config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -94,12 +94,12 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := cfg.Credentials(m, cfg.CredValDefault)
+	clientSet, err := cfg.ClientSet(m, cfg.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 	config := new(settings.APIToken)
-	err = apitokens.Service(creds).Get(ctx, d.Id(), config)
+	err = apitokens.Service(clientSet).Get(ctx, d.Id(), config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -119,12 +119,12 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := cfg.Credentials(m, cfg.CredValDefault)
+	clientSet, err := cfg.ClientSet(m, cfg.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	if err := apitokens.Service(creds).Delete(ctx, d.Id()); err != nil {
+	if err := apitokens.Service(clientSet).Delete(ctx, d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
 

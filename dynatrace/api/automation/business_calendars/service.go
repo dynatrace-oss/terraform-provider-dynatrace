@@ -30,16 +30,16 @@ import (
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
 )
 
-func Service(credentials *tfrest.Credentials) settings.CRUDService[*business_calendars.Settings] {
-	return &service{credentials}
+func Service(clientSet tfrest.ClientSet) settings.CRUDService[*business_calendars.Settings] {
+	return &service{clientSet}
 }
 
 type service struct {
-	credentials *tfrest.Credentials
+	clientSet tfrest.ClientSet
 }
 
 func (me *service) client(ctx context.Context) (*automation.Client, error) {
-	platformClient, err := tfrest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials)
+	platformClient, err := tfrest.CreatePlatformClient(ctx, me.clientSet.Credentials().Platform.EnvironmentURL, me.clientSet.Credentials())
 	if err != nil {
 		return nil, err
 	}

@@ -39,16 +39,16 @@ var supportedDocumentTypes = []docclient.DocumentType{
 	docclient.Launchpad,
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*documents.Document] {
-	return &service{credentials}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*documents.Document] {
+	return &service{clientSet: clientSet}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	clientSet rest.ClientSet
 }
 
 func (me *service) client(ctx context.Context) (*docclient.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials)
+	platformClient, err := rest.CreatePlatformClient(ctx, me.clientSet.Credentials().Platform.EnvironmentURL, me.clientSet.Credentials())
 	if err != nil {
 		return nil, err
 	}

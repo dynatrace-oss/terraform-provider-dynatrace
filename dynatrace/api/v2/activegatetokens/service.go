@@ -29,8 +29,8 @@ import (
 	activegatetokens "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/activegatetokens/settings"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*activegatetokens.Settings] {
-	return &service{credentials}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*activegatetokens.Settings] {
+	return &service{clientSet}
 }
 
 type TokenCreateResponse struct {
@@ -44,13 +44,13 @@ type TenantTokenResponse struct {
 }
 
 type service struct {
-	credentials *rest.Credentials
+	clientSet rest.ClientSet
 }
 
 func (me *service) Get(ctx context.Context, id string, v *activegatetokens.Settings) error {
 	var err error
 
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.clientSet.Credentials())
 	req := client.Get(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id))).Expect(200)
 	if err = req.Finish(v); err != nil {
 		return err
@@ -80,7 +80,7 @@ func (me *service) Create(ctx context.Context, v *activegatetokens.Settings) (*a
 	var err error
 
 	response := TokenCreateResponse{}
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.clientSet.Credentials())
 	if err = client.Post(ctx, "/api/v2/activeGateTokens", v, 201).Finish(&response); err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ func (me *service) Update(ctx context.Context, id string, v *activegatetokens.Se
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return rest.APITokenClient(me.credentials).Delete(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id)), 204).Finish()
+	return rest.APITokenClient(me.clientSet.Credentials()).Delete(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id)), 204).Finish()
 }
 
 func (me *service) New() *activegatetokens.Settings {

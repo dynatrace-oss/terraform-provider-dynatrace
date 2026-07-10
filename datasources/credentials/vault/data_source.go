@@ -73,12 +73,12 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if name == "" && typ == "" && scope == "" {
 		return diag.FromErr(fmt.Errorf("at least one of `name`, `type` or `scope` needs to be specified as a non empty string"))
 	}
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	service := export.Service(creds, export.ResourceTypes.Credentials)
+	service := export.Service(clientSet, export.ResourceTypes.Credentials)
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)
@@ -90,8 +90,8 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		if name != "" && stub.Name != name {
 			continue
 		}
-		var credentials vault.Credentials
-		if err = service.Get(ctx, stub.ID, &credentials); err != nil {
+		var clientSet vault.Credentials
+		if err = service.Get(ctx, stub.ID, &clientSet); err != nil {
 			/*
 				Identically configured credentials are allowed to be configured via REST and WebUI.
 				Therefore the block
@@ -112,14 +112,14 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 			}
 			return diag.FromErr(err)
 		}
-		if scope != "" && string(credentials.Scope) != scope {
+		if scope != "" && string(clientSet.Scope) != scope {
 			continue
 		}
-		if typ != "" && string(credentials.Type) != typ {
+		if typ != "" && string(clientSet.Type) != typ {
 			continue
 		}
-		d.Set("scope", string(credentials.Scope))
-		d.Set("type", string(credentials.Type))
+		d.Set("scope", string(clientSet.Scope))
+		d.Set("type", string(clientSet.Type))
 		d.Set("name", stub.Name)
 		d.SetId(stub.ID)
 		return diag.Diagnostics{}

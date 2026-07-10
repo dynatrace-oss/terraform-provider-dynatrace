@@ -30,12 +30,12 @@ import (
 const SchemaID = "v1:config:calculated-metrics-synthetic"
 const BasePath = "/api/config/v1/calculatedMetrics/synthetic"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*mysettings.CalculatedSyntheticMetric] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*mysettings.CalculatedSyntheticMetric] {
 	return &service{service: settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*mysettings.CalculatedSyntheticMetric](BasePath),
-	), client: rest.APITokenClient(credentials)}
+	), client: rest.APITokenClient(clientSet.Credentials())}
 }
 
 type service struct {

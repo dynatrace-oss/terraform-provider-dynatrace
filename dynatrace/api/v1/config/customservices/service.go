@@ -36,8 +36,8 @@ type service struct {
 	client rest.Client
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*customservices.CustomService] {
-	return &service{client: rest.APITokenClient(credentials)}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*customservices.CustomService] {
+	return &service{client: rest.APITokenClient(clientSet.Credentials())}
 }
 
 func (me *service) Get(ctx context.Context, id string, v *customservices.CustomService) error {

@@ -27,13 +27,14 @@ import (
 	api2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestList(t *testing.T) {
 	t.Run("Returns an error if the client creation fails", func(t *testing.T) {
-		_, err := openpipeline.EventsService(&rest.Credentials{}).List(t.Context())
+		_, err := openpipeline.EventsService(&config.ProviderConfiguration{}).List(t.Context())
 		assert.ErrorIs(t, err, rest.NoPlatformCredentialsErr)
 	})
 
@@ -44,7 +45,7 @@ func TestList(t *testing.T) {
 			require.NoError(t, err)
 		}))
 		defer server.Close()
-		_, err := openpipeline.EventsService(&rest.Credentials{
+		_, err := openpipeline.EventsService(&config.ProviderConfiguration{
 			Platform: rest.PlatformCredentials{
 				EnvironmentURL: server.URL,
 				PlatformToken:  "token",
@@ -59,7 +60,7 @@ func TestList(t *testing.T) {
 		}))
 		defer server.Close()
 
-		configs, err := openpipeline.EventsService(&rest.Credentials{
+		configs, err := openpipeline.EventsService(&config.ProviderConfiguration{
 			Platform: rest.PlatformCredentials{
 				EnvironmentURL: server.URL,
 				PlatformToken:  "token",

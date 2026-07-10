@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:rum.mobile.request-errors"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*requesterrors.Settings] {
-	return settings20.Service[*requesterrors.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*requesterrors.Settings] {
+	return settings20.Service[*requesterrors.Settings](clientSet, SchemaID, SchemaVersion)
 }

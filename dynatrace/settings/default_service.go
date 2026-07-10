@@ -32,12 +32,12 @@ import (
 
 var ExportRunning = false
 
-func NewAPITokenService[T Settings](credentials *rest.Credentials, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
-	return &defaultService[T]{schemaID: schemaID, client: rest.APITokenClient(credentials), options: options}
+func NewAPITokenService[T Settings](clientSet rest.ClientSet, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
+	return &defaultService[T]{schemaID: schemaID, client: rest.APITokenClient(clientSet.Credentials()), options: options}
 }
 
-func NewHybridService[T Settings](credentials *rest.Credentials, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
-	return &defaultService[T]{schemaID: schemaID, client: rest.HybridClient(credentials), options: options}
+func NewHybridService[T Settings](clientSet rest.ClientSet, schemaID string, options *ServiceOptions[T]) CRUDService[T] {
+	return &defaultService[T]{schemaID: schemaID, client: rest.HybridClient(clientSet.Credentials()), options: options}
 }
 
 type defaultService[T Settings] struct {

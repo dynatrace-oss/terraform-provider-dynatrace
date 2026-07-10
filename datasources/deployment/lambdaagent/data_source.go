@@ -80,13 +80,13 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	var latest latest.Latest
-	service := srv.Service(creds)
+	service := srv.Service(clientSet)
 	if err := service.Get(ctx, "", &latest); err != nil {
 		return diag.FromErr(err)
 	}

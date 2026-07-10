@@ -41,20 +41,20 @@ type AutomationClient interface {
 }
 
 type service struct {
-	credentials  *tfrest.Credentials
-	clientGetter func(ctx context.Context, credentials *tfrest.Credentials) (AutomationClient, error)
+	clientSet    tfrest.ClientSet
+	clientGetter func(ctx context.Context, clientSet tfrest.ClientSet) (AutomationClient, error)
 }
 
-func Service(credentials *tfrest.Credentials) settings.CRUDService[*workflows.Workflow] {
-	return &service{credentials: credentials, clientGetter: createCoreClient}
+func Service(clientSet tfrest.ClientSet) settings.CRUDService[*workflows.Workflow] {
+	return &service{clientSet: clientSet, clientGetter: createCoreClient}
 }
 
-func ServiceWithClientGetter(clientGetter func(ctx context.Context, credentials *tfrest.Credentials) (AutomationClient, error), credentials *tfrest.Credentials) settings.CRUDService[*workflows.Workflow] {
-	return &service{credentials: credentials, clientGetter: clientGetter}
+func ServiceWithClientGetter(clientGetter func(ctx context.Context, clientSet tfrest.ClientSet) (AutomationClient, error), clientSet tfrest.ClientSet) settings.CRUDService[*workflows.Workflow] {
+	return &service{clientSet: clientSet, clientGetter: clientGetter}
 }
 
-func createCoreClient(ctx context.Context, credentials *tfrest.Credentials) (AutomationClient, error) {
-	platformClient, err := tfrest.CreatePlatformClient(ctx, credentials.Platform.EnvironmentURL, credentials)
+func createCoreClient(ctx context.Context, clientSet tfrest.ClientSet) (AutomationClient, error) {
+	platformClient, err := tfrest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func createCoreClient(ctx context.Context, credentials *tfrest.Credentials) (Aut
 }
 
 func (me *service) Get(ctx context.Context, id string, v *workflows.Workflow) error {
-	client, err := me.clientGetter(ctx, me.credentials)
+	client, err := me.clientGetter(ctx, me.clientSet)
 	if err != nil {
 		return err
 	}
@@ -120,7 +120,7 @@ type WorkflowStub struct {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	client, err := me.clientGetter(ctx, me.credentials)
+	client, err := me.clientGetter(ctx, me.clientSet)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ func (me *service) Validate(v *workflows.Workflow) error {
 }
 
 func (me *service) Create(ctx context.Context, v *workflows.Workflow) (stub *api.Stub, err error) {
-	client, err := me.clientGetter(ctx, me.credentials)
+	client, err := me.clientGetter(ctx, me.clientSet)
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +166,7 @@ func (me *service) Create(ctx context.Context, v *workflows.Workflow) (stub *api
 }
 
 func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow) (err error) {
-	client, err := me.clientGetter(ctx, me.credentials)
+	client, err := me.clientGetter(ctx, me.clientSet)
 	if err != nil {
 		return err
 	}
@@ -179,7 +179,7 @@ func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow)
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	client, err := me.clientGetter(ctx, me.credentials)
+	client, err := me.clientGetter(ctx, me.clientSet)
 	if err != nil {
 		return err
 	}

@@ -35,18 +35,18 @@ import (
 const SchemaVersion = "1.3"
 const SchemaID = "builtin:host.monitoring.mode"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*mode.Settings] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*mode.Settings] {
 	return &service{
-		service:     settings20.Service[*mode.Settings](credentials, SchemaID, SchemaVersion),
-		credentials: credentials,
-		client:      rest.APITokenClient(credentials),
+		service:   settings20.Service[*mode.Settings](clientSet, SchemaID, SchemaVersion),
+		clientSet: clientSet,
+		client:    rest.APITokenClient(clientSet.Credentials()),
 	}
 }
 
 type service struct {
-	service     settings.CRUDService[*mode.Settings]
-	credentials *rest.Credentials
-	client      rest.Client
+	service   settings.CRUDService[*mode.Settings]
+	clientSet rest.ClientSet
+	client    rest.Client
 }
 
 type ListResponse struct {

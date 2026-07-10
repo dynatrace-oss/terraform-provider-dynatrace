@@ -31,8 +31,8 @@ import (
 const SchemaVersion = "1.0.19"
 const SchemaID = "builtin:anomaly-detection.metric-events"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*metricevents.Settings] {
-	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*metricevents.Settings]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
+func Service(clientSet rest.ClientSet) settings.CRUDService[*metricevents.Settings] {
+	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*metricevents.Settings]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*metricevents.Settings], v *metricevents.Settings) (*api.Stub, error) {

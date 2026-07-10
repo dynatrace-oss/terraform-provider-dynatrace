@@ -93,13 +93,13 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		to = ""
 	}
 
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	var settings entities.Settings
-	service := srv.Service(entityType, "", entitySelector, from, to, creds)
+	service := srv.Service(entityType, "", entitySelector, from, to, clientSet)
 
 	d.SetId(fmt.Sprintf("%s#%s#%s#%s#%s", service.SchemaID(), entityType, entitySelector, from, to))
 

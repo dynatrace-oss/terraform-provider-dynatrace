@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.5"
 const SchemaID = "builtin:security-context"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*securitycontext.Settings] {
-	return settings20.Service[*securitycontext.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*securitycontext.Settings] {
+	return settings20.Service[*securitycontext.Settings](clientSet, SchemaID, SchemaVersion)
 }

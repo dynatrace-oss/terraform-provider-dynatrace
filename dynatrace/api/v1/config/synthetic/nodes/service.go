@@ -30,8 +30,8 @@ import (
 
 const SchemaID = "v1:synthetic:nodes:all"
 
-func Service(credentials *rest.Credentials) settings.RService[*nodes.Settings] {
-	return &service{client: rest.APITokenClient(credentials)}
+func Service(clientSet rest.ClientSet) settings.RService[*nodes.Settings] {
+	return &service{client: rest.APITokenClient(clientSet.Credentials())}
 }
 
 type service struct {

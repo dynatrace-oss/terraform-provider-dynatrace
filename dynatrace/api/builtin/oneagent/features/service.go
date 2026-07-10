@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.5.10"
 const SchemaID = "builtin:oneagent.features"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*features.Settings] {
-	return settings20.Service[*features.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*features.Settings] {
+	return settings20.Service[*features.Settings](clientSet, SchemaID, SchemaVersion)
 }

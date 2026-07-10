@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.6.1"
 const SchemaID = "builtin:monitoring.slo.normalization"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*normalization.Settings] {
-	return settings20.Service[*normalization.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*normalization.Settings] {
+	return settings20.Service[*normalization.Settings](clientSet, SchemaID, SchemaVersion)
 }

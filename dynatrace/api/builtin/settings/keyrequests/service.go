@@ -35,15 +35,15 @@ import (
 const SchemaVersion = "0.1.9"
 const SchemaID = "builtin:settings.subscriptions.service"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*keyrequests.Settings] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*keyrequests.Settings] {
 	var topologyService settings.RService[*entity.Entity]
 	if settings.ExportRunning {
-		topologyService = toposervices.DataSourceService(credentials)
+		topologyService = toposervices.DataSourceService(clientSet)
 	} else {
-		topologyService = toposervices.Service(credentials)
+		topologyService = toposervices.Service(clientSet)
 	}
 	return &service{
-		service: settings20.Service[*keyrequests.Settings](credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*keyrequests.Settings]{
+		service: settings20.Service[*keyrequests.Settings](clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*keyrequests.Settings]{
 			Name: func(ctx context.Context, id string, v *keyrequests.Settings) (string, error) {
 				service := settings.NewSettings(topologyService)
 				if err := topologyService.Get(ctx, v.ServiceID, service); err != nil {
@@ -52,15 +52,15 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*keyrequests.Se
 				return "Key Requests for " + *service.DisplayName, nil
 			},
 		}),
-		credentials: credentials,
-		client:      rest.HybridClient(credentials),
+		clientSet: clientSet,
+		client:    rest.HybridClient(clientSet.Credentials()),
 	}
 }
 
 type service struct {
-	service     settings.CRUDService[*keyrequests.Settings]
-	credentials *rest.Credentials
-	client      rest.Client
+	service   settings.CRUDService[*keyrequests.Settings]
+	clientSet rest.ClientSet
+	client    rest.Client
 }
 
 func (me *service) Create(ctx context.Context, v *keyrequests.Settings) (*api.Stub, error) {
@@ -85,7 +85,7 @@ func (me *service) Get(ctx context.Context, id string, v *keyrequests.Settings) 
 // if the request errors the state value is returned
 func (me *service) getKeyRequestIDs(ctx context.Context, serviceID string, names []string) map[string]string {
 	var entitySettings entities.Settings
-	service := srv.Service("", "", fmt.Sprintf("type(\"SERVICE_METHOD\"),fromRelationships.isServiceMethodOf(type(\"SERVICE_METHOD_GROUP\"),fromRelationships.isGroupOf(type(\"SERVICE\"),entityId(\"%s\")))", serviceID), "", "", me.credentials)
+	service := srv.Service("", "", fmt.Sprintf("type(\"SERVICE_METHOD\"),fromRelationships.isServiceMethodOf(type(\"SERVICE_METHOD_GROUP\"),fromRelationships.isGroupOf(type(\"SERVICE\"),entityId(\"%s\")))", serviceID), "", "", me.clientSet)
 	if err := service.Get(ctx, service.SchemaID(), &entitySettings); err == nil {
 		keyRequestIDs := map[string]string{}
 		for _, name := range names {

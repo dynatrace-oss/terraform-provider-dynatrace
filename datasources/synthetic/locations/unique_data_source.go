@@ -72,12 +72,12 @@ func UniqueDataSourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 			ips = vt
 		}
 	}
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 	var stubs api.Stubs
-	if stubs, err = locations.Service(creds).List(ctx); err != nil {
+	if stubs, err = locations.Service(clientSet).List(ctx); err != nil {
 		return diag.FromErr(err)
 	}
 

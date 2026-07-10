@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:logmonitoring.log-buckets-rules"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*logbucketsrules.Settings] {
-	return settings20.Service[*logbucketsrules.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*logbucketsrules.Settings] {
+	return settings20.Service[*logbucketsrules.Settings](clientSet, SchemaID, SchemaVersion)
 }

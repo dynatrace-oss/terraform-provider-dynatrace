@@ -30,16 +30,16 @@ import (
 const SchemaVersion = "1.0.16"
 const SchemaID = "builtin:davis.anomaly-detectors"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*anomalydetectors.Settings] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*anomalydetectors.Settings] {
 	return &service{
-		credentials: credentials,
-		service:     settings20.Service[*anomalydetectors.Settings](credentials, SchemaID, SchemaVersion),
+		clientSet: clientSet,
+		service:   settings20.Service[*anomalydetectors.Settings](clientSet, SchemaID, SchemaVersion),
 	}
 }
 
 type service struct {
-	credentials *rest.Credentials
-	service     settings.CRUDService[*anomalydetectors.Settings]
+	clientSet rest.ClientSet
+	service   settings.CRUDService[*anomalydetectors.Settings]
 }
 
 func (me *service) Create(ctx context.Context, v *anomalydetectors.Settings) (*api.Stub, error) {
@@ -49,7 +49,7 @@ func (me *service) Create(ctx context.Context, v *anomalydetectors.Settings) (*a
 	}
 
 	// if the anomaly detector requires OAuth, try again with OAuth (without an API token)
-	if rest.IsRequiresOAuthError(err) && me.credentials.ContainsOAuthOrPlatformToken() {
+	if rest.IsRequiresOAuthError(err) && me.clientSet.Credentials().ContainsOAuthOrPlatformToken() {
 		ctx := rest.NewPreferOAuthContext(ctx)
 		return me.service.Create(ctx, v)
 	}
@@ -64,7 +64,7 @@ func (me *service) Update(ctx context.Context, id string, v *anomalydetectors.Se
 	}
 
 	// if the anomaly detector requires OAuth, try again with OAuth (without an API token)
-	if rest.IsRequiresOAuthError(err) && me.credentials.ContainsOAuthOrPlatformToken() {
+	if rest.IsRequiresOAuthError(err) && me.clientSet.Credentials().ContainsOAuthOrPlatformToken() {
 		ctx := rest.NewPreferOAuthContext(ctx)
 		return me.service.Update(ctx, id, v)
 	}

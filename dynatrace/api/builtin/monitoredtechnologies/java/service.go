@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.2"
 const SchemaID = "builtin:monitored-technologies.java"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*java.Settings] {
-	return settings20.Service[*java.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*java.Settings] {
+	return settings20.Service[*java.Settings](clientSet, SchemaID, SchemaVersion)
 }

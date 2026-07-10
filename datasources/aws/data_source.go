@@ -36,12 +36,12 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	service := svc.Service(creds)
+	service := svc.Service(clientSet)
 
 	var settings iam.Settings
 	if err = service.Get(ctx, "", &settings); err != nil {

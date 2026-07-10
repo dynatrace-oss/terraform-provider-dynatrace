@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.2"
 const SchemaID = "builtin:monitored-technologies.iis"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*iis.Settings] {
-	return settings20.Service[*iis.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*iis.Settings] {
+	return settings20.Service[*iis.Settings](clientSet, SchemaID, SchemaVersion)
 }

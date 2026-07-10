@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:logmonitoring.log-debug-settings"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*logdebugsettings.Settings] {
-	return settings20.Service[*logdebugsettings.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*logdebugsettings.Settings] {
+	return settings20.Service[*logdebugsettings.Settings](clientSet, SchemaID, SchemaVersion)
 }

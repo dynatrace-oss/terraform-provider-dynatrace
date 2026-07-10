@@ -31,8 +31,8 @@ import (
 const SchemaVersion = "1.1.18"
 const SchemaID = "builtin:processavailability"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*processavailability.Settings] {
-	return settings20.Service[*processavailability.Settings](credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*processavailability.Settings]{Duplicates: Duplicates})
+func Service(clientSet rest.ClientSet) settings.CRUDService[*processavailability.Settings] {
+	return settings20.Service[*processavailability.Settings](clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*processavailability.Settings]{Duplicates: Duplicates})
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*processavailability.Settings], v *processavailability.Settings) (*api.Stub, error) {

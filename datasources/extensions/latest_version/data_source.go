@@ -55,8 +55,8 @@ type ExtensionClient interface {
 	ListExtensionVersions(ctx context.Context, extensionName string) (coreapi.PagedListResponse, error)
 }
 
-func createCoreClient(ctx context.Context, credentials *rest.Credentials) (ExtensionClient, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, credentials.Platform.EnvironmentURL, credentials)
+func createCoreClient(ctx context.Context, clientSet rest.ClientSet) (ExtensionClient, error) {
+	platformClient, err := rest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
 	if err != nil {
 		return nil, err
 	}
@@ -64,12 +64,12 @@ func createCoreClient(ctx context.Context, credentials *rest.Credentials) (Exten
 }
 
 func dataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	client, err := createCoreClient(ctx, creds)
+	client, err := createCoreClient(ctx, clientSet)
 	if err != nil {
 		return diag.FromErr(err)
 	}

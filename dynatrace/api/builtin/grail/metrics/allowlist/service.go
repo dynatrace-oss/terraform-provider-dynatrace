@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.2"
 const SchemaID = "builtin:grail.metrics.allow-list"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*allowlist.Settings] {
-	return settings20.Service[*allowlist.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*allowlist.Settings] {
+	return settings20.Service[*allowlist.Settings](clientSet, SchemaID, SchemaVersion)
 }

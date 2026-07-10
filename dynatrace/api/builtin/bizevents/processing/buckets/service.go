@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:bizevents-processing-buckets.rule"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*buckets.Settings] {
-	return settings20.Service[*buckets.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*buckets.Settings] {
+	return settings20.Service[*buckets.Settings](clientSet, SchemaID, SchemaVersion)
 }

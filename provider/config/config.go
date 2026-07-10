@@ -48,6 +48,18 @@ type ProviderConfiguration struct {
 	Platform        rest.PlatformCredentials
 }
 
+func (c *ProviderConfiguration) Credentials() *rest.Credentials {
+	credentials := &rest.Credentials{
+		Token:    c.APIToken,
+		URL:      c.EnvironmentURL,
+		IAM:      c.IAM,
+		Platform: c.Platform,
+	}
+	credentials.Cluster.URL = c.ClusterAPIV2URL
+	credentials.Cluster.Token = c.ClusterAPIToken
+	return credentials
+}
+
 type Getter interface {
 	Get(key string) any
 }
@@ -174,24 +186,15 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 	return nil
 }
 
-func Credentials(m any, CredentialValidation int) (*rest.Credentials, error) {
+// ClientSet validates the provider meta and returns it as a rest.ClientSet. *ProviderConfiguration
+// implements rest.ClientSet (see client_set.go), so services/resources/datasources depend on the
+// interface rather than the concrete credentials.
+func ClientSet(m any, CredentialValidation int) (rest.ClientSet, error) {
 	conf := m.(*ProviderConfiguration)
 	if err := validateCredentials(conf, CredentialValidation); err != nil {
 		return nil, err
 	}
-	return &rest.Credentials{
-		Token:    conf.APIToken,
-		URL:      conf.EnvironmentURL,
-		IAM:      conf.IAM,
-		Platform: conf.Platform,
-		Cluster: struct {
-			URL   string
-			Token string
-		}{
-			URL:   conf.ClusterAPIV2URL,
-			Token: conf.ClusterAPIToken,
-		},
-	}, nil
+	return conf, nil
 }
 
 // getClassicEnvironmentURL retrieves the classic environment URL from the "dt_env_url" key in the provided configuration.

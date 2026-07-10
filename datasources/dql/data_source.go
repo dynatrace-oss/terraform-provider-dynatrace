@@ -33,7 +33,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-
 func DataSource() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: DataSourceRead,
@@ -104,12 +103,12 @@ func processHeredocString(s string) string {
 }
 
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	restClient, err := rest.CreatePlatformClient(ctx, creds.Platform.EnvironmentURL, creds)
+	restClient, err := rest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
 	if err != nil {
 		return diag.FromErr(err)
 	}

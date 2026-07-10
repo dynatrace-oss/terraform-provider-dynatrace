@@ -31,9 +31,9 @@ import (
 const SchemaID = "v1:config:conditional-naming:hosts"
 const BasePath = "/api/config/v1/conditionalNaming/host"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*hosts.NamingRule] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*hosts.NamingRule] {
 	return settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*hosts.NamingRule](BasePath).WithDuplicates(Duplicates),
 	)

@@ -69,12 +69,12 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		name = new(v.(string))
 	}
 
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 	var stubs api.Stubs
-	if stubs, err = locations.Service(creds).List(ctx); err != nil {
+	if stubs, err = locations.Service(clientSet).List(ctx); err != nil {
 		return diag.FromErr(err)
 	}
 	locs := locsettings.SyntheticLocations{}

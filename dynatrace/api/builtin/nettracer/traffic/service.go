@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:nettracer.traffic"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*traffic.Settings] {
-	return settings20.Service[*traffic.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*traffic.Settings] {
+	return settings20.Service[*traffic.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -133,14 +133,14 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	}
 
 	dataSourceID := fmt.Sprintf("%#v.%#v.%#v.%#v", global, environments, accounts, groupIDs)
-	creds, err := config.Credentials(m, config.CredValIAM)
+	clientSet, err := config.ClientSet(m, config.CredValIAM)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	discoveredLevels := map[string]string{}
 
-	service := policies.ServiceWithGloabals(creds)
+	service := policies.ServiceWithGloabals(clientSet)
 	stubs, err := service.ListWithGlobals(ctx)
 	if err != nil {
 		return diag.FromErr(err)
@@ -191,7 +191,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	}
 
 	if len(groupIDs) > 0 {
-		bindingsService := bindings.Service(creds).(*bindings.BindingServiceClient)
+		bindingsService := bindings.Service(clientSet).(*bindings.BindingServiceClient)
 
 		allPolicyUUIDs := []string{}
 		for levelID, levelType := range discoveredLevels {
