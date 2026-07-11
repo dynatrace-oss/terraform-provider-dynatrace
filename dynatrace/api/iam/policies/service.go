@@ -230,7 +230,7 @@ func listForAccount(ctx context.Context, credentials *rest.Credentials) (results
 		defer close(results)
 
 		var response api2.Response
-		if response, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/policies", credentials.IAM.AccountID), rest2.RequestOptions{}); err != nil {
+		if response, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/policies", client.AccountID()), rest2.RequestOptions{}); err != nil {
 			return
 		}
 
@@ -240,7 +240,7 @@ func listForAccount(ctx context.Context, credentials *rest.Credentials) (results
 		}
 
 		for _, policy := range policiesResponse.Policies {
-			results <- &api.Stub{ID: Join(policy.UUID, "account", credentials.IAM.AccountID), Name: policy.Name}
+			results <- &api.Stub{ID: Join(policy.UUID, "account", client.AccountID()), Name: policy.Name}
 		}
 	}()
 	return results, nil

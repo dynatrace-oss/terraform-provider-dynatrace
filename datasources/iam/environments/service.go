@@ -28,12 +28,12 @@ import (
 const baseURL = "/env/v2/accounts"
 
 type environmentsService struct {
-	credentials *rest.Credentials
+	client rest.IAMClient
 }
 
-func newEnvironmentService(clientSet rest.ClientSet) *environmentsService {
+func newEnvironmentService(ctx context.Context, clientSet rest.ClientSet) *environmentsService {
 	return &environmentsService{
-		credentials: clientSet.Credentials(),
+		client: rest.NewIAMClient(ctx, clientSet.Credentials()),
 	}
 }
 
@@ -49,13 +49,12 @@ type Response struct {
 }
 
 func (ec *environmentsService) Get(ctx context.Context) ([]Environment, error) {
-	u, err := url.JoinPath(baseURL, ec.credentials.IAM.AccountID, "environments")
+	u, err := url.JoinPath(baseURL, ec.client.AccountID(), "environments")
 	if err != nil {
 		return nil, err
 	}
 
-	client := rest.NewIAMClient(ctx, ec.credentials)
-	response, err := client.GET(ctx, u, rest2.RequestOptions{})
+	response, err := ec.client.GET(ctx, u, rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}

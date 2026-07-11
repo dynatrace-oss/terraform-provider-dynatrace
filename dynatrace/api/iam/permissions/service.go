@@ -69,7 +69,7 @@ func (me *PermissionServiceClient) Create(ctx context.Context, permission *permi
 		ScopeType: scopeType,
 		Name:      permission.Name,
 	}}
-	if _, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.clientSet.Credentials().IAM.AccountID, permission.GroupID), payload, rest2.RequestOptions{}); err != nil {
+	if _, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", client.AccountID(), permission.GroupID), payload, rest2.RequestOptions{}); err != nil {
 		return nil, err
 	}
 
@@ -88,7 +88,7 @@ func (me *PermissionServiceClient) Get(ctx context.Context, id string, v *permis
 		return err
 	}
 
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.clientSet.Credentials().IAM.AccountID, groupID), rest2.RequestOptions{})
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", client.AccountID(), groupID), rest2.RequestOptions{})
 	if err != nil {
 		return err
 	}
@@ -139,10 +139,8 @@ func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) 
 	for _, groupStub := range groupStubs {
 		groupID := groupStub.ID
 
-		accountID := me.clientSet.Credentials().IAM.AccountID
-
 		var groupPermissionsResponse GetGroupPermissionsResponse
-		response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", accountID, groupID), rest2.RequestOptions{})
+		response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", client.AccountID(), groupID), rest2.RequestOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -172,7 +170,8 @@ func (me *PermissionServiceClient) Delete(ctx context.Context, id string) error 
 	queryParams.Set("permission-name", name)
 	queryParams.Set("scope-type", scopeType)
 
-	_, err = rest.NewIAMClient(ctx, me.clientSet.Credentials()).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.clientSet.Credentials().IAM.AccountID, groupID), rest2.RequestOptions{QueryParams: queryParams})
+	client := rest.NewIAMClient(ctx, me.clientSet.Credentials())
+	_, err = client.DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", client.AccountID(), groupID), rest2.RequestOptions{QueryParams: queryParams})
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("Permission %s not found", id)) {
 		return nil
 	}

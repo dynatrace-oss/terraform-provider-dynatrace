@@ -154,7 +154,7 @@ func (me *BindingServiceClient) GetPolicyUUIDsForGroup(ctx context.Context, grou
 func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	client := rest.NewIAMClient(ctx, me.credentials)
 
-	response, err := client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", me.credentials.IAM.AccountID), rest2.RequestOptions{})
+	response, err := client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", client.AccountID()), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +164,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 		return nil, err
 	}
 
-	response, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/bindings", me.credentials.IAM.AccountID), rest2.RequestOptions{})
+	response, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/bindings", client.AccountID()), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +179,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	for _, policy := range policyBindingsResponse.PolicyBindings {
 		for _, group := range policy.Groups {
 			if _, exists := groupIds[group]; !exists {
-				id := join(group, "account", me.credentials.IAM.AccountID)
+				id := join(group, "account", client.AccountID())
 				stubs = append(stubs, &api.Stub{ID: id, Name: "PolicyBindings-" + id})
 				groupIds[group] = true
 			}
