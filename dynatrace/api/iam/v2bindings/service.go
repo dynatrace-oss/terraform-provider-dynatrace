@@ -26,7 +26,6 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	bindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/v2bindings/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -103,7 +102,7 @@ func (me *BindingServiceClient) getGroupPolicyBindings(ctx context.Context, id s
 	if err != nil {
 		return GroupPolicyBindings{}, err
 	}
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 
 	var policyBindings GroupPolicyBindings
 
@@ -212,7 +211,7 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, v *bindin
 		return err
 	}
 
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 
 	for _, desiredPolicy := range v.Policies {
 		policyUUID, _, _, _ := policies.SplitID(desiredPolicy.ID, levelType, levelID)
@@ -245,7 +244,7 @@ func (me *BindingServiceClient) FetchAccountBindings(ctx context.Context) chan *
 		}()
 
 		var policyBindings ListPolicyBindingsResponse
-		client := iam.NewIAMClient(ctx, me.credentials)
+		client := rest.NewIAMClient(ctx, me.credentials)
 
 		response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/bindings", me.credentials.IAM.AccountID), rest2.RequestOptions{})
 		if err != nil {
@@ -279,7 +278,7 @@ func (me *BindingServiceClient) FetchEnvironmentBindings(ctx context.Context) ch
 		defer func() {
 			close(results)
 		}()
-		client := iam.NewIAMClient(ctx, me.credentials)
+		client := rest.NewIAMClient(ctx, me.credentials)
 
 		environmentIDs, err := policies.GetEnvironmentIDs(ctx, me.credentials)
 		if err != nil {
@@ -364,7 +363,7 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 	groupBindings := groupPolicyBindingsUpdate{
 		PolicyUuids: make([]string, 0),
 	}
-	_, err = iam.NewIAMClient(ctx, me.credentials).PUT(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), groupBindings, rest2.RequestOptions{})
+	_, err = rest.NewIAMClient(ctx, me.credentials).PUT(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), groupBindings, rest2.RequestOptions{})
 	return err
 }
 

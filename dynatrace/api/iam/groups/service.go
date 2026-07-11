@@ -24,7 +24,6 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	groups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -66,7 +65,7 @@ func (me *GroupServiceClient) Name() string {
 // FederatedAttributeValues []string           `json:"federatedAttributeValues"`
 // Permissions              groups.Permissions `json:"permissions"`
 func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (*api.Stub, error) {
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 	response, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups", me.credentials.IAM.AccountID), []*groups.Group{group}, rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
@@ -95,7 +94,7 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 }
 
 func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *groups.Group) error {
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", me.credentials.IAM.AccountID, uuid), group, rest2.RequestOptions{}); err != nil {
 		return err
 	}
@@ -126,7 +125,7 @@ type ListGroupsResponse struct {
 }
 
 func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 	var groupStubs ListGroupsResponse
 	accountID := me.credentials.IAM.AccountID
 	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups", accountID), rest2.RequestOptions{})
@@ -147,7 +146,7 @@ func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
 func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Group) (err error) {
 	var groupStub ListGroup
 	accountID := me.credentials.IAM.AccountID
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", accountID, id), rest2.RequestOptions{})
 	if err != nil {
 		return err
@@ -164,7 +163,7 @@ func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Grou
 }
 
 func (me *GroupServiceClient) Delete(ctx context.Context, id string) error {
-	_, err := iam.NewIAMClient(ctx, me.credentials).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", me.credentials.IAM.AccountID, id), rest2.RequestOptions{})
+	_, err := rest.NewIAMClient(ctx, me.credentials).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", me.credentials.IAM.AccountID, id), rest2.RequestOptions{})
 
 	// data sources MAY have cached a list of group IDs
 	// Updating the (publicly available) revision signals to them that either a CREATE or DELETE has happened since
