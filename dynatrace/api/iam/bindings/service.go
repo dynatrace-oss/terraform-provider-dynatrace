@@ -26,7 +26,6 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	bindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/bindings/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -68,7 +67,7 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 	if err != nil {
 		return err
 	}
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 
 	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), rest2.RequestOptions{})
 	if err != nil {
@@ -96,7 +95,7 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, bindings 
 		return err
 	}
 
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 
 	policyIDs := []string{}
 	for _, policyID := range bindings.PolicyIDs {
@@ -139,7 +138,7 @@ type ListPolicyUUIDsForGroupResponse struct {
 }
 
 func (me *BindingServiceClient) GetPolicyUUIDsForGroup(ctx context.Context, groupID string, levelType string, levelID string) ([]string, error) {
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
@@ -153,7 +152,7 @@ func (me *BindingServiceClient) GetPolicyUUIDsForGroup(ctx context.Context, grou
 }
 
 func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 
 	response, err := client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", me.credentials.IAM.AccountID), rest2.RequestOptions{})
 	if err != nil {
@@ -227,7 +226,7 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 		if err != nil {
 			return err
 		}
-		if _, err = iam.NewIAMClient(ctx, me.credentials).DELETE(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyUUID, groupID), rest2.RequestOptions{}); err != nil {
+		if _, err = rest.NewIAMClient(ctx, me.credentials).DELETE(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyUUID, groupID), rest2.RequestOptions{}); err != nil {
 
 			// The API currently returns a 400 Bad Request when the binding does not exist
 			if apiErr, ok := errors.AsType[coreapi.APIError](err); ok && apiErr.StatusCode == http.StatusBadRequest {

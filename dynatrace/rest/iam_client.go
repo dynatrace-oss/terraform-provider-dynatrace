@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2025 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package iam
+package rest
 
 import (
 	"bytes"
@@ -25,7 +25,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"golang.org/x/oauth2/clientcredentials"
@@ -49,8 +48,8 @@ type iamClient struct {
 	client *rest2.Client
 }
 
-func NewIAMClient(ctx context.Context, credentials *rest.Credentials) IAMClient {
-	rest.PreRequest()
+func NewIAMClient(ctx context.Context, credentials *Credentials) IAMClient {
+	PreRequest()
 
 	client, _ := clients.Factory().
 		WithHTTPListener(logging.HTTPListener("iam")).
@@ -69,7 +68,7 @@ func NewIAMClient(ctx context.Context, credentials *rest.Credentials) IAMClient 
 			},
 		}).
 		WithAccountURL(credentials.IAM.EndpointURL).
-		AccountRestClient(rest.NewContextWithOAuthRetryClient(ctx))
+		AccountRestClient(NewContextWithOAuthRetryClient(ctx))
 
 	return &iamClient{client: client}
 }
