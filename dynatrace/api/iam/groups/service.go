@@ -66,7 +66,7 @@ func (me *GroupServiceClient) Name() string {
 // Permissions              groups.Permissions `json:"permissions"`
 func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (*api.Stub, error) {
 	client := rest.NewIAMClient(ctx, me.credentials)
-	response, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups", me.credentials.IAM.AccountID), []*groups.Group{group}, rest2.RequestOptions{})
+	response, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups", client.AccountID()), []*groups.Group{group}, rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 	groupName := responseGroups[0].Name
 
 	if len(group.Permissions) > 0 {
-		if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.credentials.IAM.AccountID, groupID), group.Permissions, rest2.RequestOptions{}); err != nil {
+		if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", client.AccountID(), groupID), group.Permissions, rest2.RequestOptions{}); err != nil {
 			return nil, err
 		}
 	}
@@ -95,7 +95,7 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 
 func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *groups.Group) error {
 	client := rest.NewIAMClient(ctx, me.credentials)
-	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", me.credentials.IAM.AccountID, uuid), group, rest2.RequestOptions{}); err != nil {
+	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", client.AccountID(), uuid), group, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 
@@ -104,7 +104,7 @@ func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *gr
 	if len(group.Permissions) > 0 {
 		permissions = group.Permissions
 	}
-	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.credentials.IAM.AccountID, uuid), permissions, rest2.RequestOptions{}); err != nil {
+	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", client.AccountID(), uuid), permissions, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 
@@ -127,8 +127,7 @@ type ListGroupsResponse struct {
 func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	client := rest.NewIAMClient(ctx, me.credentials)
 	var groupStubs ListGroupsResponse
-	accountID := me.credentials.IAM.AccountID
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups", accountID), rest2.RequestOptions{})
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups", client.AccountID()), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -145,9 +144,8 @@ func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
 
 func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Group) (err error) {
 	var groupStub ListGroup
-	accountID := me.credentials.IAM.AccountID
 	client := rest.NewIAMClient(ctx, me.credentials)
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", accountID, id), rest2.RequestOptions{})
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", client.AccountID(), id), rest2.RequestOptions{})
 	if err != nil {
 		return err
 	}
@@ -163,7 +161,8 @@ func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Grou
 }
 
 func (me *GroupServiceClient) Delete(ctx context.Context, id string) error {
-	_, err := rest.NewIAMClient(ctx, me.credentials).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", me.credentials.IAM.AccountID, id), rest2.RequestOptions{})
+	client := rest.NewIAMClient(ctx, me.credentials)
+	_, err := client.DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", client.AccountID(), id), rest2.RequestOptions{})
 
 	// data sources MAY have cached a list of group IDs
 	// Updating the (publicly available) revision signals to them that either a CREATE or DELETE has happened since

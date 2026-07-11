@@ -25,10 +25,15 @@ import (
 )
 
 type MockIAMClient struct {
-	POSTFunc   func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error)
-	PUTFunc    func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error)
-	GETFunc    func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
-	DELETEFunc func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
+	POSTFunc       func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error)
+	PUTFunc        func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error)
+	GETFunc        func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
+	DELETEFunc     func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
+	AccountIDValue string
+}
+
+func (me *MockIAMClient) AccountID() string {
+	return me.AccountIDValue
 }
 
 func (me *MockIAMClient) POST(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
