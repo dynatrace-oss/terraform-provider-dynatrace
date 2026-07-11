@@ -24,7 +24,6 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
@@ -53,7 +52,7 @@ func CheckPolicyExists(ctx context.Context, credentials *rest.Credentials, level
 		UUID string `json:"uuid"`
 		Name string `json:"name"`
 	}{}
-	client := iam.NewIAMClient(ctx, credentials)
+	client := rest.NewIAMClient(ctx, credentials)
 	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, policyUUID), rest2.RequestOptions{})
 	if err != nil {
 		// A 404 Not Found means the policy is not defined at the given level - that is not an error here
@@ -223,7 +222,7 @@ func FetchAllPolicyLevels(ctx context.Context, credentials *rest.Credentials) (m
 }
 
 func fetchGlobalPolicies(ctx context.Context, credentials *rest.Credentials) (results chan *api.Stub) {
-	client := iam.NewIAMClient(ctx, credentials)
+	client := rest.NewIAMClient(ctx, credentials)
 	results = make(chan *api.Stub)
 	go func() {
 		defer func() {
@@ -313,7 +312,7 @@ func fetchAllPolicyLevels(ctx context.Context, credentials *rest.Credentials) (m
 // GetEnvironmentIDs retrieves all environmentIDs reachable via the given IAM Client
 // The operation is NOT guarded by a mutex. See `GetEnvironmentIDs` for a guarded version
 func getEnvironmentIDs(ctx context.Context, credentials *rest.Credentials) ([]string, error) {
-	client := iam.NewIAMClient(ctx, credentials)
+	client := rest.NewIAMClient(ctx, credentials)
 
 	var envResponse ListEnvResponse
 	response, err := client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", credentials.IAM.AccountID), rest2.RequestOptions{})

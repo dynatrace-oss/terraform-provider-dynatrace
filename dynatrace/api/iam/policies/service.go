@@ -26,7 +26,6 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	policies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/policies/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -61,7 +60,7 @@ type PolicyCreateResponse struct {
 func (me *PolicyServiceClient) Create(ctx context.Context, v *policies.Policy) (*api.Stub, error) {
 	levelType, levelID := getLevel(v)
 
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 	response, err := client.POST(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies", levelType, levelID), v, rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
@@ -97,7 +96,7 @@ func (me *PolicyServiceClient) get(ctx context.Context, id string, v *policies.P
 	if err != nil {
 		return err
 	}
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 	var policyName string
 
 	levelType, levelID, policyName, err = ResolvePolicyLevel(ctx, me.credentials, uuid)
@@ -144,7 +143,7 @@ func (me *PolicyServiceClient) Update(ctx context.Context, id string, user *poli
 	if err != nil {
 		return err
 	}
-	client := iam.NewIAMClient(ctx, me.credentials)
+	client := rest.NewIAMClient(ctx, me.credentials)
 
 	if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), user, rest2.RequestOptions{}); err != nil {
 		return err
@@ -174,7 +173,7 @@ func listForEnvironment(ctx context.Context, credentials *rest.Credentials, envi
 	results = make(chan *api.Stub)
 	go func() {
 		defer close(results)
-		client := iam.NewIAMClient(ctx, credentials)
+		client := rest.NewIAMClient(ctx, credentials)
 
 		var response api2.Response
 		if response, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/environment/%s/policies", environmentID), rest2.RequestOptions{}); err != nil {
@@ -224,7 +223,7 @@ func listForEnvironments(ctx context.Context, credentials *rest.Credentials) (re
 }
 
 func listForAccount(ctx context.Context, credentials *rest.Credentials) (results chan *api.Stub, err error) {
-	client := iam.NewIAMClient(ctx, credentials)
+	client := rest.NewIAMClient(ctx, credentials)
 
 	results = make(chan *api.Stub)
 	go func() {
@@ -334,7 +333,7 @@ func (me *PolicyServiceClient) Delete(ctx context.Context, id string) error {
 		return err
 	}
 
-	_, err = iam.NewIAMClient(ctx, me.credentials).DELETE(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), rest2.RequestOptions{})
+	_, err = rest.NewIAMClient(ctx, me.credentials).DELETE(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/policies/%s", levelType, levelID, uuid), rest2.RequestOptions{})
 	return err
 }
 

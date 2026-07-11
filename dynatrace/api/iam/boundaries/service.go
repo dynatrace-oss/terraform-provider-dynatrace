@@ -26,7 +26,6 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	boundaries "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/boundaries/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/clean"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -46,15 +45,15 @@ func Service(clientSet rest.ClientSet) settings.CRUDService[*boundaries.PolicyBo
 }
 
 type iamClientGetter interface {
-	New(ctx context.Context) iam.IAMClient
+	New(ctx context.Context) rest.IAMClient
 }
 
 type iamClientGetterImp struct {
 	credentials *rest.Credentials
 }
 
-func (me *iamClientGetterImp) New(ctx context.Context) iam.IAMClient {
-	return iam.NewIAMClient(ctx, me.credentials)
+func (me *iamClientGetterImp) New(ctx context.Context) rest.IAMClient {
+	return rest.NewIAMClient(ctx, me.credentials)
 }
 
 type BoundaryServiceClient struct {

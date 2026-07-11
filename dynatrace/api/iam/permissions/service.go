@@ -26,7 +26,6 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/groups"
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -51,7 +50,7 @@ func (me *PermissionServiceClient) Name() string {
 }
 
 func (me *PermissionServiceClient) Create(ctx context.Context, permission *permissions.Permission) (*api.Stub, error) {
-	client := iam.NewIAMClient(ctx, me.clientSet.Credentials())
+	client := rest.NewIAMClient(ctx, me.clientSet.Credentials())
 	scope := ""
 	scopeType := ""
 	if len(permission.Account) > 0 {
@@ -82,7 +81,7 @@ type GetGroupPermissionsResponse struct {
 }
 
 func (me *PermissionServiceClient) Get(ctx context.Context, id string, v *permissions.Permission) error {
-	client := iam.NewIAMClient(ctx, me.clientSet.Credentials())
+	client := rest.NewIAMClient(ctx, me.clientSet.Credentials())
 
 	groupID, name, scope, scopeType, err := splitID(id)
 	if err != nil {
@@ -133,7 +132,7 @@ func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) 
 
 	var stubs api.Stubs
 
-	client := iam.NewIAMClient(ctx, me.clientSet.Credentials())
+	client := rest.NewIAMClient(ctx, me.clientSet.Credentials())
 	for _, groupStub := range groupStubs {
 		groupID := groupStub.ID
 
@@ -170,7 +169,7 @@ func (me *PermissionServiceClient) Delete(ctx context.Context, id string) error 
 	queryParams.Set("permission-name", name)
 	queryParams.Set("scope-type", scopeType)
 
-	_, err = iam.NewIAMClient(ctx, me.clientSet.Credentials()).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.clientSet.Credentials().IAM.AccountID, groupID), rest2.RequestOptions{QueryParams: queryParams})
+	_, err = rest.NewIAMClient(ctx, me.clientSet.Credentials()).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.clientSet.Credentials().IAM.AccountID, groupID), rest2.RequestOptions{QueryParams: queryParams})
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("Permission %s not found", id)) {
 		return nil
 	}

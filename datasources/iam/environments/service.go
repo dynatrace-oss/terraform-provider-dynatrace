@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 	"net/url"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
@@ -55,7 +54,7 @@ func (ec *environmentsService) Get(ctx context.Context) ([]Environment, error) {
 		return nil, err
 	}
 
-	client := iam.NewIAMClient(ctx, ec.credentials)
+	client := rest.NewIAMClient(ctx, ec.credentials)
 	response, err := client.GET(ctx, u, rest2.RequestOptions{})
 	if err != nil {
 		return nil, err

@@ -24,7 +24,6 @@ import (
 	"net/url"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam"
 	serviceusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/serviceusers/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -37,15 +36,15 @@ type ServiceUserService interface {
 }
 
 type iamClientGetter interface {
-	New(ctx context.Context) iam.IAMClient
+	New(ctx context.Context) rest.IAMClient
 }
 
 type iamClientGetterImp struct {
 	credentials *rest.Credentials
 }
 
-func (me *iamClientGetterImp) New(ctx context.Context) iam.IAMClient {
-	return iam.NewIAMClient(ctx, me.credentials)
+func (me *iamClientGetterImp) New(ctx context.Context) rest.IAMClient {
+	return rest.NewIAMClient(ctx, me.credentials)
 }
 
 type serviceUserServiceClient struct {
