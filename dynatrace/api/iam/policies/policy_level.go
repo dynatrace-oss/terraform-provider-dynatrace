@@ -86,11 +86,12 @@ func fetchPolicyLevel(ctx context.Context, credentials *rest.Credentials, uuid s
 		return "global", "global", name, nil
 	}
 
-	if exists, name, err = CheckPolicyExists(ctx, credentials, "account", credentials.IAM.AccountID, uuid); err != nil {
+	accountID := rest.NewIAMClient(ctx, credentials).AccountID()
+	if exists, name, err = CheckPolicyExists(ctx, credentials, "account", accountID, uuid); err != nil {
 		return "", "", name, err
 	}
 	if exists {
-		return "account", credentials.IAM.AccountID, name, nil
+		return "account", accountID, name, nil
 	}
 
 	var environmentIDs []string
@@ -299,7 +300,7 @@ func getEnvironmentIDs(ctx context.Context, credentials *rest.Credentials) ([]st
 	client := rest.NewIAMClient(ctx, credentials)
 
 	var envResponse ListEnvResponse
-	response, err := client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", credentials.IAM.AccountID), rest2.RequestOptions{})
+	response, err := client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", client.AccountID()), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}

@@ -49,7 +49,6 @@ func (me *iamClientGetterImp) New(ctx context.Context) rest.IAMClient {
 
 type serviceUserServiceClient struct {
 	iamClientGetter iamClientGetter
-	accountID       string
 }
 
 func NewService(clientSet rest.ClientSet) ServiceUserService {
@@ -57,7 +56,6 @@ func NewService(clientSet rest.ClientSet) ServiceUserService {
 		iamClientGetter: &iamClientGetterImp{
 			credentials: clientSet.Credentials(),
 		},
-		accountID: clientSet.Credentials().IAM.AccountID,
 	}
 }
 
@@ -77,7 +75,8 @@ type createResponse struct {
 }
 
 func (me *serviceUserServiceClient) Create(ctx context.Context, serviceUser *serviceusers.ServiceUser) (*api.Stub, error) {
-	response, err := me.iamClientGetter.New(ctx).POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users", me.accountID), serviceUser, rest2.RequestOptions{})
+	client := me.iamClientGetter.New(ctx)
+	response, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users", client.AccountID()), serviceUser, rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +106,8 @@ type getServiceUserResponse struct {
 }
 
 func (me *serviceUserServiceClient) Get(ctx context.Context, id string, v *serviceusers.ServiceUser) error {
-	response, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, id), rest2.RequestOptions{})
+	client := me.iamClientGetter.New(ctx)
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", client.AccountID(), id), rest2.RequestOptions{})
 	if err != nil {
 		return err
 	}
@@ -141,7 +141,8 @@ type getUserPartialResponse struct {
 }
 
 func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email string) ([]string, error) {
-	response, err := me.iamClientGetter.New(ctx).GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.accountID, email), rest2.RequestOptions{})
+	client := me.iamClientGetter.New(ctx)
+	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", client.AccountID(), email), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +162,8 @@ func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email str
 
 func (me *serviceUserServiceClient) Update(ctx context.Context, id string, serviceUser *serviceusers.ServiceUser) error {
 	// Update the service user details
-	if _, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, id), serviceUser, rest2.RequestOptions{}); err != nil {
+	client := me.iamClientGetter.New(ctx)
+	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", client.AccountID(), id), serviceUser, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 
@@ -174,7 +176,8 @@ func (me *serviceUserServiceClient) updateGroupAssignments(ctx context.Context, 
 	if groups == nil {
 		groups = []string{}
 	}
-	_, err := me.iamClientGetter.New(ctx).PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.accountID, serviceUserEmail), groups, rest2.RequestOptions{})
+	client := me.iamClientGetter.New(ctx)
+	_, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", client.AccountID(), serviceUserEmail), groups, rest2.RequestOptions{})
 	return err
 }
 
@@ -197,7 +200,7 @@ func (me *serviceUserServiceClient) GetAll(ctx context.Context) ([]ServiceUserSt
 	client := me.iamClientGetter.New(ctx)
 
 	var stubs []ServiceUserStub
-	endpoint := fmt.Sprintf("/iam/v1/accounts/%s/service-users", me.accountID)
+	endpoint := fmt.Sprintf("/iam/v1/accounts/%s/service-users", client.AccountID())
 	options := rest2.RequestOptions{}
 
 	for {
@@ -241,6 +244,7 @@ func (me *serviceUserServiceClient) List(ctx context.Context) (api.Stubs, error)
 }
 
 func (me *serviceUserServiceClient) Delete(ctx context.Context, uid string) error {
-	_, err := me.iamClientGetter.New(ctx).DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.accountID, uid), rest2.RequestOptions{})
+	client := me.iamClientGetter.New(ctx)
+	_, err := client.DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", client.AccountID(), uid), rest2.RequestOptions{})
 	return err
 }

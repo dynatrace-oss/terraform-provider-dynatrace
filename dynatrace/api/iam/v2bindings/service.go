@@ -246,7 +246,7 @@ func (me *BindingServiceClient) FetchAccountBindings(ctx context.Context) chan *
 		var policyBindings ListPolicyBindingsResponse
 		client := rest.NewIAMClient(ctx, me.credentials)
 
-		response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/bindings", me.credentials.IAM.AccountID), rest2.RequestOptions{})
+		response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/bindings", client.AccountID()), rest2.RequestOptions{})
 		if err != nil {
 			return
 		}
@@ -259,7 +259,7 @@ func (me *BindingServiceClient) FetchAccountBindings(ctx context.Context) chan *
 		for _, policy := range policyBindings.PolicyBindings {
 			for _, group := range policy.Groups {
 				if _, exists := groupIds[group]; !exists {
-					id := fmt.Sprintf("%s#-#%s#-#%s", group, "account", me.credentials.IAM.AccountID)
+					id := fmt.Sprintf("%s#-#%s#-#%s", group, "account", client.AccountID())
 					stubs = append(stubs, &api.Stub{ID: id, Name: "PolicyV2Bindings-" + id})
 					groupIds[group] = true
 				}

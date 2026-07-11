@@ -42,10 +42,14 @@ type IAMClient interface {
 	PUT(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error)
 	GET(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
 	DELETE(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error)
+	// AccountID returns the account ID associated with the client. It is a constant fixed when the
+	// client is created.
+	AccountID() string
 }
 
 type iamClient struct {
-	client *rest2.Client
+	client    *rest2.Client
+	accountID string
 }
 
 func NewIAMClient(ctx context.Context, credentials *Credentials) IAMClient {
@@ -70,7 +74,11 @@ func NewIAMClient(ctx context.Context, credentials *Credentials) IAMClient {
 		WithAccountURL(credentials.IAM.EndpointURL).
 		AccountRestClient(NewContextWithOAuthRetryClient(ctx))
 
-	return &iamClient{client: client}
+	return &iamClient{client: client, accountID: credentials.IAM.AccountID}
+}
+
+func (me *iamClient) AccountID() string {
+	return me.accountID
 }
 
 func (me *iamClient) POST(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {

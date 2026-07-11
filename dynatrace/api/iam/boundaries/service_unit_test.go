@@ -26,7 +26,6 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
@@ -36,10 +35,10 @@ import (
 
 const testAccountID = "test-account-id"
 
-func newTestClient(mock rest.IAMClient) *BoundaryServiceClient {
+func newTestClient(mock *testing2.MockIAMClient) *BoundaryServiceClient {
+	mock.AccountIDValue = testAccountID
 	return &BoundaryServiceClient{
 		iamClientGetter: &testing2.MockIAMClientGetter{Client: mock},
-		accountID:       testAccountID,
 	}
 }
 
