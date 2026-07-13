@@ -31,11 +31,11 @@ import (
 )
 
 type UserServiceClient struct {
-	credentials *rest.Credentials
+	client rest.IAMClient
 }
 
 func Service(clientSet rest.ClientSet) settings.CRUDService[*users.User] {
-	return &UserServiceClient{credentials: clientSet.Credentials()}
+	return &UserServiceClient{client: clientSet.IAMClient()}
 }
 
 func (me *UserServiceClient) SchemaID() string {
@@ -43,8 +43,7 @@ func (me *UserServiceClient) SchemaID() string {
 }
 
 func (me *UserServiceClient) Create(ctx context.Context, user *users.User) (*api.Stub, error) {
-	client := rest.NewIAMClient(ctx, me.credentials)
-	if _, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", client.AccountID()), user, rest2.RequestOptions{}); err != nil {
+	if _, err := me.client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.client.AccountID()), user, rest2.RequestOptions{}); err != nil {
 		return nil, err
 	}
 
@@ -52,7 +51,7 @@ func (me *UserServiceClient) Create(ctx context.Context, user *users.User) (*api
 	if len(user.Groups) > 0 {
 		groups = user.Groups
 	}
-	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", client.AccountID(), user.Email), groups, rest2.RequestOptions{}); err != nil {
+	if _, err := me.client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.client.AccountID(), user.Email), groups, rest2.RequestOptions{}); err != nil {
 		return nil, err
 	}
 
@@ -70,9 +69,7 @@ type GetUserGroupsResponse struct {
 }
 
 func (me *UserServiceClient) Get(ctx context.Context, email string, v *users.User) error {
-	client := rest.NewIAMClient(ctx, me.credentials)
-
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", client.AccountID(), email), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.client.AccountID(), email), rest2.RequestOptions{})
 	if err != nil {
 		if strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
 			return rest.Error{Code: 404, Message: err.Error()}
@@ -99,8 +96,7 @@ func (me *UserServiceClient) Update(ctx context.Context, email string, user *use
 	if len(user.Groups) > 0 {
 		groups = user.Groups
 	}
-	client := rest.NewIAMClient(ctx, me.credentials)
-	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", client.AccountID(), user.Email), groups, rest2.RequestOptions{}); err != nil {
+	if _, err := me.client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.client.AccountID(), user.Email), groups, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 
@@ -118,8 +114,7 @@ type ListUsersResponse struct {
 }
 
 func (me *UserServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	client := rest.NewIAMClient(ctx, me.credentials)
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", client.AccountID()), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users", me.client.AccountID()), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -136,8 +131,7 @@ func (me *UserServiceClient) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (me *UserServiceClient) Delete(ctx context.Context, email string) error {
-	client := rest.NewIAMClient(ctx, me.credentials)
-	_, err := client.DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", client.AccountID(), email), rest2.RequestOptions{})
+	_, err := me.client.DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.client.AccountID(), email), rest2.RequestOptions{})
 	if err != nil && strings.Contains(err.Error(), fmt.Sprintf("User %s not found", email)) {
 		return nil
 	}

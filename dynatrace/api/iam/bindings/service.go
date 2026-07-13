@@ -35,11 +35,11 @@ import (
 )
 
 type BindingServiceClient struct {
-	credentials *rest.Credentials
+	client rest.IAMClient
 }
 
 func Service(clientSet rest.ClientSet) settings.CRUDService[*bindings.PolicyBinding] {
-	return &BindingServiceClient{credentials: clientSet.Credentials()}
+	return &BindingServiceClient{client: clientSet.IAMClient()}
 }
 
 func (me *BindingServiceClient) SchemaID() string {
@@ -67,9 +67,8 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 	if err != nil {
 		return err
 	}
-	client := rest.NewIAMClient(ctx, me.credentials)
 
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), rest2.RequestOptions{})
 	if err != nil {
 		return err
 	}
@@ -95,8 +94,6 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, bindings 
 		return err
 	}
 
-	client := rest.NewIAMClient(ctx, me.credentials)
-
 	policyIDs := []string{}
 	for _, policyID := range bindings.PolicyIDs {
 		uuid, policyLevelType, policyLevelID, err := policies.SplitID(policyID, levelType, levelID)
@@ -111,7 +108,7 @@ func (me *BindingServiceClient) Update(ctx context.Context, id string, bindings 
 	}
 	bindings.PolicyIDs = policyIDs
 
-	if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), bindings, rest2.RequestOptions{}); err != nil {
+	if _, err = me.client.PUT(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), bindings, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 	return nil
@@ -138,8 +135,7 @@ type ListPolicyUUIDsForGroupResponse struct {
 }
 
 func (me *BindingServiceClient) GetPolicyUUIDsForGroup(ctx context.Context, groupID string, levelType string, levelID string) ([]string, error) {
-	client := rest.NewIAMClient(ctx, me.credentials)
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/groups/%s", levelType, levelID, groupID), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -152,9 +148,7 @@ func (me *BindingServiceClient) GetPolicyUUIDsForGroup(ctx context.Context, grou
 }
 
 func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	client := rest.NewIAMClient(ctx, me.credentials)
-
-	response, err := client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", client.AccountID()), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/env/v2/accounts/%s/environments", me.client.AccountID()), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +158,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 		return nil, err
 	}
 
-	response, err = client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/bindings", client.AccountID()), rest2.RequestOptions{})
+	response, err = me.client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/bindings", me.client.AccountID()), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +173,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	for _, policy := range policyBindingsResponse.PolicyBindings {
 		for _, group := range policy.Groups {
 			if _, exists := groupIds[group]; !exists {
-				id := join(group, "account", client.AccountID())
+				id := join(group, "account", me.client.AccountID())
 				stubs = append(stubs, &api.Stub{ID: id, Name: "PolicyBindings-" + id})
 				groupIds[group] = true
 			}
@@ -187,7 +181,7 @@ func (me *BindingServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	}
 
 	for _, environment := range envResponse.Data {
-		response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/environment/%s/bindings", environment.ID), rest2.RequestOptions{})
+		response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/repo/environment/%s/bindings", environment.ID), rest2.RequestOptions{})
 		if err != nil {
 			return nil, err
 		}
@@ -226,7 +220,7 @@ func (me *BindingServiceClient) Delete(ctx context.Context, id string) error {
 		if err != nil {
 			return err
 		}
-		if _, err = rest.NewIAMClient(ctx, me.credentials).DELETE(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyUUID, groupID), rest2.RequestOptions{}); err != nil {
+		if _, err = me.client.DELETE(ctx, fmt.Sprintf("/iam/v1/repo/%s/%s/bindings/%s/%s", levelType, levelID, policyUUID, groupID), rest2.RequestOptions{}); err != nil {
 
 			// The API currently returns a 400 Bad Request when the binding does not exist
 			if apiErr, ok := errors.AsType[coreapi.APIError](err); ok && apiErr.StatusCode == http.StatusBadRequest {

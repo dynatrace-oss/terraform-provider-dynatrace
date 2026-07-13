@@ -37,9 +37,7 @@ const testAccountID = "test-account-id"
 
 func newTestClient(mock *testing2.MockIAMClient) *BoundaryServiceClient {
 	mock.AccountIDValue = testAccountID
-	return &BoundaryServiceClient{
-		iamClientGetter: &testing2.MockIAMClientGetter{Client: mock},
-	}
+	return &BoundaryServiceClient{client: mock}
 }
 
 func boundaryPageResponse(items []PolicyBoundary) []byte {

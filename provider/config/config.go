@@ -46,6 +46,11 @@ type ProviderConfiguration struct {
 	APIToken        string
 	IAM             IAM
 	Platform        rest.PlatformCredentials
+
+	// iamClient is built once in ProviderConfigureGeneric (when IAM credentials are available) and
+	// reused by all IAM services. It is created there because that context outlives individual
+	// requests, which the IAM client's OAuth token refresh relies on.
+	iamClient rest.IAMClient
 }
 
 func (c *ProviderConfiguration) Credentials() *rest.Credentials {
@@ -58,6 +63,10 @@ func (c *ProviderConfiguration) Credentials() *rest.Credentials {
 	credentials.Cluster.URL = c.ClusterAPIV2URL
 	credentials.Cluster.Token = c.ClusterAPIToken
 	return credentials
+}
+
+func (c *ProviderConfiguration) IAMClient() rest.IAMClient {
+	return c.iamClient
 }
 
 type Getter interface {
@@ -118,6 +127,11 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 			TokenURL:       getPlatformTokenURL(d),
 			EnvironmentURL: getPlatformEnvironmentURL(d),
 		},
+	}
+	// Build the shared IAM client once, using this long-lived context, when IAM credentials are
+	// available. IAM services reuse it via pc.IAMClient() rather than constructing their own.
+	if validateCredentials(pc, CredValIAM) == nil {
+		pc.iamClient = rest.NewIAMClient(ctx, pc.Credentials())
 	}
 	return pc, diag.Diagnostics{}
 }

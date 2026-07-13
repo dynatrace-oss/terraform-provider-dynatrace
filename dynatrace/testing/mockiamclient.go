@@ -52,10 +52,13 @@ func (me *MockIAMClient) DELETE(ctx context.Context, url string, options rest2.R
 	return me.DELETEFunc(ctx, url, options)
 }
 
-type MockIAMClientGetter struct {
-	Client rest.IAMClient
+// MockClientSet is a rest.ClientSet whose IAM client and credentials are supplied directly, for
+// injecting a MockIAMClient into IAM services under test.
+type MockClientSet struct {
+	IAMClientValue   rest.IAMClient
+	CredentialsValue *rest.Credentials
 }
 
-func (me *MockIAMClientGetter) New(_ context.Context) rest.IAMClient {
-	return me.Client
-}
+func (me *MockClientSet) IAMClient() rest.IAMClient { return me.IAMClientValue }
+
+func (me *MockClientSet) Credentials() *rest.Credentials { return me.CredentialsValue }

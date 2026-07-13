@@ -43,11 +43,11 @@ func GetRevision() string {
 }
 
 type GroupServiceClient struct {
-	credentials *rest.Credentials
+	client rest.IAMClient
 }
 
 func Service(clientSet rest.ClientSet) settings.CRUDService[*groups.Group] {
-	return &GroupServiceClient{credentials: clientSet.Credentials()}
+	return &GroupServiceClient{client: clientSet.IAMClient()}
 }
 
 func (me *GroupServiceClient) SchemaID() string {
@@ -65,8 +65,7 @@ func (me *GroupServiceClient) Name() string {
 // FederatedAttributeValues []string           `json:"federatedAttributeValues"`
 // Permissions              groups.Permissions `json:"permissions"`
 func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (*api.Stub, error) {
-	client := rest.NewIAMClient(ctx, me.credentials)
-	response, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups", client.AccountID()), []*groups.Group{group}, rest2.RequestOptions{})
+	response, err := me.client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups", me.client.AccountID()), []*groups.Group{group}, rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +78,7 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 	groupName := responseGroups[0].Name
 
 	if len(group.Permissions) > 0 {
-		if _, err = client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", client.AccountID(), groupID), group.Permissions, rest2.RequestOptions{}); err != nil {
+		if _, err = me.client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.client.AccountID(), groupID), group.Permissions, rest2.RequestOptions{}); err != nil {
 			return nil, err
 		}
 	}
@@ -94,8 +93,7 @@ func (me *GroupServiceClient) Create(ctx context.Context, group *groups.Group) (
 }
 
 func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *groups.Group) error {
-	client := rest.NewIAMClient(ctx, me.credentials)
-	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", client.AccountID(), uuid), group, rest2.RequestOptions{}); err != nil {
+	if _, err := me.client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", me.client.AccountID(), uuid), group, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 
@@ -104,7 +102,7 @@ func (me *GroupServiceClient) Update(ctx context.Context, uuid string, group *gr
 	if len(group.Permissions) > 0 {
 		permissions = group.Permissions
 	}
-	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", client.AccountID(), uuid), permissions, rest2.RequestOptions{}); err != nil {
+	if _, err := me.client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.client.AccountID(), uuid), permissions, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 
@@ -125,9 +123,8 @@ type ListGroupsResponse struct {
 }
 
 func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	client := rest.NewIAMClient(ctx, me.credentials)
 	var groupStubs ListGroupsResponse
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups", client.AccountID()), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups", me.client.AccountID()), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -144,8 +141,7 @@ func (me *GroupServiceClient) List(ctx context.Context) (api.Stubs, error) {
 
 func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Group) (err error) {
 	var groupStub ListGroup
-	client := rest.NewIAMClient(ctx, me.credentials)
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", client.AccountID(), id), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s/permissions", me.client.AccountID(), id), rest2.RequestOptions{})
 	if err != nil {
 		return err
 	}
@@ -161,8 +157,7 @@ func (me *GroupServiceClient) Get(ctx context.Context, id string, v *groups.Grou
 }
 
 func (me *GroupServiceClient) Delete(ctx context.Context, id string) error {
-	client := rest.NewIAMClient(ctx, me.credentials)
-	_, err := client.DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", client.AccountID(), id), rest2.RequestOptions{})
+	_, err := me.client.DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/groups/%s", me.client.AccountID(), id), rest2.RequestOptions{})
 
 	// data sources MAY have cached a list of group IDs
 	// Updating the (publicly available) revision signals to them that either a CREATE or DELETE has happened since

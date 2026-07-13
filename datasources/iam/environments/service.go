@@ -33,7 +33,7 @@ type environmentsService struct {
 
 func newEnvironmentService(ctx context.Context, clientSet rest.ClientSet) *environmentsService {
 	return &environmentsService{
-		client: rest.NewIAMClient(ctx, clientSet.Credentials()),
+		client: clientSet.IAMClient(),
 	}
 }
 

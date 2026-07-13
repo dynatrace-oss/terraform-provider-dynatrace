@@ -32,6 +32,7 @@ import (
 	setboundaries "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/boundaries/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -119,15 +120,14 @@ func TestProviderLogging(t *testing.T) {
 		httpServer := httptest.NewServer(&mux)
 		defer httpServer.Close()
 
-		service := boundaries.Service(&config.ProviderConfiguration{
-			EnvironmentURL: httpServer.URL,
-			IAM: config.IAM{
-				ClientID:     "id",
-				AccountID:    "account-id",
-				ClientSecret: "secret",
-				TokenURL:     httpServer.URL + "/sso",
-				EndpointURL:  httpServer.URL,
-			},
+		credentials := &rest.Credentials{}
+		credentials.IAM.ClientID = "id"
+		credentials.IAM.AccountID = "account-id"
+		credentials.IAM.ClientSecret = "secret"
+		credentials.IAM.TokenURL = httpServer.URL + "/sso"
+		credentials.IAM.EndpointURL = httpServer.URL
+		service := boundaries.Service(&testing2.MockClientSet{
+			IAMClientValue: rest.NewIAMClient(t.Context(), credentials),
 		})
 		err := service.Get(t.Context(), "test-id", new(setboundaries.PolicyBoundary))
 		require.NoError(t, err)

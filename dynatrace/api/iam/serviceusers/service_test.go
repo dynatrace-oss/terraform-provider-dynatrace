@@ -37,11 +37,7 @@ const testAccountID = "test-account-id"
 
 func createTestServiceUserServiceClient(client *testing2.MockIAMClient) *serviceUserServiceClient {
 	client.AccountIDValue = testAccountID
-	return &serviceUserServiceClient{
-		iamClientGetter: &testing2.MockIAMClientGetter{
-			Client: client,
-		},
-	}
+	return &serviceUserServiceClient{client: client}
 }
 
 func TestService_Create(t *testing.T) {

@@ -19,9 +19,11 @@ package rest
 
 // ClientSet is the credential/client provider handed to services, resources and datasources.
 //
-// For now it only exposes the raw Credentials so the existing client factories can be reused
-// unchanged. Concrete clients (e.g. an IAM client, an API-token client) will be added over time and
-// services migrated onto them, at which point Credentials can eventually be retired.
+// It exposes the raw Credentials (so the existing client factories can be reused unchanged) plus
+// concrete clients that are built once and reused. More clients (e.g. an API-token client) will be
+// added over time and services migrated onto them, at which point Credentials can eventually be
+// retired.
 type ClientSet interface {
 	Credentials() *Credentials
+	IAMClient() IAMClient
 }
