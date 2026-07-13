@@ -1,0 +1,36 @@
+/*
+ * @license
+ * Copyright 2026 Dynatrace LLC
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package testing
+
+import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+)
+
+// MockClientSet is a rest.ClientSet whose clients and credentials are supplied directly, for
+// injecting mocks into services under test.
+type MockClientSet struct {
+	IAMClientValue      rest.IAMClient
+	PlatformClientValue *rest2.Client
+	CredentialsValue    *rest.Credentials
+}
+
+func (me *MockClientSet) IAMClient() rest.IAMClient { return me.IAMClientValue }
+
+func (me *MockClientSet) PlatformClient() (*rest2.Client, error) { return me.PlatformClientValue, nil }
+
+func (me *MockClientSet) Credentials() *rest.Credentials { return me.CredentialsValue }

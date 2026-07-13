@@ -54,7 +54,7 @@ func ServiceWithClientGetter(clientGetter func(ctx context.Context, clientSet tf
 }
 
 func createCoreClient(ctx context.Context, clientSet tfrest.ClientSet) (AutomationClient, error) {
-	platformClient, err := tfrest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}

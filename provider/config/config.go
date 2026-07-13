@@ -26,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -51,6 +52,12 @@ type ProviderConfiguration struct {
 	// reused by all IAM services. It is created there because that context outlives individual
 	// requests, which the IAM client's OAuth token refresh relies on.
 	iamClient rest.IAMClient
+
+	// platformClient is built once in ProviderConfigureGeneric (same long-lived-context reasoning as
+	// iamClient) and reused by all platform services. platformClientErr memorizes the creation error
+	// (e.g. NoPlatformCredentialsErr) so PlatformClient() can surface it rather than dropping it.
+	platformClient    *rest2.Client
+	platformClientErr error
 }
 
 func (c *ProviderConfiguration) Credentials() *rest.Credentials {
@@ -67,6 +74,15 @@ func (c *ProviderConfiguration) Credentials() *rest.Credentials {
 
 func (c *ProviderConfiguration) IAMClient() rest.IAMClient {
 	return c.iamClient
+}
+
+func (c *ProviderConfiguration) PlatformClient() (*rest2.Client, error) {
+	// A ProviderConfiguration built directly (e.g. in tests) never ran ProviderConfigureGeneric, so
+	// neither the client nor the error is set; treat that as "no platform credentials".
+	if c.platformClient == nil && c.platformClientErr == nil {
+		return nil, rest.NoPlatformCredentialsErr
+	}
+	return c.platformClient, c.platformClientErr
 }
 
 type Getter interface {
@@ -134,6 +150,10 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 	if validateCredentials(pc, CredValIAM) == nil {
 		pc.iamClient = rest.NewIAMClient(context.Background(), pc.Credentials())
 	}
+	// Build the shared platform client once, using this long-lived context. CreatePlatformClient
+	// returns NoPlatformCredentialsErr when no platform credentials are configured; that error is
+	// memorized and surfaced by PlatformClient() rather than dropped.
+	pc.platformClient, pc.platformClientErr = rest.CreatePlatformClient(ctx, pc.Platform.EnvironmentURL, pc.Credentials())
 	return pc, diag.Diagnostics{}
 }
 

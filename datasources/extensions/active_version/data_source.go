@@ -55,7 +55,7 @@ type ExtensionClient interface {
 }
 
 func createCoreClient(ctx context.Context, clientSet rest.ClientSet) (ExtensionClient, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}

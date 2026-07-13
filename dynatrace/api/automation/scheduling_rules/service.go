@@ -39,7 +39,7 @@ type service struct {
 }
 
 func (me *service) client(ctx context.Context) (*automation.Client, error) {
-	platformClient, err := tfrest.CreatePlatformClient(ctx, me.clientSet.Credentials().Platform.EnvironmentURL, me.clientSet.Credentials())
+	platformClient, err := me.clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}

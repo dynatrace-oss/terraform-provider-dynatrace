@@ -86,7 +86,7 @@ type service struct {
 }
 
 func (s *service) createClient(ctx context.Context) (*caclib.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, s.clientSet.Credentials().Platform.EnvironmentURL, s.clientSet.Credentials())
+	platformClient, err := s.clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}

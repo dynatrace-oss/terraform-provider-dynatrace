@@ -19,7 +19,6 @@ package testing
 import (
 	"context"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
@@ -51,14 +50,3 @@ func (me *MockIAMClient) GET(ctx context.Context, url string, options rest2.Requ
 func (me *MockIAMClient) DELETE(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 	return me.DELETEFunc(ctx, url, options)
 }
-
-// MockClientSet is a rest.ClientSet whose IAM client and credentials are supplied directly, for
-// injecting a MockIAMClient into IAM services under test.
-type MockClientSet struct {
-	IAMClientValue   rest.IAMClient
-	CredentialsValue *rest.Credentials
-}
-
-func (me *MockClientSet) IAMClient() rest.IAMClient { return me.IAMClientValue }
-
-func (me *MockClientSet) Credentials() *rest.Credentials { return me.CredentialsValue }

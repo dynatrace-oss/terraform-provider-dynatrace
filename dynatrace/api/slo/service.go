@@ -38,7 +38,7 @@ type service struct {
 }
 
 func (me *service) client(ctx context.Context) (*sloclient.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.clientSet.Credentials().Platform.EnvironmentURL, me.clientSet.Credentials())
+	platformClient, err := me.clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}

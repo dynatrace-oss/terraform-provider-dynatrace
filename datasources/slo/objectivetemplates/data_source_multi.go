@@ -21,7 +21,6 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
@@ -65,7 +64,7 @@ func DataSourceMultiRead(ctx context.Context, d *schema.ResourceData, m any) dia
 		return diag.FromErr(err)
 	}
 
-	restClient, _ := rest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
+	restClient, _ := clientSet.PlatformClient()
 
 	client := NewClient(restClient)
 

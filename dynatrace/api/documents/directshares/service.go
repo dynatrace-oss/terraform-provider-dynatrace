@@ -81,7 +81,7 @@ type removeDirectShareRecipientsDTO struct {
 }
 
 func createCoreClient(ctx context.Context, clientSet rest.ClientSet) (directSharesClient, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}
