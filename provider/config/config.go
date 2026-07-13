@@ -128,10 +128,11 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 			EnvironmentURL: getPlatformEnvironmentURL(d),
 		},
 	}
+
 	// Build the shared IAM client once, using this long-lived context, when IAM credentials are
 	// available. IAM services reuse it via pc.IAMClient() rather than constructing their own.
 	if validateCredentials(pc, CredValIAM) == nil {
-		pc.iamClient = rest.NewIAMClient(ctx, pc.Credentials())
+		pc.iamClient = rest.NewIAMClient(context.Background(), pc.Credentials())
 	}
 	return pc, diag.Diagnostics{}
 }
