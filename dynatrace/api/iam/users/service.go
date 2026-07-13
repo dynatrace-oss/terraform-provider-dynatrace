@@ -112,7 +112,6 @@ type UserStub struct {
 }
 
 type ListUsersResponse struct {
-	Count int        `json:"count:"`
 	Items []UserStub `json:"items"`
 }
 
