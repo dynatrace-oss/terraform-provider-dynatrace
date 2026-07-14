@@ -17,16 +17,6 @@
 
 package rest
 
-const (
-	ProdTokenURL   = "https://sso.dynatrace.com/sso/oauth2/token"
-	SprintTokenURL = "https://sso-sprint.dynatracelabs.com/sso/oauth2/token"
-	DevTokenURL    = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
-
-	ProdIAMEndpointURL   = "https://api.dynatrace.com"
-	SprintIAMEndpointURL = "https://api-hardening.internal.dynatracelabs.com"
-	DevIAMEndpointURL    = "https://api-dev.internal.dynatracelabs.com"
-)
-
 const TestCaseEnvURL = "go-test"
 
 type PlatformCredentials struct {

@@ -21,7 +21,6 @@ import (
 	"context"
 	"errors"
 	"net/url"
-	"regexp"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
@@ -63,7 +62,7 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 			WithOAuthCredentials(clientcredentials.Config{
 				ClientID:     credentials.Platform.ClientID,
 				ClientSecret: credentials.Platform.ClientSecret,
-				TokenURL:     evalTokenURL(platformURL),
+				TokenURL:     credentials.Platform.TokenURL,
 			}).
 			CreatePlatformClient(NewContextWithOAuthRetryClient(ctx))
 	}
@@ -114,21 +113,4 @@ func (me *platform_request) evalPlatformURL(envURL string) string {
 	envURL = strings.ReplaceAll(envURL, ".sprint.dynatracelabs.", ".sprint.apps.dynatracelabs.")
 	return envURL
 
-}
-
-var regexpSaasTenant = regexp.MustCompile(`https:\/\/(.*).(live|apps).dynatrace.com`)
-var regexpSprintTenant = regexp.MustCompile(`https:\/\/(.*).sprint(?:\.apps)?.dynatracelabs.com`)
-var regexpDevTenant = regexp.MustCompile(`https:\/\/(.*).dev(?:\.apps)?.dynatracelabs.com`)
-
-func evalTokenURL(dtEnvURL string) string {
-	if match := regexpSaasTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-		return ProdTokenURL
-	}
-	if match := regexpSprintTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-		return SprintTokenURL
-	}
-	if match := regexpDevTenant.FindStringSubmatch(dtEnvURL); len(match) > 0 {
-		return DevTokenURL
-	}
-	return ""
 }
