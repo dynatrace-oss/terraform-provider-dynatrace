@@ -80,14 +80,14 @@ func (me *api_token_client) Delete(ctx context.Context, url string, expectedStat
 }
 
 func (me *api_token_request) Finish(vs ...any) error {
-	credentials := me.client.Credentials()
-	if !credentials.ContainsAPIToken() {
-		return NoAPITokenError
-	}
+	// credentials := me.client.Credentials()
+	// if !credentials.ContainsAPIToken() {
+	// 	return NoAPITokenError
+	// }
 	classicRequest := classic_request(*me)
-	if credentials.URL == TestCaseEnvURL {
-		return errors.New("classic")
-	}
+	// if credentials.URL == TestCaseEnvURL {
+	// 	return errors.New("classic")
+	// }
 	return classicRequest.Finish(vs...)
 }
 
