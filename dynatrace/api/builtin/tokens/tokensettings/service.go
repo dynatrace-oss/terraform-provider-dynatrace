@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "2.0.2"
 const SchemaID = "builtin:tokens.token-settings"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*tokensettings.Settings] {
-	return settings20.Service[*tokensettings.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*tokensettings.Settings] {
+	return settings20.Service[*tokensettings.Settings](clientSet, SchemaID, SchemaVersion)
 }

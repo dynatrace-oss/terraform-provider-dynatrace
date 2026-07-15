@@ -33,11 +33,10 @@ import (
 
 const SchemaID = "v1:config:applications:web"
 
-
-func Service(credentials *rest.Credentials) settings.CRUDService[*web.Application] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*web.Application] {
 	return &service{
 		service: settings.NewAPITokenService(
-			credentials,
+			clientSet,
 			SchemaID,
 			&settings.ServiceOptions[*web.Application]{
 				Get:           settings.Path("/api/config/v1/applications/web/%s"),
@@ -46,7 +45,7 @@ func Service(credentials *rest.Credentials) settings.CRUDService[*web.Applicatio
 				Duplicates:    Duplicates,
 			},
 		),
-		client: rest.APITokenClient(credentials),
+		client: rest.APITokenClient(clientSet.Credentials()),
 	}
 }
 

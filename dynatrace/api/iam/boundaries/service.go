@@ -36,12 +36,12 @@ import (
 
 const maxPageSize = 10000
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*boundaries.PolicyBoundary] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*boundaries.PolicyBoundary] {
 	return &BoundaryServiceClient{
 		iamClientGetter: &iamClientGetterImp{
-			credentials: credentials,
+			credentials: clientSet.Credentials(),
 		},
-		accountID: credentials.IAM.AccountID,
+		accountID: clientSet.Credentials().IAM.AccountID,
 	}
 }
 

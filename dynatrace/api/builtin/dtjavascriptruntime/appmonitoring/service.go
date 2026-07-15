@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "2.4.1"
 const SchemaID = "builtin:dt-javascript-runtime.app-monitoring"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*appmonitoring.Settings] {
-	return settings20.Service[*appmonitoring.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*appmonitoring.Settings] {
+	return settings20.Service[*appmonitoring.Settings](clientSet, SchemaID, SchemaVersion)
 }

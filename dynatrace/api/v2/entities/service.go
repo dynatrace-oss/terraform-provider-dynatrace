@@ -33,8 +33,8 @@ import (
 
 const SchemaID = "v2:environment:entities"
 
-func Service(entityType string, entityName string, entitySelector string, from string, to string, credentials *rest.Credentials) settings.RService[*entities.Settings] {
-	return &service{entityType: entityType, entityName: entityName, entitySelector: entitySelector, from: from, to: to, client: rest.APITokenClient(credentials)}
+func Service(entityType string, entityName string, entitySelector string, from string, to string, clientSet rest.ClientSet) settings.RService[*entities.Settings] {
+	return &service{entityType: entityType, entityName: entityName, entitySelector: entitySelector, from: from, to: to, client: rest.APITokenClient(clientSet.Credentials())}
 }
 
 type service struct {

@@ -73,7 +73,7 @@ var mmu = &multiMutex{lock: new(sync.Mutex), mutexes: make(map[string]*sync.Mute
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -91,7 +91,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 	// Retrieve auto tag rules from API
 	apiConfig := new(auto_tag_settings.Settings)
-	if err := autotagging.Service(creds).Get(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
+	if err := autotagging.Service(clientSet).Get(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -99,7 +99,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	// Concatenated rules may contain duplicates but API does not care
 	apiConfig.Rules = append(apiConfig.Rules, tfConfig.Rules...)
 
-	if err := autotagging.Service(creds).Update(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
+	if err := autotagging.Service(clientSet).Update(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(uuid.New().String())
@@ -123,7 +123,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -152,7 +152,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 	// Retrieve auto tag rules from API
 	apiConfig := new(auto_tag_settings.Settings)
-	if err := autotagging.Service(creds).Get(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
+	if err := autotagging.Service(clientSet).Get(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -188,7 +188,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	}
 	apiConfig.Rules = finalRules
 
-	if err := autotagging.Service(creds).Update(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
+	if err := autotagging.Service(clientSet).Update(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -203,7 +203,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -230,7 +230,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 	// Retrieve auto tag rules from API
 	apiConfig := new(auto_tag_settings.Settings)
-	if err := autotagging.Service(creds).Get(ctx, stateConfig.AutoTagId, apiConfig); err != nil {
+	if err := autotagging.Service(clientSet).Get(ctx, stateConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -259,7 +259,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -286,7 +286,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 	// Retrieve auto tag rules from API
 	apiConfig := new(auto_tag_settings.Settings)
-	if err := autotagging.Service(creds).Get(ctx, stateConfig.AutoTagId, apiConfig); err != nil {
+	if err := autotagging.Service(clientSet).Get(ctx, stateConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -299,7 +299,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		}
 	}
 
-	if err := autotagging.Service(creds).Update(ctx, stateConfig.AutoTagId, apiConfig); err != nil {
+	if err := autotagging.Service(clientSet).Update(ctx, stateConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 

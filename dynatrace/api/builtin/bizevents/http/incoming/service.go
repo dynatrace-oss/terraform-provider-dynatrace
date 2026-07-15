@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:bizevents.http.incoming"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*incoming.Settings] {
-	return settings20.Service[*incoming.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*incoming.Settings] {
+	return settings20.Service[*incoming.Settings](clientSet, SchemaID, SchemaVersion)
 }

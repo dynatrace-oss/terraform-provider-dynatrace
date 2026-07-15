@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.1"
 const SchemaID = "builtin:histogram-metrics"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*histogrammetrics.Settings] {
-	return settings20.Service[*histogrammetrics.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*histogrammetrics.Settings] {
+	return settings20.Service[*histogrammetrics.Settings](clientSet, SchemaID, SchemaVersion)
 }

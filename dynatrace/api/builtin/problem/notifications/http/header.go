@@ -24,7 +24,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-
 type Headers []*Header
 
 func (me *Headers) Schema() map[string]*schema.Schema {

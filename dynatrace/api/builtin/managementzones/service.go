@@ -36,18 +36,18 @@ import (
 const SchemaID = "builtin:management-zones"
 const SchemaVersion = "1.0.13"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*managementzones.Settings] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*managementzones.Settings] {
 	return &service{
-		service:     settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*managementzones.Settings]{LegacyID: settings.LegacyLongDecode}),
-		client:      rest.HybridClient(credentials),
-		credentials: credentials,
+		service:    settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*managementzones.Settings]{LegacyID: settings.LegacyLongDecode}),
+		sloService: slo.Service(clientSet),
+		client:     rest.HybridClient(clientSet.Credentials()),
 	}
 }
 
 type service struct {
-	service     settings.ListIDCRUDService[*managementzones.Settings]
-	client      rest.Client
-	credentials *rest.Credentials
+	service    settings.ListIDCRUDService[*managementzones.Settings]
+	sloService settings.CRUDService[*slosettings.Settings]
+	client     rest.Client
 }
 
 func (me *service) Create(ctx context.Context, v *managementzones.Settings) (*api.Stub, error) {
@@ -73,7 +73,7 @@ func (me *service) Create(ctx context.Context, v *managementzones.Settings) (*ap
 		},
 	}
 
-	validator := slo.Service(me.credentials).(settings.Validator[*slosettings.Settings])
+	validator := me.sloService.(settings.Validator[*slosettings.Settings])
 
 	maxConfirmationRetries := envutils.DTMgmzRetries.Get()
 	numRequiredSuccesses := envutils.DTMgmzSuccesses.Get()

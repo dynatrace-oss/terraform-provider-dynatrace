@@ -26,9 +26,9 @@ import (
 const SchemaID = "v1:config:alerting"
 const BasePath = "/api/config/v1/alertingProfiles"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*alerting.Profile] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*alerting.Profile] {
 	return settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*alerting.Profile](BasePath),
 	)

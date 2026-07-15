@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.4"
 const SchemaID = "builtin:process-group.monitoring.state"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*state.Settings] {
-	return settings20.Service[*state.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*state.Settings] {
+	return settings20.Service[*state.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -95,14 +95,14 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if to == "now" {
 		to = ""
 	}
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	var settings entities.Settings
 	// service := cache.Read(srv.Service(entityType, entitySelector, creds), true)
-	service := srv.Service(entityType, name, entitySelector, from, to, creds)
+	service := srv.Service(entityType, name, entitySelector, from, to, clientSet)
 	if err := service.Get(ctx, service.SchemaID(), &settings); err != nil {
 		return diag.FromErr(err)
 	}

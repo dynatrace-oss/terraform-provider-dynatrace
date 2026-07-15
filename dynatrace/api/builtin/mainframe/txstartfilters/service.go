@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.2"
 const SchemaID = "builtin:mainframe.txstartfilters"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*txstartfilters.Settings] {
-	return settings20.Service[*txstartfilters.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*txstartfilters.Settings] {
+	return settings20.Service[*txstartfilters.Settings](clientSet, SchemaID, SchemaVersion)
 }

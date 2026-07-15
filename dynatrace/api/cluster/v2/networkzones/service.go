@@ -31,9 +31,9 @@ import (
 
 const SchemaID = "cluster:networkzones"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*networkzones.NetworkZone] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*networkzones.NetworkZone] {
 	return &service{
-		serviceClient: NewService(credentials),
+		serviceClient: NewService(clientSet),
 	}
 }
 
@@ -69,8 +69,8 @@ func (cs *ServiceClient) SchemaID() string {
 	return SchemaID
 }
 
-func NewService(credentials *rest.Credentials) *ServiceClient {
-	return &ServiceClient{client: rest.ClusterV2Client(credentials)}
+func NewService(clientSet rest.ClientSet) *ServiceClient {
+	return &ServiceClient{client: rest.ClusterV2Client(clientSet.Credentials())}
 }
 
 type service struct {

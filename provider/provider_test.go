@@ -186,8 +186,11 @@ func TestSSOTokenURL(t *testing.T) {
 
 func createCredentials(getter config.Getter) *rest.Credentials {
 	configResult, _ := config.ProviderConfigureGeneric(context.Background(), getter)
-	creds, _ := config.Credentials(configResult, config.CredValNone)
-	return creds
+	clientSet, err := config.ClientSet(configResult, config.CredValNone)
+	if err != nil {
+		return nil
+	}
+	return clientSet.Credentials()
 }
 
 type Assert struct {

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "2.1.10"
 const SchemaID = "builtin:service-detection.external-web-service"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*externalwebservice.Settings] {
-	return settings20.Service[*externalwebservice.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*externalwebservice.Settings] {
+	return settings20.Service[*externalwebservice.Settings](clientSet, SchemaID, SchemaVersion)
 }

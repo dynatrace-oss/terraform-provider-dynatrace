@@ -27,7 +27,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-
 type StateMap struct {
 	mutex     *sync.Mutex
 	resources map[string]StateResource

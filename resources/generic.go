@@ -165,7 +165,7 @@ func (me *Generic) Resource() *schema.Resource {
 	return resRes
 }
 
-func (me *Generic) createCredentials(m any) (*rest.Credentials, error) {
+func (me *Generic) clientSet(m any) (rest.ClientSet, error) {
 	// By default credential validation follows the default route
 	// (EnvURL, APIToken)
 	cv := config.CredValDefault
@@ -175,16 +175,7 @@ func (me *Generic) createCredentials(m any) (*rest.Credentials, error) {
 	if me.CredentialValidation != cv {
 		cv = me.CredentialValidation
 	}
-	conf := m.(*config.ProviderConfiguration)
-	if _, err := config.Credentials(m, cv); err != nil {
-		return nil, err
-	}
-	return &rest.Credentials{
-		Token: conf.APIToken,
-		URL:   conf.EnvironmentURL,
-		IAM:   conf.IAM,
-		Platform: conf.Platform,
-	}, nil
+	return config.ClientSet(m, cv)
 }
 
 func (me *Generic) Settings() settings.Settings {
@@ -192,11 +183,11 @@ func (me *Generic) Settings() settings.Settings {
 }
 
 func (me *Generic) Service(m any) (settings.CRUDService[settings.Settings], error) {
-	creds, err := me.createCredentials(m)
+	clientSet, err := me.clientSet(m)
 	if err != nil {
 		return nil, err
 	}
-	return me.Descriptor.Service(creds), nil
+	return me.Descriptor.Service(clientSet), nil
 }
 
 func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {

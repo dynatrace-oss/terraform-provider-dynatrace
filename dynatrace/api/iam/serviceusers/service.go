@@ -53,17 +53,17 @@ type serviceUserServiceClient struct {
 	accountID       string
 }
 
-func NewService(credentials *rest.Credentials) ServiceUserService {
+func NewService(clientSet rest.ClientSet) ServiceUserService {
 	return &serviceUserServiceClient{
 		iamClientGetter: &iamClientGetterImp{
-			credentials: credentials,
+			credentials: clientSet.Credentials(),
 		},
-		accountID: credentials.IAM.AccountID,
+		accountID: clientSet.Credentials().IAM.AccountID,
 	}
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*serviceusers.ServiceUser] {
-	return NewService(credentials)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*serviceusers.ServiceUser] {
+	return NewService(clientSet)
 }
 
 func (me *serviceUserServiceClient) SchemaID() string {

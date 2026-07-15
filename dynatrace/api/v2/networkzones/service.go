@@ -35,13 +35,13 @@ import (
 
 const SchemaID = "v2:environment:network-zones"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*networkzones.NetworkZone] {
-	return &service{client: rest.APITokenClient(credentials), credentials: credentials}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*networkzones.NetworkZone] {
+	return &service{client: rest.APITokenClient(clientSet.Credentials()), clientSet: clientSet}
 }
 
 type service struct {
-	credentials *rest.Credentials
-	client      rest.Client
+	clientSet rest.ClientSet
+	client    rest.Client
 }
 
 func (me *service) Get(ctx context.Context, id string, v *networkzones.NetworkZone) error {
@@ -79,7 +79,7 @@ func (me *service) Create(ctx context.Context, v *networkzones.NetworkZone) (*ap
 
 	if err = req.Finish(); err != nil {
 		if strings.Contains(err.Error(), "Not allowed because network zones are disabled") {
-			if _, err := enable.Service(me.credentials).Create(ctx, &enablesettings.NetworkZones{Enabled: true}); err != nil {
+			if _, err := enable.Service(me.clientSet).Create(ctx, &enablesettings.NetworkZones{Enabled: true}); err != nil {
 				return nil, err
 			}
 			return me.Create(ctx, v)

@@ -30,9 +30,9 @@ import (
 const SchemaID = "v1:config:applications:detection"
 const BasePath = "/api/config/v1/applicationDetectionRules"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*detection.Rule] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*detection.Rule] {
 	return &service{settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*detection.Rule](BasePath),
 	)}

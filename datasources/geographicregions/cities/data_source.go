@@ -67,11 +67,11 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	}
 	countryRegionCode := fmt.Sprintf("%s-%s", countryCode, regionCode)
 
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	service := srv.Service(creds)
+	service := srv.Service(clientSet)
 
 	var settings cities.Settings
 	if err := service.Get(ctx, countryRegionCode, &settings); err != nil {

@@ -41,9 +41,9 @@ const SchemaID = "builtin:hyperscaler-authentication.connections.gcp"
 // fails and forces this constant to be updated in lockstep.
 const RetryableAuthenticationErrorMessage = "GCP authentication failed"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*serviceSettings.Settings] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*serviceSettings.Settings] {
 	return &service{
-		service: settings20.Service[*serviceSettings.Settings](credentials, SchemaID, SchemaVersion),
+		service: settings20.Service[*serviceSettings.Settings](clientSet, SchemaID, SchemaVersion),
 	}
 }
 

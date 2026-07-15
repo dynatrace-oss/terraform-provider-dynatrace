@@ -49,11 +49,11 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	name := d.Get("name").(string)
 
 	d.SetId("dynatrace_v2_alerting_profiles")
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	service := export.Service(creds, export.ResourceTypes.Alerting)
+	service := export.Service(clientSet, export.ResourceTypes.Alerting)
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)

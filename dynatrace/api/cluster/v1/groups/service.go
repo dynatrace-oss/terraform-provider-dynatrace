@@ -29,9 +29,9 @@ import (
 
 const SchemaID = "accounts:groups"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*groups.GroupConfig] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*groups.GroupConfig] {
 	return &service{
-		serviceClient: NewService(credentials),
+		serviceClient: NewService(clientSet),
 	}
 }
 
@@ -43,8 +43,8 @@ type ServiceClient struct {
 // NewService creates a new Service Client
 // baseURL should look like this: "https://#######.live.dynatrace.com/api/config/v1"
 // token is an API Token
-func NewService(credentials *rest.Credentials) *ServiceClient {
-	return &ServiceClient{client: rest.ClusterV1Client(credentials)}
+func NewService(clientSet rest.ClientSet) *ServiceClient {
+	return &ServiceClient{client: rest.ClusterV1Client(clientSet.Credentials())}
 }
 
 type service struct {

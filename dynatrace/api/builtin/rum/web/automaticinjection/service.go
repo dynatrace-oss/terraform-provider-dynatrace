@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.2.4"
 const SchemaID = "builtin:rum.web.automatic-injection"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*automaticinjection.Settings] {
-	return settings20.Service[*automaticinjection.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*automaticinjection.Settings] {
+	return settings20.Service[*automaticinjection.Settings](clientSet, SchemaID, SchemaVersion)
 }

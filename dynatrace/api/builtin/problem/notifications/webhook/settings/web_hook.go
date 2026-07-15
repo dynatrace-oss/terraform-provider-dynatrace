@@ -18,8 +18,9 @@
 package notifications
 
 import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/http"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.3"
 const SchemaID = "builtin:host.monitoring"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*monitoring.Settings] {
-	return settings20.Service[*monitoring.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*monitoring.Settings] {
+	return settings20.Service[*monitoring.Settings](clientSet, SchemaID, SchemaVersion)
 }

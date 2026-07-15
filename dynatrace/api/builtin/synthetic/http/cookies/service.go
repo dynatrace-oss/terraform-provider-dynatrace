@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:synthetic.http.cookies"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*cookies.Settings] {
-	return settings20.Service[*cookies.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*cookies.Settings] {
+	return settings20.Service[*cookies.Settings](clientSet, SchemaID, SchemaVersion)
 }

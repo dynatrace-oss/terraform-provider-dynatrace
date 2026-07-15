@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.7"
 const SchemaID = "builtin:devobs.agent.optin"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
-	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

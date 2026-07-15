@@ -27,8 +27,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
-func Service(credentials *rest.Credentials, schemaID string, staticID string, staticName string, basePath string) settings.CRUDService[*order.Settings] {
-	return &service{client: rest.APITokenClient(credentials), schemaID: schemaID, StaticID: staticID, StaticName: staticName, BasePath: basePath}
+func Service(clientSet rest.ClientSet, schemaID string, staticID string, staticName string, basePath string) settings.CRUDService[*order.Settings] {
+	return &service{client: rest.APITokenClient(clientSet.Credentials()), schemaID: schemaID, StaticID: staticID, StaticName: staticName, BasePath: basePath}
 }
 
 type service struct {

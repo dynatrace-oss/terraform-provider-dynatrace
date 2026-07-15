@@ -29,9 +29,9 @@ import (
 
 const SchemaID = "v1:config:json-dashboards-base"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*dashboardsbase.JSONDashboardBase] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*dashboardsbase.JSONDashboardBase] {
 	return &service{settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*dashboardsbase.JSONDashboardBase]("/api/config/v1/dashboards").WithStubs(&dashboardsbase.DashboardList{}),
 	)}

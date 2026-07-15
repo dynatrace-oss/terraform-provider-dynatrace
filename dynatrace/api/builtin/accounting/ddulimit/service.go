@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "3.4.1"
 const SchemaID = "builtin:accounting.ddu.limit"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*ddulimit.DDUPool] {
-	return settings20.Service[*ddulimit.DDUPool](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*ddulimit.DDUPool] {
+	return settings20.Service[*ddulimit.DDUPool](clientSet, SchemaID, SchemaVersion)
 }

@@ -31,8 +31,8 @@ import (
 const SchemaVersion = "8.6.3"
 const SchemaID = "builtin:alerting.profile"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*profile.Profile] {
-	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*profile.Profile]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
+func Service(clientSet rest.ClientSet) settings.CRUDService[*profile.Profile] {
+	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*profile.Profile]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*profile.Profile], v *profile.Profile) (*api.Stub, error) {

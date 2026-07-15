@@ -34,10 +34,10 @@ const BasePath = "/api/v2/credentials"
 
 var mu sync.Mutex
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*vault.Credentials] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*vault.Credentials] {
 	return &service{
 		service: settings.NewAPITokenService(
-			credentials,
+			clientSet,
 			SchemaID,
 			settings.DefaultServiceOptions[*vault.Credentials](BasePath).
 				WithMutex(mu.Lock, mu.Unlock).

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "8.0.52"
 const SchemaID = "builtin:logmonitoring.schemaless-log-metric"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*schemalesslogmetric.Settings] {
-	return settings20.Service[*schemalesslogmetric.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*schemalesslogmetric.Settings] {
+	return settings20.Service[*schemalesslogmetric.Settings](clientSet, SchemaID, SchemaVersion)
 }

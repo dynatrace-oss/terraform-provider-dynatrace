@@ -106,7 +106,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		testResType := ResourceType("test_builtin_resource")
 		resources := map[ResourceType]ResourceDescriptor{
 			testResType: {
-				Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
+				Service: func(credentials rest.ClientSet) settings.CRUDService[settings.Settings] {
 					return &settings.GenericCRUDService[*mockSettingsWithInsertAfter]{
 						Service: &mockService[*mockSettingsWithInsertAfter]{schemaID: "builtin:test.schema"},
 					}
@@ -130,7 +130,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		testResType := ResourceType("test_app_resource")
 		resources := map[ResourceType]ResourceDescriptor{
 			testResType: {
-				Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
+				Service: func(credentials rest.ClientSet) settings.CRUDService[settings.Settings] {
 					return &settings.GenericCRUDService[*mockSettingsWithInsertAfter]{
 						Service: &mockService[*mockSettingsWithInsertAfter]{schemaID: "app:dynatrace.test"},
 					}
@@ -154,7 +154,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		testResType := ResourceType("test_legacy_resource")
 		resources := map[ResourceType]ResourceDescriptor{
 			testResType: {
-				Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
+				Service: func(credentials rest.ClientSet) settings.CRUDService[settings.Settings] {
 					return &settings.GenericCRUDService[*mockSettingsWithInsertAfter]{
 						Service: &mockService[*mockSettingsWithInsertAfter]{schemaID: "legacy:test.schema"},
 					}
@@ -177,7 +177,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		testResType := ResourceType("test_no_insert_after")
 		resources := map[ResourceType]ResourceDescriptor{
 			testResType: {
-				Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
+				Service: func(credentials rest.ClientSet) settings.CRUDService[settings.Settings] {
 					return &settings.GenericCRUDService[*mockSettingsWithoutInsertAfter]{
 						Service: &mockService[*mockSettingsWithoutInsertAfter]{schemaID: "builtin:test.schema"},
 					}
@@ -201,7 +201,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		existingDep := Dependencies.WeakID(testResType)
 		resources := map[ResourceType]ResourceDescriptor{
 			testResType: {
-				Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
+				Service: func(credentials rest.ClientSet) settings.CRUDService[settings.Settings] {
 					return &settings.GenericCRUDService[*mockSettingsWithInsertAfter]{
 						Service: &mockService[*mockSettingsWithInsertAfter]{schemaID: "builtin:test.schema"},
 					}
@@ -227,7 +227,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 
 		resources := map[ResourceType]ResourceDescriptor{
 			resTypeWithInsertAfter: {
-				Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
+				Service: func(credentials rest.ClientSet) settings.CRUDService[settings.Settings] {
 					return &settings.GenericCRUDService[*mockSettingsWithInsertAfter]{
 						Service: &mockService[*mockSettingsWithInsertAfter]{schemaID: "builtin:with.insertafter"},
 					}
@@ -236,7 +236,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 				Dependencies: []Dependency{},
 			},
 			resTypeWithoutInsertAfter: {
-				Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
+				Service: func(credentials rest.ClientSet) settings.CRUDService[settings.Settings] {
 					return &settings.GenericCRUDService[*mockSettingsWithoutInsertAfter]{
 						Service: &mockService[*mockSettingsWithoutInsertAfter]{schemaID: "builtin:without.insertafter"},
 					}
@@ -245,7 +245,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 				Dependencies: []Dependency{},
 			},
 			resTypeNonSettings20: {
-				Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
+				Service: func(credentials rest.ClientSet) settings.CRUDService[settings.Settings] {
 					return &settings.GenericCRUDService[*mockSettingsWithInsertAfter]{
 						Service: &mockService[*mockSettingsWithInsertAfter]{schemaID: "v1:legacy.schema"},
 					}
@@ -275,7 +275,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 
 		resources := map[ResourceType]ResourceDescriptor{
 			testResType: {
-				Service: func(credentials *rest.Credentials) settings.CRUDService[settings.Settings] {
+				Service: func(credentials rest.ClientSet) settings.CRUDService[settings.Settings] {
 					return &settings.GenericCRUDService[*mockSettingsWithInsertAfter]{
 						Service: &mockService[*mockSettingsWithInsertAfter]{schemaID: "builtin:test.schema"},
 					}

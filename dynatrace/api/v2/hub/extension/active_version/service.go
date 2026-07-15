@@ -30,18 +30,18 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*active_version.Settings] {
-	return &service{credentials: credentials, itemsService: items.Service(credentials, items.Options{Type: "EXTENSION2"})}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*active_version.Settings] {
+	return &service{clientSet: clientSet, itemsService: items.Service(clientSet, items.Options{Type: "EXTENSION2"})}
 }
 
 type service struct {
-	credentials  *rest.Credentials
+	clientSet    rest.ClientSet
 	itemsService settings.RService[*items_settings.HubItemList]
 }
 
 func (me *service) Get(ctx context.Context, id string, v *active_version.Settings) error {
 	var response GetActiveEnvironmentConfigurationResponse
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.clientSet.Credentials())
 	if err := client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/environmentConfiguration", url.PathEscape(id)), 200).Finish(&response); err != nil {
 		return err
 	}
@@ -77,7 +77,7 @@ func (me *service) Create(ctx context.Context, v *active_version.Settings) (*api
 	if err := me.ensureInstalled(ctx, name, version); err != nil {
 		return nil, err
 	}
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.clientSet.Credentials())
 	createResponse := SetActiveEnvironmentConfigurationResponse{}
 	retry := 10
 	for retry > 0 {
@@ -91,7 +91,7 @@ func (me *service) Create(ctx context.Context, v *active_version.Settings) (*api
 }
 
 func (me *service) ensureInstalled(ctx context.Context, name string, version string) error {
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.clientSet.Credentials())
 	response := struct {
 		Name    string `json:"extensionName"`
 		Version string `json:"extensionVersion"`

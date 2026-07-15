@@ -36,16 +36,16 @@ import (
 const settingsObjectEndpoint = "/api/v2/settings/objects"
 const settingsSchemaEndpoint = "/api/v2/settings/schemas"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*generic.Settings] {
-	return &service{credentials: credentials}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*generic.Settings] {
+	return &service{clientSet: clientSet}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	clientSet rest.ClientSet
 }
 
 func (me *service) Client() rest.Client {
-	return rest.HybridClient(me.credentials)
+	return rest.HybridClient(me.clientSet.Credentials())
 }
 
 func (me *service) Get(ctx context.Context, id string, v *generic.Settings) error {
@@ -158,7 +158,7 @@ func (me *service) Create(ctx context.Context, v *generic.Settings) (*api.Stub, 
 	if err == nil {
 		return stubs, nil
 	}
-	if rest.IsRequiresOAuthError(err) && me.credentials.ContainsOAuthOrPlatformToken() {
+	if rest.IsRequiresOAuthError(err) && me.clientSet.Credentials().ContainsOAuthOrPlatformToken() {
 		ctx := rest.NewPreferOAuthContext(ctx)
 		return me.create(ctx, v)
 	}
@@ -196,7 +196,7 @@ func (me *service) Update(ctx context.Context, id string, v *generic.Settings) e
 	if err == nil {
 		return nil
 	}
-	if rest.IsRequiresOAuthError(err) && me.credentials.ContainsOAuthOrPlatformToken() {
+	if rest.IsRequiresOAuthError(err) && me.clientSet.Credentials().ContainsOAuthOrPlatformToken() {
 		ctx := rest.NewPreferOAuthContext(ctx)
 		return me.update(ctx, id, v)
 	}

@@ -31,8 +31,8 @@ import (
 const SchemaVersion = "0.4.13"
 const SchemaID = "builtin:process.custom-process-monitoring-rule"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*customprocessmonitoring.Settings] {
-	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*customprocessmonitoring.Settings]{Duplicates: Duplicates})
+func Service(clientSet rest.ClientSet) settings.CRUDService[*customprocessmonitoring.Settings] {
+	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*customprocessmonitoring.Settings]{Duplicates: Duplicates})
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*customprocessmonitoring.Settings], v *customprocessmonitoring.Settings) (*api.Stub, error) {

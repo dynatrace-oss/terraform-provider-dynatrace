@@ -30,8 +30,8 @@ import (
 const SchemaVersion = "1.0.18"
 const SchemaID = "builtin:tags.auto-tagging"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*autotagging.Settings] {
-	return &service{settings20.Service[*autotagging.Settings](credentials, SchemaID, SchemaVersion)}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*autotagging.Settings] {
+	return &service{settings20.Service[*autotagging.Settings](clientSet, SchemaID, SchemaVersion)}
 }
 
 /*

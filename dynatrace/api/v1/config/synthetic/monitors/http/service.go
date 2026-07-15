@@ -31,8 +31,8 @@ import (
 const SchemaID = "v1:synthetic:monitors:http"
 const BasePath = "/api/v1/synthetic/monitors"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*http.SyntheticMonitor] {
-	return &service{service: settings.NewAPITokenService(credentials, SchemaID, &settings.ServiceOptions[*http.SyntheticMonitor]{
+func Service(clientSet rest.ClientSet) settings.CRUDService[*http.SyntheticMonitor] {
+	return &service{service: settings.NewAPITokenService(clientSet, SchemaID, &settings.ServiceOptions[*http.SyntheticMonitor]{
 		Get:            settings.Path("/api/v1/synthetic/monitors/%s"),
 		List:           settings.Path("/api/v1/synthetic/monitors?type=HTTP"),
 		CreateURL:      func(v *http.SyntheticMonitor) string { return "/api/v1/synthetic/monitors" },

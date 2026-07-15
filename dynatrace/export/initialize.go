@@ -157,7 +157,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		os.RemoveAll(targetFolder)
 	}
 
-	var credentials *rest.Credentials
+	var clientSet rest.ClientSet
 	configResult, _ := config.ProviderConfigureGeneric(context.Background(), cfgGetter)
 
 	dwValidationStrategy := config.CredValExport
@@ -168,7 +168,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		}
 	}
 
-	if credentials, err = config.Credentials(configResult, dwValidationStrategy); err != nil {
+	if clientSet, err = config.ClientSet(configResult, dwValidationStrategy); err != nil {
 		return nil, err
 	}
 
@@ -188,7 +188,7 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 
 	return &Environment{
 		OutputFolder:          targetFolder,
-		Credentials:           credentials,
+		ClientSet:             clientSet,
 		Modules:               map[ResourceType]*Module{},
 		Flags:                 flags,
 		ResArgs:               resArgs,

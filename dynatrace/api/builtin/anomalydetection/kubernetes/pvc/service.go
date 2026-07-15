@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.2"
 const SchemaID = "builtin:anomaly-detection.kubernetes.pvc"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*pvc.Settings] {
-	return settings20.Service[*pvc.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*pvc.Settings] {
+	return settings20.Service[*pvc.Settings](clientSet, SchemaID, SchemaVersion)
 }

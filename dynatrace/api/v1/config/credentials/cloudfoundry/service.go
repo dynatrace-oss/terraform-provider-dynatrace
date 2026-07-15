@@ -30,9 +30,9 @@ const BasePath = "/api/config/v1/cloudFoundry/credentials"
 
 var mu sync.Mutex
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*cloudfoundry.CloudFoundryCredentials] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*cloudfoundry.CloudFoundryCredentials] {
 	return settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*cloudfoundry.CloudFoundryCredentials](BasePath).WithMutex(mu.Lock, mu.Unlock),
 	)

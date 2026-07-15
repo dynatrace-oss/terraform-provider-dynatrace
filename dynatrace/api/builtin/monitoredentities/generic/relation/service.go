@@ -31,8 +31,8 @@ import (
 const SchemaVersion = "1.2"
 const SchemaID = "builtin:monitoredentities.generic.relation"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*relation.Settings] {
-	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*relation.Settings]{Duplicates: Duplicates})
+func Service(clientSet rest.ClientSet) settings.CRUDService[*relation.Settings] {
+	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*relation.Settings]{Duplicates: Duplicates})
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*relation.Settings], v *relation.Settings) (*api.Stub, error) {

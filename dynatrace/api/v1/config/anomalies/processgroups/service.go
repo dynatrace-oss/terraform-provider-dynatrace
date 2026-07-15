@@ -34,13 +34,13 @@ import (
 const SchemaID = "v1:config:anomaly-detection:process-groups"
 const BasePath = "/api/config/v1/anomalyDetection/processGroups"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*processgroups.AnomalyDetection] {
-	return &service{client: rest.APITokenClient(credentials), credentials: credentials}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*processgroups.AnomalyDetection] {
+	return &service{client: rest.APITokenClient(clientSet.Credentials()), clientSet: clientSet}
 }
 
 type service struct {
-	credentials *rest.Credentials
-	client      rest.Client
+	clientSet rest.ClientSet
+	client    rest.Client
 }
 
 func (me *service) SchemaID() string {
@@ -101,7 +101,7 @@ func (me *service) Get(ctx context.Context, id string, v *processgroups.AnomalyD
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	srv := entities.Service("PROCESS_GROUP", "", "", "", "", me.credentials)
+	srv := entities.Service("PROCESS_GROUP", "", "", "", "", me.clientSet)
 	v := new(entitiesSettings.Settings)
 	if err := srv.Get(ctx, "", v); err != nil {
 		return nil, err

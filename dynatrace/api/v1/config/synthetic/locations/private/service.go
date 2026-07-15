@@ -26,8 +26,8 @@ import (
 
 const SchemaID = "v1:synthetic:locations"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*locations.PrivateSyntheticLocation] {
-	return settings.NewAPITokenService(credentials, SchemaID, &settings.ServiceOptions[*locations.PrivateSyntheticLocation]{
+func Service(clientSet rest.ClientSet) settings.CRUDService[*locations.PrivateSyntheticLocation] {
+	return settings.NewAPITokenService(clientSet, SchemaID, &settings.ServiceOptions[*locations.PrivateSyntheticLocation]{
 		Get:            settings.Path("/api/v1/synthetic/locations/%s"),
 		List:           settings.Path("/api/v1/synthetic/locations?type=PRIVATE"),
 		CreateURL:      func(v *locations.PrivateSyntheticLocation) string { return "/api/v1/synthetic/locations" },

@@ -78,12 +78,12 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		docType = v.(string)
 	}
 
-	creds, err := config.Credentials(m, config.CredValPlatform)
+	clientSet, err := config.ClientSet(m, config.CredValPlatform)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	service := export.Service(creds, export.ResourceTypes.Documents)
+	service := export.Service(clientSet, export.ResourceTypes.Documents)
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)

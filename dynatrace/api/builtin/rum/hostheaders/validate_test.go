@@ -27,9 +27,9 @@ import (
 
 	hostheadersvc "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/hostheaders"
 	hostheaders "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/hostheaders/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -48,8 +48,8 @@ func TestValidateDoesNotCreateObjects(t *testing.T) {
 
 	headerName := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
 
-	credentials := &rest.Credentials{URL: envURL, Token: apiToken}
-	service := settings20.Service[*hostheaders.Settings](credentials, hostheadersvc.SchemaID, hostheadersvc.SchemaVersion)
+	clientSet := &config.ProviderConfiguration{EnvironmentURL: envURL, APIToken: apiToken}
+	service := settings20.Service[*hostheaders.Settings](clientSet, hostheadersvc.SchemaID, hostheadersvc.SchemaVersion)
 
 	// If Validate accidentally creates an object, clean it up so subsequent
 	// test runs are not polluted.

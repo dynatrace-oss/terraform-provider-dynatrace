@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.6.2"
 const SchemaID = "builtin:synthetic.http.performance-thresholds"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*performancethresholds.Settings] {
-	return settings20.Service[*performancethresholds.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*performancethresholds.Settings] {
+	return settings20.Service[*performancethresholds.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -42,16 +42,16 @@ import (
 const SchemaID = "builtin:span-attribute"
 const SchemaVersion = "0.0.42"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*attribute.Settings] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*attribute.Settings] {
 	return &service{
-		credentials: credentials,
-		client:      rest.HybridClient(credentials),
+		clientSet: clientSet,
+		client:    rest.HybridClient(clientSet.Credentials()),
 	}
 }
 
 type service struct {
-	credentials *rest.Credentials
-	client      rest.Client
+	clientSet rest.ClientSet
+	client    rest.Client
 }
 
 func (me *service) SchemaID() string {
@@ -76,7 +76,7 @@ func (me *service) Create(ctx context.Context, v *attribute.Settings) (*api.Stub
 				Enabled: true,
 				Key:     v.Key,
 			}
-			stub, err = allowlist.Service(me.credentials).Create(ctx, &allowlistSettings)
+			stub, err = allowlist.Service(me.clientSet).Create(ctx, &allowlistSettings)
 			if err != nil {
 				return nil, err
 			}
@@ -87,7 +87,7 @@ func (me *service) Create(ctx context.Context, v *attribute.Settings) (*api.Stub
 					Key:     v.Key,
 					Masking: maskingsettings.MaskingType(v.Masking),
 				}
-				if _, err = masking.Service(me.credentials).Create(ctx, &maskingSettings); err != nil {
+				if _, err = masking.Service(me.clientSet).Create(ctx, &maskingSettings); err != nil {
 					return nil, err
 				}
 			}
@@ -114,7 +114,7 @@ func (me *service) Update(ctx context.Context, id string, v *attribute.Settings)
 				stateKey = attributeConfig.Key
 			}
 
-			allowlistStubs, err := allowlist.Service(me.credentials).List(ctx)
+			allowlistStubs, err := allowlist.Service(me.clientSet).List(ctx)
 			if err != nil {
 				return err
 			}
@@ -132,12 +132,12 @@ func (me *service) Update(ctx context.Context, id string, v *attribute.Settings)
 					Enabled: true,
 					Key:     v.Key,
 				}
-				if err = allowlist.Service(me.credentials).Update(ctx, *allowlistId, &allowlistSettings); err != nil {
+				if err = allowlist.Service(me.clientSet).Update(ctx, *allowlistId, &allowlistSettings); err != nil {
 					return err
 				}
 			}
 
-			maskingStubs, err := masking.Service(me.credentials).List(ctx)
+			maskingStubs, err := masking.Service(me.clientSet).List(ctx)
 			if err != nil {
 				return err
 			}
@@ -157,11 +157,11 @@ func (me *service) Update(ctx context.Context, id string, v *attribute.Settings)
 						Key:     v.Key,
 						Masking: maskingsettings.MaskingType(v.Masking),
 					}
-					if err = masking.Service(me.credentials).Update(ctx, *maskingId, &maskingSettings); err != nil {
+					if err = masking.Service(me.clientSet).Update(ctx, *maskingId, &maskingSettings); err != nil {
 						return err
 					}
 				} else {
-					if err = masking.Service(me.credentials).Delete(ctx, *maskingId); err != nil {
+					if err = masking.Service(me.clientSet).Delete(ctx, *maskingId); err != nil {
 						return err
 					}
 				}
@@ -172,7 +172,7 @@ func (me *service) Update(ctx context.Context, id string, v *attribute.Settings)
 						Key:     v.Key,
 						Masking: maskingsettings.MaskingType(v.Masking),
 					}
-					if _, err = masking.Service(me.credentials).Create(ctx, &maskingSettings); err != nil {
+					if _, err = masking.Service(me.clientSet).Create(ctx, &maskingSettings); err != nil {
 						return err
 					}
 				}
@@ -202,7 +202,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 				stateKey = attributeConfig.Key
 			}
 
-			allowlistStubs, err := allowlist.Service(me.credentials).List(ctx)
+			allowlistStubs, err := allowlist.Service(me.clientSet).List(ctx)
 			if err != nil {
 				return err
 			}
@@ -220,7 +220,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 				}
 			}
 
-			maskingStubs, err := masking.Service(me.credentials).List(ctx)
+			maskingStubs, err := masking.Service(me.clientSet).List(ctx)
 			if err != nil {
 				return err
 			}
@@ -264,7 +264,7 @@ func (me *service) Get(ctx context.Context, id string, v *attribute.Settings) er
 				stateKey = attributeConfig.Key
 			}
 
-			allowlistStubs, err := allowlist.Service(me.credentials).List(ctx)
+			allowlistStubs, err := allowlist.Service(me.clientSet).List(ctx)
 			if err != nil {
 				return err
 			}
@@ -280,7 +280,7 @@ func (me *service) Get(ctx context.Context, id string, v *attribute.Settings) er
 			}
 
 			v.Masking = attribute.MaskingTypes.NotMasked
-			maskingStubs, err := masking.Service(me.credentials).List(ctx)
+			maskingStubs, err := masking.Service(me.clientSet).List(ctx)
 			if err != nil {
 				return err
 			}

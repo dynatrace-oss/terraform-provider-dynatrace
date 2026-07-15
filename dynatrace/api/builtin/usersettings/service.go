@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "2"
 const SchemaID = "builtin:user-settings"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*usersettings.Settings] {
-	return settings20.Service[*usersettings.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*usersettings.Settings] {
+	return settings20.Service[*usersettings.Settings](clientSet, SchemaID, SchemaVersion)
 }

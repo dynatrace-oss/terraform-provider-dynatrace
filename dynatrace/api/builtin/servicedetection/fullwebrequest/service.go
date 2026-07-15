@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "2.1.15"
 const SchemaID = "builtin:service-detection.full-web-request"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*service.Settings] {
-	return settings20.Service[*service.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

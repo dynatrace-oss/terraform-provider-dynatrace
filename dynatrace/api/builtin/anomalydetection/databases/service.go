@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.18"
 const SchemaID = "builtin:anomaly-detection.databases"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*databases.Settings] {
-	return settings20.Service[*databases.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*databases.Settings] {
+	return settings20.Service[*databases.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -32,12 +32,12 @@ import (
 const SchemaID = "v1:config:service:request-naming"
 const BasePath = "/api/config/v1/service/requestNaming"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*requestnaming.RequestNaming] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*requestnaming.RequestNaming] {
 	return &service{service: settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*requestnaming.RequestNaming](BasePath),
-	), client: rest.APITokenClient(credentials)}
+	), client: rest.APITokenClient(clientSet.Credentials())}
 }
 
 type service struct {

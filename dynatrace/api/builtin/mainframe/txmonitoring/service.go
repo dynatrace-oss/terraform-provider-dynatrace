@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.6.3"
 const SchemaID = "builtin:mainframe.txmonitoring"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*txmonitoring.Settings] {
-	return settings20.Service[*txmonitoring.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*txmonitoring.Settings] {
+	return settings20.Service[*txmonitoring.Settings](clientSet, SchemaID, SchemaVersion)
 }

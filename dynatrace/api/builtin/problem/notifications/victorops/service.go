@@ -23,6 +23,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*notifications.Notification] {
-	return notifications.Service(credentials, notifications.Types.VictorOps)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*notifications.Notification] {
+	return notifications.Service(clientSet, notifications.Types.VictorOps)
 }
