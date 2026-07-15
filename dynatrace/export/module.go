@@ -1306,7 +1306,7 @@ func (me *Module) Discover() error {
 	descriptor := me.GetDescriptor()
 
 	if me.Service == nil {
-		me.Service = descriptor.Service(me.Environment.Credentials)
+		me.Service = descriptor.Service(me.Environment.ClientSet)
 	}
 
 	var err error

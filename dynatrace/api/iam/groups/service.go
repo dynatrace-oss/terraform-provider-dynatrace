@@ -47,8 +47,8 @@ type GroupServiceClient struct {
 	credentials *rest.Credentials
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*groups.Group] {
-	return &GroupServiceClient{credentials: credentials}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*groups.Group] {
+	return &GroupServiceClient{credentials: clientSet.Credentials()}
 }
 
 func (me *GroupServiceClient) SchemaID() string {

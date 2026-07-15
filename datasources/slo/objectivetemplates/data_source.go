@@ -49,12 +49,12 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	restClient, _ := rest.CreatePlatformClient(ctx, creds.Platform.EnvironmentURL, creds)
+	restClient, _ := rest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
 
 	client := NewClient(restClient)
 

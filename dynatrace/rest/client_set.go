@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
 * limitations under the License.
  */
 
-package servicenow
+package rest
 
-import (
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-)
-
-func Service(clientSet rest.ClientSet) settings.CRUDService[*notifications.Notification] {
-	return notifications.Service(clientSet, notifications.Types.ServiceNow)
+// ClientSet is the credential/client provider handed to services, resources and datasources.
+//
+// For now it only exposes the raw Credentials so the existing client factories can be reused
+// unchanged. Concrete clients (e.g. an IAM client, an API-token client) will be added over time and
+// services migrated onto them, at which point Credentials can eventually be retired.
+type ClientSet interface {
+	Credentials() *Credentials
 }

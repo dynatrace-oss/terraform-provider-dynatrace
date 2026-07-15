@@ -26,9 +26,9 @@ import (
 const SchemaID = "v1:environment:services"
 const BasePath = "/api/v1/entity/services"
 
-func Service(credentials *rest.Credentials) settings.RService[*services.Settings] {
+func Service(clientSet rest.ClientSet) settings.RService[*services.Settings] {
 	return settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*services.Settings](BasePath).WithStubs(new(services.Services)),
 	)

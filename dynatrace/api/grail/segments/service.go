@@ -30,16 +30,16 @@ import (
 	segments "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments/settings"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*segments.Segment] {
-	return &service{credentials}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*segments.Segment] {
+	return &service{clientSet}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	clientSet rest.ClientSet
 }
 
 func (me *service) client(ctx context.Context) (*segmentsclient.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.credentials.Platform.EnvironmentURL, me.credentials)
+	platformClient, err := rest.CreatePlatformClient(ctx, me.clientSet.Credentials().Platform.EnvironmentURL, me.clientSet.Credentials())
 	if err != nil {
 		return nil, err
 	}

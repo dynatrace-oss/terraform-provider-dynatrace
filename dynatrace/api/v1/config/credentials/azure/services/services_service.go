@@ -39,10 +39,10 @@ type SupportedService struct {
 
 var supportedServicesRepo = map[string]map[string]*SupportedService{}
 
-func NewSupportedServicesService(credentials *rest.Credentials) *SupportedServicesService {
+func NewSupportedServicesService(clientSet rest.ClientSet) *SupportedServicesService {
 	return &SupportedServicesService{
-		url:    credentials.URL,
-		client: rest.APITokenClient(credentials),
+		url:    clientSet.Credentials().URL,
+		client: rest.APITokenClient(clientSet.Credentials()),
 	}
 }
 

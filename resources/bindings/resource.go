@@ -23,7 +23,6 @@ import (
 
 	bindings_service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/bindings"
 	bindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/bindings/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -45,17 +44,12 @@ func Resource() *schema.Resource {
 }
 
 func NewService(m any) *bindings_service.BindingServiceClient {
-	conf := m.(*config.ProviderConfiguration)
-	credentials := &rest.Credentials{}
-	credentials.Cluster.URL = conf.ClusterAPIV2URL
-	credentials.Cluster.Token = conf.ClusterAPIToken
-	apiService := bindings_service.NewPolicyService(credentials)
-	return apiService
+	return bindings_service.NewPolicyService(m.(*config.ProviderConfiguration))
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.ClientSet(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -74,7 +68,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.ClientSet(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -90,7 +84,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.ClientSet(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -112,7 +106,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.ClientSet(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}

@@ -32,9 +32,9 @@ type environmentsService struct {
 	credentials *rest.Credentials
 }
 
-func newEnvironmentService(credentials *rest.Credentials) *environmentsService {
+func newEnvironmentService(clientSet rest.ClientSet) *environmentsService {
 	return &environmentsService{
-		credentials: credentials,
+		credentials: clientSet.Credentials(),
 	}
 }
 

@@ -27,6 +27,6 @@ import (
 const SchemaID = "builtin:mainframe.mqfilters"
 const SchemaVersion = "1.0.3"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*mqfilters.Settings] {
-	return settings20.Service[*mqfilters.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*mqfilters.Settings] {
+	return settings20.Service[*mqfilters.Settings](clientSet, SchemaID, SchemaVersion)
 }

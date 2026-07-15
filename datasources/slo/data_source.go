@@ -109,11 +109,11 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		name = v.(string)
 	}
 
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	service := slo.Service(creds)
+	service := slo.Service(clientSet)
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)

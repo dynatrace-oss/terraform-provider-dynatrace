@@ -32,8 +32,8 @@ import (
 const SchemaID = "builtin:span-entry-points"
 const SchemaVersion = "0.1.16"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*entrypoints.SpanEntryPoint] {
-	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*entrypoints.SpanEntryPoint]{Duplicates: Duplicates})
+func Service(clientSet rest.ClientSet) settings.CRUDService[*entrypoints.SpanEntryPoint] {
+	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*entrypoints.SpanEntryPoint]{Duplicates: Duplicates})
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*entrypoints.SpanEntryPoint], v *entrypoints.SpanEntryPoint) (*api.Stub, error) {

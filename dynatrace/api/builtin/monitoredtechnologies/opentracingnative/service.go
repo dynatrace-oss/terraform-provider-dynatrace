@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.3"
 const SchemaID = "builtin:monitored-technologies.open-tracing-native"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*opentracingnative.Settings] {
-	return settings20.Service[*opentracingnative.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*opentracingnative.Settings] {
+	return settings20.Service[*opentracingnative.Settings](clientSet, SchemaID, SchemaVersion)
 }

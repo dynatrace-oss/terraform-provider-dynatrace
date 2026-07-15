@@ -34,10 +34,10 @@ import (
 const SchemaVersion = "2.1.2"
 const SchemaID = "builtin:rum.web.app-detection"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*appdetection.Settings] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*appdetection.Settings] {
 	return &service{
-		service: settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*appdetection.Settings]{Duplicates: Duplicates}),
-		client:  rest.HybridClient(credentials),
+		service: settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*appdetection.Settings]{Duplicates: Duplicates}),
+		client:  rest.HybridClient(clientSet.Credentials()),
 	}
 }
 

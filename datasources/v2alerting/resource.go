@@ -48,12 +48,8 @@ func XResource() *schema.Resource {
 	}
 }
 
-func createCredentials(m any) *rest.Credentials {
-	conf := m.(*config.ProviderConfiguration)
-	return &rest.Credentials{
-		Token: conf.APIToken,
-		URL:   conf.EnvironmentURL,
-	}
+func clientSet(m any) rest.ClientSet {
+	return m.(*config.ProviderConfiguration)
 }
 
 func Settings() settings.Settings {
@@ -61,7 +57,7 @@ func Settings() settings.Settings {
 }
 
 func Service(m any) settings.CRUDService[settings.Settings] {
-	return export.AllResources[ResourceType].Service(createCredentials(m))
+	return export.AllResources[ResourceType].Service(clientSet(m))
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource

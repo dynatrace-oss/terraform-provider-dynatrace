@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.4.10"
 const SchemaID = "builtin:appsec.notification-integration"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*notificationintegration.Settings] {
-	return settings20.Service[*notificationintegration.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*notificationintegration.Settings] {
+	return settings20.Service[*notificationintegration.Settings](clientSet, SchemaID, SchemaVersion)
 }

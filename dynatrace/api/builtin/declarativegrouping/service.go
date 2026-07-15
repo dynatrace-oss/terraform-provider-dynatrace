@@ -31,8 +31,8 @@ import (
 const SchemaVersion = "1.1.29"
 const SchemaID = "builtin:declarativegrouping"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*declarativegrouping.Settings] {
-	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*declarativegrouping.Settings]{Duplicates: Duplicates})
+func Service(clientSet rest.ClientSet) settings.CRUDService[*declarativegrouping.Settings] {
+	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*declarativegrouping.Settings]{Duplicates: Duplicates})
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*declarativegrouping.Settings], v *declarativegrouping.Settings) (*api.Stub, error) {

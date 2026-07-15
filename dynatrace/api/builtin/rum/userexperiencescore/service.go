@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:rum.user-experience-score"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*userexperiencescore.Settings] {
-	return settings20.Service[*userexperiencescore.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*userexperiencescore.Settings] {
+	return settings20.Service[*userexperiencescore.Settings](clientSet, SchemaID, SchemaVersion)
 }

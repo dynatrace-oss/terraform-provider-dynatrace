@@ -30,9 +30,9 @@ const EndpointURL = "/api/config/v1/anomalyDetection/applications"
 const StaticID = "a7a73377-9452-43b1-ae09-a9f695a61572"
 const StaticName = "application_anomalies"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*applications.AnomalyDetection] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*applications.AnomalyDetection] {
 	return settings.APITokenStaticService[*applications.AnomalyDetection](
-		credentials,
+		clientSet,
 		SchemaID,
 		EndpointURL,
 		api.Stub{ID: StaticID, Name: StaticName},

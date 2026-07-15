@@ -30,6 +30,6 @@ const StaticID = "1551518f-4591-4c64-91ff-57f4b14dbb2e"
 const StaticName = "host_naming_order"
 const BasePath = "/api/config/v1/conditionalNaming/host"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*order_settings.Settings] {
-	return order.Service(credentials, SchemaID, StaticID, StaticName, BasePath)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*order_settings.Settings] {
+	return order.Service(clientSet, SchemaID, StaticID, StaticName, BasePath)
 }

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.1"
 const SchemaID = "builtin:grail.metrics.allow-all"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*allowall.Settings] {
-	return settings20.Service[*allowall.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*allowall.Settings] {
+	return settings20.Service[*allowall.Settings](clientSet, SchemaID, SchemaVersion)
 }

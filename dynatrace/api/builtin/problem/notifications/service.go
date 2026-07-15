@@ -44,9 +44,9 @@ func (me *filter) Suffix() string {
 	return string(me.Type)
 }
 
-func Service(credentials *rest.Credentials, t Type) settings.CRUDService[*Notification] {
+func Service(clientSet rest.ClientSet, t Type) settings.CRUDService[*Notification] {
 	return filtered.Service[*Notification](
-		settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*Notification]{
+		settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*Notification]{
 			LegacyID:    settings.LegacyObjIDDecode,
 			CreateRetry: UseOAuth2Fix,
 			UpdateRetry: UseOAuth2Fix,

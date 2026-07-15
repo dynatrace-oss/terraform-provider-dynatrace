@@ -27,9 +27,9 @@ import (
 const SchemaID = "v1:config:anomaly-detection:disk-events"
 const BasePath = "/api/config/v1/anomalyDetection/diskEvents"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*diskevents.AnomalyDetection] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*diskevents.AnomalyDetection] {
 	return settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*diskevents.AnomalyDetection](BasePath),
 	)

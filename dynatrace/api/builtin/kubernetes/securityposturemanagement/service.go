@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:kubernetes.security-posture-management"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*securityposturemanagement.Settings] {
-	return settings20.Service[*securityposturemanagement.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*securityposturemanagement.Settings] {
+	return settings20.Service[*securityposturemanagement.Settings](clientSet, SchemaID, SchemaVersion)
 }

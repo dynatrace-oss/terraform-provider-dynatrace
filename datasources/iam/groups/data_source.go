@@ -57,7 +57,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
-	creds, err := config.Credentials(m, config.CredValIAM)
+	clientSet, err := config.ClientSet(m, config.CredValIAM)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -69,7 +69,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if groups.GetRevision() != lastGroupsServiceRevision {
 		lastGroupsServiceRevision = groups.GetRevision()
 		var err error
-		service := groups.Service(creds)
+		service := groups.Service(clientSet)
 		stubs, err = service.List(ctx)
 		if err != nil {
 			return diag.FromErr(err)

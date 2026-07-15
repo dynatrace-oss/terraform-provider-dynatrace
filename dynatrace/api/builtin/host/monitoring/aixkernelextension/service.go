@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:host.monitoring.aix-kernel-extension"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*aixkernelextension.Settings] {
-	return settings20.Service[*aixkernelextension.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*aixkernelextension.Settings] {
+	return settings20.Service[*aixkernelextension.Settings](clientSet, SchemaID, SchemaVersion)
 }

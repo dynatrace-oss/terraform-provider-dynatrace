@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.5"
 const SchemaID = "builtin:process-group.simple-detection-rule"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*simpledetectionrule.Settings] {
-	return settings20.Service[*simpledetectionrule.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*simpledetectionrule.Settings] {
+	return settings20.Service[*simpledetectionrule.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "app:dynatrace.infraops:feature-flags"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*infraops.Settings] {
-	return settings20.Service[*infraops.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*infraops.Settings] {
+	return settings20.Service[*infraops.Settings](clientSet, SchemaID, SchemaVersion)
 }

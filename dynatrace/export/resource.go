@@ -37,7 +37,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hclgen"
 )
 
-
 type Resource struct {
 	ID                              string
 	LegacyID                        string

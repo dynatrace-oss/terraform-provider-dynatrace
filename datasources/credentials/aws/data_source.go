@@ -45,12 +45,12 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if v, ok := d.GetOk("label"); ok {
 		label = v.(string)
 	}
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	service := export.Service(creds, export.ResourceTypes.AWSCredentials)
+	service := export.Service(clientSet, export.ResourceTypes.AWSCredentials)
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)

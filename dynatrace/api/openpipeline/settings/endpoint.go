@@ -19,6 +19,7 @@ package openpipeline
 
 import (
 	"encoding/json"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

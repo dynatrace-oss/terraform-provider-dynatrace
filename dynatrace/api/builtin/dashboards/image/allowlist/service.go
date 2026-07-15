@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:dashboards.image.allowlist"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*allowlist.Settings] {
-	return settings20.Service[*allowlist.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*allowlist.Settings] {
+	return settings20.Service[*allowlist.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.7"
 const SchemaID = "builtin:remote.environment"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*environment.Settings] {
-	return settings20.Service[*environment.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*environment.Settings] {
+	return settings20.Service[*environment.Settings](clientSet, SchemaID, SchemaVersion)
 }

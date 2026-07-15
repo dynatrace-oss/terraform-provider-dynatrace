@@ -78,13 +78,13 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	d.SetId(fmt.Sprintf("generic_settings[%s][%s][%s]", query.Schema, query.Scope, query.Filter))
 
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	var stubs api.Stubs
-	myService := srv.Service(creds)
+	myService := srv.Service(clientSet)
 	if spService, ok := myService.(SpecificLister); ok {
 		stubs, err = spService.ListSpecific(ctx, query)
 	}

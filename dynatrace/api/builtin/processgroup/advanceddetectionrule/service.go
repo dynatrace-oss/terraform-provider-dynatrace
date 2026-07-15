@@ -31,8 +31,8 @@ import (
 const SchemaVersion = "0.0.6"
 const SchemaID = "builtin:process-group.advanced-detection-rule"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*advanceddetectionrule.Settings] {
-	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*advanceddetectionrule.Settings]{Duplicates: Duplicates})
+func Service(clientSet rest.ClientSet) settings.CRUDService[*advanceddetectionrule.Settings] {
+	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*advanceddetectionrule.Settings]{Duplicates: Duplicates})
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*advanceddetectionrule.Settings], v *advanceddetectionrule.Settings) (*api.Stub, error) {

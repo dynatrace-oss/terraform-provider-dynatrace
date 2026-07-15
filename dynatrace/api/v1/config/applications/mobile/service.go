@@ -33,9 +33,9 @@ import (
 
 const SchemaID = "v1:config:applications:mobile"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*mobile.Application] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*mobile.Application] {
 	return settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		&settings.ServiceOptions[*mobile.Application]{
 			Get:           settings.Path("/api/config/v1/applications/mobile/%s"),

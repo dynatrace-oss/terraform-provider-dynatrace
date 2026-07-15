@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:unified-services-endpoint-metrics"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*endpointmetrics.Settings] {
-	return settings20.Service[*endpointmetrics.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*endpointmetrics.Settings] {
+	return settings20.Service[*endpointmetrics.Settings](clientSet, SchemaID, SchemaVersion)
 }

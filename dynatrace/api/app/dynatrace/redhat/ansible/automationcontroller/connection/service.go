@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "2"
 const SchemaID = "app:dynatrace.redhat.ansible:automation-controller.connection"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*connection.Settings] {
-	return settings20.Service[*connection.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*connection.Settings] {
+	return settings20.Service[*connection.Settings](clientSet, SchemaID, SchemaVersion)
 }

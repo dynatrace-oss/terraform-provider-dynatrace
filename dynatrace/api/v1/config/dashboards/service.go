@@ -30,8 +30,8 @@ import (
 
 const SchemaID = "v1:config:dashboards"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*dashboards.Dashboard] {
-	return &service{service: jsondashboards.Service(credentials)}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*dashboards.Dashboard] {
+	return &service{service: jsondashboards.Service(clientSet)}
 }
 
 type service struct {

@@ -31,9 +31,9 @@ import (
 
 const SchemaID = "accounts:policy-bindings"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*bindings.PolicyBinding] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*bindings.PolicyBinding] {
 	return &service{
-		serviceClient: NewPolicyService(credentials),
+		serviceClient: NewPolicyService(clientSet),
 	}
 }
 
@@ -65,8 +65,8 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func NewPolicyService(credentials *rest.Credentials) *BindingServiceClient {
-	return &BindingServiceClient{client: rest.ClusterV2Client(credentials)}
+func NewPolicyService(clientSet rest.ClientSet) *BindingServiceClient {
+	return &BindingServiceClient{client: rest.ClusterV2Client(clientSet.Credentials())}
 }
 
 type service struct {

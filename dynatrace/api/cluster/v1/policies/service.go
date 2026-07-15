@@ -32,13 +32,13 @@ type PolicyServiceClient struct {
 	client rest.Client
 }
 
-func NewPolicyService(credentials *rest.Credentials) *PolicyServiceClient {
-	return &PolicyServiceClient{client: rest.ClusterV2Client(credentials)}
+func NewPolicyService(clientSet rest.ClientSet) *PolicyServiceClient {
+	return &PolicyServiceClient{client: rest.ClusterV2Client(clientSet.Credentials())}
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*policies.Policy] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*policies.Policy] {
 	return &service{
-		serviceClient: NewPolicyService(credentials),
+		serviceClient: NewPolicyService(clientSet),
 	}
 }
 

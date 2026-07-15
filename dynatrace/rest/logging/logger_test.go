@@ -32,6 +32,7 @@ import (
 	setboundaries "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/boundaries/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -56,14 +57,14 @@ func TestProviderLogging(t *testing.T) {
 	t.Setenv("DYNATRACE_HTTP_RESPONSE", "true")
 
 	connectionTests := []struct {
-		name        string
-		credentials func(url string) *rest.Credentials
+		name      string
+		clientSet func(url string) rest.ClientSet
 	}{
 		{
 			name: "log HTTP requests and responses only once for platform token",
-			credentials: func(url string) *rest.Credentials {
-				return &rest.Credentials{
-					URL: url,
+			clientSet: func(url string) rest.ClientSet {
+				return &config.ProviderConfiguration{
+					EnvironmentURL: url,
 					Platform: rest.PlatformCredentials{
 						PlatformToken: "my-token",
 					},
@@ -72,10 +73,10 @@ func TestProviderLogging(t *testing.T) {
 		},
 		{
 			name: "log HTTP requests and responses only once for classic",
-			credentials: func(url string) *rest.Credentials {
-				return &rest.Credentials{
-					URL:   url,
-					Token: "my-token",
+			clientSet: func(url string) rest.ClientSet {
+				return &config.ProviderConfiguration{
+					EnvironmentURL: url,
+					APIToken:       "my-token",
 				}
 			},
 		},
@@ -92,7 +93,7 @@ func TestProviderLogging(t *testing.T) {
 			httpServer := httptest.NewServer(&mux)
 			defer httpServer.Close()
 
-			service := connection.Service(tc.credentials(httpServer.URL))
+			service := connection.Service(tc.clientSet(httpServer.URL))
 			err := service.Get(t.Context(), "test-id", new(set.Settings))
 			require.NoError(t, err)
 			assertLoggedOnce(t, builder.String())
@@ -118,15 +119,9 @@ func TestProviderLogging(t *testing.T) {
 		httpServer := httptest.NewServer(&mux)
 		defer httpServer.Close()
 
-		service := boundaries.Service(&rest.Credentials{
-			URL: httpServer.URL,
-			IAM: struct {
-				ClientID     string
-				AccountID    string
-				ClientSecret string
-				TokenURL     string
-				EndpointURL  string
-			}{
+		service := boundaries.Service(&config.ProviderConfiguration{
+			EnvironmentURL: httpServer.URL,
+			IAM: config.IAM{
 				ClientID:     "id",
 				AccountID:    "account-id",
 				ClientSecret: "secret",

@@ -27,9 +27,9 @@ import (
 const SchemaID = "v1:config:maintenance-windows"
 const BasePath = "/api/config/v1/maintenanceWindows"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*maintenance.Window] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*maintenance.Window] {
 	return settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*maintenance.Window](BasePath),
 	)

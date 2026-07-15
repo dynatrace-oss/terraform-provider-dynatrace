@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:anomaly-detection.infrastructure-aws"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*aws.Settings] {
-	return settings20.Service[*aws.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*aws.Settings] {
+	return settings20.Service[*aws.Settings](clientSet, SchemaID, SchemaVersion)
 }

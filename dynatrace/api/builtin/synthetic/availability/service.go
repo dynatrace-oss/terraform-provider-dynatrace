@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:synthetic.synthetic-availability-settings"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*availability.Settings] {
-	return settings20.Service[*availability.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*availability.Settings] {
+	return settings20.Service[*availability.Settings](clientSet, SchemaID, SchemaVersion)
 }

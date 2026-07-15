@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "4.29"
 const SchemaID = "builtin:metric.metadata"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*metadata.Settings] {
-	return settings20.Service[*metadata.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*metadata.Settings] {
+	return settings20.Service[*metadata.Settings](clientSet, SchemaID, SchemaVersion)
 }

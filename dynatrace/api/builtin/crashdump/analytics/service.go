@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.1.1"
 const SchemaID = "builtin:crashdump.analytics"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*analytics.Settings] {
-	return settings20.Service[*analytics.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*analytics.Settings] {
+	return settings20.Service[*analytics.Settings](clientSet, SchemaID, SchemaVersion)
 }

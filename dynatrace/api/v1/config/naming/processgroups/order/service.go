@@ -30,6 +30,6 @@ const StaticID = "60a3a3c9-a18c-49a7-a36b-075e15729ade"
 const StaticName = "process_group_naming_order"
 const BasePath = "/api/config/v1/conditionalNaming/processGroup"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*order_settings.Settings] {
-	return order.Service(credentials, SchemaID, StaticID, StaticName, BasePath)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*order_settings.Settings] {
+	return order.Service(clientSet, SchemaID, StaticID, StaticName, BasePath)
 }

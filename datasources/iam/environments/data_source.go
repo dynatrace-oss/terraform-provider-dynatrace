@@ -92,12 +92,12 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValIAM)
+	clientSet, err := config.ClientSet(m, config.CredValIAM)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	service := newEnvironmentService(creds)
+	service := newEnvironmentService(clientSet)
 	envs, err := service.Get(ctx)
 	if err != nil {
 		return diag.FromErr(err)
@@ -108,7 +108,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	filterName, hasFilterName := d.GetOk(attrName)
 	filterActive, hasFilterActive := d.GetOk(attrActive)
 	// Create a unique ID for the data source based on filter criteria
-	dataSourceID := fmt.Sprintf("%#v.%#v.%#v.%#v", creds.IAM.AccountID, filterID, filterName, filterActive)
+	dataSourceID := fmt.Sprintf("%#v.%#v.%#v.%#v", clientSet.Credentials().IAM.AccountID, filterID, filterName, filterActive)
 
 	// Filter environments based on provided criteria
 	var filteredEnvs []map[string]any

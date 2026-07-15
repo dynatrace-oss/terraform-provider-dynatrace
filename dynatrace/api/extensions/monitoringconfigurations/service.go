@@ -57,20 +57,20 @@ type ExtensionClient interface {
 }
 
 type service struct {
-	clientGetter func(ctx context.Context, credentials *rest.Credentials) (ExtensionClient, error)
-	credentials  *rest.Credentials
+	clientGetter func(ctx context.Context, clientSet rest.ClientSet) (ExtensionClient, error)
+	clientSet    rest.ClientSet
 }
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*serviceSettings.Settings] {
-	return &service{clientGetter: createCoreClient, credentials: credentials}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*serviceSettings.Settings] {
+	return &service{clientGetter: createCoreClient, clientSet: clientSet}
 }
 
-func ServiceWithClientGetter(clientGetter func(ctx context.Context, credentials *rest.Credentials) (ExtensionClient, error), credentials *rest.Credentials) settings.CRUDService[*serviceSettings.Settings] {
-	return &service{clientGetter: clientGetter, credentials: credentials}
+func ServiceWithClientGetter(clientGetter func(ctx context.Context, clientSet rest.ClientSet) (ExtensionClient, error), clientSet rest.ClientSet) settings.CRUDService[*serviceSettings.Settings] {
+	return &service{clientGetter: clientGetter, clientSet: clientSet}
 }
 
-func createCoreClient(ctx context.Context, credentials *rest.Credentials) (ExtensionClient, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, credentials.Platform.EnvironmentURL, credentials)
+func createCoreClient(ctx context.Context, clientSet rest.ClientSet) (ExtensionClient, error) {
+	platformClient, err := rest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +82,7 @@ func (s *service) SchemaID() string {
 }
 
 func (s *service) Get(ctx context.Context, id string, v *serviceSettings.Settings) error {
-	client, err := s.clientGetter(ctx, s.credentials)
+	client, err := s.clientGetter(ctx, s.clientSet)
 	if err != nil {
 		return err
 	}
@@ -110,7 +110,7 @@ func (s *service) Get(ctx context.Context, id string, v *serviceSettings.Setting
 }
 
 func (s *service) List(ctx context.Context) (api.Stubs, error) {
-	client, err := s.clientGetter(ctx, s.credentials)
+	client, err := s.clientGetter(ctx, s.clientSet)
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +155,7 @@ func (s *service) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (s *service) Create(ctx context.Context, v *serviceSettings.Settings) (stub *api.Stub, err error) {
-	client, err := s.clientGetter(ctx, s.credentials)
+	client, err := s.clientGetter(ctx, s.clientSet)
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +179,7 @@ func (s *service) Create(ctx context.Context, v *serviceSettings.Settings) (stub
 }
 
 func (s *service) Update(ctx context.Context, id string, v *serviceSettings.Settings) error {
-	client, err := s.clientGetter(ctx, s.credentials)
+	client, err := s.clientGetter(ctx, s.clientSet)
 	if err != nil {
 		return err
 	}
@@ -196,7 +196,7 @@ func (s *service) Update(ctx context.Context, id string, v *serviceSettings.Sett
 }
 
 func (s *service) Delete(ctx context.Context, id string) error {
-	client, err := s.clientGetter(ctx, s.credentials)
+	client, err := s.clientGetter(ctx, s.clientSet)
 	if err != nil {
 		return err
 	}

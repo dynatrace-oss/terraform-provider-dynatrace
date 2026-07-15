@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:synthetic.multiprotocol.outage-handling"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*outagehandling.Settings] {
-	return settings20.Service[*outagehandling.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*outagehandling.Settings] {
+	return settings20.Service[*outagehandling.Settings](clientSet, SchemaID, SchemaVersion)
 }

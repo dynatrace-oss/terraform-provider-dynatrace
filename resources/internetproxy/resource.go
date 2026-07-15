@@ -44,18 +44,18 @@ func Resource() *schema.Resource {
 }
 
 func NewService(m any) (*internetproxy.ServiceClient, error) {
-	creds, err := config.Credentials(m, config.CredValCluster)
+	clientSet, err := config.ClientSet(m, config.CredValCluster)
 	if err != nil {
 		return nil, err
 	}
 
-	apiService := internetproxy.NewService(creds)
+	apiService := internetproxy.NewService(clientSet)
 	return apiService, nil
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.ClientSet(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -79,7 +79,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.ClientSet(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -102,7 +102,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.ClientSet(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -130,7 +130,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.Credentials(m, config.CredValCluster)
+	_, err := config.ClientSet(m, config.CredValCluster)
 	if err != nil {
 		return diag.FromErr(err)
 	}

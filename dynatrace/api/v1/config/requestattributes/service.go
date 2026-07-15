@@ -31,9 +31,9 @@ const BasePath = "/api/config/v1/service/requestAttributes"
 
 var mu sync.Mutex
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*requestattributes.RequestAttribute] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*requestattributes.RequestAttribute] {
 	return settings.NewAPITokenService(
-		credentials,
+		clientSet,
 		SchemaID,
 		&settings.ServiceOptions[*requestattributes.RequestAttribute]{
 			Get:    settings.Path(BasePath + "/%s?includeProcessGroupReferences=true"),

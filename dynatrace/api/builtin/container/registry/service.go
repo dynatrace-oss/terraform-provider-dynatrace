@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:container-registry"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*registry.Settings] {
-	return settings20.Service[*registry.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*registry.Settings] {
+	return settings20.Service[*registry.Settings](clientSet, SchemaID, SchemaVersion)
 }

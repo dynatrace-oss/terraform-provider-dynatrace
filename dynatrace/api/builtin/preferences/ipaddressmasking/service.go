@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:preferences.ipaddressmasking"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*ipaddressmasking.Settings] {
-	return settings20.Service[*ipaddressmasking.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*ipaddressmasking.Settings] {
+	return settings20.Service[*ipaddressmasking.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:user-action-custom-metrics"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*useractioncustommetrics.Settings] {
-	return settings20.Service[*useractioncustommetrics.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*useractioncustommetrics.Settings] {
+	return settings20.Service[*useractioncustommetrics.Settings](clientSet, SchemaID, SchemaVersion)
 }

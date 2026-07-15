@@ -50,7 +50,7 @@ func Resource() *schema.Resource {
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -60,7 +60,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if _, err := customtags.Service(creds).Create(ctx, config); err != nil {
+	if _, err := customtags.Service(clientSet).Create(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(uuid.New().String())
@@ -85,7 +85,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -120,7 +120,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		delConfig := new(settings.Settings)
 		delConfig.EntitySelector = config.EntitySelector
 		delConfig.Tags = deleteTags
-		srv := customtags.Service(creds)
+		srv := customtags.Service(clientSet)
 		if fullDeleter, ok := srv.(FullDeleter); ok {
 			if err := fullDeleter.DeleteValue(ctx, delConfig); err != nil {
 				if !strings.HasPrefix(err.Error(), "Unable to find tag") {
@@ -130,7 +130,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		}
 	}
 
-	if err := customtags.Service(creds).Update(ctx, config.EntitySelector, config); err != nil {
+	if err := customtags.Service(clientSet).Update(ctx, config.EntitySelector, config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -146,7 +146,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -167,7 +167,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	}
 
 	apiConfig := new(settings.Settings)
-	if err := customtags.Service(creds).Get(ctx, selector, apiConfig); err != nil {
+	if err := customtags.Service(clientSet).Get(ctx, selector, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -195,7 +195,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -213,7 +213,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		}
 	}
 
-	srv := customtags.Service(creds)
+	srv := customtags.Service(clientSet)
 	if fullDeleter, ok := srv.(FullDeleter); ok {
 		if err := fullDeleter.DeleteValue(ctx, stateConfig); err != nil {
 			if strings.HasPrefix(err.Error(), "Unable to find tag") {

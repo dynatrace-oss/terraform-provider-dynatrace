@@ -29,6 +29,7 @@ import (
 	workflowSettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/automation/workflows/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -61,14 +62,14 @@ func (m *mockAutomationClient) Delete(ctx context.Context, resourceType apiClien
 	return m.deleteFn(ctx, resourceType, id)
 }
 
-func mockClientGetter(client *mockAutomationClient) func(ctx context.Context, credentials *rest.Credentials) (workflows.AutomationClient, error) {
-	return func(ctx context.Context, credentials *rest.Credentials) (workflows.AutomationClient, error) {
+func mockClientGetter(client *mockAutomationClient) func(ctx context.Context, credentials rest.ClientSet) (workflows.AutomationClient, error) {
+	return func(ctx context.Context, credentials rest.ClientSet) (workflows.AutomationClient, error) {
 		return client, nil
 	}
 }
 
-func failingClientGetter(err error) func(ctx context.Context, credentials *rest.Credentials) (workflows.AutomationClient, error) {
-	return func(ctx context.Context, credentials *rest.Credentials) (workflows.AutomationClient, error) {
+func failingClientGetter(err error) func(ctx context.Context, credentials rest.ClientSet) (workflows.AutomationClient, error) {
+	return func(ctx context.Context, credentials rest.ClientSet) (workflows.AutomationClient, error) {
 		return nil, err
 	}
 }
@@ -81,7 +82,7 @@ func pagedResponse(objects ...[]byte) coreapi.PagedListResponse {
 
 func TestService_Get(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
-		svc := workflows.ServiceWithClientGetter(failingClientGetter(assert.AnError), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(failingClientGetter(assert.AnError), &config.ProviderConfiguration{})
 		err := svc.Get(t.Context(), "wf-1", &workflowSettings.Workflow{})
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -92,7 +93,7 @@ func TestService_Get(t *testing.T) {
 				return coreapi.Response{}, assert.AnError
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Get(t.Context(), "wf-1", &workflowSettings.Workflow{})
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -103,7 +104,7 @@ func TestService_Get(t *testing.T) {
 				return coreapi.Response{Data: []byte("not-json")}, nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Get(t.Context(), "wf-1", &workflowSettings.Workflow{})
 		var jsonErr *json.SyntaxError
 		assert.ErrorAs(t, err, &jsonErr)
@@ -120,7 +121,7 @@ func TestService_Get(t *testing.T) {
 				return coreapi.Response{Data: responseData}, nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		v := &workflowSettings.Workflow{}
 		err := svc.Get(t.Context(), "wf-1", v)
 		require.NoError(t, err)
@@ -147,7 +148,7 @@ func TestService_Get(t *testing.T) {
 				return coreapi.Response{Data: responseData}, nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		v := &workflowSettings.Workflow{}
 		// context without a state config (export scenario)
 		err := svc.Get(t.Context(), "wf-1", v)
@@ -163,7 +164,7 @@ func TestService_Get(t *testing.T) {
 				return coreapi.Response{Data: responseData}, nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stateConfig := &workflowSettings.Workflow{
 			Tasks: workflowSettings.Tasks{
 				{Name: "task1", Position: &workflowSettings.TaskPosition{X: 5, Y: 6}},
@@ -184,7 +185,7 @@ func TestService_Get(t *testing.T) {
 				return coreapi.Response{Data: responseData}, nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stateConfig := &workflowSettings.Workflow{
 			Tasks: workflowSettings.Tasks{
 				{Name: "task1", Position: &workflowSettings.TaskPosition{X: 5, Y: 6}},
@@ -217,7 +218,7 @@ func TestService_Get(t *testing.T) {
 				return coreapi.Response{Data: responseData}, nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stateConfig := &workflowSettings.Workflow{
 			Tasks: workflowSettings.Tasks{
 				{Name: "task1"},
@@ -234,7 +235,7 @@ func TestService_Get(t *testing.T) {
 
 func TestService_List(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
-		svc := workflows.ServiceWithClientGetter(failingClientGetter(assert.AnError), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(failingClientGetter(assert.AnError), &config.ProviderConfiguration{})
 		_, err := svc.List(t.Context())
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -245,7 +246,7 @@ func TestService_List(t *testing.T) {
 				return nil, assert.AnError
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.List(t.Context())
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -256,7 +257,7 @@ func TestService_List(t *testing.T) {
 				return pagedResponse([]byte("bad-json")), nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.List(t.Context())
 		var jsonErr *json.SyntaxError
 		assert.ErrorAs(t, err, &jsonErr)
@@ -272,7 +273,7 @@ func TestService_List(t *testing.T) {
 				return pagedResponse(wf1JSON, wf2JSON), nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stubs, err := svc.List(t.Context())
 		require.NoError(t, err)
 		assert.Equal(t, apiClient.Workflows, capturedResourceType)
@@ -285,7 +286,7 @@ func TestService_List(t *testing.T) {
 				return pagedResponse(), nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stubs, err := svc.List(t.Context())
 		require.NoError(t, err)
 		assert.Empty(t, stubs)
@@ -294,7 +295,7 @@ func TestService_List(t *testing.T) {
 
 func TestService_Create(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
-		svc := workflows.ServiceWithClientGetter(failingClientGetter(assert.AnError), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(failingClientGetter(assert.AnError), &config.ProviderConfiguration{})
 		_, err := svc.Create(t.Context(), &workflowSettings.Workflow{Title: "wf"})
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -305,7 +306,7 @@ func TestService_Create(t *testing.T) {
 				return coreapi.Response{}, assert.AnError
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.Create(t.Context(), &workflowSettings.Workflow{Title: "wf"})
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -316,7 +317,7 @@ func TestService_Create(t *testing.T) {
 				return coreapi.Response{Data: []byte("bad-json")}, nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		_, err := svc.Create(t.Context(), &workflowSettings.Workflow{Title: "wf"})
 		var jsonErr *json.SyntaxError
 		assert.ErrorAs(t, err, &jsonErr)
@@ -334,7 +335,7 @@ func TestService_Create(t *testing.T) {
 				return coreapi.Response{Data: respJSON}, nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		stub, err := svc.Create(t.Context(), &workflowSettings.Workflow{
 			Title:       "My Workflow",
 			Description: "desc",
@@ -349,7 +350,7 @@ func TestService_Create(t *testing.T) {
 
 func TestService_Update(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
-		svc := workflows.ServiceWithClientGetter(failingClientGetter(assert.AnError), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(failingClientGetter(assert.AnError), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "wf-1", &workflowSettings.Workflow{})
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -360,7 +361,7 @@ func TestService_Update(t *testing.T) {
 				return coreapi.Response{}, assert.AnError
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "wf-1", &workflowSettings.Workflow{})
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -378,7 +379,7 @@ func TestService_Update(t *testing.T) {
 				return coreapi.Response{}, nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Update(t.Context(), "wf-1", &workflowSettings.Workflow{
 			Title:       "Updated",
 			Description: "updated desc",
@@ -393,7 +394,7 @@ func TestService_Update(t *testing.T) {
 
 func TestService_Delete(t *testing.T) {
 	t.Run("Returns error when client creation fails", func(t *testing.T) {
-		svc := workflows.ServiceWithClientGetter(failingClientGetter(assert.AnError), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(failingClientGetter(assert.AnError), &config.ProviderConfiguration{})
 		err := svc.Delete(t.Context(), "wf-1")
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -404,7 +405,7 @@ func TestService_Delete(t *testing.T) {
 				return coreapi.Response{}, assert.AnError
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Delete(t.Context(), "wf-1")
 		assert.ErrorIs(t, err, assert.AnError)
 	})
@@ -415,7 +416,7 @@ func TestService_Delete(t *testing.T) {
 				return coreapi.Response{}, coreapi.APIError{StatusCode: http.StatusNotFound}
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Delete(t.Context(), "wf-1")
 		assert.NoError(t, err)
 	})
@@ -430,7 +431,7 @@ func TestService_Delete(t *testing.T) {
 				return coreapi.Response{}, nil
 			},
 		}
-		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &rest.Credentials{})
+		svc := workflows.ServiceWithClientGetter(mockClientGetter(mock), &config.ProviderConfiguration{})
 		err := svc.Delete(t.Context(), "wf-1")
 		require.NoError(t, err)
 		assert.Equal(t, apiClient.Workflows, capturedResourceType)

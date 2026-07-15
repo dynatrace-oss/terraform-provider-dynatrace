@@ -26,9 +26,9 @@ import (
 	gcpservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcp"
 	gcpsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcp/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcpdynatraceprincipal"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -43,8 +43,8 @@ func TestValidateIsSuccessfulForGcpConnection(t *testing.T) {
 		t.Skip("Environment Variables DYNATRACE_ENV_URL and DYNATRACE_API_TOKEN must be specified")
 	}
 
-	credentials := &rest.Credentials{URL: envURL, Token: apiToken}
-	service := settings20.Service[*gcpsettings.Settings](credentials, gcpservice.SchemaID, gcpservice.SchemaVersion)
+	clientSet := &config.ProviderConfiguration{EnvironmentURL: envURL, APIToken: apiToken}
+	service := settings20.Service[*gcpsettings.Settings](clientSet, gcpservice.SchemaID, gcpservice.SchemaVersion)
 
 	validator, ok := service.(settings.Validator[*gcpsettings.Settings])
 	require.True(t, ok, "settings20 service must implement settings.Validator")

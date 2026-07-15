@@ -35,10 +35,10 @@ const BasePath = "/api/config/v1/azure/credentials"
 
 var smu sync.Mutex
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*services.Settings] {
+func Service(clientSet rest.ClientSet) settings.CRUDService[*services.Settings] {
 	return &service{
-		client:     rest.APITokenClient(credentials),
-		supService: NewSupportedServicesService(credentials),
+		client:     rest.APITokenClient(clientSet.Credentials()),
+		supService: NewSupportedServicesService(clientSet),
 	}
 }
 

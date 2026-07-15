@@ -32,8 +32,8 @@ import (
 
 const SchemaID = "v1:config:calculated-metrics-mobile"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*mysettings.CalculatedMobileMetric] {
-	return &service{client: rest.APITokenClient(credentials)}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*mysettings.CalculatedMobileMetric] {
+	return &service{client: rest.APITokenClient(clientSet.Credentials())}
 }
 
 type service struct {

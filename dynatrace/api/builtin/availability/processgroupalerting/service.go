@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:availability.process-group-alerting"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*pgalerting.Settings] {
-	return settings20.Service[*pgalerting.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*pgalerting.Settings] {
+	return settings20.Service[*pgalerting.Settings](clientSet, SchemaID, SchemaVersion)
 }

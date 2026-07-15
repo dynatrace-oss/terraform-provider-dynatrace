@@ -32,12 +32,12 @@ import (
 	permissions2 "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/settings/permissions"
 )
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*permissions.SettingPermissions] {
-	return &ServiceImpl{Credentials: credentials}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*permissions.SettingPermissions] {
+	return &ServiceImpl{ClientSet: clientSet}
 }
 
 type ServiceImpl struct {
-	Credentials    *rest.Credentials
+	ClientSet      rest.ClientSet
 	Client         permissions.PermissionClient
 	SettingsClient PlatformSettingsClient
 }
@@ -46,7 +46,7 @@ func (me *ServiceImpl) getClient(ctx context.Context) (permissions.PermissionCli
 	if me.Client != nil {
 		return me.Client, nil
 	}
-	restClient, err := rest.CreatePlatformClient(ctx, me.Credentials.Platform.EnvironmentURL, me.Credentials)
+	restClient, err := rest.CreatePlatformClient(ctx, me.ClientSet.Credentials().Platform.EnvironmentURL, me.ClientSet.Credentials())
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (me *ServiceImpl) getSettingsClient(ctx context.Context) (PlatformSettingsC
 	if me.SettingsClient != nil {
 		return me.SettingsClient, nil
 	}
-	restClient, err := rest.CreatePlatformClient(ctx, me.Credentials.Platform.EnvironmentURL, me.Credentials)
+	restClient, err := rest.CreatePlatformClient(ctx, me.ClientSet.Credentials().Platform.EnvironmentURL, me.ClientSet.Credentials())
 	if err != nil {
 		return nil, err
 	}

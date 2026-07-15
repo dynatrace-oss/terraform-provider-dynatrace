@@ -31,8 +31,8 @@ import (
 const SchemaVersion = "3.2.6"
 const SchemaID = "builtin:logmonitoring.log-events"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*logevents.Settings] {
-	return settings20.Service[*logevents.Settings](credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*logevents.Settings]{Duplicates: Duplicates})
+func Service(clientSet rest.ClientSet) settings.CRUDService[*logevents.Settings] {
+	return settings20.Service[*logevents.Settings](clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*logevents.Settings]{Duplicates: Duplicates})
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*logevents.Settings], v *logevents.Settings) (*api.Stub, error) {

@@ -69,12 +69,12 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValIAM)
+	clientSet, err := config.ClientSet(m, config.CredValIAM)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	service := serviceusers.NewService(creds)
+	service := serviceusers.NewService(clientSet)
 	return dataSourceReadWithService(ctx, d, service)
 }
 

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.3"
 const SchemaID = "builtin:monitored-technologies.go"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*golang.Settings] {
-	return settings20.Service[*golang.Settings](credentials, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) settings.CRUDService[*golang.Settings] {
+	return settings20.Service[*golang.Settings](clientSet, SchemaID, SchemaVersion)
 }

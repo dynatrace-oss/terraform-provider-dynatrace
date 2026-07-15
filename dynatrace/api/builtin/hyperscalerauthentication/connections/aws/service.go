@@ -36,8 +36,8 @@ type service struct {
 
 // An update should only happen when the role ARN is added or the name is modified. Otherwise, all attributes and subresources
 // are flagged as "forceNew", meaning instead of an update, the resource is destroyed and created from scratch
-func Service(credentials *rest.Credentials) settings.CRUDService[*awsconnection.Settings] {
-	return &service{service: settings20.Service[*awsconnection.Settings](credentials, SchemaID, SchemaVersion)}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*awsconnection.Settings] {
+	return &service{service: settings20.Service[*awsconnection.Settings](clientSet, SchemaID, SchemaVersion)}
 }
 
 func (me *service) SchemaID() string {

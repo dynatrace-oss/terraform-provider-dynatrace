@@ -75,11 +75,11 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		dscommon.StringsToTags(tagList, &tags)
 	}
 
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	service := services.Service(creds)
+	service := services.Service(clientSet)
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)

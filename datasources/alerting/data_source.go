@@ -81,16 +81,16 @@ func DataSource() *schema.Resource {
 
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	d.SetId("dynatrace_alerting_profiles")
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	service := alertingsrv.Service(creds)
+	service := alertingsrv.Service(clientSet)
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)
 	}
-	mgmzService := managementzonessrv.Service(creds)
+	mgmzService := managementzonessrv.Service(clientSet)
 	var mgmzStubs api.Stubs
 	if mgmzStubs, err = mgmzService.List(ctx); err != nil {
 		return diag.FromErr(err)

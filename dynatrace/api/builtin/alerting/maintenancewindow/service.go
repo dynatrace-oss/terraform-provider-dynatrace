@@ -31,8 +31,8 @@ import (
 const SchemaID = "builtin:alerting.maintenance-window"
 const SchemaVersion = "2.15"
 
-func Service(credentials *rest.Credentials) settings.CRUDService[*maintenancewindow.Settings] {
-	return settings20.Service(credentials, SchemaID, SchemaVersion, &settings20.ServiceOptions[*maintenancewindow.Settings]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
+func Service(clientSet rest.ClientSet) settings.CRUDService[*maintenancewindow.Settings] {
+	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*maintenancewindow.Settings]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*maintenancewindow.Settings], v *maintenancewindow.Settings) (*api.Stub, error) {

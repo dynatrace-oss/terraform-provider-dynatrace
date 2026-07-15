@@ -33,13 +33,12 @@ import (
 const SchemaID = "v2:synthetic:monitors:network"
 const BasePath = "/api/v2/synthetic/monitors"
 
-
-func Service(credentials *rest.Credentials) settings.CRUDService[*monitors.Settings] {
-	return &service{credentials: credentials}
+func Service(clientSet rest.ClientSet) settings.CRUDService[*monitors.Settings] {
+	return &service{clientSet: clientSet}
 }
 
 type service struct {
-	credentials *rest.Credentials
+	clientSet rest.ClientSet
 }
 
 func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub, error) {
@@ -48,7 +47,7 @@ func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub,
 	resp := struct {
 		EntityId string `json:"entityId"`
 	}{}
-	client := rest.APITokenClient(me.credentials)
+	client := rest.APITokenClient(me.clientSet.Credentials())
 	if err = client.Post(ctx, BasePath, v, 201).Finish(&resp); err != nil {
 		return nil, err
 	}
@@ -92,7 +91,7 @@ func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub,
 }
 
 func (me *service) Get(ctx context.Context, id string, v *monitors.Settings) error {
-	if err := rest.APITokenClient(me.credentials).Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), 200).Finish(v); err != nil {
+	if err := rest.APITokenClient(me.clientSet.Credentials()).Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), 200).Finish(v); err != nil {
 		return err
 	}
 
@@ -112,7 +111,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var monitors monitorList
 
-	if err = rest.APITokenClient(me.credentials).Get(ctx, BasePath, 200).Finish(&monitors); err != nil {
+	if err = rest.APITokenClient(me.clientSet.Credentials()).Get(ctx, BasePath, 200).Finish(&monitors); err != nil {
 		return nil, err
 	}
 	stubs := api.Stubs{}
@@ -127,7 +126,7 @@ func (me *service) Validate(v *monitors.Settings) error {
 }
 
 func (me *service) Update(ctx context.Context, id string, v *monitors.Settings) error {
-	err := rest.APITokenClient(me.credentials).Put(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), v, 200).Finish()
+	err := rest.APITokenClient(me.clientSet.Credentials()).Put(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), v, 200).Finish()
 	if err != nil {
 		return err
 	}
@@ -136,7 +135,7 @@ func (me *service) Update(ctx context.Context, id string, v *monitors.Settings) 
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return rest.APITokenClient(me.credentials).Delete(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), 204).Finish()
+	return rest.APITokenClient(me.clientSet.Credentials()).Delete(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), 204).Finish()
 }
 
 func (me *service) New() *monitors.Settings {

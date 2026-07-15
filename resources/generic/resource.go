@@ -45,7 +45,7 @@ func Resource() *schema.Resource {
 
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var err error
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -56,7 +56,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	}
 
 	var stub *api.Stub
-	if stub, err = generic.Service(creds).Create(ctx, config); err != nil {
+	if stub, err = generic.Service(clientSet).Create(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(stub.ID)
@@ -75,7 +75,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 }
 
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -84,7 +84,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := generic.Service(creds).Update(ctx, d.Id(), config); err != nil {
+	if err := generic.Service(clientSet).Update(ctx, d.Id(), config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -101,7 +101,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 }
 
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -109,7 +109,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var configToMarshal *settings.Settings
 
 	apiConfig := new(settings.Settings)
-	if err := generic.Service(creds).Get(ctx, d.Id(), apiConfig); err != nil {
+	if err := generic.Service(clientSet).Get(ctx, d.Id(), apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -139,11 +139,11 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 }
 
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	creds, err := config.Credentials(m, config.CredValDefault)
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	if err := generic.Service(creds).Delete(ctx, d.Id()); err != nil {
+	if err := generic.Service(clientSet).Delete(ctx, d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
 
