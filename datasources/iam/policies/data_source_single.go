@@ -78,7 +78,7 @@ func DataSourceSingleRead(ctx context.Context, d *schema.ResourceData, m any) di
 		return diag.FromErr(err)
 	}
 
-	service := policies.ServiceWithGloabals(clientSet)
+	service := policies.ServiceWithGlobals(clientSet)
 	stubs, err := service.ListWithGlobals(ctx)
 	if err != nil {
 		return diag.FromErr(err)

@@ -41,7 +41,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*policies.Policy], 
 	return &PolicyServiceClient{credentials: clientSet.Credentials()}, nil
 }
 
-func ServiceWithGloabals(clientSet rest.ClientSet) *PolicyServiceClient {
+func ServiceWithGlobals(clientSet rest.ClientSet) *PolicyServiceClient {
 	return &PolicyServiceClient{credentials: clientSet.Credentials()}
 }
 
