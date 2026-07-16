@@ -35,8 +35,8 @@ import (
 	bucket "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/buckets"
 )
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*buckets.Bucket] {
-	return &service{clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*buckets.Bucket], error) {
+	return &service{clientSet}, nil
 }
 
 type service struct {

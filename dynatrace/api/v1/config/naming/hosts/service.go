@@ -31,12 +31,12 @@ import (
 const SchemaID = "v1:config:conditional-naming:hosts"
 const BasePath = "/api/config/v1/conditionalNaming/host"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*hosts.NamingRule] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*hosts.NamingRule], error) {
 	return settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*hosts.NamingRule](BasePath).WithDuplicates(Duplicates),
-	)
+	), nil
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*hosts.NamingRule], v *hosts.NamingRule) (*api.Stub, error) {

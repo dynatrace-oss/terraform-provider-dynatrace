@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.3.3"
 const SchemaID = "builtin:synthetic.http.outage-handling"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*outagehandling.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*outagehandling.Settings], error) {
 	return settings20.Service[*outagehandling.Settings](clientSet, SchemaID, SchemaVersion)
 }

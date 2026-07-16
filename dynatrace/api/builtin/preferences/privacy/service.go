@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "4.0.2"
 const SchemaID = "builtin:preferences.privacy"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

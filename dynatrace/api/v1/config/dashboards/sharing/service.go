@@ -35,11 +35,15 @@ import (
 
 const SchemaID = "v1:config:dashboards:sharing"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*sharing.DashboardSharing] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*sharing.DashboardSharing], error) {
+	dashboardService, err := jsondashboards.Service(clientSet)
+	if err != nil {
+		return nil, err
+	}
 	return &service{
 		client:           rest.APITokenClient(clientSet.Credentials()),
-		dashboardService: jsondashboards.Service(clientSet),
-	}
+		dashboardService: dashboardService,
+	}, nil
 }
 
 type service struct {

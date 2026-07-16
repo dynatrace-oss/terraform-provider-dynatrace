@@ -35,26 +35,33 @@ import (
 const SchemaVersion = "0.1.9"
 const SchemaID = "builtin:settings.subscriptions.service"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*keyrequests.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*keyrequests.Settings], error) {
 	var topologyService settings.RService[*entity.Entity]
 	if settings.ExportRunning {
 		topologyService = toposervices.DataSourceService(clientSet)
 	} else {
-		topologyService = toposervices.Service(clientSet)
+		var err error
+		if topologyService, err = toposervices.Service(clientSet); err != nil {
+			return nil, err
+		}
+	}
+	svc, err := settings20.Service[*keyrequests.Settings](clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*keyrequests.Settings]{
+		Name: func(ctx context.Context, id string, v *keyrequests.Settings) (string, error) {
+			service := settings.NewSettings(topologyService)
+			if err := topologyService.Get(ctx, v.ServiceID, service); err != nil {
+				return "", err
+			}
+			return "Key Requests for " + *service.DisplayName, nil
+		},
+	})
+	if err != nil {
+		return nil, err
 	}
 	return &service{
-		service: settings20.Service[*keyrequests.Settings](clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*keyrequests.Settings]{
-			Name: func(ctx context.Context, id string, v *keyrequests.Settings) (string, error) {
-				service := settings.NewSettings(topologyService)
-				if err := topologyService.Get(ctx, v.ServiceID, service); err != nil {
-					return "", err
-				}
-				return "Key Requests for " + *service.DisplayName, nil
-			},
-		}),
+		service:   svc,
 		clientSet: clientSet,
 		client:    rest.HybridClient(clientSet.Credentials()),
-	}
+	}, nil
 }
 
 type service struct {
@@ -85,17 +92,19 @@ func (me *service) Get(ctx context.Context, id string, v *keyrequests.Settings) 
 // if the request errors the state value is returned
 func (me *service) getKeyRequestIDs(ctx context.Context, serviceID string, names []string) map[string]string {
 	var entitySettings entities.Settings
-	service := srv.Service("", "", fmt.Sprintf("type(\"SERVICE_METHOD\"),fromRelationships.isServiceMethodOf(type(\"SERVICE_METHOD_GROUP\"),fromRelationships.isGroupOf(type(\"SERVICE\"),entityId(\"%s\")))", serviceID), "", "", me.clientSet)
-	if err := service.Get(ctx, service.SchemaID(), &entitySettings); err == nil {
-		keyRequestIDs := map[string]string{}
-		for _, name := range names {
-			for _, entity := range entitySettings.Entities {
-				if entity.DisplayName != nil && *entity.DisplayName == name {
-					keyRequestIDs[*entity.DisplayName] = *entity.EntityId
+	service, err := srv.Service("", "", fmt.Sprintf("type(\"SERVICE_METHOD\"),fromRelationships.isServiceMethodOf(type(\"SERVICE_METHOD_GROUP\"),fromRelationships.isGroupOf(type(\"SERVICE\"),entityId(\"%s\")))", serviceID), "", "", me.clientSet)
+	if err == nil {
+		if err := service.Get(ctx, service.SchemaID(), &entitySettings); err == nil {
+			keyRequestIDs := map[string]string{}
+			for _, name := range names {
+				for _, entity := range entitySettings.Entities {
+					if entity.DisplayName != nil && *entity.DisplayName == name {
+						keyRequestIDs[*entity.DisplayName] = *entity.EntityId
+					}
 				}
 			}
+			return keyRequestIDs
 		}
-		return keyRequestIDs
 	}
 	cfg := ctx.Value(settings.ContextKeyStateConfig)
 	if keyRequestConfig, ok := cfg.(*keyrequests.Settings); ok && keyRequestConfig != nil {

@@ -50,7 +50,10 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	service := export.Service(clientSet, export.ResourceTypes.UpdateWindows)
+	service, err := export.Service(clientSet, export.ResourceTypes.UpdateWindows)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)

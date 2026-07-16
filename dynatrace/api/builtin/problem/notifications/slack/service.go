@@ -23,6 +23,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*notifications.Notification] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*notifications.Notification], error) {
 	return notifications.Service(clientSet, notifications.Types.Slack)
 }

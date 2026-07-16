@@ -31,7 +31,7 @@ import (
 const SchemaID = "builtin:alerting.maintenance-window"
 const SchemaVersion = "2.15"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*maintenancewindow.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*maintenancewindow.Settings], error) {
 	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*maintenancewindow.Settings]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 

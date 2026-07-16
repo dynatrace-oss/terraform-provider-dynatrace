@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.3"
 const SchemaID = "builtin:monitored-technologies.varnish"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*varnish.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*varnish.Settings], error) {
 	return settings20.Service[*varnish.Settings](clientSet, SchemaID, SchemaVersion)
 }

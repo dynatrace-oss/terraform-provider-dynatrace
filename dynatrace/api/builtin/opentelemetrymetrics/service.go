@@ -35,11 +35,15 @@ import (
 const SchemaVersion = "1.6.2"
 const SchemaID = "builtin:opentelemetry-metrics"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*opentelemetrymetrics.Settings] {
-	return &service{
-		service: settings20.Service[*opentelemetrymetrics.Settings](clientSet, SchemaID, SchemaVersion),
-		client:  rest.HybridClient(clientSet.Credentials()),
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*opentelemetrymetrics.Settings], error) {
+	svc, err := settings20.Service[*opentelemetrymetrics.Settings](clientSet, SchemaID, SchemaVersion)
+	if err != nil {
+		return nil, err
 	}
+	return &service{
+		service: svc,
+		client:  rest.HybridClient(clientSet.Credentials()),
+	}, nil
 }
 
 type service struct {

@@ -464,20 +464,28 @@ import (
 	openpipelineusersessionsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/routing"
 )
 
-func NewResourceDescriptor[T settings.Settings](fn func(clientSet rest.ClientSet) settings.CRUDService[T], dependencies ...Dependency) ResourceDescriptor {
+func NewResourceDescriptor[T settings.Settings](fn func(clientSet rest.ClientSet) (settings.CRUDService[T], error), dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
-		Service: func(clientSet rest.ClientSet) settings.CRUDService[settings.Settings] {
-			return &settings.GenericCRUDService[T]{Service: fn(clientSet)}
+		Service: func(clientSet rest.ClientSet) (settings.CRUDService[settings.Settings], error) {
+			svc, err := fn(clientSet)
+			if err != nil {
+				return nil, err
+			}
+			return &settings.GenericCRUDService[T]{Service: svc}, nil
 		},
 		protoType:    newSettings(fn),
 		Dependencies: dependencies,
 	}
 }
 
-func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(clientSet rest.ClientSet) settings.CRUDService[T], folderName string, dependencies ...Dependency) ResourceDescriptor {
+func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(clientSet rest.ClientSet) (settings.CRUDService[T], error), folderName string, dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
-		Service: func(clientSet rest.ClientSet) settings.CRUDService[settings.Settings] {
-			return &settings.GenericCRUDService[T]{Service: fn(clientSet)}
+		Service: func(clientSet rest.ClientSet) (settings.CRUDService[settings.Settings], error) {
+			svc, err := fn(clientSet)
+			if err != nil {
+				return nil, err
+			}
+			return &settings.GenericCRUDService[T]{Service: svc}, nil
 		},
 		protoType:    newSettings(fn),
 		Dependencies: dependencies,
@@ -485,10 +493,14 @@ func NewResourceDescriptorWithFolderOverride[T settings.Settings](fn func(client
 	}
 }
 
-func NewChildResourceDescriptor[T settings.Settings](fn func(clientSet rest.ClientSet) settings.CRUDService[T], parent ResourceType, dependencies ...Dependency) ResourceDescriptor {
+func NewChildResourceDescriptor[T settings.Settings](fn func(clientSet rest.ClientSet) (settings.CRUDService[T], error), parent ResourceType, dependencies ...Dependency) ResourceDescriptor {
 	return ResourceDescriptor{
-		Service: func(clientSet rest.ClientSet) settings.CRUDService[settings.Settings] {
-			return &settings.GenericCRUDService[T]{Service: fn(clientSet)}
+		Service: func(clientSet rest.ClientSet) (settings.CRUDService[settings.Settings], error) {
+			svc, err := fn(clientSet)
+			if err != nil {
+				return nil, err
+			}
+			return &settings.GenericCRUDService[T]{Service: svc}, nil
 		},
 		protoType:    newSettings(fn),
 		Dependencies: dependencies,
@@ -496,14 +508,14 @@ func NewChildResourceDescriptor[T settings.Settings](fn func(clientSet rest.Clie
 	}
 }
 
-func newSettings[T settings.Settings](sfn func(clientSet rest.ClientSet) settings.CRUDService[T]) T {
+func newSettings[T settings.Settings](sfn func(clientSet rest.ClientSet) (settings.CRUDService[T], error)) T {
 	var proto T
 	return reflect.New(reflect.TypeOf(proto).Elem()).Interface().(T)
 }
 
 type ResourceDescriptor struct {
 	Dependencies []Dependency
-	Service      func(clientSet rest.ClientSet) settings.CRUDService[settings.Settings]
+	Service      func(clientSet rest.ClientSet) (settings.CRUDService[settings.Settings], error)
 	protoType    settings.Settings
 	except       func(id string, name string) bool
 	Parent       *ResourceType
@@ -563,7 +575,11 @@ func ContainsInsertAfterAttribute(protoType settings.Settings, schemaID string) 
 // `Dependencies.WeakID` takes care of that.
 func AddInsertAfterWeakIDDependencies(resources map[ResourceType]ResourceDescriptor) {
 	for resType, descriptor := range resources {
-		schemaID := descriptor.Service(&config.ProviderConfiguration{}).SchemaID()
+		service, err := descriptor.Service(&config.ProviderConfiguration{})
+		if err != nil {
+			continue
+		}
+		schemaID := service.SchemaID()
 		if !ContainsInsertAfterAttribute(descriptor.protoType, schemaID) {
 			continue
 		}
@@ -2194,6 +2210,6 @@ func GetExcludeListedResources() []ResourceType {
 
 }
 
-func Service(clientSet rest.ClientSet, resourceType ResourceType) settings.CRUDService[settings.Settings] {
+func Service(clientSet rest.ClientSet, resourceType ResourceType) (settings.CRUDService[settings.Settings], error) {
 	return AllResources[resourceType].Service(clientSet)
 }

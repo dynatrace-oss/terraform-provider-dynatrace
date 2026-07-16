@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:rum.web.beacon-domain-origins"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

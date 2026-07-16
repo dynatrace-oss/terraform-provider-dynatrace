@@ -34,7 +34,9 @@ import (
 
 func TestList(t *testing.T) {
 	t.Run("Returns an error if the client creation fails", func(t *testing.T) {
-		_, err := openpipeline.EventsService(&config.ProviderConfiguration{}).List(t.Context())
+		service, err := openpipeline.EventsService(&config.ProviderConfiguration{})
+		require.NoError(t, err)
+		_, err = service.List(t.Context())
 		assert.ErrorIs(t, err, rest.NoPlatformCredentialsErr)
 	})
 
@@ -45,12 +47,14 @@ func TestList(t *testing.T) {
 			require.NoError(t, err)
 		}))
 		defer server.Close()
-		_, err := openpipeline.EventsService(&config.ProviderConfiguration{
+		service, err := openpipeline.EventsService(&config.ProviderConfiguration{
 			Platform: rest.PlatformCredentials{
 				EnvironmentURL: server.URL,
 				PlatformToken:  "token",
 			},
-		}).List(t.Context())
+		})
+		require.NoError(t, err)
+		_, err = service.List(t.Context())
 		assert.ErrorContains(t, err, "Not Found")
 	})
 
@@ -60,12 +64,14 @@ func TestList(t *testing.T) {
 		}))
 		defer server.Close()
 
-		configs, err := openpipeline.EventsService(&config.ProviderConfiguration{
+		service, err := openpipeline.EventsService(&config.ProviderConfiguration{
 			Platform: rest.PlatformCredentials{
 				EnvironmentURL: server.URL,
 				PlatformToken:  "token",
 			},
-		}).List(t.Context())
+		})
+		require.NoError(t, err)
+		configs, err := service.List(t.Context())
 		require.NoError(t, err)
 		assert.Equal(t, configs, api2.Stubs{&api2.Stub{ID: "events", Name: "events"}})
 	})

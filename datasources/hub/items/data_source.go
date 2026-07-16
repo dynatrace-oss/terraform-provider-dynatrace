@@ -69,7 +69,10 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		opts.Type = v.(string)
 	}
 
-	service := srv.Service(clientSet, opts)
+	service, err := srv.Service(clientSet, opts)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	if err := service.Get(ctx, service.SchemaID(), &settings); err != nil {
 		return diag.FromErr(err)
 	}

@@ -27,6 +27,6 @@ import (
 const SchemaID = "builtin:networkzones"
 const SchemaVersion = "1.0.2"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*networkzones.NetworkZones] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*networkzones.NetworkZones], error) {
 	return settings20.Service[*networkzones.NetworkZones](clientSet, SchemaID, SchemaVersion)
 }

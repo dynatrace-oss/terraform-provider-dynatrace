@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "2.1"
 const SchemaID = "app:dynatrace.redhat.ansible:eda-webhook.connection"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*connection.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*connection.Settings], error) {
 	return settings20.Service[*connection.Settings](clientSet, SchemaID, SchemaVersion)
 }

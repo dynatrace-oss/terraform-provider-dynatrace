@@ -38,8 +38,8 @@ type PolicyServiceClient struct {
 	credentials *rest.Credentials
 }
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*policies.Policy] {
-	return &PolicyServiceClient{credentials: clientSet.Credentials()}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*policies.Policy], error) {
+	return &PolicyServiceClient{credentials: clientSet.Credentials()}, nil
 }
 
 func ServiceWithGloabals(clientSet rest.ClientSet) *PolicyServiceClient {

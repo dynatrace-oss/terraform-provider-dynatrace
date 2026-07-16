@@ -26,10 +26,10 @@ import (
 const SchemaID = "v1:config:notifications"
 const BasePath = "/api/config/v1/notifications"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*notifications.NotificationRecord] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*notifications.NotificationRecord], error) {
 	return settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*notifications.NotificationRecord](BasePath),
-	)
+	), nil
 }

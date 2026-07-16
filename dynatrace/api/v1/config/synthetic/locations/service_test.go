@@ -40,9 +40,12 @@ func TestSyntheticLocations(t *testing.T) {
 		return
 	}
 	clientSet := &config.ProviderConfiguration{EnvironmentURL: envURL, APIToken: apiToken}
-	service := locations.Service(clientSet)
+	service, err := locations.Service(clientSet)
+	if err != nil {
+		t.Error(err)
+		return
+	}
 	var stubs api.Stubs
-	var err error
 	if stubs, err = service.List(context.Background()); err != nil {
 		t.Error(err)
 		return

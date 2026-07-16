@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.1.6"
 const SchemaID = "builtin:rum.mobile.key-performance-metrics"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*keyperformancemetrics.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*keyperformancemetrics.Settings], error) {
 	return settings20.Service[*keyperformancemetrics.Settings](clientSet, SchemaID, SchemaVersion)
 }

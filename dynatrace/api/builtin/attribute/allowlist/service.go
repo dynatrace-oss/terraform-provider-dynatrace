@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.19"
 const SchemaID = "builtin:attribute-allow-list"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*allowlist.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*allowlist.Settings], error) {
 	return settings20.Service[*allowlist.Settings](clientSet, SchemaID, SchemaVersion)
 }

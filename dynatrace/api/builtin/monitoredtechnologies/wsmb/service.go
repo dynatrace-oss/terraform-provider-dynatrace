@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.2"
 const SchemaID = "builtin:monitored-technologies.wsmb"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*wsmb.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*wsmb.Settings], error) {
 	return settings20.Service[*wsmb.Settings](clientSet, SchemaID, SchemaVersion)
 }

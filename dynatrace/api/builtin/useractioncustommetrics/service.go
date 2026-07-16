@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:user-action-custom-metrics"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*useractioncustommetrics.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*useractioncustommetrics.Settings], error) {
 	return settings20.Service[*useractioncustommetrics.Settings](clientSet, SchemaID, SchemaVersion)
 }

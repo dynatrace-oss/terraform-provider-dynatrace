@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.9"
 const SchemaID = "app:dynatrace.discovery.coverage:discovery.findings.default.rules.schema"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*defaultrules.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*defaultrules.Settings], error) {
 	return settings20.Service[*defaultrules.Settings](clientSet, SchemaID, SchemaVersion)
 }

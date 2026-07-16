@@ -30,7 +30,7 @@ import (
 
 const SchemaID = "v1:synthetic:monitors:browser"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*browser.SyntheticMonitor] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*browser.SyntheticMonitor], error) {
 	return settings.NewAPITokenService(clientSet, SchemaID, &settings.ServiceOptions[*browser.SyntheticMonitor]{
 		Get:            settings.Path("/api/v1/synthetic/monitors/%s"),
 		List:           settings.Path("/api/v1/synthetic/monitors?type=BROWSER"),
@@ -39,7 +39,7 @@ func Service(clientSet rest.ClientSet) settings.CRUDService[*browser.SyntheticMo
 		Stubs:          &monitors.Monitors{},
 		HasNoValidator: true,
 		CreateConfirm:  20,
-	})
+	}), nil
 }
 
 func contains(elems []string, search string) bool {

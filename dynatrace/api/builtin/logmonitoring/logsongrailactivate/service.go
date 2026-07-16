@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.4"
 const SchemaID = "builtin:logmonitoring.logs-on-grail-activate"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*logsongrailactivate.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*logsongrailactivate.Settings], error) {
 	return settings20.Service[*logsongrailactivate.Settings](clientSet, SchemaID, SchemaVersion)
 }

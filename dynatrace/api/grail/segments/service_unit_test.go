@@ -33,7 +33,9 @@ import (
 
 func TestList(t *testing.T) {
 	t.Run("Returns an error if the client creation fails", func(t *testing.T) {
-		_, err := segments.Service(&config.ProviderConfiguration{}).List(t.Context())
+		service, err := segments.Service(&config.ProviderConfiguration{})
+		require.NoError(t, err)
+		_, err = service.List(t.Context())
 		assert.ErrorIs(t, err, rest.NoPlatformCredentialsErr)
 	})
 
@@ -52,12 +54,14 @@ func TestList(t *testing.T) {
 		}))
 		defer server.Close()
 
-		result, err := segments.Service(&config.ProviderConfiguration{
+		service, err := segments.Service(&config.ProviderConfiguration{
 			Platform: rest.PlatformCredentials{
 				EnvironmentURL: server.URL,
 				PlatformToken:  "token",
 			},
-		}).List(t.Context())
+		})
+		require.NoError(t, err)
+		result, err := service.List(t.Context())
 
 		require.NoError(t, err)
 		assert.Len(t, result, 2)

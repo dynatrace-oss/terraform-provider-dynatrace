@@ -26,12 +26,12 @@ import (
 
 const SchemaID = "v1:synthetic:locations"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*locations.PrivateSyntheticLocation] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*locations.PrivateSyntheticLocation], error) {
 	return settings.NewAPITokenService(clientSet, SchemaID, &settings.ServiceOptions[*locations.PrivateSyntheticLocation]{
 		Get:            settings.Path("/api/v1/synthetic/locations/%s"),
 		List:           settings.Path("/api/v1/synthetic/locations?type=PRIVATE"),
 		CreateURL:      func(v *locations.PrivateSyntheticLocation) string { return "/api/v1/synthetic/locations" },
 		Stubs:          &locations.SyntheticLocations{},
 		HasNoValidator: true,
-	})
+	}), nil
 }

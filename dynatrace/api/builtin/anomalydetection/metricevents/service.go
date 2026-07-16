@@ -31,7 +31,7 @@ import (
 const SchemaVersion = "1.0.19"
 const SchemaID = "builtin:anomaly-detection.metric-events"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*metricevents.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*metricevents.Settings], error) {
 	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*metricevents.Settings]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 

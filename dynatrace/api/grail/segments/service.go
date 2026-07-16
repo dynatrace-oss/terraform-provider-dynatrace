@@ -30,8 +30,8 @@ import (
 	segments "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments/settings"
 )
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*segments.Segment] {
-	return &service{clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*segments.Segment], error) {
+	return &service{clientSet}, nil
 }
 
 type service struct {

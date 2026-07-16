@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.3.13"
 const SchemaID = "builtin:os-services-monitoring"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*osservicesmonitoring.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*osservicesmonitoring.Settings], error) {
 	return settings20.Service[*osservicesmonitoring.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -86,7 +86,10 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	}
 
 	var latest latest.Latest
-	service := srv.Service(clientSet)
+	service, err := srv.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	if err := service.Get(ctx, "", &latest); err != nil {
 		return diag.FromErr(err)
 	}

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:anomaly-detection.infrastructure-disks.per-disk-override"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*perdiskoverride.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*perdiskoverride.Settings], error) {
 	return settings20.Service[*perdiskoverride.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -30,10 +30,10 @@ const BasePath = "/api/config/v1/kubernetes/credentials"
 
 var mu sync.Mutex
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*kubernetes.KubernetesCredentials] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*kubernetes.KubernetesCredentials], error) {
 	return settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*kubernetes.KubernetesCredentials](BasePath).WithMutex(mu.Lock, mu.Unlock),
-	)
+	), nil
 }

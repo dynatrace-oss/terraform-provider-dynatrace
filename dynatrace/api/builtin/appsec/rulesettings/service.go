@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.8"
 const SchemaID = "builtin:appsec.rule-settings"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*rulesettings.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*rulesettings.Settings], error) {
 	return settings20.Service[*rulesettings.Settings](clientSet, SchemaID, SchemaVersion)
 }

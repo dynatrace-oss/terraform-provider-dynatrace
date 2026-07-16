@@ -36,12 +36,20 @@ import (
 const SchemaID = "builtin:management-zones"
 const SchemaVersion = "1.0.13"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*managementzones.Settings] {
-	return &service{
-		service:    settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*managementzones.Settings]{LegacyID: settings.LegacyLongDecode}),
-		sloService: slo.Service(clientSet),
-		client:     rest.HybridClient(clientSet.Credentials()),
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*managementzones.Settings], error) {
+	sloService, err := slo.Service(clientSet)
+	if err != nil {
+		return nil, err
 	}
+	svc, err := settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*managementzones.Settings]{LegacyID: settings.LegacyLongDecode})
+	if err != nil {
+		return nil, err
+	}
+	return &service{
+		service:    svc,
+		sloService: sloService,
+		client:     rest.HybridClient(clientSet.Credentials()),
+	}, nil
 }
 
 type service struct {

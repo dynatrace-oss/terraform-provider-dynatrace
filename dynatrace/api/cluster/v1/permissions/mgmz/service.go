@@ -31,10 +31,10 @@ import (
 
 const SchemaID = "accounts:groups-mgmz"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*mgmz.Permission] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*mgmz.Permission], error) {
 	return &service{
 		serviceClient: NewService(clientSet),
-	}
+	}, nil
 }
 
 // ServiceClient TODO: documentation

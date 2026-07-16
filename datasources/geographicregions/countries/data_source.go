@@ -50,7 +50,10 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	service := srv.Service(clientSet)
+	service, err := srv.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	var settings countries.Settings
 	if err := service.Get(ctx, service.SchemaID(), &settings); err != nil {

@@ -381,7 +381,8 @@ func TestService(t *testing.T) {
 	})
 
 	t.Run("Service returns a new instance", func(t *testing.T) {
-		service := permissionService.Service(nil)
+		service, err := permissionService.Service(nil)
+		require.NoError(t, err)
 		assert.IsType(t, &permissionService.ServiceImpl{}, service)
 	})
 

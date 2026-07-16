@@ -46,6 +46,6 @@ func (me *service) SchemaID() string {
 	return SchemaID
 }
 
-func Service(clientSet rest.ClientSet) settings.RService[*iam.Settings] {
-	return &service{client: rest.APITokenClient(clientSet.Credentials())}
+func Service(clientSet rest.ClientSet) (settings.RService[*iam.Settings], error) {
+	return &service{client: rest.APITokenClient(clientSet.Credentials())}, nil
 }

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.4.7"
 const SchemaID = "builtin:process.built-in-process-monitoring-rule"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

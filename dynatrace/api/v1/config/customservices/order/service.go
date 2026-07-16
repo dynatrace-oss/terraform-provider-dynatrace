@@ -33,8 +33,8 @@ const StaticID = "a67b38c9-1e0b-4c5f-8320-f1713df613d3"
 const StaticName = "custom_service_order"
 const BasePath = "/api/config/v1/service/customServices/%s"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*order.Settings] {
-	return &service{client: rest.APITokenClient(clientSet.Credentials())}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*order.Settings], error) {
+	return &service{client: rest.APITokenClient(clientSet.Credentials())}, nil
 }
 
 type service struct {

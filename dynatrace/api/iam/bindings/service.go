@@ -39,8 +39,8 @@ type BindingServiceClient struct {
 	credentials *rest.Credentials
 }
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*bindings.PolicyBinding] {
-	return &BindingServiceClient{credentials: clientSet.Credentials()}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*bindings.PolicyBinding], error) {
+	return &BindingServiceClient{credentials: clientSet.Credentials()}, nil
 }
 
 func (me *BindingServiceClient) SchemaID() string {

@@ -90,8 +90,12 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	defer mu.Unlock()
 
 	// Retrieve auto tag rules from API
+	service, err := autotagging.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	apiConfig := new(auto_tag_settings.Settings)
-	if err := autotagging.Service(clientSet).Get(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
+	if err := service.Get(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -99,7 +103,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	// Concatenated rules may contain duplicates but API does not care
 	apiConfig.Rules = append(apiConfig.Rules, tfConfig.Rules...)
 
-	if err := autotagging.Service(clientSet).Update(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
+	if err := service.Update(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(uuid.New().String())
@@ -151,8 +155,12 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	defer mu.Unlock()
 
 	// Retrieve auto tag rules from API
+	service, err := autotagging.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	apiConfig := new(auto_tag_settings.Settings)
-	if err := autotagging.Service(clientSet).Get(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
+	if err := service.Get(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -188,7 +196,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	}
 	apiConfig.Rules = finalRules
 
-	if err := autotagging.Service(clientSet).Update(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
+	if err := service.Update(ctx, tfConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -229,8 +237,12 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	defer mu.Unlock()
 
 	// Retrieve auto tag rules from API
+	service, err := autotagging.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	apiConfig := new(auto_tag_settings.Settings)
-	if err := autotagging.Service(clientSet).Get(ctx, stateConfig.AutoTagId, apiConfig); err != nil {
+	if err := service.Get(ctx, stateConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -285,8 +297,12 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	defer mu.Unlock()
 
 	// Retrieve auto tag rules from API
+	service, err := autotagging.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	apiConfig := new(auto_tag_settings.Settings)
-	if err := autotagging.Service(clientSet).Get(ctx, stateConfig.AutoTagId, apiConfig); err != nil {
+	if err := service.Get(ctx, stateConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -299,7 +315,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		}
 	}
 
-	if err := autotagging.Service(clientSet).Update(ctx, stateConfig.AutoTagId, apiConfig); err != nil {
+	if err := service.Update(ctx, stateConfig.AutoTagId, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 

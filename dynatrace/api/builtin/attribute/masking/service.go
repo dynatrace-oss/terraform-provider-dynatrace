@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.4"
 const SchemaID = "builtin:attribute-masking"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*masking.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*masking.Settings], error) {
 	return settings20.Service[*masking.Settings](clientSet, SchemaID, SchemaVersion)
 }

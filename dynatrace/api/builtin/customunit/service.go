@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.8"
 const SchemaID = "builtin:custom-unit"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:bizevents.http.capturing-variants"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*capturingvariants.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*capturingvariants.Settings], error) {
 	return settings20.Service[*capturingvariants.Settings](clientSet, SchemaID, SchemaVersion)
 }

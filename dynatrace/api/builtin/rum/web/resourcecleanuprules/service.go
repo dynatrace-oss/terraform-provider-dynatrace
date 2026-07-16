@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.7"
 const SchemaID = "builtin:rum.web.resource-cleanup-rules"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

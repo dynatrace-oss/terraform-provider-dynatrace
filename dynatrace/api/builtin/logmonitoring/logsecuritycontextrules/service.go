@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.3"
 const SchemaID = "builtin:logmonitoring.log-security-context-rules"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*logsecuritycontextrules.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*logsecuritycontextrules.Settings], error) {
 	return settings20.Service[*logsecuritycontextrules.Settings](clientSet, SchemaID, SchemaVersion)
 }

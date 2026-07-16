@@ -33,8 +33,8 @@ import (
 	customtags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags/settings"
 )
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*customtags.Settings] {
-	return &service{clientSet: clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*customtags.Settings], error) {
+	return &service{clientSet: clientSet}, nil
 }
 
 type service struct {

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.6.3"
 const SchemaID = "builtin:mainframe.txmonitoring"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*txmonitoring.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*txmonitoring.Settings], error) {
 	return settings20.Service[*txmonitoring.Settings](clientSet, SchemaID, SchemaVersion)
 }

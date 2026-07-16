@@ -93,8 +93,9 @@ func TestProviderLogging(t *testing.T) {
 			httpServer := httptest.NewServer(&mux)
 			defer httpServer.Close()
 
-			service := connection.Service(tc.clientSet(httpServer.URL))
-			err := service.Get(t.Context(), "test-id", new(set.Settings))
+			service, err := connection.Service(tc.clientSet(httpServer.URL))
+			require.NoError(t, err)
+			err = service.Get(t.Context(), "test-id", new(set.Settings))
 			require.NoError(t, err)
 			assertLoggedOnce(t, builder.String())
 		})
@@ -119,7 +120,7 @@ func TestProviderLogging(t *testing.T) {
 		httpServer := httptest.NewServer(&mux)
 		defer httpServer.Close()
 
-		service := boundaries.Service(&config.ProviderConfiguration{
+		service, err := boundaries.Service(&config.ProviderConfiguration{
 			EnvironmentURL: httpServer.URL,
 			IAM: config.IAM{
 				ClientID:     "id",
@@ -129,7 +130,8 @@ func TestProviderLogging(t *testing.T) {
 				EndpointURL:  httpServer.URL,
 			},
 		})
-		err := service.Get(t.Context(), "test-id", new(setboundaries.PolicyBoundary))
+		require.NoError(t, err)
+		err = service.Get(t.Context(), "test-id", new(setboundaries.PolicyBoundary))
 		require.NoError(t, err)
 		assertLoggedOnce(t, builder.String())
 	})

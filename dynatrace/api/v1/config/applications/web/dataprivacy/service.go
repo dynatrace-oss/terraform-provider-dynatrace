@@ -34,11 +34,15 @@ import (
 
 const SchemaID = "v1:config:applications:web:data-privacy"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*dataprivacy.ApplicationDataPrivacy] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*dataprivacy.ApplicationDataPrivacy], error) {
+	webAppService, err := webservice.Service(clientSet)
+	if err != nil {
+		return nil, err
+	}
 	return &service{
 		schemaID:      SchemaID,
 		client:        rest.APITokenClient(clientSet.Credentials()),
-		webAppService: webservice.Service(clientSet)}
+		webAppService: webAppService}, nil
 }
 
 type service struct {

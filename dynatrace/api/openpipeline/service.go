@@ -31,52 +31,52 @@ import (
 	caclib "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/openpipeline"
 )
 
-func EventsService(clientSet rest.ClientSet) settings.CRUDService[*openpipeline.Configuration] {
-	return &service{clientSet: clientSet, kind: "events", schemaSuffix: "events"}
+func EventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
+	return &service{clientSet: clientSet, kind: "events", schemaSuffix: "events"}, nil
 }
 
-func LogsService(clientSet rest.ClientSet) settings.CRUDService[*openpipeline.Configuration] {
-	return &service{clientSet: clientSet, kind: "logs", schemaSuffix: "logs"}
+func LogsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
+	return &service{clientSet: clientSet, kind: "logs", schemaSuffix: "logs"}, nil
 }
 
-func BusinessEventsService(clientSet rest.ClientSet) settings.CRUDService[*openpipeline.Configuration] {
-	return &service{clientSet: clientSet, kind: "bizevents", schemaSuffix: "events.business"}
+func BusinessEventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
+	return &service{clientSet: clientSet, kind: "bizevents", schemaSuffix: "events.business"}, nil
 }
 
-func SecurityEventsService(clientSet rest.ClientSet) settings.CRUDService[*openpipeline.Configuration] {
-	return &service{clientSet: clientSet, kind: "events.security", schemaSuffix: "events.security"}
+func SecurityEventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
+	return &service{clientSet: clientSet, kind: "events.security", schemaSuffix: "events.security"}, nil
 }
 
-func SDLCEventsService(clientSet rest.ClientSet) settings.CRUDService[*openpipeline.Configuration] {
-	return &service{clientSet: clientSet, kind: "events.sdlc", schemaSuffix: "events.sdlc"}
+func SDLCEventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
+	return &service{clientSet: clientSet, kind: "events.sdlc", schemaSuffix: "events.sdlc"}, nil
 }
 
-func MetricsService(clientSet rest.ClientSet) settings.CRUDService[*openpipeline.Configuration] {
-	return &service{clientSet: clientSet, kind: "metrics", schemaSuffix: "metrics"}
+func MetricsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
+	return &service{clientSet: clientSet, kind: "metrics", schemaSuffix: "metrics"}, nil
 }
 
-func UserSessionsService(clientSet rest.ClientSet) settings.CRUDService[*openpipeline.Configuration] {
-	return &service{clientSet: clientSet, kind: "usersessions", schemaSuffix: "user.sessions"}
+func UserSessionsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
+	return &service{clientSet: clientSet, kind: "usersessions", schemaSuffix: "user.sessions"}, nil
 }
 
-func DavisProblemsService(clientSet rest.ClientSet) settings.CRUDService[*openpipeline.Configuration] {
-	return &service{clientSet: clientSet, kind: "davis.problems", schemaSuffix: "davis.problems"}
+func DavisProblemsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
+	return &service{clientSet: clientSet, kind: "davis.problems", schemaSuffix: "davis.problems"}, nil
 }
 
-func DavisEventsService(clientSet rest.ClientSet) settings.CRUDService[*openpipeline.Configuration] {
-	return &service{clientSet: clientSet, kind: "davis.events", schemaSuffix: "davis.events"}
+func DavisEventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
+	return &service{clientSet: clientSet, kind: "davis.events", schemaSuffix: "davis.events"}, nil
 }
 
-func SystemEventsService(clientSet rest.ClientSet) settings.CRUDService[*openpipeline.Configuration] {
-	return &service{clientSet: clientSet, kind: "system.events", schemaSuffix: "system.events"}
+func SystemEventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
+	return &service{clientSet: clientSet, kind: "system.events", schemaSuffix: "system.events"}, nil
 }
 
-func UserEventsService(clientSet rest.ClientSet) settings.CRUDService[*openpipeline.Configuration] {
-	return &service{clientSet: clientSet, kind: "user.events", schemaSuffix: "user.events"}
+func UserEventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
+	return &service{clientSet: clientSet, kind: "user.events", schemaSuffix: "user.events"}, nil
 }
 
-func SpansService(clientSet rest.ClientSet) settings.CRUDService[*openpipeline.Configuration] {
-	return &service{clientSet: clientSet, kind: "spans", schemaSuffix: "spans"}
+func SpansService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
+	return &service{clientSet: clientSet, kind: "spans", schemaSuffix: "spans"}, nil
 }
 
 type service struct {

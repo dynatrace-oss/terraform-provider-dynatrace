@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:eula-settings"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*eulasettings.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*eulasettings.Settings], error) {
 	return settings20.Service[*eulasettings.Settings](clientSet, SchemaID, SchemaVersion)
 }

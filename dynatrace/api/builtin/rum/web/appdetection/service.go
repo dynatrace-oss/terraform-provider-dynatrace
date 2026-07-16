@@ -34,11 +34,15 @@ import (
 const SchemaVersion = "2.1.2"
 const SchemaID = "builtin:rum.web.app-detection"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*appdetection.Settings] {
-	return &service{
-		service: settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*appdetection.Settings]{Duplicates: Duplicates}),
-		client:  rest.HybridClient(clientSet.Credentials()),
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*appdetection.Settings], error) {
+	svc, err := settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*appdetection.Settings]{Duplicates: Duplicates})
+	if err != nil {
+		return nil, err
 	}
+	return &service{
+		service: svc,
+		client:  rest.HybridClient(clientSet.Credentials()),
+	}, nil
 }
 
 var NotAValidDataSourceRegexp = regexp.MustCompile(`Given property 'applicationId' with value: '([^']*)' is not a valid value in datasource\. Value must be one of`)

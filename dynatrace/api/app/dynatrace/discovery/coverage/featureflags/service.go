@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "app:dynatrace.discovery.coverage:feature-flags"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*featureflags.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*featureflags.Settings], error) {
 	return settings20.Service[*featureflags.Settings](clientSet, SchemaID, SchemaVersion)
 }

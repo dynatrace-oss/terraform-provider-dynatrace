@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.9.1"
 const SchemaID = "app:dynatrace.site.reliability.guardian:guardians"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

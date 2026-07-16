@@ -31,7 +31,7 @@ import (
 const SchemaVersion = "1.1.18"
 const SchemaID = "builtin:processavailability"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*processavailability.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*processavailability.Settings], error) {
 	return settings20.Service[*processavailability.Settings](clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*processavailability.Settings]{Duplicates: Duplicates})
 }
 

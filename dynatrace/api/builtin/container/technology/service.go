@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.8"
 const SchemaID = "builtin:container.technology"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*technology.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*technology.Settings], error) {
 	return settings20.Service[*technology.Settings](clientSet, SchemaID, SchemaVersion)
 }

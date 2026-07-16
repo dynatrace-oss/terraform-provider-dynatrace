@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "app:dynatrace.database.overview:feature-flags"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*database.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*database.Settings], error) {
 	return settings20.Service[*database.Settings](clientSet, SchemaID, SchemaVersion)
 }

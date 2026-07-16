@@ -34,7 +34,7 @@ const BasePath = "/api/config/v1/aws/credentials"
 
 var mu sync.Mutex
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*aws.AWSCredentialsConfig] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*aws.AWSCredentialsConfig], error) {
 	return &service{
 		service: settings.NewAPITokenService(
 			clientSet,
@@ -86,7 +86,7 @@ func Service(clientSet rest.ClientSet) settings.CRUDService[*aws.AWSCredentialsC
 				}),
 		),
 		client: rest.APITokenClient(clientSet.Credentials()),
-	}
+	}, nil
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*aws.AWSCredentialsConfig], v *aws.AWSCredentialsConfig) (*api.Stub, error) {

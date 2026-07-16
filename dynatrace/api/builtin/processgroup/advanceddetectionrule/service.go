@@ -31,7 +31,7 @@ import (
 const SchemaVersion = "0.0.6"
 const SchemaID = "builtin:process-group.advanced-detection-rule"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*advanceddetectionrule.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*advanceddetectionrule.Settings], error) {
 	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*advanceddetectionrule.Settings]{Duplicates: Duplicates})
 }
 

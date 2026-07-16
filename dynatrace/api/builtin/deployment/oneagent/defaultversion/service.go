@@ -30,8 +30,8 @@ import (
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:deployment.oneagent.default-version"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*defaultversion.Settings] {
-	return &service{}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*defaultversion.Settings], error) {
+	return &service{}, nil
 }
 
 type service struct{}

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.4"
 const SchemaID = "builtin:automation.approval"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

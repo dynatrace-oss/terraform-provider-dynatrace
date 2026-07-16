@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.68"
 const SchemaID = "builtin:openpipeline.events.security.pipelines"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

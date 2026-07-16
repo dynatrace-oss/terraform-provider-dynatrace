@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.1.14"
 const SchemaID = "app:dynatrace.kubernetes.connector:connection"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*connection.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*connection.Settings], error) {
 	return settings20.Service[*connection.Settings](clientSet, SchemaID, SchemaVersion)
 }

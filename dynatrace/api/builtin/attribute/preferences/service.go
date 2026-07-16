@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.5"
 const SchemaID = "builtin:attributes-preferences"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*preferences.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*preferences.Settings], error) {
 	return settings20.Service[*preferences.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.3"
 const SchemaID = "app:dynatrace.launcher:home.launchpad"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*launchpad.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*launchpad.Settings], error) {
 	return settings20.Service[*launchpad.Settings](clientSet, SchemaID, SchemaVersion)
 }

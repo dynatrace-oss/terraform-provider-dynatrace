@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.6"
 const SchemaID = "app:dynatrace.hub:manage.permissions"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*permissions.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*permissions.Settings], error) {
 	return settings20.Service[*permissions.Settings](clientSet, SchemaID, SchemaVersion)
 }

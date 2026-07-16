@@ -31,7 +31,7 @@ import (
 const SchemaVersion = "1.1.29"
 const SchemaID = "builtin:declarativegrouping"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*declarativegrouping.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*declarativegrouping.Settings], error) {
 	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*declarativegrouping.Settings]{Duplicates: Duplicates})
 }
 

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.16"
 const SchemaID = "builtin:logmonitoring.log-custom-attributes"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*logcustomattributes.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*logcustomattributes.Settings], error) {
 	return settings20.Service[*logcustomattributes.Settings](clientSet, SchemaID, SchemaVersion)
 }

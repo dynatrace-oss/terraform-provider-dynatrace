@@ -91,14 +91,15 @@ func (me *Environment) DataSource(id string, kind DataSourceKind, excepts ...Res
 	case DataSourceKindEntity:
 		return me.FetchEntity(id)
 	case DataSourceKindPolicy:
-		service := policies.Service(me.ClientSet)
-		var policy policysettings.Policy
-		if err := service.Get(context.Background(), id, &policy); err == nil {
-			terraformName := toTerraformName(policy.Name)
-			if policyMod := me.Module(ResourceTypes.IAMPolicy); policyMod != nil {
-				terraformName = me.Module(ResourceTypes.IAMPolicy).namer.Name(terraformName)
+		if service, err := policies.Service(me.ClientSet); err == nil {
+			var policy policysettings.Policy
+			if err := service.Get(context.Background(), id, &policy); err == nil {
+				terraformName := toTerraformName(policy.Name)
+				if policyMod := me.Module(ResourceTypes.IAMPolicy); policyMod != nil {
+					terraformName = me.Module(ResourceTypes.IAMPolicy).namer.Name(terraformName)
+				}
+				return &DataSource{ID: id, Name: policy.Name, UniqueName: terraformName, Type: string(DataSourceKindPolicy)}
 			}
-			return &DataSource{ID: id, Name: policy.Name, UniqueName: terraformName, Type: string(DataSourceKindPolicy)}
 		}
 	}
 	for _, module := range me.Modules {

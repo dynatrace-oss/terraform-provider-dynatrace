@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:mobile.notifications"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*notifications.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*notifications.Settings], error) {
 	return settings20.Service[*notifications.Settings](clientSet, SchemaID, SchemaVersion)
 }

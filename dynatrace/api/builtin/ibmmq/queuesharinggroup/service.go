@@ -28,6 +28,6 @@ import (
 const SchemaID = "builtin:ibmmq.queue-sharing-group"
 const SchemaVersion = "1.0.1"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*queuesharinggroup.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*queuesharinggroup.Settings], error) {
 	return settings20.Service[*queuesharinggroup.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -68,8 +68,10 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	// In that case we need to fetch the currently available groups IDs anew
 	if groups.GetRevision() != lastGroupsServiceRevision {
 		lastGroupsServiceRevision = groups.GetRevision()
-		var err error
-		service := groups.Service(clientSet)
+		service, err := groups.Service(clientSet)
+		if err != nil {
+			return diag.FromErr(err)
+		}
 		stubs, err = service.List(ctx)
 		if err != nil {
 			return diag.FromErr(err)

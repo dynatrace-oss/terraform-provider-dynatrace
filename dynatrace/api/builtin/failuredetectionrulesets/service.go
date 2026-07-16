@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.7"
 const SchemaID = "builtin:failure-detection-rulesets"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*failuredetectionrulesets.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*failuredetectionrulesets.Settings], error) {
 	return settings20.Service[*failuredetectionrulesets.Settings](clientSet, SchemaID, SchemaVersion)
 }

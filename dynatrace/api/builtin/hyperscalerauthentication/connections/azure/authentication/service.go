@@ -30,10 +30,14 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*connectionauthentication_settings.Settings] {
-	return &service{
-		connService: azureconnection.Service(clientSet),
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*connectionauthentication_settings.Settings], error) {
+	connService, err := azureconnection.Service(clientSet)
+	if err != nil {
+		return nil, err
 	}
+	return &service{
+		connService: connService,
+	}, nil
 }
 
 type service struct {

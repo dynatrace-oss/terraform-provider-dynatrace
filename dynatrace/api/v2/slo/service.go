@@ -34,8 +34,8 @@ import (
 	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/slo/settings"
 )
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*slo.SLO] {
-	return &service{clientSet: clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*slo.SLO], error) {
+	return &service{clientSet: clientSet}, nil
 }
 
 type service struct {

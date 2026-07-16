@@ -39,8 +39,8 @@ var supportedDocumentTypes = []docclient.DocumentType{
 	docclient.Launchpad,
 }
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*documents.Document] {
-	return &service{clientSet: clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*documents.Document], error) {
+	return &service{clientSet: clientSet}, nil
 }
 
 type service struct {

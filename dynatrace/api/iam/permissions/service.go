@@ -38,8 +38,8 @@ type PermissionServiceClient struct {
 	clientSet rest.ClientSet
 }
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*permissions.Permission] {
-	return &PermissionServiceClient{clientSet: clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*permissions.Permission], error) {
+	return &PermissionServiceClient{clientSet: clientSet}, nil
 }
 
 func (me *PermissionServiceClient) SchemaID() string {
@@ -125,7 +125,10 @@ func (me *PermissionServiceClient) Update(ctx context.Context, email string, per
 }
 
 func (me *PermissionServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	groupsService := groups.Service(me.clientSet)
+	groupsService, err := groups.Service(me.clientSet)
+	if err != nil {
+		return nil, err
+	}
 	groupStubs, err := groupsService.List(ctx)
 	if err != nil {
 		return nil, err

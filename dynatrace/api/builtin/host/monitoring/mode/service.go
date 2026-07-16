@@ -35,11 +35,15 @@ import (
 const SchemaVersion = "1.3"
 const SchemaID = "builtin:host.monitoring.mode"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*mode.Settings] {
-	return &service{
-		service: settings20.Service[*mode.Settings](clientSet, SchemaID, SchemaVersion),
-		client:  rest.APITokenClient(clientSet.Credentials()),
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*mode.Settings], error) {
+	svc, err := settings20.Service[*mode.Settings](clientSet, SchemaID, SchemaVersion)
+	if err != nil {
+		return nil, err
 	}
+	return &service{
+		service: svc,
+		client:  rest.APITokenClient(clientSet.Credentials()),
+	}, nil
 }
 
 type service struct {

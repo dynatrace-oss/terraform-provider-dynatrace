@@ -60,7 +60,11 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if _, err := customtags.Service(clientSet).Create(ctx, config); err != nil {
+	service, err := customtags.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	if _, err := service.Create(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(uuid.New().String())
@@ -120,7 +124,10 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		delConfig := new(settings.Settings)
 		delConfig.EntitySelector = config.EntitySelector
 		delConfig.Tags = deleteTags
-		srv := customtags.Service(clientSet)
+		srv, err := customtags.Service(clientSet)
+		if err != nil {
+			return diag.FromErr(err)
+		}
 		if fullDeleter, ok := srv.(FullDeleter); ok {
 			if err := fullDeleter.DeleteValue(ctx, delConfig); err != nil {
 				if !strings.HasPrefix(err.Error(), "Unable to find tag") {
@@ -130,7 +137,11 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		}
 	}
 
-	if err := customtags.Service(clientSet).Update(ctx, config.EntitySelector, config); err != nil {
+	service, err := customtags.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	if err := service.Update(ctx, config.EntitySelector, config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -166,8 +177,12 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		}
 	}
 
+	service, err := customtags.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	apiConfig := new(settings.Settings)
-	if err := customtags.Service(clientSet).Get(ctx, selector, apiConfig); err != nil {
+	if err := service.Get(ctx, selector, apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -213,7 +228,10 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		}
 	}
 
-	srv := customtags.Service(clientSet)
+	srv, err := customtags.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	if fullDeleter, ok := srv.(FullDeleter); ok {
 		if err := fullDeleter.DeleteValue(ctx, stateConfig); err != nil {
 			if strings.HasPrefix(err.Error(), "Unable to find tag") {

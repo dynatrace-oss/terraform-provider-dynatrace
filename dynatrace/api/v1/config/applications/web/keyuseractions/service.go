@@ -35,10 +35,14 @@ import (
 
 const SchemaID = "v1:config:applications:web:keyuseractions"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*keyuseractions.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*keyuseractions.Settings], error) {
+	webAppService, err := webservice.Service(clientSet)
+	if err != nil {
+		return nil, err
+	}
 	return &service{
 		client:        rest.APITokenClient(clientSet.Credentials()),
-		webAppService: webservice.Service(clientSet)}
+		webAppService: webAppService}, nil
 }
 
 type service struct {

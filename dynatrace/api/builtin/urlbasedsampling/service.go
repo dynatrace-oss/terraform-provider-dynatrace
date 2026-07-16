@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.3"
 const SchemaID = "builtin:url-based-sampling"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*urlbasedsampling.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*urlbasedsampling.Settings], error) {
 	return settings20.Service[*urlbasedsampling.Settings](clientSet, SchemaID, SchemaVersion)
 }

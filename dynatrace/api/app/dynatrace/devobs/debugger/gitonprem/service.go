@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.5"
 const SchemaID = "app:dynatrace.devobs.debugger:git.on.prem"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

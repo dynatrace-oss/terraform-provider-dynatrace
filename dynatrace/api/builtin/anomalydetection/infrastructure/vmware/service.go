@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:anomaly-detection.infrastructure-vmware"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*vmware.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*vmware.Settings], error) {
 	return settings20.Service[*vmware.Settings](clientSet, SchemaID, SchemaVersion)
 }

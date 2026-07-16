@@ -34,7 +34,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
-func Service[T settings.Settings](clientSet rest.ClientSet, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) settings.ListIDCRUDService[T] {
+func Service[T settings.Settings](clientSet rest.ClientSet, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) (settings.ListIDCRUDService[T], error) {
 	var opts *ServiceOptions[T]
 	if len(options) > 0 {
 		opts = options[0]
@@ -44,7 +44,7 @@ func Service[T settings.Settings](clientSet rest.ClientSet, schemaID string, sch
 		// schemaVersion: schemaVersion,
 		client:  rest.HybridClient(clientSet.Credentials()),
 		options: opts,
-	}
+	}, nil
 }
 
 type SettingsObjectUpdate struct {

@@ -26,10 +26,10 @@ import (
 const SchemaID = "v1:config:auto-tags"
 const BasePath = "/api/config/v1/autoTags"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*autotags.AutoTag] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*autotags.AutoTag], error) {
 	return settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*autotags.AutoTag](BasePath),
-	)
+	), nil
 }

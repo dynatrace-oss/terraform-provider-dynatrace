@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "2.0.3"
 const SchemaID = "builtin:appsec.attack-protection-advanced-config"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*attackprotectionadvancedconfig.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*attackprotectionadvancedconfig.Settings], error) {
 	return settings20.Service[*attackprotectionadvancedconfig.Settings](clientSet, SchemaID, SchemaVersion)
 }

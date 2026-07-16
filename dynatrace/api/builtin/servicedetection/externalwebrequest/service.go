@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "2.1.14"
 const SchemaID = "builtin:service-detection.external-web-request"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*externalwebrequest.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*externalwebrequest.Settings], error) {
 	return settings20.Service[*externalwebrequest.Settings](clientSet, SchemaID, SchemaVersion)
 }

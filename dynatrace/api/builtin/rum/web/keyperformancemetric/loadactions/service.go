@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.1.1"
 const SchemaID = "builtin:rum.web.key-performance-metric-load-actions"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

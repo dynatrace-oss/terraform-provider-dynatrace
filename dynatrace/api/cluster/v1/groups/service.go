@@ -29,10 +29,10 @@ import (
 
 const SchemaID = "accounts:groups"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*groups.GroupConfig] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*groups.GroupConfig], error) {
 	return &service{
 		serviceClient: NewService(clientSet),
-	}
+	}, nil
 }
 
 // ServiceClient TODO: documentation
