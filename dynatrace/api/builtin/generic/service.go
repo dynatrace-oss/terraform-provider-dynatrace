@@ -36,8 +36,8 @@ import (
 const settingsObjectEndpoint = "/api/v2/settings/objects"
 const settingsSchemaEndpoint = "/api/v2/settings/schemas"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*generic.Settings] {
-	return &service{clientSet: clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*generic.Settings], error) {
+	return &service{clientSet: clientSet}, nil
 }
 
 type service struct {

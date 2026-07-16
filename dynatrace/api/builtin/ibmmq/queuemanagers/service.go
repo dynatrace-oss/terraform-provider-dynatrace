@@ -28,6 +28,6 @@ import (
 const SchemaID = "builtin:ibmmq.queue-managers"
 const SchemaVersion = "1"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*queuemanagers.QueueManager] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*queuemanagers.QueueManager], error) {
 	return settings20.Service[*queuemanagers.QueueManager](clientSet, SchemaID, SchemaVersion)
 }

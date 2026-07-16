@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.2"
 const SchemaID = "builtin:attribute-block-list"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*blocklist.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*blocklist.Settings], error) {
 	return settings20.Service[*blocklist.Settings](clientSet, SchemaID, SchemaVersion)
 }

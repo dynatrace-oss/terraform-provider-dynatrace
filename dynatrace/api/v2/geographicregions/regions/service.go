@@ -30,8 +30,8 @@ import (
 
 const SchemaID = "v2:geographicregions:regions"
 
-func Service(clientSet rest.ClientSet) settings.RService[*regions.Settings] {
-	return &service{client: rest.APITokenClient(clientSet.Credentials())}
+func Service(clientSet rest.ClientSet) (settings.RService[*regions.Settings], error) {
+	return &service{client: rest.APITokenClient(clientSet.Credentials())}, nil
 }
 
 type service struct {

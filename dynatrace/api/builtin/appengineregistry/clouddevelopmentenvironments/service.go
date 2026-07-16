@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.1"
 const SchemaID = "builtin:app-engine-registry.cloud-development-environments"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*clouddevelopmentenvironments.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*clouddevelopmentenvironments.Settings], error) {
 	return settings20.Service[*clouddevelopmentenvironments.Settings](clientSet, SchemaID, SchemaVersion)
 }

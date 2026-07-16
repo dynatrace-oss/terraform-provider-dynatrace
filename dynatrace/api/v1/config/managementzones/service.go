@@ -30,12 +30,12 @@ import (
 const SchemaID = "v1:config:management-zones"
 const BasePath = "/api/config/v1/managementZones"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*managementzones.ManagementZone] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*managementzones.ManagementZone], error) {
 	return settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*managementzones.ManagementZone](BasePath).Hijack(Hijack),
-	)
+	), nil
 }
 
 func Hijack(ctx context.Context, err error, service settings.RService[*managementzones.ManagementZone], v *managementzones.ManagementZone) (*api.Stub, error) {

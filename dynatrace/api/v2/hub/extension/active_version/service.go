@@ -30,8 +30,12 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*active_version.Settings] {
-	return &service{clientSet: clientSet, itemsService: items.Service(clientSet, items.Options{Type: "EXTENSION2"})}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*active_version.Settings], error) {
+	itemsService, err := items.Service(clientSet, items.Options{Type: "EXTENSION2"})
+	if err != nil {
+		return nil, err
+	}
+	return &service{clientSet: clientSet, itemsService: itemsService}, nil
 }
 
 type service struct {

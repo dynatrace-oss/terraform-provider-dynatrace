@@ -81,11 +81,11 @@ func (me *mockSchema) UnmarshalHCL(properties hcl.Decoder) error {
 	return properties.Decode("name", &me.Name)
 }
 
-func MockService(stub *api.Stub, err error) func(credentials rest.ClientSet) settings.CRUDService[*mockSchema] {
-	return func(credentials rest.ClientSet) settings.CRUDService[*mockSchema] {
+func MockService(stub *api.Stub, err error) func(credentials rest.ClientSet) (settings.CRUDService[*mockSchema], error) {
+	return func(credentials rest.ClientSet) (settings.CRUDService[*mockSchema], error) {
 		return &service{
 			Err:  err,
 			Stub: stub,
-		}
+		}, nil
 	}
 }

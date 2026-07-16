@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.63.2"
 const SchemaID = "builtin:deployment.management.update-windows"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*updatewindows.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*updatewindows.Settings], error) {
 	return settings20.Service[*updatewindows.Settings](clientSet, SchemaID, SchemaVersion)
 }

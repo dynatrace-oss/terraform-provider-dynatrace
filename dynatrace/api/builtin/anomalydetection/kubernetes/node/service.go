@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.3.1"
 const SchemaID = "builtin:anomaly-detection.kubernetes.node"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*node.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*node.Settings], error) {
 	return settings20.Service[*node.Settings](clientSet, SchemaID, SchemaVersion)
 }

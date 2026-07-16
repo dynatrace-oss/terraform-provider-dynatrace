@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:process-visibility"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*processvisibility.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*processvisibility.Settings], error) {
 	return settings20.Service[*processvisibility.Settings](clientSet, SchemaID, SchemaVersion)
 }

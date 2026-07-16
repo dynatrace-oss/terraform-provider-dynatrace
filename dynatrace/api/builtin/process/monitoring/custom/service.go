@@ -31,7 +31,7 @@ import (
 const SchemaVersion = "0.4.13"
 const SchemaID = "builtin:process.custom-process-monitoring-rule"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*customprocessmonitoring.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*customprocessmonitoring.Settings], error) {
 	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*customprocessmonitoring.Settings]{Duplicates: Duplicates})
 }
 

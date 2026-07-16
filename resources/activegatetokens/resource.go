@@ -54,7 +54,11 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	objStub, err := activegatetokens.Service(clientSet).Create(ctx, config)
+	service, err := activegatetokens.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	objStub, err := service.Create(ctx, config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -85,7 +89,11 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := activegatetokens.Service(clientSet).Update(ctx, d.Id(), config); err != nil {
+	service, err := activegatetokens.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	if err := service.Update(ctx, d.Id(), config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -98,8 +106,12 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	service, err := activegatetokens.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	config := new(settings.Settings)
-	err = activegatetokens.Service(clientSet).Get(ctx, d.Id(), config)
+	err = service.Get(ctx, d.Id(), config)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -124,7 +136,11 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := activegatetokens.Service(clientSet).Delete(ctx, d.Id()); err != nil {
+	service, err := activegatetokens.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	if err := service.Delete(ctx, d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
 

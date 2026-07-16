@@ -30,12 +30,12 @@ import (
 const SchemaID = "v1:config:applications:detection"
 const BasePath = "/api/config/v1/applicationDetectionRules"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*detection.Rule] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*detection.Rule], error) {
 	return &service{settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*detection.Rule](BasePath),
-	)}
+	)}, nil
 }
 
 type service struct {

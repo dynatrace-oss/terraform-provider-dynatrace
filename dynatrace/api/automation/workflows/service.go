@@ -45,8 +45,8 @@ type service struct {
 	clientGetter func(ctx context.Context, clientSet tfrest.ClientSet) (AutomationClient, error)
 }
 
-func Service(clientSet tfrest.ClientSet) settings.CRUDService[*workflows.Workflow] {
-	return &service{clientSet: clientSet, clientGetter: createCoreClient}
+func Service(clientSet tfrest.ClientSet) (settings.CRUDService[*workflows.Workflow], error) {
+	return &service{clientSet: clientSet, clientGetter: createCoreClient}, nil
 }
 
 func ServiceWithClientGetter(clientGetter func(ctx context.Context, clientSet tfrest.ClientSet) (AutomationClient, error), clientSet tfrest.ClientSet) settings.CRUDService[*workflows.Workflow] {

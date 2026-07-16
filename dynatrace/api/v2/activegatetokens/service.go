@@ -29,8 +29,8 @@ import (
 	activegatetokens "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/activegatetokens/settings"
 )
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*activegatetokens.Settings] {
-	return &service{clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*activegatetokens.Settings], error) {
+	return &service{clientSet}, nil
 }
 
 type TokenCreateResponse struct {

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "2.0.1"
 const SchemaID = "app:dynatrace.msteams:connection"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*connection.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*connection.Settings], error) {
 	return settings20.Service[*connection.Settings](clientSet, SchemaID, SchemaVersion)
 }

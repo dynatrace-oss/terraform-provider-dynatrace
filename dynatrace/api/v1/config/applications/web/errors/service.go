@@ -34,10 +34,14 @@ import (
 
 const SchemaID = "v1:config:applications:web:errors"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*errors.Rules] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*errors.Rules], error) {
+	webAppService, err := webservice.Service(clientSet)
+	if err != nil {
+		return nil, err
+	}
 	return &service{
 		client:        rest.APITokenClient(clientSet.Credentials()),
-		webAppService: webservice.Service(clientSet)}
+		webAppService: webAppService}, nil
 }
 
 type service struct {

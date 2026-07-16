@@ -40,8 +40,8 @@ import (
 const SchemaVersion = "6.0.14"
 const SchemaID = "builtin:monitoring.slo"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*slo.Settings] {
-	return &service{clientSet: clientSet, client: rest.HybridClient(clientSet.Credentials())}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*slo.Settings], error) {
+	return &service{clientSet: clientSet, client: rest.HybridClient(clientSet.Credentials())}, nil
 }
 
 type service struct {
@@ -56,7 +56,10 @@ func (me *service) SchemaID() string {
 func (me *service) Create(ctx context.Context, v *slo.Settings) (*api.Stub, error) {
 	slo := me.convertToEnvV2(v)
 
-	service := slo_env2_service.Service(me.clientSet)
+	service, err := slo_env2_service.Service(me.clientSet)
+	if err != nil {
+		return nil, err
+	}
 	stub, err := service.Create(ctx, &slo)
 	if err != nil {
 		return nil, err
@@ -95,8 +98,11 @@ func (me *service) Update(ctx context.Context, id string, v *slo.Settings) error
 
 	slo := me.convertToEnvV2(v)
 
-	service := slo_env2_service.Service(me.clientSet)
-	err := service.Update(ctx, legacyId, &slo)
+	service, err := slo_env2_service.Service(me.clientSet)
+	if err != nil {
+		return err
+	}
+	err = service.Update(ctx, legacyId, &slo)
 	if err != nil {
 		return err
 	}
@@ -130,8 +136,11 @@ func (me *service) Delete(ctx context.Context, id string) error {
 		legacyId = id
 	}
 
-	service := slo_env2_service.Service(me.clientSet)
-	err := service.Delete(ctx, legacyId)
+	service, err := slo_env2_service.Service(me.clientSet)
+	if err != nil {
+		return err
+	}
+	err = service.Delete(ctx, legacyId)
 	if err != nil {
 		return err
 	}

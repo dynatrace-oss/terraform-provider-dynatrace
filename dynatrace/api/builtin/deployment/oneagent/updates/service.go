@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.4"
 const SchemaID = "builtin:deployment.oneagent.updates"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*updates.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*updates.Settings], error) {
 	return settings20.Service[*updates.Settings](clientSet, SchemaID, SchemaVersion)
 }

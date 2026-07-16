@@ -191,7 +191,11 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	}
 
 	if len(groupIDs) > 0 {
-		bindingsService := bindings.Service(clientSet).(*bindings.BindingServiceClient)
+		bindingsSvc, err := bindings.Service(clientSet)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		bindingsService := bindingsSvc.(*bindings.BindingServiceClient)
 
 		allPolicyUUIDs := []string{}
 		for levelID, levelType := range discoveredLevels {

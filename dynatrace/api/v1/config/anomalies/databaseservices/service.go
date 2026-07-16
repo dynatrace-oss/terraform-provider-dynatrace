@@ -30,11 +30,11 @@ const EndpointURL = "/api/config/v1/anomalyDetection/databaseServices"
 const StaticID = "70276f24-2efe-4203-89f9-4fd3b7d7e5d9"
 const StaticName = "database_anomalies"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*databaseservices.AnomalyDetection] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*databaseservices.AnomalyDetection], error) {
 	return settings.APITokenStaticService[*databaseservices.AnomalyDetection](
 		clientSet,
 		SchemaID,
 		EndpointURL,
 		api.Stub{ID: StaticID, Name: StaticName},
-	)
+	), nil
 }

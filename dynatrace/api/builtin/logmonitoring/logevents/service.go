@@ -31,7 +31,7 @@ import (
 const SchemaVersion = "3.2.6"
 const SchemaID = "builtin:logmonitoring.log-events"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*logevents.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*logevents.Settings], error) {
 	return settings20.Service[*logevents.Settings](clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*logevents.Settings]{Duplicates: Duplicates})
 }
 

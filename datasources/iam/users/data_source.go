@@ -68,7 +68,10 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	}
 
 	var user usr.User
-	service := users.Service(clientSet)
+	service, err := users.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	if err := service.Get(ctx, email, &user); err != nil {
 		return diag.FromErr(err)
 	}

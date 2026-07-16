@@ -31,10 +31,10 @@ import (
 
 const SchemaID = "accounts:users"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*users.UserConfig] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*users.UserConfig], error) {
 	return &service{
 		serviceClient: NewService(clientSet),
-	}
+	}, nil
 }
 
 // ServiceClient TODO: documentation

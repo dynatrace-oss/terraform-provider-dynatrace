@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:monitored-technologies.python"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*python.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*python.Settings], error) {
 	return settings20.Service[*python.Settings](clientSet, SchemaID, SchemaVersion)
 }

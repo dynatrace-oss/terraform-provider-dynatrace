@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:ebpf.service.discovery"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*discovery.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*discovery.Settings], error) {
 	return settings20.Service[*discovery.Settings](clientSet, SchemaID, SchemaVersion)
 }

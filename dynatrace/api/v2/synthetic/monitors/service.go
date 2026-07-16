@@ -33,8 +33,8 @@ import (
 const SchemaID = "v2:synthetic:monitors:network"
 const BasePath = "/api/v2/synthetic/monitors"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*monitors.Settings] {
-	return &service{clientSet: clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*monitors.Settings], error) {
+	return &service{clientSet: clientSet}, nil
 }
 
 type service struct {

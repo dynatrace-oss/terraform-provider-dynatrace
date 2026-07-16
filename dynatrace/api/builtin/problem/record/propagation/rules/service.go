@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.3"
 const SchemaID = "builtin:problem.record.propagation.rules"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*rules.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*rules.Settings], error) {
 	return settings20.Service[*rules.Settings](clientSet, SchemaID, SchemaVersion)
 }

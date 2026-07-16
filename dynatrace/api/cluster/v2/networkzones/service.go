@@ -31,10 +31,10 @@ import (
 
 const SchemaID = "cluster:networkzones"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*networkzones.NetworkZone] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*networkzones.NetworkZone], error) {
 	return &service{
 		serviceClient: NewService(clientSet),
-	}
+	}, nil
 }
 
 type ServiceClient struct {

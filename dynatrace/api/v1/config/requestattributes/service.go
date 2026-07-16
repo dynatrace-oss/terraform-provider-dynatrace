@@ -31,7 +31,7 @@ const BasePath = "/api/config/v1/service/requestAttributes"
 
 var mu sync.Mutex
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*requestattributes.RequestAttribute] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*requestattributes.RequestAttribute], error) {
 	return settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
@@ -41,5 +41,5 @@ func Service(clientSet rest.ClientSet) settings.CRUDService[*requestattributes.R
 			Lock:   mu.Lock,
 			Unlock: mu.Unlock,
 		},
-	)
+	), nil
 }

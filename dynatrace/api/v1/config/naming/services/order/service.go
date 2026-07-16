@@ -30,6 +30,6 @@ const StaticID = "f99fed70-ef81-488d-a8d6-1787719c5e46"
 const StaticName = "service_naming_order"
 const BasePath = "/api/config/v1/conditionalNaming/service"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*order_settings.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*order_settings.Settings], error) {
 	return order.Service(clientSet, SchemaID, StaticID, StaticName, BasePath)
 }

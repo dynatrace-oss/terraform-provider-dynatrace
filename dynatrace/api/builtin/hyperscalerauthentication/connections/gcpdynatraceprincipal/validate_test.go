@@ -44,11 +44,12 @@ func TestValidateIsSuccessfulForGcpConnection(t *testing.T) {
 	}
 
 	clientSet := &config.ProviderConfiguration{EnvironmentURL: envURL, APIToken: apiToken}
-	service := settings20.Service[*gcpsettings.Settings](clientSet, gcpservice.SchemaID, gcpservice.SchemaVersion)
+	service, err := settings20.Service[*gcpsettings.Settings](clientSet, gcpservice.SchemaID, gcpservice.SchemaVersion)
+	require.NoError(t, err)
 
 	validator, ok := service.(settings.Validator[*gcpsettings.Settings])
 	require.True(t, ok, "settings20 service must implement settings.Validator")
 
-	err := validator.Validate(t.Context(), &gcpdynatraceprincipal.ValidConnection)
+	err = validator.Validate(t.Context(), &gcpdynatraceprincipal.ValidConnection)
 	assert.NoError(t, err, "ValidConnection in service.go was rejected by the API — update the fixture or principal creation might never be triggered.")
 }

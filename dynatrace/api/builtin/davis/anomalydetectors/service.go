@@ -30,11 +30,15 @@ import (
 const SchemaVersion = "1.0.16"
 const SchemaID = "builtin:davis.anomaly-detectors"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*anomalydetectors.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*anomalydetectors.Settings], error) {
+	svc, err := settings20.Service[*anomalydetectors.Settings](clientSet, SchemaID, SchemaVersion)
+	if err != nil {
+		return nil, err
+	}
 	return &service{
 		clientSet: clientSet,
-		service:   settings20.Service[*anomalydetectors.Settings](clientSet, SchemaID, SchemaVersion),
-	}
+		service:   svc,
+	}, nil
 }
 
 type service struct {

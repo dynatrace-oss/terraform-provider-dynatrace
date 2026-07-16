@@ -32,12 +32,12 @@ import (
 const SchemaID = "v1:config:anomaly-detection:metric-events"
 const BasePath = "/api/config/v1/anomalyDetection/metricEvents"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*metricevents.MetricEvent] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*metricevents.MetricEvent], error) {
 	return settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*metricevents.MetricEvent](BasePath).WithCreateRetry(RetryOnCreate).WithDuplicates(Duplicates),
-	)
+	), nil
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*metricevents.MetricEvent], v *metricevents.MetricEvent) (*api.Stub, error) {

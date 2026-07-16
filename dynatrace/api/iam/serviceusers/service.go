@@ -62,8 +62,8 @@ func NewService(clientSet rest.ClientSet) ServiceUserService {
 	}
 }
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*serviceusers.ServiceUser] {
-	return NewService(clientSet)
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*serviceusers.ServiceUser], error) {
+	return NewService(clientSet), nil
 }
 
 func (me *serviceUserServiceClient) SchemaID() string {

@@ -34,8 +34,8 @@ type Options struct {
 	Type string
 }
 
-func Service(clientSet rest.ClientSet, opts Options) settings.RService[*items.HubItemList] {
-	return &service{client: rest.APITokenClient(clientSet.Credentials()), opts: opts}
+func Service(clientSet rest.ClientSet, opts Options) (settings.RService[*items.HubItemList], error) {
+	return &service{client: rest.APITokenClient(clientSet.Credentials()), opts: opts}, nil
 }
 
 type service struct {

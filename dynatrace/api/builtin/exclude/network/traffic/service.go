@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:exclude.network.traffic"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*traffic.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*traffic.Settings], error) {
 	return settings20.Service[*traffic.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -30,8 +30,8 @@ import (
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/automation"
 )
 
-func Service(clientSet tfrest.ClientSet) settings.CRUDService[*business_calendars.Settings] {
-	return &service{clientSet}
+func Service(clientSet tfrest.ClientSet) (settings.CRUDService[*business_calendars.Settings], error) {
+	return &service{clientSet}, nil
 }
 
 type service struct {

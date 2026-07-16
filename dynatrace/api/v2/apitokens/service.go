@@ -28,8 +28,8 @@ import (
 	apitokens "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/apitokens/settings"
 )
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*apitokens.APIToken] {
-	return &service{clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*apitokens.APIToken], error) {
+	return &service{clientSet}, nil
 }
 
 type service struct {

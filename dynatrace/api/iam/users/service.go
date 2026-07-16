@@ -35,8 +35,8 @@ type UserServiceClient struct {
 	credentials *rest.Credentials
 }
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*users.User] {
-	return &UserServiceClient{credentials: clientSet.Credentials()}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*users.User], error) {
+	return &UserServiceClient{credentials: clientSet.Credentials()}, nil
 }
 
 func (me *UserServiceClient) SchemaID() string {

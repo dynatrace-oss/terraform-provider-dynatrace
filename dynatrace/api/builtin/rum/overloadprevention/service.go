@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:rum.overload-prevention"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*overloadprevention.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*overloadprevention.Settings], error) {
 	return settings20.Service[*overloadprevention.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -31,8 +31,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 )
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*serviceSettings.DirectShare] {
-	return &service{clientGetter: createCoreClient, clientSet: clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*serviceSettings.DirectShare], error) {
+	return &service{clientGetter: createCoreClient, clientSet: clientSet}, nil
 }
 
 func ServiceWithClientGetter(clientGetter func(ctx context.Context, clientSet rest.ClientSet) (directSharesClient, error), clientSet rest.ClientSet) settings.CRUDService[*serviceSettings.DirectShare] {

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "3"
 const SchemaID = "builtin:anomaly-detection.infrastructure-disks"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*disks.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*disks.Settings], error) {
 	return settings20.Service[*disks.Settings](clientSet, SchemaID, SchemaVersion)
 }

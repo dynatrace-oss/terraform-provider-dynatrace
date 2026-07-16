@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.6"
 const SchemaID = "builtin:bizevents-processing-pipelines.rule"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*pipelines.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*pipelines.Settings], error) {
 	return settings20.Service[*pipelines.Settings](clientSet, SchemaID, SchemaVersion)
 }

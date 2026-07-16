@@ -35,11 +35,11 @@ const BasePath = "/api/config/v1/aws/credentials"
 
 var smu sync.Mutex
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*services.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*services.Settings], error) {
 	return &service{
 		client:     rest.APITokenClient(clientSet.Credentials()),
 		supService: NewSupportedServicesService(clientSet),
-	}
+	}, nil
 }
 
 type service struct {

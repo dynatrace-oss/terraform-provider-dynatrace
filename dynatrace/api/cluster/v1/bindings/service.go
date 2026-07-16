@@ -31,10 +31,10 @@ import (
 
 const SchemaID = "accounts:policy-bindings"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*bindings.PolicyBinding] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*bindings.PolicyBinding], error) {
 	return &service{
 		serviceClient: NewPolicyService(clientSet),
-	}
+	}, nil
 }
 
 type BindingServiceClient struct {

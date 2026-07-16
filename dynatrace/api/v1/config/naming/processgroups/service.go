@@ -31,12 +31,12 @@ import (
 const SchemaID = "v1:config:conditional-naming:process-groups"
 const BasePath = "/api/config/v1/conditionalNaming/processGroup"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*processgroups.NamingRule] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*processgroups.NamingRule], error) {
 	return settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*processgroups.NamingRule](BasePath).WithDuplicates(Duplicates),
-	)
+	), nil
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*processgroups.NamingRule], v *processgroups.NamingRule) (*api.Stub, error) {

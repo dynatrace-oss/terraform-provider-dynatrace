@@ -49,7 +49,8 @@ func TestValidateDoesNotCreateObjects(t *testing.T) {
 	headerName := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
 
 	clientSet := &config.ProviderConfiguration{EnvironmentURL: envURL, APIToken: apiToken}
-	service := settings20.Service[*hostheaders.Settings](clientSet, hostheadersvc.SchemaID, hostheadersvc.SchemaVersion)
+	service, err := settings20.Service[*hostheaders.Settings](clientSet, hostheadersvc.SchemaID, hostheadersvc.SchemaVersion)
+	require.NoError(t, err)
 
 	// If Validate accidentally creates an object, clean it up so subsequent
 	// test runs are not polluted.
@@ -70,7 +71,7 @@ func TestValidateDoesNotCreateObjects(t *testing.T) {
 	validator, ok := service.(settings.Validator[*hostheaders.Settings])
 	require.True(t, ok, "settings20 service must implement settings.Validator")
 
-	err := validator.Validate(t.Context(), &hostheaders.Settings{HeaderName: headerName})
+	err = validator.Validate(t.Context(), &hostheaders.Settings{HeaderName: headerName})
 	assert.NoError(t, err)
 
 	stubsAfter, err := service.List(t.Context())

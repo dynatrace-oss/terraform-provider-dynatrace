@@ -187,7 +187,7 @@ func (me *Generic) Service(m any) (settings.CRUDService[settings.Settings], erro
 	if err != nil {
 		return nil, err
 	}
-	return me.Descriptor.Service(clientSet), nil
+	return me.Descriptor.Service(clientSet)
 }
 
 func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {

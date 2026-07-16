@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.4"
 const SchemaID = "builtin:monitored-technologies.php"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*php.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*php.Settings], error) {
 	return settings20.Service[*php.Settings](clientSet, SchemaID, SchemaVersion)
 }

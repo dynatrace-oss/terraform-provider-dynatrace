@@ -31,7 +31,7 @@ import (
 const SchemaID = "v1:synthetic:monitors:http"
 const BasePath = "/api/v1/synthetic/monitors"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*http.SyntheticMonitor] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*http.SyntheticMonitor], error) {
 	return &service{service: settings.NewAPITokenService(clientSet, SchemaID, &settings.ServiceOptions[*http.SyntheticMonitor]{
 		Get:            settings.Path("/api/v1/synthetic/monitors/%s"),
 		List:           settings.Path("/api/v1/synthetic/monitors?type=HTTP"),
@@ -39,7 +39,7 @@ func Service(clientSet rest.ClientSet) settings.CRUDService[*http.SyntheticMonit
 		Stubs:          &monitors.Monitors{},
 		HasNoValidator: true,
 		CreateConfirm:  30,
-	})}
+	})}, nil
 }
 
 type service struct {

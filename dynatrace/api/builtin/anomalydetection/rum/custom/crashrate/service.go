@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:anomaly-detection.rum-custom-crash-rate-increase"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*crashrate.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*crashrate.Settings], error) {
 	return settings20.Service[*crashrate.Settings](clientSet, SchemaID, SchemaVersion)
 }

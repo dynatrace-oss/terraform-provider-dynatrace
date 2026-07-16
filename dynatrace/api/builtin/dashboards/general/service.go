@@ -40,8 +40,12 @@ type service struct {
 	service settings.CRUDService[*general.Settings]
 }
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*general.Settings] {
-	return &service{settings20.Service[*general.Settings](clientSet, SchemaID, SchemaVersion)}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*general.Settings], error) {
+	svc, err := settings20.Service[*general.Settings](clientSet, SchemaID, SchemaVersion)
+	if err != nil {
+		return nil, err
+	}
+	return &service{svc}, nil
 }
 func (me *service) Create(ctx context.Context, v *general.Settings) (*api.Stub, error) {
 	var apiStub *api.Stub

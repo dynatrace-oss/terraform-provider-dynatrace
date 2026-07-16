@@ -44,16 +44,20 @@ func (me *filter) Suffix() string {
 	return string(me.Type)
 }
 
-func Service(clientSet rest.ClientSet, t Type) settings.CRUDService[*Notification] {
+func Service(clientSet rest.ClientSet, t Type) (settings.CRUDService[*Notification], error) {
+	svc, err := settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*Notification]{
+		LegacyID:    settings.LegacyObjIDDecode,
+		CreateRetry: UseOAuth2Fix,
+		UpdateRetry: UseOAuth2Fix,
+		Duplicates:  Duplicates,
+	})
+	if err != nil {
+		return nil, err
+	}
 	return filtered.Service[*Notification](
-		settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*Notification]{
-			LegacyID:    settings.LegacyObjIDDecode,
-			CreateRetry: UseOAuth2Fix,
-			UpdateRetry: UseOAuth2Fix,
-			Duplicates:  Duplicates,
-		}),
+		svc,
 		&filter{Type: t},
-	)
+	), nil
 }
 
 func UseOAuth2Fix(v *Notification, err error) *Notification {

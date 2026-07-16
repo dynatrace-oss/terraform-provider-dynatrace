@@ -32,8 +32,12 @@ import (
 const SchemaID = "v1:synthetic:monitors:http:script"
 const BasePath = "/api/v1/synthetic/monitors"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*script.Settings] {
-	return &service{scriptService: settings.NewAPITokenService(clientSet, SchemaID, settings.DefaultServiceOptions[*script.Settings](http.BasePath)), httpService: http.Service(clientSet)}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*script.Settings], error) {
+	httpService, err := http.Service(clientSet)
+	if err != nil {
+		return nil, err
+	}
+	return &service{scriptService: settings.NewAPITokenService(clientSet, SchemaID, settings.DefaultServiceOptions[*script.Settings](http.BasePath)), httpService: httpService}, nil
 }
 
 type service struct {

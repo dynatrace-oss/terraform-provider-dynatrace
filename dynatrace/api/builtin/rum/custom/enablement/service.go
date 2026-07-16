@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.1.6"
 const SchemaID = "builtin:rum.custom.enablement"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*enablement.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*enablement.Settings], error) {
 	return settings20.Service[*enablement.Settings](clientSet, SchemaID, SchemaVersion)
 }

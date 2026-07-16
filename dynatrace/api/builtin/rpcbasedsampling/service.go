@@ -27,6 +27,6 @@ import (
 const SchemaID = "builtin:rpc-based-sampling"
 const SchemaVersion = "1.0.3"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*rpcbasedsampling.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*rpcbasedsampling.Settings], error) {
 	return settings20.Service[*rpcbasedsampling.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -33,8 +33,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 )
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*extension_config.Settings] {
-	return &service{clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*extension_config.Settings], error) {
+	return &service{clientSet}, nil
 }
 
 type service struct {

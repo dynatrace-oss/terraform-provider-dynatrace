@@ -42,8 +42,8 @@ import (
 const SchemaID = "builtin:span-event-attribute"
 const SchemaVersion = "1.0.17"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*eventattribute.Settings] {
-	return &service{clientSet: clientSet, client: rest.HybridClient(clientSet.Credentials())}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*eventattribute.Settings], error) {
+	return &service{clientSet: clientSet, client: rest.HybridClient(clientSet.Credentials())}, nil
 }
 
 type service struct {
@@ -73,7 +73,11 @@ func (me *service) Create(ctx context.Context, v *eventattribute.Settings) (*api
 				Enabled: true,
 				Key:     v.Key,
 			}
-			stub, err = allowlist.Service(me.clientSet).Create(ctx, &allowlistSettings)
+			allowlistService, err := allowlist.Service(me.clientSet)
+			if err != nil {
+				return nil, err
+			}
+			stub, err = allowlistService.Create(ctx, &allowlistSettings)
 			if err != nil {
 				return nil, err
 			}
@@ -84,7 +88,11 @@ func (me *service) Create(ctx context.Context, v *eventattribute.Settings) (*api
 					Key:     v.Key,
 					Masking: maskingsettings.MaskingType(v.Masking),
 				}
-				if _, err = masking.Service(me.clientSet).Create(ctx, &maskingSettings); err != nil {
+				maskingService, err := masking.Service(me.clientSet)
+				if err != nil {
+					return nil, err
+				}
+				if _, err = maskingService.Create(ctx, &maskingSettings); err != nil {
 					return nil, err
 				}
 			}
@@ -111,7 +119,11 @@ func (me *service) Update(ctx context.Context, id string, v *eventattribute.Sett
 				stateKey = attributeConfig.Key
 			}
 
-			allowlistStubs, err := allowlist.Service(me.clientSet).List(ctx)
+			allowlistService, err := allowlist.Service(me.clientSet)
+			if err != nil {
+				return err
+			}
+			allowlistStubs, err := allowlistService.List(ctx)
 			if err != nil {
 				return err
 			}
@@ -129,12 +141,16 @@ func (me *service) Update(ctx context.Context, id string, v *eventattribute.Sett
 					Enabled: true,
 					Key:     v.Key,
 				}
-				if err = allowlist.Service(me.clientSet).Update(ctx, *allowlistId, &allowlistSettings); err != nil {
+				if err = allowlistService.Update(ctx, *allowlistId, &allowlistSettings); err != nil {
 					return err
 				}
 			}
 
-			maskingStubs, err := masking.Service(me.clientSet).List(ctx)
+			maskingService, err := masking.Service(me.clientSet)
+			if err != nil {
+				return err
+			}
+			maskingStubs, err := maskingService.List(ctx)
 			if err != nil {
 				return err
 			}
@@ -154,11 +170,11 @@ func (me *service) Update(ctx context.Context, id string, v *eventattribute.Sett
 						Key:     v.Key,
 						Masking: maskingsettings.MaskingType(v.Masking),
 					}
-					if err = masking.Service(me.clientSet).Update(ctx, *maskingId, &maskingSettings); err != nil {
+					if err = maskingService.Update(ctx, *maskingId, &maskingSettings); err != nil {
 						return err
 					}
 				} else {
-					if err = masking.Service(me.clientSet).Delete(ctx, *maskingId); err != nil {
+					if err = maskingService.Delete(ctx, *maskingId); err != nil {
 						return err
 					}
 				}
@@ -169,7 +185,7 @@ func (me *service) Update(ctx context.Context, id string, v *eventattribute.Sett
 						Key:     v.Key,
 						Masking: maskingsettings.MaskingType(v.Masking),
 					}
-					if _, err = masking.Service(me.clientSet).Create(ctx, &maskingSettings); err != nil {
+					if _, err = maskingService.Create(ctx, &maskingSettings); err != nil {
 						return err
 					}
 				}
@@ -199,7 +215,11 @@ func (me *service) Delete(ctx context.Context, id string) error {
 				stateKey = attributeConfig.Key
 			}
 
-			allowlistStubs, err := allowlist.Service(me.clientSet).List(ctx)
+			allowlistService, err := allowlist.Service(me.clientSet)
+			if err != nil {
+				return err
+			}
+			allowlistStubs, err := allowlistService.List(ctx)
 			if err != nil {
 				return err
 			}
@@ -217,7 +237,11 @@ func (me *service) Delete(ctx context.Context, id string) error {
 				}
 			}
 
-			maskingStubs, err := masking.Service(me.clientSet).List(ctx)
+			maskingService, err := masking.Service(me.clientSet)
+			if err != nil {
+				return err
+			}
+			maskingStubs, err := maskingService.List(ctx)
 			if err != nil {
 				return err
 			}
@@ -261,7 +285,11 @@ func (me *service) Get(ctx context.Context, id string, v *eventattribute.Setting
 				stateKey = attributeConfig.Key
 			}
 
-			allowlistStubs, err := allowlist.Service(me.clientSet).List(ctx)
+			allowlistService, err := allowlist.Service(me.clientSet)
+			if err != nil {
+				return err
+			}
+			allowlistStubs, err := allowlistService.List(ctx)
 			if err != nil {
 				return err
 			}
@@ -277,7 +305,11 @@ func (me *service) Get(ctx context.Context, id string, v *eventattribute.Setting
 			}
 
 			v.Masking = eventattribute.MaskingTypes.NotMasked
-			maskingStubs, err := masking.Service(me.clientSet).List(ctx)
+			maskingService, err := masking.Service(me.clientSet)
+			if err != nil {
+				return err
+			}
+			maskingStubs, err := maskingService.List(ctx)
 			if err != nil {
 				return err
 			}

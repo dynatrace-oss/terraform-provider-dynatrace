@@ -32,7 +32,7 @@ import (
 const SchemaID = "builtin:span-entry-points"
 const SchemaVersion = "0.1.16"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*entrypoints.SpanEntryPoint] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*entrypoints.SpanEntryPoint], error) {
 	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*entrypoints.SpanEntryPoint]{Duplicates: Duplicates})
 }
 

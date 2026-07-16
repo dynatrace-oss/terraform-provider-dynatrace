@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:sessionreplay.web.resource-capturing"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*resourcecapturing.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*resourcecapturing.Settings], error) {
 	return settings20.Service[*resourcecapturing.Settings](clientSet, SchemaID, SchemaVersion)
 }

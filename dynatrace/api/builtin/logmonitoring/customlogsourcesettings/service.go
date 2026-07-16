@@ -32,11 +32,15 @@ const SchemaVersion = "1.1.2"
 const SchemaID = "builtin:logmonitoring.custom-log-source-settings"
 
 // The custom service below was created to gracefully deal with the breaking change from attribute `values` to `values-and-enrichment` introduced in v292.
-func Service(clientSet rest.ClientSet) settings.CRUDService[*customlogsourcesettings.Settings] {
-	return &service{
-		service: settings20.Service[*customlogsourcesettings.Settings](clientSet, SchemaID, SchemaVersion),
-		client:  rest.HybridClient(clientSet.Credentials()),
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*customlogsourcesettings.Settings], error) {
+	svc, err := settings20.Service[*customlogsourcesettings.Settings](clientSet, SchemaID, SchemaVersion)
+	if err != nil {
+		return nil, err
 	}
+	return &service{
+		service: svc,
+		client:  rest.HybridClient(clientSet.Credentials()),
+	}, nil
 }
 
 type service struct {

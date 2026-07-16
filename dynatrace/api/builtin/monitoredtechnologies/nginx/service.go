@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.2"
 const SchemaID = "builtin:monitored-technologies.nginx"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*nginx.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*nginx.Settings], error) {
 	return settings20.Service[*nginx.Settings](clientSet, SchemaID, SchemaVersion)
 }

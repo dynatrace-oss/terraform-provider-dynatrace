@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.5"
 const SchemaID = "builtin:process-group.cloud-application-workload-detection"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*workloaddetection.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*workloaddetection.Settings], error) {
 	return settings20.Service[*workloaddetection.Settings](clientSet, SchemaID, SchemaVersion)
 }

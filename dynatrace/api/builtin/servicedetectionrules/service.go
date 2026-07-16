@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.8"
 const SchemaID = "builtin:service-detection-rules"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

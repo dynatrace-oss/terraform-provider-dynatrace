@@ -31,7 +31,7 @@ import (
 const SchemaVersion = "8.6.3"
 const SchemaID = "builtin:alerting.profile"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*profile.Profile] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*profile.Profile], error) {
 	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*profile.Profile]{LegacyID: settings.LegacyObjIDDecode, Duplicates: Duplicates})
 }
 

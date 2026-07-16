@@ -34,7 +34,7 @@ const BasePath = "/api/v2/credentials"
 
 var mu sync.Mutex
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*vault.Credentials] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*vault.Credentials], error) {
 	return &service{
 		service: settings.NewAPITokenService(
 			clientSet,
@@ -54,7 +54,7 @@ func Service(clientSet rest.ClientSet) settings.CRUDService[*vault.Credentials] 
 					return false, nil
 				}),
 		),
-	}
+	}, nil
 }
 
 type service struct {

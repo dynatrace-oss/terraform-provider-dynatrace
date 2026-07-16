@@ -99,7 +99,10 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	}
 
 	var settings entities.Settings
-	service := srv.Service(entityType, "", entitySelector, from, to, clientSet)
+	service, err := srv.Service(entityType, "", entitySelector, from, to, clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	d.SetId(fmt.Sprintf("%s#%s#%s#%s#%s", service.SchemaID(), entityType, entitySelector, from, to))
 

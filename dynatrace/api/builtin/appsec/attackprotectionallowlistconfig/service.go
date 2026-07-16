@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "2.0.3"
 const SchemaID = "builtin:appsec.attack-protection-allowlist-config"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*attackprotectionallowlistconfig.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*attackprotectionallowlistconfig.Settings], error) {
 	return settings20.Service[*attackprotectionallowlistconfig.Settings](clientSet, SchemaID, SchemaVersion)
 }

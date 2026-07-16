@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.8.1"
 const SchemaID = "builtin:synthetic.browser.performance-thresholds"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*performancethresholds.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*performancethresholds.Settings], error) {
 	return settings20.Service[*performancethresholds.Settings](clientSet, SchemaID, SchemaVersion)
 }

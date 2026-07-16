@@ -28,6 +28,6 @@ import (
 const SchemaID = "builtin:span-capturing"
 const SchemaVersion = "0.1.15"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*capturing.SpanCaptureSetting] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*capturing.SpanCaptureSetting], error) {
 	return settings20.Service[*capturing.SpanCaptureSetting](clientSet, SchemaID, SchemaVersion)
 }

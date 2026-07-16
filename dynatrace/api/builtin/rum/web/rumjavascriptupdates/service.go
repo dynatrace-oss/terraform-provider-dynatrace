@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.2.2"
 const SchemaID = "builtin:rum.web.rum-javascript-updates"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

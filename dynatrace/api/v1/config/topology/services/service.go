@@ -26,10 +26,10 @@ import (
 const SchemaID = "v1:environment:services"
 const BasePath = "/api/v1/entity/services"
 
-func Service(clientSet rest.ClientSet) settings.RService[*services.Settings] {
+func Service(clientSet rest.ClientSet) (settings.RService[*services.Settings], error) {
 	return settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*services.Settings](BasePath).WithStubs(new(services.Services)),
-	)
+	), nil
 }

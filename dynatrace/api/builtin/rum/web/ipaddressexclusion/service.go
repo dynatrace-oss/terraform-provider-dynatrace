@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "6.0.4"
 const SchemaID = "builtin:rum.web.ipaddress-exclusion"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

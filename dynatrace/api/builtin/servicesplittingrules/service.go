@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.15"
 const SchemaID = "builtin:service-splitting-rules"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

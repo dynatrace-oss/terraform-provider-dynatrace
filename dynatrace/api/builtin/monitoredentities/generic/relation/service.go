@@ -31,7 +31,7 @@ import (
 const SchemaVersion = "1.2"
 const SchemaID = "builtin:monitoredentities.generic.relation"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*relation.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*relation.Settings], error) {
 	return settings20.Service(clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*relation.Settings]{Duplicates: Duplicates})
 }
 

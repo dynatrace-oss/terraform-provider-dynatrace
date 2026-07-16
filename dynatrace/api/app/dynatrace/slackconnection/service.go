@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.1.1"
 const SchemaID = "app:dynatrace.slack:connection"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*slackconnection.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*slackconnection.Settings], error) {
 	return settings20.Service[*slackconnection.Settings](clientSet, SchemaID, SchemaVersion)
 }

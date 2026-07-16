@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:rum.web.manual-insertion"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*manualinsertion.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*manualinsertion.Settings], error) {
 	return settings20.Service[*manualinsertion.Settings](clientSet, SchemaID, SchemaVersion)
 }

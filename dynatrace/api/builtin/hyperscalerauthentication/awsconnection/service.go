@@ -27,6 +27,6 @@ import (
 const SchemaID = "builtin:hyperscaler-authentication.aws.connection"
 const SchemaVersion = "0.0.3"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*awsconnection.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*awsconnection.Settings], error) {
 	return settings20.Service[*awsconnection.Settings](clientSet, SchemaID, SchemaVersion)
 }

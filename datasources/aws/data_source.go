@@ -41,7 +41,10 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		return diag.FromErr(err)
 	}
 
-	service := svc.Service(clientSet)
+	service, err := svc.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	var settings iam.Settings
 	if err = service.Get(ctx, "", &settings); err != nil {

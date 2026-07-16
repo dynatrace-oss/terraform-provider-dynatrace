@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.1"
 const SchemaID = "builtin:bizevents-processing-metrics.rule"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*metrics.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*metrics.Settings], error) {
 	return settings20.Service[*metrics.Settings](clientSet, SchemaID, SchemaVersion)
 }

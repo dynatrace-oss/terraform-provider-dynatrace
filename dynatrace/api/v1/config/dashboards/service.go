@@ -30,8 +30,12 @@ import (
 
 const SchemaID = "v1:config:dashboards"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*dashboards.Dashboard] {
-	return &service{service: jsondashboards.Service(clientSet)}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*dashboards.Dashboard], error) {
+	jsonDashboardsService, err := jsondashboards.Service(clientSet)
+	if err != nil {
+		return nil, err
+	}
+	return &service{service: jsonDashboardsService}, nil
 }
 
 type service struct {

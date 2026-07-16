@@ -35,10 +35,14 @@ const SchemaVersion = "0.0.18"
 const SchemaID = "builtin:hyperscaler-authentication.connections.azure"
 const DefaultTimeout = 2 * time.Minute
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*serviceSettings.Settings] {
-	return &service{
-		service: settings20.Service[*serviceSettings.Settings](clientSet, SchemaID, SchemaVersion),
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*serviceSettings.Settings], error) {
+	svc, err := settings20.Service[*serviceSettings.Settings](clientSet, SchemaID, SchemaVersion)
+	if err != nil {
+		return nil, err
 	}
+	return &service{
+		service: svc,
+	}, nil
 }
 
 type service struct {

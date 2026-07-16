@@ -46,7 +46,10 @@ func DataSourceMultiRead(ctx context.Context, d *schema.ResourceData, m any) dia
 		return diag.FromErr(err)
 	}
 
-	service := groups.Service(clientSet)
+	service, err := groups.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	stubs, err := service.List(ctx)
 	if err != nil {
 		return diag.FromErr(err)

@@ -32,8 +32,8 @@ import (
 	permissions2 "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/settings/permissions"
 )
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*permissions.SettingPermissions] {
-	return &ServiceImpl{ClientSet: clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*permissions.SettingPermissions], error) {
+	return &ServiceImpl{ClientSet: clientSet}, nil
 }
 
 type ServiceImpl struct {

@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "4.0.3"
 const SchemaID = "builtin:metric.query"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*query.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*query.Settings], error) {
 	return settings20.Service[*query.Settings](clientSet, SchemaID, SchemaVersion)
 }

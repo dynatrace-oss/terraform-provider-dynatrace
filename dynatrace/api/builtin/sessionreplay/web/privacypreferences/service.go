@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.0.8"
 const SchemaID = "builtin:sessionreplay.web.privacy-preferences"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*privacypreferences.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*privacypreferences.Settings], error) {
 	return settings20.Service[*privacypreferences.Settings](clientSet, SchemaID, SchemaVersion)
 }

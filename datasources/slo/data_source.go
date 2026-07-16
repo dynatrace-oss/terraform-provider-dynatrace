@@ -113,7 +113,10 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	service := slo.Service(clientSet)
+	service, err := slo.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)

@@ -30,8 +30,12 @@ import (
 const SchemaVersion = "1.0.18"
 const SchemaID = "builtin:tags.auto-tagging"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*autotagging.Settings] {
-	return &service{settings20.Service[*autotagging.Settings](clientSet, SchemaID, SchemaVersion)}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*autotagging.Settings], error) {
+	svc, err := settings20.Service[*autotagging.Settings](clientSet, SchemaID, SchemaVersion)
+	if err != nil {
+		return nil, err
+	}
+	return &service{svc}, nil
 }
 
 /*

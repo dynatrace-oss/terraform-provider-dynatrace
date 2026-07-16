@@ -78,7 +78,10 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		return diag.FromErr(err)
 	}
 
-	service := export.Service(clientSet, export.ResourceTypes.Credentials)
+	service, err := export.Service(clientSet, export.ResourceTypes.Credentials)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	var stubs api.Stubs
 	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)

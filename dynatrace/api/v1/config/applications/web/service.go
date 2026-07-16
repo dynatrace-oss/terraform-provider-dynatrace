@@ -33,7 +33,7 @@ import (
 
 const SchemaID = "v1:config:applications:web"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*web.Application] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*web.Application], error) {
 	return &service{
 		service: settings.NewAPITokenService(
 			clientSet,
@@ -46,7 +46,7 @@ func Service(clientSet rest.ClientSet) settings.CRUDService[*web.Application] {
 			},
 		),
 		client: rest.APITokenClient(clientSet.Credentials()),
-	}
+	}, nil
 }
 
 type service struct {

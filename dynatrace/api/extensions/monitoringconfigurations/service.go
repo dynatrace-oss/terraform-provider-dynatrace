@@ -61,8 +61,8 @@ type service struct {
 	clientSet    rest.ClientSet
 }
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*serviceSettings.Settings] {
-	return &service{clientGetter: createCoreClient, clientSet: clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*serviceSettings.Settings], error) {
+	return &service{clientGetter: createCoreClient, clientSet: clientSet}, nil
 }
 
 func ServiceWithClientGetter(clientGetter func(ctx context.Context, clientSet rest.ClientSet) (ExtensionClient, error), clientSet rest.ClientSet) settings.CRUDService[*serviceSettings.Settings] {

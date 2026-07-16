@@ -56,7 +56,11 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	}
 
 	var stub *api.Stub
-	if stub, err = generic.Service(clientSet).Create(ctx, config); err != nil {
+	service, err := generic.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	if stub, err = service.Create(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(stub.ID)
@@ -84,7 +88,11 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := generic.Service(clientSet).Update(ctx, d.Id(), config); err != nil {
+	service, err := generic.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	if err := service.Update(ctx, d.Id(), config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -108,8 +116,12 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 	var configToMarshal *settings.Settings
 
+	service, err := generic.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	apiConfig := new(settings.Settings)
-	if err := generic.Service(clientSet).Get(ctx, d.Id(), apiConfig); err != nil {
+	if err := service.Get(ctx, d.Id(), apiConfig); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -143,7 +155,11 @@ func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	if err := generic.Service(clientSet).Delete(ctx, d.Id()); err != nil {
+	service, err := generic.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	if err := service.Delete(ctx, d.Id()); err != nil {
 		return diag.FromErr(err)
 	}
 

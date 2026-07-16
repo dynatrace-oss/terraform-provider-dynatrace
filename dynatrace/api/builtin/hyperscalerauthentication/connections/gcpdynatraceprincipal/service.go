@@ -48,11 +48,19 @@ var ValidConnection = gcpconnection.Settings{
 	}),
 }
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*gcpprincipalsettings.Settings] {
-	return &service{
-		principalService:  settings20.Service[*gcpprincipalsettings.Settings](clientSet, SchemaID, SchemaVersion),
-		connectionService: gcp.Service(clientSet),
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*gcpprincipalsettings.Settings], error) {
+	connectionService, err := gcp.Service(clientSet)
+	if err != nil {
+		return nil, err
 	}
+	principalService, err := settings20.Service[*gcpprincipalsettings.Settings](clientSet, SchemaID, SchemaVersion)
+	if err != nil {
+		return nil, err
+	}
+	return &service{
+		principalService:  principalService,
+		connectionService: connectionService,
+	}, nil
 }
 
 type service struct {

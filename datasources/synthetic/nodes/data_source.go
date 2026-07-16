@@ -48,8 +48,12 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	service, err := nodes.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	var stubs api.Stubs
-	if stubs, err = nodes.Service(clientSet).List(ctx); err != nil {
+	if stubs, err = service.List(ctx); err != nil {
 		return diag.FromErr(err)
 	}
 	nodes := []*nodessettings.Settings{}

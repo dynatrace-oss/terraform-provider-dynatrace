@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.2"
 const SchemaID = "builtin:monitored-technologies.dotnet"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*dotnet.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*dotnet.Settings], error) {
 	return settings20.Service[*dotnet.Settings](clientSet, SchemaID, SchemaVersion)
 }

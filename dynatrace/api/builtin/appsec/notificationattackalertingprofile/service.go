@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.4"
 const SchemaID = "builtin:appsec.notification-attack-alerting-profile"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*notificationattackalertingprofile.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*notificationattackalertingprofile.Settings], error) {
 	return settings20.Service[*notificationattackalertingprofile.Settings](clientSet, SchemaID, SchemaVersion)
 }

@@ -33,7 +33,7 @@ import (
 
 const SchemaID = "v1:config:applications:mobile"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*mobile.Application] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*mobile.Application], error) {
 	return settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
@@ -50,7 +50,7 @@ func Service(clientSet rest.ClientSet) settings.CRUDService[*mobile.Application]
 			},
 			Duplicates: Duplicates,
 		},
-	)
+	), nil
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*mobile.Application], v *mobile.Application) (*api.Stub, error) {

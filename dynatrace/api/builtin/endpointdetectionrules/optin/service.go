@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "0.0.1"
 const SchemaID = "builtin:endpoint-detection-rules-opt-in"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*optin.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*optin.Settings], error) {
 	return settings20.Service[*optin.Settings](clientSet, SchemaID, SchemaVersion)
 }

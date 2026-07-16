@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.3"
 const SchemaID = "builtin:anomaly-detection.infrastructure-hosts"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*hosts.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*hosts.Settings], error) {
 	return settings20.Service[*hosts.Settings](clientSet, SchemaID, SchemaVersion)
 }

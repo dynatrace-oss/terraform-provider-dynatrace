@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.2"
 const SchemaID = "builtin:anomaly-detection.kubernetes.namespace"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*namespace.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*namespace.Settings], error) {
 	return settings20.Service[*namespace.Settings](clientSet, SchemaID, SchemaVersion)
 }

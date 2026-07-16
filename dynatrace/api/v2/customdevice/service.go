@@ -34,8 +34,8 @@ import (
 
 var mutex sync.Mutex
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*customdevice.CustomDevice] {
-	return &service{clientSet}
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*customdevice.CustomDevice], error) {
+	return &service{clientSet}, nil
 }
 
 type service struct {

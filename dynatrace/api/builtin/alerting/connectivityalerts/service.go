@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:alerting.connectivity-alerts"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*connectivityalerts.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*connectivityalerts.Settings], error) {
 	return settings20.Service[*connectivityalerts.Settings](clientSet, SchemaID, SchemaVersion)
 }

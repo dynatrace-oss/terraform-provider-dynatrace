@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1"
 const SchemaID = "builtin:audit-log"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*auditlog.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*auditlog.Settings], error) {
 	return settings20.Service[*auditlog.Settings](clientSet, SchemaID, SchemaVersion)
 }

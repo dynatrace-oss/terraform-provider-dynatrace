@@ -27,6 +27,6 @@ import (
 const SchemaVersion = "1.1.3"
 const SchemaID = "builtin:rum.ip-mappings"
 
-func Service(clientSet rest.ClientSet) settings.CRUDService[*service.Settings] {
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
 	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }
