@@ -33,11 +33,16 @@ const SchemaID = "v1:config:service:request-naming"
 const BasePath = "/api/config/v1/service/requestNaming"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*requestnaming.RequestNaming], error) {
-	return &service{service: settings.NewAPITokenService(
+	svc, err := settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*requestnaming.RequestNaming](BasePath),
-	), client: rest.APITokenClient(clientSet.Credentials())}, nil
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &service{service: svc, client: rest.APITokenClient(clientSet.Credentials())}, nil
 }
 
 type service struct {

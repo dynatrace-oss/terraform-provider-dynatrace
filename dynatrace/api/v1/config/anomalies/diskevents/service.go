@@ -32,5 +32,5 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*diskevents.Anomaly
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*diskevents.AnomalyDetection](BasePath),
-	), nil
+	)
 }

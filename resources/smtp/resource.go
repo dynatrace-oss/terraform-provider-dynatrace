@@ -49,8 +49,7 @@ func NewService(m any) (*smtp.ServiceClient, error) {
 		return nil, err
 	}
 
-	apiService := smtp.NewService(clientSet)
-	return apiService, nil
+	return smtp.NewService(clientSet)
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource

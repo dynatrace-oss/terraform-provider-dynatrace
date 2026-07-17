@@ -31,5 +31,5 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*notifications.Noti
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*notifications.NotificationRecord](BasePath),
-	), nil
+	)
 }

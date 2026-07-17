@@ -48,8 +48,8 @@ func NewService(m any) (*mgmz.ServiceClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	apiService := mgmz.NewService(clientSet)
-	return apiService, nil
+
+	return mgmz.NewService(clientSet)
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource

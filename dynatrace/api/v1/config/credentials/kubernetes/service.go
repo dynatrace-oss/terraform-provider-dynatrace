@@ -35,5 +35,5 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*kubernetes.Kuberne
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*kubernetes.KubernetesCredentials](BasePath).WithMutex(mu.Lock, mu.Unlock),
-	), nil
+	)
 }

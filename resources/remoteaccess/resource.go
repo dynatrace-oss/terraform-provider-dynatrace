@@ -48,8 +48,7 @@ func NewService(m any) (*remoteaccess.ServiceClient, error) {
 		return nil, err
 	}
 
-	apiService := remoteaccess.NewService(clientSet)
-	return apiService, nil
+	return remoteaccess.NewService(clientSet)
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource

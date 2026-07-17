@@ -31,5 +31,5 @@ func Service(clientSet rest.ClientSet) (settings.RService[*hosts.Host], error) {
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*hosts.Host](BasePath).WithStubs(new(hosts.Hosts)),
-	), nil
+	)
 }

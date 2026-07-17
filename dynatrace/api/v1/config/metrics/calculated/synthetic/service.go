@@ -31,11 +31,16 @@ const SchemaID = "v1:config:calculated-metrics-synthetic"
 const BasePath = "/api/config/v1/calculatedMetrics/synthetic"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*mysettings.CalculatedSyntheticMetric], error) {
-	return &service{service: settings.NewAPITokenService(
+	svc, err := settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*mysettings.CalculatedSyntheticMetric](BasePath),
-	), client: rest.APITokenClient(clientSet.Credentials())}, nil
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &service{service: svc, client: rest.APITokenClient(clientSet.Credentials())}, nil
 }
 
 type service struct {

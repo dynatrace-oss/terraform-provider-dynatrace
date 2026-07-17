@@ -30,11 +30,16 @@ import (
 const SchemaID = "v1:config:json-dashboards-base"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*dashboardsbase.JSONDashboardBase], error) {
-	return &service{settings.NewAPITokenService(
+	svc, err := settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*dashboardsbase.JSONDashboardBase]("/api/config/v1/dashboards").WithStubs(&dashboardsbase.DashboardList{}),
-	)}, nil
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &service{service: svc}, nil
 }
 
 type service struct {

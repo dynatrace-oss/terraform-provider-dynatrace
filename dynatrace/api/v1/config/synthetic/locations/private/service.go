@@ -33,5 +33,5 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*locations.PrivateS
 		CreateURL:      func(v *locations.PrivateSyntheticLocation) string { return "/api/v1/synthetic/locations" },
 		Stubs:          &locations.SyntheticLocations{},
 		HasNoValidator: true,
-	}), nil
+	})
 }

@@ -34,18 +34,23 @@ import (
 const SchemaID = "v1:config:applications:web"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*web.Application], error) {
+	svc, err := settings.NewAPITokenService(
+		clientSet,
+		SchemaID,
+		&settings.ServiceOptions[*web.Application]{
+			Get:           settings.Path("/api/config/v1/applications/web/%s"),
+			List:          settings.Path("/api/config/v1/applications/web"),
+			CreateConfirm: envutils.DynatraceCreateConfirmWebApplication.Get(),
+			Duplicates:    Duplicates,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	return &service{
-		service: settings.NewAPITokenService(
-			clientSet,
-			SchemaID,
-			&settings.ServiceOptions[*web.Application]{
-				Get:           settings.Path("/api/config/v1/applications/web/%s"),
-				List:          settings.Path("/api/config/v1/applications/web"),
-				CreateConfirm: envutils.DynatraceCreateConfirmWebApplication.Get(),
-				Duplicates:    Duplicates,
-			},
-		),
-		client: rest.APITokenClient(clientSet.Credentials()),
+		service: svc,
+		client:  rest.APITokenClient(clientSet.Credentials()),
 	}, nil
 }
 

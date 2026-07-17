@@ -32,14 +32,19 @@ const SchemaID = "v1:synthetic:monitors:http"
 const BasePath = "/api/v1/synthetic/monitors"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*http.SyntheticMonitor], error) {
-	return &service{service: settings.NewAPITokenService(clientSet, SchemaID, &settings.ServiceOptions[*http.SyntheticMonitor]{
+	svc, err := settings.NewAPITokenService(clientSet, SchemaID, &settings.ServiceOptions[*http.SyntheticMonitor]{
 		Get:            settings.Path("/api/v1/synthetic/monitors/%s"),
 		List:           settings.Path("/api/v1/synthetic/monitors?type=HTTP"),
 		CreateURL:      func(v *http.SyntheticMonitor) string { return "/api/v1/synthetic/monitors" },
 		Stubs:          &monitors.Monitors{},
 		HasNoValidator: true,
 		CreateConfirm:  30,
-	})}, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &service{service: svc}, nil
 }
 
 type service struct {
