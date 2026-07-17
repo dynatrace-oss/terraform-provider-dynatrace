@@ -36,5 +36,5 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*databaseservices.A
 		SchemaID,
 		EndpointURL,
 		api.Stub{ID: StaticID, Name: StaticName},
-	), nil
+	)
 }

@@ -32,5 +32,5 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*maintenance.Window
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*maintenance.Window](BasePath),
-	), nil
+	)
 }

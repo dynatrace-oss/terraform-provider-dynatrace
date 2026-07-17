@@ -34,11 +34,16 @@ import (
 const SchemaID = "v1:config:json-dashboards"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*dashboards.JSONDashboard], error) {
-	return &service{settings.NewAPITokenService(
+	svc, err := settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*dashboards.JSONDashboard]("/api/config/v1/dashboards").WithStubs(&dashboards.DashboardList{}).WithAfterCreate(AfterCreate),
-	)}, nil
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &service{service: svc}, nil
 }
 
 type DashboardPreset struct {

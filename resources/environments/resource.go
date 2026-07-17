@@ -48,8 +48,7 @@ func NewService(m any) (*envs.ServiceClient, error) {
 		return nil, err
 	}
 
-	apiService := envs.NewService(clientSet)
-	return apiService, nil
+	return envs.NewService(clientSet)
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource

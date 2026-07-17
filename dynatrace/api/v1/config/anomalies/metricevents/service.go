@@ -37,7 +37,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*metricevents.Metri
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*metricevents.MetricEvent](BasePath).WithCreateRetry(RetryOnCreate).WithDuplicates(Duplicates),
-	), nil
+	)
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*metricevents.MetricEvent], v *metricevents.MetricEvent) (*api.Stub, error) {

@@ -37,7 +37,13 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*script.Settings], 
 	if err != nil {
 		return nil, err
 	}
-	return &service{scriptService: settings.NewAPITokenService(clientSet, SchemaID, settings.DefaultServiceOptions[*script.Settings](http.BasePath)), httpService: httpService}, nil
+
+	scriptService, err := settings.NewAPITokenService(clientSet, SchemaID, settings.DefaultServiceOptions[*script.Settings](http.BasePath))
+	if err != nil {
+		return nil, err
+	}
+
+	return &service{scriptService: scriptService, httpService: httpService}, nil
 }
 
 type service struct {

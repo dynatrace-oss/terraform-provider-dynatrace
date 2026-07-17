@@ -39,7 +39,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*browser.SyntheticM
 		Stubs:          &monitors.Monitors{},
 		HasNoValidator: true,
 		CreateConfirm:  20,
-	}), nil
+	})
 }
 
 func contains(elems []string, search string) bool {

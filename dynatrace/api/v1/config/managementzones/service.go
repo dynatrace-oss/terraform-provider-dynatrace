@@ -35,7 +35,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*managementzones.Ma
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*managementzones.ManagementZone](BasePath).Hijack(Hijack),
-	), nil
+	)
 }
 
 func Hijack(ctx context.Context, err error, service settings.RService[*managementzones.ManagementZone], v *managementzones.ManagementZone) (*api.Stub, error) {

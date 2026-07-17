@@ -74,7 +74,11 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		return diag.FromErr(err)
 	}
 
-	service := serviceusers.NewService(clientSet)
+	service, err := serviceusers.NewService(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	return dataSourceReadWithService(ctx, d, service)
 }
 

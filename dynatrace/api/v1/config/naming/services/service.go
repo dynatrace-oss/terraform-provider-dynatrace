@@ -36,7 +36,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*services.NamingRul
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*services.NamingRule](BasePath).WithDuplicates(Duplicates),
-	), nil
+	)
 }
 
 func Duplicates(ctx context.Context, service settings.RService[*services.NamingRule], v *services.NamingRule) (*api.Stub, error) {

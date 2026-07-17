@@ -31,11 +31,16 @@ const SchemaID = "v1:config:applications:detection"
 const BasePath = "/api/config/v1/applicationDetectionRules"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*detection.Rule], error) {
-	return &service{settings.NewAPITokenService(
+	svc, err := settings.NewAPITokenService(
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*detection.Rule](BasePath),
-	)}, nil
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &service{service: svc}, nil
 }
 
 type service struct {

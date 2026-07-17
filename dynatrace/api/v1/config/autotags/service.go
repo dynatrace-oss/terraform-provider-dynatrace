@@ -31,5 +31,5 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*autotags.AutoTag],
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*autotags.AutoTag](BasePath),
-	), nil
+	)
 }

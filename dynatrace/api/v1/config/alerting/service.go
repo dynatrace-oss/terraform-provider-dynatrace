@@ -31,5 +31,5 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*alerting.Profile],
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*alerting.Profile](BasePath),
-	), nil
+	)
 }

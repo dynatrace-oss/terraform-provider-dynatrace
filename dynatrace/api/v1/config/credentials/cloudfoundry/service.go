@@ -35,5 +35,5 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*cloudfoundry.Cloud
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*cloudfoundry.CloudFoundryCredentials](BasePath).WithMutex(mu.Lock, mu.Unlock),
-	), nil
+	)
 }

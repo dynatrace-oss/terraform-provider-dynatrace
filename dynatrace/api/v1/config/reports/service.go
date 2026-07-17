@@ -31,5 +31,5 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*reports.Settings],
 		clientSet,
 		SchemaID,
 		settings.DefaultServiceOptions[*reports.Settings](BasePath).WithStubs(new(reports.ReportStubList)),
-	), nil
+	)
 }

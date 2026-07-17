@@ -48,8 +48,7 @@ func NewService(m any) (*groups.ServiceClient, error) {
 		return nil, err
 	}
 
-	apiService := groups.NewService(clientSet)
-	return apiService, nil
+	return groups.NewService(clientSet)
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource

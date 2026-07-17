@@ -41,5 +41,5 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*requestattributes.
 			Lock:   mu.Lock,
 			Unlock: mu.Unlock,
 		},
-	), nil
+	)
 }

@@ -35,57 +35,62 @@ const BasePath = "/api/config/v1/aws/credentials"
 var mu sync.Mutex
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*aws.AWSCredentialsConfig], error) {
-	return &service{
-		service: settings.NewAPITokenService(
-			clientSet,
-			SchemaID,
-			settings.DefaultServiceOptions[*aws.AWSCredentialsConfig](BasePath).
-				WithStubs(&api.Stubs{}).
-				WithMutex(mu.Lock, mu.Unlock).
-				WithAfterCreate(func(ctx context.Context, client rest.Client, stub *api.Stub) (*api.Stub, error) {
-					// After creating AWS Credentials it may take a while until the `externalId` has been set by the cluster
-					// We're polling roughly 60 seconds until that has happened - in order to ensure that the credentials REALLY have been created
-					// Last resort is to populate that value right after GET has happened (see below) - which is already cheating
-					var cfg aws.AWSCredentialsConfig
-					numRetries := 0
-					configIsValid := false
-					for !configIsValid && numRetries < 30 {
-						client.Get(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", stub.ID), 200).Finish(&cfg)
-						if cfg.AuthenticationData == nil || cfg.AuthenticationData.RoleBasedAuthentication == nil || (cfg.AuthenticationData.RoleBasedAuthentication.ExternalID != nil && len(*cfg.AuthenticationData.RoleBasedAuthentication.ExternalID) > 0) {
-							configIsValid = true
-							break
-						}
-						numRetries++
-						time.Sleep(2 * time.Second)
+	svc, err := settings.NewAPITokenService(
+		clientSet,
+		SchemaID,
+		settings.DefaultServiceOptions[*aws.AWSCredentialsConfig](BasePath).
+			WithStubs(&api.Stubs{}).
+			WithMutex(mu.Lock, mu.Unlock).
+			WithAfterCreate(func(ctx context.Context, client rest.Client, stub *api.Stub) (*api.Stub, error) {
+				// After creating AWS Credentials it may take a while until the `externalId` has been set by the cluster
+				// We're polling roughly 60 seconds until that has happened - in order to ensure that the credentials REALLY have been created
+				// Last resort is to populate that value right after GET has happened (see below) - which is already cheating
+				var cfg aws.AWSCredentialsConfig
+				numRetries := 0
+				configIsValid := false
+				for !configIsValid && numRetries < 30 {
+					client.Get(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", stub.ID), 200).Finish(&cfg)
+					if cfg.AuthenticationData == nil || cfg.AuthenticationData.RoleBasedAuthentication == nil || (cfg.AuthenticationData.RoleBasedAuthentication.ExternalID != nil && len(*cfg.AuthenticationData.RoleBasedAuthentication.ExternalID) > 0) {
+						configIsValid = true
+						break
 					}
-					return stub, nil
-				}).
-				WithDuplicates(Duplicates).
-				WithCompleteGet(func(ctx context.Context, client rest.Client, id string, v *aws.AWSCredentialsConfig) error {
-					// This is a sanity (last resort) function
-					// Sometimes freshly created AWS Credentials don't have the `externalId` assigned yet
-					// ... even after a miniute of waiting
-					// If all of that fails, we're correcting that right after we've fetched the current state
-					// because that `externalId` IS available globally elsewhere
-					if v.AuthenticationData == nil {
-						return nil
-					}
-					if v.AuthenticationData.RoleBasedAuthentication == nil {
-						return nil
-					}
-					if (v.AuthenticationData.RoleBasedAuthentication.ExternalID == nil) || len(*v.AuthenticationData.RoleBasedAuthentication.ExternalID) == 0 {
-						tokenResponse := struct {
-							Token string `json:"token"`
-						}{}
-						client.Get(ctx, "/api/config/v1/aws/iamExternalId", 200).Finish(&tokenResponse)
-						if len(tokenResponse.Token) > 0 {
-							v.AuthenticationData.RoleBasedAuthentication.ExternalID = &tokenResponse.Token
-						}
-					}
+					numRetries++
+					time.Sleep(2 * time.Second)
+				}
+				return stub, nil
+			}).
+			WithDuplicates(Duplicates).
+			WithCompleteGet(func(ctx context.Context, client rest.Client, id string, v *aws.AWSCredentialsConfig) error {
+				// This is a sanity (last resort) function
+				// Sometimes freshly created AWS Credentials don't have the `externalId` assigned yet
+				// ... even after a miniute of waiting
+				// If all of that fails, we're correcting that right after we've fetched the current state
+				// because that `externalId` IS available globally elsewhere
+				if v.AuthenticationData == nil {
 					return nil
-				}),
-		),
-		client: rest.APITokenClient(clientSet.Credentials()),
+				}
+				if v.AuthenticationData.RoleBasedAuthentication == nil {
+					return nil
+				}
+				if (v.AuthenticationData.RoleBasedAuthentication.ExternalID == nil) || len(*v.AuthenticationData.RoleBasedAuthentication.ExternalID) == 0 {
+					tokenResponse := struct {
+						Token string `json:"token"`
+					}{}
+					client.Get(ctx, "/api/config/v1/aws/iamExternalId", 200).Finish(&tokenResponse)
+					if len(tokenResponse.Token) > 0 {
+						v.AuthenticationData.RoleBasedAuthentication.ExternalID = &tokenResponse.Token
+					}
+				}
+				return nil
+			}),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &service{
+		service: svc,
+		client:  rest.APITokenClient(clientSet.Credentials()),
 	}, nil
 }
 

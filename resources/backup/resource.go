@@ -45,7 +45,7 @@ func Resource() *schema.Resource {
 	}
 }
 
-func NewService(m any) *backup.ServiceClient {
+func NewService(m any) (*backup.ServiceClient, error) {
 	return backup.NewService(m.(*config.ProviderConfiguration))
 }
 
@@ -60,7 +60,11 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := NewService(m).Create(ctx, config); err != nil {
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	if err := service.Create(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 	d.SetId(uuid.NewString())
@@ -93,7 +97,11 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	if err := NewService(m).Update(ctx, config); err != nil {
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	if err := service.Update(ctx, config); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -132,7 +140,11 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 		}
 	}
 
-	config, err := NewService(m).Get(ctx)
+	service, err := NewService(m)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	config, err := service.Get(ctx)
 	if err != nil {
 		return diag.FromErr(err)
 	}
