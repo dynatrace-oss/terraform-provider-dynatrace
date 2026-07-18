@@ -92,7 +92,7 @@ func unmarshalError(method string, url string, data []byte, response *http.Respo
 		return Error{Code: env.Error.Code, Method: method, URL: url, Message: env.Error.Message, ConstraintViolations: env.Error.ConstraintViolations}
 	} else {
 		var envs []errorEnvelope
-		if err = json.Unmarshal(data, &envs); err == nil && len(envs) > 0 {
+		if err = json.Unmarshal(data, &envs); err == nil && len(envs) > 0 && envs[0].Error != nil {
 			env = envs[0]
 			return Error{Code: env.Error.Code, Method: method, URL: url, Message: env.Error.Message, ConstraintViolations: env.Error.ConstraintViolations}
 		}
