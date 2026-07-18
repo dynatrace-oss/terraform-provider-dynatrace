@@ -92,3 +92,30 @@ func TestError_IsNotFoundError_False(t *testing.T) {
 		})
 	}
 }
+
+func TestEnvelope_ArrayBodyWithoutErrorDoesNotPanic(t *testing.T) {
+	testCases := []struct {
+		Name     string
+		Body     string
+		WantsErr bool
+	}{
+		{Name: "array without error field", Body: `[{"code":400}]`, WantsErr: false},
+		{Name: "array with error field", Body: `[{"error":{"code":400,"message":"bad"}}]`, WantsErr: true},
+		{Name: "object with error field", Body: `{"error":{"code":400,"message":"bad"}}`, WantsErr: true},
+		{Name: "object without error field", Body: `{"code":400}`, WantsErr: false},
+	}
+
+	for _, tcs := range testCases {
+		t.Run(tcs.Name, func(t *testing.T) {
+			var err error
+			assert.NotPanics(t, func() {
+				err = rest.Envelope([]byte(tcs.Body), "https://example.com", http.MethodGet)
+			})
+			if tcs.WantsErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
