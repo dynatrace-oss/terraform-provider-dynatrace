@@ -25,6 +25,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/stretchr/testify/assert"
@@ -117,7 +118,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources)
+		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
 
 		// Verify
 		descriptor := resources[testResType]
@@ -141,7 +142,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources)
+		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
 
 		// Verify
 		descriptor := resources[testResType]
@@ -165,7 +166,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources)
+		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
 
 		// Verify - no dependency should be added for non-Settings 2.0 schema
 		descriptor := resources[testResType]
@@ -188,7 +189,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources)
+		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
 
 		// Verify - no dependency should be added for schema without InsertAfter
 		descriptor := resources[testResType]
@@ -212,7 +213,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources)
+		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
 
 		// Verify - should still have only one dependency
 		descriptor := resources[testResType]
@@ -256,7 +257,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources)
+		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
 
 		// Verify each resource was processed correctly
 		assert.True(t, resources[resTypeWithInsertAfter].HasWeakIDDependencyTo(resTypeWithInsertAfter),
@@ -286,7 +287,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources)
+		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
 
 		// Verify - should have both the existing dep and the new weak ID dep
 		descriptor := resources[testResType]

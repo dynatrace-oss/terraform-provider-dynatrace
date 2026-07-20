@@ -573,9 +573,9 @@ func ContainsInsertAfterAttribute(protoType settings.Settings, schemaID string) 
 // settings are allowed to contain IDs to the same resource type
 // in order to replace hardcoded IDs in there.
 // `Dependencies.WeakID` takes care of that.
-func AddInsertAfterWeakIDDependencies(resources map[ResourceType]ResourceDescriptor) {
+func AddInsertAfterWeakIDDependencies(resources map[ResourceType]ResourceDescriptor, pc *config.ProviderConfiguration) {
 	for resType, descriptor := range resources {
-		service, err := descriptor.Service(&config.ProviderConfiguration{})
+		service, err := descriptor.Service(pc)
 		if err != nil {
 			continue
 		}

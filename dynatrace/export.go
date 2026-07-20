@@ -18,6 +18,7 @@
 package dynatrace
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -79,11 +80,13 @@ func runExport(cfgGetter config.Getter) (err error) {
 	os.Remove("terraform-provider-dynatrace.export.log")
 	os.Remove("terraform-provider-dynatrace.warnings.log")
 
+	pc := config.ProviderConfigureGeneric(context.Background(), cfgGetter)
+
 	// Ensure every ordered Settings 2.0 resource (with `insert_after` attribute) won't produce hardcoded IDs when exported.
-	export.AddInsertAfterWeakIDDependencies(export.AllResources)
+	export.AddInsertAfterWeakIDDependencies(export.AllResources, pc)
 
 	var environment *export.Environment
-	if environment, err = export.Initialize(cfgGetter); err != nil {
+	if environment, err = export.Initialize(pc); err != nil {
 		return err
 	}
 
