@@ -30,7 +30,5 @@ func TestAccBrowserMonitors(t *testing.T) {
 }
 
 func TestAccTestCasesBrowserMonitors(t *testing.T) {
-	t.Skip("Skipping because the eventual consistency time is way too high")
-
 	api.TestAccTestCases(t)
 }
