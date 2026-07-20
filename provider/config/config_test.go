@@ -24,7 +24,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 type mockResourceData map[string]any
@@ -33,18 +32,9 @@ func (mrd mockResourceData) Get(k string) any {
 	return mrd[k]
 }
 
-func configure(t *testing.T, d mockResourceData) *config.ProviderConfiguration {
-	t.Helper()
-	result, diags := config.ProviderConfigureGeneric(t.Context(), d)
-	assert.Empty(t, diags)
-	configuration, ok := result.(*config.ProviderConfiguration)
-	require.True(t, ok)
-	return configuration
-}
-
 func TestProviderConfigureGeneric(t *testing.T) {
 	t.Run("Direct fields are passed through and URLs cleaned", func(t *testing.T) {
-		cfg := configure(t, mockResourceData{
+		cfg := config.ProviderConfigureGeneric(t.Context(), mockResourceData{
 			"dt_env_url":           "https://foo.live.dynatrace.com",
 			"dt_api_token":         "api-token",
 			"dt_cluster_api_token": "cluster-token",
@@ -120,7 +110,7 @@ func TestProviderConfigureGeneric(t *testing.T) {
 			},
 		} {
 			t.Run(tc.name, func(t *testing.T) {
-				cfg := configure(t, mockResourceData{"dt_env_url": tc.envURL})
+				cfg := config.ProviderConfigureGeneric(t.Context(), mockResourceData{"dt_env_url": tc.envURL})
 				assert.Equal(t, tc.expectedClassic, cfg.EnvironmentURL)
 				assert.Equal(t, tc.expectedPlatform, cfg.Platform.EnvironmentURL)
 			})
@@ -128,7 +118,7 @@ func TestProviderConfigureGeneric(t *testing.T) {
 	})
 
 	t.Run("Explicit platform environment URL overrides derivation", func(t *testing.T) {
-		cfg := configure(t, mockResourceData{
+		cfg := config.ProviderConfigureGeneric(t.Context(), mockResourceData{
 			"dt_env_url":         "https://foo.live.dynatrace.com",
 			"automation_env_url": "https://custom.apps.example.com/",
 		})
@@ -179,7 +169,7 @@ func TestProviderConfigureGeneric(t *testing.T) {
 			},
 		} {
 			t.Run(tc.name, func(t *testing.T) {
-				cfg := configure(t, tc.data)
+				cfg := config.ProviderConfigureGeneric(t.Context(), tc.data)
 				assert.Equal(t, tc.expectedIAM, cfg.IAM.ClientID)
 				assert.Equal(t, tc.expectedPlatform, cfg.Platform.ClientID)
 			})
@@ -229,7 +219,7 @@ func TestProviderConfigureGeneric(t *testing.T) {
 			},
 		} {
 			t.Run(tc.name, func(t *testing.T) {
-				cfg := configure(t, tc.data)
+				cfg := config.ProviderConfigureGeneric(t.Context(), tc.data)
 				assert.Equal(t, tc.expectedIAM, cfg.IAM.ClientSecret)
 				assert.Equal(t, tc.expectedPlatform, cfg.Platform.ClientSecret)
 			})
@@ -271,7 +261,7 @@ func TestProviderConfigureGeneric(t *testing.T) {
 			},
 		} {
 			t.Run(tc.name, func(t *testing.T) {
-				assert.Equal(t, tc.expected, configure(t, tc.data).IAM.AccountID)
+				assert.Equal(t, tc.expected, config.ProviderConfigureGeneric(t.Context(), tc.data).IAM.AccountID)
 			})
 		}
 	})
@@ -327,7 +317,7 @@ func TestProviderConfigureGeneric(t *testing.T) {
 			},
 		} {
 			t.Run(tc.name, func(t *testing.T) {
-				cfg := configure(t, tc.data)
+				cfg := config.ProviderConfigureGeneric(t.Context(), tc.data)
 				assert.Equal(t, tc.expectedIAM, cfg.IAM.TokenURL)
 				assert.Equal(t, tc.expectedPlatform, cfg.Platform.TokenURL)
 			})
@@ -373,7 +363,7 @@ func TestProviderConfigureGeneric(t *testing.T) {
 			},
 		} {
 			t.Run(tc.name, func(t *testing.T) {
-				cfg := configure(t, mockResourceData{"dt_env_url": tc.envURL})
+				cfg := config.ProviderConfigureGeneric(t.Context(), mockResourceData{"dt_env_url": tc.envURL})
 				assert.Equal(t, tc.expectedTokenURL, cfg.IAM.TokenURL)
 				assert.Equal(t, tc.expectedTokenURL, cfg.Platform.TokenURL)
 				assert.Equal(t, tc.expectedEndpoint, cfg.IAM.EndpointURL)
@@ -382,7 +372,7 @@ func TestProviderConfigureGeneric(t *testing.T) {
 	})
 
 	t.Run("Explicit IAM endpoint URL overrides derivation", func(t *testing.T) {
-		cfg := configure(t, mockResourceData{
+		cfg := config.ProviderConfigureGeneric(t.Context(), mockResourceData{
 			"dt_env_url":       "https://foo.sprint.dynatracelabs.com",
 			"iam_endpoint_url": "https://custom-endpoint.example.com/",
 		})

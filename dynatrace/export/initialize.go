@@ -18,7 +18,6 @@
 package export
 
 import (
-	"context"
 	"errors"
 	"flag"
 	"fmt"
@@ -26,13 +25,12 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
-func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
+func Initialize(pc *config.ProviderConfiguration) (environment *Environment, err error) {
 	flags, tailArgs := createFlags()
 	if flags.FlagMigrationOutput && flags.FollowReferences {
 		return nil, errors.New("-ref and -migrate are mutually exclusive")
@@ -157,9 +155,6 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		os.RemoveAll(targetFolder)
 	}
 
-	var clientSet rest.ClientSet
-	configResult, _ := config.ProviderConfigureGeneric(context.Background(), cfgGetter)
-
 	dwValidationStrategy := config.CredValExport
 	for key, _ := range resArgs {
 		if strings.Contains(key, "_iam_") {
@@ -168,7 +163,8 @@ func Initialize(cfgGetter config.Getter) (environment *Environment, err error) {
 		}
 	}
 
-	if clientSet, err = config.ClientSet(configResult, dwValidationStrategy); err != nil {
+	clientSet, err := config.ClientSet(pc, dwValidationStrategy)
+	if err != nil {
 		return nil, err
 	}
 

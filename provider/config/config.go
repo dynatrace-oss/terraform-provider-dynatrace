@@ -95,11 +95,11 @@ var regexpSprintTenant = regexp.MustCompile(`https:\/\/(.*).sprint(?:\.apps)?.dy
 var regexpDevTenant = regexp.MustCompile(`https:\/\/(.*).dev(?:\.apps)?.dynatracelabs.com`)
 
 func ProviderConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
-	return ProviderConfigureGeneric(ctx, d)
+	return ProviderConfigureGeneric(ctx, d), diag.Diagnostics{}
 }
 
-func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnostics) {
-	pc := &ProviderConfiguration{
+func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfiguration {
+	return &ProviderConfiguration{
 		EnvironmentURL:  getClassicEnvironmentURL(d),
 		APIToken:        getString(d, "dt_api_token"),
 		ClusterAPIToken: getString(d, "dt_cluster_api_token"),
@@ -119,7 +119,6 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) (any, diag.Diagnost
 			EnvironmentURL: getPlatformEnvironmentURL(d),
 		},
 	}
-	return pc, diag.Diagnostics{}
 }
 
 func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) error {
