@@ -42,7 +42,9 @@ resource "dynatrace_browser_monitor" "monitor" {
       bypass_csp = true
       user_agent = "Mozilla"
       bandwidth {
-        network_type = "GPRS"
+        download = 0
+        latency  = 0
+        upload   = 0
       }
       device {
         name        = "Apple iPhone 8"
