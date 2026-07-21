@@ -36,39 +36,26 @@ import (
 const maxPageSize = 10000
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*boundaries.PolicyBoundary], error) {
-	return &BoundaryServiceClient{
-		iamClientGetter: &iamClientGetterImp{
-			credentials: clientSet.Credentials(),
-		},
-	}, nil
-}
-
-type iamClientGetter interface {
-	New(ctx context.Context) rest.IAMClient
-}
-
-type iamClientGetterImp struct {
-	credentials *rest.Credentials
-}
-
-func (me *iamClientGetterImp) New(ctx context.Context) rest.IAMClient {
-	return rest.NewIAMClient(ctx, me.credentials)
+	iamClient, err := clientSet.IAMClient()
+	if err != nil {
+		return nil, err
+	}
+	return &BoundaryServiceClient{client: iamClient}, nil
 }
 
 type BoundaryServiceClient struct {
-	iamClientGetter iamClientGetter
+	client rest.IAMClient
 }
 
 func (me *BoundaryServiceClient) List(ctx context.Context) (api.Stubs, error) {
-	client := me.iamClientGetter.New(ctx)
 	stubs := api.Stubs{}
 	params := url.Values{}
 	params.Set("size", strconv.Itoa(maxPageSize))
-	endpoint := fmt.Sprintf("/iam/v1/repo/account/%s/boundaries", client.AccountID())
+	endpoint := fmt.Sprintf("/iam/v1/repo/account/%s/boundaries", me.client.AccountID())
 
 	for page := 1; ; page++ {
 		params.Set("page", strconv.Itoa(page))
-		response, err := client.GET(ctx, endpoint, rest2.RequestOptions{QueryParams: params})
+		response, err := me.client.GET(ctx, endpoint, rest2.RequestOptions{QueryParams: params})
 		if err != nil {
 			return nil, err
 		}
@@ -91,8 +78,7 @@ func (me *BoundaryServiceClient) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (me *BoundaryServiceClient) Get(ctx context.Context, id string, v *boundaries.PolicyBoundary) error {
-	client := me.iamClientGetter.New(ctx)
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", client.AccountID(), id), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.client.AccountID(), id), rest2.RequestOptions{})
 	if err != nil {
 		return err
 	}
@@ -105,10 +91,9 @@ func (me *BoundaryServiceClient) SchemaID() string {
 }
 
 func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.PolicyBoundary) (*api.Stub, error) {
-	client := me.iamClientGetter.New(ctx)
-	response, err := client.POST(
+	response, err := me.client.POST(
 		ctx,
-		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries", client.AccountID()),
+		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries", me.client.AccountID()),
 		v,
 		rest2.RequestOptions{},
 	)
@@ -129,10 +114,9 @@ func (me *BoundaryServiceClient) Create(ctx context.Context, v *boundaries.Polic
 }
 
 func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *boundaries.PolicyBoundary) error {
-	client := me.iamClientGetter.New(ctx)
-	_, err := client.PUT(
+	_, err := me.client.PUT(
 		ctx,
-		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", client.AccountID(), id),
+		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.client.AccountID(), id),
 		v,
 		rest2.RequestOptions{},
 	)
@@ -140,18 +124,18 @@ func (me *BoundaryServiceClient) Update(ctx context.Context, id string, v *bound
 }
 
 func (me *BoundaryServiceClient) Delete(ctx context.Context, id string) error {
-	client := me.iamClientGetter.New(ctx)
-	_, err := client.DELETE(
+
+	_, err := me.client.DELETE(
 		ctx,
-		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", client.AccountID(), id),
+		fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.client.AccountID(), id),
 		rest2.RequestOptions{},
 	)
 	if err != nil {
 		if strings.Contains(err.Error(), "Policy boundary is in use") {
 			clean.CleanUp.Register(func() {
-				client.DELETE(
+				me.client.DELETE(
 					ctx,
-					fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", client.AccountID(), id),
+					fmt.Sprintf("/iam/v1/repo/account/%s/boundaries/%s", me.client.AccountID(), id),
 					rest2.RequestOptions{},
 				)
 			})

@@ -35,28 +35,16 @@ type ServiceUserService interface {
 	GetAll(ctx context.Context) ([]ServiceUserStub, error)
 }
 
-type iamClientGetter interface {
-	New(ctx context.Context) rest.IAMClient
-}
-
-type iamClientGetterImp struct {
-	credentials *rest.Credentials
-}
-
-func (me *iamClientGetterImp) New(ctx context.Context) rest.IAMClient {
-	return rest.NewIAMClient(ctx, me.credentials)
-}
-
 type serviceUserServiceClient struct {
-	iamClientGetter iamClientGetter
+	client rest.IAMClient
 }
 
 func NewService(clientSet rest.ClientSet) (ServiceUserService, error) {
-	return &serviceUserServiceClient{
-		iamClientGetter: &iamClientGetterImp{
-			credentials: clientSet.Credentials(),
-		},
-	}, nil
+	iamClient, err := clientSet.IAMClient()
+	if err != nil {
+		return nil, err
+	}
+	return &serviceUserServiceClient{client: iamClient}, nil
 }
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*serviceusers.ServiceUser], error) {
@@ -75,8 +63,7 @@ type createResponse struct {
 }
 
 func (me *serviceUserServiceClient) Create(ctx context.Context, serviceUser *serviceusers.ServiceUser) (*api.Stub, error) {
-	client := me.iamClientGetter.New(ctx)
-	response, err := client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users", client.AccountID()), serviceUser, rest2.RequestOptions{})
+	response, err := me.client.POST(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users", me.client.AccountID()), serviceUser, rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -106,8 +93,7 @@ type getServiceUserResponse struct {
 }
 
 func (me *serviceUserServiceClient) Get(ctx context.Context, id string, v *serviceusers.ServiceUser) error {
-	client := me.iamClientGetter.New(ctx)
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", client.AccountID(), id), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.client.AccountID(), id), rest2.RequestOptions{})
 	if err != nil {
 		return err
 	}
@@ -141,8 +127,7 @@ type getUserPartialResponse struct {
 }
 
 func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email string) ([]string, error) {
-	client := me.iamClientGetter.New(ctx)
-	response, err := client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", client.AccountID(), email), rest2.RequestOptions{})
+	response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s", me.client.AccountID(), email), rest2.RequestOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -162,8 +147,7 @@ func (me *serviceUserServiceClient) getUserGroups(ctx context.Context, email str
 
 func (me *serviceUserServiceClient) Update(ctx context.Context, id string, serviceUser *serviceusers.ServiceUser) error {
 	// Update the service user details
-	client := me.iamClientGetter.New(ctx)
-	if _, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", client.AccountID(), id), serviceUser, rest2.RequestOptions{}); err != nil {
+	if _, err := me.client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.client.AccountID(), id), serviceUser, rest2.RequestOptions{}); err != nil {
 		return err
 	}
 
@@ -176,8 +160,7 @@ func (me *serviceUserServiceClient) updateGroupAssignments(ctx context.Context, 
 	if groups == nil {
 		groups = []string{}
 	}
-	client := me.iamClientGetter.New(ctx)
-	_, err := client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", client.AccountID(), serviceUserEmail), groups, rest2.RequestOptions{})
+	_, err := me.client.PUT(ctx, fmt.Sprintf("/iam/v1/accounts/%s/users/%s/groups", me.client.AccountID(), serviceUserEmail), groups, rest2.RequestOptions{})
 	return err
 }
 
@@ -197,14 +180,12 @@ type listServiceUsersResponse struct {
 }
 
 func (me *serviceUserServiceClient) GetAll(ctx context.Context) ([]ServiceUserStub, error) {
-	client := me.iamClientGetter.New(ctx)
-
 	var stubs []ServiceUserStub
-	endpoint := fmt.Sprintf("/iam/v1/accounts/%s/service-users", client.AccountID())
+	endpoint := fmt.Sprintf("/iam/v1/accounts/%s/service-users", me.client.AccountID())
 	options := rest2.RequestOptions{}
 
 	for {
-		response, err := client.GET(ctx, endpoint, options)
+		response, err := me.client.GET(ctx, endpoint, options)
 		if err != nil {
 			return nil, err
 		}
@@ -244,7 +225,6 @@ func (me *serviceUserServiceClient) List(ctx context.Context) (api.Stubs, error)
 }
 
 func (me *serviceUserServiceClient) Delete(ctx context.Context, uid string) error {
-	client := me.iamClientGetter.New(ctx)
-	_, err := client.DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", client.AccountID(), uid), rest2.RequestOptions{})
+	_, err := me.client.DELETE(ctx, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", me.client.AccountID(), uid), rest2.RequestOptions{})
 	return err
 }

@@ -19,7 +19,6 @@ package testing
 import (
 	"context"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
@@ -50,12 +49,4 @@ func (me *MockIAMClient) GET(ctx context.Context, url string, options rest2.Requ
 
 func (me *MockIAMClient) DELETE(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 	return me.DELETEFunc(ctx, url, options)
-}
-
-type MockIAMClientGetter struct {
-	Client rest.IAMClient
-}
-
-func (me *MockIAMClientGetter) New(_ context.Context) rest.IAMClient {
-	return me.Client
 }
