@@ -31,10 +31,15 @@ type environmentsService struct {
 	client rest.IAMClient
 }
 
-func newEnvironmentService(ctx context.Context, clientSet rest.ClientSet) *environmentsService {
-	return &environmentsService{
-		client: rest.NewIAMClient(ctx, clientSet.Credentials()),
+func newEnvironmentService(clientSet rest.ClientSet) (*environmentsService, error) {
+	iamClient, err := clientSet.IAMClient()
+	if err != nil {
+		return nil, err
 	}
+
+	return &environmentsService{
+		client: iamClient,
+	}, nil
 }
 
 type Environment struct {

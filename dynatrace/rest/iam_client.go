@@ -52,10 +52,10 @@ type iamClient struct {
 	accountID string
 }
 
-func NewIAMClient(ctx context.Context, credentials *Credentials) IAMClient {
+func NewIAMClient(ctx context.Context, credentials *Credentials) (IAMClient, error) {
 	PreRequest()
 
-	client, _ := clients.Factory().
+	client, err := clients.Factory().
 		WithHTTPListener(logging.HTTPListener("iam")).
 		WithOAuthCredentials(clientcredentials.Config{
 			ClientID:     credentials.IAM.ClientID,
@@ -73,8 +73,11 @@ func NewIAMClient(ctx context.Context, credentials *Credentials) IAMClient {
 		}).
 		WithAccountURL(credentials.IAM.EndpointURL).
 		AccountRestClient(NewContextWithOAuthRetryClient(ctx))
+	if err != nil {
+		return nil, err
+	}
 
-	return &iamClient{client: client, accountID: credentials.IAM.AccountID}
+	return &iamClient{client: client, accountID: credentials.IAM.AccountID}, nil
 }
 
 func (me *iamClient) AccountID() string {

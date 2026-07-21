@@ -35,18 +35,10 @@ import (
 
 const testAccountID = "test-account-id"
 
-func createTestServiceUserServiceClient(client *testing2.MockIAMClient) *serviceUserServiceClient {
-	client.AccountIDValue = testAccountID
-	return &serviceUserServiceClient{
-		iamClientGetter: &testing2.MockIAMClientGetter{
-			Client: client,
-		},
-	}
-}
-
 func TestService_Create(t *testing.T) {
 	t.Run("successful creation", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users", testAccountID), url)
 				return api.Response{Data: []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`)}, nil
@@ -57,7 +49,7 @@ func TestService_Create(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{
 			Name:        "Test User",
 			Description: "Test description",
@@ -72,6 +64,7 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("successful creation with empty groups", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users", testAccountID), url)
 				return api.Response{Data: []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`)}, nil
@@ -83,7 +76,7 @@ func TestService_Create(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{
 			Name:        "Test User",
 			Description: "Test description",
@@ -97,12 +90,13 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("creation fails on POST", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{}, errors.New("POST failed")
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{
 			Name: "Test User",
 		}
@@ -113,6 +107,7 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("creation fails on group assignment and cleanup succeeds", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{Data: []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`)}, nil
 			},
@@ -124,7 +119,7 @@ func TestService_Create(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{
 			Name:   "Test User",
 			Groups: []string{"group-1"},
@@ -136,6 +131,7 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("creation fails on group assignment and cleanup fails", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{Data: []byte(`{"uid":"test-uid","email":"test@example.com","name":"Test User"}`)}, nil
 			},
@@ -147,7 +143,7 @@ func TestService_Create(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{
 			Name:   "Test User",
 			Groups: []string{"group-1"},
@@ -159,12 +155,13 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("creation fails on invalid JSON response", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			POSTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{Data: []byte(`{invalid json`)}, nil
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{
 			Name: "Test User",
 		}
@@ -179,6 +176,7 @@ func TestService_Get(t *testing.T) {
 	t.Run("successful get with groups", func(t *testing.T) {
 		getCallCount := 0
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				getCallCount++
 				if getCallCount == 1 {
@@ -194,7 +192,7 @@ func TestService_Get(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{}
 
 		err := client.Get(t.Context(), "test-uid", serviceUser)
@@ -209,6 +207,7 @@ func TestService_Get(t *testing.T) {
 	t.Run("successful get without groups", func(t *testing.T) {
 		getCallCount := 0
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				getCallCount++
 				if getCallCount == 1 {
@@ -224,7 +223,7 @@ func TestService_Get(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{}
 
 		err := client.Get(t.Context(), "test-uid", serviceUser)
@@ -236,12 +235,13 @@ func TestService_Get(t *testing.T) {
 
 	t.Run("get fails on service user fetch", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{}, errors.New("GET failed")
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{}
 
 		err := client.Get(t.Context(), "test-uid", serviceUser)
@@ -251,6 +251,7 @@ func TestService_Get(t *testing.T) {
 	t.Run("get fails on user groups fetch", func(t *testing.T) {
 		getCallCount := 0
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				getCallCount++
 				if getCallCount == 1 {
@@ -264,7 +265,7 @@ func TestService_Get(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{}
 
 		err := client.Get(t.Context(), "test-uid", serviceUser)
@@ -273,12 +274,13 @@ func TestService_Get(t *testing.T) {
 
 	t.Run("get returns error when service user not found", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{}, errors.New("Service user test-uid does not exist")
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{}
 
 		err := client.Get(t.Context(), "test-uid", serviceUser)
@@ -287,12 +289,13 @@ func TestService_Get(t *testing.T) {
 
 	t.Run("get fails on invalid JSON for service user", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{Data: []byte(`{invalid json`)}, nil
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{}
 
 		err := client.Get(t.Context(), "test-uid", serviceUser)
@@ -302,6 +305,7 @@ func TestService_Get(t *testing.T) {
 	t.Run("get fails on invalid JSON for user groups", func(t *testing.T) {
 		getCallCount := 0
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				getCallCount++
 				if getCallCount == 1 {
@@ -315,7 +319,7 @@ func TestService_Get(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{}
 
 		err := client.Get(t.Context(), "test-uid", serviceUser)
@@ -326,6 +330,7 @@ func TestService_Get(t *testing.T) {
 func TestService_GetAll(t *testing.T) {
 	t.Run("successful get all without pagination", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users", testAccountID), url)
 				return api.Response{Data: []byte(`{
@@ -338,7 +343,7 @@ func TestService_GetAll(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		stubs, err := client.GetAll(t.Context())
 		assert.NoError(t, err)
 		assert.Len(t, stubs, 2)
@@ -355,6 +360,7 @@ func TestService_GetAll(t *testing.T) {
 	t.Run("successful get all with pagination", func(t *testing.T) {
 		callCount := 0
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				if callCount == 1 {
@@ -382,7 +388,7 @@ func TestService_GetAll(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		stubs, err := client.GetAll(t.Context())
 		assert.NoError(t, err)
 		assert.Equal(t, 2, callCount)
@@ -394,6 +400,7 @@ func TestService_GetAll(t *testing.T) {
 	t.Run("successful get all with multiple pagination pages", func(t *testing.T) {
 		callCount := 0
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				if callCount == 1 {
@@ -421,7 +428,7 @@ func TestService_GetAll(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		stubs, err := client.GetAll(t.Context())
 		assert.NoError(t, err)
 		assert.Equal(t, 3, callCount)
@@ -430,12 +437,13 @@ func TestService_GetAll(t *testing.T) {
 
 	t.Run("get all fails", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{}, errors.New("GET failed")
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		_, err := client.GetAll(t.Context())
 		assert.EqualError(t, err, "GET failed")
 	})
@@ -443,6 +451,7 @@ func TestService_GetAll(t *testing.T) {
 	t.Run("get all fails on second page", func(t *testing.T) {
 		callCount := 0
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				if callCount == 1 {
@@ -456,13 +465,14 @@ func TestService_GetAll(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		_, err := client.GetAll(t.Context())
 		assert.EqualError(t, err, "pagination failed")
 	})
 
 	t.Run("get all empty", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{Data: []byte(`{
 					"count": 0,
@@ -471,7 +481,7 @@ func TestService_GetAll(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		stubs, err := client.GetAll(t.Context())
 		assert.NoError(t, err)
 		assert.Empty(t, stubs)
@@ -479,12 +489,13 @@ func TestService_GetAll(t *testing.T) {
 
 	t.Run("get all fails on invalid JSON response", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{Data: []byte(`{invalid json`)}, nil
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		_, err := client.GetAll(t.Context())
 		assert.ErrorContains(t, err, "invalid character")
 	})
@@ -492,6 +503,7 @@ func TestService_GetAll(t *testing.T) {
 	t.Run("get all fails on invalid JSON response on second page", func(t *testing.T) {
 		callCount := 0
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				if callCount == 1 {
@@ -505,7 +517,7 @@ func TestService_GetAll(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		_, err := client.GetAll(t.Context())
 		assert.ErrorContains(t, err, "invalid character")
 	})
@@ -514,6 +526,7 @@ func TestService_GetAll(t *testing.T) {
 func TestService_List(t *testing.T) {
 	t.Run("successful list without pagination", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{Data: []byte(`{
 					"count": 2,
@@ -525,7 +538,7 @@ func TestService_List(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		stubs, err := client.List(t.Context())
 		assert.NoError(t, err)
 		assert.Len(t, stubs, 2)
@@ -538,6 +551,7 @@ func TestService_List(t *testing.T) {
 	t.Run("successful list with pagination", func(t *testing.T) {
 		callCount := 0
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				callCount++
 				if callCount == 1 {
@@ -565,7 +579,7 @@ func TestService_List(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		stubs, err := client.List(t.Context())
 		assert.NoError(t, err)
 		assert.Equal(t, 2, callCount)
@@ -574,18 +588,20 @@ func TestService_List(t *testing.T) {
 
 	t.Run("list fails", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{}, errors.New("GET failed")
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		_, err := client.List(t.Context())
 		assert.EqualError(t, err, "GET failed")
 	})
 
 	t.Run("list empty", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{Data: []byte(`{
 					"count": 0,
@@ -594,7 +610,7 @@ func TestService_List(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		stubs, err := client.List(t.Context())
 		assert.NoError(t, err)
 		assert.Empty(t, stubs)
@@ -602,12 +618,13 @@ func TestService_List(t *testing.T) {
 
 	t.Run("list fails on invalid JSON response", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			GETFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{Data: []byte(`{invalid json`)}, nil
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		_, err := client.List(t.Context())
 		assert.ErrorContains(t, err, "invalid character")
 	})
@@ -617,6 +634,7 @@ func TestService_Update(t *testing.T) {
 	t.Run("successful update", func(t *testing.T) {
 		putCallCount := 0
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				putCallCount++
 				if putCallCount == 1 {
@@ -634,7 +652,7 @@ func TestService_Update(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{
 			Name:        "Updated User",
 			Email:       "test@example.com",
@@ -649,12 +667,13 @@ func TestService_Update(t *testing.T) {
 
 	t.Run("update fails on user details", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{}, errors.New("PUT failed")
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{
 			Name:  "Updated User",
 			Email: "test@example.com",
@@ -667,6 +686,7 @@ func TestService_Update(t *testing.T) {
 	t.Run("update fails on group assignment", func(t *testing.T) {
 		putCallCount := 0
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			PUTFunc: func(ctx context.Context, url string, payload any, options rest2.RequestOptions) (api.Response, error) {
 				putCallCount++
 				if putCallCount == 1 {
@@ -682,7 +702,7 @@ func TestService_Update(t *testing.T) {
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		serviceUser := &serviceusers.ServiceUser{
 			Name:   "Updated User",
 			Email:  "test@example.com",
@@ -697,44 +717,49 @@ func TestService_Update(t *testing.T) {
 func TestService_Delete(t *testing.T) {
 	t.Run("successful delete", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				assert.Equal(t, fmt.Sprintf("/iam/v1/accounts/%s/service-users/%s", testAccountID, "test-uid"), url)
 				return api.Response{}, nil
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		err := client.Delete(t.Context(), "test-uid")
 		assert.NoError(t, err)
 	})
 
 	t.Run("delete fails", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{}, errors.New("DELETE failed")
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		err := client.Delete(t.Context(), "test-uid")
 		assert.EqualError(t, err, "DELETE failed")
 	})
 
 	t.Run("delete errors if service user does not exist", func(t *testing.T) {
 		mockClient := &testing2.MockIAMClient{
+			AccountIDValue: testAccountID,
 			DELETEFunc: func(ctx context.Context, url string, options rest2.RequestOptions) (api.Response, error) {
 				return api.Response{}, errors.New("User test-uid does not exist")
 			},
 		}
 
-		client := createTestServiceUserServiceClient(mockClient)
+		client := &serviceUserServiceClient{client: mockClient}
 		err := client.Delete(t.Context(), "test-uid")
 		assert.EqualError(t, err, "User test-uid does not exist")
 	})
 }
 
 func TestService_SchemaID(t *testing.T) {
-	client := createTestServiceUserServiceClient(&testing2.MockIAMClient{})
+	client := &serviceUserServiceClient{client: &testing2.MockIAMClient{
+		AccountIDValue: testAccountID,
+	}}
 	schemaID := client.SchemaID()
 	assert.Equal(t, "accounts:iam:serviceusers", schemaID)
 }

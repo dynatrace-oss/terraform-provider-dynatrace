@@ -140,7 +140,11 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	discoveredLevels := map[string]string{}
 
-	service := policies.ServiceWithGlobals(clientSet)
+	service, err := policies.ServiceWithGlobals(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	stubs, err := service.ListWithGlobals(ctx)
 	if err != nil {
 		return diag.FromErr(err)

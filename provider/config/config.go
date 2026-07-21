@@ -30,22 +30,17 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type IAM struct {
-	ClientID     string
-	AccountID    string
-	ClientSecret string
-	TokenURL     string
-	EndpointURL  string
-}
-
-// ProviderConfiguration contains credentials to communicate with the Dynatrace API
+// ProviderConfiguration contains credentials and clients to communicate with the Dynatrace API
 type ProviderConfiguration struct {
 	EnvironmentURL  string
 	ClusterAPIV2URL string
 	ClusterAPIToken string
 	APIToken        string
-	IAM             IAM
+	IAM             rest.IAMCredentials
 	Platform        rest.PlatformCredentials
+
+	iamClient    rest.IAMClient
+	iamClientErr error
 }
 
 func (c *ProviderConfiguration) Credentials() *rest.Credentials {
@@ -58,6 +53,10 @@ func (c *ProviderConfiguration) Credentials() *rest.Credentials {
 	credentials.Cluster.URL = c.ClusterAPIV2URL
 	credentials.Cluster.Token = c.ClusterAPIToken
 	return credentials
+}
+
+func (c *ProviderConfiguration) IAMClient() (rest.IAMClient, error) {
+	return c.iamClient, c.iamClientErr
 }
 
 type Getter interface {
@@ -99,12 +98,12 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.D
 }
 
 func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfiguration {
-	return &ProviderConfiguration{
+	pc := &ProviderConfiguration{
 		EnvironmentURL:  getClassicEnvironmentURL(d),
 		APIToken:        getString(d, "dt_api_token"),
 		ClusterAPIToken: getString(d, "dt_cluster_api_token"),
 		ClusterAPIV2URL: getURLString(d, "dt_cluster_url"),
-		IAM: IAM{
+		IAM: rest.IAMCredentials{
 			ClientID:     getIAMClientID(d),
 			AccountID:    getAccountID(d),
 			ClientSecret: getIAMClientSecret(d),
@@ -119,6 +118,14 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 			EnvironmentURL: getPlatformEnvironmentURL(d),
 		},
 	}
+
+	// As the context passed to this function does not live long enough, use context.Background() instead.
+	// The context is used to retrieve and refresh the bearer token but not for the actual API calls.
+	clientCtx := context.Background()
+
+	pc.iamClient, pc.iamClientErr = rest.NewIAMClient(clientCtx, pc.Credentials())
+
+	return pc
 }
 
 func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) error {

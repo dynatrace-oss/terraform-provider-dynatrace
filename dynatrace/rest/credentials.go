@@ -19,6 +19,14 @@ package rest
 
 const TestCaseEnvURL = "go-test"
 
+type IAMCredentials struct {
+	ClientID     string
+	AccountID    string
+	ClientSecret string
+	TokenURL     string
+	EndpointURL  string
+}
+
 type PlatformCredentials struct {
 	ClientID       string
 	ClientSecret   string
@@ -27,21 +35,17 @@ type PlatformCredentials struct {
 	PlatformToken  string
 }
 
-type Credentials struct {
+type ClusterCredentials struct {
 	URL   string
 	Token string
-	IAM   struct {
-		ClientID     string
-		AccountID    string
-		ClientSecret string
-		TokenURL     string
-		EndpointURL  string
-	}
+}
+
+type Credentials struct {
+	URL      string
+	Token    string
+	IAM      IAMCredentials
 	Platform PlatformCredentials
-	Cluster  struct {
-		URL   string
-		Token string
-	}
+	Cluster  ClusterCredentials
 }
 
 func (c *Credentials) ContainsOAuth() bool {
