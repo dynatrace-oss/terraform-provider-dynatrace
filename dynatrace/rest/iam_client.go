@@ -53,8 +53,6 @@ type iamClient struct {
 }
 
 func NewIAMClient(ctx context.Context, credentials *Credentials) (IAMClient, error) {
-	PreRequest()
-
 	client, err := clients.Factory().
 		WithHTTPListener(logging.HTTPListener("iam")).
 		WithOAuthCredentials(clientcredentials.Config{

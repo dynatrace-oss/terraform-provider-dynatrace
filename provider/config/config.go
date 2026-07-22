@@ -119,6 +119,10 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 		},
 	}
 
+	if envutils.DynatraceHTTPInsecure.Get() {
+		rest.SetInsecureSkipVerifyOnDefaultTransport(true)
+	}
+
 	// As the context passed to this function does not live long enough, use context.Background() instead.
 	// The context is used to retrieve and refresh the bearer token but not for the actual API calls.
 	clientCtx := context.Background()
