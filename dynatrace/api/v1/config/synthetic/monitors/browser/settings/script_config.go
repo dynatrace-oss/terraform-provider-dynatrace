@@ -28,8 +28,8 @@ import (
 // ScriptConfig contains the setup of the monitor
 type ScriptConfig struct {
 	UserAgent          *string                 `json:"userAgent,omitempty"`          // The user agent of the request
-	Device             *Device                 `json:"device,omitempty"`             // The emulated device of the monitor—holds either the parameters of the custom device or the name and orientation of the preconfigured device.\n\nIf not set, then the Desktop preconfigured device is used
-	Bandwidth          *Bandwidth              `json:"bandwidth,omitempty"`          // The emulated network conditions of the monitor.\n\nIf not set, then the full available bandwidth is used
+	Device             *Device                 `json:"device,omitempty"`             // The emulated device of the monitor—holds either the parameters of the custom device or the name and orientation of the preconfigured device.\n  \n  If not set, then the Desktop preconfigured device is used
+	Bandwidth          *Bandwidth              `json:"bandwidth,omitempty"`          // The emulated network conditions of the monitor.\n  \n  If not set, then the full available bandwidth is used
 	RequestHeaders     *request.HeadersSection `json:"requestHeaders,omitempty"`     // The list of HTTP headers to be sent with requests of the monitor
 	Cookies            request.Cookies         `json:"cookies,omitempty"`            // These cookies are added before execution of the first step
 	BlockRequests      []string                `json:"blockRequests,omitempty"`      // Block these URLs
@@ -80,7 +80,7 @@ func (me *ScriptConfig) Schema() map[string]*schema.Schema {
 		},
 		"device": {
 			Type:        schema.TypeList,
-			Description: "The emulated device of the monitor—holds either the parameters of the custom device or the name and orientation of the preconfigured device.\n\nIf not set, then the Desktop preconfigured device is used",
+			Description: "The emulated device of the monitor—holds either the parameters of the custom device or the name and orientation of the preconfigured device.\n  \n  If not set, then the Desktop preconfigured device is used",
 			Optional:    true,
 			MaxItems:    1,
 			Elem:        &schema.Resource{Schema: new(Device).Schema()},

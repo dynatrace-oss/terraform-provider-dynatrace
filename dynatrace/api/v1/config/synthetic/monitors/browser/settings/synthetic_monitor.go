@@ -75,12 +75,12 @@ func (me *SyntheticMonitor) Schema() map[string]*schema.Schema {
 		},
 		"frequency": {
 			Type:        schema.TypeInt,
-			Description: "The frequency of the monitor, in minutes.\n\nYou can use one of the following values: `5`, `10`, `15`, `30`, and `60`.",
+			Description: "The frequency of the monitor, in minutes.\n  \n  You can use one of the following values: `5`, `10`, `15`, `30`, and `60`.",
 			Required:    true,
 		},
 		"locations": {
 			Type:        schema.TypeSet,
-			Description: "A list of locations from which the monitor is executed.\n\nTo specify a location, use its entity ID.",
+			Description: "A list of locations from which the monitor is executed.\n  \n  To specify a location, use its entity ID.",
 			Optional:    true,
 			MinItems:    1,
 			Elem:        &schema.Schema{Type: schema.TypeString},
@@ -102,7 +102,7 @@ func (me *SyntheticMonitor) Schema() map[string]*schema.Schema {
 		},
 		"tags": {
 			Type:        schema.TypeList,
-			Description: "A set of tags assigned to the monitor.\n\nYou can specify only the value of the tag here and the `CONTEXTLESS` context and source 'USER' will be added automatically.",
+			Description: "A set of tags assigned to the monitor.\n  \n  You can specify only the value of the tag here and the `CONTEXTLESS` context and source 'USER' will be added automatically.",
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(monitors.TagsWithSourceInfo).Schema()},
 		},
