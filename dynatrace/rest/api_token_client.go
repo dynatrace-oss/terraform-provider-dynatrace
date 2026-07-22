@@ -151,9 +151,6 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 	if len(optionalTarget) > 0 {
 		target = optionalTarget[0]
 	}
-
-	PreRequest()
-
 	classicURL := evalClassicURL(me.client.Credentials().URL)
 
 	client, err := createClassicClient(classicURL, me.client.Credentials().Token)

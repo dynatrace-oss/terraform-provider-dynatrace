@@ -113,9 +113,6 @@ func (me *cluster_v1_request) Finish(optionalTarget ...any) error {
 	if len(optionalTarget) > 0 {
 		target = optionalTarget[0]
 	}
-
-	PreRequest()
-
 	clusterURL := strings.TrimSuffix(me.client.Credentials().Cluster.URL, "/") + "/api/v1.0/onpremise"
 
 	client, err := createClusterV1Client(clusterURL, me.client.Credentials().Cluster.Token)

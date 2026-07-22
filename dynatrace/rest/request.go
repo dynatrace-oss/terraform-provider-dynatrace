@@ -26,15 +26,11 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"sync"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/google/uuid"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
-
-var preRequestMutex sync.Mutex
 
 type Request interface {
 	Finish(v ...any) error
@@ -58,14 +54,10 @@ type request struct {
 	onResponse func(resp *http.Response)
 }
 
-func PreRequest() {
-	preRequestMutex.Lock()
-	defer preRequestMutex.Unlock()
-
-	if envutils.DynatraceHTTPInsecure.Get() {
-		if transport, ok := http.DefaultTransport.(*http.Transport); ok {
-			transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-		}
+// SetInsecureSkipVerifyOnDefaultTransport sets the InsecureSkipVerify flag on the default HTTP transport.
+func SetInsecureSkipVerifyOnDefaultTransport(insecure bool) {
+	if transport, ok := http.DefaultTransport.(*http.Transport); ok {
+		transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: insecure}
 	}
 }
 

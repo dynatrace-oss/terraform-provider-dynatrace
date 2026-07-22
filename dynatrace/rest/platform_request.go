@@ -41,8 +41,6 @@ type platform_request request
 var NoPlatformCredentialsErr = errors.New("neither oauth credentials nor platform token present")
 
 func CreatePlatformClient(ctx context.Context, platformURL string, credentials *Credentials) (*rest.Client, error) {
-	PreRequest()
-
 	factory := clients.Factory().
 		WithPlatformURL(platformURL).
 		WithRateLimiter(true).
@@ -75,8 +73,6 @@ func (me *platform_request) Finish(optionalTarget ...any) error {
 	if len(optionalTarget) > 0 {
 		target = optionalTarget[0]
 	}
-
-	PreRequest()
 
 	platformURL := me.evalPlatformURL(me.client.Credentials().URL)
 
