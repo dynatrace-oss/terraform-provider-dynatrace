@@ -30,6 +30,10 @@ func (me *Settings) Name() string {
 	return "mobile_notifications"
 }
 
+func (me *Settings) Deprecated() string {
+	return "This resource API endpoint has been deprecated."
+}
+
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"enabled": {

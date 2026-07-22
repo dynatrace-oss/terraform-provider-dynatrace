@@ -1,12 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_mobile_notifications Resource - terraform-provider-dynatrace"
-subcategory: "Notifications"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_mobile_notifications` covers configuration problem notifications sent via Web Hook
 ---
 
 # dynatrace_mobile_notifications (Resource)
+
+!> This resource API endpoint has been deprecated.
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
