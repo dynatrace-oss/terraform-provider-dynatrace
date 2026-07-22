@@ -19,7 +19,7 @@
 				},
 				{
 					"displayName": "Automatic (during update window)",
-					"value": "AUTOMATIC_DURING_MW"
+					"value": "AUTOMATIC_DURING_UW"
 				},
 				{
 					"displayName": "No automatic updates",
@@ -33,15 +33,72 @@
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
-		"autoUpdate": {
-			"default": true,
+		"targetVersion": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"datasource": {
+				"filterProperties": [],
+				"fullContext": false,
+				"identifier": "PrivateActiveGateAutoUpdateVersionsDataSource",
+				"resetValue": "NEVER",
+				"useApiSearch": false,
+				"validate": true
+			},
+			"default": "latest",
 			"description": "",
-			"displayName": "Automatic updates at earliest convenience",
+			"displayName": "Target version",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
-			"type": "boolean"
+			"subType": "datasource",
+			"type": "text"
+		},
+		"updateMode": {
+			"default": "AUTOMATIC",
+			"description": "",
+			"displayName": "Update mode",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/UpdateMode"
+			}
+		},
+		"updateWindows": {
+			"description": "",
+			"displayName": "Update windows",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/updateWindow"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add update window"
+			},
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "AUTOMATIC_DURING_UW",
+				"property": "updateMode",
+				"type": "EQUALS"
+			},
+			"type": "set"
 		}
 	},
 	"schemaGroups": [
@@ -49,12 +106,12 @@
 	],
 	"schemaId": "builtin:deployment.activegate.updates",
 	"types": {
-		"maintenanceWindow": {
+		"updateWindow": {
 			"description": "",
-			"displayName": "maintenanceWindow",
+			"displayName": "updateWindow",
 			"documentation": "",
 			"properties": {
-				"maintenanceWindow": {
+				"updateWindow": {
 					"default": "00000000-0000-0000-0000-000000000000",
 					"description": "Select an [update window for ActiveGate updates](/ui/settings/builtin:deployment.management.update-windows)",
 					"displayName": "Update window",
@@ -70,11 +127,11 @@
 					"type": "setting"
 				}
 			},
-			"summaryPattern": "{maintenanceWindow}",
+			"summaryPattern": "{updateWindow}",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.2"
+	"version": "1.0.4"
 }

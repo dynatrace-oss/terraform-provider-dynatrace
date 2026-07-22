@@ -28,3 +28,7 @@ import (
 func TestAccActiveGateUpdates(t *testing.T) {
 	api.TestAcc(t)
 }
+
+func TestAccTestCasesActiveGateUpdates(t *testing.T) {
+	api.TestAccTestCases(t)
+}

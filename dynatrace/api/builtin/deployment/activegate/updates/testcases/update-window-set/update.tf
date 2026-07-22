@@ -3,14 +3,16 @@ resource "dynatrace_activegate_updates" "example" {
   target_version = "latest"
   update_mode    = "AUTOMATIC_DURING_UW"
   update_windows {
+    // one window removed
     update_window {
-      update_window = dynatrace_update_windows.example.id
+      update_window = dynatrace_update_windows.example[1].id
     }
   }
 }
 
 resource "dynatrace_update_windows" "example" {
-  name       = "#name#"
+  count      = 2
+  name       = "#name#-${count.index}"
   enabled    = true
   recurrence = "ONCE"
   once_recurrence {
