@@ -72,17 +72,17 @@ func (me *TagWithSourceInfo) Schema() map[string]*schema.Schema {
 		},
 		"context": {
 			Type:        schema.TypeString,
-			Description: "The origin of the tag. Supported values are `AWS`, `AWS_GENERIC`, `AZURE`, `CLOUD_FOUNDRY`, `CONTEXTLESS`, `ENVIRONMENT`, `GOOGLE_CLOUD` and `KUBERNETES`.\n\nCustom tags use the `CONTEXTLESS` value.",
+			Description: "The origin of the tag. Supported values are `AWS`, `AWS_GENERIC`, `AZURE`, `CLOUD_FOUNDRY`, `CONTEXTLESS`, `ENVIRONMENT`, `GOOGLE_CLOUD` and `KUBERNETES`.\n  \n  Custom tags use the `CONTEXTLESS` value.",
 			Required:    true,
 		},
 		"key": {
 			Type:        schema.TypeString,
-			Description: "The key of the tag.\n\nCustom tags have the tag value here.",
+			Description: "The key of the tag.\n  \n  Custom tags have the tag value here.",
 			Required:    true,
 		},
 		"value": {
 			Type:        schema.TypeString,
-			Description: " The value of the tag.\n\nNot applicable to custom tags.",
+			Description: " The value of the tag.\n  \n  Not applicable to custom tags.",
 			Optional:    true,
 		},
 	}
