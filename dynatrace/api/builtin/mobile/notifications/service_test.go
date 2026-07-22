@@ -26,5 +26,6 @@ import (
 )
 
 func TestAccMobileNotifications(t *testing.T) {
+	t.Skip("Deprecated")
 	api.TestAcc(t)
 }
