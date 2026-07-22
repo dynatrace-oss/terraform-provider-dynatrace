@@ -86,11 +86,12 @@ func (me *ScriptConfig) Schema() map[string]*schema.Schema {
 			Elem:        &schema.Resource{Schema: new(Device).Schema()},
 		},
 		"bandwidth": {
-			Type:        schema.TypeList,
-			Description: "The emulated device of the monitor—holds either the parameters of the custom device or the name and orientation of the preconfigured device.\n\nIf not set, then the Desktop preconfigured device is used",
-			Optional:    true,
-			MaxItems:    1,
-			Elem:        &schema.Resource{Schema: new(Bandwidth).Schema()},
+			Type: schema.TypeList,
+			Description: "The emulated device of the monitor—holds either the parameters of the custom device or the name and orientation of the preconfigured device.\n  \n  If not set, then the Desktop preconfigured device is used." +
+				"\n  Set either `network_type`, or all of `latency`, `download`, and `upload` (mutually exclusive).",
+			Optional: true,
+			MaxItems: 1,
+			Elem:     &schema.Resource{Schema: new(Bandwidth).Schema()},
 		},
 		"headers": {
 			Type:        schema.TypeList,
