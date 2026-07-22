@@ -21,10 +21,10 @@ type UpdateMode string
 
 var UpdateModes = struct {
 	Automatic         UpdateMode
-	AutomaticDuringMw UpdateMode
+	AutomaticDuringUw UpdateMode
 	Manual            UpdateMode
 }{
 	"AUTOMATIC",
-	"AUTOMATIC_DURING_MW",
+	"AUTOMATIC_DURING_UW",
 	"MANUAL",
 }
