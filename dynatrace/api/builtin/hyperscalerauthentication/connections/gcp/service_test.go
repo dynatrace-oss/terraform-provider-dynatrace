@@ -1,4 +1,4 @@
-//go:build integration && connector
+//go:build sequential_integration && connector
 
 /**
 * @license
