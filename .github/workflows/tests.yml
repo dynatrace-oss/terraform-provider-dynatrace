@@ -205,7 +205,9 @@ jobs:
           DT_CLIENT_ID: ${{ secrets.DT_CLIENT_ID }}
           DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
           DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
-        run: go test -tags="sequential_integration monitored" -v -p 1 ./...
+          TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
+          TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
+        run: go test -tags="sequential_integration monitored connector" -v -p 1 ./...
 
   sonar_scan:
     name: SonarQube lint and test coverage
