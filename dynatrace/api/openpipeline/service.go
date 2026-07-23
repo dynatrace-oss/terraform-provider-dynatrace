@@ -32,74 +32,72 @@ import (
 )
 
 func EventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
-	return &service{clientSet: clientSet, kind: "events", schemaSuffix: "events"}, nil
+	return createService(clientSet, "events", "events")
 }
 
 func LogsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
-	return &service{clientSet: clientSet, kind: "logs", schemaSuffix: "logs"}, nil
+	return createService(clientSet, "logs", "logs")
 }
 
 func BusinessEventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
-	return &service{clientSet: clientSet, kind: "bizevents", schemaSuffix: "events.business"}, nil
+	return createService(clientSet, "bizevents", "events.business")
 }
 
 func SecurityEventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
-	return &service{clientSet: clientSet, kind: "events.security", schemaSuffix: "events.security"}, nil
+	return createService(clientSet, "events.security", "events.security")
 }
 
 func SDLCEventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
-	return &service{clientSet: clientSet, kind: "events.sdlc", schemaSuffix: "events.sdlc"}, nil
+	return createService(clientSet, "events.sdlc", "events.sdlc")
 }
 
 func MetricsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
-	return &service{clientSet: clientSet, kind: "metrics", schemaSuffix: "metrics"}, nil
+	return createService(clientSet, "metrics", "metrics")
 }
 
 func UserSessionsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
-	return &service{clientSet: clientSet, kind: "usersessions", schemaSuffix: "user.sessions"}, nil
+	return createService(clientSet, "usersessions", "user.sessions")
 }
 
 func DavisProblemsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
-	return &service{clientSet: clientSet, kind: "davis.problems", schemaSuffix: "davis.problems"}, nil
+	return createService(clientSet, "davis.problems", "davis.problems")
 }
 
 func DavisEventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
-	return &service{clientSet: clientSet, kind: "davis.events", schemaSuffix: "davis.events"}, nil
+	return createService(clientSet, "davis.events", "davis.events")
 }
 
 func SystemEventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
-	return &service{clientSet: clientSet, kind: "system.events", schemaSuffix: "system.events"}, nil
+	return createService(clientSet, "system.events", "system.events")
 }
 
 func UserEventsService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
-	return &service{clientSet: clientSet, kind: "user.events", schemaSuffix: "user.events"}, nil
+	return createService(clientSet, "user.events", "user.events")
 }
 
 func SpansService(clientSet rest.ClientSet) (settings.CRUDService[*openpipeline.Configuration], error) {
-	return &service{clientSet: clientSet, kind: "spans", schemaSuffix: "spans"}, nil
+	return createService(clientSet, "spans", "spans")
 }
 
 type service struct {
 	kind         string
 	schemaSuffix string
-	clientSet    rest.ClientSet
+	client       *caclib.Client
+	envURL       string
 }
 
-func (s *service) createClient(ctx context.Context) (*caclib.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, s.clientSet.Credentials().Platform.EnvironmentURL, s.clientSet.Credentials())
+func createService(clientSet rest.ClientSet, kind string, schemaSuffix string) (settings.CRUDService[*openpipeline.Configuration], error) {
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}
-	return caclib.NewClient(platformClient), nil
+
+	return &service{client: caclib.NewClient(platformClient), kind: kind, schemaSuffix: schemaSuffix, envURL: clientSet.Credentials().Platform.EnvironmentURL}, nil
 }
 
 func (s *service) List(ctx context.Context) (api.Stubs, error) {
-	client, err := s.createClient(ctx)
-	if err != nil {
-		return nil, err
-	}
 	// after migration the resource isn't available anymore (404)
-	if _, err = client.Get(ctx, s.kind); err != nil {
+	if _, err := s.client.Get(ctx, s.kind); err != nil {
 		return nil, err
 	}
 
@@ -108,16 +106,11 @@ func (s *service) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (s *service) Get(ctx context.Context, id string, v *openpipeline.Configuration) error {
-	client, err := s.createClient(ctx)
-	if err != nil {
-		return err
-	}
-
-	response, err := client.Get(ctx, s.kind)
+	response, err := s.client.Get(ctx, s.kind)
 	if err != nil {
 		apiErr := cacapi.APIError{}
 		if errors.As(err, &apiErr) {
-			return rest.Envelope(apiErr.Body, s.clientSet.Credentials().Platform.EnvironmentURL, "GET")
+			return rest.Envelope(apiErr.Body, s.envURL, "GET")
 		}
 		return err
 	}
@@ -144,10 +137,6 @@ func (s *service) Create(ctx context.Context, v *openpipeline.Configuration) (*a
 }
 
 func (s *service) Update(ctx context.Context, id string, v *openpipeline.Configuration) error {
-	client, err := s.createClient(ctx)
-	if err != nil {
-		return err
-	}
 
 	v.Kind = id
 
@@ -155,7 +144,7 @@ func (s *service) Update(ctx context.Context, id string, v *openpipeline.Configu
 	if err != nil {
 		return err
 	}
-	_, err = client.Update(ctx, s.kind, b)
+	_, err = s.client.Update(ctx, s.kind, b)
 	return err
 }
 

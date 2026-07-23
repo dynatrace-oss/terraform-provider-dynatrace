@@ -31,27 +31,20 @@ import (
 )
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*segments.Segment], error) {
-	return &service{clientSet}, nil
-}
-
-type service struct {
-	clientSet rest.ClientSet
-}
-
-func (me *service) client(ctx context.Context) (*segmentsclient.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.clientSet.Credentials().Platform.EnvironmentURL, me.clientSet.Credentials())
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}
-	return segmentsclient.NewClient(platformClient), nil
+
+	return &service{client: segmentsclient.NewClient(platformClient)}, nil
+}
+
+type service struct {
+	client *segmentsclient.Client
 }
 
 func (me *service) Get(ctx context.Context, id string, v *segments.Segment) (err error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
-	response, err := client.Get(ctx, id)
+	response, err := me.client.Get(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -70,11 +63,7 @@ type SegmentStub struct {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return nil, err
-	}
-	listResponse, err := client.List(ctx)
+	listResponse, err := me.client.List(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -99,15 +88,11 @@ func (me *service) Validate(_ *segments.Segment) error {
 }
 
 func (me *service) Create(ctx context.Context, v *segments.Segment) (stub *api.Stub, err error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return nil, err
-	}
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	response, err := client.Create(ctx, data)
+	response, err := me.client.Create(ctx, data)
 	if err != nil {
 		return nil, err
 	}
@@ -121,16 +106,12 @@ func (me *service) Create(ctx context.Context, v *segments.Segment) (stub *api.S
 }
 
 func (me *service) Update(ctx context.Context, id string, v *segments.Segment) (err error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
 
-	_, err = client.Update(ctx, id, data)
+	_, err = me.client.Update(ctx, id, data)
 	if err != nil {
 		return err
 	}
@@ -139,11 +120,7 @@ func (me *service) Update(ctx context.Context, id string, v *segments.Segment) (
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	client, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
-	_, err = client.Delete(ctx, id)
+	_, err := me.client.Delete(ctx, id)
 	if err != nil {
 		return err
 	}

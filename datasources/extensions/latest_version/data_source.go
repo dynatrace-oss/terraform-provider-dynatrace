@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -55,26 +54,18 @@ type ExtensionClient interface {
 	ListExtensionVersions(ctx context.Context, extensionName string) (coreapi.PagedListResponse, error)
 }
 
-func createCoreClient(ctx context.Context, clientSet rest.ClientSet) (ExtensionClient, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
-	if err != nil {
-		return nil, err
-	}
-	return coreextensions.NewClient(platformClient), nil
-}
-
 func dataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	clientSet, err := config.ClientSet(m, config.CredValDefault)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	client, err := createCoreClient(ctx, clientSet)
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	return DataSourceReadWithClient(ctx, d, client)
+	return DataSourceReadWithClient(ctx, d, coreextensions.NewClient(platformClient))
 }
 
 type listExtensionVersions struct {

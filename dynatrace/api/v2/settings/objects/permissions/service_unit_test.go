@@ -27,8 +27,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	permissionService "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
 	permissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -83,6 +82,12 @@ func (c *settingsClientStub) ListObjectsIDsOfSchema(ctx context.Context, schemaI
 }
 
 func TestService(t *testing.T) {
+	t.Run("Service creation fails if the platform client is missing", func(t *testing.T) {
+		service, err := permissionService.Service(&testing2.MockClientSet{PlatformClientErr: assert.AnError})
+		require.Nil(t, service)
+		require.ErrorIs(t, err, assert.AnError)
+	})
+
 	t.Run("Get", func(t *testing.T) {
 		t.Run("It gets permissions", func(t *testing.T) {
 			client := &clientStub{
@@ -154,16 +159,7 @@ func TestService(t *testing.T) {
 				SettingsObjectID: "objectID",
 			}
 			err := service.Get(t.Context(), "objectID", &value)
-			assert.Error(t, err)
-			assert.ErrorIs(t, assert.AnError, err)
-		})
-
-		t.Run("It errors during client creation", func(t *testing.T) {
-			service := permissionService.ServiceImpl{
-				ClientSet: &config.ProviderConfiguration{},
-			}
-			err := service.Get(t.Context(), "objectID", &permissions.SettingPermissions{})
-			assert.ErrorIs(t, rest.NoPlatformCredentialsErr, err)
+			assert.ErrorIs(t, err, assert.AnError)
 		})
 	})
 
@@ -216,15 +212,6 @@ func TestService(t *testing.T) {
 			service := permissionService.ServiceImpl{SettingsClient: settingsClient}
 			stubs, err := service.List(t.Context())
 			assert.ErrorIs(t, err, assert.AnError)
-			assert.Nil(t, stubs)
-		})
-
-		t.Run("Returns error if getSettingsClient fails", func(t *testing.T) {
-			service := permissionService.ServiceImpl{
-				ClientSet: &config.ProviderConfiguration{},
-			}
-			stubs, err := service.List(t.Context())
-			assert.ErrorIs(t, err, rest.NoPlatformCredentialsErr)
 			assert.Nil(t, stubs)
 		})
 	})
@@ -301,26 +288,7 @@ func TestService(t *testing.T) {
 				SettingsObjectID: "objectID",
 			}
 			_, err := service.Create(t.Context(), &value)
-			assert.Error(t, err)
-			assert.ErrorIs(t, assert.AnError, err)
-		})
-
-		t.Run("It errors during client creation", func(t *testing.T) {
-			service := permissionService.ServiceImpl{
-				ClientSet: &config.ProviderConfiguration{},
-			}
-			_, err := service.Create(t.Context(), &permissions.SettingPermissions{})
-			assert.ErrorIs(t, rest.NoPlatformCredentialsErr, err)
-		})
-	})
-
-	t.Run("Update", func(t *testing.T) {
-		t.Run("It errors during client creation", func(t *testing.T) {
-			service := permissionService.ServiceImpl{
-				ClientSet: &config.ProviderConfiguration{},
-			}
-			err := service.Update(t.Context(), "", &permissions.SettingPermissions{})
-			assert.ErrorIs(t, rest.NoPlatformCredentialsErr, err)
+			assert.ErrorIs(t, err, assert.AnError)
 		})
 	})
 
@@ -378,12 +346,6 @@ func TestService(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, int32(1), deleteAllUserCalled.Load())
 		assert.Equal(t, int32(2), deleteAccessorCalled.Load())
-	})
-
-	t.Run("Service returns a new instance", func(t *testing.T) {
-		service, err := permissionService.Service(nil)
-		require.NoError(t, err)
-		assert.IsType(t, &permissionService.ServiceImpl{}, service)
 	})
 
 	t.Run("Returns the schema ID", func(t *testing.T) {

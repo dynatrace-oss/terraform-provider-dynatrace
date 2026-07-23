@@ -33,39 +33,20 @@ import (
 )
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*permissions.SettingPermissions], error) {
-	return &ServiceImpl{ClientSet: clientSet}, nil
+	restClient, err := clientSet.PlatformClient()
+	if err != nil {
+		return nil, err
+	}
+
+	return &ServiceImpl{
+		Client:         permissions2.NewClient(restClient),
+		SettingsClient: NewPlatformSettingsClient(restClient),
+	}, nil
 }
 
 type ServiceImpl struct {
-	ClientSet      rest.ClientSet
 	Client         permissions.PermissionClient
 	SettingsClient PlatformSettingsClient
-}
-
-func (me *ServiceImpl) getClient(ctx context.Context) (permissions.PermissionClient, error) {
-	if me.Client != nil {
-		return me.Client, nil
-	}
-	restClient, err := rest.CreatePlatformClient(ctx, me.ClientSet.Credentials().Platform.EnvironmentURL, me.ClientSet.Credentials())
-	if err != nil {
-		return nil, err
-	}
-
-	me.Client = permissions2.NewClient(restClient)
-	return me.Client, nil
-}
-
-func (me *ServiceImpl) getSettingsClient(ctx context.Context) (PlatformSettingsClient, error) {
-	if me.SettingsClient != nil {
-		return me.SettingsClient, nil
-	}
-	restClient, err := rest.CreatePlatformClient(ctx, me.ClientSet.Credentials().Platform.EnvironmentURL, me.ClientSet.Credentials())
-	if err != nil {
-		return nil, err
-	}
-
-	me.SettingsClient = NewPlatformSettingsClient(restClient)
-	return me.SettingsClient, nil
 }
 
 func (me *ServiceImpl) Get(ctx context.Context, objectID string, v *permissions.SettingPermissions) error {
@@ -82,16 +63,13 @@ func (me *ServiceImpl) Get(ctx context.Context, objectID string, v *permissions.
 }
 
 func (me *ServiceImpl) get(ctx context.Context, objectID string) (data *permissions.SettingPermissions, adminAccess bool, err error) {
-	client, err := me.getClient(ctx)
-	if err != nil {
-		return nil, false, err
-	}
 	req, err, adminAccess := rest.DoWithAdminAccessRetry(func(adminAccess bool) (cacapi.Response, error) {
-		return client.GetAllAccessors(ctx, objectID, adminAccess)
+		return me.Client.GetAllAccessors(ctx, objectID, adminAccess)
 	})
 	if err != nil {
 		return nil, false, err
 	}
+
 	var permissionObjects permissions.PermissionObjects
 	err = json.Unmarshal(req.Data, &permissionObjects)
 	if err != nil {
@@ -105,18 +83,14 @@ func (me *ServiceImpl) SchemaID() string {
 }
 
 func (me *ServiceImpl) List(ctx context.Context) (api.Stubs, error) {
-	client, err := me.getSettingsClient(ctx)
-	if err != nil {
-		return nil, err
-	}
-	schemaIds, err := client.GetSchemaIDsWithOwnerBasedAccessControl(ctx)
+	schemaIds, err := me.SettingsClient.GetSchemaIDsWithOwnerBasedAccessControl(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	stubs := api.Stubs{}
 	for _, schemaID := range schemaIds {
-		objectIDs, err := client.ListObjectsIDsOfSchema(ctx, schemaID)
+		objectIDs, err := me.SettingsClient.ListObjectsIDsOfSchema(ctx, schemaID)
 		if err != nil {
 			return nil, err
 		}
@@ -132,16 +106,12 @@ func (me *ServiceImpl) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (me *ServiceImpl) Upsert(ctx context.Context, v *permissions.SettingPermissions) (*api.Stub, error) {
-	client, err := me.getClient(ctx)
-	if err != nil {
-		return nil, err
-	}
 	data, adminAccess, err := me.get(ctx, v.SettingsObjectID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = reconcile.CompareAndUpdate(ctx, client, data, v, adminAccess)
+	err = reconcile.CompareAndUpdate(ctx, me.Client, data, v, adminAccess)
 	if err != nil {
 		return nil, err
 	}

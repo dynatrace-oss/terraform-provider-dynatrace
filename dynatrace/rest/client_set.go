@@ -17,6 +17,8 @@
 
 package rest
 
+import rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+
 // ClientSet is the credential/client provider handed to services, resources and datasources.
 //
 // It exposes the raw Credentials (so the existing client factories can be reused unchanged) plus
@@ -25,4 +27,5 @@ package rest
 type ClientSet interface {
 	Credentials() *Credentials
 	IAMClient() (IAMClient, error)
+	PlatformClient() (*rest2.Client, error)
 }

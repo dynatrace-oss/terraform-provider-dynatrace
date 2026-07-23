@@ -26,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -41,6 +42,9 @@ type ProviderConfiguration struct {
 
 	iamClient    rest.IAMClient
 	iamClientErr error
+
+	platformClient    *rest2.Client
+	platformClientErr error
 }
 
 func (c *ProviderConfiguration) Credentials() *rest.Credentials {
@@ -57,6 +61,10 @@ func (c *ProviderConfiguration) Credentials() *rest.Credentials {
 
 func (c *ProviderConfiguration) IAMClient() (rest.IAMClient, error) {
 	return c.iamClient, c.iamClientErr
+}
+
+func (c *ProviderConfiguration) PlatformClient() (*rest2.Client, error) {
+	return c.platformClient, c.platformClientErr
 }
 
 type Getter interface {
@@ -128,6 +136,7 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 	clientCtx := context.Background()
 
 	pc.iamClient, pc.iamClientErr = rest.NewIAMClient(clientCtx, pc.Credentials())
+	pc.platformClient, pc.platformClientErr = rest.CreatePlatformClient(clientCtx, pc.Platform.EnvironmentURL, pc.Credentials())
 
 	return pc
 }

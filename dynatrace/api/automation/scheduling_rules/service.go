@@ -31,28 +31,23 @@ import (
 )
 
 func Service(clientSet tfrest.ClientSet) (settings.CRUDService[*scheduling_rules.Settings], error) {
-	return &service{clientSet}, nil
-}
-
-type service struct {
-	clientSet tfrest.ClientSet
-}
-
-func (me *service) client(ctx context.Context) (*automation.Client, error) {
-	platformClient, err := tfrest.CreatePlatformClient(ctx, me.clientSet.Credentials().Platform.EnvironmentURL, me.clientSet.Credentials())
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}
-	return automation.NewClient(platformClient), nil
+
+	return &service{
+		client: automation.NewClient(platformClient),
+	}, nil
+}
+
+type service struct {
+	client *automation.Client
 }
 
 func (me *service) Get(ctx context.Context, id string, v *scheduling_rules.Settings) (err error) {
-	client, err := me.client(ctx)
+	response, err := me.client.Get(ctx, automation.SchedulingRules, id)
 	if err != nil {
-		return err
-	}
-	var response cacapi.Response
-	if response, err = client.Get(ctx, automation.SchedulingRules, id); err != nil {
 		return err
 	}
 	return json.Unmarshal(response.Data, &v)
@@ -68,11 +63,7 @@ type SchedulingRuleStub struct {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return nil, err
-	}
-	listResponse, err := client.List(ctx, automation.SchedulingRules)
+	listResponse, err := me.client.List(ctx, automation.SchedulingRules)
 	if err != nil {
 		return nil, err
 	}
@@ -92,16 +83,12 @@ func (me *service) Validate(v *scheduling_rules.Settings) error {
 }
 
 func (me *service) Create(ctx context.Context, v *scheduling_rules.Settings) (stub *api.Stub, err error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return nil, err
-	}
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	var response cacapi.Response
-	if response, err = client.Create(ctx, automation.SchedulingRules, data); err != nil {
+	response, err := me.client.Create(ctx, automation.SchedulingRules, data)
+	if err != nil {
 		return nil, err
 	}
 	var scStub SchedulingRuleStub
@@ -112,24 +99,16 @@ func (me *service) Create(ctx context.Context, v *scheduling_rules.Settings) (st
 }
 
 func (me *service) Update(ctx context.Context, id string, v *scheduling_rules.Settings) (err error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
-	_, err = client.Update(ctx, automation.SchedulingRules, id, data)
+	_, err = me.client.Update(ctx, automation.SchedulingRules, id, data)
 	return err
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	client, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
-	if _, err = client.Delete(ctx, automation.SchedulingRules, id); err != nil && !cacapi.IsNotFoundError(err) {
+	if _, err := me.client.Delete(ctx, automation.SchedulingRules, id); err != nil && !cacapi.IsNotFoundError(err) {
 		return err
 	}
 	return nil

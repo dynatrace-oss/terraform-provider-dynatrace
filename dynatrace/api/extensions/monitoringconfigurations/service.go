@@ -57,24 +57,20 @@ type ExtensionClient interface {
 }
 
 type service struct {
-	clientGetter func(ctx context.Context, clientSet rest.ClientSet) (ExtensionClient, error)
-	clientSet    rest.ClientSet
+	client ExtensionClient
 }
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*serviceSettings.Settings], error) {
-	return &service{clientGetter: createCoreClient, clientSet: clientSet}, nil
-}
-
-func ServiceWithClientGetter(clientGetter func(ctx context.Context, clientSet rest.ClientSet) (ExtensionClient, error), clientSet rest.ClientSet) settings.CRUDService[*serviceSettings.Settings] {
-	return &service{clientGetter: clientGetter, clientSet: clientSet}
-}
-
-func createCoreClient(ctx context.Context, clientSet rest.ClientSet) (ExtensionClient, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}
-	return coreextensions.NewClient(platformClient), nil
+
+	return &service{client: coreextensions.NewClient(platformClient)}, nil
+}
+
+func ServiceWithClient(client ExtensionClient) settings.CRUDService[*serviceSettings.Settings] {
+	return &service{client: client}
 }
 
 func (s *service) SchemaID() string {
@@ -82,16 +78,12 @@ func (s *service) SchemaID() string {
 }
 
 func (s *service) Get(ctx context.Context, id string, v *serviceSettings.Settings) error {
-	client, err := s.clientGetter(ctx, s.clientSet)
-	if err != nil {
-		return err
-	}
-
 	extensionName, configID, err := splitID(id)
 	if err != nil {
 		return err
 	}
-	response, err := client.GetMonitoringConfiguration(ctx, extensionName, configID)
+
+	response, err := s.client.GetMonitoringConfiguration(ctx, extensionName, configID)
 	if err != nil {
 		return err
 	}
@@ -110,12 +102,7 @@ func (s *service) Get(ctx context.Context, id string, v *serviceSettings.Setting
 }
 
 func (s *service) List(ctx context.Context) (api.Stubs, error) {
-	client, err := s.clientGetter(ctx, s.clientSet)
-	if err != nil {
-		return nil, err
-	}
-
-	extensionsResponse, err := client.ListExtensions(ctx)
+	extensionsResponse, err := s.client.ListExtensions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -130,7 +117,7 @@ func (s *service) List(ctx context.Context) (api.Stubs, error) {
 			return nil, err
 		}
 
-		configurationsResponse, err := client.ListMonitoringConfigurations(ctx, extension.ExtensionName)
+		configurationsResponse, err := s.client.ListMonitoringConfigurations(ctx, extension.ExtensionName)
 		if err != nil {
 			return nil, err
 		}
@@ -155,10 +142,6 @@ func (s *service) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (s *service) Create(ctx context.Context, v *serviceSettings.Settings) (stub *api.Stub, err error) {
-	client, err := s.clientGetter(ctx, s.clientSet)
-	if err != nil {
-		return nil, err
-	}
 	body, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
@@ -167,7 +150,7 @@ func (s *service) Create(ctx context.Context, v *serviceSettings.Settings) (stub
 		ID string `json:"objectId"`
 	}
 
-	response, err := client.CreateMonitoringConfiguration(ctx, v.Name, body)
+	response, err := s.client.CreateMonitoringConfiguration(ctx, v.Name, body)
 	if err != nil {
 		return nil, err
 	}
@@ -179,10 +162,6 @@ func (s *service) Create(ctx context.Context, v *serviceSettings.Settings) (stub
 }
 
 func (s *service) Update(ctx context.Context, id string, v *serviceSettings.Settings) error {
-	client, err := s.clientGetter(ctx, s.clientSet)
-	if err != nil {
-		return err
-	}
 	body, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -191,20 +170,18 @@ func (s *service) Update(ctx context.Context, id string, v *serviceSettings.Sett
 	if err != nil {
 		return err
 	}
-	_, err = client.UpdateMonitoringConfiguration(ctx, extensionName, configID, body)
+
+	_, err = s.client.UpdateMonitoringConfiguration(ctx, extensionName, configID, body)
 	return err
 }
 
 func (s *service) Delete(ctx context.Context, id string) error {
-	client, err := s.clientGetter(ctx, s.clientSet)
-	if err != nil {
-		return err
-	}
 	extensionName, configID, err := splitID(id)
 	if err != nil {
 		return err
 	}
-	return client.DeleteMonitoringConfiguration(ctx, extensionName, configID)
+
+	return s.client.DeleteMonitoringConfiguration(ctx, extensionName, configID)
 }
 
 func joinID(extensionName string, configurationID string) string {

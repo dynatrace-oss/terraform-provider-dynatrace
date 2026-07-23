@@ -36,19 +36,17 @@ import (
 )
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*buckets.Bucket], error) {
-	return &service{clientSet}, nil
-}
-
-type service struct {
-	clientSet rest.ClientSet
-}
-
-func (me *service) client(ctx context.Context) (*bucket.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.clientSet.Credentials().Platform.EnvironmentURL, me.clientSet.Credentials())
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}
-	return bucket.NewClient(platformClient), nil
+
+	return &service{client: bucket.NewClient(platformClient), envURL: clientSet.Credentials().Platform.EnvironmentURL}, nil
+}
+
+type service struct {
+	client *bucket.Client
+	envURL string
 }
 
 func (me *service) Get(ctx context.Context, id string, v *buckets.Bucket) (err error) {
@@ -71,15 +69,11 @@ func (me *service) Get(ctx context.Context, id string, v *buckets.Bucket) (err e
 }
 
 func (me *service) get(ctx context.Context, id string, v *buckets.Bucket) (err error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
 	var result coreapi.Response
-	if result, err = client.Get(ctx, id); err != nil {
+	if result, err = me.client.Get(ctx, id); err != nil {
 		apiErr := coreapi.APIError{}
 		if errors.As(err, &apiErr) {
-			return rest.Envelope(apiErr.Body, me.clientSet.Credentials().Platform.EnvironmentURL, "GET")
+			return rest.Envelope(apiErr.Body, me.envURL, "GET")
 		}
 		return err
 	}
@@ -92,11 +86,7 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return nil, err
-	}
-	result, err := client.List(ctx)
+	result, err := me.client.List(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -116,19 +106,15 @@ func (me *service) Validate(v *buckets.Bucket) error {
 }
 
 func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stub, err error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return nil, err
-	}
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
 
-	if _, err = client.Create(ctx, v.Name, data); err != nil {
+	if _, err = me.client.Create(ctx, v.Name, data); err != nil {
 		apiErr := coreapi.APIError{}
 		if errors.As(err, &apiErr) {
-			return nil, rest.Envelope(apiErr.Body, me.clientSet.Credentials().Platform.EnvironmentURL, "POST")
+			return nil, rest.Envelope(apiErr.Body, me.envURL, "POST")
 		}
 		return nil, err
 	}
@@ -140,7 +126,7 @@ func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stu
 	var responseBucket buckets.Bucket
 	for requiredSuccessesLeft > 0 || len(responseBucket.Status) == 0 || responseBucket.Status == buckets.Statuses.Creating {
 		responseBucket = buckets.Bucket{}
-		response, err := client.Get(ctx, v.Name)
+		response, err := me.client.Get(ctx, v.Name)
 		if err != nil {
 			return nil, err
 		}
@@ -164,10 +150,6 @@ func (me *service) Create(ctx context.Context, v *buckets.Bucket) (stub *api.Stu
 }
 
 func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (err error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
 	var oldBucket buckets.Bucket
 	me.Get(ctx, id, &oldBucket)
 	oldVersion := oldBucket.Version
@@ -176,11 +158,11 @@ func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (er
 		return err
 	}
 
-	_, err = client.Update(ctx, id, data)
+	_, err = me.client.Update(ctx, id, data)
 	if err != nil {
 		apiErr := coreapi.APIError{}
 		if errors.As(err, &apiErr) {
-			return rest.Envelope(apiErr.Body, me.clientSet.Credentials().Platform.EnvironmentURL, "PUT")
+			return rest.Envelope(apiErr.Body, me.envURL, "PUT")
 		}
 		return err
 	}
@@ -208,17 +190,12 @@ func (me *service) Update(ctx context.Context, id string, v *buckets.Bucket) (er
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	client, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
-	_, err = client.Delete(ctx, id)
-	if err != nil {
+	if _, err := me.client.Delete(ctx, id); err != nil {
 		return err
 	}
 	maxConfirmationRetries := envutils.DTBucketsRetries.Get()
 	retries := 0
-	response, err := client.Get(ctx, id)
+	response, err := me.client.Get(ctx, id)
 	for response.StatusCode != 404 {
 		if err != nil {
 			if apiErr, ok := err.(coreapi.APIError); ok {
@@ -227,7 +204,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 				}
 			}
 		}
-		response, err = client.Get(ctx, id)
+		response, err = me.client.Get(ctx, id)
 		retries++
 		if retries > maxConfirmationRetries {
 			break

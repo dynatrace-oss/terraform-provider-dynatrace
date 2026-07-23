@@ -25,7 +25,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
@@ -108,7 +107,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		return diag.FromErr(err)
 	}
 
-	restClient, err := rest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
+	restClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return diag.FromErr(err)
 	}

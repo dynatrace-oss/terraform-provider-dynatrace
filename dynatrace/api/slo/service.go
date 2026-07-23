@@ -30,27 +30,20 @@ import (
 )
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*slo.SLO], error) {
-	return &service{clientSet}, nil
-}
-
-type service struct {
-	clientSet rest.ClientSet
-}
-
-func (me *service) client(ctx context.Context) (*sloclient.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.clientSet.Credentials().Platform.EnvironmentURL, me.clientSet.Credentials())
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}
-	return sloclient.NewClient(platformClient), nil
+
+	return &service{client: sloclient.NewClient(platformClient)}, nil
 }
 
-func (me *service) Get(ctx context.Context, id string, v *slo.SLO) (err error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
-	response, err := client.Get(ctx, id)
+type service struct {
+	client *sloclient.Client
+}
+
+func (me *service) Get(ctx context.Context, id string, v *slo.SLO) error {
+	response, err := me.client.Get(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -63,14 +56,11 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	client, err := me.client(ctx)
+	listResponse, err := me.client.List(ctx)
 	if err != nil {
 		return nil, err
 	}
-	listResponse, err := client.List(ctx)
-	if err != nil {
-		return nil, err
-	}
+
 	var stubs api.Stubs
 	for _, r := range listResponse.All() {
 		var stub api.Stub
@@ -88,15 +78,12 @@ func (me *service) Validate(_ *slo.SLO) error {
 }
 
 func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
-	client, err := me.client(ctx)
+	data, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
 	}
-	var data []byte
-	if data, err = json.Marshal(v); err != nil {
-		return nil, err
-	}
-	response, err := client.Create(ctx, data)
+
+	response, err := me.client.Create(ctx, data)
 	if err != nil {
 		return nil, err
 	}
@@ -109,17 +96,13 @@ func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
 	return &stub, nil
 }
 
-func (me *service) Update(ctx context.Context, id string, v *slo.SLO) (err error) {
-	client, err := me.client(ctx)
+func (me *service) Update(ctx context.Context, id string, v *slo.SLO) error {
+	data, err := json.Marshal(v)
 	if err != nil {
 		return err
 	}
-	var data []byte
-	if data, err = json.Marshal(v); err != nil {
-		return err
-	}
 
-	_, err = client.Update(ctx, id, data)
+	_, err = me.client.Update(ctx, id, data)
 	if err != nil {
 		return err
 	}
@@ -128,11 +111,7 @@ func (me *service) Update(ctx context.Context, id string, v *slo.SLO) (err error
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	client, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
-	_, err = client.Delete(ctx, id)
+	_, err := me.client.Delete(ctx, id)
 	if err != nil {
 		return err
 	}

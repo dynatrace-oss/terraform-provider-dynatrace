@@ -16,18 +16,26 @@
 
 package testing
 
-import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+import (
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+)
 
 // MockClientSet is a rest.ClientSet whose IAM client and credentials are supplied directly, for
 // injecting a MockIAMClient into IAM services under test.
 type MockClientSet struct {
-	IAMClientValue   rest.IAMClient
-	IAMClientErr     error
-	CredentialsValue *rest.Credentials
+	IAMClientValue      rest.IAMClient
+	IAMClientErr        error
+	PlatformClientValue *rest2.Client
+	PlatformClientErr   error
+	CredentialsValue    *rest.Credentials
 }
 
 func (me *MockClientSet) IAMClient() (rest.IAMClient, error) {
 	return me.IAMClientValue, me.IAMClientErr
+}
+func (me *MockClientSet) PlatformClient() (*rest2.Client, error) {
+	return me.PlatformClientValue, me.PlatformClientErr
 }
 
 func (me *MockClientSet) Credentials() *rest.Credentials { return me.CredentialsValue }
