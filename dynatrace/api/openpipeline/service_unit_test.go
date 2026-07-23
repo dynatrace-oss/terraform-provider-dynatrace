@@ -27,19 +27,29 @@ import (
 	api2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func TestList(t *testing.T) {
-	t.Run("Returns an error if the client creation fails", func(t *testing.T) {
-		service, err := openpipeline.EventsService(&config.ProviderConfiguration{})
-		require.NoError(t, err)
-		_, err = service.List(t.Context())
-		assert.ErrorIs(t, err, rest.NoPlatformCredentialsErr)
-	})
+// platformClientSet returns a ClientSet with a real platform client pointed at the test server.
+func platformClientSet(t *testing.T, serverURL string) *testing2.MockClientSet {
+	credentials := &rest.Credentials{
+		Platform: rest.PlatformCredentials{EnvironmentURL: serverURL, PlatformToken: "token"},
+	}
+	platformClient, err := rest.CreatePlatformClient(t.Context(), serverURL, credentials)
+	require.NoError(t, err)
+	return &testing2.MockClientSet{PlatformClientValue: platformClient, CredentialsValue: credentials}
+}
 
+// TestServiceCreationFailsIfMissingClient tests that the service creation fails if the platform client is missing.
+func TestServiceCreationFailsIfMissingClient(t *testing.T) {
+	service, err := openpipeline.EventsService(&testing2.MockClientSet{PlatformClientErr: assert.AnError})
+	require.Nil(t, service)
+	require.ErrorIs(t, err, assert.AnError)
+}
+
+func TestList(t *testing.T) {
 	t.Run("Returns an error if the config doesn't exist anymore", func(t *testing.T) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(404)
@@ -47,12 +57,7 @@ func TestList(t *testing.T) {
 			require.NoError(t, err)
 		}))
 		defer server.Close()
-		service, err := openpipeline.EventsService(&config.ProviderConfiguration{
-			Platform: rest.PlatformCredentials{
-				EnvironmentURL: server.URL,
-				PlatformToken:  "token",
-			},
-		})
+		service, err := openpipeline.EventsService(platformClientSet(t, server.URL))
 		require.NoError(t, err)
 		_, err = service.List(t.Context())
 		assert.ErrorContains(t, err, "Not Found")
@@ -64,12 +69,7 @@ func TestList(t *testing.T) {
 		}))
 		defer server.Close()
 
-		service, err := openpipeline.EventsService(&config.ProviderConfiguration{
-			Platform: rest.PlatformCredentials{
-				EnvironmentURL: server.URL,
-				PlatformToken:  "token",
-			},
-		})
+		service, err := openpipeline.EventsService(platformClientSet(t, server.URL))
 		require.NoError(t, err)
 		configs, err := service.List(t.Context())
 		require.NoError(t, err)

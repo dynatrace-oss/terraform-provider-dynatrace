@@ -40,19 +40,16 @@ var supportedDocumentTypes = []docclient.DocumentType{
 }
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*documents.Document], error) {
-	return &service{clientSet: clientSet}, nil
-}
-
-type service struct {
-	clientSet rest.ClientSet
-}
-
-func (me *service) client(ctx context.Context) (*docclient.Client, error) {
-	platformClient, err := rest.CreatePlatformClient(ctx, me.clientSet.Credentials().Platform.EnvironmentURL, me.clientSet.Credentials())
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}
-	return docclient.NewClient(platformClient), nil
+
+	return &service{client: docclient.NewClient(platformClient)}, nil
+}
+
+type service struct {
+	client *docclient.Client
 }
 
 func (me *service) Get(ctx context.Context, id string, v *documents.Document) (err error) {
@@ -76,11 +73,7 @@ func (me *service) Get(ctx context.Context, id string, v *documents.Document) (e
 }
 
 func (me *service) get(ctx context.Context, id string, v *documents.Document) (err error) {
-	client, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
-	result, err := client.Get(ctx, id)
+	result, err := me.client.Get(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -101,18 +94,7 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	if me == nil {
-		return api.Stubs{}, nil
-	}
-	cl, err := me.client(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	if cl == nil {
-		return api.Stubs{}, nil
-	}
-	listResponse, err := cl.List(ctx, getSupportedDocumentsFilter())
+	listResponse, err := me.client.List(ctx, getSupportedDocumentsFilter())
 	if err != nil {
 		return nil, err
 	}
@@ -163,11 +145,7 @@ func (me *service) Create(ctx context.Context, v *documents.Document) (*api.Stub
 }
 
 func (me *service) createPrivate(ctx context.Context, v *documents.Document) (stub *api.Stub, err error) {
-	c, err := me.client(ctx)
-	if err != nil {
-		return nil, err
-	}
-	response, err := c.Create(ctx, v.Name, v.IsPrivate, v.ID, []byte(v.Content), docclient.DocumentType(v.Type))
+	response, err := me.client.Create(ctx, v.Name, v.IsPrivate, v.ID, []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
 		return nil, err
 	}
@@ -184,11 +162,7 @@ func (me *service) Update(ctx context.Context, id string, v *documents.Document)
 }
 
 func (me *service) update(ctx context.Context, id string, v *documents.Document) (err error) {
-	c, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
-	_, err = c.Update(ctx, id, v.Name, v.IsPrivate, []byte(v.Content), docclient.DocumentType(v.Type))
+	_, err = me.client.Update(ctx, id, v.Name, v.IsPrivate, []byte(v.Content), docclient.DocumentType(v.Type))
 	if err != nil {
 		return err
 	}
@@ -197,11 +171,7 @@ func (me *service) update(ctx context.Context, id string, v *documents.Document)
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	client, err := me.client(ctx)
-	if err != nil {
-		return err
-	}
-	_, err = client.Delete(ctx, id)
+	_, err := me.client.Delete(ctx, id)
 	if err != nil {
 		return err
 	}

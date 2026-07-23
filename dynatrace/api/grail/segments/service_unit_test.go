@@ -26,19 +26,28 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func TestList(t *testing.T) {
-	t.Run("Returns an error if the client creation fails", func(t *testing.T) {
-		service, err := segments.Service(&config.ProviderConfiguration{})
-		require.NoError(t, err)
-		_, err = service.List(t.Context())
-		assert.ErrorIs(t, err, rest.NoPlatformCredentialsErr)
+// platformClientSet returns a ClientSet with a real platform client pointed at the test server.
+func platformClientSet(t *testing.T, serverURL string) *testing2.MockClientSet {
+	platformClient, err := rest.CreatePlatformClient(t.Context(), serverURL, &rest.Credentials{
+		Platform: rest.PlatformCredentials{EnvironmentURL: serverURL, PlatformToken: "token"},
 	})
+	require.NoError(t, err)
+	return &testing2.MockClientSet{PlatformClientValue: platformClient}
+}
 
+// TestServiceCreationFailsIfMissingClient tests that the service creation fails if the platform client is missing.
+func TestServiceCreationFailsIfClientUnavailable(t *testing.T) {
+	service, err := segments.Service(&testing2.MockClientSet{PlatformClientErr: assert.AnError})
+	require.Nil(t, service)
+	require.ErrorIs(t, err, assert.AnError)
+}
+
+func TestList(t *testing.T) {
 	t.Run("Returns the list of segments ignoring ready-made ones", func(t *testing.T) {
 		apiResponse := `{"filterSegments": [
 			{"uid": "1", "name": "ready-made-false", "isPublic": false, "isReadyMade": false},
@@ -54,12 +63,7 @@ func TestList(t *testing.T) {
 		}))
 		defer server.Close()
 
-		service, err := segments.Service(&config.ProviderConfiguration{
-			Platform: rest.PlatformCredentials{
-				EnvironmentURL: server.URL,
-				PlatformToken:  "token",
-			},
-		})
+		service, err := segments.Service(platformClientSet(t, server.URL))
 		require.NoError(t, err)
 		result, err := service.List(t.Context())
 

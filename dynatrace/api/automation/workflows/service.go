@@ -41,33 +41,25 @@ type AutomationClient interface {
 }
 
 type service struct {
-	clientSet    tfrest.ClientSet
-	clientGetter func(ctx context.Context, clientSet tfrest.ClientSet) (AutomationClient, error)
+	client AutomationClient
 }
 
 func Service(clientSet tfrest.ClientSet) (settings.CRUDService[*workflows.Workflow], error) {
-	return &service{clientSet: clientSet, clientGetter: createCoreClient}, nil
-}
-
-func ServiceWithClientGetter(clientGetter func(ctx context.Context, clientSet tfrest.ClientSet) (AutomationClient, error), clientSet tfrest.ClientSet) settings.CRUDService[*workflows.Workflow] {
-	return &service{clientSet: clientSet, clientGetter: clientGetter}
-}
-
-func createCoreClient(ctx context.Context, clientSet tfrest.ClientSet) (AutomationClient, error) {
-	platformClient, err := tfrest.CreatePlatformClient(ctx, clientSet.Credentials().Platform.EnvironmentURL, clientSet.Credentials())
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return nil, err
 	}
-	return automation.NewClient(platformClient), nil
+
+	return &service{client: automation.NewClient(platformClient)}, nil
+}
+
+func ServiceWithAutomationClient(client AutomationClient) settings.CRUDService[*workflows.Workflow] {
+	return &service{client: client}
 }
 
 func (me *service) Get(ctx context.Context, id string, v *workflows.Workflow) error {
-	client, err := me.clientGetter(ctx, me.clientSet)
+	response, err := me.client.Get(ctx, apiClient.Workflows, id)
 	if err != nil {
-		return err
-	}
-	var response cacapi.Response
-	if response, err = client.Get(ctx, apiClient.Workflows, id); err != nil {
 		return err
 	}
 
@@ -120,11 +112,7 @@ type WorkflowStub struct {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	client, err := me.clientGetter(ctx, me.clientSet)
-	if err != nil {
-		return nil, err
-	}
-	listResponse, err := client.List(ctx, apiClient.Workflows)
+	listResponse, err := me.client.List(ctx, apiClient.Workflows)
 	if err != nil {
 		return nil, err
 	}
@@ -145,16 +133,12 @@ func (me *service) Validate(v *workflows.Workflow) error {
 }
 
 func (me *service) Create(ctx context.Context, v *workflows.Workflow) (stub *api.Stub, err error) {
-	client, err := me.clientGetter(ctx, me.clientSet)
-	if err != nil {
-		return nil, err
-	}
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	var response cacapi.Response
-	if response, err = client.Create(ctx, apiClient.Workflows, data); err != nil {
+	response, err := me.client.Create(ctx, apiClient.Workflows, data)
+	if err != nil {
 		return nil, err
 	}
 
@@ -166,24 +150,16 @@ func (me *service) Create(ctx context.Context, v *workflows.Workflow) (stub *api
 }
 
 func (me *service) Update(ctx context.Context, id string, v *workflows.Workflow) (err error) {
-	client, err := me.clientGetter(ctx, me.clientSet)
-	if err != nil {
-		return err
-	}
 	var data []byte
 	if data, err = json.Marshal(v); err != nil {
 		return err
 	}
-	_, err = client.Update(ctx, apiClient.Workflows, id, data)
+	_, err = me.client.Update(ctx, apiClient.Workflows, id, data)
 	return err
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	client, err := me.clientGetter(ctx, me.clientSet)
-	if err != nil {
-		return err
-	}
-	if _, err = client.Delete(ctx, apiClient.Workflows, id); err != nil && !cacapi.IsNotFoundError(err) {
+	if _, err := me.client.Delete(ctx, apiClient.Workflows, id); err != nil && !cacapi.IsNotFoundError(err) {
 		return err
 	}
 
