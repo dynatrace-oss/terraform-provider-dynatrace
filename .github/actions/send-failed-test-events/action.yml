@@ -1,0 +1,93 @@
+name: 'Send Failed Test Events'
+description: 'Sends one Dynatrace ERROR_EVENT per failed test read from a newline-delimited list'
+inputs:
+  test_type:
+    description: 'The test type (integration, nightly, etc.)'
+    required: true
+  platform_url:
+    description: 'The platform URL to send the events to'
+    required: true
+  platform_token:
+    description: 'The platform access token needed for ingesting the events'
+    required: true
+  events_path:
+    description: 'The ingest events path appended to <platform_url>/platform/ingest/'
+    required: true
+    default: 'v1/events.sdlc'
+  failed_tests_file:
+    description: 'Path to the newline-delimited list of failed tests (one "package/Test" per line)'
+    required: true
+    default: 'failed-tests.txt'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Send failed test events
+      shell: bash
+      env:
+        PLATFORM_TOKEN: ${{ inputs.platform_token }}
+        PLATFORM_URL: ${{ inputs.platform_url }}
+        EVENTS_PATH: ${{ inputs.events_path }}
+        TEST_TYPE: ${{ inputs.test_type }}
+        FAILED_TESTS_FILE: ${{ inputs.failed_tests_file }}
+        JOB_CHECK_RUN_ID: ${{ job.check_run_id }}
+      run: |
+        set -euo pipefail
+
+        if [ ! -s "$FAILED_TESTS_FILE" ]; then
+          echo "No failed tests found in '$FAILED_TESTS_FILE' - nothing to send."
+          exit 0
+        fi
+
+        # Build a JSON array with one ERROR_EVENT per failed test line.
+        # jq -R -s reads the whole file as a raw string, then we split on
+        # newlines and drop empty lines. Using jq guarantees proper JSON escaping.
+        RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
+        payload=$(jq -R -s -c \
+          --arg testType "$TEST_TYPE" \
+          --arg repo "$GITHUB_REPOSITORY" \
+          --arg ref "$GITHUB_REF" \
+          --arg branch "$GITHUB_REF_NAME" \
+          --arg sha "$GITHUB_SHA" \
+          --arg eventName "$GITHUB_EVENT_NAME" \
+          --arg actor "$GITHUB_ACTOR" \
+          --arg workflow "$GITHUB_WORKFLOW" \
+          --arg runId "$GITHUB_RUN_ID" \
+          --arg runNumber "$GITHUB_RUN_NUMBER" \
+          --arg runAttempt "$GITHUB_RUN_ATTEMPT" \
+          --arg runUrl "$RUN_URL" \
+          --arg job "$JOB_CHECK_RUN_ID" \
+          'split("\n")
+           | map(select(length > 0))
+           | map({
+               "source": "GitHub",
+               "type": "ERROR_EVENT",
+               "test.type": $testType,
+               "test.name": .,
+               "github.repository": $repo,
+               "github.ref": $ref,
+               "github.branch": $branch,
+               "github.sha": $sha,
+               "github.event_name": $eventName,
+               "github.actor": $actor,
+               "github.workflow": $workflow,
+               "github.run_id": $runId,
+               "github.run_number": $runNumber,
+               "github.run_attempt": $runAttempt,
+               "github.run_url": $runUrl,
+               "github.job": $job
+             })' "$FAILED_TESTS_FILE")
+
+        count=$(printf '%s' "$payload" | jq 'length')
+        if [ "$count" -eq 0 ]; then
+          echo "No failed tests to send after filtering - nothing to send."
+          exit 0
+        fi
+
+        echo "Sending $count failed test event(s) to Dynatrace."
+        curl -sS --fail-with-body \
+          -H "Authorization: Api-Token $PLATFORM_TOKEN" \
+          -H 'Content-Type: application/json' \
+          -X POST "$PLATFORM_URL/platform/ingest/$EVENTS_PATH" \
+          --data-binary "$payload"

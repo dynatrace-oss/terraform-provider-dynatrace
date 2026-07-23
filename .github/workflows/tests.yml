@@ -258,6 +258,15 @@ jobs:
       - name: 🧮 Collect failed tests
         run: go run ./tools/testresults --input junit-results --out-junit failed-tests.xml --out-list failed-tests.txt
 
+      - name: 📡 Send failed tests to Dynatrace
+        if: always()
+        uses: ./.github/actions/send-failed-test-events
+        with:
+          test_type: integration
+          platform_url: ${{ secrets.SFM_PLATFORM_URL }}
+          platform_token: ${{ secrets.SFM_PLATFORM_TOKEN }}
+          failed_tests_file: failed-tests.txt
+
       - name: ⬆️ Archive failed test results
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
         if: always()
