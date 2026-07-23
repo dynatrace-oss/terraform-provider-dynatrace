@@ -698,16 +698,16 @@ Optional:
 Required:
 
 - `context` (String) The origin of the tag. Supported values are `AWS`, `AWS_GENERIC`, `AZURE`, `CLOUD_FOUNDRY`, `CONTEXTLESS`, `ENVIRONMENT`, `GOOGLE_CLOUD` and `KUBERNETES`.
-
-Custom tags use the `CONTEXTLESS` value.
+  
+  Custom tags use the `CONTEXTLESS` value.
 - `key` (String) The key of the tag.
-
-Custom tags have the tag value here.
+  
+  Custom tags have the tag value here.
 
 Optional:
 
 - `source` (String) The source of the tag. Supported values are `USER`, `RULE_BASED` and `AUTO`.
 - `value` (String) The value of the tag.
-
-Not applicable to custom tags.
+  
+  Not applicable to custom tags.
  

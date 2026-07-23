@@ -185,8 +185,8 @@ resource "dynatrace_browser_monitor" "monitor" {
 ### Required
 
 - `frequency` (Number) The frequency of the monitor, in minutes.
-
-You can use one of the following values: `5`, `10`, `15`, `30`, and `60`.
+  
+  You can use one of the following values: `5`, `10`, `15`, `30`, and `60`.
 - `key_performance_metrics` (Block List, Min: 1, Max: 1) The key performance metrics configuration (see [below for nested schema](#nestedblock--key_performance_metrics))
 - `name` (String) The name of the monitor.
 
@@ -195,13 +195,13 @@ You can use one of the following values: `5`, `10`, `15`, `30`, and `60`.
 - `anomaly_detection` (Block List, Max: 1) The anomaly detection configuration. (see [below for nested schema](#nestedblock--anomaly_detection))
 - `enabled` (Boolean) The monitor is enabled (`true`) or disabled (`false`).
 - `locations` (Set of String) A list of locations from which the monitor is executed.
-
-To specify a location, use its entity ID.
+  
+  To specify a location, use its entity ID.
 - `manually_assigned_apps` (Set of String) A set of manually assigned applications.
 - `script` (Block List, Max: 1) The Browser Script (see [below for nested schema](#nestedblock--script))
 - `tags` (Block List) A set of tags assigned to the monitor.
-
-You can specify only the value of the tag here and the `CONTEXTLESS` context and source 'USER' will be added automatically. (see [below for nested schema](#nestedblock--tags))
+  
+  You can specify only the value of the tag here and the `CONTEXTLESS` context and source 'USER' will be added automatically. (see [below for nested schema](#nestedblock--tags))
 
 ### Read-Only
 
@@ -307,14 +307,15 @@ Optional:
 Optional:
 
 - `bandwidth` (Block List, Max: 1) The emulated device of the monitor—holds either the parameters of the custom device or the name and orientation of the preconfigured device.
-
-If not set, then the Desktop preconfigured device is used (see [below for nested schema](#nestedblock--script--configuration--bandwidth))
+  
+  If not set, then the Desktop preconfigured device is used.
+  Set either `network_type`, or all of `latency`, `download`, and `upload` (mutually exclusive). (see [below for nested schema](#nestedblock--script--configuration--bandwidth))
 - `block` (Set of String) Block these URLs
 - `bypass_csp` (Boolean) Bypass Content Security Policy of monitored pages
 - `cookies` (Block List, Max: 1) These cookies are added before execution of the first step (see [below for nested schema](#nestedblock--script--configuration--cookies))
 - `device` (Block List, Max: 1) The emulated device of the monitor—holds either the parameters of the custom device or the name and orientation of the preconfigured device.
-
-If not set, then the Desktop preconfigured device is used (see [below for nested schema](#nestedblock--script--configuration--device))
+  
+  If not set, then the Desktop preconfigured device is used (see [below for nested schema](#nestedblock--script--configuration--device))
 - `disable_web_security` (Boolean) No documentation available
 - `headers` (Block List, Max: 1) The list of HTTP headers to be sent with requests of the monitor (see [below for nested schema](#nestedblock--script--configuration--headers))
 - `ignored_error_codes` (Block List, Max: 1) Ignore specific status codes (see [below for nested schema](#nestedblock--script--configuration--ignored_error_codes))
@@ -1407,16 +1408,16 @@ Optional:
 Required:
 
 - `context` (String) The origin of the tag. Supported values are `AWS`, `AWS_GENERIC`, `AZURE`, `CLOUD_FOUNDRY`, `CONTEXTLESS`, `ENVIRONMENT`, `GOOGLE_CLOUD` and `KUBERNETES`.
-
-Custom tags use the `CONTEXTLESS` value.
+  
+  Custom tags use the `CONTEXTLESS` value.
 - `key` (String) The key of the tag.
-
-Custom tags have the tag value here.
+  
+  Custom tags have the tag value here.
 
 Optional:
 
 - `source` (String) The source of the tag. Supported values are `USER`, `RULE_BASED` and `AUTO`.
 - `value` (String) The value of the tag.
-
-Not applicable to custom tags.
+  
+  Not applicable to custom tags.
  

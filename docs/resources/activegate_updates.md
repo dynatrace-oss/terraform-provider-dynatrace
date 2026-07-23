@@ -25,9 +25,27 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_activegate_updates" "#name#" {
-  auto_update = true
-  scope = "environment"
+resource "dynatrace_activegate_updates" "example" {
+  scope          = "environment"
+  target_version = "latest"
+  update_mode    = "AUTOMATIC_DURING_UW"
+  update_windows {
+    update_window {
+      update_window = dynatrace_update_windows.example.id
+    }
+  }
+}
+
+resource "dynatrace_update_windows" "example" {
+  name       = "#name#"
+  enabled    = true
+  recurrence = "ONCE"
+  once_recurrence {
+    recurrence_range {
+      end   = "2023-02-15T04:00:00Z"
+      start = "2023-02-15T02:00:00Z"
+    }
+  }
 }
 ```
 
@@ -36,13 +54,29 @@ resource "dynatrace_activegate_updates" "#name#" {
 
 ### Required
 
-- `auto_update` (Boolean) Automatic updates at earliest convenience
+- `target_version` (String) Target version
+- `update_mode` (String) Update mode. Possible values: `AUTOMATIC`, `AUTOMATIC_DURING_UW`, `MANUAL`
 
 ### Optional
 
 - `scope` (String) The scope of this setting (ENVIRONMENT_ACTIVE_GATE). Omit this property if you want to cover the whole environment.
+- `update_windows` (Block List, Max: 1) Update windows (see [below for nested schema](#nestedblock--update_windows))
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+<a id="nestedblock--update_windows"></a>
+### Nested Schema for `update_windows`
+
+Required:
+
+- `update_window` (Block Set, Min: 1) (see [below for nested schema](#nestedblock--update_windows--update_window))
+
+<a id="nestedblock--update_windows--update_window"></a>
+### Nested Schema for `update_windows.update_window`
+
+Required:
+
+- `update_window` (String) Select an [update window for ActiveGate updates](/ui/settings/builtin:deployment.management.update-windows)
  
