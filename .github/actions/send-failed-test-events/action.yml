@@ -89,5 +89,5 @@ runs:
         curl -sS --fail-with-body \
           -H "Authorization: Bearer $PLATFORM_TOKEN" \
           -H 'Content-Type: application/json' \
-          -X POST "$PLATFORM_URL/platform/ingest/$EVENTS_PATH" \
+          -X POST 'https://pet39401.dev.dynatracelabs.com/platform/ingest/v1/events.sdlc' \
           --data-binary "$payload"
