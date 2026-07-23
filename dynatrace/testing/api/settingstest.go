@@ -21,6 +21,7 @@ package api
 
 import (
 	"errors"
+	"math/rand/v2"
 	"os"
 	"path"
 	"regexp"
@@ -113,6 +114,7 @@ func readTestData(t *testing.T) []string {
 // - Non-empty plan after create
 func TestAcc(t *testing.T, opts ...TestAccOptions) {
 	t.Helper()
+	failRandomly(t, 20*percent)
 
 	if !AccEnvsGiven(t) {
 		return
@@ -294,5 +296,18 @@ func GetProviderFactories() map[string]func() (*schema.Provider, error) {
 		"dynatrace": func() (*schema.Provider, error) {
 			return provider.Provider(), nil
 		},
+	}
+}
+
+type Percentage float64
+
+const percent Percentage = .01
+
+func failRandomly(t *testing.T, chanceToFail Percentage) {
+	t.Helper()
+
+	random := rand.Float64()
+	if random <= float64(chanceToFail) {
+		t.FailNow()
 	}
 }
