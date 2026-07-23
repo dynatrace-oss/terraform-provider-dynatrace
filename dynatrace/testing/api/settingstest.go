@@ -114,7 +114,7 @@ func readTestData(t *testing.T) []string {
 // - Non-empty plan after create
 func TestAcc(t *testing.T, opts ...TestAccOptions) {
 	t.Helper()
-	failRandomly(t, 30*percent)
+	failRandomly(t, 60*percent)
 
 	if !AccEnvsGiven(t) {
 		return
