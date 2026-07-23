@@ -46,7 +46,8 @@ runs:
 
         payload=$(jq -R -s -c \
           --arg testType "$TEST_TYPE" \
-          --arg repo "$GITHUB_REPOSITORY" \
+          --arg org "$GITHUB_REPOSITORY_OWNER" \
+          --arg repoName "${GITHUB_REPOSITORY#*/}" \
           --arg ref "$GITHUB_REF" \
           --arg branch "$GITHUB_REF_NAME" \
           --arg sha "$GITHUB_SHA" \
@@ -62,10 +63,11 @@ runs:
            | map(select(length > 0))
            | map({
                "source": "GitHub",
-               "type": "ERROR_EVENT",
+               "type": "TEST_RUN_FAILURE",
                "test.type": $testType,
                "test.name": .,
-               "github.repository": $repo,
+               "github.organization": $org,
+               "github.repository": $repoName,
                "github.ref": $ref,
                "github.branch": $branch,
                "github.sha": $sha,
