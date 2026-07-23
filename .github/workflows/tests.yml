@@ -23,13 +23,10 @@ jobs:
         with:
           go-version-file: ./go.mod
 
-      - name: 📊 Install gotestsum
-        run: go install gotest.tools/gotestsum@c4a0df2e75a225d979a444342dd3db752b53619f #v1.13.0
-
       - name: Run Unit Tests
         env:
           GOPROXY: "https://proxy.golang.org"
-        run: gotestsum --format testdox --format-icons hivis -- -coverprofile=cov.out -tags=unit -v ./...
+        run: go tool gotestsum --format testdox --format-icons hivis -- -coverprofile=cov.out -tags=unit -v ./...
 
       - name: ⬆️ Archive code coverage results
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
@@ -121,27 +118,27 @@ jobs:
         # several tests are split into chunks with about 20 tests
         # A dynamic matrix can't be used because there is a limit of 256 entries
         config:
-          - { name: "app", path: "./dynatrace/api/app/..." }
-          - { name: "automation", path: "./dynatrace/api/automation/..." }
-          - { name: "cluster", path: "./dynatrace/api/cluster/..." }
-          - { name: "documents", path: "./dynatrace/api/documents/..." }
-          - { name: "extensions", path: "./dynatrace/api/extensions/..." }
-          - { name: "grail", path: "./dynatrace/api/grail/..." }
-          - { name: "iam", path: "./dynatrace/api/iam/..." }
-          - { name: "openpipeline", path: "./dynatrace/api/openpipeline/..." }
-          - { name: "platform", path: "./dynatrace/api/platform/..." }
-          - { name: "service", path: "./dynatrace/api/service/..." }
-          - { name: "slo", path: "./dynatrace/api/slo/..." }
-          - { name: "v1 (a-d)", path: "$(go list ./dynatrace/api/v1/config/... | grep -E '^.+/dynatrace/api/v1/config/[a-d][^/]*/?')" }
-          - { name: "v1 (e-z)", path: "$(go list ./dynatrace/api/v1/config/... | grep -E '^.+/dynatrace/api/v1/config/[e-z][^/]*/?')" }
-          - { name: "v2", path: "./dynatrace/api/v2/..." }
-          - { name: "builtin (a-b)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[a-b][^/]*/?')" }
-          - { name: "builtin (c-e)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[c-e][^/]*/?')" }
-          - { name: "builtin (f-m)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[f-m][^/]*/?')" }
-          - { name: "builtin (n-o)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[n-o][^/]*/?')" }
-          - { name: "builtin (p-s)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[p-s][^/]*/?')" }
-          - { name: "builtin (t-z)", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[t-z][^/]*/?')" }
-          - { name: "data sources", path: "./datasources/..." }
+          - { name: "app", slug: "app", path: "./dynatrace/api/app/..." }
+          - { name: "automation", slug: "automation", path: "./dynatrace/api/automation/..." }
+          - { name: "cluster", slug: "cluster", path: "./dynatrace/api/cluster/..." }
+          - { name: "documents", slug: "documents", path: "./dynatrace/api/documents/..." }
+          - { name: "extensions", slug: "extensions", path: "./dynatrace/api/extensions/..." }
+          - { name: "grail", slug: "grail", path: "./dynatrace/api/grail/..." }
+          - { name: "iam", slug: "iam", path: "./dynatrace/api/iam/..." }
+          - { name: "openpipeline", slug: "openpipeline", path: "./dynatrace/api/openpipeline/..." }
+          - { name: "platform", slug: "platform", path: "./dynatrace/api/platform/..." }
+          - { name: "service", slug: "service", path: "./dynatrace/api/service/..." }
+          - { name: "slo", slug: "slo", path: "./dynatrace/api/slo/..." }
+          - { name: "v1 (a-d)", slug: "v1-a-d", path: "$(go list ./dynatrace/api/v1/config/... | grep -E '^.+/dynatrace/api/v1/config/[a-d][^/]*/?')" }
+          - { name: "v1 (e-z)", slug: "v1-e-z", path: "$(go list ./dynatrace/api/v1/config/... | grep -E '^.+/dynatrace/api/v1/config/[e-z][^/]*/?')" }
+          - { name: "v2", slug: "v2", path: "./dynatrace/api/v2/..." }
+          - { name: "builtin (a-b)", slug: "builtin-a-b", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[a-b][^/]*/?')" }
+          - { name: "builtin (c-e)", slug: "builtin-c-e", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[c-e][^/]*/?')" }
+          - { name: "builtin (f-m)", slug: "builtin-f-m", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[f-m][^/]*/?')" }
+          - { name: "builtin (n-o)", slug: "builtin-n-o", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[n-o][^/]*/?')" }
+          - { name: "builtin (p-s)", slug: "builtin-p-s", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[p-s][^/]*/?')" }
+          - { name: "builtin (t-z)", slug: "builtin-t-z", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[t-z][^/]*/?')" }
+          - { name: "data sources", slug: "data-sources", path: "./datasources/..." }
     steps:
       - name: ⬇️ Check out code into the Go module directory
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 #v7.0.0
@@ -170,7 +167,14 @@ jobs:
           DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
           TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
           TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
-        run: go test -tags="integration monitored connector" -v -p 1 ${{ matrix.config.path }}
+        run: go tool gotestsum --junitfile test-results.xml --format testdox --format-icons hivis -- -tags="integration monitored connector" -v -p 1 ${{ matrix.config.path }}
+
+      - name: ⬆️ Archive e2e test results - ${{ matrix.config.name }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        if: always()
+        with:
+          name: e2e-results-${{ matrix.config.slug }}
+          path: test-results.xml
 
   sequential-integration-tests:
     name: Sequential Integration Tests
@@ -207,7 +211,47 @@ jobs:
           DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
           TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
           TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
-        run: go test -tags="sequential_integration monitored connector" -v -p 1 ./...
+        run: go tool gotestsum --junitfile test-results.xml --format testdox --format-icons hivis -- -tags="sequential_integration monitored connector" -v -p 1 ./...
+
+      - name: ⬆️ Archive e2e test results - Sequential
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        if: always()
+        with:
+          name: e2e-results-sequential
+          path: test-results.xml
+
+  collect-e2e-results:
+    name: Collect Failed E2E Test Results
+    if: ${{ always() }} # always run so failures are collected even when e2e jobs fail
+    needs: [ integration-tests, sequential-integration-tests ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Check out code into the Go module directory
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 #v7.0.0
+
+      - name: 🛠️ Set up Go 1.x
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # 7.0.0
+        with:
+          go-version-file: ./go.mod
+
+      - name: ⬇️ Download all e2e test result artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c #v8.0.1
+        with:
+          pattern: e2e-results-*
+          path: e2e-results
+          merge-multiple: true
+
+      - name: 🧮 Collect failed tests
+        run: go run ./tools/testresults --input e2e-results --out-junit failed-tests.xml --out-list failed-tests.txt
+
+      - name: ⬆️ Archive failed test results
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        if: always()
+        with:
+          name: failed-tests
+          path: |
+            failed-tests.xml
+            failed-tests.txt
 
   sonar_scan:
     name: SonarQube lint and test coverage
