@@ -167,63 +167,68 @@ jobs:
           DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
           TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
           TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
-        run: go tool gotestsum --junitfile test-results.xml --format testdox --format-icons hivis -- -tags="integration monitored connector" -v -p 1 ${{ matrix.config.path }}
+        run: |
+          mkdir -p test-results/${{ matrix.config.slug }}
+          go tool gotestsum --junitfile test-results/${{ matrix.config.slug }}/test-results.xml --format testdox --format-icons hivis -- -tags="integration monitored connector" -v -p 1 ${{ matrix.config.path }}
 
       - name: ⬆️ Archive e2e test results - ${{ matrix.config.name }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
         if: always()
         with:
           name: e2e-results-${{ matrix.config.slug }}
-          path: test-results.xml
+          path: test-results
 
   sequential-integration-tests:
     name: Sequential Integration Tests
     runs-on: ubuntu-latest
     needs: [ run-setup ]
-    concurrency:
-      group: sequential-integration-tests # only one run at a time, globally
-      cancel-in-progress: false # queue, don't cancel
+#    concurrency:
+#      group: sequential-integration-tests # only one run at a time, globally
+#      cancel-in-progress: false # queue, don't cancel
     steps:
       - name: ⬇️ Check out code into the Go module directory
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 #v7.0.0
 
-      - name: 🛠️ Set up Go 1.x
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # 7.0.0
-        with:
-          go-version-file: ./go.mod
-
-      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e #v4.0.1
-        with:
-          terraform_wrapper: false
-
-      - name: Run Integration Tests - Sequential
-        if: success() || failure()
-        env:
-          GOPROXY: "https://proxy.golang.org"
-          TF_ACC: "true"
-          DYNATRACE_DEBUG: "true"
-          DYNATRACE_HTTP_OAUTH_PREFERENCE: "true"
-          DT_NO_REPAIR_INPUT: "false"
-          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
-          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
-          DT_CLIENT_ID: ${{ secrets.DT_CLIENT_ID }}
-          DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
-          DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
-          TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
-          TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
-        run: go tool gotestsum --junitfile test-results.xml --format testdox --format-icons hivis -- -tags="sequential_integration monitored connector" -v -p 1 ./...
-
-      - name: ⬆️ Archive e2e test results - Sequential
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
-        if: always()
-        with:
-          name: e2e-results-sequential
-          path: test-results.xml
+#      - name: 🛠️ Set up Go 1.x
+#        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # 7.0.0
+#        with:
+#          go-version-file: ./go.mod
+#
+#      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e #v4.0.1
+#        with:
+#          terraform_wrapper: false
+#
+#      - name: Run Integration Tests - Sequential
+#        if: success() || failure()
+#        env:
+#          GOPROXY: "https://proxy.golang.org"
+#          TF_ACC: "true"
+#          DYNATRACE_DEBUG: "true"
+#          DYNATRACE_HTTP_OAUTH_PREFERENCE: "true"
+#          DT_NO_REPAIR_INPUT: "false"
+#          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+#          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+#          DT_CLIENT_ID: ${{ secrets.DT_CLIENT_ID }}
+#          DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
+#          DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
+#          TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
+#          TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
+#        run: |
+#          mkdir -p test-results/sequential
+#          go tool gotestsum --junitfile test-results/sequential/test-results.xml --format testdox --format-icons hivis -- -tags="sequential_integration monitored connector" -v -p 1 ./...
+#
+#      - name: ⬆️ Archive e2e test results - Sequential
+#        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+#        if: always()
+#        with:
+#          name: e2e-results-sequential
+#          path: test-results
 
   collect-e2e-results:
     name: Collect Failed E2E Test Results
     if: ${{ always() }} # always run so failures are collected even when e2e jobs fail
-    needs: [ integration-tests, sequential-integration-tests ]
+    needs: [ integration-tests ]
+#    needs: [ integration-tests, sequential-integration-tests ]
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Check out code into the Go module directory
