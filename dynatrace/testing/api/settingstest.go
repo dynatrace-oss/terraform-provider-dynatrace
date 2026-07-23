@@ -114,7 +114,7 @@ func readTestData(t *testing.T) []string {
 // - Non-empty plan after create
 func TestAcc(t *testing.T, opts ...TestAccOptions) {
 	t.Helper()
-	failRandomly(t, 20*percent)
+	failRandomly(t, 30*percent)
 
 	if !AccEnvsGiven(t) {
 		return
@@ -308,6 +308,6 @@ func failRandomly(t *testing.T, chanceToFail Percentage) {
 
 	random := rand.Float64()
 	if random <= float64(chanceToFail) {
-		t.FailNow()
+		t.Fatalf("Random failure triggered with chance: %f", chanceToFail)
 	}
 }
