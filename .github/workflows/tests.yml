@@ -26,7 +26,16 @@ jobs:
       - name: Run Unit Tests
         env:
           GOPROXY: "https://proxy.golang.org"
-        run: go tool gotestsum --format testdox --format-icons hivis -- -coverprofile=cov.out -tags=unit -v ./...
+        run: |
+          mkdir -p test-results/unit
+          go tool gotestsum --junitfile test-results/unit/test-results.xml --format testdox --format-icons hivis -- -coverprofile=cov.out -tags=unit -v ./...
+
+      - name: ⬆️ Archive unit test results
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        if: always()
+        with:
+          name: junit-results-unit
+          path: test-results
 
       - name: ⬆️ Archive code coverage results
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
@@ -175,7 +184,7 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
         if: always()
         with:
-          name: e2e-results-${{ matrix.config.slug }}
+          name: junit-results-${{ matrix.config.slug }}
           path: test-results
 
   sequential-integration-tests:
@@ -221,14 +230,14 @@ jobs:
 #        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
 #        if: always()
 #        with:
-#          name: e2e-results-sequential
+#          name: junit-results-sequential
 #          path: test-results
 
   collect-e2e-results:
-    name: Collect Failed E2E Test Results
-    if: ${{ always() }} # always run so failures are collected even when e2e jobs fail
-    needs: [ integration-tests ]
-#    needs: [ integration-tests, sequential-integration-tests ]
+    name: Collect Failed Test Results
+    if: ${{ always() }} # always run so failures are collected even when test jobs fail
+    needs: [ unit-tests, integration-tests ]
+#    needs: [ unit-tests, integration-tests, sequential-integration-tests ]
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Check out code into the Go module directory
@@ -239,15 +248,15 @@ jobs:
         with:
           go-version-file: ./go.mod
 
-      - name: ⬇️ Download all e2e test result artifacts
+      - name: ⬇️ Download all test result artifacts
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c #v8.0.1
         with:
-          pattern: e2e-results-*
-          path: e2e-results
+          pattern: junit-results-*
+          path: junit-results
           merge-multiple: true
 
       - name: 🧮 Collect failed tests
-        run: go run ./tools/testresults --input e2e-results --out-junit failed-tests.xml --out-list failed-tests.txt
+        run: go run ./tools/testresults --input junit-results --out-junit failed-tests.xml --out-list failed-tests.txt
 
       - name: ⬆️ Archive failed test results
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
