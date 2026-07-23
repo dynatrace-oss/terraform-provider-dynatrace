@@ -87,7 +87,7 @@ runs:
 
         echo "Sending $count failed test event(s) to Dynatrace."
         curl -sS --fail-with-body \
-          -H "Authorization: Api-Token $PLATFORM_TOKEN" \
+          -H "Authorization: Bearer $PLATFORM_TOKEN" \
           -H 'Content-Type: application/json' \
           -X POST "$PLATFORM_URL/platform/ingest/$EVENTS_PATH" \
           --data-binary "$payload"
