@@ -19,5 +19,17 @@ resource "dynatrace_platform_slo" "#name#" {
       | fieldsAdd sli=(((total[]-failures[])/total[])*(100))
       | fieldsRemove total, failures, tags
     EOT
+
+    filter_segments {
+      filter_segment {
+        id = "segment_1"
+        variables {
+          filter_segment_variable {
+            name = "variable_1"
+            values = ["value_1"]
+          }
+        }
+      }
+    }
   }
 }
