@@ -46,7 +46,7 @@ func (me *FilterSegments) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type FilterSegment struct {
 	Id        string                 `json:"id"`
-	Variables FilterSegmentVariables `json:"value,omitempty"`
+	Variables FilterSegmentVariables `json:"variables,omitempty"`
 }
 
 func (me *FilterSegment) Schema() map[string]*schema.Schema {
