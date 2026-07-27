@@ -212,6 +212,35 @@
 					"nullable": true,
 					"type": "boolean"
 				},
+				"fullSessionReplayOnGrail": {
+					"constraints": [
+						{
+							"customValidatorId": "replayOnGrailEnablementValidator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "saasDeploymentValidator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"description": "",
+					"displayName": "Enable New Session Replay Experience",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"maturity": "GENERAL_AVAILABILITY"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"expectedValue": true,
+						"property": "fullSessionReplay",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
+				},
 				"onCrash": {
 					"default": true,
 					"description": "Capture screen recordings that replay the user actions preceding all detected crashes. Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi). ",
@@ -221,6 +250,35 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "boolean"
+				},
+				"onCrashOnGrail": {
+					"constraints": [
+						{
+							"customValidatorId": "replayOnGrailEnablementValidator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "saasDeploymentValidator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"description": "",
+					"displayName": "Enable New Session Replay on Crashes Experience",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"maturity": "GENERAL_AVAILABILITY"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"expectedValue": true,
+						"property": "onCrash",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
 				}
 			},
 			"summaryPattern": "",
@@ -229,5 +287,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.7.2"
+	"version": "2.7.3"
 }
