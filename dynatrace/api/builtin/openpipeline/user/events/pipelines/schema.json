@@ -14,6 +14,7 @@
 		{
 			"schemaIds": [
 				"builtin:openpipeline.user.events.routing",
+				"builtin:openpipeline.user.events.data-forwarding",
 				"builtin:openpipeline.user.events.pipeline-groups",
 				"builtin:openpipeline.user.events.ingest-sources"
 			],
@@ -3642,5 +3643,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.68"
+	"version": "1.69"
 }

@@ -13,6 +13,7 @@
 	"deletionConstraints": [
 		{
 			"schemaIds": [
+				"builtin:openpipeline.events.security.data-forwarding",
 				"builtin:openpipeline.events.security.ingest-sources",
 				"builtin:openpipeline.events.security.routing",
 				"builtin:openpipeline.events.security.pipeline-groups"
@@ -3642,5 +3643,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.68"
+	"version": "1.69"
 }
