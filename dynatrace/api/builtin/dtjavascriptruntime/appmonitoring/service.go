@@ -18,15 +18,15 @@
 package appmonitoring
 
 import (
-	appmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/appmonitoring/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/dtjavascriptruntime/appmonitoring/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "2.4.1"
+const SchemaVersion = "2.4.3"
 const SchemaID = "builtin:dt-javascript-runtime.app-monitoring"
 
-func Service(clientSet rest.ClientSet) (settings.CRUDService[*appmonitoring.Settings], error) {
-	return settings20.Service[*appmonitoring.Settings](clientSet, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

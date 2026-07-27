@@ -120,6 +120,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -251,5 +252,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.4.1"
+	"version": "2.4.3"
 }
