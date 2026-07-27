@@ -5,7 +5,7 @@
 	"constraints": [
 		{
 			"checkAllProperties": false,
-			"customMessage": "For security reasons please re-enter the API token before saving the configuration.",
+			"customMessage": "For security reasons please re-enter the API token / Signing Secret before saving the configuration.",
 			"type": "SECRET_RESUBMISSION"
 		}
 	],
@@ -14,6 +14,7 @@
 	"documentation": "(for more information read the [Slack api documentation](https://api.slack.com/authentication/basics/ \"Visit Slack document\"))",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"appName": "Slack"
@@ -22,6 +23,15 @@
 	"ordered": false,
 	"ownerBasedAccessControl": true,
 	"properties": {
+		"externalApproval": {
+			"description": "Accept external approvals can enable Slack users to directly respond to approval request.",
+			"displayName": "External approval",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "boolean"
+		},
 		"name": {
 			"constraints": [
 				{
@@ -39,6 +49,29 @@
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": "text"
+		},
+		"signingSecret": {
+			"constraints": [
+				{
+					"customMessage": "Signing secret has to be between 5 and 500 characters long",
+					"maxLength": 500,
+					"minLength": 5,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The signing secret obtained from the Slack App Management UI.",
+			"displayName": "Signing secret",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "externalApproval",
+				"type": "EQUALS"
+			},
+			"type": "secret"
 		},
 		"token": {
 			"constraints": [
@@ -81,5 +114,5 @@
 	],
 	"schemaId": "app:dynatrace.slack:connection",
 	"types": {},
-	"version": "0.1.1"
+	"version": "0.2"
 }

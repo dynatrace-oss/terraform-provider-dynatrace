@@ -18,56 +18,77 @@
 package slackconnection
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type Settings struct {
-	Name        string `json:"name"`  // The name of the Slack connection
-	Token       string `json:"token"` // The bot token obtained from the Slack App Management UI
-	InsertAfter string `json:"-"`
+	ExternalApproval *bool   `json:"externalApproval,omitempty"` // Accept external approvals can enable Slack users to directly respond to approval request.
+	Name             string  `json:"name"`                       // Provide a unique and clearly identifiable connection name to your Slack App.
+	SigningSecret    *string `json:"signingSecret,omitempty"`    // The signing secret obtained from the Slack App Management UI.
+	Token            string  `json:"token"`                      // The bot token obtained from the Slack App Management UI.
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"external_approval": {
+			Type:        schema.TypeBool,
+			Description: "Accept external approvals can enable Slack users to directly respond to approval request.",
+			Optional:    true, // nullable
+		},
 		"name": {
 			Type:        schema.TypeString,
-			Description: "The name of the Slack connection",
+			Description: "Provide a unique and clearly identifiable connection name to your Slack App.",
 			Required:    true,
+		},
+		"signing_secret": {
+			Type:        schema.TypeString,
+			Description: "The signing secret obtained from the Slack App Management UI.",
+			Optional:    true, // precondition
+			Sensitive:   true,
 		},
 		"token": {
 			Type:        schema.TypeString,
-			Description: "The bot token obtained from the Slack App Management UI",
+			Description: "The bot token obtained from the Slack App Management UI.",
 			Required:    true,
 			Sensitive:   true,
-		},
-		"insert_after": {
-			Type:        schema.TypeString,
-			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
-			Optional:    true,
-			Computed:    true,
-			Deprecated:  "This resource is no longer ordered, please remove this attribute from the configuration",
 		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":         me.Name,
-		"token":        "${state.secret_value}",
-		"insert_after": me.InsertAfter,
+		"external_approval": me.ExternalApproval,
+		"name":              me.Name,
+		"signing_secret":    "${state.secret_value}",
+		"token":             "${state.secret_value}",
 	})
+}
+
+func (me *Settings) HandlePreconditions() error {
+	if (me.SigningSecret != nil) && (me.ExternalApproval == nil || !*me.ExternalApproval) {
+		return fmt.Errorf("'signing_secret' must not be specified unless 'external_approval' is set to 'true'; got 'external_approval'='%v'", opt.ValOrNil(me.ExternalApproval))
+	}
+	if (me.SigningSecret == nil) && (me.ExternalApproval != nil && *me.ExternalApproval) {
+		return fmt.Errorf("'signing_secret' must be specified when 'external_approval' is set to 'true'; got 'external_approval'='%v'", opt.ValOrNil(me.ExternalApproval))
+	}
+	return nil
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":         &me.Name,
-		"token":        &me.Token,
-		"insert_after": &me.InsertAfter,
+		"external_approval": &me.ExternalApproval,
+		"name":              &me.Name,
+		"signing_secret":    &me.SigningSecret,
+		"token":             &me.Token,
 	})
 }
 
 func (me *Settings) FillDemoValues() []string {
 	me.Token = "#######"
+	me.SigningSecret = new("#######")
 	return []string{"REST API didn't provide token data"}
 }
