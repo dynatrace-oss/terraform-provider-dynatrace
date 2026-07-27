@@ -58,7 +58,7 @@ func (me *MetadataItem) Schema() map[string]*schema.Schema {
 		},
 		"metadata_value": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 	}

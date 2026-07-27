@@ -30,15 +30,15 @@ type Settings struct {
 	DetectionConditionsLinux   LinuxDetectionConditions   `json:"detectionConditionsLinux,omitempty"`   // Detection rules
 	DetectionConditionsWindows WindowsDetectionConditions `json:"detectionConditionsWindows,omitempty"` // Detection rules
 	Enabled                    bool                       `json:"enabled"`                              // This setting is enabled (`true`) or disabled (`false`)
+	InsertAfter                *string                    `json:"-"`                                    // Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 	Metadata                   MetadataItems              `json:"metadata,omitempty"`                   // Set of additional key-value properties to be attached to the triggered event. You can retrieve the available property keys using the [Events API v2](https://dt-url.net/9622g1w). Additionally any Host resource attribute can be dynamically substituted (agent 1.325+).
-	Monitoring                 bool                       `json:"monitoring"`                           // Toggle the switch in order to enable or disable availability metric monitoring for this policy. Availability metrics produce custom metrics. Refer to [documentation](https://dt-url.net/vl03xzk) for consumption examples. Each monitored service consumes one custom metric.
+	Monitoring                 bool                       `json:"monitoring"`                           // Toggle the switch in order to enable or disable availability metric monitoring for this policy. Availability metrics produce custom metrics. Refer to [documentation](https://dt-url.net/vl03xzk) for consumption examples. Each monitored service consumes one custom metric.\n\n  **The feature can't be configured on hosts in Discovery mode**
 	Name                       string                     `json:"name"`                                 // Rule name
 	NotInstalledAlerting       *bool                      `json:"notInstalledAlerting,omitempty"`       // By default, Dynatrace does not alert if the service is not installed. Toggle the switch to enable or disable this feature
 	Scope                      *string                    `json:"-" scope:"scope"`                      // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
-	StatusConditionLinux       *string                    `json:"statusConditionLinux,omitempty"`       // This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$eq(failed)` – Matches services that are in failed state.\n\nAvailable logic operations:\n- `$not($eq(active))` – Matches services with state different from active.\n- `$or($eq(inactive),$eq(failed))` – Matches services that are either in inactive or failed state.\n\nUse one of the following values as a parameter for this condition:\n\n- `reloading`\n- `activating`\n- `deactivating`\n- `failed`\n- `inactive`\n- `active`
-	StatusConditionWindows     *string                    `json:"statusConditionWindows,omitempty"`     // This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$eq(paused)` – Matches services that are in paused state.\n\nAvailable logic operations:\n- `$not($eq(paused))` – Matches services that are in state different from paused.\n- `$or($eq(paused),$eq(running))` – Matches services that are either in paused or running state.\n\nUse one of the following values as a parameter for this condition:\n\n- `running`\n- `stopped`\n- `start_pending`\n- `stop_pending`\n- `continue_pending`\n- `pause_pending`\n- `paused`
-	System                     System                     `json:"system"`                               // Possible Values: `LINUX`, `WINDOWS`
-	InsertAfter                string                     `json:"-"`
+	StatusConditionLinux       *string                    `json:"statusConditionLinux,omitempty"`       // This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n  - `$eq(failed)` – Matches services that are in failed state.\n\n  Available logic operations:\n - `$not($eq(active))` – Matches services with state different from active.\n - `$or($eq(inactive),$eq(failed))` – Matches services that are either in inactive or failed state.\n\n  Use one of the following values as a parameter for this condition:\n\n  - `reloading`\n - `activating`\n - `deactivating`\n - `failed`\n - `inactive`\n - `active`
+	StatusConditionWindows     *string                    `json:"statusConditionWindows,omitempty"`     // This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n  - `$eq(paused)` – Matches services that are in paused state.\n\n  Available logic operations:\n - `$not($eq(paused))` – Matches services that are in state different from paused.\n - `$or($eq(paused),$eq(running))` – Matches services that are either in paused or running state.\n\n  Use one of the following values as a parameter for this condition:\n\n  - `running`\n - `stopped`\n - `start_pending`\n - `stop_pending`\n - `continue_pending`\n - `pause_pending`\n - `paused`
+	System                     System                     `json:"system"`                               // System. Possible values: `LINUX`, `WINDOWS`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -56,7 +56,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"detection_conditions_linux": {
 			Type:        schema.TypeList,
 			Description: "Detection rules",
-			Optional:    true, // precondition & minobjects == 0
+			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(LinuxDetectionConditions).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -64,7 +64,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"detection_conditions_windows": {
 			Type:        schema.TypeList,
 			Description: "Detection rules",
-			Optional:    true, // precondition & minobjects == 0
+			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(WindowsDetectionConditions).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -73,6 +73,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
+		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Computed:    true,
+			Optional:    true,
 		},
 		"metadata": {
 			Type:        schema.TypeList,
@@ -84,7 +90,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"monitoring": {
 			Type:        schema.TypeBool,
-			Description: "Toggle the switch in order to enable or disable availability metric monitoring for this policy. Availability metrics produce custom metrics. Refer to [documentation](https://dt-url.net/vl03xzk) for consumption examples. Each monitored service consumes one custom metric.",
+			Description: "Toggle the switch in order to enable or disable availability metric monitoring for this policy. Availability metrics produce custom metrics. Refer to [documentation](https://dt-url.net/vl03xzk) for consumption examples. Each monitored service consumes one custom metric.\n\n  **The feature can't be configured on hosts in Discovery mode**",
 			Required:    true,
 		},
 		"name": {
@@ -106,24 +112,18 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"status_condition_linux": {
 			Type:        schema.TypeString,
-			Description: "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$eq(failed)` – Matches services that are in failed state.\n\nAvailable logic operations:\n- `$not($eq(active))` – Matches services with state different from active.\n- `$or($eq(inactive),$eq(failed))` – Matches services that are either in inactive or failed state.\n\nUse one of the following values as a parameter for this condition:\n\n- `reloading`\n- `activating`\n- `deactivating`\n- `failed`\n- `inactive`\n- `active`",
+			Description: "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n  - `$eq(failed)` – Matches services that are in failed state.\n\n  Available logic operations:\n - `$not($eq(active))` – Matches services with state different from active.\n - `$or($eq(inactive),$eq(failed))` – Matches services that are either in inactive or failed state.\n\n  Use one of the following values as a parameter for this condition:\n\n  - `reloading`\n - `activating`\n - `deactivating`\n - `failed`\n - `inactive`\n - `active`",
 			Optional:    true, // precondition
 		},
 		"status_condition_windows": {
 			Type:        schema.TypeString,
-			Description: "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$eq(paused)` – Matches services that are in paused state.\n\nAvailable logic operations:\n- `$not($eq(paused))` – Matches services that are in state different from paused.\n- `$or($eq(paused),$eq(running))` – Matches services that are either in paused or running state.\n\nUse one of the following values as a parameter for this condition:\n\n- `running`\n- `stopped`\n- `start_pending`\n- `stop_pending`\n- `continue_pending`\n- `pause_pending`\n- `paused`",
+			Description: "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n  - `$eq(paused)` – Matches services that are in paused state.\n\n  Available logic operations:\n - `$not($eq(paused))` – Matches services that are in state different from paused.\n - `$or($eq(paused),$eq(running))` – Matches services that are either in paused or running state.\n\n  Use one of the following values as a parameter for this condition:\n\n  - `running`\n - `stopped`\n - `start_pending`\n - `stop_pending`\n - `continue_pending`\n - `pause_pending`\n - `paused`",
 			Optional:    true, // precondition
 		},
 		"system": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `LINUX`, `WINDOWS`",
+			Description: "System. Possible values: `LINUX`, `WINDOWS`",
 			Required:    true,
-		},
-		"insert_after": {
-			Type:        schema.TypeString,
-			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
-			Optional:    true,
-			Computed:    true,
 		},
 	}
 }
@@ -135,6 +135,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"detection_conditions_linux":   me.DetectionConditionsLinux,
 		"detection_conditions_windows": me.DetectionConditionsWindows,
 		"enabled":                      me.Enabled,
+		"insert_after":                 me.InsertAfter,
 		"metadata":                     me.Metadata,
 		"monitoring":                   me.Monitoring,
 		"name":                         me.Name,
@@ -143,7 +144,6 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"status_condition_linux":       me.StatusConditionLinux,
 		"status_condition_windows":     me.StatusConditionWindows,
 		"system":                       me.System,
-		"insert_after":                 me.InsertAfter,
 	})
 }
 
@@ -151,14 +151,26 @@ func (me *Settings) HandlePreconditions() error {
 	if (me.NotInstalledAlerting == nil) && (me.Alerting) {
 		me.NotInstalledAlerting = new(false)
 	}
+	if (me.AlertActivationDuration != nil) && (!me.Alerting) {
+		return fmt.Errorf("'alert_activation_duration' must not be specified unless 'alerting' is set to 'true'; got 'alerting'='%v'", me.Alerting)
+	}
 	if (me.AlertActivationDuration == nil) && (me.Alerting) {
-		return fmt.Errorf("'alert_activation_duration' must be specified if 'alerting' is set to '%v'", me.Alerting)
+		return fmt.Errorf("'alert_activation_duration' must be specified when 'alerting' is set to 'true'; got 'alerting'='%v'", me.Alerting)
 	}
-	if (me.StatusConditionLinux == nil) && ((string(me.System) == "LINUX") && (me.Alerting)) {
-		return fmt.Errorf("'status_condition_linux' must be specified if 'system' is set to '%v'", me.System)
+	if (me.NotInstalledAlerting != nil) && (!me.Alerting) {
+		return fmt.Errorf("'not_installed_alerting' must not be specified unless 'alerting' is set to 'true'; got 'alerting'='%v'", me.Alerting)
 	}
-	if (me.StatusConditionWindows == nil) && ((string(me.System) == "WINDOWS") && (me.Alerting)) {
-		return fmt.Errorf("'status_condition_windows' must be specified if 'system' is set to '%v'", me.System)
+	if (me.StatusConditionLinux != nil) && (string(me.System) != "LINUX" || !me.Alerting) {
+		return fmt.Errorf("'status_condition_linux' must not be specified unless ('system' is set to 'LINUX' and 'alerting' is set to 'true'); got 'system'='%v', 'alerting'='%v'", me.System, me.Alerting)
+	}
+	if (me.StatusConditionLinux == nil) && (string(me.System) == "LINUX" && me.Alerting) {
+		return fmt.Errorf("'status_condition_linux' must be specified when ('system' is set to 'LINUX' and 'alerting' is set to 'true'); got 'system'='%v', 'alerting'='%v'", me.System, me.Alerting)
+	}
+	if (me.StatusConditionWindows != nil) && (string(me.System) != "WINDOWS" || !me.Alerting) {
+		return fmt.Errorf("'status_condition_windows' must not be specified unless ('system' is set to 'WINDOWS' and 'alerting' is set to 'true'); got 'system'='%v', 'alerting'='%v'", me.System, me.Alerting)
+	}
+	if (me.StatusConditionWindows == nil) && (string(me.System) == "WINDOWS" && me.Alerting) {
+		return fmt.Errorf("'status_condition_windows' must be specified when ('system' is set to 'WINDOWS' and 'alerting' is set to 'true'); got 'system'='%v', 'alerting'='%v'", me.System, me.Alerting)
 	}
 	// ---- DetectionConditionsLinux LinuxDetectionConditions -> {"expectedValues":["LINUX"],"property":"system","type":"IN"}
 	// ---- DetectionConditionsWindows WindowsDetectionConditions -> {"expectedValues":["WINDOWS"],"property":"system","type":"IN"}
@@ -173,6 +185,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"detection_conditions_linux":   &me.DetectionConditionsLinux,
 		"detection_conditions_windows": &me.DetectionConditionsWindows,
 		"enabled":                      &me.Enabled,
+		"insert_after":                 &me.InsertAfter,
 		"metadata":                     &me.Metadata,
 		"monitoring":                   &me.Monitoring,
 		"name":                         &me.Name,
@@ -181,6 +194,5 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"status_condition_linux":       &me.StatusConditionLinux,
 		"status_condition_windows":     &me.StatusConditionWindows,
 		"system":                       &me.System,
-		"insert_after":                 &me.InsertAfter,
 	})
 }
