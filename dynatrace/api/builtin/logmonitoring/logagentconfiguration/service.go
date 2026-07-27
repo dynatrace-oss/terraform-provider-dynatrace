@@ -18,15 +18,15 @@
 package logagentconfiguration
 
 import (
-	logagentconfiguration "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentconfiguration/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logagentconfiguration/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.1.17"
+const SchemaVersion = "1.1.18"
 const SchemaID = "builtin:logmonitoring.log-agent-configuration"
 
-func Service(clientSet rest.ClientSet) (settings.CRUDService[*logagentconfiguration.Settings], error) {
-	return settings20.Service[*logagentconfiguration.Settings](clientSet, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }
