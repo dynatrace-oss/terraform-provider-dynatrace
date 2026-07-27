@@ -19,10 +19,11 @@ package osservicesmonitoring
 
 import (
 	"fmt"
+	"slices"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"golang.org/x/exp/slices"
 )
 
 type LinuxDetectionConditions []*LinuxDetectionCondition
@@ -48,23 +49,23 @@ func (me *LinuxDetectionConditions) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type LinuxDetectionCondition struct {
-	Condition             *string                `json:"condition,omitempty"`             // This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$contains(ssh)` – Matches if `ssh` appears anywhere in the service's property value.\n- `$eq(sshd)` – Matches if `sshd` matches the service's property value exactly.\n- `$prefix(ss)` – Matches if `ss` matches the prefix of the service's property value.\n- `$suffix(hd)` – Matches if `hd` matches the suffix of the service's property value.\n\nAvailable logic operations:\n- `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.\n- `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.\n- `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
-	HostMetadataCondition *HostMetadataCondition `json:"hostMetadataCondition,omitempty"` // Custom metadata
-	Property              *LinuxServiceProp      `json:"property,omitempty"`              // Possible Values: `ServiceName`, `StartupType`
-	RuleType              *RuleType              `json:"ruleType,omitempty"`              // Possible Values: `RuleTypeHost`, `RuleTypeOsService`
-	StartupCondition      *string                `json:"startupCondition,omitempty"`      // This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$eq(enabled)` – Matches services with startup type equal to enabled.\n\nAvailable logic operations:\n- `$not($eq(enabled))` – Matches services with startup type different from enabled.\n- `$or($eq(enabled),$eq(disabled))` - Matches services that are either enabled or disabled.\n\nUse one of the following values as a parameter for this condition:\n\n- `enabled`\n- `enabled-runtime`\n- `static`\n- `disabled`
+	Condition             *string                `json:"condition,omitempty"`             // This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n  - `$match(ip?tables*)` – Matches string with wildcards: `*` any number (including zero) of characters and `?` exactly one character.\n - `$contains(ssh)` – Matches if `ssh` appears anywhere in the service's property value.\n - `$eq(sshd)` – Matches if `sshd` matches the service's property value exactly.\n - `$prefix(ss)` – Matches if `ss` matches the prefix of the service's property value.\n - `$suffix(hd)` – Matches if `hd` matches the suffix of the service's property value.\n\n  Available logic operations:\n - `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.\n - `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.\n - `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.\n\n  Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
+	HostMetadataCondition *HostMetadataCondition `json:"hostMetadataCondition,omitempty"` // Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\n  By defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\n  See [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).\n\n  Note: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata.
+	Property              *LinuxServiceProp      `json:"property,omitempty"`              // Service property. Possible values: `ServiceName`, `StartupType`
+	RuleType              *RuleType              `json:"ruleType,omitempty"`              // Rule scope. Possible values: `RuleTypeHost`, `RuleTypeOsService`
+	StartupCondition      *string                `json:"startupCondition,omitempty"`      // This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n  - `$eq(enabled)` – Matches services with startup type equal to enabled.\n\n  Available logic operations:\n - `$not($eq(enabled))` – Matches services with startup type different from enabled.\n - `$or($eq(enabled),$eq(disabled))` - Matches services that are either enabled or disabled.\n\n  Use one of the following values as a parameter for this condition:\n\n  - `enabled`\n - `enabled-runtime`\n - `static`\n - `disabled`\n - `indirect`\n - `linked`\n - `linked-runtime`
 }
 
 func (me *LinuxDetectionCondition) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"condition": {
 			Type:        schema.TypeString,
-			Description: "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$contains(ssh)` – Matches if `ssh` appears anywhere in the service's property value.\n- `$eq(sshd)` – Matches if `sshd` matches the service's property value exactly.\n- `$prefix(ss)` – Matches if `ss` matches the prefix of the service's property value.\n- `$suffix(hd)` – Matches if `hd` matches the suffix of the service's property value.\n\nAvailable logic operations:\n- `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.\n- `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.\n- `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.\n\nBrackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
+			Description: "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n  - `$match(ip?tables*)` – Matches string with wildcards: `*` any number (including zero) of characters and `?` exactly one character.\n - `$contains(ssh)` – Matches if `ssh` appears anywhere in the service's property value.\n - `$eq(sshd)` – Matches if `sshd` matches the service's property value exactly.\n - `$prefix(ss)` – Matches if `ss` matches the prefix of the service's property value.\n - `$suffix(hd)` – Matches if `hd` matches the suffix of the service's property value.\n\n  Available logic operations:\n - `$not($eq(sshd))` – Matches if the service's property value is different from `sshd`.\n - `$and($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` and ends with `hd`.\n - `$or($prefix(ss),$suffix(hd))` – Matches if service's property value starts with `ss` or ends with `hd`.\n\n  Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**",
 			Optional:    true, // precondition
 		},
 		"host_metadata_condition": {
 			Type:        schema.TypeList,
-			Description: "Custom metadata",
+			Description: "Host resource attributes are dimensions enriching the host including custom metadata which are user-defined key-value pairs that you can assign to hosts monitored by Dynatrace.\n\n  By defining custom metadata, you can enrich the monitoring data with context specific to your organization's needs, such as environment names, team ownership, application versions, or any other relevant details.\n\n  See [Define tags and metadata for hosts](https://dt-url.net/w3hv0kbw).\n\n  Note: Starting from version 1.325 host resource attributes are supported in addition to host custom metadata.",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(HostMetadataCondition).Schema()},
 			MinItems:    1,
@@ -72,17 +73,17 @@ func (me *LinuxDetectionCondition) Schema() map[string]*schema.Schema {
 		},
 		"property": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `ServiceName`, `StartupType`",
+			Description: "Service property. Possible values: `ServiceName`, `StartupType`",
 			Optional:    true, // precondition
 		},
 		"rule_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `RuleTypeHost`, `RuleTypeOsService`",
+			Description: "Rule scope. Possible values: `RuleTypeHost`, `RuleTypeOsService`",
 			Optional:    true, // nullable
 		},
 		"startup_condition": {
 			Type:        schema.TypeString,
-			Description: "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n- `$eq(enabled)` – Matches services with startup type equal to enabled.\n\nAvailable logic operations:\n- `$not($eq(enabled))` – Matches services with startup type different from enabled.\n- `$or($eq(enabled),$eq(disabled))` - Matches services that are either enabled or disabled.\n\nUse one of the following values as a parameter for this condition:\n\n- `enabled`\n- `enabled-runtime`\n- `static`\n- `disabled`",
+			Description: "This string has to match a required format. See [OS services monitoring](https://dt-url.net/vl03xzk).\n\n  - `$eq(enabled)` – Matches services with startup type equal to enabled.\n\n  Available logic operations:\n - `$not($eq(enabled))` – Matches services with startup type different from enabled.\n - `$or($eq(enabled),$eq(disabled))` - Matches services that are either enabled or disabled.\n\n  Use one of the following values as a parameter for this condition:\n\n  - `enabled`\n - `enabled-runtime`\n - `static`\n - `disabled`\n - `indirect`\n - `linked`\n - `linked-runtime`",
 			Optional:    true, // precondition
 		},
 	}
@@ -99,19 +100,30 @@ func (me *LinuxDetectionCondition) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *LinuxDetectionCondition) HandlePreconditions() error {
+	if (me.Condition != nil) && (me.Property == nil || !slices.Contains([]string{"ServiceName"}, string(*me.Property))) {
+		return fmt.Errorf("'condition' must not be specified unless 'property' is one of ['ServiceName']; got 'property'='%v'", opt.ValOrNil(me.Property))
+	}
 	if (me.Condition == nil) && (me.Property != nil && slices.Contains([]string{"ServiceName"}, string(*me.Property))) {
-		return fmt.Errorf("'condition' must be specified if 'property' is set to '%v'", me.Property)
+		return fmt.Errorf("'condition' must be specified when 'property' is one of ['ServiceName']; got 'property'='%v'", opt.ValOrNil(me.Property))
+	}
+	if (me.HostMetadataCondition != nil) && (me.RuleType == nil || !slices.Contains([]string{"RuleTypeHost"}, string(*me.RuleType))) {
+		return fmt.Errorf("'host_metadata_condition' must not be specified unless 'rule_type' is one of ['RuleTypeHost']; got 'rule_type'='%v'", opt.ValOrNil(me.RuleType))
 	}
 	if (me.HostMetadataCondition == nil) && (me.RuleType != nil && slices.Contains([]string{"RuleTypeHost"}, string(*me.RuleType))) {
-		return fmt.Errorf("'host_metadata_condition' must be specified if 'rule_type' is set to '%v'", me.RuleType)
+		return fmt.Errorf("'host_metadata_condition' must be specified when 'rule_type' is one of ['RuleTypeHost']; got 'rule_type'='%v'", opt.ValOrNil(me.RuleType))
 	}
-	if (me.HostMetadataCondition != nil) && (me.RuleType != nil && !slices.Contains([]string{"RuleTypeHost"}, string(*me.RuleType))) {
-		return fmt.Errorf("'host_metadata_condition' must not be specified if 'rule_type' is set to '%v'", me.RuleType)
+	if (me.Property != nil) && ((me.RuleType != nil) && (me.RuleType == nil || !slices.Contains([]string{"RuleTypeOsService"}, string(*me.RuleType)))) {
+		return fmt.Errorf("'property' must not be specified unless ('rule_type' is not set or 'rule_type' is one of ['RuleTypeOsService']); got 'rule_type'='%v'", opt.ValOrNil(me.RuleType))
+	}
+	if (me.Property == nil) && ((me.RuleType == nil) || (me.RuleType != nil && slices.Contains([]string{"RuleTypeOsService"}, string(*me.RuleType)))) {
+		return fmt.Errorf("'property' must be specified when ('rule_type' is not set or 'rule_type' is one of ['RuleTypeOsService']); got 'rule_type'='%v'", opt.ValOrNil(me.RuleType))
+	}
+	if (me.StartupCondition != nil) && (me.Property == nil || !slices.Contains([]string{"StartupType"}, string(*me.Property))) {
+		return fmt.Errorf("'startup_condition' must not be specified unless 'property' is one of ['StartupType']; got 'property'='%v'", opt.ValOrNil(me.Property))
 	}
 	if (me.StartupCondition == nil) && (me.Property != nil && slices.Contains([]string{"StartupType"}, string(*me.Property))) {
-		return fmt.Errorf("'startup_condition' must be specified if 'property' is set to '%v'", me.Property)
+		return fmt.Errorf("'startup_condition' must be specified when 'property' is one of ['StartupType']; got 'property'='%v'", opt.ValOrNil(me.Property))
 	}
-	// ---- Property *LinuxServiceProp -> {"preconditions":[{"property":"ruleType","type":"NULL"},{"expectedValues":["RuleTypeOsService"],"property":"ruleType","type":"IN"}],"type":"OR"}
 	return nil
 }
 
