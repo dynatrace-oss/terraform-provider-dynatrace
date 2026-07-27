@@ -232,6 +232,35 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "boolean"
+				},
+				"enabledOnGrail": {
+					"constraints": [
+						{
+							"customValidatorId": "replayOnGrailEnablementValidator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"customValidatorId": "saasDeploymentValidator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"description": "",
+					"displayName": "Enable New Session Replay Experience",
+					"documentation": "",
+					"maxObjects": 1,
+					"metadata": {
+						"maturity": "GENERAL_AVAILABILITY"
+					},
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"expectedValue": true,
+						"property": "enabled",
+						"type": "EQUALS"
+					},
+					"type": "boolean"
 				}
 			},
 			"summaryPattern": "",
@@ -240,5 +269,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.9.1"
+	"version": "1.9.2"
 }
