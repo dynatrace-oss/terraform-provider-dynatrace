@@ -92,19 +92,20 @@ type Settings struct {
 	RuleID70    bool    `json:"-70"`                   // Rule id: 70 - Do not monitor processes if EXE name contains 'UiPath'
 	RuleID71    bool    `json:"-71"`                   // Rule id: 71 - Do not monitor processes if EXE name equals 'openhandlecollector.exe'
 	RuleID72    bool    `json:"-72"`                   // Rule id: 72 - Do not monitor processes if EXE name equals 'yq'
-	RuleID73    bool    `json:"-73"`                   // Rule id: 73 - Do not monitor processes if EXE name equals 'pip'
-	RuleID74    bool    `json:"-74"`                   // Rule id: 74 - Do not monitor processes if EXE name equals 'hatch'
-	RuleID75    bool    `json:"-75"`                   // Rule id: 75 - Do not monitor processes if EXE name equals 'wheel'
-	RuleID76    bool    `json:"-76"`                   // Rule id: 76 - Do not monitor processes if EXE name equals 'yum'
-	RuleID77    bool    `json:"-77"`                   // Rule id: 77 - Do not monitor processes if EXE name equals 'jupyter'
-	RuleID78    bool    `json:"-78"`                   // Rule id: 78 - Do not monitor processes if EXE name equals 'conda'
-	RuleID79    bool    `json:"-79"`                   // Rule id: 79 - Do not monitor processes if EXE name equals 'ansible'
-	RuleID80    bool    `json:"-80"`                   // Rule id: 80 - Do not monitor processes if EXE name equals 'openstack'
-	RuleID81    bool    `json:"-81"`                   // Rule id: 81 - Do not monitor processes if EXE name equals 'aws'
-	RuleID82    bool    `json:"-82"`                   // Rule id: 82 - Do not monitor processes if EXE name equals 'az'
-	RuleID83    bool    `json:"-83"`                   // Rule id: 83 - Do not monitor processes if EXE name equals 'gcloud'
+	RuleID73    bool    `json:"-73"`                   // Rule id: 73 - Do not monitor processes if Python script equals 'pip'
+	RuleID74    bool    `json:"-74"`                   // Rule id: 74 - Do not monitor processes if Python script equals 'hatch'
+	RuleID75    bool    `json:"-75"`                   // Rule id: 75 - Do not monitor processes if Python script equals 'wheel'
+	RuleID76    bool    `json:"-76"`                   // Rule id: 76 - Do not monitor processes if Python script equals 'yum'
+	RuleID77    bool    `json:"-77"`                   // Rule id: 77 - Do not monitor processes if Python script equals 'jupyter'
+	RuleID78    bool    `json:"-78"`                   // Rule id: 78 - Do not monitor processes if Python script equals 'conda'
+	RuleID79    bool    `json:"-79"`                   // Rule id: 79 - Do not monitor processes if Python script equals 'ansible'
+	RuleID80    bool    `json:"-80"`                   // Rule id: 80 - Do not monitor processes if Python script equals 'openstack'
+	RuleID81    bool    `json:"-81"`                   // Rule id: 81 - Do not monitor processes if Python script equals 'aws'
+	RuleID82    bool    `json:"-82"`                   // Rule id: 82 - Do not monitor processes if Python script equals 'az'
+	RuleID83    bool    `json:"-83"`                   // Rule id: 83 - Do not monitor processes if Python script equals 'gcloud'
 	RuleID84    bool    `json:"-84"`                   // Rule id: 84 - Do not monitor processes if command line arguments contain 'forever/bin/monitor'
 	RuleID85    bool    `json:"-85"`                   // Rule id: 85 - Do not monitor process if Java Main class contains 'ActiveGateCommandLineTool'
+	RuleID86    bool    `json:"-86"`                   // Rule id: 86 - Do not monitor processes if Python script contains 'supervisord'
 }
 
 func (me *Settings) Name() string {
@@ -530,67 +531,67 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"exe_pip": {
 			Type:        schema.TypeBool,
-			Description: "Rule id: 73 - Do not monitor processes if EXE name equals 'pip'",
+			Description: "Rule id: 73 - Do not monitor processes if Python script equals 'pip'",
 			Optional:    true,
 			Default:     true,
 		},
 		"exe_hatch": {
 			Type:        schema.TypeBool,
-			Description: "Rule id: 74 - Do not monitor processes if EXE name equals 'hatch'",
+			Description: "Rule id: 74 - Do not monitor processes if Python script equals 'hatch'",
 			Optional:    true,
 			Default:     true,
 		},
 		"exe_wheel": {
 			Type:        schema.TypeBool,
-			Description: "Rule id: 75 - Do not monitor processes if EXE name equals 'wheel'",
+			Description: "Rule id: 75 - Do not monitor processes if Python script equals 'wheel'",
 			Optional:    true,
 			Default:     true,
 		},
 		"exe_yum": {
 			Type:        schema.TypeBool,
-			Description: "Rule id: 76 - Do not monitor processes if EXE name equals 'yum'",
+			Description: "Rule id: 76 - Do not monitor processes if Python script equals 'yum'",
 			Optional:    true,
 			Default:     true,
 		},
 		"exe_jupyter": {
 			Type:        schema.TypeBool,
-			Description: "Rule id: 77 - Do not monitor processes if EXE name equals 'jupyter'",
+			Description: "Rule id: 77 - Do not monitor processes if Python script equals 'jupyter'",
 			Optional:    true,
 			Default:     true,
 		},
 		"exe_conda": {
 			Type:        schema.TypeBool,
-			Description: "Rule id: 78 - Do not monitor processes if EXE name equals 'conda'",
+			Description: "Rule id: 78 - Do not monitor processes if Python script equals 'conda'",
 			Optional:    true,
 			Default:     true,
 		},
 		"exe_ansible": {
 			Type:        schema.TypeBool,
-			Description: "Rule id: 79 - Do not monitor processes if EXE name equals 'ansible'",
+			Description: "Rule id: 79 - Do not monitor processes if Python script equals 'ansible'",
 			Optional:    true,
 			Default:     true,
 		},
 		"exe_openstack": {
 			Type:        schema.TypeBool,
-			Description: "Rule id: 80 - Do not monitor processes if EXE name equals 'openstack'",
+			Description: "Rule id: 80 - Do not monitor processes if Python script equals 'openstack'",
 			Optional:    true,
 			Default:     true,
 		},
 		"exe_aws": {
 			Type:        schema.TypeBool,
-			Description: "Rule id: 81 - Do not monitor processes if EXE name equals 'aws'",
+			Description: "Rule id: 81 - Do not monitor processes if Python script equals 'aws'",
 			Optional:    true,
 			Default:     true,
 		},
 		"exe_az": {
 			Type:        schema.TypeBool,
-			Description: "Rule id: 82 - Do not monitor processes if EXE name equals 'az'",
+			Description: "Rule id: 82 - Do not monitor processes if Python script equals 'az'",
 			Optional:    true,
 			Default:     true,
 		},
 		"exe_gcloud": {
 			Type:        schema.TypeBool,
-			Description: "Rule id: 83 - Do not monitor processes if EXE name equals 'gcloud'",
+			Description: "Rule id: 83 - Do not monitor processes if Python script equals 'gcloud'",
 			Optional:    true,
 			Default:     true,
 		},
@@ -603,6 +604,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"jmc_activegatecommandlinetool": {
 			Type:        schema.TypeBool,
 			Description: "Rule id: 85 - Do not monitor process if Java Main class contains 'ActiveGateCommandLineTool'",
+			Optional:    true, // new required field
+			Default:     true,
+		},
+		"py_supervisord": {
+			Type:        schema.TypeBool,
+			Description: "Rule id: 86 - Do not monitor processes if Python script contains 'supervisord'",
 			Optional:    true, // new required field
 			Default:     true,
 		},
@@ -693,6 +700,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"exe_gcloud":                            me.RuleID83,
 		"cmd_foreverbinmonitor":                 me.RuleID84,
 		"jmc_activegatecommandlinetool":         me.RuleID85,
+		"py_supervisord":                        me.RuleID86,
 	})
 }
 
@@ -780,5 +788,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"exe_gcloud":                            &me.RuleID83,
 		"cmd_foreverbinmonitor":                 &me.RuleID84,
 		"jmc_activegatecommandlinetool":         &me.RuleID85,
+		"py_supervisord":                        &me.RuleID86,
 	})
 }

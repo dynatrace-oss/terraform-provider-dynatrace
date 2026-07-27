@@ -675,7 +675,7 @@
 		"-73": {
 			"default": true,
 			"description": "Rule id: 73",
-			"displayName": "Do not monitor processes if EXE name equals 'pip'",
+			"displayName": "Do not monitor processes if Python script equals 'pip'",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -685,7 +685,7 @@
 		"-74": {
 			"default": true,
 			"description": "Rule id: 74",
-			"displayName": "Do not monitor processes if EXE name equals 'hatch'",
+			"displayName": "Do not monitor processes if Python script equals 'hatch'",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -695,7 +695,7 @@
 		"-75": {
 			"default": true,
 			"description": "Rule id: 75",
-			"displayName": "Do not monitor processes if EXE name equals 'wheel'",
+			"displayName": "Do not monitor processes if Python script equals 'wheel'",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -705,7 +705,7 @@
 		"-76": {
 			"default": true,
 			"description": "Rule id: 76",
-			"displayName": "Do not monitor processes if EXE name equals 'yum'",
+			"displayName": "Do not monitor processes if Python script equals 'yum'",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -715,7 +715,7 @@
 		"-77": {
 			"default": true,
 			"description": "Rule id: 77",
-			"displayName": "Do not monitor processes if EXE name equals 'jupyter'",
+			"displayName": "Do not monitor processes if Python script equals 'jupyter'",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -725,7 +725,7 @@
 		"-78": {
 			"default": true,
 			"description": "Rule id: 78",
-			"displayName": "Do not monitor processes if EXE name equals 'conda'",
+			"displayName": "Do not monitor processes if Python script equals 'conda'",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -735,7 +735,7 @@
 		"-79": {
 			"default": true,
 			"description": "Rule id: 79",
-			"displayName": "Do not monitor processes if EXE name equals 'ansible'",
+			"displayName": "Do not monitor processes if Python script equals 'ansible'",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -755,7 +755,7 @@
 		"-80": {
 			"default": true,
 			"description": "Rule id: 80",
-			"displayName": "Do not monitor processes if EXE name equals 'openstack'",
+			"displayName": "Do not monitor processes if Python script equals 'openstack'",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -765,7 +765,7 @@
 		"-81": {
 			"default": true,
 			"description": "Rule id: 81",
-			"displayName": "Do not monitor processes if EXE name equals 'aws'",
+			"displayName": "Do not monitor processes if Python script equals 'aws'",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -775,7 +775,7 @@
 		"-82": {
 			"default": true,
 			"description": "Rule id: 82",
-			"displayName": "Do not monitor processes if EXE name equals 'az'",
+			"displayName": "Do not monitor processes if Python script equals 'az'",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -785,7 +785,7 @@
 		"-83": {
 			"default": true,
 			"description": "Rule id: 83",
-			"displayName": "Do not monitor processes if EXE name equals 'gcloud'",
+			"displayName": "Do not monitor processes if Python script equals 'gcloud'",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -812,6 +812,16 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"-86": {
+			"default": true,
+			"description": "Rule id: 86",
+			"displayName": "Do not monitor processes if Python script contains 'supervisord'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"-9": {
 			"default": true,
 			"description": "Rule id: 9",
@@ -829,5 +839,5 @@
 	],
 	"schemaId": "builtin:process.built-in-process-monitoring-rule",
 	"types": {},
-	"version": "0.4.7"
+	"version": "0.4.8"
 }
