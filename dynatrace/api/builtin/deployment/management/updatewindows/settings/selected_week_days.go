@@ -36,37 +36,37 @@ func (me *SelectedWeekDays) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"friday": {
 			Type:        schema.TypeBool,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 		"monday": {
 			Type:        schema.TypeBool,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 		"saturday": {
 			Type:        schema.TypeBool,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 		"sunday": {
 			Type:        schema.TypeBool,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 		"thursday": {
 			Type:        schema.TypeBool,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 		"tuesday": {
 			Type:        schema.TypeBool,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 		"wednesday": {
 			Type:        schema.TypeBool,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 	}

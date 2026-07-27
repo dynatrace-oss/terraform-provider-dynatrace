@@ -2,8 +2,14 @@
 	"allowedScopes": [
 		"environment"
 	],
-	"description": "Define maintenance windows for how often and when to update your OneAgent instances. You will be able to apply these windows to OneAgents, Host Groups or your whole Environment in Automatic Update settings screens.",
-	"displayName": "Maintenance windows for OneAgent updates",
+	"deletionConstraints": [
+		{
+			"customValidatorId": "update-window-deletion-validator",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Define when automatic updates for OneAgent and ActiveGate should run.\n\nApply update windows at these scopes:\n\n- **OneAgent:** environment, host group, or individual host.\n - **ActiveGate:** environment or individual ActiveGate.",
+	"displayName": "Update windows for OneAgent and ActiveGate",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
@@ -140,10 +146,11 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
-		"addItemButton": "Create maintenance window",
-		"itemDisplayName": "New maintenance window"
+		"addItemButton": "Add update window",
+		"itemDisplayName": "New update window"
 	},
 	"multiObject": true,
 	"ordered": false,
@@ -261,6 +268,16 @@
 			}
 		}
 	},
+	"schemaConstraints": [
+		{
+			"customMessage": "The name of the update window must be unique.",
+			"flattenCollections": false,
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"name"
+			]
+		}
+	],
 	"schemaGroups": [
 		"group:updates"
 	],
@@ -410,6 +427,7 @@
 				{
 					"customMessage": "Start must be before End",
 					"customValidatorId": "start-end-one-time-container-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -454,6 +472,7 @@
 				{
 					"customMessage": "Start must be before End",
 					"customValidatorId": "recurrence-range-container-validator",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -498,6 +517,7 @@
 				{
 					"customMessage": "At least one day must be selected",
 					"customValidatorId": "at-least-one-selected",
+					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
@@ -711,5 +731,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.63.2"
+	"version": "0.63.3"
 }

@@ -32,10 +32,9 @@ func (me *OnceRecurrence) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Update time",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(OnceWindow).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(OnceWindow).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }
