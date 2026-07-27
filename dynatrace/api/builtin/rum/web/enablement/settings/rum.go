@@ -18,6 +18,8 @@
 package enablement
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -59,6 +61,9 @@ func (me *Rum) MarshalHCL(properties hcl.Properties) error {
 func (me *Rum) HandlePreconditions() error {
 	if (me.EnabledOnGrail == nil) && (me.Enabled) {
 		me.EnabledOnGrail = new(false)
+	}
+	if (me.EnabledOnGrail != nil) && (!me.Enabled) {
+		return fmt.Errorf("'enabled_on_grail' must not be specified unless 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
 	}
 	return nil
 }
