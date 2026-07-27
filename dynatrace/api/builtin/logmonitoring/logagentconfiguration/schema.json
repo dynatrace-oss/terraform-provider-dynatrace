@@ -9,10 +9,44 @@
 	"displayName": "Advanced log settings",
 	"documentation": "",
 	"dynatrace": "1",
-	"enums": {},
+	"enums": {
+		"BinaryDetectionMode": {
+			"description": "",
+			"displayName": "Binary detection mode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Per log source",
+					"value": "BinaryPerLogSource"
+				},
+				{
+					"displayName": "Per log file",
+					"value": "BinaryPerLogFile"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
+		"BinaryDetectionMode": {
+			"default": "BinaryPerLogSource",
+			"description": "Specifies the granularity at which binary log files are detected. 'Per log source' applies binary detection at the log source level, 'Per log file' evaluates each log file individually.",
+			"displayName": "Binary detection mode",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.343",
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/BinaryDetectionMode"
+			}
+		},
 		"LAConfigContainerTimezoneHeuristicEnabled": {
 			"default": true,
 			"description": "Enables automatic detection of timezone in container's logs if it is not explicitly defined in content or configured.",
@@ -116,7 +150,7 @@
 		},
 		"LAConfigLogScannerLinuxNfsEnabled": {
 			"default": false,
-			"description": "Allows detection of logs written to mounted network storage drives. Applies only to Linux hosts. For other OSes it's always enabled.",
+			"description": "Allows detection of logs written to mounted network storage drives. Applies only to Linux hosts. For Windows operating system it's always enabled.",
 			"displayName": "Detect logs on network file systems",
 			"documentation": "",
 			"maxObjects": 1,
@@ -134,7 +168,7 @@
 			],
 			"default": 200,
 			"description": "Defines the maximum number of log group instances per entity after which, the new automatic ones wouldn't be added.",
-			"displayName": "Maximum of log group instances per entity limit - count",
+			"displayName": "Maximum number of log sources per process group instance",
 			"documentation": "",
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
@@ -163,7 +197,7 @@
 		},
 		"LAConfigMonitorOwnLogsEnabled": {
 			"default": false,
-			"description": "Enabling this option may affect your licensing costs. For more details, see [documentation](https://dt-url.net/4l02yi8).",
+			"description": "Enabling this option may affect your licensing costs. For more details, see [documentation](https://dt-url.net/7v02z76).",
 			"displayName": "Allow OneAgent to monitor Dynatrace logs",
 			"documentation": "",
 			"maxObjects": 1,
@@ -235,5 +269,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-agent-configuration",
 	"types": {},
-	"version": "1.1.17"
+	"version": "1.1.18"
 }
