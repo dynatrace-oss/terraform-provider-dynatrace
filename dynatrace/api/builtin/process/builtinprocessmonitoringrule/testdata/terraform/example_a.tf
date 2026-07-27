@@ -12,4 +12,5 @@ resource "dynatrace_builtin_process_monitoring" "monitoring" {
   node_nodegyp                  = false
   cmd_foreverbinmonitor         = false
   jmc_activegatecommandlinetool = false
+  py_supervisord                = false
 }
