@@ -13,6 +13,7 @@
 	"deletionConstraints": [
 		{
 			"schemaIds": [
+				"builtin:openpipeline.davis.problems.data-forwarding",
 				"builtin:openpipeline.davis.problems.routing",
 				"builtin:openpipeline.davis.problems.ingest-sources",
 				"builtin:openpipeline.davis.problems.pipeline-groups"
@@ -3642,5 +3643,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.68"
+	"version": "1.69"
 }

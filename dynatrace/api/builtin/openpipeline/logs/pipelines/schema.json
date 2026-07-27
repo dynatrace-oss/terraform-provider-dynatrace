@@ -14,6 +14,7 @@
 		{
 			"schemaIds": [
 				"builtin:openpipeline.logs.ingest-sources",
+				"builtin:openpipeline.logs.data-forwarding",
 				"builtin:openpipeline.logs.routing",
 				"builtin:openpipeline.logs.pipeline-groups"
 			],
@@ -3642,5 +3643,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.68"
+	"version": "1.69"
 }

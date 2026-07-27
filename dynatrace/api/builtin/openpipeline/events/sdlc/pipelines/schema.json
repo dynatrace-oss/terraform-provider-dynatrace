@@ -15,7 +15,8 @@
 			"schemaIds": [
 				"builtin:openpipeline.events.sdlc.pipeline-groups",
 				"builtin:openpipeline.events.sdlc.routing",
-				"builtin:openpipeline.events.sdlc.ingest-sources"
+				"builtin:openpipeline.events.sdlc.ingest-sources",
+				"builtin:openpipeline.events.sdlc.data-forwarding"
 			],
 			"type": "REFERENTIAL_INTEGRITY"
 		}
@@ -3642,5 +3643,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.68"
+	"version": "1.69"
 }

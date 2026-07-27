@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.68"
+const SchemaVersion = "1.69"
 const SchemaID = "builtin:openpipeline.bizevents.ingest-sources"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
