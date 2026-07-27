@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.4"
+const SchemaVersion = "1.0.5"
 const SchemaID = "builtin:dt-javascript-runtime.allowed-outbound-connections"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
