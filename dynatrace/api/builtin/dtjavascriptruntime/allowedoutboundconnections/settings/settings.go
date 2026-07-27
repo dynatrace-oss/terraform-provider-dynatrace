@@ -34,7 +34,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"allowed_outbound_connections": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(AllowedHostsList).Schema()},
 			MinItems:    1,

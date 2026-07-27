@@ -66,7 +66,7 @@
 						"documentation": "",
 						"type": "text"
 					},
-					"maxObjects": 50,
+					"maxObjects": 100,
 					"minObjects": 0,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -84,5 +84,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.4"
+	"version": "1.0.5"
 }
