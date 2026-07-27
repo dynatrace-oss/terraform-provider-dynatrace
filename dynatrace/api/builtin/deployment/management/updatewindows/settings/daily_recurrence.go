@@ -23,7 +23,7 @@ import (
 )
 
 type DailyRecurrence struct {
-	Every           int              `json:"every"`           // Every **X** days:\n* `1` = every day,\n* `2` = every two days,\n* `3` = every three days,\n* etc.
+	Every           int              `json:"every"`           // Every **X** days:\n * `1` = every day,\n * `2` = every two days,\n * `3` = every three days,\n * etc.
 	RecurrenceRange *RecurrenceRange `json:"recurrenceRange"` // Recurrence range
 	UpdateTime      *UpdateTime      `json:"updateTime"`      // Update time
 }
@@ -32,26 +32,24 @@ func (me *DailyRecurrence) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"every": {
 			Type:        schema.TypeInt,
-			Description: "Every **X** days:\n* `1` = every day,\n* `2` = every two days,\n* `3` = every three days,\n* etc.",
+			Description: "Every **X** days:\n * `1` = every day,\n * `2` = every two days,\n * `3` = every three days,\n * etc.",
 			Required:    true,
 		},
 		"recurrence_range": {
 			Type:        schema.TypeList,
 			Description: "Recurrence range",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(RecurrenceRange).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(RecurrenceRange).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"update_time": {
 			Type:        schema.TypeList,
 			Description: "Update time",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(UpdateTime).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(UpdateTime).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }

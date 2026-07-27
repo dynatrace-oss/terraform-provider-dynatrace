@@ -31,12 +31,12 @@ func (me *RecurrenceRange) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"end": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 		"start": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 	}

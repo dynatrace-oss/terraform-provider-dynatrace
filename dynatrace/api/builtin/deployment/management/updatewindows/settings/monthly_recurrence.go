@@ -23,7 +23,7 @@ import (
 )
 
 type MonthlyRecurrence struct {
-	Every            int              `json:"every"`            // Every **X** months:\n* `1` = every month,\n* `2` = every two months,\n* `3` = every three months,\n* etc.
+	Every            int              `json:"every"`            // Every **X** months:\n * `1` = every month,\n * `2` = every two months,\n * `3` = every three months,\n * etc.
 	RecurrenceRange  *RecurrenceRange `json:"recurrenceRange"`  // Recurrence range
 	SelectedMonthDay int              `json:"selectedMonthDay"` // Day of the month
 	UpdateTime       *UpdateTime      `json:"updateTime"`       // Update time
@@ -33,17 +33,16 @@ func (me *MonthlyRecurrence) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"every": {
 			Type:        schema.TypeInt,
-			Description: "Every **X** months:\n* `1` = every month,\n* `2` = every two months,\n* `3` = every three months,\n* etc.",
+			Description: "Every **X** months:\n * `1` = every month,\n * `2` = every two months,\n * `3` = every three months,\n * etc.",
 			Required:    true,
 		},
 		"recurrence_range": {
 			Type:        schema.TypeList,
 			Description: "Recurrence range",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(RecurrenceRange).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(RecurrenceRange).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"selected_month_day": {
 			Type:        schema.TypeInt,
@@ -54,10 +53,9 @@ func (me *MonthlyRecurrence) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Description: "Update time",
 			Required:    true,
-
-			Elem:     &schema.Resource{Schema: new(UpdateTime).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Elem:        &schema.Resource{Schema: new(UpdateTime).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 	}
 }
