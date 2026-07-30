@@ -33,6 +33,10 @@ resource "dynatrace_automation_workflow" "workflow_with_davis_problem_trigger" {
           entity_tags_match  = "all"
           custom_filter = "matchesPhrase(custom.event.type, \"DEPLOY\")"
           analysis_ready = true
+          trigger_on = "open-and-close"
+          severity_threshold = 3
+          trigger_on_update_fields = ["event.severity", "smartscape.affected_entities"]
+          problem_open_duration = 15
         }
       }
     }

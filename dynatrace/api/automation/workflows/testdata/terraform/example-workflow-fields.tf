@@ -1,5 +1,5 @@
 # Exercises the new fields: hourly_execution_limit, analysis_ready,
-# is_deployed, owner_type, input, guide, and result
+# is_deployed, owner_type, input, guide, result, and throttle
 
 resource "dynatrace_iam_group" "group" {
   name = "#name#"
@@ -21,6 +21,11 @@ resource "dynatrace_automation_workflow" "with_group_owner" {
   guide = "##My Guide"
   result = "deployment_status"
 
+  # Reset lever - false is a no-op on an unthrottled workflow and round-trips
+  throttle {
+    is_limit_hit = false
+  }
+
   # Optional
   description = "Validates all newly added workflow fields"
   private     = false
@@ -37,6 +42,10 @@ resource "dynatrace_automation_workflow" "with_group_owner" {
       input = jsonencode({
         "method" : "GET",
         "url" : "https://www.example.com/"
+      })
+      custom_sample_result = jsonencode({
+        "statusCode" : 200,
+        "body" : { "ok" : true }
       })
       position {
         x = 0
