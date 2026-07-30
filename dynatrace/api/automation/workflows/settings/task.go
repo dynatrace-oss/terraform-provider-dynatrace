@@ -19,6 +19,7 @@ package workflows
 
 import (
 	"encoding/json"
+	"fmt"
 	"regexp"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
@@ -91,19 +92,20 @@ func (me *Tasks) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type Task struct {
-	Name         string               `json:"name" pattern:"^(?!.*null$)([A-Za-z_][A-Za-z0-9-_]*)$"` // The name of the task
-	Action       string               `json:"action" pattern:"^.+:.+$"`
-	Description  *string              `json:"description,omitempty"` // A description for this task
-	Input        map[string]any       `json:"input"`
-	Active       *bool                `json:"active,omitempty"` // Specifies whether a task should be skipped as a no operation or not
-	Position     *TaskPosition        `json:"position"`
-	Predecessors []string             `json:"predecessors,omitempty"`
-	Conditions   *TaskConditionOption `json:"conditions,omitempty"`
-	WithItems    *string              `json:"withItems,omitempty"`
-	Concurrency  *VarInt              `json:"concurrency" minimum:"1" maximum:"99"`
-	Retry        *TaskRetryOption     `json:"retry,omitempty"`
-	Timeout      *VarInt              `json:"timeout" default:"900" minimum:"1" maximum:"604800"` // Specifies a default task timeout. 15 * 60 (15min) is used when not set
-	WaitBefore   *VarInt              `json:"waitBefore" default:"0" minimum:"0" maximum:"86400"` // Specifies a default task wait before in seconds. 0 is used when not set
+	Name               string               `json:"name" pattern:"^(?!.*null$)([A-Za-z_][A-Za-z0-9-_]*)$"` // The name of the task
+	Action             string               `json:"action" pattern:"^.+:.+$"`
+	Description        *string              `json:"description,omitempty"` // A description for this task
+	Input              map[string]any       `json:"input"`
+	Active             *bool                `json:"active,omitempty"` // Specifies whether a task should be skipped as a no operation or not
+	Position           *TaskPosition        `json:"position"`
+	CustomSampleResult json.RawMessage      `json:"customSampleResult,omitempty"`
+	Predecessors       []string             `json:"predecessors,omitempty"`
+	Conditions         *TaskConditionOption `json:"conditions,omitempty"`
+	WithItems          *string              `json:"withItems,omitempty"`
+	Concurrency        *VarInt              `json:"concurrency" minimum:"1" maximum:"99"`
+	Retry              *TaskRetryOption     `json:"retry,omitempty"`
+	Timeout            *VarInt              `json:"timeout" default:"900" minimum:"1" maximum:"604800"` // Specifies a default task timeout. 15 * 60 (15min) is used when not set
+	WaitBefore         *VarInt              `json:"waitBefore" default:"0" minimum:"0" maximum:"86400"` // Specifies a default task wait before in seconds. 0 is used when not set
 }
 
 func (me *Task) Schema(prefix string) map[string]*schema.Schema {
@@ -131,6 +133,12 @@ func (me *Task) Schema(prefix string) map[string]*schema.Schema {
 			DiffSuppressFunc: hcl.SuppressJSONorEOT,
 			Default:          "{}",
 			Elem:             &schema.Schema{Type: schema.TypeString},
+		},
+		"custom_sample_result": {
+			Type:             schema.TypeString,
+			Description:      "A stored sample result for this task as JSON. Not used during execution - it powers expression auto-complete and result preview in the Dynatrace UI. Accepts any JSON value",
+			Optional:         true,
+			DiffSuppressFunc: hcl.SuppressJSONorEOT,
 		},
 		"active": {
 			Type:        schema.TypeBool,
@@ -197,6 +205,10 @@ func (me *Task) MarshalHCL(properties hcl.Properties) error {
 	if err != nil {
 		return err
 	}
+	var customSampleResultJSON string
+	if len(me.CustomSampleResult) > 0 {
+		customSampleResultJSON = string(me.CustomSampleResult)
+	}
 	// Fix for #579. The REST API apparently now produces an empty `conditions` property
 	// That leads to non-empty plans
 	if me.Conditions != nil {
@@ -205,36 +217,39 @@ func (me *Task) MarshalHCL(properties hcl.Properties) error {
 		}
 	}
 	return properties.EncodeAll(map[string]any{
-		"name":        me.Name,
-		"action":      me.Action,
-		"description": me.Description,
-		"input":       inputJSON,
-		"active":      me.Active,
-		"position":    me.Position,
-		"conditions":  me.Conditions,
-		"concurrency": me.Concurrency,
-		"with_items":  me.WithItems,
-		"retry":       me.Retry,
-		"timeout":     me.Timeout,
-		"wait_before": me.WaitBefore,
+		"name":                 me.Name,
+		"action":               me.Action,
+		"description":          me.Description,
+		"input":                inputJSON,
+		"custom_sample_result": customSampleResultJSON,
+		"active":               me.Active,
+		"position":             me.Position,
+		"conditions":           me.Conditions,
+		"concurrency":          me.Concurrency,
+		"with_items":           me.WithItems,
+		"retry":                me.Retry,
+		"timeout":              me.Timeout,
+		"wait_before":          me.WaitBefore,
 	})
 }
 
 func (me *Task) UnmarshalHCL(decoder hcl.Decoder) error {
 	var inputStr string
+	var customSampleResultStr string
 	if err := decoder.DecodeAll(map[string]any{
-		"name":        &me.Name,
-		"action":      &me.Action,
-		"description": &me.Description,
-		"input":       &inputStr,
-		"active":      &me.Active,
-		"position":    &me.Position,
-		"conditions":  &me.Conditions,
-		"concurrency": &me.Concurrency,
-		"with_items":  &me.WithItems,
-		"retry":       &me.Retry,
-		"timeout":     &me.Timeout,
-		"wait_before": &me.WaitBefore,
+		"name":                 &me.Name,
+		"action":               &me.Action,
+		"description":          &me.Description,
+		"input":                &inputStr,
+		"custom_sample_result": &customSampleResultStr,
+		"active":               &me.Active,
+		"position":             &me.Position,
+		"conditions":           &me.Conditions,
+		"concurrency":          &me.Concurrency,
+		"with_items":           &me.WithItems,
+		"retry":                &me.Retry,
+		"timeout":              &me.Timeout,
+		"wait_before":          &me.WaitBefore,
 	}); err != nil {
 		return err
 	}
@@ -242,6 +257,13 @@ func (me *Task) UnmarshalHCL(decoder hcl.Decoder) error {
 		if err := json.Unmarshal([]byte(inputStr), &me.Input); err != nil {
 			return err
 		}
+	}
+
+	if len(customSampleResultStr) > 0 {
+		if !json.Valid([]byte(customSampleResultStr)) {
+			return fmt.Errorf("custom_sample_result must be valid JSON")
+		}
+		me.CustomSampleResult = json.RawMessage(customSampleResultStr)
 	}
 
 	// The REST API requires `predecessors` getting populated with the names of the tasks

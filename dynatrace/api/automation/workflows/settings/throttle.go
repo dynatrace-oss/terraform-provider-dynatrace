@@ -22,37 +22,32 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type EventQuery struct {
-	Query     string    `json:"query"`
-	EventType EventType `json:"eventType"`
+type Throttle struct {
+	IsLimitHit bool `json:"isLimitHit"` // Whether the execution limit is currently hit. Set `false` to clear an active throttle; the API rejects `true` unless the workflow is already throttled
 }
 
-func (me *EventQuery) Schema(prefix string) map[string]*schema.Schema {
+func (me *Throttle) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"query": {
-			Type:        schema.TypeString,
-			Description: "A query based on DQL for events that trigger executions",
-			Required:    true,
-		},
-		"event_type": {
-			Type:        schema.TypeString,
-			Description: "Possible values: `events`, `bizevents`, `dt.system.events`, and `security.events`. Default: `events`",
-			Optional:    true,
-			Default:     "events",
+		"is_limit_hit": {
+			Type: schema.TypeBool,
+			Description: "Whether the workflow's execution limit is currently hit. This value is computed by the server from the current throttle state." +
+				"\n  Set to `false` to reset (clear) an active throttle." +
+				"\n  The API rejects `true` unless the workflow is already throttled." +
+				"\n  When omitted, the value is read from the API",
+			Optional: true,
+			Computed: true,
 		},
 	}
 }
 
-func (me *EventQuery) MarshalHCL(properties hcl.Properties) error {
+func (me *Throttle) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"query":      me.Query,
-		"event_type": me.EventType,
+		"is_limit_hit": me.IsLimitHit,
 	})
 }
 
-func (me *EventQuery) UnmarshalHCL(decoder hcl.Decoder) error {
+func (me *Throttle) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"query":      &me.Query,
-		"event_type": &me.EventType,
+		"is_limit_hit": &me.IsLimitHit,
 	})
 }

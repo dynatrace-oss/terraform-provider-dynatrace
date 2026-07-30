@@ -26,12 +26,14 @@ import (
 )
 
 type DavisEventConfig struct {
-	EntityTagsMatch EntityTagsMatch        `json:"entityTagsMatch"`                // Possible values: `all` and `any`
-	EntityTags      map[string]StringArray `json:"entityTags"`                     // key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Multiple values can be provided separated by whitespace (e.g. \"val1 val2\") and will be parsed as multiple tag values. Omit this attribute if all entities should match
-	OnProblemClose  bool                   `json:"onProblemClose" default:"false"` // If set to `true` closing a problem also is considered an event that triggers the execution
-	Types           []string               `json:"types" flags:"uniqueitems"`      // The types of davis events to trigger an execution
-	Names           DavisEventNames        `json:"names"`
-	CustomFilter    string                 `json:"customFilter,omitempty"`
+	EntityTagsMatch                  EntityTagsMatch        `json:"entityTagsMatch"`                // Possible values: `all` and `any`
+	EntityTags                       map[string]StringArray `json:"entityTags"`                     // key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Multiple values can be provided separated by whitespace (e.g. \"val1 val2\") and will be parsed as multiple tag values. Omit this attribute if all entities should match
+	OnProblemClose                   bool                   `json:"onProblemClose" default:"false"` // If set to `true` closing a problem also is considered an event that triggers the execution
+	TriggerOn                        string                 `json:"triggerOn,omitempty"`            // Event state to trigger on. Possible values: `open`, `open-and-close`, `close`. When unset, falls back to `on_problem_close`
+	Names                            DavisEventNames        `json:"names"`
+	Types                            []string               `json:"types" flags:"uniqueitems"` // The types of davis events to trigger an execution
+	CustomFilter                     string                 `json:"customFilter,omitempty"`
+	MaintenanceWindowTriggerBehavior string                 `json:"maintenanceWindowTriggerBehavior,omitempty"` // Specifies when to trigger based on maintenance window status. Possible values: `always`, `inside`, `outside`
 }
 
 func (me *DavisEventConfig) Schema(prefix string) map[string]*schema.Schema {
@@ -50,9 +52,21 @@ func (me *DavisEventConfig) Schema(prefix string) map[string]*schema.Schema {
 		},
 		"on_problem_close": {
 			Type:        schema.TypeBool,
-			Description: "If set to `true` closing a problem also is considered an event that triggers the execution",
+			Description: "If set to `true` closing a problem also is considered an event that triggers the execution.",
+			Deprecated:  "Use `trigger_on` instead",
 			Optional:    true,
 			Default:     false,
+		},
+		"trigger_on": {
+			Type:        schema.TypeString,
+			Description: "Event state to trigger on. Possible values: `open` (active only), `open-and-close` (both phases), or `close` (closure only). When unset, falls back to `on_problem_close`",
+			Optional:    true,
+		},
+		"maintenance_window_trigger_behavior": {
+			Type:        schema.TypeString,
+			Description: "Specifies when to trigger based on maintenance window status. Possible values: `always`, `inside`, `outside`. Default: `always`",
+			Optional:    true,
+			Default:     "always",
 		},
 		"types": {
 			Type:        schema.TypeSet,
@@ -83,11 +97,13 @@ func (me *DavisEventConfig) MarshalHCL(properties hcl.Properties) error {
 		return err
 	}
 	return properties.EncodeAll(map[string]any{
-		"entity_tags_match": me.EntityTagsMatch,
-		"on_problem_close":  me.OnProblemClose,
-		"types":             me.Types,
-		"names":             me.Names,
-		"custom_filter":     me.CustomFilter,
+		"entity_tags_match":                   me.EntityTagsMatch,
+		"on_problem_close":                    me.OnProblemClose,
+		"trigger_on":                          me.TriggerOn,
+		"maintenance_window_trigger_behavior": me.MaintenanceWindowTriggerBehavior,
+		"types":                               me.Types,
+		"names":                               me.Names,
+		"custom_filter":                       me.CustomFilter,
 	})
 }
 
@@ -96,11 +112,13 @@ func (me *DavisEventConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 		return err
 	}
 	return decoder.DecodeAll(map[string]any{
-		"entity_tags_match": &me.EntityTagsMatch,
-		"on_problem_close":  &me.OnProblemClose,
-		"types":             &me.Types,
-		"names":             &me.Names,
-		"custom_filter":     &me.CustomFilter,
+		"entity_tags_match":                   &me.EntityTagsMatch,
+		"on_problem_close":                    &me.OnProblemClose,
+		"trigger_on":                          &me.TriggerOn,
+		"maintenance_window_trigger_behavior": &me.MaintenanceWindowTriggerBehavior,
+		"types":                               &me.Types,
+		"names":                               &me.Names,
+		"custom_filter":                       &me.CustomFilter,
 	})
 }
 
