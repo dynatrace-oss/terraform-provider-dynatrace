@@ -95,6 +95,8 @@ resource "dynatrace_automation_workflow" "workflow_with_davis_event_trigger" {
           }
           entity_tags_match  = "all"
           on_problem_close = false
+          trigger_on = "open"
+          maintenance_window_trigger_behavior = "inside"
           custom_filter = "matchesPhrase(custom.event.type, \"DEPLOY\")"
         }
       }
