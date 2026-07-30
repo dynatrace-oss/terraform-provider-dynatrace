@@ -79,10 +79,12 @@ var ScheduleTriggerTypes = struct {
 	Cron     ScheduleTriggerType
 	Time     ScheduleTriggerType
 	Interval ScheduleTriggerType
+	Once     ScheduleTriggerType
 }{
 	"cron",
 	"time",
 	"interval",
+	"once",
 }
 
 type EventTriggerType string

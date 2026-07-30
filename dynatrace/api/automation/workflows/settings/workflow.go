@@ -28,22 +28,24 @@ import (
 const SchemaVersion = 4
 
 type Workflow struct {
-	Title       string `json:"title" maxlength:"200"` // The title / name of the workflow
-	Description string `json:"description"`           // An optional description for the workflow
-
+	Title                string         `json:"title" maxlength:"200"`                        // The title / name of the workflow
+	IsDeployed           bool           `json:"isDeployed"`                                   // Defines whether this workflow is deployed or kept as a draft. Default is `true`
+	Tasks                Tasks          `json:"tasks"`                                        // The tasks to run for every execution of this workflow
+	Description          string         `json:"description"`                                  // An optional description for the workflow
 	Actor                string         `json:"actor,omitempty" maxlength:"36" format:"uuid"` // The user context the executions of the workflow will happen with
 	Owner                string         `json:"owner,omitempty" format:"uuid"`                // The ID of the owner of this workflow
 	OwnerType            string         `json:"ownerType"`                                    // The type of the owner. Possible values: `USER` and `GROUP`
 	Private              bool           `json:"isPrivate"`                                    // Defines whether this workflow is private to the owner or not. Default is `true`
-	IsDeployed           bool           `json:"isDeployed"`                                   // Defines whether this workflow is deployed or kept as a draft. Default is `true`
 	SchemaVersion        int            `json:"schemaVersion"`                                //
 	Trigger              *Trigger       `json:"trigger,omitempty"`                            // Configures how executions of the workflows are getting triggered. If no trigger is specified it means the workflow is getting manually triggered
-	Tasks                Tasks          `json:"tasks"`                                        // The tasks to run for every execution of this workflow
+	Result               *string        `json:"result,omitempty"`                             // The result of the workflow
 	Type                 string         `json:"type"`
-	HourlyExecutionLimit *int           `json:"hourlyExecutionLimit"` // Maximum number of executions per hour, default is 1000
 	Input                map[string]any `json:"input"`                // Workflow-level input parameters
+	HourlyExecutionLimit *int           `json:"hourlyExecutionLimit"` // Maximum number of executions per hour, default is 1000
 	Guide                string         `json:"guide"`                // Informational guide text for the workflow
-	Result               *string        `json:"result,omitempty"`     // The result of the workflow
+	// basedOnTemplate: ignore
+	Throttle                        *Throttle `json:"throttle,omitempty"`                        // Execution throttling configuration for the workflow
+	UnacknowledgedSkippedScheduleAt *string   `json:"unacknowledgedSkippedScheduleAt,omitempty"` // Timestamp of the earliest schedule that was skipped and not yet acknowledged
 }
 
 func (me *Workflow) Name() string {
@@ -145,6 +147,19 @@ func (me *Workflow) Schema() map[string]*schema.Schema {
 			Optional:    true,
 			// Default must not be set because SIMPLE workflows don't support it
 		},
+		"throttle": {
+			Type:        schema.TypeList,
+			Description: "Execution throttling state for the workflow. Server-computed - see `is_limit_hit`. Set only to reset an active throttle",
+			MaxItems:    1,
+			Optional:    true,
+			Computed:    true,
+			Elem:        &schema.Resource{Schema: new(Throttle).Schema()},
+		},
+		"unacknowledged_skipped_schedule_at": {
+			Type:        schema.TypeString,
+			Description: "Timestamp of the earliest schedule that was skipped and not yet acknowledged",
+			Computed:    true,
+		},
 	}
 }
 
@@ -167,17 +182,19 @@ func (me *Workflow) MarshalHCL(properties hcl.Properties) error {
 		"title":       me.Title,
 		"description": me.Description,
 
-		"actor":                  me.Actor,
-		"owner":                  me.Owner,
-		"owner_type":             me.OwnerType,
-		"private":                me.Private,
-		"is_deployed":            me.IsDeployed,
-		"trigger":                me.Trigger,
-		"type":                   me.Type,
-		"hourly_execution_limit": me.HourlyExecutionLimit,
-		"input":                  inputJSON,
-		"guide":                  me.Guide,
-		"result":                 me.Result,
+		"actor":                              me.Actor,
+		"owner":                              me.Owner,
+		"owner_type":                         me.OwnerType,
+		"private":                            me.Private,
+		"is_deployed":                        me.IsDeployed,
+		"trigger":                            me.Trigger,
+		"type":                               me.Type,
+		"hourly_execution_limit":             me.HourlyExecutionLimit,
+		"input":                              inputJSON,
+		"guide":                              me.Guide,
+		"result":                             me.Result,
+		"throttle":                           me.Throttle,
+		"unacknowledged_skipped_schedule_at": me.UnacknowledgedSkippedScheduleAt,
 	})
 }
 
@@ -187,18 +204,20 @@ func (me *Workflow) UnmarshalHCL(decoder hcl.Decoder) error {
 		"title":       &me.Title,
 		"description": &me.Description,
 
-		"actor":                  &me.Actor,
-		"owner":                  &me.Owner,
-		"owner_type":             &me.OwnerType,
-		"private":                &me.Private,
-		"is_deployed":            &me.IsDeployed,
-		"trigger":                &me.Trigger,
-		"tasks":                  &me.Tasks,
-		"type":                   &me.Type,
-		"hourly_execution_limit": &me.HourlyExecutionLimit,
-		"input":                  &inputStr,
-		"guide":                  &me.Guide,
-		"result":                 &me.Result,
+		"actor":                              &me.Actor,
+		"owner":                              &me.Owner,
+		"owner_type":                         &me.OwnerType,
+		"private":                            &me.Private,
+		"is_deployed":                        &me.IsDeployed,
+		"trigger":                            &me.Trigger,
+		"tasks":                              &me.Tasks,
+		"type":                               &me.Type,
+		"hourly_execution_limit":             &me.HourlyExecutionLimit,
+		"input":                              &inputStr,
+		"guide":                              &me.Guide,
+		"result":                             &me.Result,
+		"throttle":                           &me.Throttle,
+		"unacknowledged_skipped_schedule_at": &me.UnacknowledgedSkippedScheduleAt,
 	}); err != nil {
 		return err
 	}
