@@ -26,14 +26,17 @@ import (
 )
 
 type Document struct {
-	ID            string `json:"id,omitempty"`
-	Name          string `json:"name" maxlength:"200"`
-	Content       string `json:"content,omitempty"`
-	IsPrivate     bool   `json:"isPrivate,omitempty"`
-	Type          string `json:"type"`
-	Owner         string `json:"owner,omitempty" format:"uuid"`
-	Version       int    `json:"version,omitempty"`
-	SchemaVersion int    `json:"schemaVersion,omitempty"`
+	ID            string   `json:"id,omitempty"`
+	Name          string   `json:"name" maxlength:"200"`
+	Content       string   `json:"content,omitempty"`
+	IsPrivate     bool     `json:"isPrivate,omitempty"`
+	Type          string   `json:"type"`
+	Owner         string   `json:"owner,omitempty" format:"uuid"`
+	Version       int      `json:"version,omitempty"`
+	SchemaVersion int      `json:"schemaVersion,omitempty"`
+	Description   string   `json:"description,omitempty"`
+	Labels        []string `json:"labels,omitempty"`
+	IsReshareable bool     `json:"isReshareable,omitempty"`
 }
 
 func (me *Document) Schema() map[string]*schema.Schema {
@@ -79,6 +82,22 @@ func (me *Document) Schema() map[string]*schema.Schema {
 			Description: "The version of the document",
 			Computed:    true,
 		},
+		"description": {
+			Type:        schema.TypeString,
+			Description: "A short description of the document",
+			Optional:    true,
+		},
+		"labels": {
+			Type:        schema.TypeSet,
+			Description: "Labels attached to the document",
+			Optional:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+		},
+		"is_reshareable": {
+			Type:        schema.TypeBool,
+			Description: "Specifies whether recipients of a direct share can share the document further",
+			Optional:    true,
+		},
 	}
 }
 
@@ -90,45 +109,57 @@ func (me *Document) MarshalHCL(properties hcl.Properties) error {
 		}
 	}
 	return properties.EncodeAll(map[string]any{
-		"name":    me.Name,
-		"content": me.Content,
-		"private": me.IsPrivate,
-		"type":    me.Type,
-		"owner":   me.Owner,
-		"version": me.Version,
+		"name":           me.Name,
+		"content":        me.Content,
+		"private":        me.IsPrivate,
+		"type":           me.Type,
+		"owner":          me.Owner,
+		"version":        me.Version,
+		"description":    me.Description,
+		"labels":         me.Labels,
+		"is_reshareable": me.IsReshareable,
 	})
 }
 
 func (me *Document) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"custom_id": &me.ID,
-		"name":      &me.Name,
-		"content":   &me.Content,
-		"private":   &me.IsPrivate,
-		"type":      &me.Type,
-		"owner":     &me.Owner,
-		"version":   &me.Version,
+		"custom_id":      &me.ID,
+		"name":           &me.Name,
+		"content":        &me.Content,
+		"private":        &me.IsPrivate,
+		"type":           &me.Type,
+		"owner":          &me.Owner,
+		"version":        &me.Version,
+		"description":    &me.Description,
+		"labels":         &me.Labels,
+		"is_reshareable": &me.IsReshareable,
 	})
 }
 
 func (me *Document) MarshalJSON() ([]byte, error) {
 	d := struct {
-		ID      string `json:"id,omitempty"`
-		Name    string `json:"name"`
-		Content string `json:"content,omitempty"`
-		Private bool   `json:"isPrivate,omitempty"`
-		Type    string `json:"type"`
-		Actor   string `json:"actor,omitempty"`
-		Owner   string `json:"owner,omitempty"`
-		Version int    `json:"version,omitempty"`
+		ID            string   `json:"id,omitempty"`
+		Name          string   `json:"name"`
+		Content       string   `json:"content,omitempty"`
+		Private       bool     `json:"isPrivate,omitempty"`
+		Type          string   `json:"type"`
+		Actor         string   `json:"actor,omitempty"`
+		Owner         string   `json:"owner,omitempty"`
+		Version       int      `json:"version,omitempty"`
+		Description   string   `json:"description,omitempty"`
+		Labels        []string `json:"labels,omitempty"`
+		IsReshareable bool     `json:"isReshareable,omitempty"`
 	}{
-		ID:      me.ID,
-		Name:    me.Name,
-		Private: me.IsPrivate,
-		Content: me.Content,
-		Type:    me.Type,
-		Owner:   me.Owner,
-		Version: me.Version,
+		ID:            me.ID,
+		Name:          me.Name,
+		Private:       me.IsPrivate,
+		Content:       me.Content,
+		Type:          me.Type,
+		Owner:         me.Owner,
+		Version:       me.Version,
+		Description:   me.Description,
+		Labels:        me.Labels,
+		IsReshareable: me.IsReshareable,
 	}
 	return json.Marshal(d)
 }
