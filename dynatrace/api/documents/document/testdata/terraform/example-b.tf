@@ -1,6 +1,9 @@
 resource "dynatrace_document" "#name#" {
-  name = "#name#"
-  type = "launchpad"
+  name           = "#name#"
+  type           = "launchpad"
+  description    = "Updated description"
+  labels         = ["monitoring", "cloud"]
+  is_reshareable = false
   content = jsonencode({
     "background" : "default",
     "containerList" : {
