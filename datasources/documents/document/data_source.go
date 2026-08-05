@@ -37,7 +37,7 @@ func DataSource() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The type of documents to query for. Leave empty if you want to query for all kinds of documents. Possible values are `dashboard` or `notebook`",
+				Description: "The type of documents to query for. Leave empty if you want to query for all kinds of documents. Possible values are `dashboard`, `notebook` or `launchpad`",
 			},
 			"values": {
 				Type:     schema.TypeList,
@@ -63,6 +63,22 @@ func DataSource() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "The owner of the document. This could be a user or a group that has ownership rights over the document.",
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "A short description of the document.",
+						},
+						"labels": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Labels attached to the document.",
+						},
+						"is_reshareable": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Specifies whether recipients of a direct share can share the document further.",
 						},
 					},
 				},
@@ -103,10 +119,13 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 				}
 			}
 			m := map[string]any{
-				"id":    stub.ID,
-				"name":  stub.Name,
-				"type":  stub.Extra["type"],
-				"owner": stub.Extra["owner"],
+				"id":             stub.ID,
+				"name":           stub.Name,
+				"type":           stub.Extra["type"],
+				"owner":          stub.Extra["owner"],
+				"description":    stub.Extra["description"],
+				"labels":         stub.Extra["labels"],
+				"is_reshareable": stub.Extra["isReshareable"],
 			}
 
 			values = append(values, m)
