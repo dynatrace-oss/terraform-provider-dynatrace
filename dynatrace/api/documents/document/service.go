@@ -110,7 +110,22 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	}
 	var stubs api.Stubs
 	for _, response := range listResponse.Responses {
-		stubs = append(stubs, &api.Stub{ID: response.ID, Name: response.Name, Extra: map[string]any{"type": response.Type, "owner": response.Owner}})
+		var description string
+		if response.Description != nil {
+			description = *response.Description
+		}
+		var isReshareable bool
+		if response.IsReshareable != nil {
+			isReshareable = *response.IsReshareable
+		}
+		extra := map[string]any{
+			"type":          response.Type,
+			"owner":         response.Owner,
+			"labels":        response.Labels,
+			"description":   description,
+			"isReshareable": isReshareable,
+		}
+		stubs = append(stubs, &api.Stub{ID: response.ID, Name: response.Name, Extra: extra})
 	}
 
 	return stubs, nil
