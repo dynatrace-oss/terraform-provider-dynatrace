@@ -462,6 +462,7 @@ import (
 	openpipelineusersessionspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/pipelinegroups"
 	openpipelineusersessionspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/pipelines"
 	openpipelineusersessionsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/usersessions/routing"
+	syntheticprimarygrailtags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/synthetic/primarygrailtags"
 )
 
 func NewResourceDescriptor[T settings.Settings](fn func(clientSet rest.ClientSet) (settings.CRUDService[T], error), dependencies ...Dependency) ResourceDescriptor {
@@ -2013,6 +2014,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsIngestsources),
 	),
+	ResourceTypes.SyntheticPrimarygrailtags: NewResourceDescriptor(syntheticprimarygrailtags.Service),
 }
 
 type ResourceExclusion struct {

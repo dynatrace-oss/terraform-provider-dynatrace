@@ -1,0 +1,97 @@
+{
+	"allowedScopes": [
+		"SYNTHETIC_TEST",
+		"HTTP_CHECK",
+		"MULTIPROTOCOL_MONITOR"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "primary_grail_tags_validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Set synthetic monitor's primary grail tags.",
+	"displayName": "Synthetic monitor's primary grail tags",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maturity": "EARLY_ADOPTER",
+	"maxObjects": 1,
+	"multiObject": false,
+	"properties": {
+		"tags": {
+			"description": "",
+			"displayName": "Primary grail tags",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/PrimaryGrailTag"
+				}
+			},
+			"maxObjects": 10,
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		}
+	},
+	"schemaId": "builtin:synthetic.primary-grail-tags",
+	"types": {
+		"PrimaryGrailTag": {
+			"description": "",
+			"displayName": "Primary grail tag",
+			"documentation": "",
+			"properties": {
+				"key": {
+					"constraints": [
+						{
+							"maxLength": 50,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"type": "NOT_BLANK"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Primary grail tag's key",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"value": {
+					"constraints": [
+						{
+							"maxLength": 200,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"type": "NOT_BLANK"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Primary grail tag's value",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "Primary grail tag with key: {key}, and value: {value}.",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1.0.1"
+}
