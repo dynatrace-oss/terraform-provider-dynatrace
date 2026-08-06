@@ -77,6 +77,10 @@ Required:
 - `cost_and_traffic_control` (Number) (Field has overlap with `dynatrace_web_application`) [Percentage of user sessions recorded with Session Replay Classic](https://dt-url.net/sr-cost-traffic-control). For example, if you have 50% for RUM and 50% for Session Replay Classic, it results in 25% of sessions recorded with Session Replay Classic.
 - `enabled` (Boolean) (Field has overlap with `dynatrace_web_application`) This setting is enabled (`true`) or disabled (`false`)
 
+Optional:
+
+- `enabled_on_grail` (Boolean) Enable New Session Replay Experience
+
 
 <a id="nestedblock--experience_analytics"></a>
 ### Nested Schema for `experience_analytics`

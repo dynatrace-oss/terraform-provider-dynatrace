@@ -118,6 +118,8 @@ resource "dynatrace_automation_workflow" "workflow_with_davis_event_trigger" {
           }
           entity_tags_match  = "all"
           on_problem_close = false
+          trigger_on = "open"
+          maintenance_window_trigger_behavior = "inside"
           custom_filter = "matchesPhrase(custom.event.type, \"DEPLOY\")"
         }
       }
@@ -147,12 +149,14 @@ resource "dynatrace_automation_workflow" "workflow_with_davis_event_trigger" {
 - `owner_type` (String) The type of the owner. Possible values are `USER` and `GROUP`
 - `private` (Boolean) Defines whether this workflow is private to the owner or not. Default is `true`
 - `result` (String) The result of the workflow
+- `throttle` (Block List, Max: 1) Execution throttling state for the workflow. Server-computed - see `is_limit_hit`. Set only to reset an active throttle (see [below for nested schema](#nestedblock--throttle))
 - `trigger` (Block List, Max: 1) Configures how executions of the workflows are getting triggered. If no trigger is specified it means the workflow is getting manually triggered (see [below for nested schema](#nestedblock--trigger))
 - `type` (String) The type of the workflow. Possible values are `STANDARD` and `SIMPLE`. Defaults to `STANDARD`. Workflows of type `SIMPLE` are allowed to contain only one action
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `unacknowledged_skipped_schedule_at` (String) Timestamp of the earliest schedule that was skipped and not yet acknowledged
 
 <a id="nestedblock--tasks"></a>
 ### Nested Schema for `tasks`
@@ -174,6 +178,7 @@ Optional:
 - `active` (Boolean) Specifies whether a task should be skipped as a no operation or not
 - `concurrency` (String) Required if `with_items` is specified. By default loops execute sequentially with concurrency set to 1. You can increase how often it runs in parallel
 - `conditions` (Block List, Max: 1) Conditions that have to be met in order to execute that task (see [below for nested schema](#nestedblock--tasks--task--conditions))
+- `custom_sample_result` (String) A stored sample result for this task as JSON. Not used during execution - it powers expression auto-complete and result preview in the Dynatrace UI. Accepts any JSON value
 - `description` (String) A description for this task
 - `input` (String) Parameters and values for this task as JSON code. Contents depend on the kind of task - determined by the attribute `action`
 - `position` (Block List, Max: 1) Layouting information about the task tile when visualized. If not specified Dynatrace will position the task tiles automatically (see [below for nested schema](#nestedblock--tasks--task--position))
@@ -213,6 +218,17 @@ Optional:
 
 
 
+<a id="nestedblock--throttle"></a>
+### Nested Schema for `throttle`
+
+Optional:
+
+- `is_limit_hit` (Boolean) Whether the workflow's execution limit is currently hit. This value is computed by the server from the current throttle state.
+  Set to `false` to reset (clear) an active throttle.
+  The API rejects `true` unless the workflow is already throttled.
+  When omitted, the value is read from the API
+
+
 <a id="nestedblock--trigger"></a>
 ### Nested Schema for `trigger`
 
@@ -248,8 +264,10 @@ Optional:
 - `custom_filter` (String) Additional DQL matcher expression to further filter events to match
 - `entity_tags` (Map of String) key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Multiple values can be provided separated by whitespace (e.g. "val1 val2") and will be parsed as multiple tag values. Omit this attribute if all entities should match
 - `entity_tags_match` (String) Specifies whether all or just any of the configured entity tags need to match. Possible values: `all` and `any`. Omit this attribute if all entities should match
+- `maintenance_window_trigger_behavior` (String) Specifies when to trigger based on maintenance window status. Possible values: `always`, `inside`, `outside`. Default: `always`
 - `names` (Block List, Max: 1) The Davis Events to match on (see [below for nested schema](#nestedblock--trigger--event--config--davis_event--names))
-- `on_problem_close` (Boolean) If set to `true` closing a problem also is considered an event that triggers the execution
+- `on_problem_close` (Boolean, Deprecated) If set to `true` closing a problem also is considered an event that triggers the execution.
+- `trigger_on` (String) Event state to trigger on. Possible values: `open` (active only), `open-and-close` (both phases), or `close` (closure only). When unset, falls back to `on_problem_close`
 - `types` (Set of String, Deprecated) The types of davis events to trigger an execution. Possible values are `CUSTOM_ANNOTATION`, `APPLICATION_UNEXPECTED_HIGH_LOAD`, `APPLICATION_UNEXPECTED_LOW_LOAD`, `APPLICATION_OVERLOAD_PREVENTION`, `APPLICATION_SLOWDOWN`, `AVAILABILITY_EVENT`, `LOG_AVAILABILITY`, `EC2_HIGH_CPU`, `RDS_BACKUP_COMPLETED`, `RDS_BACKUP_STARTED`, `SYNTHETIC_GLOBAL_OUTAGE`, `SYNTHETIC_LOCAL_OUTAGE`, `SYNTHETIC_TEST_LOCATION_SLOWDOWN`, `CUSTOM_CONFIGURATION`, `PROCESS_NA_HIGH_CONN_FAIL_RATE`, `OSI_HIGH_CPU`, `CUSTOM_ALERT`, `CUSTOM_APP_CRASH_RATE_INCREASED`, `CUSTOM_APPLICATION_ERROR_RATE_INCREASED`, `CUSTOM_APPLICATION_UNEXPECTED_HIGH_LOAD`, `CUSTOM_APPLICATION_UNEXPECTED_LOW_LOAD`, `CUSTOM_APPLICATION_OVERLOAD_PREVENTION`, `CUSTOM_APPLICATION_SLOWDOWN`, `PGI_CUSTOM_AVAILABILITY`, `PGI_CUSTOM_ERROR`, `CUSTOM_INFO`, `PGI_CUSTOM_PERFORMANCE`, `CUSTOM_DEPLOYMENT`, `DEPLOYMENT_CHANGED_CHANGE`, `DEPLOYMENT_CHANGED_NEW`, `DEPLOYMENT_CHANGED_REMOVED`, `EBS_VOLUME_HIGH_LATENCY`, `ERROR_EVENT`, `LOG_ERROR`, `ESXI_HOST_CONNECTION_FAILED`, `ESXI_HOST_CONNECTION_LOST`, `ESXI_GUEST_CPU_LIMIT_REACHED`, `ESXI_GUEST_ACTIVE_SWAP_WAIT`, `ESXI_HOST_CPU_SATURATION`, `ESXI_HOST_MEMORY_SATURATION`, `ESXI_HOST_MAINTENANCE`, `ESXI_HOST_NETWORK_PROBLEMS`, `ESXI_HOST_NO_CONNECTION`, `ESXI_HOST_SHUTDOWN`, `ESXI_HOST_DISK_SLOW`, `ESXI_HOST_UP`, `ESXI_HOST_TIMEOUT`, `ESXI_VM_IMPACT_HOST_CPU_SATURATION`, `ESXI_VM_IMPACT_HOST_MEMORY_SATURATION`, `DATABASE_CONNECTION_FAILURE`, `RDS_AZ_FAILOVER_COMPLETED`, `RDS_AZ_FAILOVER_STARTED`, `SERVICE_ERROR_RATE_INCREASED`, `RDS_HIGH_LATENCY`, `OSI_NIC_UTILIZATION_HIGH`, `OSI_NIC_ERRORS_HIGH`, `PGI_HAPROXY_QUEUED_REQUESTS_HIGH`, `PGI_RMQ_HIGH_FILE_DESC_USAGE`, `PGI_RMQ_HIGH_MEM_USAGE`, `PGI_RMQ_HIGH_PROCESS_USAGE`, `PGI_RMQ_HIGH_SOCKETS_USAGE`, `OSI_NIC_DROPPED_PACKETS_HIGH`, `PGI_MYSQL_SLOW_QUERIES_RATE_HIGH`, `PGI_KEYSTONE_SLOW`, `PGI_HAPROXY_SESSION_USAGE_HIGH`, `HOST_LOG_AVAILABILITY`, `HOST_LOG_ERROR`, `OSI_GRACEFULLY_SHUTDOWN`, `HOST_LOG_MATCHED`, `OSI_UNEXPECTEDLY_UNAVAILABLE`, `HOST_LOG_PERFORMANCE`, `HOST_OF_SERVICE_UNAVAILABLE`, `HTTP_CHECK_GLOBAL_OUTAGE`, `HTTP_CHECK_LOCAL_OUTAGE`, `HTTP_CHECK_TEST_LOCATION_SLOWDOWN`, `ESXI_HOST_DISK_QUEUE_SLOW`, `LOG_MATCHED`, `APPLICATION_ERROR_RATE_INCREASED`, `APPLICATION_JS_FRAMEWORK_DETECTED`, `AWS_LAMBDA_HIGH_ERROR_RATE`, `ELB_HIGH_BACKEND_ERROR_RATE`, `ELB_HIGH_FRONTEND_ERROR_RATE`, `ELB_HIGH_UNHEALTHY_HOST_RATE`, `PROCESS_HIGH_GC_ACTIVITY`, `ESXI_HOST_DATASTORE_LOW_DISK_SPACE`, `OSI_DOCKER_DEVICEMAPPER_LOW_DATA_SPACE`, `OSI_LOW_DISK_SPACE`, `OSI_DOCKER_DEVICEMAPPER_LOW_METADATA_SPACE`, `OSI_DISK_LOW_INODES`, `PGI_RMQ_LOW_DISK_SPACE`, `RDS_LOW_STORAGE_SPACE`, `MARKED_FOR_TERMINATION`, `PROCESS_MEMORY_RESOURCE_EXHAUSTED`, `OSI_HIGH_MEMORY`, `MOBILE_APP_CRASH_RATE_INCREASED`, `MOBILE_APPLICATION_ERROR_RATE_INCREASED`, `MOBILE_APPLICATION_OVERLOAD_PREVENTION`, `MOBILE_APPLICATION_SLOWDOWN`, `MOBILE_APPLICATION_UNEXPECTED_HIGH_LOAD`, `MOBILE_APPLICATION_UNEXPECTED_LOW_LOAD`, `MONITORING_UNAVAILABLE`, `PROCESS_NA_HIGH_LOSS_RATE`, `PGI_KEYSTONE_UNHEALTHY`, `ESXI_HOST_OVERLOADED_STORAGE`, `PERFORMANCE_EVENT`, `LOG_PERFORMANCE`, `PGI_LOG_AVAILABILITY`, `PGI_CRASHED_INFO`, `PROCESS_CRASHED`, `PGI_LOG_ERROR`, `PG_LOW_INSTANCE_COUNT`, `PGI_LOG_MATCHED`, `PGI_MEMDUMP`, `PGI_LOG_PERFORMANCE`, `PROCESS_RESTART`, `PGI_UNAVAILABLE`, `RDS_HIGH_CPU`, `RDS_LOW_MEMORY`, `RDS_OF_SERVICE_UNAVAILABLE`, `RESOURCE_CONTENTION_EVENT`, `SERVICE_SLOWDOWN`, `RDS_RESTART`, `RDS_RESTART_SEQUENCE`, `PGI_OF_SERVICE_UNAVAILABLE`, `OSI_SLOW_DISK`, `SYNTHETIC_NODE_OUTAGE`, `SYNTHETIC_PRIVATE_LOCATION_OUTAGE`, `EXTERNAL_SYNTHETIC_TEST_OUTAGE`, `EXTERNAL_SYNTHETIC_TEST_SLOWDOWN`, `PROCESS_THREADS_RESOURCE_EXHAUSTED`, `SERVICE_UNEXPECTED_HIGH_LOAD`, `SERVICE_UNEXPECTED_LOW_LOAD`, `ESXI_VM_DISCONNECTED`, `OPENSTACK_VM_LAUNCH_FAILED`, `ESXI_HOST_VM_MOTION_LEFT`, `ESXI_HOST_VM_MOTION_ARRIVED`, `ESXI_VM_MOTION`, `OPENSTACK_VM_MOTION`, `ESXI_VM_POWER_OFF`, `ESXI_VM_SHUTDOWN`, `OPENSTACK_HOST_VM_SHUTDOWN`, `ESXI_VM_START`, `ESXI_HOST_VM_STARTED`, `OPENSTACK_HOST_VM_STARTED`
 
 <a id="nestedblock--trigger--event--config--davis_event--names"></a>
@@ -283,7 +301,11 @@ Optional:
 - `custom_filter` (String) Additional DQL matcher expression to further filter events to match
 - `entity_tags` (Map of String) key/value pairs for entity tags to match for. For tags that don't require a value, just specify an empty string as value. Multiple values can be provided separated by whitespace (e.g. "val1 val2") and will be parsed as multiple tag values. Omit this attribute if all entities should match
 - `entity_tags_match` (String) Specifies whether all or just any of the configured entity tags need to match. Possible values: `all` and `any`. Omit this attribute if all entities should match
-- `on_problem_close` (Boolean) If set to `true` closing a problem also is considered an event that triggers the execution
+- `on_problem_close` (Boolean, Deprecated) If set to `true` closing a problem also is considered an event that triggers the execution.
+- `problem_open_duration` (Number) Minimum problem duration in minutes before the trigger fires. Possible values: `5`, `10`, `15`, `30`, `60`, `120`, `240`, `1440`, `10080`
+- `severity_threshold` (Number) Triggers only for problems whose severity is this value or more severe. Possible values: `1` (critical) to `5` (informational). Lower numbers are more severe, so 3 matches severities 1, 2, and 3
+- `trigger_on` (String) Problem state to trigger on. Possible values: `open` (active only), `open-and-close` (both phases), or `close` (closure only). When unset, falls back to `on_problem_close`
+- `trigger_on_update_fields` (Set of String) Problem event fields tracked for value changes. Changes to any selected field cause re-triggering. Possible values: `dt.davis.affected_users_count`, `dt.davis.impact_level`, `event.category`, `event.severity`, `root_cause_entity_id`, `smartscape.affected_entities`
 
 <a id="nestedblock--trigger--event--config--davis_problem--categories"></a>
 ### Nested Schema for `trigger.event.config.davis_problem.categories`
@@ -309,7 +331,7 @@ Required:
 
 Optional:
 
-- `event_type` (String) Possible values: `events` or `bizevents`. Default: `events`
+- `event_type` (String) Possible values: `events`, `bizevents`, `dt.system.events`, and `security.events`. Default: `events`
 
 
 
@@ -333,11 +355,12 @@ Optional:
 
 Optional:
 
-- `between_end` (String) Triggers the schedule every n minutes within a given time frame - specifying the end time on any valid day in 24h format (e.g. 14:22). Conflicts with `cron` and `time`. Required with `interval_minutes` and `between_start`
-- `between_start` (String) Triggers the schedule every n minutes within a given time frame - specifying the start time on any valid day in 24h format (e.g. 13:22). Conflicts with `cron` and `time`. Required with `interval_minutes` and `between_end`
-- `cron` (String) Configures using cron syntax. Conflicts with `time`, `interval_minutes`, `between_start` and `between_end`
-- `interval_minutes` (Number) Triggers the schedule every n minutes within a given time frame. Minimum: 1, Maximum: 720. Required with `between_start` and `between_end`. Conflicts with `cron` and `time`
-- `time` (String) Specifies a fixed time the schedule will trigger at in 24h format (e.g. `14:23`). Conflicts with `cron`, `interval_minutes`, `between_start` and `between_end`
+- `at` (String) Triggers the schedule once at a fixed date and time in ISO 8601 format without timezone (e.g. `2025-12-25T14:30:00`). Conflicts with `cron`, `time`, `interval_minutes`, `between_start` and `between_end`
+- `between_end` (String) Triggers the schedule every n minutes within a given time frame - specifying the end time on any valid day in 24h format (e.g. 14:22). Conflicts with `cron`, `time` and `at`. Required with `interval_minutes` and `between_start`
+- `between_start` (String) Triggers the schedule every n minutes within a given time frame - specifying the start time on any valid day in 24h format (e.g. 13:22). Conflicts with `cron`, `time` and `at`. Required with `interval_minutes` and `between_end`
+- `cron` (String) Configures using cron syntax. Conflicts with `time`, `interval_minutes`, `between_start`, `between_end` and `at`
+- `interval_minutes` (Number) Triggers the schedule every n minutes within a given time frame. Minimum: 1, Maximum: 720. Required with `between_start` and `between_end`. Conflicts with `cron`, `time` and `at`
+- `time` (String) Specifies a fixed time the schedule will trigger at in 24h format (e.g. `14:23`). Conflicts with `cron`, `interval_minutes`, `between_start`, `between_end` and `at`
 
 
 <a id="nestedblock--trigger--schedule--filter_parameters"></a>

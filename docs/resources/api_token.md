@@ -14,6 +14,8 @@ description: |-
 
 -> This resource requires the API token scopes **Read API tokens** (`apiTokens.read`) and **Write API tokens** (`apiTokens.write`)
 
+Use this resource to create and manage access tokens for Dynatrace. This resource can not be used to manage platform tokens.
+
 ## Dynatrace Documentation
 
 - Dynatrace API Tokens and authentication - https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication

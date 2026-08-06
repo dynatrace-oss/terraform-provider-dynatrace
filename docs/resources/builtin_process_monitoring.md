@@ -39,6 +39,7 @@ resource "dynatrace_builtin_process_monitoring" "monitoring" {
   node_nodegyp                  = false
   cmd_foreverbinmonitor         = false
   jmc_activegatecommandlinetool = false
+  py_supervisord                = false
 }
 ```
 
@@ -58,40 +59,40 @@ resource "dynatrace_builtin_process_monitoring" "monitoring" {
 - `exe_adapter` (Boolean) Rule id: 7 - Do monitor processes if EXE name equals 'adapter'
 - `exe_agentlistener` (Boolean) Rule id: 63 - Do not monitor processes if EXE name contains 'Agent.Listener'
 - `exe_agentworker` (Boolean) Rule id: 61 - Do not monitor processes if EXE name contains 'Agent.Worker'
-- `exe_ansible` (Boolean) Rule id: 79 - Do not monitor processes if EXE name equals 'ansible'
+- `exe_ansible` (Boolean) Rule id: 79 - Do not monitor processes if Python script equals 'ansible'
 - `exe_auctioneer` (Boolean) Rule id: 8 - Do monitor processes if EXE name equals 'auctioneer'
 - `exe_auditbeat` (Boolean) Rule id: 52 - Do not monitor processes if EXE name equals 'auditbeat'
-- `exe_aws` (Boolean) Rule id: 81 - Do not monitor processes if EXE name equals 'aws'
-- `exe_az` (Boolean) Rule id: 82 - Do not monitor processes if EXE name equals 'az'
+- `exe_aws` (Boolean) Rule id: 81 - Do not monitor processes if Python script equals 'aws'
+- `exe_az` (Boolean) Rule id: 82 - Do not monitor processes if Python script equals 'az'
 - `exe_bbs` (Boolean) Rule id: 9 - Do monitor processes if EXE name equals 'bbs'
 - `exe_caddy` (Boolean) Rule id: 5 - Do monitor processes if EXE name equals 'caddy'
 - `exe_caliconode` (Boolean) Rule id: 58 - Do not monitor processes if EXE name equals 'calico-node'
 - `exe_casclient` (Boolean) Rule id: 59 - Do not monitor processes if EXE name equals 'casclient.exe'
 - `exe_ccuploader` (Boolean) Rule id: 10 - Do monitor processes if EXE name equals 'cc-uploader'
-- `exe_conda` (Boolean) Rule id: 78 - Do not monitor processes if EXE name equals 'conda'
+- `exe_conda` (Boolean) Rule id: 78 - Do not monitor processes if Python script equals 'conda'
 - `exe_doppler` (Boolean) Rule id: 11 - Do monitor processes if EXE name equals 'doppler'
 - `exe_filebeat` (Boolean) Rule id: 49 - Do not monitor processes if EXE name equals 'filebeat'
 - `exe_flexnetjobexecutorservice` (Boolean) Rule id: 65 - Do not monitor processes if EXE name equals 'FlexNetJobExecutorService'
 - `exe_flexnetmaintenanceremotingservice` (Boolean) Rule id: 66 - Do not monitor processes if EXE name equals 'FlexNetMaintenanceRemotingService'
 - `exe_functionbeat` (Boolean) Rule id: 54 - Do not monitor processes if EXE name equals 'functionbeat'
-- `exe_gcloud` (Boolean) Rule id: 83 - Do not monitor processes if EXE name equals 'gcloud'
+- `exe_gcloud` (Boolean) Rule id: 83 - Do not monitor processes if Python script equals 'gcloud'
 - `exe_gorouter` (Boolean) Rule id: 12 - Do monitor processes if EXE name equals 'gorouter'
 - `exe_grootfs` (Boolean) Rule id: 55 - Do not monitor processes if EXE name equals 'grootfs'
-- `exe_hatch` (Boolean) Rule id: 74 - Do not monitor processes if EXE name equals 'hatch'
+- `exe_hatch` (Boolean) Rule id: 74 - Do not monitor processes if Python script equals 'hatch'
 - `exe_heartbeat` (Boolean) Rule id: 53 - Do not monitor processes if EXE name equals 'heartbeat'
 - `exe_influxd` (Boolean) Rule id: 6 - Do monitor processes if EXE name equals 'influxd'
-- `exe_jupyter` (Boolean) Rule id: 77 - Do not monitor processes if EXE name equals 'jupyter'
+- `exe_jupyter` (Boolean) Rule id: 77 - Do not monitor processes if Python script equals 'jupyter'
 - `exe_locket` (Boolean) Rule id: 13 - Do monitor processes if EXE name equals 'locket'
 - `exe_metricbeat` (Boolean) Rule id: 50 - Do not monitor processes if EXE name equals 'metricbeat'
 - `exe_metron` (Boolean) Rule id: 14 - Do monitor processes if EXE name equals 'metron'
 - `exe_mqsi` (Boolean) Rule id: 48 - Do not monitor processes if EXE name begins with 'mqsi'
 - `exe_oc` (Boolean) Rule id: 44 - Do not monitor processes if EXE name equals 'oc'
 - `exe_openhandlecollector` (Boolean) Rule id: 71 - Do not monitor processes if EXE name equals 'openhandlecollector.exe'
-- `exe_openstack` (Boolean) Rule id: 80 - Do not monitor processes if EXE name equals 'openstack'
+- `exe_openstack` (Boolean) Rule id: 80 - Do not monitor processes if Python script equals 'openstack'
 - `exe_optcnibinhostlocal` (Boolean) Rule id: 46 - Do not monitor processes if EXE path equals '/opt/cni/bin/host-local'
 - `exe_packetbeat` (Boolean) Rule id: 51 - Do not monitor processes if EXE name equals 'packetbeat'
 - `exe_phpcgi` (Boolean) Rule id: 2 - Do not monitor processes if EXE name equals 'php-cgi'
-- `exe_pip` (Boolean) Rule id: 73 - Do not monitor processes if EXE name equals 'pip'
+- `exe_pip` (Boolean) Rule id: 73 - Do not monitor processes if Python script equals 'pip'
 - `exe_rep` (Boolean) Rule id: 16 - Do monitor processes if EXE name equals 'rep'
 - `exe_routeemitter` (Boolean) Rule id: 17 - Do monitor processes if EXE name equals 'route-emitter'
 - `exe_routeregistrar` (Boolean) Rule id: 18 - Do monitor processes if EXE name equals 'route-registrar'
@@ -107,9 +108,9 @@ resource "dynatrace_builtin_process_monitoring" "monitoring" {
 - `exe_uipath` (Boolean) Rule id: 70 - Do not monitor processes if EXE name contains 'UiPath'
 - `exe_userbinpiper` (Boolean) Rule id: 67 - Do not monitor processes if EXE path equals '/usr/bin/piper'
 - `exe_w3wp` (Boolean) Rule id: 4 - Do monitor processes if EXE name equals 'w3wp.exe'
-- `exe_wheel` (Boolean) Rule id: 75 - Do not monitor processes if EXE name equals 'wheel'
+- `exe_wheel` (Boolean) Rule id: 75 - Do not monitor processes if Python script equals 'wheel'
 - `exe_yq` (Boolean) Rule id: 72 - Do not monitor processes if EXE name equals 'yq'
-- `exe_yum` (Boolean) Rule id: 76 - Do not monitor processes if EXE name equals 'yum'
+- `exe_yum` (Boolean) Rule id: 76 - Do not monitor processes if Python script equals 'yum'
 - `go_static` (Boolean) Rule id: 47 - Do not monitor processes if Go Binary Linkage equals 'static'
 - `host_group_id` (String) The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
 - `jar_dtibmmqconnector` (Boolean) Rule id: 60 - Do not monitor processes if JAR file name equals 'dynatrace_ibm_mq_connector.jar'
@@ -129,6 +130,7 @@ resource "dynatrace_builtin_process_monitoring" "monitoring" {
 - `node_typescript` (Boolean) Rule id: 29 - Do not monitor processes if Node.js application base directory ends with '/node_modules/typescript'
 - `node_yarn` (Boolean) Rule id: 45 - Do not monitor processes if Node.js application equals 'yarn'
 - `php_script` (Boolean) (v1.274) Rule id: 1 - Do not monitor processes if PHP script exists
+- `py_supervisord` (Boolean) Rule id: 86 - Do not monitor processes if Python script contains 'supervisord'
 
 ### Read-Only
 

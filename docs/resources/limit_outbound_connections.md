@@ -38,7 +38,7 @@ resource "dynatrace_limit_outbound_connections" "#name#" {
 
 ### Required
 
-- `allowed_outbound_connections` (Block List, Min: 1, Max: 1) no documentation available (see [below for nested schema](#nestedblock--allowed_outbound_connections))
+- `allowed_outbound_connections` (Block List, Min: 1, Max: 1) No documentation available (see [below for nested schema](#nestedblock--allowed_outbound_connections))
 
 ### Read-Only
 
