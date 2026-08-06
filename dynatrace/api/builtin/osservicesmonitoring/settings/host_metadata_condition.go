@@ -33,7 +33,8 @@ func (me *HostMetadataCondition) Schema() map[string]*schema.Schema {
 		"key_must_exist": {
 			Type:        schema.TypeBool,
 			Description: "When enabled, the condition requires a resource attribute to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.",
-			Required:    true,
+			Optional:    true,
+			Default:     true,
 		},
 		"metadata_condition": {
 			Type:        schema.TypeString,
