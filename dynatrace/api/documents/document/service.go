@@ -65,6 +65,9 @@ func (me *service) Get(ctx context.Context, id string, v *documents.Document) (e
 				v.Type = stateDocument.Type
 				v.Owner = stateDocument.Owner
 				v.Version = stateDocument.Version
+				v.Description = stateDocument.Description
+				v.Labels = stateDocument.Labels
+				v.IsReshareable = stateDocument.IsReshareable
 				return nil
 			}
 		}
@@ -85,6 +88,13 @@ func (me *service) get(ctx context.Context, id string, v *documents.Document) (e
 	v.Owner = result.Owner
 	v.Type = result.Type
 	v.Version = result.Version
+	v.Labels = result.Labels
+	if result.Description != nil {
+		v.Description = *result.Description
+	}
+	if result.IsReshareable != nil {
+		v.IsReshareable = *result.IsReshareable
+	}
 
 	return nil
 }
@@ -100,7 +110,13 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	}
 	var stubs api.Stubs
 	for _, response := range listResponse.Responses {
-		stubs = append(stubs, &api.Stub{ID: response.ID, Name: response.Name, Extra: map[string]any{"type": response.Type, "owner": response.Owner}})
+		// The list endpoint only returns a subset of the metadata. Fields like description,
+		// labels and isReshareable are exclusive to the get endpoint.
+		extra := map[string]any{
+			"type":  response.Type,
+			"owner": response.Owner,
+		}
+		stubs = append(stubs, &api.Stub{ID: response.ID, Name: response.Name, Extra: extra})
 	}
 
 	return stubs, nil
@@ -131,21 +147,22 @@ func (me *service) Validate(_ *documents.Document) error {
 }
 
 func (me *service) Create(ctx context.Context, v *documents.Document) (*api.Stub, error) {
-	stub, err := me.createPrivate(ctx, v)
-	if err != nil {
-		return nil, err
-	}
-
-	if !v.IsPrivate {
-		if err = me.update(ctx, stub.ID, v); err != nil {
-			return nil, err
-		}
-	}
-	return stub, nil
+	return me.createPrivate(ctx, v)
 }
 
 func (me *service) createPrivate(ctx context.Context, v *documents.Document) (stub *api.Stub, err error) {
-	response, err := me.client.Create(ctx, v.Name, v.IsPrivate, v.ID, []byte(v.Content), docclient.DocumentType(v.Type))
+	meta := docclient.Metadata{
+		ID:        v.ID,
+		Name:      v.Name,
+		IsPrivate: v.IsPrivate,
+		Type:      v.Type,
+		Labels:    v.Labels,
+	}
+	if v.Description != "" {
+		meta.Description = &v.Description
+	}
+	meta.IsReshareable = &v.IsReshareable
+	response, err := me.client.Create(ctx, meta, []byte(v.Content))
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +171,6 @@ func (me *service) createPrivate(ctx context.Context, v *documents.Document) (st
 		return nil, err
 	}
 	return stub, nil
-
 }
 
 func (me *service) Update(ctx context.Context, id string, v *documents.Document) (err error) {
@@ -162,7 +178,18 @@ func (me *service) Update(ctx context.Context, id string, v *documents.Document)
 }
 
 func (me *service) update(ctx context.Context, id string, v *documents.Document) (err error) {
-	_, err = me.client.Update(ctx, id, v.Name, v.IsPrivate, []byte(v.Content), docclient.DocumentType(v.Type))
+	meta := docclient.Metadata{
+		ID:        id,
+		Name:      v.Name,
+		IsPrivate: v.IsPrivate,
+		Type:      v.Type,
+		Labels:    v.Labels,
+	}
+	if v.Description != "" {
+		meta.Description = &v.Description
+	}
+	meta.IsReshareable = &v.IsReshareable
+	_, err = me.client.Update(ctx, meta, []byte(v.Content))
 	if err != nil {
 		return err
 	}

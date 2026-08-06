@@ -22,7 +22,8 @@ import (
 	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
+	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document"
+	settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -37,7 +38,7 @@ func DataSource() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The type of documents to query for. Leave empty if you want to query for all kinds of documents. Possible values are `dashboard` or `notebook`",
+				Description: "The type of documents to query for. Leave empty if you want to query for all kinds of documents. Possible values are `dashboard`, `notebook` or `launchpad`",
 			},
 			"values": {
 				Type:     schema.TypeList,
@@ -64,6 +65,22 @@ func DataSource() *schema.Resource {
 							Computed:    true,
 							Description: "The owner of the document. This could be a user or a group that has ownership rights over the document.",
 						},
+						"description": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "A short description of the document.",
+						},
+						"labels": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Labels attached to the document.",
+						},
+						"is_reshareable": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Specifies whether recipients of a direct share can share the document further.",
+						},
 					},
 				},
 			},
@@ -83,7 +100,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		return diag.FromErr(err)
 	}
 
-	service, err := export.Service(clientSet, export.ResourceTypes.Documents)
+	service, err := documents.Service(clientSet)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -102,11 +119,20 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 					continue
 				}
 			}
+			// The list endpoint doesn't provide description, labels and isReshareable,
+			// therefore every document needs to be fetched separately.
+			document := new(settings.Document)
+			if err := service.Get(ctx, stub.ID, document); err != nil {
+				return diag.FromErr(err)
+			}
 			m := map[string]any{
-				"id":    stub.ID,
-				"name":  stub.Name,
-				"type":  stub.Extra["type"],
-				"owner": stub.Extra["owner"],
+				"id":             stub.ID,
+				"name":           document.Name,
+				"type":           document.Type,
+				"owner":          document.Owner,
+				"description":    document.Description,
+				"labels":         document.Labels,
+				"is_reshareable": document.IsReshareable,
 			}
 
 			values = append(values, m)
