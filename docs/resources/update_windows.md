@@ -45,14 +45,14 @@ resource "dynatrace_update_windows" "#name#" {
 
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `name` (String) Name
-- `recurrence` (String) Possible Values: `MONTHLY`, `ONCE`, `DAILY`, `WEEKLY`
+- `recurrence` (String) Recurrence. Possible values: `DAILY`, `MONTHLY`, `ONCE`, `WEEKLY`
 
 ### Optional
 
-- `daily_recurrence` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--daily_recurrence))
-- `monthly_recurrence` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--monthly_recurrence))
-- `once_recurrence` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--once_recurrence))
-- `weekly_recurrence` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--weekly_recurrence))
+- `daily_recurrence` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--daily_recurrence))
+- `monthly_recurrence` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--monthly_recurrence))
+- `once_recurrence` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--once_recurrence))
+- `weekly_recurrence` (Block List, Max: 1) No documentation available (see [below for nested schema](#nestedblock--weekly_recurrence))
 
 ### Read-Only
 
@@ -64,10 +64,10 @@ resource "dynatrace_update_windows" "#name#" {
 Required:
 
 - `every` (Number) Every **X** days:
-* `1` = every day,
-* `2` = every two days,
-* `3` = every three days,
-* etc.
+ * `1` = every day,
+ * `2` = every two days,
+ * `3` = every three days,
+ * etc.
 - `recurrence_range` (Block List, Min: 1, Max: 1) Recurrence range (see [below for nested schema](#nestedblock--daily_recurrence--recurrence_range))
 - `update_time` (Block List, Min: 1, Max: 1) Update time (see [below for nested schema](#nestedblock--daily_recurrence--update_time))
 
@@ -76,8 +76,8 @@ Required:
 
 Required:
 
-- `end` (String) no documentation available
-- `start` (String) no documentation available
+- `end` (String) No documentation available
+- `start` (String) No documentation available
 
 
 <a id="nestedblock--daily_recurrence--update_time"></a>
@@ -87,7 +87,7 @@ Required:
 
 - `duration` (Number) Duration (minutes)
 - `start_time` (String) Start time (24-hour clock)
-- `time_zone` (String) Possible Values: `GMT_06_00`, `GMT_12_00`, `GMT_10_00`, `GMT_07_00`, `GMT_00_00`, `GMT_11_00`, `GMT_03_00`, `GMT_01_00`, `GMT_05_00`, `GMT_09_00`, `GMT_02_00`, `GMT_04_00`, `GMT_08_00`
+- `time_zone` (String) Time zone. Possible values: `GMT+00:00`, `GMT+01:00`, `GMT+02:00`, `GMT+07:00`, `GMT+09:00`, `GMT-03:00`, `GMT-04:00`, `GMT-05:00`, `GMT-06:00`, `GMT-08:00`, `GMT-10:00`, `GMT-11:00`, `GMT-12:00`
 
 
 
@@ -97,10 +97,10 @@ Required:
 Required:
 
 - `every` (Number) Every **X** months:
-* `1` = every month,
-* `2` = every two months,
-* `3` = every three months,
-* etc.
+ * `1` = every month,
+ * `2` = every two months,
+ * `3` = every three months,
+ * etc.
 - `recurrence_range` (Block List, Min: 1, Max: 1) Recurrence range (see [below for nested schema](#nestedblock--monthly_recurrence--recurrence_range))
 - `selected_month_day` (Number) Day of the month
 - `update_time` (Block List, Min: 1, Max: 1) Update time (see [below for nested schema](#nestedblock--monthly_recurrence--update_time))
@@ -110,8 +110,8 @@ Required:
 
 Required:
 
-- `end` (String) no documentation available
-- `start` (String) no documentation available
+- `end` (String) No documentation available
+- `start` (String) No documentation available
 
 
 <a id="nestedblock--monthly_recurrence--update_time"></a>
@@ -121,7 +121,7 @@ Required:
 
 - `duration` (Number) Duration (minutes)
 - `start_time` (String) Start time (24-hour clock)
-- `time_zone` (String) Possible Values: `GMT_06_00`, `GMT_12_00`, `GMT_10_00`, `GMT_07_00`, `GMT_00_00`, `GMT_11_00`, `GMT_03_00`, `GMT_01_00`, `GMT_05_00`, `GMT_09_00`, `GMT_02_00`, `GMT_04_00`, `GMT_08_00`
+- `time_zone` (String) Time zone. Possible values: `GMT+00:00`, `GMT+01:00`, `GMT+02:00`, `GMT+07:00`, `GMT+09:00`, `GMT-03:00`, `GMT-04:00`, `GMT-05:00`, `GMT-06:00`, `GMT-08:00`, `GMT-10:00`, `GMT-11:00`, `GMT-12:00`
 
 
 
@@ -137,8 +137,8 @@ Required:
 
 Required:
 
-- `end` (String) no documentation available
-- `start` (String) no documentation available
+- `end` (String) No documentation available
+- `start` (String) No documentation available
 
 
 
@@ -148,10 +148,10 @@ Required:
 Required:
 
 - `every` (Number) Every **X** weeks:
-* `1` = every week,
-* `2` = every two weeks,
-* `3` = every three weeks,
-* etc.
+ * `1` = every week,
+ * `2` = every two weeks,
+ * `3` = every three weeks,
+ * etc.
 - `recurrence_range` (Block List, Min: 1, Max: 1) Recurrence range (see [below for nested schema](#nestedblock--weekly_recurrence--recurrence_range))
 - `selected_week_days` (Block List, Min: 1, Max: 1) Day of the week (see [below for nested schema](#nestedblock--weekly_recurrence--selected_week_days))
 - `update_time` (Block List, Min: 1, Max: 1) Update time (see [below for nested schema](#nestedblock--weekly_recurrence--update_time))
@@ -161,8 +161,8 @@ Required:
 
 Required:
 
-- `end` (String) no documentation available
-- `start` (String) no documentation available
+- `end` (String) No documentation available
+- `start` (String) No documentation available
 
 
 <a id="nestedblock--weekly_recurrence--selected_week_days"></a>
@@ -170,13 +170,13 @@ Required:
 
 Required:
 
-- `friday` (Boolean) no documentation available
-- `monday` (Boolean) no documentation available
-- `saturday` (Boolean) no documentation available
-- `sunday` (Boolean) no documentation available
-- `thursday` (Boolean) no documentation available
-- `tuesday` (Boolean) no documentation available
-- `wednesday` (Boolean) no documentation available
+- `friday` (Boolean) No documentation available
+- `monday` (Boolean) No documentation available
+- `saturday` (Boolean) No documentation available
+- `sunday` (Boolean) No documentation available
+- `thursday` (Boolean) No documentation available
+- `tuesday` (Boolean) No documentation available
+- `wednesday` (Boolean) No documentation available
 
 
 <a id="nestedblock--weekly_recurrence--update_time"></a>
@@ -186,5 +186,5 @@ Required:
 
 - `duration` (Number) Duration (minutes)
 - `start_time` (String) Start time (24-hour clock)
-- `time_zone` (String) Possible Values: `GMT_06_00`, `GMT_12_00`, `GMT_10_00`, `GMT_07_00`, `GMT_00_00`, `GMT_11_00`, `GMT_03_00`, `GMT_01_00`, `GMT_05_00`, `GMT_09_00`, `GMT_02_00`, `GMT_04_00`, `GMT_08_00`
+- `time_zone` (String) Time zone. Possible values: `GMT+00:00`, `GMT+01:00`, `GMT+02:00`, `GMT+07:00`, `GMT+09:00`, `GMT-03:00`, `GMT-04:00`, `GMT-05:00`, `GMT-06:00`, `GMT-08:00`, `GMT-10:00`, `GMT-11:00`, `GMT-12:00`
  

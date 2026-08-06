@@ -79,6 +79,8 @@ Optional:
 
 - `cost_and_traffic_control` (Number) Percentage of user sessions recorded with Session Replay. For example, if you have 50% for RUM and 50% for Session Replay, it results in 25% of sessions recorded with Session Replay.
 - `full_session_replay` (Boolean) Before enabling, Dynatrace checks your system against the [prerequisites for Session Replay](https://dt-url.net/t23s0ppi).
+- `full_session_replay_on_grail` (Boolean) Enable New Session Replay Experience
+- `on_crash_on_grail` (Boolean) Enable New Session Replay on Crashes Experience
 
 
 <a id="nestedblock--experience_analytics"></a>

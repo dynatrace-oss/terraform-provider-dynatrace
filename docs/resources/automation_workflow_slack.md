@@ -44,9 +44,16 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_automation_workflow_slack" "#name#" {
+resource "dynatrace_automation_workflow_slack" "default" {
   name  = "#name#"
   token = "#######"
+}
+
+resource "dynatrace_automation_workflow_slack" "external_approval" {
+  name              = "#name#"
+  token             = "#######"
+  external_approval = true
+  signing_secret    = "#######"
 }
 ```
 
@@ -55,12 +62,13 @@ resource "dynatrace_automation_workflow_slack" "#name#" {
 
 ### Required
 
-- `name` (String) The name of the Slack connection
-- `token` (String, Sensitive) The bot token obtained from the Slack App Management UI
+- `name` (String) Provide a unique and clearly identifiable connection name to your Slack App.
+- `token` (String, Sensitive) The bot token obtained from the Slack App Management UI.
 
 ### Optional
 
-- `insert_after` (String, Deprecated) Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
+- `external_approval` (Boolean) Accept external approvals can enable Slack users to directly respond to approval request.
+- `signing_secret` (String, Sensitive) The signing secret obtained from the Slack App Management UI.
 
 ### Read-Only
 

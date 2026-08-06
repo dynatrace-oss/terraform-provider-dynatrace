@@ -36,12 +36,12 @@ resource "dynatrace_app_monitoring" "#name#" {
 
 ### Required
 
-- `default_log_level` (String) Possible Values: `debug`, `error`, `info`, `off`, `warn`
+- `default_log_level` (String) Default log level. Possible values: `debug`, `error`, `info`, `off`, `warn`
+- `default_trace_level` (String) App function traces. Possible values: `off`, `on`
 
 ### Optional
 
 - `app_monitoring` (Block List, Max: 1) You can override the default monitoring setting for each app separately (see [below for nested schema](#nestedblock--app_monitoring))
-- `default_trace_level` (String) Possible Values: `off`, `on`
 
 ### Read-Only
 
@@ -60,9 +60,9 @@ Required:
 Required:
 
 - `app_id` (String) App ID
-- `custom_log_level` (String) Possible Values: `debug`, `error`, `info`, `off`, `useDefault`, `warn`
+- `custom_log_level` (String) App specific log level. Possible values: `debug`, `error`, `info`, `off`, `useDefault`, `warn`
 
 Optional:
 
-- `custom_trace_level` (String) Possible Values: `off`, `on`, `useDefault`
+- `custom_trace_level` (String) App specific function traces. Possible values: `off`, `on`, `useDefault`
  

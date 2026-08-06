@@ -55,10 +55,10 @@ resource "dynatrace_log_oneagent" "#name#" {
 - `default_timezone` (String) Default timezone for agent if more specific configurations is not defined.
 - `event_log_query_timeout_sec` (Number) Defines the maximum timeout value, in seconds, for the query extracting Windows Event Logs
 - `iisdetection_enabled` (Boolean) Allows detection of logs and event logs written by IIS server.
-- `log_scanner_linux_nfs_enabled` (Boolean) Allows detection of logs written to mounted network storage drives. Applies only to Linux hosts. For other OSes it's always enabled.
+- `log_scanner_linux_nfs_enabled` (Boolean) Allows detection of logs written to mounted network storage drives. Applies only to Linux hosts. For Windows operating system it's always enabled.
 - `max_lgis_per_entity_count` (Number) Defines the maximum number of log group instances per entity after which, the new automatic ones wouldn't be added.
 - `min_binary_detection_limit_bytes` (Number) Defines the minimum number of bytes in log file required for binary detection.
-- `monitor_own_logs_enabled` (Boolean) Enabling this option may affect your licensing costs. For more details, see [documentation](https://dt-url.net/4l02yi8).
+- `monitor_own_logs_enabled` (Boolean) Enabling this option may affect your licensing costs. For more details, see [documentation](https://dt-url.net/7v02z76).
 - `open_log_files_detection_enabled` (Boolean) Automatically detect logs written by important processes. For more details, check our [documentation](https://dt-url.net/7v02z76)
 - `severity_detection_limit_bytes` (Number) Defines the number of characters in every log line (starting from the first character in the line) where severity is searched.
 - `severity_detection_lines_limit` (Number) Defines the number of the first lines of every log entry where severity is searched.
@@ -66,6 +66,7 @@ resource "dynatrace_log_oneagent" "#name#" {
 
 ### Optional
 
+- `binary_detection_mode` (String) Specifies the granularity at which binary log files are detected. 'Per log source' applies binary detection at the log source level, 'Per log file' evaluates each log file individually. Possible values: `BinaryPerLogFile`, `BinaryPerLogSource`
 - `scope` (String) The scope of this setting (HOST, KUBERNETES_CLUSTER, HOST_GROUP). Omit this property if you want to cover the whole environment.
 
 ### Read-Only
