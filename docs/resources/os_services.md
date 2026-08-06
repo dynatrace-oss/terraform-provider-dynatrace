@@ -168,7 +168,6 @@ Optional:
 
 Required:
 
-- `key_must_exist` (Boolean) When enabled, the condition requires a resource attribute to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.
 - `metadata_condition` (String) This string has to match a required format.
 
   - `$match(ver*_1.2.?)` – Matches string with wildcards: `*` any number (including zero) of characters and `?` exactly one character.
@@ -184,6 +183,10 @@ Required:
 
   Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
 - `metadata_key` (String) Key
+
+Optional:
+
+- `key_must_exist` (Boolean) When enabled, the condition requires a resource attribute to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.
 
 
 
@@ -240,7 +243,6 @@ Optional:
 
 Required:
 
-- `key_must_exist` (Boolean) When enabled, the condition requires a resource attribute to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.
 - `metadata_condition` (String) This string has to match a required format.
 
   - `$match(ver*_1.2.?)` – Matches string with wildcards: `*` any number (including zero) of characters and `?` exactly one character.
@@ -256,6 +258,10 @@ Required:
 
   Brackets **(** and **)** that are part of the matched property **must be escaped with a tilde (~)**
 - `metadata_key` (String) Key
+
+Optional:
+
+- `key_must_exist` (Boolean) When enabled, the condition requires a resource attribute to exist and match the constraints; when disabled, the key is optional but must still match the constrains if it is present.
 
 
 
