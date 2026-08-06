@@ -110,20 +110,11 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	}
 	var stubs api.Stubs
 	for _, response := range listResponse.Responses {
-		var description string
-		if response.Description != nil {
-			description = *response.Description
-		}
-		var isReshareable bool
-		if response.IsReshareable != nil {
-			isReshareable = *response.IsReshareable
-		}
+		// The list endpoint only returns a subset of the metadata. Fields like description,
+		// labels and isReshareable are exclusive to the get endpoint.
 		extra := map[string]any{
-			"type":          response.Type,
-			"owner":         response.Owner,
-			"labels":        response.Labels,
-			"description":   description,
-			"isReshareable": isReshareable,
+			"type":  response.Type,
+			"owner": response.Owner,
 		}
 		stubs = append(stubs, &api.Stub{ID: response.ID, Name: response.Name, Extra: extra})
 	}

@@ -18,8 +18,6 @@
 package documents
 
 import (
-	"encoding/json"
-
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -134,32 +132,4 @@ func (me *Document) UnmarshalHCL(decoder hcl.Decoder) error {
 		"labels":         &me.Labels,
 		"is_reshareable": &me.IsReshareable,
 	})
-}
-
-func (me *Document) MarshalJSON() ([]byte, error) {
-	d := struct {
-		ID            string   `json:"id,omitempty"`
-		Name          string   `json:"name"`
-		Content       string   `json:"content,omitempty"`
-		Private       bool     `json:"isPrivate,omitempty"`
-		Type          string   `json:"type"`
-		Actor         string   `json:"actor,omitempty"`
-		Owner         string   `json:"owner,omitempty"`
-		Version       int      `json:"version,omitempty"`
-		Description   string   `json:"description,omitempty"`
-		Labels        []string `json:"labels,omitempty"`
-		IsReshareable bool     `json:"isReshareable,omitempty"`
-	}{
-		ID:            me.ID,
-		Name:          me.Name,
-		Private:       me.IsPrivate,
-		Content:       me.Content,
-		Type:          me.Type,
-		Owner:         me.Owner,
-		Version:       me.Version,
-		Description:   me.Description,
-		Labels:        me.Labels,
-		IsReshareable: me.IsReshareable,
-	}
-	return json.Marshal(d)
 }
