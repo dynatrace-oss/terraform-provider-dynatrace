@@ -24,6 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document"
 	settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -89,15 +90,19 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	values := []map[string]any{}
-	var docType string
-	if v, ok := d.GetOk("type"); ok {
-		docType = v.(string)
-	}
-
 	clientSet, err := config.ClientSet(m, config.CredValPlatform)
 	if err != nil {
 		return diag.FromErr(err)
+	}
+
+	return dataSourceRead(ctx, d, clientSet)
+}
+
+func dataSourceRead(ctx context.Context, d *schema.ResourceData, clientSet rest.ClientSet) diag.Diagnostics {
+	var values []map[string]any
+	var docType string
+	if v, ok := d.GetOk("type"); ok {
+		docType = v.(string)
 	}
 
 	service, err := documents.Service(clientSet)
@@ -119,19 +124,18 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 					continue
 				}
 			}
-			// The list endpoint doesn't provide description, labels and isReshareable,
-			// therefore every document needs to be fetched separately.
+			// isReshareable is the only field the list endpoint doesn't provide,
 			document := new(settings.Document)
 			if err := service.Get(ctx, stub.ID, document); err != nil {
 				return diag.FromErr(err)
 			}
 			m := map[string]any{
 				"id":             stub.ID,
-				"name":           document.Name,
-				"type":           document.Type,
-				"owner":          document.Owner,
-				"description":    document.Description,
-				"labels":         document.Labels,
+				"name":           stub.Name,
+				"type":           stub.Extra["type"],
+				"owner":          stub.Extra["owner"],
+				"description":    stub.Extra["description"],
+				"labels":         stub.Extra["labels"],
 				"is_reshareable": document.IsReshareable,
 			}
 
