@@ -153,10 +153,10 @@ func (me *service) Validate(_ *documents.Document) error {
 }
 
 func (me *service) Create(ctx context.Context, v *documents.Document) (*api.Stub, error) {
-	return me.createPrivate(ctx, v)
+	return me.create(ctx, v)
 }
 
-func (me *service) createPrivate(ctx context.Context, v *documents.Document) (stub *api.Stub, err error) {
+func (me *service) create(ctx context.Context, v *documents.Document) (stub *api.Stub, err error) {
 	meta := docclient.Metadata{
 		ID:        v.ID,
 		Name:      v.Name,
