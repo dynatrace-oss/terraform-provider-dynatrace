@@ -107,7 +107,7 @@ func (me *RecurrenceRule) Schema() map[string]*schema.Schema {
 		"workdays": {
 			Type:         schema.TypeString,
 			Description:  "Possible values are `WORKING` (Work days), `HOLIDAYS` (Holidays) and `OFF` (Weekends + Holidays)",
-			Required:     true,
+			Optional:     true,
 			ValidateFunc: validation.StringInSlice([]string{"WORKING", "HOLIDAYS", "OFF"}, false),
 		},
 	}
