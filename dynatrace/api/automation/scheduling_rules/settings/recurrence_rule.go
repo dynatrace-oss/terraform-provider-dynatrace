@@ -23,7 +23,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 type RecurrenceRule struct {
@@ -52,10 +51,9 @@ type jsonrule RecurrenceRule
 func (me *RecurrenceRule) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"frequency": {
-			Type:         schema.TypeString,
-			Description:  "Possible values are `YEARLY`, `MONTHLY`, `WEEKLY`, `DAILY`, `HOURLY`, `MINUTELY` and `SECONDLY`. Example: `frequency` = `DAILY` and `interval` = `2` schedules for every other day",
-			Required:     true,
-			ValidateFunc: validation.StringInSlice([]string{"YEARLY", "MONTHLY", "WEEKLY", "DAILY", "HOURLY", "MINUTELY", "SECONDLY"}, false),
+			Type:        schema.TypeString,
+			Description: "Possible values are `YEARLY`, `MONTHLY`, `WEEKLY`, `DAILY`, `HOURLY`, `MINUTELY` and `SECONDLY`. Example: `frequency` = `DAILY` and `interval` = `2` schedules for every other day",
+			Required:    true,
 		},
 		"datestart": {
 			Type:        schema.TypeString,
@@ -105,10 +103,9 @@ func (me *RecurrenceRule) Schema() map[string]*schema.Schema {
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"workdays": {
-			Type:         schema.TypeString,
-			Description:  "Possible values are `WORKING` (Work days), `HOLIDAYS` (Holidays) and `OFF` (Weekends + Holidays)",
-			Optional:     true,
-			ValidateFunc: validation.StringInSlice([]string{"WORKING", "HOLIDAYS", "OFF"}, false),
+			Type:        schema.TypeString,
+			Description: "Possible values are `WORKING` (Work days), `HOLIDAYS` (Holidays) and `OFF` (Weekends + Holidays)",
+			Optional:    true,
 		},
 	}
 }
