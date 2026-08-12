@@ -125,13 +125,6 @@ func (me *hybrid_request) OnResponse(onResponse func(resp *http.Response)) Reque
 	return me
 }
 
-func (me *hybrid_request) SetHeader(name string, value string) {
-	if me.headers == nil {
-		me.headers = map[string]string{}
-	}
-	me.headers[name] = value
-}
-
 func NewPreferOAuthContext(ctx context.Context) context.Context {
 	return context.WithValue(ctx, envutils.DynatraceHTTPOAuthPreference.Key, true)
 }

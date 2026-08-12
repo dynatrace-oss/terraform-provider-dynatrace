@@ -36,7 +36,6 @@ type Request interface {
 	Finish(v ...any) error
 	Expect(codes ...int) Request
 	OnResponse(func(resp *http.Response)) Request
-	SetHeader(name string, value string)
 }
 
 type statuscodes []int

@@ -22,7 +22,6 @@ package rest
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -211,30 +210,6 @@ func TestApiTokenClient(t *testing.T) {
 		err := req.Finish()
 		expectedErr := &url.Error{}
 		assert.ErrorAs(t, err, &expectedErr)
-	})
-
-	t.Run("Sets correct headers", func(t *testing.T) {
-		customHeaderName := "my-header"
-		customHeaderValue := "my-value"
-		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			expectedURL, err := url.JoinPath(activeGatePostfix, endpoint)
-			require.NoError(t, err)
-			require.Equal(t, expectedURL, r.URL.Path)
-			require.Equal(t, fmt.Sprintf("Api-Token %s", mockToken), r.Header.Get("Authorization"))
-			require.Equal(t, customHeaderValue, r.Header.Get(customHeaderName))
-			w.WriteHeader(http.StatusOK)
-			_, _ = w.Write([]byte("{}"))
-		}))
-		activeGateURL, err := url.JoinPath(server.URL, activeGatePostfix)
-		require.NoError(t, err)
-
-		cred := Credentials{URL: activeGateURL, Token: mockToken}
-		client := HybridClient(&cred)
-
-		req := client.Get(t.Context(), endpoint)
-		req.SetHeader(customHeaderName, customHeaderValue)
-		err = req.Finish()
-		assert.NoError(t, err)
 	})
 }
 
