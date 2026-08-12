@@ -35,10 +35,9 @@ func (me *FixedOffsetRule) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 		"offset": {
-			Type:             schema.TypeInt,
-			Description:      "Every day of the scheduling rule referred to with `rule` will be offset by this amount of days",
-			Required:         true,
-			ValidateDiagFunc: ValidateRange(-50, 50),
+			Type:        schema.TypeInt,
+			Description: "Every day of the scheduling rule referred to with `rule` will be offset by this amount of days",
+			Required:    true,
 		},
 	}
 }

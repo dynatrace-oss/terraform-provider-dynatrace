@@ -40,10 +40,9 @@ func (me *Settings) Name() string {
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"title": {
-			Type:             schema.TypeString,
-			Description:      "The title / name of the scheduling rule",
-			Required:         true,
-			ValidateDiagFunc: ValidateMaxLength(200),
+			Type:        schema.TypeString,
+			Description: "The title / name of the scheduling rule",
+			Required:    true,
 		},
 		"description": {
 			Type:        schema.TypeString,
@@ -51,10 +50,9 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Optional:    true,
 		},
 		"business_calendar": {
-			Type:             schema.TypeString,
-			Description:      "",
-			Optional:         true,
-			ValidateDiagFunc: ValidateUUID,
+			Type:        schema.TypeString,
+			Description: "The ID of the business calendar associated with the scheduling rule",
+			Optional:    true,
 		},
 		"recurrence": {
 			Type:         schema.TypeList,
