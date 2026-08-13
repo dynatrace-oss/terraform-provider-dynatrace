@@ -156,19 +156,24 @@ func (me *service) Create(ctx context.Context, v *documents.Document) (*api.Stub
 	return me.create(ctx, v)
 }
 
+func toMetadata(id string, v *documents.Document) docclient.Metadata {
+	labels := v.Labels
+	if labels == nil {
+		labels = []string{}
+	}
+	return docclient.Metadata{
+		ID:            id,
+		Name:          v.Name,
+		IsPrivate:     v.IsPrivate,
+		Type:          v.Type,
+		Labels:        labels,
+		Description:   &v.Description,
+		IsReshareable: &v.IsReshareable,
+	}
+}
+
 func (me *service) create(ctx context.Context, v *documents.Document) (stub *api.Stub, err error) {
-	meta := docclient.Metadata{
-		ID:        v.ID,
-		Name:      v.Name,
-		IsPrivate: v.IsPrivate,
-		Type:      v.Type,
-		Labels:    v.Labels,
-	}
-	if v.Description != "" {
-		meta.Description = &v.Description
-	}
-	meta.IsReshareable = &v.IsReshareable
-	response, err := me.client.Create(ctx, meta, []byte(v.Content))
+	response, err := me.client.Create(ctx, toMetadata(v.ID, v), []byte(v.Content))
 	if err != nil {
 		return nil, err
 	}
@@ -184,18 +189,7 @@ func (me *service) Update(ctx context.Context, id string, v *documents.Document)
 }
 
 func (me *service) update(ctx context.Context, id string, v *documents.Document) (err error) {
-	meta := docclient.Metadata{
-		ID:        id,
-		Name:      v.Name,
-		IsPrivate: v.IsPrivate,
-		Type:      v.Type,
-		Labels:    v.Labels,
-	}
-	if v.Description != "" {
-		meta.Description = &v.Description
-	}
-	meta.IsReshareable = &v.IsReshareable
-	_, err = me.client.Update(ctx, meta, []byte(v.Content))
+	_, err = me.client.Update(ctx, toMetadata(id, v), []byte(v.Content))
 	if err != nil {
 		return err
 	}
