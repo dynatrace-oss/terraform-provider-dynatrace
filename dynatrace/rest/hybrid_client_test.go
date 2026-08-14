@@ -29,6 +29,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/wif"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -44,6 +45,8 @@ var credential_repo = map[string]Credentials{
 	"api-token-and-platform-token":           {URL: TestCaseEnvURL, Token: mockToken, Platform: PlatformCredentials{PlatformToken: mockToken}},
 	"oauth-and-platform-token":               {URL: TestCaseEnvURL, Platform: PlatformCredentials{ClientID: mockToken, ClientSecret: mockToken, PlatformToken: mockToken}},
 	"api-token-and-oauth-and-platform-token": {URL: TestCaseEnvURL, Token: mockToken, Platform: PlatformCredentials{PlatformToken: mockToken, ClientID: mockToken, ClientSecret: mockToken}},
+	"wif":                                    {URL: TestCaseEnvURL, Platform: PlatformCredentials{WIF: wif.Config{Vendor: wif.VendorGitHub, Audience: mockToken}}},
+	"api-token-and-wif":                      {URL: TestCaseEnvURL, Token: mockToken, Platform: PlatformCredentials{WIF: wif.Config{Vendor: wif.VendorGitHub, Audience: mockToken}}},
 }
 
 type testcase struct {
@@ -57,7 +60,7 @@ func (t testcase) Credentials() *Credentials {
 }
 
 var expectedAPITokenError = errors.New("No API Token has been specified")
-var expectedOAuthCredsError = errors.New("Neither OAuth Credentials nor Platform Token have been specified")
+var expectedOAuthCredsError = errors.New("Neither OAuth Credentials, a Platform Token nor Workload Identity Federation have been specified")
 var classicChosen = errors.New("classic")
 var platformChosen = errors.New("platform")
 
@@ -148,6 +151,26 @@ var testcases = []testcase{
 	},
 	{
 		credentials:      credentials("api-token-and-oauth-and-platform-token"),
+		IsOAuthPreferred: true,
+		Expected:         platformChosen,
+	},
+	{
+		credentials:      credentials("wif"),
+		IsOAuthPreferred: false,
+		Expected:         platformChosen,
+	},
+	{
+		credentials:      credentials("wif"),
+		IsOAuthPreferred: true,
+		Expected:         platformChosen,
+	},
+	{
+		credentials:      credentials("api-token-and-wif"),
+		IsOAuthPreferred: false,
+		Expected:         classicChosen,
+	},
+	{
+		credentials:      credentials("api-token-and-wif"),
 		IsOAuthPreferred: true,
 		Expected:         platformChosen,
 	},

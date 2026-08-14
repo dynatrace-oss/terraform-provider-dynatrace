@@ -53,7 +53,7 @@ func (me *service) Create(ctx context.Context, v *anomalydetectors.Settings) (*a
 	}
 
 	// if the anomaly detector requires OAuth, try again with OAuth (without an API token)
-	if rest.IsRequiresOAuthError(err) && me.clientSet.Credentials().ContainsOAuthOrPlatformToken() {
+	if rest.IsRequiresOAuthError(err) && me.clientSet.Credentials().ContainsPlatformCredentials() {
 		ctx := rest.NewPreferOAuthContext(ctx)
 		return me.service.Create(ctx, v)
 	}
@@ -68,7 +68,7 @@ func (me *service) Update(ctx context.Context, id string, v *anomalydetectors.Se
 	}
 
 	// if the anomaly detector requires OAuth, try again with OAuth (without an API token)
-	if rest.IsRequiresOAuthError(err) && me.clientSet.Credentials().ContainsOAuthOrPlatformToken() {
+	if rest.IsRequiresOAuthError(err) && me.clientSet.Credentials().ContainsPlatformCredentials() {
 		ctx := rest.NewPreferOAuthContext(ctx)
 		return me.service.Update(ctx, id, v)
 	}

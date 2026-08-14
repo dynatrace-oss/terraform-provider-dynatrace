@@ -4,7 +4,7 @@ go 1.26.5
 
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
-	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20260810104307-a9c67f731f2f
+	github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20260814115220-232d136d6403
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cty v1.5.0
 	github.com/hashicorp/go-hclog v1.6.3

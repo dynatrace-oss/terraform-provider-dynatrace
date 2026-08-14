@@ -24,7 +24,9 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/wif"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
+	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
@@ -38,7 +40,7 @@ var eligiblePlatformRequests = map[string]string{
 
 type platform_request request
 
-var NoPlatformCredentialsErr = errors.New("neither oauth credentials nor platform token present")
+var NoPlatformCredentialsErr = errors.New("neither workload identity federation, oauth credentials nor platform token present")
 
 func CreatePlatformClient(ctx context.Context, platformURL string, credentials *Credentials) (*rest.Client, error) {
 	factory := clients.Factory().
@@ -47,10 +49,24 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 		WithRetryOptions(defaultRetryOptions).
 		WithUserAgent(version.UserAgent())
 
+	// Workload Identity Federation is checked first: configuring it is the most explicit statement
+	// of which identity the platform requests should use, so it wins over a platform token and over
+	// OAuth credentials that may merely be left over in the environment.
+	if credentials.ContainsWIF() {
+		tokenSource, err := wif.TokenSourceFor(credentials.Platform.WIF)
+		if err != nil {
+			return nil, err
+		}
+		return factory.
+			WithHTTPListener(logging.HTTPListener("plat/wif")).
+			WithPlatformTokenSource(tokenSource).
+			CreatePlatformClient(NewContextWithReauthenticatingClient(ctx, tokenSource))
+	}
+
 	if credentials.ContainsPlatformToken() {
 		return factory.
 			WithHTTPListener(logging.HTTPListener("plat/tok")).
-			WithPlatformToken(credentials.Platform.PlatformToken).
+			WithPlatformTokenSource(oauth2.StaticTokenSource(&oauth2.Token{AccessToken: credentials.Platform.PlatformToken})).
 			CreatePlatformClient(ctx)
 	}
 

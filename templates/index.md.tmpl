@@ -132,6 +132,66 @@ If `DYNATRACE_PLATFORM_TOKEN` is not defined, the provider will use the configur
 Platform token authentication follows the same selection rules as OAuth credentials:
 When the environment variable `DYNATRACE_HTTP_OAUTH_PREFERENCE` is set to `true`, the provider will favor platform or OAuth tokens over API tokens.
 
+---
+
+### Authenticating with Workload Identity Federation (GitHub Actions OIDC)
+
+Inside a GitHub Actions job the provider can obtain a short lived OIDC token and use it for the Dynatrace platform APIs. No long lived secret has to be stored in the repository.
+
+Set the vendor and the audience:
+
+```
+DYNATRACE_WIF_VENDOR=github
+DYNATRACE_WIF_AUDIENCE=<<AUDIENCE>>
+```
+
+Alternatively, you can use the `wif_vendor` and `wif_audience` attributes in the provider configuration. `wif_audience` has no default: the value has to match the audience that your Dynatrace environment expects.
+
+The job needs the `id-token: write` permission, otherwise GitHub does not issue an OIDC token to it:
+
+```yaml
+name: terraform
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write   # required - lets the job request a GitHub OIDC token
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    env:
+      DYNATRACE_ENV_URL: https://########.apps.dynatrace.com
+      DYNATRACE_WIF_VENDOR: github
+      DYNATRACE_WIF_AUDIENCE: <<AUDIENCE>>
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform init
+      - run: terraform apply -auto-approve
+```
+
+> **Note:** If the permission is missing, the provider fails with `Unable to get ACTIONS_ID_TOKEN_REQUEST_URL environment variable`.
+
+The provider obtains a new token shortly before the current one expires, so a long running `terraform apply` does not fail halfway through when the token reaches the end of its short lifetime.
+
+Workload Identity Federation applies to the Dynatrace **platform** APIs only. IAM (Account Management) resources still require OAuth credentials, and classic resources still require an API token. When it is configured, it takes precedence over `platform_token` and over OAuth credentials for platform requests, and the provider emits a warning naming the credentials that are being ignored.
+
+#### Using an OIDC token obtained elsewhere
+
+If you obtain the token by other means, you can pass it directly:
+
+```
+DYNATRACE_WIF_OIDC_TOKEN=<<OIDC_TOKEN>>
+```
+
+or use the `wif_oidc_token` attribute. It conflicts with `wif_vendor` - specify one or the other, never both.
+
+> **Warning:** A token supplied this way is **never replaced**. It carries a fixed `exp` claim and can expire in the middle of a long running `terraform apply`, which shows up as `401` responses partway through. Prefer `wif_vendor` whenever the workload runs on a supported CI platform.
+
 
 ## Exporting existing configuration from a Dynatrace environment
 In addition to the out-of-the-box functionality of Terraform, the provider has the ability to be executed as a standalone executable to export an existing configuration from a Dynatrace environment. Refer to the [Export Utility](https://dt-url.net/h203qmc) page for more information.

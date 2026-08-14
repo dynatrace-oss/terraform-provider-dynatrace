@@ -26,6 +26,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/wif"
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -102,10 +103,19 @@ var regexpSprintTenant = regexp.MustCompile(`https:\/\/(.*).sprint(?:\.apps)?.dy
 var regexpDevTenant = regexp.MustCompile(`https:\/\/(.*).dev(?:\.apps)?.dynatracelabs.com`)
 
 func ProviderConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
-	return ProviderConfigureGeneric(ctx, d), diag.Diagnostics{}
+	pc, diagnostics := ProviderConfigureGenericWithDiagnostics(ctx, d)
+	return pc, diagnostics
 }
 
+// ProviderConfigureGeneric parses the provider configuration and discards any diagnostics it
+// produced. Callers that are able to show diagnostics should use
+// ProviderConfigureGenericWithDiagnostics instead.
 func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfiguration {
+	pc, _ := ProviderConfigureGenericWithDiagnostics(ctx, d)
+	return pc
+}
+
+func ProviderConfigureGenericWithDiagnostics(ctx context.Context, d Getter) (*ProviderConfiguration, diag.Diagnostics) {
 	pc := &ProviderConfiguration{
 		EnvironmentURL:  getClassicEnvironmentURL(d),
 		APIToken:        getString(d, "dt_api_token"),
@@ -124,6 +134,7 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 			ClientSecret:   getPlatformClientSecret(d),
 			TokenURL:       getPlatformTokenURL(d),
 			EnvironmentURL: getPlatformEnvironmentURL(d),
+			WIF:            getWIFCredentials(d),
 		},
 	}
 
@@ -138,7 +149,59 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 	pc.iamClient, pc.iamClientErr = rest.NewIAMClient(clientCtx, pc.Credentials())
 	pc.platformClient, pc.platformClientErr = rest.CreatePlatformClient(clientCtx, pc.Platform.EnvironmentURL, pc.Credentials())
 
-	return pc
+	return pc, wifDiagnostics(pc)
+}
+
+// wifDiagnostics reports credential combinations that are allowed but are almost certainly not what
+// the user meant.
+//
+// Combinations written entirely in the provider block are already rejected by the schema. What
+// reaches this point are the ones that only appear once environment variables have been resolved -
+// typically a platform token or an OAuth client left over in a CI runner - and failing on those
+// would break a pipeline over a variable nobody meant to use.
+func wifDiagnostics(pc *ProviderConfiguration) diag.Diagnostics {
+	if !pc.Platform.WIF.Configured() {
+		return diag.Diagnostics{}
+	}
+
+	// An unusable setup is reported on its own. Announcing that it takes precedence over credentials
+	// that do work would point the user away from the actual problem.
+	if err := validateWIF(pc); err != nil {
+		return diag.Diagnostics{{
+			Severity: diag.Error,
+			Summary:  "Invalid Workload Identity Federation configuration",
+			Detail:   strings.TrimSpace(err.Error()),
+		}}
+	}
+
+	var ignored []string
+	if len(pc.Platform.PlatformToken) > 0 {
+		ignored = append(ignored, "`platform_token`")
+	}
+	if len(pc.Platform.ClientID) > 0 && len(pc.Platform.ClientSecret) > 0 {
+		ignored = append(ignored, "`client_id` and `client_secret`")
+	}
+	if len(ignored) == 0 {
+		return diag.Diagnostics{}
+	}
+
+	return diag.Diagnostics{{
+		Severity: diag.Warning,
+		Summary:  "Workload Identity Federation takes precedence over other platform credentials",
+		Detail: fmt.Sprintf(
+			"Workload Identity Federation is configured and is used for all Dynatrace platform API requests. %s will be ignored for platform requests. OAuth credentials are still used for IAM (Account Management) requests.",
+			strings.Join(ignored, " and ")),
+	}}
+}
+
+// validateWIF reports a Workload Identity Federation setup that cannot work, in the wording the rest
+// of the credential validation uses. The judgement itself lives in the wif package, so that the
+// provider and the export command cannot drift apart on what counts as a valid setup.
+func validateWIF(conf *ProviderConfiguration) error {
+	if err := wif.Validate(conf.Platform.WIF); err != nil {
+		return fmt.Errorf(" %s", err)
+	}
+	return nil
 }
 
 func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) error {
@@ -176,6 +239,17 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 			return fmt.Errorf(" No Cluster URL has been specified. Use either the environment variable `DT_CLUSTER_URL` or the configuration attribute `dt_cluster_url` of the provider for that")
 		}
 	case CredValPlatform:
+		if err := validateWIF(conf); err != nil {
+			return err
+		}
+		if conf.Platform.WIF.Configured() {
+			// The environment URL is checked here rather than left to the client factory, whose own
+			// complaint about a missing platform URL says nothing about how to fix it.
+			if len(conf.Platform.EnvironmentURL) == 0 {
+				return fmt.Errorf(" No Environment URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_ENVIRONMENT_URL` or the configuration attribute `automation_env_url` of the provider for that")
+			}
+			return nil
+		}
 		if len(conf.Platform.ClientID) == 0 {
 			return fmt.Errorf(" No OAuth Client ID for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_ID` or the configuration attribute `automation_client_id` of the provider for that")
 		}
@@ -192,8 +266,14 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 		if len(conf.EnvironmentURL) == 0 {
 			return fmt.Errorf(" No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
 		}
-		if len(conf.APIToken) == 0 && len(conf.Platform.PlatformToken) == 0 && validateCredentials(conf, CredValPlatform) != nil {
-			return fmt.Errorf(" No API Token, Platform Token, or OAuth has been specified for export. More detailed information can be found in the documentation at https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#configure-the-dynatrace-provider")
+		// Checked ahead of the combined test below, so that a Workload Identity Federation setup
+		// which is present but unusable reports what is wrong with it instead of the generic
+		// complaint that no credentials were given at all.
+		if err := validateWIF(conf); err != nil {
+			return err
+		}
+		if len(conf.APIToken) == 0 && len(conf.Platform.PlatformToken) == 0 && !conf.Platform.WIF.Configured() && validateCredentials(conf, CredValPlatform) != nil {
+			return fmt.Errorf(" No API Token, Platform Token, Workload Identity Federation, or OAuth has been specified for export. More detailed information can be found in the documentation at https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#configure-the-dynatrace-provider")
 		}
 	case CredValExportIAM:
 		if conf.IAM.AccountID == "" {
@@ -317,6 +397,22 @@ func getPlatformClientSecret(d Getter) string {
 		return clientSecret
 	}
 	return getString(d, "iam_client_secret")
+}
+
+// getWIFCredentials retrieves the Workload Identity Federation settings from the provided
+// configuration. The values are passed through unjudged, so that validateWIF can report a single,
+// actionable problem rather than several partial ones.
+func getWIFCredentials(d Getter) wif.Config {
+	return wif.Config{
+		// The provider schema rejects a misspelled vendor before this is reached, but the export
+		// command reads the configuration without going through schema validation. Lowering here
+		// keeps DYNATRACE_WIF_VENDOR=GitHub working there rather than failing as an unknown vendor.
+		Vendor:   wif.Vendor(strings.ToLower(strings.TrimSpace(getString(d, "wif_vendor")))),
+		Audience: strings.TrimSpace(getString(d, "wif_audience")),
+		// A token that travelled through a CI secret often arrives with a trailing newline, and
+		// "Bearer <token>\n" is not a valid header value.
+		StaticToken: strings.TrimSpace(getString(d, "wif_oidc_token")),
+	}
 }
 
 // getPlatformTokenURL returns the SSO token URL for platform based on the provided configuration.

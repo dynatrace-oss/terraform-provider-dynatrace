@@ -1,0 +1,132 @@
+//go:build unit
+
+/*
+ * @license
+ * Copyright 2026 Dynatrace LLC
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package wif
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+// withEmptyCache gives a test the cache to itself, since it outlives any single one of them.
+func withEmptyCache(t *testing.T) {
+	t.Helper()
+
+	clear(tokenSourceCache)
+	t.Cleanup(func() { clear(tokenSourceCache) })
+
+	// A vendor minter reads its credentials from the environment while it is being built.
+	t.Setenv(githubRequestURLVariable, "https://token.service.invalid/")
+	t.Setenv(githubRequestTokenVariable, "request-token")
+}
+
+func TestTokenSourceForReusesSourceForSameConfiguration(t *testing.T) {
+	withEmptyCache(t)
+	config := Config{Vendor: VendorGitHub, Audience: "dynatrace"}
+
+	first, err := TokenSourceFor(config)
+	require.NoError(t, err)
+	second, err := TokenSourceFor(config)
+	require.NoError(t, err)
+
+	assert.Same(t, first, second)
+}
+
+// The audience is the identity of the minted token, so two audiences cannot share one source.
+func TestTokenSourceForSeparatesSourcesByAudience(t *testing.T) {
+	withEmptyCache(t)
+
+	first, err := TokenSourceFor(Config{Vendor: VendorGitHub, Audience: "dynatrace"})
+	require.NoError(t, err)
+	second, err := TokenSourceFor(Config{Vendor: VendorGitHub, Audience: "another-audience"})
+	require.NoError(t, err)
+
+	assert.NotSame(t, first, second)
+}
+
+func TestTokenSourceForReturnsSuppliedStaticToken(t *testing.T) {
+	withEmptyCache(t)
+	rawToken := jwtWithPayload(`{"exp":1767225600}`)
+
+	source, err := TokenSourceFor(Config{StaticToken: rawToken})
+	require.NoError(t, err)
+
+	token, err := source.Token()
+	require.NoError(t, err)
+	assert.Equal(t, rawToken, token.AccessToken)
+}
+
+// A supplied token cannot be replaced, so it carries no expiry and is sent until the platform
+// rejects it. Reporting an expiry would make oauth2 discard it and leave the request unauthenticated.
+func TestTokenSourceForLeavesSuppliedStaticTokenWithoutExpiry(t *testing.T) {
+	withEmptyCache(t)
+
+	source, err := TokenSourceFor(Config{StaticToken: jwtWithPayload(`{"exp":1767225600}`)})
+	require.NoError(t, err)
+
+	token, err := source.Token()
+	require.NoError(t, err)
+	assert.True(t, token.Expiry.IsZero())
+}
+
+// Being handed back the very token that was rejected is how a source says that it has no other one
+// to offer, which is what stops the caller from sending the same request a second time for nothing.
+func TestTokenSourceForCannotReplaceSuppliedStaticToken(t *testing.T) {
+	withEmptyCache(t)
+	rawToken := jwtWithPayload(`{"exp":1767225600}`)
+
+	source, err := TokenSourceFor(Config{StaticToken: rawToken})
+	require.NoError(t, err)
+
+	token, err := source.Replace(rawToken)
+	require.NoError(t, err)
+	assert.Equal(t, rawToken, token.AccessToken)
+}
+
+// A supplied token is a credential. Caching it would make its value a key in a map that lives as long
+// as the process.
+func TestTokenSourceForDoesNotCacheSuppliedStaticToken(t *testing.T) {
+	withEmptyCache(t)
+
+	_, err := TokenSourceFor(Config{StaticToken: jwtWithPayload(`{"exp":1767225600}`)})
+
+	require.NoError(t, err)
+	assert.Empty(t, tokenSourceCache)
+}
+
+func TestTokenSourceForRejectsInvalidConfiguration(t *testing.T) {
+	withEmptyCache(t)
+
+	_, err := TokenSourceFor(Config{Vendor: VendorGitHub})
+
+	assert.EqualError(t, err, "No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
+}
+
+// A missing credential is worth reporting again once the environment has been fixed, so it must not
+// leave a permanent hole in the cache.
+func TestTokenSourceForDoesNotCacheCredentialFailure(t *testing.T) {
+	withEmptyCache(t)
+	t.Setenv(githubRequestURLVariable, "")
+
+	_, err := TokenSourceFor(Config{Vendor: VendorGitHub, Audience: "dynatrace"})
+
+	require.Error(t, err)
+	assert.Empty(t, tokenSourceCache)
+}

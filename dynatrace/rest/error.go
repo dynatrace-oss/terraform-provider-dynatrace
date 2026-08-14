@@ -176,7 +176,7 @@ Specifying an API Token:
 - environment variable 'DYNATRACE_API_TOKEN'
 - provider configuration attribute 'dt_api_token'`)
 
-var NoOAuthCredentialsError = errors.New(`Neither OAuth Credentials nor Platform Token have been specified.
+var NoOAuthCredentialsError = errors.New(`Neither OAuth Credentials, a Platform Token nor Workload Identity Federation have been specified.
 
 Specifying OAuth credentials:
 - environment variables 'DYNATRACE_CLIENT_ID' and 'DYNATRACE_CLIENT_SECRET'
@@ -184,4 +184,8 @@ Specifying OAuth credentials:
 Specifying a Platform Token:
 
 - environment variable 'DYNATRACE_PLATFORM_TOKEN'
-- provider configuration attribute 'platform_token'`)
+- provider configuration attribute 'platform_token'
+Specifying Workload Identity Federation:
+
+- environment variables 'DYNATRACE_WIF_VENDOR' and 'DYNATRACE_WIF_AUDIENCE'
+- provider configuration attributes 'wif_vendor' and 'wif_audience'`)

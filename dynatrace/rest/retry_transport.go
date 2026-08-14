@@ -93,6 +93,16 @@ func bufferRequestBody(req *http.Request) ([]byte, error) {
 	return body, err
 }
 
+// cloneRequestWithBody returns a copy of req that can be sent on its own, with the previously
+// buffered body put back in place of the one sending the request consumed.
+func cloneRequestWithBody(req *http.Request, body []byte) *http.Request {
+	clone := req.Clone(req.Context())
+	if body != nil {
+		clone.Body = io.NopCloser(bytes.NewReader(body))
+	}
+	return clone
+}
+
 // drainAndClose drains body into /dev/null and closes it, allowing TCP
 // connection reuse. The drain error takes precedence over the close error.
 func drainAndClose(body io.ReadCloser) error {
@@ -115,10 +125,7 @@ func (t *RetryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 	for attempt := 0; ; attempt++ {
 		// Clone the request and restore the body for each attempt.
-		clone := req.Clone(req.Context())
-		if bodyBytes != nil {
-			clone.Body = io.NopCloser(bytes.NewReader(bodyBytes))
-		}
+		clone := cloneRequestWithBody(req, bodyBytes)
 
 		resp, err := t.transport().RoundTrip(clone)
 		if err != nil {

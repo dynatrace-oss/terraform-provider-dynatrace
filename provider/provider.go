@@ -92,8 +92,10 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/usergroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/users"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/wif"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 // ResourceSpecification has no documentation
@@ -225,6 +227,31 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_PLATFORM_TOKEN", "DT_PLATFORM_TOKEN"}, nil),
+			},
+			"wif_vendor": {
+				Type:         schema.TypeString,
+				Description:  "Obtains a short lived OIDC token from the given workload identity provider and uses it for platform APIs. The only supported value is `github`, which requires the job to run in GitHub Actions with the `id-token: write` permission. Requires `wif_audience` and conflicts with `wif_oidc_token`. When specified, it is used in preference to `platform_token` and to OAuth credentials for platform requests. Workload Identity Federation can't be used for IAM (Account Management) or classic resources.",
+				Optional:     true,
+				DefaultFunc:  schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_VENDOR", "DT_WIF_VENDOR"}, nil),
+				ValidateFunc: validation.StringInSlice([]string{string(wif.VendorGitHub)}, false),
+				// A missing audience is deliberately left to the credential validation rather than
+				// declared as RequiredWith here. That path reaches the export command too, which does
+				// not run schema validation at all, and it can say which environment variable to set.
+				ConflictsWith: []string{"wif_oidc_token"},
+			},
+			"wif_audience": {
+				Type:        schema.TypeString,
+				Description: "The audience (`aud` claim) requested for the Workload Identity Federation OIDC token. Required whenever `wif_vendor` is specified. There is no default: the value has to match the audience that the Dynatrace environment expects.",
+				Optional:    true,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_AUDIENCE", "DT_WIF_AUDIENCE"}, nil),
+			},
+			"wif_oidc_token": {
+				Type:          schema.TypeString,
+				Description:   "An already obtained OIDC token (JWT) that is sent to the platform APIs as it is. Conflicts with `wif_vendor`. This token is never replaced: it carries a fixed `exp` claim and can expire in the middle of a long running `terraform apply`. Prefer `wif_vendor` whenever the workload runs on a supported CI platform.",
+				Optional:      true,
+				Sensitive:     true,
+				DefaultFunc:   schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_OIDC_TOKEN", "DT_WIF_OIDC_TOKEN"}, nil),
+				ConflictsWith: []string{"wif_vendor"},
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{

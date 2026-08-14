@@ -26,6 +26,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"golang.org/x/exp/slices"
 )
 
@@ -80,7 +81,14 @@ func runExport(cfgGetter config.Getter) (err error) {
 	os.Remove("terraform-provider-dynatrace.export.log")
 	os.Remove("terraform-provider-dynatrace.warnings.log")
 
-	pc := config.ProviderConfigureGeneric(context.Background(), cfgGetter)
+	pc, diagnostics := config.ProviderConfigureGenericWithDiagnostics(context.Background(), cfgGetter)
+	// Only warnings are printed here. Errors reach the user through validateCredentials below, and
+	// printing them twice would just be noise.
+	for _, diagnostic := range diagnostics {
+		if diagnostic.Severity == diag.Warning {
+			fmt.Printf("WARNING: %s\n%s\n", diagnostic.Summary, diagnostic.Detail)
+		}
+	}
 
 	// Ensure every ordered Settings 2.0 resource (with `insert_after` attribute) won't produce hardcoded IDs when exported.
 	export.AddInsertAfterWeakIDDependencies(export.AllResources, pc)

@@ -17,6 +17,8 @@
 
 package rest
 
+import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/wif"
+
 const TestCaseEnvURL = "go-test"
 
 type IAMCredentials struct {
@@ -33,6 +35,7 @@ type PlatformCredentials struct {
 	TokenURL       string
 	EnvironmentURL string
 	PlatformToken  string
+	WIF            wif.Config
 }
 
 type ClusterCredentials struct {
@@ -60,6 +63,17 @@ func (c *Credentials) ContainsAPIToken() bool {
 	return len(c.Token) > 0
 }
 
-func (c *Credentials) ContainsOAuthOrPlatformToken() bool {
-	return c.ContainsOAuth() || c.ContainsPlatformToken()
+// ContainsWIF reports whether Workload Identity Federation was requested. It says nothing about
+// whether obtaining a token will succeed: a configuration that asks for it but cannot reach its
+// token service has to fail with that error, rather than silently falling back to another credential
+// and authenticating as somebody else.
+func (c *Credentials) ContainsWIF() bool {
+	return c.Platform.WIF.Configured()
+}
+
+// ContainsPlatformCredentials reports whether any credential usable against the platform APIs is
+// present. It answers whether a request may take the platform path, not which credential that
+// request will end up using - that order is decided in CreatePlatformClient.
+func (c *Credentials) ContainsPlatformCredentials() bool {
+	return c.ContainsWIF() || c.ContainsOAuth() || c.ContainsPlatformToken()
 }
