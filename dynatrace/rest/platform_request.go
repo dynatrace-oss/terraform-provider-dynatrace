@@ -32,8 +32,8 @@ import (
 )
 
 var eligiblePlatformRequests = map[string]string{
-	"/api/v2/settings/objects": "/platform/classic/environment-api/v2/settings/objects",
-	"/api/v2/settings/schemas": "/platform/classic/environment-api/v2/settings/schemas",
+	"/api/v2/": "/platform/classic/environment-api/v2/",
+	"/api/v1/": "/platform/classic/environment-api/v1/",
 }
 
 type platform_request request
@@ -74,7 +74,13 @@ func (me *platform_request) Finish(optionalTarget ...any) error {
 		target = optionalTarget[0]
 	}
 
-	platformURL := me.evalPlatformURL(me.client.Credentials().URL)
+	var platformURL string
+	// config v1 are not reachable on platform, so we need to use the classic URL for those requests
+	if strings.Contains(me.url, "/api/config/v1/") {
+		platformURL = EvalClassicURL(me.client.Credentials().URL)
+	} else {
+		platformURL = me.evalPlatformURL(me.client.Credentials().URL)
+	}
 
 	client, err := CreatePlatformClient(me.ctx, platformURL, me.client.Credentials())
 	if err != nil {

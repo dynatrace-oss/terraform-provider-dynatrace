@@ -26,5 +26,5 @@ import (
 )
 
 func TestAccCustomServices(t *testing.T) {
-	api.TestAcc(t)
+	api.TestAccClassicHybrid(t)
 }

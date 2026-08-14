@@ -9,6 +9,7 @@ description: |-
 # dynatrace_custom_service (Resource)
 
 -> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
+or the OAuth scopes `settings:objects:read` and `settings:objects:write`
 
 ## Dynatrace Documentation
 
@@ -27,4 +28,3 @@ The full documentation of the export feature is available [here](https://dt-url.
 {{ tffile "dynatrace/api/v1/config/customservices/testdata/terraform/example_a.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
- 

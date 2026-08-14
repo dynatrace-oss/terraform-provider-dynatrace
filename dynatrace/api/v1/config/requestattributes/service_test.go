@@ -26,5 +26,5 @@ import (
 )
 
 func TestAccRequestAttributes(t *testing.T) {
-	api.TestAcc(t)
+	api.TestAccClassicHybrid(t)
 }

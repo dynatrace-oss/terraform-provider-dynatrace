@@ -30,7 +30,7 @@ import (
 )
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*activegatetokens.Settings], error) {
-	return &service{clientSet}, nil
+	return &service{client: rest.ClassicHybridClient(clientSet)}, nil
 }
 
 type TokenCreateResponse struct {
@@ -44,19 +44,18 @@ type TenantTokenResponse struct {
 }
 
 type service struct {
-	clientSet rest.ClientSet
+	client rest.Client
 }
 
 func (me *service) Get(ctx context.Context, id string, v *activegatetokens.Settings) error {
 	var err error
 
-	client := rest.APITokenClient(me.clientSet.Credentials())
-	req := client.Get(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id))).Expect(200)
+	req := me.client.Get(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id))).Expect(200)
 	if err = req.Finish(v); err != nil {
 		return err
 	}
 	var ttr TenantTokenResponse
-	req = client.Get(ctx, "/api/v1/deployment/installer/agent/connectioninfo").Expect(200)
+	req = me.client.Get(ctx, "/api/v1/deployment/installer/agent/connectioninfo").Expect(200)
 	if err = req.Finish(&ttr); err == nil {
 		v.TenantToken = &ttr.TenantToken
 	}
@@ -80,15 +79,14 @@ func (me *service) Create(ctx context.Context, v *activegatetokens.Settings) (*a
 	var err error
 
 	response := TokenCreateResponse{}
-	client := rest.APITokenClient(me.clientSet.Credentials())
-	if err = client.Post(ctx, "/api/v2/activeGateTokens", v, 201).Finish(&response); err != nil {
+	if err = me.client.Post(ctx, "/api/v2/activeGateTokens", v, 201).Finish(&response); err != nil {
 		return nil, err
 	}
 	v.ExpirationDate = response.ExpirationDate
 	v.Token = response.Token
 
 	var ttr TenantTokenResponse
-	req := client.Get(ctx, "/api/v1/deployment/installer/agent/connectioninfo").Expect(200)
+	req := me.client.Get(ctx, "/api/v1/deployment/installer/agent/connectioninfo").Expect(200)
 	if err = req.Finish(&ttr); err == nil {
 		v.TenantToken = &ttr.TenantToken
 	}
@@ -101,7 +99,7 @@ func (me *service) Update(ctx context.Context, id string, v *activegatetokens.Se
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return rest.APITokenClient(me.clientSet.Credentials()).Delete(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id)), 204).Finish()
+	return me.client.Delete(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id)), 204).Finish()
 }
 
 func (me *service) New() *activegatetokens.Settings {

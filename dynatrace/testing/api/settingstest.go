@@ -42,6 +42,8 @@ type TestCaseAccOptions struct {
 type TestAccOptions struct {
 	ExpectNonEmptyPlan bool
 	ExternalProviders  map[string]resource.ExternalProvider
+	// preset identifier to replace "#name#" and "${randomize}" in the config, if empty a random string will be generated
+	Identifier string
 }
 
 func AccEnvsGiven(t *testing.T) bool {
@@ -126,12 +128,33 @@ func TestAcc(t *testing.T, opts ...TestAccOptions) {
 		t.Run(subTestName, func(t *testing.T) {
 			t.Helper()
 
-			config, _ := ReadTfConfig(t, file)
+			var config string
+			if len(opts) > 0 && opts[0].Identifier != "" {
+				// if an identifier is provided, use it to replace "#name#" and "${randomize}"
+				config = ReadTfConfigWithIdentifier(t, file, opts[0].Identifier)
+			} else {
+				// otherwise, generate a random identifier
+				config, _ = ReadTfConfig(t, file)
+			}
 
 			testCase := createTestCaseWithOptions(t, config, opts)
 			resource.Test(t, testCase)
 		})
 	}
+}
+
+// TestAccClassicHybrid executes all test files in the `testdata` with classic credentials and platform credentials.
+// Disables the envs set in the GitHub pipeline to ensure that the tests are executed with both credentials.
+func TestAccClassicHybrid(t *testing.T, opts ...TestAccOptions) {
+	t.Run("Classic", func(t *testing.T) {
+		t.Setenv("DT_CLIENT_SECRET", "")
+		TestAcc(t, opts...)
+	})
+
+	t.Run("Platform", func(t *testing.T) {
+		t.Setenv("DYNATRACE_API_TOKEN", "")
+		TestAcc(t, opts...)
+	})
 }
 
 // TestAccSingle executes a single test/example file.  e.g., "testdata/terraform/example.tf"

@@ -32,7 +32,7 @@ const BasePath = "/api/config/v1/service/requestAttributes"
 var mu sync.Mutex
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*requestattributes.RequestAttribute], error) {
-	return settings.NewAPITokenService(
+	return settings.NewClassicHybridService(
 		clientSet,
 		SchemaID,
 		&settings.ServiceOptions[*requestattributes.RequestAttribute]{

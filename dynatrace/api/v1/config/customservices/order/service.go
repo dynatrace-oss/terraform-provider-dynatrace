@@ -34,7 +34,7 @@ const StaticName = "custom_service_order"
 const BasePath = "/api/config/v1/service/customServices/%s"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*order.Settings], error) {
-	return &service{client: rest.APITokenClient(clientSet.Credentials())}, nil
+	return &service{client: rest.ClassicHybridClient(clientSet)}, nil
 }
 
 type service struct {

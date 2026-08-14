@@ -1,4 +1,4 @@
-//go:build integration
+//go:build sequential_integration
 
 /**
 * @license
@@ -26,5 +26,5 @@ import (
 )
 
 func TestAccRequestNamingOrder(t *testing.T) {
-	api.TestAcc(t)
+	api.TestAccClassicHybrid(t)
 }
