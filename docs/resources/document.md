@@ -22,9 +22,12 @@ description: |-
 
 ```terraform
 resource "dynatrace_document" "this" {
-  type = "dashboard"
-  name = "Example Dashboard"
-  custom_id = "#name#"
+  type           = "dashboard"
+  name           = "Example Dashboard"
+  custom_id      = "#name#"
+  description    = "Initial description"
+  labels         = ["monitoring", "cloud", "draft"]
+  is_reshareable = true
   content = jsonencode(
     {
       "version" : 13,
@@ -179,6 +182,9 @@ resource "dynatrace_document" "this" {
 ### Optional
 
 - `custom_id` (String) If provided, this will be the id of the document. If not provided, a system-generated id is used.
+- `description` (String) A short description of the document
+- `is_reshareable` (Boolean) Specifies whether recipients of a direct share can share the document further
+- `labels` (Set of String) Labels attached to the document
 - `private` (Boolean) Specifies whether the document is private or readable by everybody
 
 ### Read-Only
