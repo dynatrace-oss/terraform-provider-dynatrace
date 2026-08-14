@@ -223,6 +223,7 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Description: "The Dynatrace platform token used for platform APIs. When specified, it is used in preference to `client_id`, `client_secret`, `automation_client_id`, `automation_client_secret`, `automation_token_url`, and `automation_env_url` for platform requests. Platform tokens can't be used for IAM (Account Management) or classic resources.",
 				Optional:    true,
+				Sensitive:   true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_PLATFORM_TOKEN", "DT_PLATFORM_TOKEN"}, nil),
 			},
 		},
