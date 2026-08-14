@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_hub_extension_v2_config (Resource)
 
--> This resource requires the OAuth scopes `extensions:configurations:read` and `extensions:configurations:write`
+-> This resource requires the OAuth scopes `extensions:configurations:read`, `extensions:configurations:write`, and `extensions:definitions:read`.
 
 This resource configures a monitoring configuration for the given extension with the specified version.
 Managing of configurations will fail if the extension has not yet gotten installed for the specified version.

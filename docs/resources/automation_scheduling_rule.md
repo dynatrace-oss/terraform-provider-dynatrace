@@ -1808,7 +1808,6 @@ resource "dynatrace_automation_scheduling_rule" "base" {
     months        = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     weekdays      = [ "MO", "TU", "WE" ]
     weeks         = [-2, -1, 1, 2, 3]
-    workdays      = "WORKING"
   }
 }
 
@@ -2490,7 +2489,7 @@ resource "dynatrace_automation_scheduling_rule" "#name#" {
 
 ### Optional
 
-- `business_calendar` (String)
+- `business_calendar` (String) The ID of the business calendar associated with the scheduling rule
 - `description` (String) An optional description for the scheduling rule
 - `fixed_offset` (Block List, Max: 1) (see [below for nested schema](#nestedblock--fixed_offset))
 - `grouping` (Block List, Max: 1) (see [below for nested schema](#nestedblock--grouping))
@@ -2530,7 +2529,6 @@ Required:
 
 - `datestart` (String) The recurrence start. Example: `2017-07-04` represents July 4th 2017
 - `frequency` (String) Possible values are `YEARLY`, `MONTHLY`, `WEEKLY`, `DAILY`, `HOURLY`, `MINUTELY` and `SECONDLY`. Example: `frequency` = `DAILY` and `interval` = `2` schedules for every other day
-- `workdays` (String) Possible values are `WORKING` (Work days), `HOLIDAYS` (Holidays) and `OFF` (Weekends + Holidays)
 
 Optional:
 
@@ -2541,6 +2539,7 @@ Optional:
 - `months` (Set of Number) Restricts the recurrence to specific months. `1` for `January`, `2` for `February`, ..., `12` for `December`
 - `weekdays` (Set of String) Restricts the recurrence to specific week days. Possible values are `MO`, `TU`, `WE`, `TH`, `FR`, `SA` and `SU`
 - `weeks` (Set of Number) Restricts the recurrence to specific weeks within a year. `1`, `2`, `3`, ... refers to the first, second, third week of the year. You can also specify negative values to refer to values relative to the last week. `-1` refers to the last week, `-2` refers to the second to the last week, ...
+- `workdays` (String) Possible values are `WORKING` (Work days), `HOLIDAYS` (Holidays) and `OFF` (Weekends + Holidays)
 
 
 <a id="nestedblock--relative_offset"></a>

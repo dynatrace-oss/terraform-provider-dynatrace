@@ -32,7 +32,7 @@ data "dynatrace_documents" "all-notebooks" {
 
 ### Optional
 
-- `type` (String) The type of documents to query for. Leave empty if you want to query for all kinds of documents. Possible values are `dashboard` or `notebook`
+- `type` (String) The type of documents to query for. Leave empty if you want to query for all kinds of documents. Possible values are `dashboard`, `notebook` or `launchpad`
 
 ### Read-Only
 
@@ -44,7 +44,10 @@ data "dynatrace_documents" "all-notebooks" {
 
 Read-Only:
 
+- `description` (String)
 - `id` (String)
+- `is_reshareable` (Boolean)
+- `labels` (Set of String)
 - `name` (String)
 - `owner` (String)
 - `type` (String)
