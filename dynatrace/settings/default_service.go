@@ -33,7 +33,15 @@ import (
 var ExportRunning = false
 
 func NewAPITokenService[T Settings](clientSet rest.ClientSet, schemaID string, options *ServiceOptions[T]) (CRUDService[T], error) {
-	return &defaultService[T]{schemaID: schemaID, client: rest.APITokenClient(clientSet.Credentials()), options: options}, nil
+	return newServiceWithClient[T](rest.APITokenClient(clientSet.Credentials()), schemaID, options)
+}
+
+func NewClassicHybridService[T Settings](clientSet rest.ClientSet, schemaID string, options *ServiceOptions[T]) (CRUDService[T], error) {
+	return newServiceWithClient[T](rest.ClassicHybridClient(clientSet), schemaID, options)
+}
+
+func newServiceWithClient[T Settings](client rest.Client, schemaID string, options *ServiceOptions[T]) (CRUDService[T], error) {
+	return &defaultService[T]{schemaID: schemaID, client: client, options: options}, nil
 }
 
 type defaultService[T Settings] struct {

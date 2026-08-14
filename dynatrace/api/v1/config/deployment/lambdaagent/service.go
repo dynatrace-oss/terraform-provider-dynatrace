@@ -30,7 +30,7 @@ const SchemaID = "v1:deployment:lambdaagent"
 const BasePath = "/api/v1/deployment/lambda/agent/latest"
 
 func Service(clientSet rest.ClientSet) (settings.RService[*lambdaagent.Latest], error) {
-	return &service{client: rest.APITokenClient(clientSet.Credentials())}, nil
+	return &service{client: rest.ClassicHybridClient(clientSet)}, nil
 }
 
 type service struct {

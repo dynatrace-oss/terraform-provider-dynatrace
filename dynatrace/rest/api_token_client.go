@@ -151,7 +151,7 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 	if len(optionalTarget) > 0 {
 		target = optionalTarget[0]
 	}
-	classicURL := evalClassicURL(me.client.Credentials().URL)
+	classicURL := EvalClassicURL(me.client.Credentials().URL)
 
 	client, err := createClassicClient(classicURL, me.client.Credentials().Token)
 	if err != nil {
@@ -169,7 +169,7 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 	return request(*me).HandleResponse(client, pathURL, target)
 }
 
-func evalClassicURL(envURL string) string {
+func EvalClassicURL(envURL string) string {
 	envURL = strings.TrimSuffix(strings.TrimSpace(envURL), "/")
 	if len(envURL) == 0 {
 		return envURL

@@ -26,5 +26,5 @@ import (
 )
 
 func TestAccRequestNaming(t *testing.T) {
-	api.TestAcc(t)
+	api.TestAccClassicHybrid(t)
 }

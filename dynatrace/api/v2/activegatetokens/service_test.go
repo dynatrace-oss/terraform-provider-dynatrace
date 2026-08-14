@@ -26,5 +26,5 @@ import (
 )
 
 func TestAccAGTokens(t *testing.T) {
-	api.TestAcc(t)
+	api.TestAccClassicHybrid(t)
 }
