@@ -25,22 +25,18 @@ import (
 	"time"
 )
 
-// jwtSegmentCount is the number of dot-separated segments of a JWT: header, payload and signature.
+// header, payload and signature
 const jwtSegmentCount = 3
 
-// expiryOf reads the expiry claim out of a JWT without verifying the token.
-//
-// No signature check is attempted, and none is missing: the provider is not the relying party for
-// these tokens - the Dynatrace platform is - so there is nothing here to verify against. Only the
-// payload segment is decoded; the signature segment is never decoded, inspected or logged. For the
-// same reason none of the errors below embed any part of the token.
+// expiryOf reads the expiry claim out of a JWT without verifying it. No signature check is missing
+// here: the provider is not the relying party for these tokens, the Dynatrace platform is.
 func expiryOf(token string) (time.Time, error) {
 	segments := strings.Split(token, ".")
 	if len(segments) != jwtSegmentCount {
 		return time.Time{}, errors.New("the ID token is not a JWT: expected three dot-separated segments")
 	}
 
-	// TrimRight covers encoders that pad the segment. GitHub does not, but the cost is one call.
+	// GitHub does not pad, but other encoders do.
 	payload, err := base64.RawURLEncoding.DecodeString(strings.TrimRight(segments[1], "="))
 	if err != nil {
 		return time.Time{}, errors.New("the payload segment of the ID token is not valid base64url")

@@ -17,12 +17,9 @@
 
 package wif
 
-// ConfigError marks a failure that the user can only resolve by changing the provider configuration
-// or the CI job definition, as opposed to a token service being temporarily unreachable.
-//
-// The distinction is what lets the provider report these while it is being configured, instead of
-// deferring them to the first platform request the way it defers the absence of any platform
-// credentials at all.
+// ConfigError marks a failure the user can only resolve by changing the provider configuration or
+// the CI job, as opposed to a token service being temporarily unreachable. That distinction is what
+// lets the provider report these while it is being configured rather than on the first request.
 type ConfigError struct {
 	Message string
 }

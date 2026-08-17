@@ -40,7 +40,6 @@ func tokenServiceHandler(t *testing.T, respond func(writer http.ResponseWriter, 
 	return server
 }
 
-// gitHubMinterFor points the minter at the given token service and returns it ready to use.
 func gitHubMinterFor(t *testing.T, requestURL string, audience string) minter {
 	t.Helper()
 
@@ -53,9 +52,8 @@ func gitHubMinterFor(t *testing.T, requestURL string, audience string) minter {
 	return minter
 }
 
-// unreachableTransport stands in for a token service that cannot be reached from the runner at all.
-// A stub is used rather than a closed port, so that the error the test asserts on is the one the
-// transport was given rather than whatever the operating system words a refused connection as.
+// A stub rather than a closed port, so the asserted error is the one given to the transport rather
+// than however the operating system words a refused connection.
 type unreachableTransport struct {
 	err error
 }
@@ -101,8 +99,7 @@ func TestGitHubMinterAuthenticatesWithRequestToken(t *testing.T) {
 	assert.Equal(t, "Bearer request-token", authorization)
 }
 
-// The URL GitHub injects into the job already carries an api-version parameter. Appending the
-// audience to the raw string instead of merging it into the query would corrupt that parameter.
+// The URL GitHub injects already carries an api-version parameter.
 func TestGitHubMinterKeepsExistingQueryParameters(t *testing.T) {
 	var query string
 	server := tokenServiceHandler(t, func(writer http.ResponseWriter, request *http.Request) {
@@ -116,9 +113,6 @@ func TestGitHubMinterKeepsExistingQueryParameters(t *testing.T) {
 	assert.Equal(t, "api-version=2.0&audience=dynatrace", query)
 }
 
-// A runner that cannot reach the token service is the likeliest way for minting to fail out in the
-// world, and the reason has to survive all the way to the caller rather than be flattened into a
-// generic complaint.
 func TestGitHubMinterReportsUnreachableTokenService(t *testing.T) {
 	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "https://token.service.invalid/")
 	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "request-token")

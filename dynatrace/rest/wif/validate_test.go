@@ -44,9 +44,7 @@ func TestValidateRejectsUnsupportedVendor(t *testing.T) {
 	assert.EqualError(t, err, "`aws` is not a supported Workload Identity Federation vendor. The only supported value for `wif_vendor` (`DYNATRACE_WIF_VENDOR`) is `github`")
 }
 
-// The audience belongs to the vendor that mints a token, so a configuration that supplies its own
-// token is complete without one. This is the counterpart of TestValidateRejectsVendorWithoutAudience,
-// varying only in where the token comes from.
+// The audience belongs to the vendor that mints a token, so a supplied one is complete without it.
 func TestValidateAcceptsStaticTokenWithoutAudience(t *testing.T) {
 	assert.NoError(t, Validate(Config{StaticToken: jwtWithPayload(`{"exp":1767225600}`)}))
 }

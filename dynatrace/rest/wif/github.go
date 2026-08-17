@@ -30,15 +30,13 @@ import (
 )
 
 const (
-	// githubPermissionHint is appended to the errors below, because a missing permission is by far
-	// the most likely reason for the minting credentials to be absent inside a workflow.
+	// A missing permission is by far the likeliest reason for the credentials to be absent.
 	githubPermissionHint = "`wif_vendor = \"github\"` only works inside a GitHub Actions job that is allowed to request an OIDC token. Add `permissions: { id-token: write }` to the workflow or to the job."
 
-	// maxTokenResponseSize bounds what is read from a token service. A JWT is a few kilobytes.
+	// A JWT is a few kilobytes.
 	maxTokenResponseSize = 1 << 20
 )
 
-// githubMinter requests OIDC tokens from the GitHub Actions token service.
 type githubMinter struct {
 	requestURL   string
 	requestToken string
@@ -46,8 +44,8 @@ type githubMinter struct {
 	httpClient   *http.Client
 }
 
-// newGitHubMinter reads the minting credentials GitHub injects into the job. They are valid for the
-// whole job, which is what lets the provider request a fresh OIDC token whenever it needs one.
+// newGitHubMinter reads the credentials GitHub injects into the job. They stay valid for the whole
+// job, which is what lets the provider mint a fresh token whenever it needs one.
 func newGitHubMinter(audience string, httpClient *http.Client) (minter, error) {
 	requestURL := envutils.ActionsIDTokenRequestURL.Get()
 	if len(requestURL) == 0 {
@@ -72,8 +70,7 @@ func (minter *githubMinter) mint(ctx context.Context) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to get ID token: the value of %s is not a valid URL", envutils.ActionsIDTokenRequestURL.Key)
 	}
-	// The URL GitHub provides already carries an api-version query parameter, so the audience is
-	// merged into the existing query rather than appended to the raw string.
+	// Merged into the query rather than appended, because the URL already carries an api-version.
 	query := endpoint.Query()
 	query.Set("audience", minter.audience)
 	endpoint.RawQuery = query.Encode()
@@ -82,8 +79,6 @@ func (minter *githubMinter) mint(ctx context.Context) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to get ID token: %w", err)
 	}
-	// The request token authenticates this call to the token service. It is a credential in its own
-	// right and must never reach a log, an error message or a Terraform diagnostic.
 	request.Header.Set("Authorization", "Bearer "+minter.requestToken)
 	request.Header.Set("Accept", "application/json; api-version=2.0")
 
@@ -94,8 +89,8 @@ func (minter *githubMinter) mint(ctx context.Context) (string, error) {
 	defer drainAndClose(response.Body)
 
 	if response.StatusCode != http.StatusOK {
-		// The response body is deliberately left out of this message. On success that body is the
-		// ID token itself, and echoing it on failure is one refactor away from leaking it.
+		// The body is left out: on success it is the ID token itself, and echoing it on failure is
+		// one refactor away from leaking it.
 		return "", fmt.Errorf("failed to get ID token: %s responded with HTTP %d", envutils.ActionsIDTokenRequestURL.Key, response.StatusCode)
 	}
 

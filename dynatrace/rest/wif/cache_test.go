@@ -50,7 +50,6 @@ func TestTokenSourceForReusesSourceForSameConfiguration(t *testing.T) {
 	assert.Same(t, first, second)
 }
 
-// The audience is the identity of the minted token, so two audiences cannot share one source.
 func TestTokenSourceForSeparatesSourcesByAudience(t *testing.T) {
 	withEmptyCache(t)
 
@@ -74,8 +73,7 @@ func TestTokenSourceForReturnsSuppliedStaticToken(t *testing.T) {
 	assert.Equal(t, rawToken, token.AccessToken)
 }
 
-// A supplied token cannot be replaced, so it carries no expiry and is sent until the platform
-// rejects it. Reporting an expiry would make oauth2 discard it and leave the request unauthenticated.
+// Reporting an expiry would make oauth2 discard the token and leave the request unauthenticated.
 func TestTokenSourceForLeavesSuppliedStaticTokenWithoutExpiry(t *testing.T) {
 	withEmptyCache(t)
 
@@ -87,8 +85,6 @@ func TestTokenSourceForLeavesSuppliedStaticTokenWithoutExpiry(t *testing.T) {
 	assert.True(t, token.Expiry.IsZero())
 }
 
-// Being handed back the very token that was rejected is how a source says that it has no other one
-// to offer, which is what stops the caller from sending the same request a second time for nothing.
 func TestTokenSourceForCannotReplaceSuppliedStaticToken(t *testing.T) {
 	withEmptyCache(t)
 	rawToken := jwtWithPayload(`{"exp":1767225600}`)
@@ -101,8 +97,7 @@ func TestTokenSourceForCannotReplaceSuppliedStaticToken(t *testing.T) {
 	assert.Equal(t, rawToken, token.AccessToken)
 }
 
-// A supplied token is a credential. Caching it would make its value a key in a map that lives as long
-// as the process.
+// Caching it would make a credential a key in a map that lives as long as the process.
 func TestTokenSourceForDoesNotCacheSuppliedStaticToken(t *testing.T) {
 	withEmptyCache(t)
 
@@ -120,8 +115,7 @@ func TestTokenSourceForRejectsInvalidConfiguration(t *testing.T) {
 	assert.EqualError(t, err, "No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
 }
 
-// A missing credential is worth reporting again once the environment has been fixed, so it must not
-// leave a permanent hole in the cache.
+// A cached failure would outlive a fix to the environment.
 func TestTokenSourceForDoesNotCacheCredentialFailure(t *testing.T) {
 	withEmptyCache(t)
 	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "")

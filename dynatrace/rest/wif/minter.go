@@ -23,28 +23,20 @@ import (
 	"net/http"
 )
 
-// minter obtains a freshly issued OIDC token from a workload identity provider.
-//
-// This is the extension point for further vendors: a new vendor is one case in newMinter plus one
-// file implementing this interface. The interface is deliberately narrow, because vendors differ in
-// how they authenticate to their own token service - GitHub passes credentials to the job through
-// environment variables, others use a metadata endpoint, a mounted token file or a signed request.
-// Each implementation therefore discovers and validates its own credentials in its constructor,
-// rather than being handed a shape that only fits one vendor.
+// minter obtains a freshly issued OIDC token from a workload identity provider. The interface stays
+// this narrow because vendors differ in how they authenticate to their own token service, so each
+// implementation discovers and validates its own credentials in its constructor.
 type minter interface {
 	mint(ctx context.Context) (string, error)
 }
 
-// newMinter builds the minter for the configured vendor. It fails without any network access when
-// the vendor's credentials are not available, so that the problem is reported while the provider is
-// being configured rather than on the first platform request.
+// newMinter builds the minter for the configured vendor, without network access, so that missing
+// credentials are reported while the provider is configured rather than on the first request.
 func newMinter(config Config, httpClient *http.Client) (minter, error) {
 	switch config.Vendor {
 	case VendorGitHub:
 		return newGitHubMinter(config.Audience, httpClient)
 	default:
-		// Validate rejects unsupported vendors before this is reached; this branch keeps the switch
-		// total should a caller ever build a minter without validating first.
 		return nil, ConfigError{fmt.Sprintf("`%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif_vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", config.Vendor, VendorGitHub)}
 	}
 }

@@ -22,13 +22,9 @@ import (
 	"strings"
 )
 
-// Validate reports the configuration problems that can be judged from the configuration alone,
-// without contacting a token service and without knowing which vendor's credentials are present in
-// the environment. Whether a vendor can actually reach its token service is decided later, by that
-// vendor's minter.
-//
-// A configuration that requests no Workload Identity Federation at all is not an error here. Only
-// the callers that require platform credentials can decide whether its absence is a problem.
+// Validate reports the configuration problems that can be judged without contacting a token service.
+// Requesting no Workload Identity Federation at all is not one of them: only a caller that requires
+// platform credentials can decide whether its absence is a problem.
 func Validate(config Config) error {
 	if !config.Configured() {
 		return nil

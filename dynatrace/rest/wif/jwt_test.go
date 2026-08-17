@@ -27,10 +27,9 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// jwtWithPayload assembles a JWT out of the given raw payload JSON.
-//
-// The signature segment is deliberately not a real signature: nothing in this package verifies it,
-// and a test that supplied a valid one would suggest otherwise.
+// jwtWithPayload assembles a JWT out of the given raw payload JSON. Its signature segment is not a
+// real signature: nothing in this package verifies it, and supplying a valid one would suggest
+// otherwise.
 func jwtWithPayload(payload string) string {
 	header := base64.RawURLEncoding.EncodeToString([]byte(`{"alg":"RS256","typ":"JWT"}`))
 	return header + "." + base64.RawURLEncoding.EncodeToString([]byte(payload)) + ".not-a-real-signature"

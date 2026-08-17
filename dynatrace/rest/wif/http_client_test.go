@@ -30,10 +30,8 @@ import (
 )
 
 // answering starts a server that replies with the given status codes in order, repeating the last one
-// once they run out, and returns a retrying client aimed at it together with the request counter.
-//
-// The backoff is negligible on purpose, so that the retry behaviour can be observed without the test
-// waiting for the production one.
+// once they run out, and returns a retrying client aimed at it together with the request counter. Its
+// backoff is negligible, so the retries can be observed without waiting for the production one.
 func answering(t *testing.T, statusCodes ...int) (*http.Client, string, *atomic.Int64) {
 	t.Helper()
 
@@ -60,8 +58,6 @@ func TestRetryTransportRetriesServerError(t *testing.T) {
 	assert.Equal(t, int64(2), requests.Load())
 }
 
-// The sibling of the test above, differing only in which of the two retriable answers the token
-// service gives. Being rate limited is the one a job shares with every other job on the runner fleet.
 func TestRetryTransportRetriesTooManyRequests(t *testing.T) {
 	client, url, requests := answering(t, http.StatusTooManyRequests, http.StatusOK)
 

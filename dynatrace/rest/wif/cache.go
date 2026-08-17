@@ -24,12 +24,9 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// tokenSourceCache holds one token source per configuration for the lifetime of the process.
-//
-// It is what keeps token minting away from the request path: a platform request builds its own
-// client, and with it a token source, inside every single call, so without this cache every API call
-// would mint a token of its own. That is the only reason it exists - the day those clients outlive
-// the request they were built for, it can go.
+// A platform request builds its own client, and with it a token source, inside every single call, so
+// without this cache every API call would mint a token of its own. That is the only reason it exists
+// - the day those clients outlive the request they were built for, it can go.
 var (
 	tokenSourceCacheMutex sync.Mutex
 	tokenSourceCache      = map[string]TokenSource{}
@@ -37,18 +34,16 @@ var (
 
 // TokenSourceFor returns the token source for the given configuration, creating it on first use.
 //
-// The returned source is consulted on every request, and it decides on its own when to replace the
-// token it holds. Callers must not wrap it in an [oauth2.ReuseTokenSource]: that caches until ten
-// seconds before the token's stated expiry and would override the refresh margin the source keeps.
+// Callers must not wrap the result in an [oauth2.ReuseTokenSource]: that caches until ten seconds
+// before the token's stated expiry and would override the refresh margin the source keeps.
 func TokenSourceFor(config Config) (TokenSource, error) {
 	if err := Validate(config); err != nil {
 		return nil, err
 	}
 
 	if len(config.Vendor) == 0 {
-		// A pre-minted token carries no expiry here on purpose: the provider cannot obtain a
-		// replacement for a token it did not mint, so it sends this one until the platform rejects
-		// it. There is also nothing to cache, and a credential is not worth putting into a map key.
+		// No expiry on purpose: a token the provider did not mint is sent until the platform rejects
+		// it, and reporting an expiry would make oauth2 discard it instead.
 		return &staticTokenSource{token: &oauth2.Token{AccessToken: config.StaticToken}}, nil
 	}
 
@@ -61,8 +56,7 @@ func TokenSourceFor(config Config) (TokenSource, error) {
 
 	minter, err := newMinter(config, mintingHTTPClient())
 	if err != nil {
-		// Configuration errors are deliberately not cached. They are deterministic and cheap to
-		// reproduce, and a cached one would outlive a fix to the environment.
+		// Not cached: a cached one would outlive a fix to the environment.
 		return nil, err
 	}
 

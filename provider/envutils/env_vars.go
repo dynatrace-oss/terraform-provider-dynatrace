@@ -78,16 +78,15 @@ var DTRestDebugLog = StringEnvVar{
 // --- Workload Identity Federation ---
 
 // ActionsIDTokenRequestURL is the endpoint a GitHub Actions job asks for an OIDC token. Unlike the
-// variables above it is not set by the user: GitHub injects it into every job that holds the
+// variables above it is not set by the user: GitHub injects it into every job holding the
 // id-token: write permission, which is why its absence is reported as a missing permission.
 var ActionsIDTokenRequestURL = StringEnvVar{
 	Key:          "ACTIONS_ID_TOKEN_REQUEST_URL",
 	DefaultValue: "",
 }
 
-// ActionsIDTokenRequestToken authenticates the request to the endpoint above and is injected
-// alongside it. It is a credential in its own right and must never reach a log, an error message or
-// a Terraform diagnostic.
+// ActionsIDTokenRequestToken authenticates the request to the endpoint above. It is a credential and
+// must never reach a log, an error message or a Terraform diagnostic.
 var ActionsIDTokenRequestToken = StringEnvVar{
 	Key:          "ACTIONS_ID_TOKEN_REQUEST_TOKEN",
 	DefaultValue: "",

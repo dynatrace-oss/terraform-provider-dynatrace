@@ -26,27 +26,18 @@ import (
 )
 
 const (
-	// refreshMargin is how long before its expiry a token is replaced. These tokens cannot be
-	// refreshed, only re-minted, so the margin has to be wide enough that a request never picks up a
-	// token which expires while it is still in flight.
+	// Wide enough that a token handed out just before it is due can still not expire in flight.
 	refreshMargin = 2 * time.Minute
 
-	// minimumMintInterval bounds re-minting when a freshly minted token already expires within the
-	// refresh margin, so that a misbehaving token service cannot be asked for a token per request.
+	// Floor for a token that already expires within the refresh margin when it arrives, so that a
+	// misbehaving token service cannot be asked for a token per request.
 	minimumMintInterval = 30 * time.Second
 
-	// mintRetryInterval is how long minting is left alone after it failed while a token that still
-	// works is being handed out. Without it, an outage of the token service would put a minting
-	// attempt - and its timeout - in front of every single request for as long as it lasts.
+	// How long minting is left alone after it failed while a usable token is still being served.
 	mintRetryInterval = 5 * time.Second
 )
 
 // TokenSource hands out the tokens platform requests are authenticated with.
-//
-// It extends [oauth2.TokenSource] with the opposite direction of information: the platform can
-// reject a token that this source still considers current, and Replace is how that answer gets back
-// here. A Terraform run easily outlives a federated token, so the ability to obtain a replacement
-// mid-run is what keeps a long apply going.
 type TokenSource interface {
 	oauth2.TokenSource
 
@@ -56,11 +47,9 @@ type TokenSource interface {
 	Replace(rejected string) (*oauth2.Token, error)
 }
 
-// tokenSource hands out OIDC tokens, obtaining a replacement shortly before the current one expires.
 type tokenSource struct {
-	// mintContext is captured at construction because oauth2.TokenSource.Token takes no context,
-	// while the context the provider is configured with does not outlive the configure call. The
-	// minting HTTP client carries its own timeout instead.
+	// Held rather than passed, because oauth2.TokenSource.Token takes no context while the context
+	// the provider is configured with does not outlive the configure call.
 	mintContext context.Context
 	minter      minter
 
@@ -70,8 +59,8 @@ type tokenSource struct {
 }
 
 func (source *tokenSource) Token() (*oauth2.Token, error) {
-	// The lock is deliberately held across the network call. That makes minting single flight, so a
-	// burst of parallel platform requests produces one token rather than one per goroutine.
+	// Held across the network call, which makes minting single flight: a burst of parallel requests
+	// produces one token rather than one per goroutine.
 	source.mutex.Lock()
 	defer source.mutex.Unlock()
 
@@ -84,10 +73,8 @@ func (source *tokenSource) Token() (*oauth2.Token, error) {
 		return token, nil
 	}
 
-	// The token due for replacement has not expired yet - having something left to fall back on here
-	// is what the refresh margin is for. Handing it out is better than failing a request over a token
-	// service that may well answer again a second later, and if the platform rejects it after all,
-	// Replace gets another chance at a replacement.
+	// Serving a token the platform still accepts beats failing the request over a token service that
+	// may well answer again a second later. Having one left to serve here is what the margin is for.
 	if fallback := source.unexpiredToken(); fallback != nil {
 		source.postponeMinting()
 		return fallback, nil
@@ -96,28 +83,24 @@ func (source *tokenSource) Token() (*oauth2.Token, error) {
 	return nil, err
 }
 
-// Replace hands out a token to be used instead of the one the platform rejected, minting one unless
-// the token held has been replaced already.
 func (source *tokenSource) Replace(rejected string) (*oauth2.Token, error) {
 	source.mutex.Lock()
 	defer source.mutex.Unlock()
 
-	// The token held may already be a different one: with resources being applied in parallel, a
-	// token that stops being accepted is rejected on many requests at once, and one replacement
-	// serves all of them.
+	// One replacement serves every rejection of the same token, and with resources applied in
+	// parallel they arrive together.
 	if source.token != nil && source.token.AccessToken != rejected {
 		return source.token, nil
 	}
 
-	// The rejected token is dropped before minting rather than after: it is of no use even if
-	// minting fails, and leaving it in place would let the fallback above hand it out again.
+	// Dropped before minting rather than after, or a failed mint would leave it for Token to serve.
 	source.token = nil
 	source.refreshAt = time.Time{}
 
 	return source.mintAndHold()
 }
 
-// mintAndHold obtains a token and takes it into use. The mutex must be held by the caller.
+// The mutex must be held by the caller.
 func (source *tokenSource) mintAndHold() (*oauth2.Token, error) {
 	rawToken, err := source.minter.mint(source.mintContext)
 	if err != nil {
@@ -135,19 +118,14 @@ func (source *tokenSource) mintAndHold() (*oauth2.Token, error) {
 		refreshAt = now.Add(minimumMintInterval)
 	}
 
-	// Expiry stays the expiry the token actually claims; when to replace it is tracked separately,
-	// so that the token reports what it is rather than when this source intends to act on it.
-	//
-	// Leaving TokenType empty is what makes oauth2 send the token as a bearer token, which is the
-	// wire format the Dynatrace platform APIs expect - the same one a platform token uses.
+	// An empty TokenType is what makes oauth2 send this as a bearer token.
 	source.token = &oauth2.Token{AccessToken: rawToken, Expiry: expiry}
 	source.refreshAt = refreshAt
 
 	return source.token, nil
 }
 
-// unexpiredToken returns the token currently held for as long as it can still be used, and nil once
-// it has expired or when none is held. The mutex must be held by the caller.
+// The mutex must be held by the caller.
 func (source *tokenSource) unexpiredToken() *oauth2.Token {
 	if source.token == nil || !time.Now().Before(source.token.Expiry) {
 		return nil
@@ -155,18 +133,16 @@ func (source *tokenSource) unexpiredToken() *oauth2.Token {
 	return source.token
 }
 
-// postponeMinting schedules the next minting attempt a short while ahead. It never schedules it past
-// the expiry of the token held, so that a token is not handed out beyond its expiry without at least
-// having tried to replace it. The mutex must be held by the caller.
+// The mutex must be held by the caller.
 func (source *tokenSource) postponeMinting() {
 	retryAt := time.Now().Add(mintRetryInterval)
+	// Never past the expiry, or a token would be served beyond it without an attempt to replace it.
 	if retryAt.After(source.token.Expiry) {
 		retryAt = source.token.Expiry
 	}
 	source.refreshAt = retryAt
 }
 
-// staticTokenSource hands out a token that was supplied ready-made.
 type staticTokenSource struct {
 	token *oauth2.Token
 }
@@ -175,8 +151,7 @@ func (source *staticTokenSource) Token() (*oauth2.Token, error) {
 	return source.token, nil
 }
 
-// Replace returns the token held, which is the one that was rejected: the provider cannot obtain a
-// replacement for a token it did not mint itself, so there is nothing to send the request again with.
+// Returns the rejected token itself: the provider cannot replace a token it did not mint.
 func (source *staticTokenSource) Replace(string) (*oauth2.Token, error) {
 	return source.token, nil
 }
