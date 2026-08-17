@@ -397,6 +397,7 @@ import (
 
 	azureconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure"
 	azureconnectionauthentication "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure/authentication"
+	networkzoneszones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/networkzones/zones"
 	openpipelinebizeventsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/dataforwarding"
 	openpipelinebizeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/ingestsources"
 	openpipelinebizeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelinegroups"
@@ -2015,6 +2016,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsIngestsources),
 	),
 	ResourceTypes.SyntheticPrimarygrailtags: NewResourceDescriptor(syntheticprimarygrailtags.Service),
+	ResourceTypes.NetworkzonesZones:         NewResourceDescriptor(networkzoneszones.Service),
 }
 
 type ResourceExclusion struct {
