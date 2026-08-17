@@ -27,7 +27,6 @@ type Settings struct {
 	Description      *string      `json:"description,omitempty"`      // Description
 	FallbackMode     FallbackMode `json:"fallbackMode"`               // Determines the network zone fallback behavior in case the primary and alternative zones are not available. Possible values: `ANY_ACTIVE_GATE`, `NONE`, `ONLY_DEFAULT_ZONE`
 	ID               string       `json:"id"`                         // A lowercase string limited to 256 characters that can contain alphanumerics (0-9, a-z), hyphens (-), underscores (_), and dots (.), but can not start with a dot.
-	Scope            *string      `json:"-" scope:"scope"`            // The scope of this setting (environment-default). Omit this property if you want to cover the whole environment.
 }
 
 func (me *Settings) Name() string {
@@ -59,13 +58,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			ForceNew:    true,
 			Required:    true,
 		},
-		"scope": {
-			Type:        schema.TypeString,
-			Description: "The scope of this setting (environment-default). Omit this property if you want to cover the whole environment.",
-			ForceNew:    true,
-			Optional:    true,
-			Default:     "environment",
-		},
 	}
 }
 
@@ -75,7 +67,6 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"description":       me.Description,
 		"fallback_mode":     me.FallbackMode,
 		"identifier":        me.ID,
-		"scope":             me.Scope,
 	})
 }
 
@@ -85,6 +76,5 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"description":       &me.Description,
 		"fallback_mode":     &me.FallbackMode,
 		"identifier":        &me.ID,
-		"scope":             &me.Scope,
 	})
 }
