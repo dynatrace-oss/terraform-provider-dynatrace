@@ -27,6 +27,10 @@ type NetworkZones struct {
 	Enabled bool `json:"enabled"` // Network Zones are enabled (`true`) or disabled (`false`)
 }
 
+func (me *NetworkZones) Deprecated() string {
+	return "This resource has been deprecated. Please use the `dynatrace_network_zone_v2` resource instead."
+}
+
 func (me *NetworkZones) Name() string {
 	return "network_zones"
 }
