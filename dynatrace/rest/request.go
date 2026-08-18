@@ -49,7 +49,6 @@ type request struct {
 	method     string
 	payload    any
 	fileName   string
-	headers    map[string]string
 	onResponse func(resp *http.Response)
 }
 
@@ -152,10 +151,4 @@ func (me request) HandleResponse(client *rest.Client, u *url.URL, target any) (e
 	}
 
 	return nil
-}
-
-var headers = struct {
-	ContentType struct{ ApplicationJSON map[string]string }
-}{
-	ContentType: struct{ ApplicationJSON map[string]string }{ApplicationJSON: map[string]string{"Content-Type": "application/json"}},
 }

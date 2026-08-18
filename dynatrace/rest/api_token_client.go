@@ -56,7 +56,7 @@ func (me *api_token_client) Get(ctx context.Context, url string, expectedStatusC
 }
 
 func (me *api_token_client) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload, headers: map[string]string{"Content-Type": "application/json"}}
+	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
@@ -64,7 +64,7 @@ func (me *api_token_client) Post(ctx context.Context, url string, payload any, e
 }
 
 func (me *api_token_client) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload, headers: map[string]string{"Content-Type": "application/json"}}
+	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
@@ -149,9 +149,6 @@ func (me *classic_request) Finish(optionalTarget ...any) error {
 	client, err := createClassicClient(classicURL, me.client.Credentials().Token)
 	if err != nil {
 		return err
-	}
-	for headername, headervalue := range me.headers {
-		client.SetHeader(headername, headervalue)
 	}
 
 	pathURL, err := url.Parse(me.url)
