@@ -27,6 +27,7 @@ import (
 )
 
 func TestAccApiTokenDataSource(t *testing.T) {
+	t.Skip("API doesn't return tokens when queried via OAuth")
 	api.AccEnvsGiven(t)
 
 	setup, identifier := api.ReadTfConfig(t, "./testdata/api_token_setup.tf")
