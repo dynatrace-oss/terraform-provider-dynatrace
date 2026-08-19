@@ -1,5 +1,7 @@
 # Dynatrace Terraform Provider
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/dynatrace-oss/terraform-provider-dynatrace/badge)](https://scorecard.dev/viewer/?uri=github.com/dynatrace-oss/terraform-provider-dynatrace)
+
 The Dynatrace Terraform Provider is officially supported by Dynatrace.
 
 ## Requirements
