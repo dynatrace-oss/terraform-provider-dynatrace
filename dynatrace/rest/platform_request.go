@@ -20,6 +20,7 @@ package rest
 import (
 	"context"
 	"errors"
+	"net/http"
 	"net/url"
 	"strings"
 
@@ -51,7 +52,7 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 		return factory.
 			WithHTTPListener(logging.HTTPListener("plat/tok")).
 			WithPlatformToken(credentials.Platform.PlatformToken).
-			CreatePlatformClient(ctx)
+			CreatePlatformClient(NewContextWithOAuthRetryClient(ctx))
 	}
 
 	if credentials.ContainsOAuth() {
@@ -96,7 +97,11 @@ func (me *platform_request) Finish(optionalTarget ...any) error {
 	if err != nil {
 		return err
 	}
-	return request(*me).HandleResponse(client, fullURL, target)
+	platformRequest := request(*me)
+	if me.method == http.MethodPost && (me.url == "/api/v2/settings/objects" || strings.HasPrefix(me.url, "/api/v2/settings/objects?")) {
+		platformRequest.ctx = withNonIdempotentRetry(platformRequest.ctx)
+	}
+	return platformRequest.HandleResponse(client, fullURL, target)
 }
 
 func (me *platform_request) evalPlatformURL(envURL string) string {

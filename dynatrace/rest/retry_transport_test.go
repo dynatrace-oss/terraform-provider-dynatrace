@@ -21,9 +21,13 @@ package rest_test
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
+	"net/url"
+	"syscall"
 	"testing"
 	"time"
 
@@ -103,20 +107,76 @@ func TestRetryTransport_NonRetriableStatusCodes(t *testing.T) {
 	}
 }
 
-// TestRetryTransport_TransportError verifies that an error from the underlying
-// transport is propagated immediately without retrying.
-func TestRetryTransport_TransportError(t *testing.T) {
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
-			return nil, assert.AnError
-		}),
+// TestRetryTransport_NonRetriableTransportErrors verifies that general errors,
+// timeouts, DNS errors, and authentication errors are propagated immediately.
+func TestRetryTransport_NonRetriableTransportErrors(t *testing.T) {
+	tests := []struct {
+		name string
+		err  error
+	}{
+		{name: "general error", err: assert.AnError},
+		{name: "timeout wrapping EOF", err: timeoutEOFError{}},
+		{name: "DNS error", err: &net.DNSError{Name: "dynatrace.com", Err: "no such host"}},
+		{name: "authentication error", err: errors.New("401 unauthorized")},
 	}
 
-	req, _ := http.NewRequest(http.MethodGet, "https://dynatrace.com", nil)
-	resp, err := tr.RoundTrip(req)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			calls := 0
+			tr := &rest.RetryTransport{
+				Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+					calls++
+					return nil, tt.err
+				}),
+				BaseBackoff: time.Millisecond,
+			}
 
-	assert.Nil(t, resp)
-	assert.ErrorIs(t, err, assert.AnError)
+			req, err := http.NewRequest(http.MethodGet, "https://dynatrace.com", nil)
+			require.NoError(t, err)
+			resp, err := tr.RoundTrip(req)
+
+			assert.Nil(t, resp)
+			assert.ErrorIs(t, err, tt.err)
+			assert.Equal(t, 1, calls)
+		})
+	}
+}
+
+// TestRetryTransport_RetriesOnTransientTransportErrors_EventualSuccess verifies that
+// transient transport errors are retried and that a later successful response is returned.
+func TestRetryTransport_RetriesOnTransientTransportErrors_EventualSuccess(t *testing.T) {
+	tests := []struct {
+		name string
+		err  error
+	}{
+		{name: "EOF", err: io.EOF},
+		{name: "unexpected EOF", err: io.ErrUnexpectedEOF},
+		{name: "wrapped unexpected EOF", err: &url.Error{Op: "GET", URL: "https://dynatrace.com", Err: io.ErrUnexpectedEOF}},
+		{name: "wrapped connection reset", err: fmt.Errorf("read failed: %w", syscall.ECONNRESET)},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			calls := 0
+			tr := &rest.RetryTransport{
+				Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+					calls++
+					if calls < 3 {
+						return nil, tt.err
+					}
+					return emptyResponse(http.StatusOK, nil), nil
+				}),
+				BaseBackoff: 1 * time.Millisecond,
+			}
+
+			req, _ := http.NewRequest(http.MethodGet, "https://dynatrace.com", nil)
+			resp, err := tr.RoundTrip(req)
+
+			require.NoError(t, err)
+			assert.Equal(t, http.StatusOK, resp.StatusCode)
+			assert.Equal(t, 3, calls)
+		})
+	}
 }
 
 // TestRetryTransport_NilBody verifies that requests without a body are handled correctly.
@@ -336,6 +396,29 @@ func TestRetryTransport_MaxRetriesExhausted(t *testing.T) {
 	assert.Equal(t, maxRetries+1, calls, "expected MaxRetries+1 = %d total attempts", maxRetries+1)
 }
 
+// TestRetryTransport_TransportErrorMaxRetriesExhausted verifies that a retriable
+// transport error is returned after MaxRetries retries are exhausted.
+func TestRetryTransport_TransportErrorMaxRetriesExhausted(t *testing.T) {
+	const maxRetries = 3
+	transportErr := fmt.Errorf("connection reset: %w", syscall.ECONNRESET)
+	calls := 0
+	tr := &rest.RetryTransport{
+		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+			calls++
+			return nil, transportErr
+		}),
+		MaxRetries:  maxRetries,
+		BaseBackoff: 1 * time.Millisecond,
+	}
+
+	req, _ := http.NewRequest(http.MethodGet, "https://dynatrace.com", nil)
+	resp, err := tr.RoundTrip(req)
+
+	assert.Nil(t, resp)
+	assert.ErrorIs(t, err, syscall.ECONNRESET)
+	assert.Equal(t, maxRetries+1, calls, "expected MaxRetries+1 = %d total attempts", maxRetries+1)
+}
+
 // NewContextWithOAuthRetryClient verifies that the context is enriched with an
 // HTTP client whose transport is a *RetryTransport.
 func TestNewContextWithOAuthRetryClient(t *testing.T) {
@@ -508,7 +591,59 @@ func TestRetryTransport_ContextCancelled(t *testing.T) {
 	assert.Equal(t, 1, calls, "should not retry after context is cancelled")
 }
 
+// TestRetryTransport_TransportErrorContextCancelled verifies that context cancellation
+// during a transport error retry wait is honored immediately.
+func TestRetryTransport_TransportErrorContextCancelled(t *testing.T) {
+	ctx, cancel := context.WithCancel(t.Context())
+
+	calls := 0
+	tr := &rest.RetryTransport{
+		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+			calls++
+			cancel()
+			return nil, io.ErrUnexpectedEOF
+		}),
+		BaseBackoff: time.Hour,
+	}
+
+	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, "https://dynatrace.com", nil)
+	resp, err := tr.RoundTrip(req)
+
+	assert.Nil(t, resp)
+	assert.ErrorIs(t, err, context.Canceled)
+	assert.Equal(t, 1, calls, "should not retry after context is cancelled")
+}
+
+// TestRetryTransport_NonIdempotentTransportErrorNotRetried verifies that a POST is not
+// retried unless the caller explicitly opts into replaying the request.
+func TestRetryTransport_NonIdempotentTransportErrorNotRetried(t *testing.T) {
+	calls := 0
+	tr := &rest.RetryTransport{
+		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+			calls++
+			return nil, io.ErrUnexpectedEOF
+		}),
+		BaseBackoff: 1 * time.Millisecond,
+	}
+
+	req, _ := http.NewRequest(http.MethodPost, "https://dynatrace.com", nil)
+	resp, err := tr.RoundTrip(req)
+
+	assert.Nil(t, resp)
+	assert.ErrorIs(t, err, io.ErrUnexpectedEOF)
+	assert.Equal(t, 1, calls)
+}
+
 // failReader is an io.Reader that always returns an error.
 type failReader struct{ err error }
 
 func (f *failReader) Read(_ []byte) (int, error) { return 0, f.err }
+
+// timeoutEOFError models a timeout that also wraps EOF. It verifies that the
+// timeout classification takes precedence over the EOF retry classification.
+type timeoutEOFError struct{}
+
+func (timeoutEOFError) Error() string   { return "i/o timeout" }
+func (timeoutEOFError) Timeout() bool   { return true }
+func (timeoutEOFError) Temporary() bool { return true }
+func (timeoutEOFError) Unwrap() error   { return io.EOF }

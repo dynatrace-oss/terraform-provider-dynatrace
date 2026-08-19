@@ -19,11 +19,14 @@ package rest
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 	"math"
 	"math/rand/v2"
+	"net"
 	"net/http"
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
@@ -37,7 +40,8 @@ const (
 )
 
 // RetryTransport is an http.RoundTripper that automatically retries requests
-// when the server returns HTTP 429 (Too Many Requests) or HTTP 503 (Service Unavailable).
+// when the server returns HTTP 429 (Too Many Requests) or HTTP 503 (Service Unavailable),
+// or when the underlying transport returns a transient EOF or connection reset error.
 // MaxRetries, BaseBackoff, and MaxBackoff can be set to non-zero values to override the
 // defaults, which is useful in tests to keep execution time short.
 type RetryTransport struct {
@@ -46,6 +50,8 @@ type RetryTransport struct {
 	BaseBackoff time.Duration
 	MaxBackoff  time.Duration
 }
+
+type retryNonIdempotentRequestContextKey struct{}
 
 // transport returns the configured RoundTripper, falling back to http.DefaultTransport when nil.
 func (t *RetryTransport) transport() http.RoundTripper {
@@ -78,6 +84,40 @@ func (t *RetryTransport) maxBackoff() time.Duration {
 
 func isRetriableStatus(statusCode int) bool {
 	return statusCode == http.StatusTooManyRequests || statusCode == http.StatusServiceUnavailable
+}
+
+func isRetriableError(err error) bool {
+	var netErr net.Error
+	if errors.As(err, &netErr) && netErr.Timeout() {
+		return false
+	}
+	return errors.Is(err, io.EOF) || errors.Is(err, io.ErrUnexpectedEOF) || errors.Is(err, syscall.ECONNRESET)
+}
+
+func isIdempotentMethod(method string) bool {
+	switch method {
+	case http.MethodGet, http.MethodHead, http.MethodPut, http.MethodDelete, http.MethodOptions, http.MethodTrace:
+		return true
+	default:
+		return false
+	}
+}
+
+func withNonIdempotentRetry(ctx context.Context) context.Context {
+	return context.WithValue(ctx, retryNonIdempotentRequestContextKey{}, true)
+}
+
+func canRetryTransportError(req *http.Request, err error) bool {
+	// Replay non-idempotent requests only when the caller has explicitly opted in.
+	// A transport error does not tell us whether the server applied the request.
+	if !isRetriableError(err) {
+		return false
+	}
+	if isIdempotentMethod(req.Method) {
+		return true
+	}
+	value, _ := req.Context().Value(retryNonIdempotentRequestContextKey{}).(bool)
+	return value
 }
 
 // bufferRequestBody reads and closes req.Body, returning its contents.
@@ -122,7 +162,19 @@ func (t *RetryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 		resp, err := t.transport().RoundTrip(clone)
 		if err != nil {
-			return nil, err
+			if !canRetryTransportError(clone, err) || attempt >= maxRetries {
+				return nil, err
+			}
+
+			ctx := clone.Context()
+			wait := t.sleepDuration(nil, attempt)
+			logging.Logger.Printf(ctx, "[RetryTransport] Received transport error %v, retrying in %s (attempt %d/%d)", err, wait, attempt+1, maxRetries)
+			select {
+			case <-time.After(wait):
+			case <-ctx.Done():
+				return nil, ctx.Err()
+			}
+			continue
 		}
 
 		if !isRetriableStatus(resp.StatusCode) || attempt >= maxRetries {
@@ -147,6 +199,9 @@ func (t *RetryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 // indicated wait duration. Returns 0 if the header is absent,
 // cannot be parsed, or indicates a non-positive delay.
 func getRetryAfterHeaderAsSleepTime(resp *http.Response) time.Duration {
+	if resp == nil {
+		return 0
+	}
 	ra := resp.Header.Get("Retry-After")
 	if ra == "" {
 		return 0

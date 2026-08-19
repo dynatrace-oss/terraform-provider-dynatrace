@@ -32,6 +32,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
+	"github.com/google/uuid"
 )
 
 func Service[T settings.Settings](clientSet rest.ClientSet, schemaID string, schemaVersion string, options ...*ServiceOptions[T]) (settings.ListIDCRUDService[T], error) {
@@ -54,6 +55,7 @@ type SettingsObjectUpdate struct {
 }
 
 type SettingsObjectCreate struct {
+	ExternalID    string `json:"externalId,omitempty"`
 	SchemaVersion string `json:"schemaVersion,omitempty"`
 	SchemaID      string `json:"schemaId"`
 	Scope         string `json:"scope,omitempty"`
@@ -366,7 +368,9 @@ func (me *service[T]) Validate(ctx context.Context, v T) error {
 }
 
 func (me *service[T]) Create(ctx context.Context, v T) (*api.Stub, error) {
-	return me.create(ctx, v, false, false)
+	// Reuse one external ID across retries belonging to this logical create so the
+	// Settings API can upsert instead of creating a duplicate object.
+	return me.create(ctx, v, false, false, uuid.NewString())
 }
 
 type Matcher interface {
@@ -379,7 +383,7 @@ func (me *service[T]) skipRepairInput() bool {
 
 var regexpNeighborWithKey = regexp.MustCompile(`Neighbor\swith\skey\s'[^']*'\snot\sfound\sfor\s'[^']*'`)
 
-func (me *service[T]) create(ctx context.Context, v T, retry bool, noInsertAfter bool) (*api.Stub, error) {
+func (me *service[T]) create(ctx context.Context, v T, retry bool, noInsertAfter bool, externalID string) (*api.Stub, error) {
 
 	if me.options != nil && me.options.Duplicates != nil {
 		dupStub, dupErr := me.options.Duplicates(ctx, me, v)
@@ -422,6 +426,7 @@ func (me *service[T]) create(ctx context.Context, v T, retry bool, noInsertAfter
 		}
 	}
 	soc := SettingsObjectCreate{
+		ExternalID:    externalID,
 		SchemaID:      me.schemaID,
 		SchemaVersion: me.schemaVersion,
 		Scope:         "environment",
@@ -445,12 +450,12 @@ func (me *service[T]) create(ctx context.Context, v T, retry bool, noInsertAfter
 
 	if oerr := req.Finish(&objectID); oerr != nil {
 		if isInvalidInsertAfter(oerr) {
-			return me.create(ctx, v, retry, true)
+			return me.create(ctx, v, retry, true, externalID)
 		}
 
 		if me.options != nil && me.options.CreateRetry != nil && !retry {
 			if modifiedPayload := me.options.CreateRetry(v, oerr); !reflect.ValueOf(modifiedPayload).IsNil() {
-				return me.create(ctx, modifiedPayload, true, noInsertAfter)
+				return me.create(ctx, modifiedPayload, true, noInsertAfter, externalID)
 			}
 		}
 		if me.options != nil && me.options.HijackOnCreate != nil {

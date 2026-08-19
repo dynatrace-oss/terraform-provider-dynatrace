@@ -31,6 +31,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
+	"github.com/google/uuid"
 )
 
 const settingsObjectEndpoint = "/api/v2/settings/objects"
@@ -154,26 +155,29 @@ func (me *service) Validate(v *generic.Settings) error {
 }
 
 func (me *service) Create(ctx context.Context, v *generic.Settings) (*api.Stub, error) {
-	stubs, err := me.create(ctx, v)
+	// Reuse one external ID when the initial classic request falls back to OAuth.
+	externalID := uuid.NewString()
+	stubs, err := me.create(ctx, v, externalID)
 	if err == nil {
 		return stubs, nil
 	}
 	if rest.IsRequiresOAuthError(err) && me.clientSet.Credentials().ContainsOAuthOrPlatformToken() {
 		ctx := rest.NewPreferOAuthContext(ctx)
-		return me.create(ctx, v)
+		return me.create(ctx, v, externalID)
 	}
 	return nil, err
 }
 
-func (me *service) create(ctx context.Context, v *generic.Settings) (*api.Stub, error) {
+func (me *service) create(ctx context.Context, v *generic.Settings, externalID string) (*api.Stub, error) {
 	scope := "environment"
 	if len(v.Scope) > 0 {
 		scope = v.Scope
 	}
 	obj := []settings20.SettingsObjectCreate{{
-		SchemaID: v.SchemaID,
-		Scope:    scope,
-		Value:    json.RawMessage(v.Value),
+		ExternalID: externalID,
+		SchemaID:   v.SchemaID,
+		Scope:      scope,
+		Value:      json.RawMessage(v.Value),
 	}}
 
 	var response []settings20.SettingsObjectCreateResponse
