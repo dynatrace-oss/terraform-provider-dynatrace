@@ -23,6 +23,7 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 func TestAccDavisAnomalyDetectors(t *testing.T) {
@@ -31,7 +32,7 @@ func TestAccDavisAnomalyDetectors(t *testing.T) {
 
 // TestAccDavisAnomalyDetectorsWithPreferToken tests the token => OAuth fallback logic
 func TestAccDavisAnomalyDetectorsWithPreferToken(t *testing.T) {
-	t.Setenv("DYNATRACE_HTTP_OAUTH_PREFERENCE", "false")
+	t.Setenv(envutils.DynatraceHTTPOAuthPreference.Key, "false")
 	api.TestAcc(t)
 }
 
