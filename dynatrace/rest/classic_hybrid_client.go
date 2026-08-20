@@ -19,6 +19,8 @@ package rest
 
 import (
 	"context"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 // ClassicHybridClient prefers classic over platform requests and doesn't consider the DYNATRACE_HTTP_OAUTH_PREFERENCE env variable.
@@ -53,5 +55,5 @@ func (me *classic_hybrid_client) Delete(ctx context.Context, url string, expecte
 }
 
 func newDisableOAuthPreferenceContext(ctx context.Context) context.Context {
-	return context.WithValue(ctx, "DYNATRACE_HTTP_OAUTH_PREFERENCE", false)
+	return context.WithValue(ctx, envutils.DynatraceHTTPOAuthPreference.Key, false)
 }

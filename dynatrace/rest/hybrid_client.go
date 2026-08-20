@@ -73,7 +73,7 @@ func (me *hybrid_client) Delete(ctx context.Context, url string, expectedStatusC
 
 func (me *hybrid_request) Finish(optionalTarget ...any) error {
 	isOAuthPreferred := envutils.DynatraceHTTPOAuthPreference.Get()
-	if v := me.ctx.Value("DYNATRACE_HTTP_OAUTH_PREFERENCE"); v != nil {
+	if v := me.ctx.Value(envutils.DynatraceHTTPOAuthPreference.Key); v != nil {
 		if bv, ok := v.(bool); ok {
 			isOAuthPreferred = bv
 		}
@@ -133,5 +133,5 @@ func (me *hybrid_request) SetHeader(name string, value string) {
 }
 
 func NewPreferOAuthContext(ctx context.Context) context.Context {
-	return context.WithValue(ctx, "DYNATRACE_HTTP_OAUTH_PREFERENCE", true)
+	return context.WithValue(ctx, envutils.DynatraceHTTPOAuthPreference.Key, true)
 }

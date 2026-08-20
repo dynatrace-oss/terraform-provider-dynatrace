@@ -29,6 +29,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -161,7 +162,7 @@ func TestHybridClient(t *testing.T) {
 		}
 		t.Run(testCaseName, func(t *testing.T) {
 			t.Parallel()
-			ctx := context.WithValue(t.Context(), "DYNATRACE_HTTP_OAUTH_PREFERENCE", testcase.IsOAuthPreferred)
+			ctx := context.WithValue(t.Context(), envutils.DynatraceHTTPOAuthPreference.Key, testcase.IsOAuthPreferred)
 			expect(t, testcase.Expected, HybridClient(testcase.Credentials()).Get(ctx, "").Finish())
 		})
 	}
