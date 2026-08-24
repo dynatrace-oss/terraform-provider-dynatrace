@@ -8,7 +8,7 @@
 	"dynatrace": "1",
 	"enums": {},
 	"maturity": "EARLY_ADOPTER",
-	"maxObjects": 40,
+	"maxObjects": 43,
 	"multiObject": true,
 	"ordered": false,
 	"properties": {
@@ -90,5 +90,5 @@
 	],
 	"schemaId": "builtin:problem.fields",
 	"types": {},
-	"version": "1.10"
+	"version": "1.11"
 }
