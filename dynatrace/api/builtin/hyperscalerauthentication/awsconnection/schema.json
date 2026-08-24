@@ -9,8 +9,8 @@
 			"type": "SECRET_RESUBMISSION"
 		}
 	],
-	"description": "Available connections for [AWS for Workflows](https://dt-url.net/s803q9r). A connection is used to authenticate against your AWS account. The retrieved, temporary AWS credentials are used to execute the AWS workflow actions.",
-	"displayName": "AWS Connections",
+	"description": "This schema has been replaced by `builtin:hyperscaler-authentication.connections.aws`.",
+	"displayName": "AWS Connections (deprecated)",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
@@ -27,6 +27,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "EARLY_ADOPTER",
 	"maxObjects": 100,
 	"multiObject": true,
 	"ordered": false,
@@ -159,5 +160,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.3"
+	"version": "0.0.4"
 }
