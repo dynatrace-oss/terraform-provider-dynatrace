@@ -24,7 +24,7 @@ import (
 
 type Settings struct {
 	Enabled                  bool               `json:"enabled"`                            // This setting is enabled (`true`) or disabled (`false`)
-	EnabledAttackMitigations []AttackMitigation `json:"enabledAttackMitigations,omitempty"` // Attack State
+	EnabledAttackMitigations []AttackMitigation `json:"enabledAttackMitigations,omitempty"` // Attack State. Possible values: `BLOCKED_WITH_EXCEPTION`, `NONE_ALLOWLISTED`, `NONE_BLOCKING_DISABLED`
 	Name                     string             `json:"name"`                               // Name
 }
 
@@ -37,7 +37,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"enabled_attack_mitigations": {
 			Type:        schema.TypeSet,
-			Description: "Attack State",
+			Description: "Attack State. Possible values: `BLOCKED_WITH_EXCEPTION`, `NONE_ALLOWLISTED`, `NONE_BLOCKING_DISABLED`",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},

@@ -18,15 +18,15 @@
 package notificationattackalertingprofile
 
 import (
-	notificationattackalertingprofile "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationattackalertingprofile/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/appsec/notificationattackalertingprofile/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.4"
+const SchemaVersion = "0.0.5"
 const SchemaID = "builtin:appsec.notification-attack-alerting-profile"
 
-func Service(clientSet rest.ClientSet) (settings.CRUDService[*notificationattackalertingprofile.Settings], error) {
-	return settings20.Service[*notificationattackalertingprofile.Settings](clientSet, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }
