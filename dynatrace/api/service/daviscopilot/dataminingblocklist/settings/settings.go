@@ -18,6 +18,8 @@
 package dataminingblocklist
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -28,6 +30,8 @@ type Settings struct {
 	EnableCopilot               bool                       `json:"enableCopilot"`                         // Please note that once generative AI is enabled, you still need to [assign permissions](https://dt-url.net/rh22idn \"Dynatrace Generative AI permissions\") to the relevant user groups.
 	EnableDocumentSuggestion    *bool                      `json:"enableDocumentSuggestion,omitempty"`    // By enabling document suggestions, Dynatrace Intelligence can find similarities between Problems and existing Notebooks and Dashboards in order to suggest relevant troubleshooting guides. Learn more about [document suggestions](https://dt-url.net/xy02gpo \"Dynatrace AI document suggestions\").
 	EnableTenantAwareDataMining *bool                      `json:"enableTenantAwareDataMining,omitempty"` // You can enrich Dynatrace generative and agentic AI with your environment data. This lets you generate more accurate queries that identify and reference relevant entities, events, spans, logs, and metrics from your environment. Once enabled, Dynatrace Intelligence periodically scans your Grail data to create its own semantic index. Please note, it can take up to 24 hours to reflect changes. Learn more about [environment-aware queries](https://dt-url.net/4g42iu7 \"Dynatrace Generative AI environment aware queries\").
+	PiiBlockingEnabled          bool                       `json:"piiBlockingEnabled"`                    // Enable PII blocking
+	PiiBlockingTypes            *PiiBlockingTypes          `json:"piiBlockingTypes,omitempty"`            // PII blocking types
 }
 
 func (me *Settings) Name() string {
@@ -64,6 +68,21 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "You can enrich Dynatrace generative and agentic AI with your environment data. This lets you generate more accurate queries that identify and reference relevant entities, events, spans, logs, and metrics from your environment. Once enabled, Dynatrace Intelligence periodically scans your Grail data to create its own semantic index. Please note, it can take up to 24 hours to reflect changes. Learn more about [environment-aware queries](https://dt-url.net/4g42iu7 \"Dynatrace Generative AI environment aware queries\").",
 			Optional:    true, // precondition
 		},
+		"pii_blocking_enabled": {
+			Type:        schema.TypeBool,
+			Description: "Enable PII blocking",
+			// New required field. Default to "false" as pii_blocking_types must be provided if this is true
+			Optional: true,
+			Default:  false,
+		},
+		"pii_blocking_types": {
+			Type:        schema.TypeList,
+			Description: "PII blocking types",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(PiiBlockingTypes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 	}
 }
 
@@ -74,6 +93,8 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"enable_copilot":                  me.EnableCopilot,
 		"enable_document_suggestion":      me.EnableDocumentSuggestion,
 		"enable_tenant_aware_data_mining": me.EnableTenantAwareDataMining,
+		"pii_blocking_enabled":            me.PiiBlockingEnabled,
+		"pii_blocking_types":              me.PiiBlockingTypes,
 	})
 }
 
@@ -87,6 +108,21 @@ func (me *Settings) HandlePreconditions() error {
 	if (me.EnableTenantAwareDataMining == nil) && (me.EnableCopilot) {
 		me.EnableTenantAwareDataMining = new(false)
 	}
+	if (me.EnableAgenticAi != nil) && (!me.EnableCopilot) {
+		return fmt.Errorf("'enable_agentic_ai' must not be specified unless 'enable_copilot' is set to 'true'; got 'enable_copilot'='%v'", me.EnableCopilot)
+	}
+	if (me.EnableDocumentSuggestion != nil) && (!me.EnableCopilot) {
+		return fmt.Errorf("'enable_document_suggestion' must not be specified unless 'enable_copilot' is set to 'true'; got 'enable_copilot'='%v'", me.EnableCopilot)
+	}
+	if (me.EnableTenantAwareDataMining != nil) && (!me.EnableCopilot) {
+		return fmt.Errorf("'enable_tenant_aware_data_mining' must not be specified unless 'enable_copilot' is set to 'true'; got 'enable_copilot'='%v'", me.EnableCopilot)
+	}
+	if (me.PiiBlockingTypes != nil) && (!me.PiiBlockingEnabled) {
+		return fmt.Errorf("'pii_blocking_types' must not be specified unless 'pii_blocking_enabled' is set to 'true'; got 'pii_blocking_enabled'='%v'", me.PiiBlockingEnabled)
+	}
+	if (me.PiiBlockingTypes == nil) && (me.PiiBlockingEnabled) {
+		return fmt.Errorf("'pii_blocking_types' must be specified when 'pii_blocking_enabled' is set to 'true'; got 'pii_blocking_enabled'='%v'", me.PiiBlockingEnabled)
+	}
 	// ---- BlocklistEntries DataminingBlocklistEntries -> {"expectedValue":true,"property":"enableTenantAwareDataMining","type":"EQUALS"}
 	return nil
 }
@@ -98,5 +134,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"enable_copilot":                  &me.EnableCopilot,
 		"enable_document_suggestion":      &me.EnableDocumentSuggestion,
 		"enable_tenant_aware_data_mining": &me.EnableTenantAwareDataMining,
+		"pii_blocking_enabled":            &me.PiiBlockingEnabled,
+		"pii_blocking_types":              &me.PiiBlockingTypes,
 	})
 }
