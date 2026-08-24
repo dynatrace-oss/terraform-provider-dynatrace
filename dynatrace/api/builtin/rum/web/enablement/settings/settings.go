@@ -38,9 +38,9 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"application_id": {
 			Type:        schema.TypeString,
 			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
+			ForceNew:    true,
 			Optional:    true,
 			Default:     "environment",
-			ForceNew:    true,
 		},
 		"experience_analytics": {
 			Type:        schema.TypeList,
