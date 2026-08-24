@@ -5,6 +5,13 @@ resource "dynatrace_maintenance_windows" "recurring_window" {
   auto_delete = true
   enabled     = true
 
+  object_scopes {
+    synthetic_monitors {
+      disable_synthetic_monitor_filter = "status == \"OPEN\" AND severity == \"HIGH\""
+      disable_synthetic_monitors       = true
+    }
+  }
+
   schedule {
     duration = 60
     timezone = "UTC"

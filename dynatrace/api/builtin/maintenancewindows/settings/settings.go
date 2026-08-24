@@ -23,12 +23,13 @@ import (
 )
 
 type Settings struct {
-	AutoDelete  bool                `json:"autoDelete"`            // When enabled, this maintenance window configuration will be automatically deleted 30 days after the end of its last execution.
-	Description *string             `json:"description,omitempty"` // Description
-	Enabled     bool                `json:"enabled"`               // This setting is enabled (`true`) or disabled (`false`)
-	Filter      string              `json:"filter"`                // DQL Filter
-	Name        string              `json:"name"`                  // Name of the maintenance window
-	Schedule    *ScheduleDefinition `json:"schedule"`              // Schedule definition
+	AutoDelete   bool                `json:"autoDelete"`             // When enabled, this maintenance window configuration will be automatically deleted 30 days after the end of its last execution.
+	Description  *string             `json:"description,omitempty"`  // Description
+	Enabled      bool                `json:"enabled"`                // This setting is enabled (`true`) or disabled (`false`)
+	Filter       string              `json:"filter"`                 // DQL Filter
+	Name         string              `json:"name"`                   // Name of the maintenance window
+	ObjectScopes *ObjectScopes       `json:"objectScopes,omitempty"` // Object scopes
+	Schedule     *ScheduleDefinition `json:"schedule"`               // Schedule definition
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -58,6 +59,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Name of the maintenance window",
 			Required:    true,
 		},
+		"object_scopes": {
+			Type:        schema.TypeList,
+			Description: "Object scopes",
+			Optional:    true, // nullable
+			Elem:        &schema.Resource{Schema: new(ObjectScopes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"schedule": {
 			Type:        schema.TypeList,
 			Description: "Schedule definition",
@@ -71,22 +80,24 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"auto_delete": me.AutoDelete,
-		"description": me.Description,
-		"enabled":     me.Enabled,
-		"filter":      me.Filter,
-		"name":        me.Name,
-		"schedule":    me.Schedule,
+		"auto_delete":   me.AutoDelete,
+		"description":   me.Description,
+		"enabled":       me.Enabled,
+		"filter":        me.Filter,
+		"name":          me.Name,
+		"object_scopes": me.ObjectScopes,
+		"schedule":      me.Schedule,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"auto_delete": &me.AutoDelete,
-		"description": &me.Description,
-		"enabled":     &me.Enabled,
-		"filter":      &me.Filter,
-		"name":        &me.Name,
-		"schedule":    &me.Schedule,
+		"auto_delete":   &me.AutoDelete,
+		"description":   &me.Description,
+		"enabled":       &me.Enabled,
+		"filter":        &me.Filter,
+		"name":          &me.Name,
+		"object_scopes": &me.ObjectScopes,
+		"schedule":      &me.Schedule,
 	})
 }

@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1"
+const SchemaVersion = "1.1"
 const SchemaID = "builtin:maintenance-windows"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
