@@ -47,7 +47,7 @@ const (
 var createErrs = []string{"Unable to create", "already exists"}
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*mysettings.CalculatedWebMetric], error) {
-	return &service{client: rest.APITokenClient(clientSet.Credentials())}, nil
+	return &service{client: rest.APITokenClient(clientSet)}, nil
 }
 
 type service struct {

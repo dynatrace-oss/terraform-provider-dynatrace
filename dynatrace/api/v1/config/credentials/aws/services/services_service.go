@@ -42,7 +42,7 @@ var supportedServicesRepo = map[string]map[string]*SupportedService{}
 func NewSupportedServicesService(clientSet rest.ClientSet) *SupportedServicesService {
 	return &SupportedServicesService{
 		url:    clientSet.Credentials().URL,
-		client: rest.APITokenClient(clientSet.Credentials()),
+		client: rest.APITokenClient(clientSet),
 	}
 }
 

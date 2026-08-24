@@ -33,7 +33,7 @@ import (
 const SchemaID = "v1:config:calculated-metrics-service"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*mysettings.CalculatedServiceMetric], error) {
-	return &service{client: rest.APITokenClient(clientSet.Credentials())}, nil
+	return &service{client: rest.APITokenClient(clientSet)}, nil
 }
 
 type service struct {

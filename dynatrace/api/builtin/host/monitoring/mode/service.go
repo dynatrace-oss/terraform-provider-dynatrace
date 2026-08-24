@@ -42,7 +42,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*mode.Settings], er
 	}
 	return &service{
 		service: svc,
-		client:  rest.APITokenClient(clientSet.Credentials()),
+		client:  rest.APITokenClient(clientSet),
 	}, nil
 }
 

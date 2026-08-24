@@ -75,7 +75,7 @@ func (cs *ServiceClient) SchemaID() string {
 }
 
 func NewService(clientSet rest.ClientSet) (*ServiceClient, error) {
-	return &ServiceClient{client: rest.ClusterV2Client(clientSet.Credentials())}, nil
+	return &ServiceClient{client: rest.ClusterV2Client(clientSet)}, nil
 }
 
 type service struct {

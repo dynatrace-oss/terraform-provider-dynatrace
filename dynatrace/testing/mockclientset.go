@@ -24,18 +24,45 @@ import (
 // MockClientSet is a rest.ClientSet whose IAM client and credentials are supplied directly, for
 // injecting a MockIAMClient into IAM services under test.
 type MockClientSet struct {
-	IAMClientValue      rest.IAMClient
-	IAMClientErr        error
-	PlatformClientValue *rest2.Client
-	PlatformClientErr   error
-	CredentialsValue    *rest.Credentials
+	IAMClientValue             rest.IAMClient
+	IAMClientErr               error
+	PlatformClientValue        *rest2.Client
+	PlatformClientErr          error
+	ClassicPlatformClientValue *rest2.Client
+	ClassicPlatformClientErr   error
+	APITokenClientValue        *rest2.Client
+	APITokenClientErr          error
+	ClusterV1ClientValue       *rest2.Client
+	ClusterV1ClientErr         error
+	ClusterV2ClientValue       *rest2.Client
+	ClusterV2ClientErr         error
+	CredentialsValue           *rest.Credentials
 }
 
 func (me *MockClientSet) IAMClient() (rest.IAMClient, error) {
 	return me.IAMClientValue, me.IAMClientErr
 }
+
 func (me *MockClientSet) PlatformClient() (*rest2.Client, error) {
 	return me.PlatformClientValue, me.PlatformClientErr
 }
 
-func (me *MockClientSet) Credentials() *rest.Credentials { return me.CredentialsValue }
+func (me *MockClientSet) ClassicPlatformClient() (*rest2.Client, error) {
+	return me.ClassicPlatformClientValue, me.ClassicPlatformClientErr
+}
+
+func (me *MockClientSet) APITokenClient() (*rest2.Client, error) {
+	return me.APITokenClientValue, me.APITokenClientErr
+}
+
+func (me *MockClientSet) ClusterV1Client() (*rest2.Client, error) {
+	return me.ClusterV1ClientValue, me.ClusterV1ClientErr
+}
+
+func (me *MockClientSet) ClusterV2Client() (*rest2.Client, error) {
+	return me.ClusterV2ClientValue, me.ClusterV2ClientErr
+}
+
+func (me *MockClientSet) Credentials() *rest.Credentials {
+	return me.CredentialsValue
+}

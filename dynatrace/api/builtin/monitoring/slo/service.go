@@ -41,7 +41,7 @@ const SchemaVersion = "6.0.14"
 const SchemaID = "builtin:monitoring.slo"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*slo.Settings], error) {
-	return &service{clientSet: clientSet, client: rest.HybridClient(clientSet.Credentials())}, nil
+	return &service{clientSet: clientSet, client: rest.HybridClient(clientSet)}, nil
 }
 
 type service struct {
@@ -184,7 +184,7 @@ func (me *service) get(ctx context.Context, id string, v *slo.Settings) error {
 
 	slo := new(sloGet)
 
-	client := rest.APITokenClient(me.clientSet.Credentials())
+	client := rest.APITokenClient(me.clientSet)
 	req := client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(legacyId)), 200)
 	if err := req.Finish(slo); err != nil {
 		return err

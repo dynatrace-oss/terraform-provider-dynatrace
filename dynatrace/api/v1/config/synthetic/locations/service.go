@@ -30,7 +30,7 @@ import (
 const SchemaID = "v1:synthetic:locations:all"
 
 func Service(clientSet rest.ClientSet) (settings.RService[*locations.SyntheticLocation], error) {
-	return &service{client: rest.APITokenClient(clientSet.Credentials())}, nil
+	return &service{client: rest.APITokenClient(clientSet)}, nil
 }
 
 type service struct {

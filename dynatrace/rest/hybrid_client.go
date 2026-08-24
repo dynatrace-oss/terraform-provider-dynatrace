@@ -27,16 +27,16 @@ import (
 	"github.com/google/uuid"
 )
 
-func HybridClient(credentials *Credentials) Client {
-	return &hybrid_client{credentials: credentials}
+func HybridClient(clientSet ClientSet) Client {
+	return &hybrid_client{clientSet: clientSet}
 }
 
 type hybrid_client struct {
-	credentials *Credentials
+	clientSet ClientSet
 }
 
-func (me *hybrid_client) Credentials() *Credentials {
-	return me.credentials
+func (me *hybrid_client) ClientSet() ClientSet {
+	return me.clientSet
 }
 
 func (me *hybrid_client) Get(ctx context.Context, url string, expectedStatusCodes ...int) Request {
@@ -79,7 +79,7 @@ func (me *hybrid_request) Finish(optionalTarget ...any) error {
 		}
 	}
 
-	credentials := me.client.Credentials()
+	credentials := me.client.ClientSet().Credentials()
 
 	if !credentials.ContainsAPIToken() && !credentials.ContainsOAuthOrPlatformToken() {
 		if isOAuthPreferred {

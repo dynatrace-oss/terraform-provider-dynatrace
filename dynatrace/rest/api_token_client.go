@@ -22,7 +22,6 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
@@ -34,16 +33,16 @@ import (
 
 var NoClassicURLDefinedErr = errors.New("no Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
 
-func APITokenClient(credentials *Credentials) Client {
-	return &api_token_client{credentials: credentials}
+func APITokenClient(clientSet ClientSet) Client {
+	return &api_token_client{clientSet: clientSet}
 }
 
 type api_token_client struct {
-	credentials *Credentials
+	clientSet ClientSet
 }
 
-func (me *api_token_client) Credentials() *Credentials {
-	return me.credentials
+func (me *api_token_client) ClientSet() ClientSet {
+	return me.clientSet
 }
 
 func (me *api_token_client) Get(ctx context.Context, url string, expectedStatusCodes ...int) Request {
@@ -79,17 +78,7 @@ func (me *api_token_client) Delete(ctx context.Context, url string, expectedStat
 }
 
 func (me *api_token_request) Finish(optionalTarget ...any) error {
-	credentials := me.client.Credentials()
-	if !credentials.ContainsAPIToken() {
-		return NoAPITokenError
-	}
-
-	var target any
-	if len(optionalTarget) > 0 {
-		target = optionalTarget[0]
-	}
-
-	client, err := createAPITokenClient(me.client.Credentials().URL, me.client.Credentials().Token)
+	client, err := me.client.ClientSet().APITokenClient()
 	if err != nil {
 		return err
 	}
@@ -99,6 +88,10 @@ func (me *api_token_request) Finish(optionalTarget ...any) error {
 		return err
 	}
 
+	var target any
+	if len(optionalTarget) > 0 {
+		target = optionalTarget[0]
+	}
 	return request(*me).HandleResponse(client, pathURL, target)
 }
 
@@ -114,36 +107,12 @@ func (me *api_token_request) OnResponse(onResponse func(resp *http.Response)) Re
 	return me
 }
 
-var apiTokenClientCache = map[string]*rest.Client{}
-
-var apiTokenClientCacheMutex sync.Mutex
-
-func createAPITokenClient(classicURL string, apiToken string) (*rest.Client, error) {
-	if classicURL == "" {
-		// sanity check - this should not be empty anymore at this point
-		return nil, NoClassicURLDefinedErr
-	}
-
-	apiTokenClientCacheMutex.Lock()
-	defer apiTokenClientCacheMutex.Unlock()
-
-	if client, found := apiTokenClientCache[classicURL]; found {
-		return client, nil
-	}
-
-	client, err := clients.Factory().
+func CreateAPITokenClient(ctx context.Context, classicURL string, apiToken string) (*rest.Client, error) {
+	return clients.Factory().
 		WithUserAgent(version.UserAgent()).
 		WithClassicURL(classicURL).
 		WithAccessToken(apiToken).
 		WithHTTPListener(logging.HTTPListener("classic")).
 		WithRetryOptions(defaultRetryOptions).
-		CreateClassicClient()
-
-	if err != nil {
-		return nil, err
-	}
-
-	apiTokenClientCache[classicURL] = client
-
-	return client, nil
+		CreateClassicClientWithContext(ctx)
 }

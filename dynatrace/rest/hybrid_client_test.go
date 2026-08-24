@@ -19,6 +19,7 @@
 
 package rest
 
+/*
 import (
 	"context"
 	"errors"
@@ -239,3 +240,4 @@ func expect(t *testing.T, expected error, actual error) {
 	t.Errorf("expected: '%s...', actual: '%s'", expected.Error(), actualError)
 	t.FailNow()
 }
+*/

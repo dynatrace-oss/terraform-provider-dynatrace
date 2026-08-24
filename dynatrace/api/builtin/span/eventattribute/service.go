@@ -43,7 +43,7 @@ const SchemaID = "builtin:span-event-attribute"
 const SchemaVersion = "1.0.17"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*eventattribute.Settings], error) {
-	return &service{clientSet: clientSet, client: rest.HybridClient(clientSet.Credentials())}, nil
+	return &service{clientSet: clientSet, client: rest.HybridClient(clientSet)}, nil
 }
 
 type service struct {

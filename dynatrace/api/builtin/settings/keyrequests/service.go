@@ -60,7 +60,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*keyrequests.Settin
 	return &service{
 		service:   svc,
 		clientSet: clientSet,
-		client:    rest.HybridClient(clientSet.Credentials()),
+		client:    rest.HybridClient(clientSet),
 	}, nil
 }
 

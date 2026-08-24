@@ -34,7 +34,7 @@ import (
 const SchemaID = "v2:environment:entities"
 
 func Service(entityType string, entityName string, entitySelector string, from string, to string, clientSet rest.ClientSet) (settings.RService[*entities.Settings], error) {
-	return &service{entityType: entityType, entityName: entityName, entitySelector: entitySelector, from: from, to: to, client: rest.APITokenClient(clientSet.Credentials())}, nil
+	return &service{entityType: entityType, entityName: entityName, entitySelector: entitySelector, from: from, to: to, client: rest.APITokenClient(clientSet)}, nil
 }
 
 type service struct {

@@ -34,7 +34,7 @@ type staticService[T Settings] struct {
 func APITokenStaticService[T Settings](clientSet rest.ClientSet, schemaID string, url string, stub api.Stub) (Service[T], error) {
 	return &staticService[T]{
 		schemaID: schemaID,
-		client:   rest.APITokenClient(clientSet.Credentials()),
+		client:   rest.APITokenClient(clientSet),
 		url:      url,
 		stub:     stub,
 	}, nil

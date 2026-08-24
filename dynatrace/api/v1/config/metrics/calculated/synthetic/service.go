@@ -40,7 +40,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*mysettings.Calcula
 		return nil, err
 	}
 
-	return &service{service: svc, client: rest.APITokenClient(clientSet.Credentials())}, nil
+	return &service{service: svc, client: rest.APITokenClient(clientSet)}, nil
 }
 
 type service struct {

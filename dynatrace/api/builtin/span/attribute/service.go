@@ -45,7 +45,7 @@ const SchemaVersion = "0.0.42"
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*attribute.Settings], error) {
 	return &service{
 		clientSet: clientSet,
-		client:    rest.HybridClient(clientSet.Credentials()),
+		client:    rest.HybridClient(clientSet),
 	}, nil
 }
 

@@ -74,15 +74,7 @@ func (me *platform_request) Finish(optionalTarget ...any) error {
 		target = optionalTarget[0]
 	}
 
-	var platformURL string
-	// config v1 are not reachable on platform, so we need to use the classic URL for those requests
-	if strings.Contains(me.url, "/api/config/v1/") {
-		platformURL = me.client.Credentials().URL
-	} else {
-		platformURL = me.client.Credentials().Platform.EnvironmentURL
-	}
-
-	client, err := CreatePlatformClient(me.ctx, platformURL, me.client.Credentials())
+	client, err := selectClient(me.client.ClientSet(), me.url)
 	if err != nil {
 		return err
 	}
@@ -98,9 +90,16 @@ func (me *platform_request) Finish(optionalTarget ...any) error {
 		}
 	}
 
-	fullURL, err := url.Parse(platformURL + meURL)
+	fullURL, err := url.Parse(client.BaseURL().String() + meURL)
 	if err != nil {
 		return err
 	}
 	return request(*me).HandleResponse(client, fullURL, target)
+}
+
+func selectClient(clientSet ClientSet, url string) (*rest.Client, error) {
+	if strings.Contains(url, "/api/config/v1/") {
+		return clientSet.ClassicPlatformClient()
+	}
+	return clientSet.PlatformClient()
 }
