@@ -20,15 +20,11 @@ package aws
 type ConsumersOfAwsRoleBasedAuthentication string
 
 var ConsumersOfAwsRoleBasedAuthentications = struct {
-	Da                          ConsumersOfAwsRoleBasedAuthentication
-	None                        ConsumersOfAwsRoleBasedAuthentication
 	SvcComDynatraceBo           ConsumersOfAwsRoleBasedAuthentication
 	SvcComDynatraceDa           ConsumersOfAwsRoleBasedAuthentication
 	SvcComDynatraceGrail        ConsumersOfAwsRoleBasedAuthentication
 	SvcComDynatraceOpenpipeline ConsumersOfAwsRoleBasedAuthentication
 }{
-	"DA",
-	"NONE",
 	"SVC:com.dynatrace.bo",
 	"SVC:com.dynatrace.da",
 	"SVC:com.dynatrace.grail",
