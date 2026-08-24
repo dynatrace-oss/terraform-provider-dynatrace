@@ -20,12 +20,8 @@ package azure
 type ConsumersOfClientSecret string
 
 var ConsumersOfClientSecrets = struct {
-	Da                ConsumersOfClientSecret
-	None              ConsumersOfClientSecret
 	SvcComDynatraceDa ConsumersOfClientSecret
 }{
-	"DA",
-	"NONE",
 	"SVC:com.dynatrace.da",
 }
 
@@ -33,16 +29,12 @@ type ConsumersOfFederatedIdentityCredential string
 
 var ConsumersOfFederatedIdentityCredentials = struct {
 	AppDynatraceMicrosoftAzureConnector ConsumersOfFederatedIdentityCredential
-	Da                                  ConsumersOfFederatedIdentityCredential
-	None                                ConsumersOfFederatedIdentityCredential
 	SvcComDynatraceBo                   ConsumersOfFederatedIdentityCredential
 	SvcComDynatraceDa                   ConsumersOfFederatedIdentityCredential
 	SvcComDynatraceGrail                ConsumersOfFederatedIdentityCredential
 	SvcComDynatraceOpenpipeline         ConsumersOfFederatedIdentityCredential
 }{
 	"APP:dynatrace.microsoft.azure.connector",
-	"DA",
-	"NONE",
 	"SVC:com.dynatrace.bo",
 	"SVC:com.dynatrace.da",
 	"SVC:com.dynatrace.grail",

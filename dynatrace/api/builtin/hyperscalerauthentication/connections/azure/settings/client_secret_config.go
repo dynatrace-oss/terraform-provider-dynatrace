@@ -25,7 +25,7 @@ import (
 type ClientSecretConfig struct {
 	ApplicationID string                    `json:"applicationId"`       // Application (client) ID of your app registered in Microsoft Azure App registrations
 	ClientSecret  string                    `json:"clientSecret"`        // Client secret of your app registered in Microsoft Azure App registrations
-	Consumers     []ConsumersOfClientSecret `json:"consumers,omitempty"` // Dynatrace integrations that can use this connection. Possible values: `DA`, `NONE`, `SVC:com.dynatrace.da`
+	Consumers     []ConsumersOfClientSecret `json:"consumers,omitempty"` // Dynatrace integrations that can use this connection. Possible values: `SVC:com.dynatrace.da`
 	DirectoryID   string                    `json:"directoryId"`         // Directory (tenant) ID of Microsoft Entra ID
 }
 
@@ -45,7 +45,7 @@ func (me *ClientSecretConfig) Schema() map[string]*schema.Schema {
 		},
 		"consumers": {
 			Type:        schema.TypeList,
-			Description: "Dynatrace integrations that can use this connection. Possible values: `DA`, `NONE`, `SVC:com.dynatrace.da`",
+			Description: "Dynatrace integrations that can use this connection. Possible values: `SVC:com.dynatrace.da`",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			ForceNew:    true,
