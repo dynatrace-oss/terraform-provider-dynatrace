@@ -1,5 +1,6 @@
-resource "dynatrace_kubernetes_enrichment" "#name#" {
+resource "dynatrace_kubernetes_enrichment" "example" {
   scope = "environment"
+  use_ingest_enrichment_config_schema = true
   rules {
     rule {
       type    = "LABEL"
