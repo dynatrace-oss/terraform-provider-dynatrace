@@ -18,15 +18,15 @@
 package awsconnection
 
 import (
-	awsconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/awsconnection/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/awsconnection/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
+const SchemaVersion = "0.0.4"
 const SchemaID = "builtin:hyperscaler-authentication.aws.connection"
-const SchemaVersion = "0.0.3"
 
-func Service(clientSet rest.ClientSet) (settings.CRUDService[*awsconnection.Settings], error) {
-	return settings20.Service[*awsconnection.Settings](clientSet, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }
