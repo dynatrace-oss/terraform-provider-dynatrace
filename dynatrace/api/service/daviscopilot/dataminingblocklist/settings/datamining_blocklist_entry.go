@@ -53,7 +53,7 @@ func (me *DataminingBlocklistEntry) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 		},
 		"type": {

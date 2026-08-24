@@ -70,7 +70,7 @@
 			"type": "boolean"
 		},
 		"enableCopilot": {
-			"default": false,
+			"default": true,
 			"description": "Please note that once generative AI is enabled, you still need to [assign permissions](https://dt-url.net/rh22idn \"Dynatrace Generative AI permissions\") to the relevant user groups.",
 			"displayName": "Enable generative AI",
 			"documentation": "",
@@ -108,6 +108,32 @@
 				"type": "EQUALS"
 			},
 			"type": "boolean"
+		},
+		"piiBlockingEnabled": {
+			"default": true,
+			"description": "",
+			"displayName": "Enable PII blocking",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"piiBlockingTypes": {
+			"description": "",
+			"displayName": "PII blocking types",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": true,
+				"property": "piiBlockingEnabled",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/PiiBlockingTypes"
+			}
 		}
 	},
 	"schemaGroups": [
@@ -157,7 +183,108 @@
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
+		},
+		"PiiBlockingTypes": {
+			"description": "",
+			"displayName": "PII blocking types",
+			"documentation": "",
+			"properties": {
+				"canadianSocialInsuranceNumber": {
+					"default": true,
+					"description": "",
+					"displayName": "Canadian social insurance number",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"creditCardNumber": {
+					"default": true,
+					"description": "",
+					"displayName": "Credit card number",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"emailAddress": {
+					"default": true,
+					"description": "",
+					"displayName": "Email address",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"ibanBankAccount": {
+					"default": false,
+					"description": "",
+					"displayName": "IBAN bank account",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"ipAddress": {
+					"default": true,
+					"description": "",
+					"displayName": "IP address",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"phoneNumber": {
+					"default": false,
+					"description": "",
+					"displayName": "Phone number",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"urlQueryParameters": {
+					"default": true,
+					"description": "",
+					"displayName": "URL query parameters",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"usBankNumber": {
+					"default": false,
+					"description": "",
+					"displayName": "US bank number",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				},
+				"usSocialSecurityNumber": {
+					"default": true,
+					"description": "",
+					"displayName": "US social security number",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
 		}
 	},
-	"version": "0.4"
+	"version": "0.5"
 }
