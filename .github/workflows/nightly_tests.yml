@@ -1,0 +1,18 @@
+name: Nightly Tests
+
+# Runs the shared test suite (unit, lint, schema-support, integration, sonar)
+# on a nightly schedule and on pushes to main. Same suite as tests.yml; only the
+# trigger differs.
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  suite:
+    uses: ./.github/workflows/_test-suite.yml
+    secrets: inherit
