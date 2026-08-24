@@ -3,6 +3,14 @@
 		"KUBERNETES_CLUSTER",
 		"environment"
 	],
+	"constraints": [
+		{
+			"customMessage": "This scope has opted into the new unified enrichment settings (builtin:ingest.enrichment.config). Rules in builtin:kubernetes.generic.metadata.enrichment are inactive; disable the opt-in toggle to edit them.",
+			"customValidatorId": "kubernetes-enrichment-optin-write-block",
+			"skipAsyncValidation": true,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"description": "Generic metadata enrichment for Kubernetes.",
 	"displayName": "Kubernetes Telemetry Enrichment",
 	"documentation": "",
@@ -77,6 +85,15 @@
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": "list"
+		},
+		"useIngestEnrichmentConfigSchema": {
+			"description": "Opt-in to experience the new unified enrichment settings view ahead of future rollout.\nEnabling this toggle may trigger migration of rules to the new enrichment settings. Learn more in our [documentation](https://dt-url.net/qm02uk2).",
+			"displayName": "Use new unified enrichment settings",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "boolean"
 		}
 	},
 	"schemaGroups": [
@@ -167,5 +184,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.5"
+	"version": "1.6.2"
 }

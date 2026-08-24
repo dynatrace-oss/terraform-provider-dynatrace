@@ -23,8 +23,9 @@ import (
 )
 
 type Settings struct {
-	Rules Rules   `json:"rules,omitempty"` // Kubernetes Telemetry Enrichment empowers you to effectively tag your telemetry data using Kubernetes namespace labels and annotations. Additionally, it enables you to tag it for cost allocation and permission purposes.\n\n  Enrichment Options:\n\n  - **Enrich telemetry with label/annotation directly:** Tag your telemetry data with existing Kubernetes namespace labels or annotations. These will be made available as domain-specific fields (e.g., `k8s.namespace.label.your_key`). This allows for flexible pipeline routing, bucket selection, segmentation, and filtering.\n\n  - **Security Context and Cost Allocation:** Leverage existing Kubernetes namespace labels or annotations  as the basis for security context or cost allocation. This provides granular control over permissions and facilitates chargeback functionalities.\n\n  Additional Information:\n\n  - Only namespace-level labels or annotations can be used as source.\n\n  - You can define up to 20 enrichment rules.\n\n  - New rules may take up to 45 minutes to take effect.\n\n  - Pod restarts are required after the 45 mins to ensure the changes take effect.\n\n  To learn more, please refer to our [documentation](https://dt-url.net/pn22sye).
-	Scope *string `json:"-" scope:"scope"` // The scope of this setting (KUBERNETES_CLUSTER). Omit this property if you want to cover the whole environment.
+	Rules                           Rules   `json:"rules,omitempty"`                           // Kubernetes Telemetry Enrichment empowers you to effectively tag your telemetry data using Kubernetes namespace labels and annotations. Additionally, it enables you to tag it for cost allocation and permission purposes.\n\n  Enrichment Options:\n\n  - **Enrich telemetry with label/annotation directly:** Tag your telemetry data with existing Kubernetes namespace labels or annotations. These will be made available as domain-specific fields (e.g., `k8s.namespace.label.your_key`). This allows for flexible pipeline routing, bucket selection, segmentation, and filtering.\n\n  - **Security Context and Cost Allocation:** Leverage existing Kubernetes namespace labels or annotations  as the basis for security context or cost allocation. This provides granular control over permissions and facilitates chargeback functionalities.\n\n  Additional Information:\n\n  - Only namespace-level labels or annotations can be used as source.\n\n  - You can define up to 20 enrichment rules.\n\n  - New rules may take up to 45 minutes to take effect.\n\n  - Pod restarts are required after the 45 mins to ensure the changes take effect.\n\n  To learn more, please refer to our [documentation](https://dt-url.net/pn22sye).
+	Scope                           *string `json:"-" scope:"scope"`                           // The scope of this setting (KUBERNETES_CLUSTER). Omit this property if you want to cover the whole environment.
+	UseIngestEnrichmentConfigSchema *bool   `json:"useIngestEnrichmentConfigSchema,omitempty"` // Opt-in to experience the new unified enrichment settings view ahead of future rollout.\n Enabling this toggle may trigger migration of rules to the new enrichment settings. Learn more in our [documentation](https://dt-url.net/qm02uk2).
 }
 
 func (me *Settings) Name() string {
@@ -44,22 +45,30 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"scope": {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (KUBERNETES_CLUSTER). Omit this property if you want to cover the whole environment.",
+			ForceNew:    true,
 			Optional:    true,
 			Default:     "environment",
+		},
+		"use_ingest_enrichment_config_schema": {
+			Type:        schema.TypeBool,
+			Description: "Opt-in to experience the new unified enrichment settings view ahead of future rollout.\n Enabling this toggle may trigger migration of rules to the new enrichment settings. Learn more in our [documentation](https://dt-url.net/qm02uk2).",
+			Optional:    true, // nullable
 		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"rules": me.Rules,
-		"scope": me.Scope,
+		"rules":                               me.Rules,
+		"scope":                               me.Scope,
+		"use_ingest_enrichment_config_schema": me.UseIngestEnrichmentConfigSchema,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"rules": &me.Rules,
-		"scope": &me.Scope,
+		"rules":                               &me.Rules,
+		"scope":                               &me.Scope,
+		"use_ingest_enrichment_config_schema": &me.UseIngestEnrichmentConfigSchema,
 	})
 }
