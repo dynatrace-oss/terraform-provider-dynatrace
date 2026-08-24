@@ -23,7 +23,7 @@ import (
 )
 
 type AwsRoleBasedAuthenticationConfig struct {
-	Consumers []ConsumersOfAwsRoleBasedAuthentication `json:"consumers"` // Dynatrace integrations that can use this connection. Possible values: `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`
+	Consumers []ConsumersOfAwsRoleBasedAuthentication `json:"consumers"` // Dynatrace integrations that can use this connection. Possible values: `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`
 	RoleArn   string                                  `json:"roleArn"`   // The ARN of the AWS role that should be assumed
 }
 
@@ -37,7 +37,7 @@ func (me *AwsRoleBasedAuthenticationConfig) Schema() map[string]*schema.Schema {
 		// },
 		"consumers": {
 			Type:        schema.TypeSet,
-			Description: "Dynatrace integrations that can use this connection. Possible values: `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`",
+			Description: "Dynatrace integrations that can use this connection. Possible values: `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`",
 			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			MinItems:    1,
