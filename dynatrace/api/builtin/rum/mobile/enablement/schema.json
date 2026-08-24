@@ -27,6 +27,18 @@
 			"customValidatorId": "mrumOnGrailEnabledForReplayOnGrailValidator",
 			"skipAsyncValidation": false,
 			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Real User Monitoring Classic and the New Real User Monitoring Experience must be enabled or disabled together.",
+			"customValidatorId": "mrumPhase3RumGrailPairingValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Session Replay Classic and the New Session Replay Experience must be enabled or disabled together.",
+			"customValidatorId": "mrumPhase3SessionReplayGrailPairingValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
 		}
 	],
 	"description": "Turn on Real User Monitoring and Session Replay. Configure cost and traffic control settings.",
@@ -287,5 +299,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.7.3"
+	"version": "2.7.4"
 }
