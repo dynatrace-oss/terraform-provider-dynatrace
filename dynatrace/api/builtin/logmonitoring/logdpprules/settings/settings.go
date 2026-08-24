@@ -27,11 +27,11 @@ import (
 
 type Settings struct {
 	Enabled             bool                 `json:"enabled"`             // This setting is enabled (`true`) or disabled (`false`)
+	InsertAfter         *string              `json:"-"`                   // Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 	ProcessorDefinition *ProcessorDefinition `json:"ProcessorDefinition"` // ## Processor definition
 	Query               string               `json:"query"`               // Matcher
 	RuleName            string               `json:"ruleName"`            // Rule name
-	RuleTesting         *RuleTesting         `json:"RuleTesting"`         // ## Rule testing\n### 1. Paste a log / JSON sample
-	InsertAfter         string               `json:"-"`
+	RuleTesting         *RuleTesting         `json:"RuleTesting"`         // ## Rule testing\n ### 1. Paste a log / JSON sample
 }
 
 func (me *Settings) Name() string {
@@ -44,6 +44,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
+		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Computed:    true,
+			Optional:    true,
 		},
 		"processor_definition": {
 			Type:        schema.TypeList,
@@ -72,12 +78,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
-		"insert_after": {
-			Type:        schema.TypeString,
-			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
-			Optional:    true,
-			Computed:    true,
-		},
 	}
 }
 
@@ -98,11 +98,11 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		me.Schema(),
 		map[string]any{
 			"enabled":              me.Enabled,
+			"insert_after":         me.InsertAfter,
 			"processor_definition": me.ProcessorDefinition,
 			"query":                me.Query,
 			"rule_name":            me.RuleName,
 			"rule_testing":         me.RuleTesting,
-			"insert_after":         me.InsertAfter,
 		},
 		me.genIgnoreChanges(),
 	))
@@ -111,10 +111,10 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"enabled":              &me.Enabled,
+		"insert_after":         &me.InsertAfter,
 		"processor_definition": &me.ProcessorDefinition,
 		"query":                &me.Query,
 		"rule_name":            &me.RuleName,
 		"rule_testing":         &me.RuleTesting,
-		"insert_after":         &me.InsertAfter,
 	})
 }
