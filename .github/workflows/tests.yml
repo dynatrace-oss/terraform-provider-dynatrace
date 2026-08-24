@@ -1,5 +1,6 @@
 name: Tests
 # Runs the shared test suite (unit, lint, schema-support, integration, sonar) on every push.
+# Test results are not collected. See nightly_tests.yml for a nightly run that collects results and ingests them to Dynatrace.
 on:
   push:
     branches:

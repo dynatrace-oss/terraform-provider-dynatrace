@@ -1,18 +1,24 @@
 name: Nightly Tests
-
-# Runs the shared test suite (unit, lint, schema-support, integration, sonar)
-# on a nightly schedule and on pushes to main. Same suite as tests.yml; only the
-# trigger differs.
-
+# Runs the shared test suite nightly (and on push to main) with result collection
+# enabled: JUnit results from every test job are gathered and ingested to Dynatrace.
+# Can also be dispatched manually against any branch; collection stays on by
+# default but can be turned off for a dry run.
 on:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
+    inputs:
+      collect-results:
+        description: 'Collect JUnit results and ingest them to Dynatrace'
+        type: boolean
+        default: true
   push:
     branches:
       - main
-
 jobs:
   suite:
     uses: ./.github/workflows/_test-suite.yml
+    with:
+      # Scheduled and push runs always collect; a manual run honors the toggle.
+      collect-results: ${{ github.event_name != 'workflow_dispatch' || inputs.collect-results }}
     secrets: inherit
