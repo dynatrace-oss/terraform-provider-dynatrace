@@ -77,9 +77,9 @@ func (me *platform_request) Finish(optionalTarget ...any) error {
 	var platformURL string
 	// config v1 are not reachable on platform, so we need to use the classic URL for those requests
 	if strings.Contains(me.url, "/api/config/v1/") {
-		platformURL = EvalClassicURL(me.client.Credentials().URL)
+		platformURL = me.client.Credentials().URL
 	} else {
-		platformURL = me.evalPlatformURL(me.client.Credentials().URL)
+		platformURL = me.client.Credentials().Platform.EnvironmentURL
 	}
 
 	client, err := CreatePlatformClient(me.ctx, platformURL, me.client.Credentials())
@@ -103,16 +103,4 @@ func (me *platform_request) Finish(optionalTarget ...any) error {
 		return err
 	}
 	return request(*me).HandleResponse(client, fullURL, target)
-}
-
-func (me *platform_request) evalPlatformURL(envURL string) string {
-	envURL = strings.TrimSuffix(strings.TrimSpace(envURL), "/")
-	if len(envURL) == 0 {
-		return envURL
-	}
-	envURL = strings.ReplaceAll(envURL, ".dev.dynatracelabs.", ".dev.apps.dynatracelabs.")
-	envURL = strings.ReplaceAll(envURL, ".live.dynatrace.", ".apps.dynatrace.")
-	envURL = strings.ReplaceAll(envURL, ".sprint.dynatracelabs.", ".sprint.apps.dynatracelabs.")
-	return envURL
-
 }

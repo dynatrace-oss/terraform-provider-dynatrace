@@ -95,11 +95,8 @@ func (me *hybrid_request) Finish(optionalTarget ...any) error {
 		if !credentials.ContainsAPIToken() {
 			return NoAPITokenError
 		}
-		classicRequest := classic_request(*me)
-		if credentials.URL == TestCaseEnvURL {
-			return errors.New("classic")
-		}
-		return classicRequest.Finish(optionalTarget...)
+		apiTokenRequest := api_token_request(*me)
+		return apiTokenRequest.Finish(optionalTarget...)
 	}
 
 	if !credentials.ContainsOAuthOrPlatformToken() {

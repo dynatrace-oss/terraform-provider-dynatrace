@@ -22,7 +22,6 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strings"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
@@ -79,16 +78,28 @@ func (me *api_token_client) Delete(ctx context.Context, url string, expectedStat
 	return req
 }
 
-func (me *api_token_request) Finish(vs ...any) error {
+func (me *api_token_request) Finish(optionalTarget ...any) error {
 	credentials := me.client.Credentials()
 	if !credentials.ContainsAPIToken() {
 		return NoAPITokenError
 	}
-	classicRequest := classic_request(*me)
-	if credentials.URL == TestCaseEnvURL {
-		return errors.New("classic")
+
+	var target any
+	if len(optionalTarget) > 0 {
+		target = optionalTarget[0]
 	}
-	return classicRequest.Finish(vs...)
+
+	client, err := createAPITokenClient(me.client.Credentials().URL, me.client.Credentials().Token)
+	if err != nil {
+		return err
+	}
+
+	pathURL, err := url.Parse(me.url)
+	if err != nil {
+		return err
+	}
+
+	return request(*me).HandleResponse(client, pathURL, target)
 }
 
 type api_token_request request
@@ -103,22 +114,20 @@ func (me *api_token_request) OnResponse(onResponse func(resp *http.Response)) Re
 	return me
 }
 
-type classic_request request
+var apiTokenClientCache = map[string]*rest.Client{}
 
-var classicClientCache = map[string]*rest.Client{}
+var apiTokenClientCacheMutex sync.Mutex
 
-var classicClientCacheMutex sync.Mutex
-
-func createClassicClient(classicURL string, apiToken string) (*rest.Client, error) {
+func createAPITokenClient(classicURL string, apiToken string) (*rest.Client, error) {
 	if classicURL == "" {
 		// sanity check - this should not be empty anymore at this point
 		return nil, NoClassicURLDefinedErr
 	}
 
-	classicClientCacheMutex.Lock()
-	defer classicClientCacheMutex.Unlock()
+	apiTokenClientCacheMutex.Lock()
+	defer apiTokenClientCacheMutex.Unlock()
 
-	if client, found := classicClientCache[classicURL]; found {
+	if client, found := apiTokenClientCache[classicURL]; found {
 		return client, nil
 	}
 
@@ -134,38 +143,7 @@ func createClassicClient(classicURL string, apiToken string) (*rest.Client, erro
 		return nil, err
 	}
 
-	classicClientCache[classicURL] = client
+	apiTokenClientCache[classicURL] = client
 
 	return client, nil
-}
-
-func (me *classic_request) Finish(optionalTarget ...any) error {
-	var target any
-	if len(optionalTarget) > 0 {
-		target = optionalTarget[0]
-	}
-	classicURL := EvalClassicURL(me.client.Credentials().URL)
-
-	client, err := createClassicClient(classicURL, me.client.Credentials().Token)
-	if err != nil {
-		return err
-	}
-
-	pathURL, err := url.Parse(me.url)
-	if err != nil {
-		return err
-	}
-
-	return request(*me).HandleResponse(client, pathURL, target)
-}
-
-func EvalClassicURL(envURL string) string {
-	envURL = strings.TrimSuffix(strings.TrimSpace(envURL), "/")
-	if len(envURL) == 0 {
-		return envURL
-	}
-	envURL = strings.ReplaceAll(envURL, ".dev.apps.dynatracelabs.", ".dev.dynatracelabs.")
-	envURL = strings.ReplaceAll(envURL, ".sprint.apps.dynatracelabs.", ".sprint.dynatracelabs.")
-	envURL = strings.ReplaceAll(envURL, ".apps.dynatrace.", ".live.dynatrace.")
-	return envURL
 }
