@@ -104,6 +104,17 @@
 			"nullable": false,
 			"type": "text"
 		},
+		"objectScopes": {
+			"description": "",
+			"displayName": "Object scopes",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": {
+				"$ref": "#/types/ObjectScopes"
+			}
+		},
 		"schedule": {
 			"default": {
 				"duration": 60,
@@ -127,6 +138,31 @@
 	},
 	"schemaId": "builtin:maintenance-windows",
 	"types": {
+		"ObjectScopes": {
+			"description": "Scopes controlling which objects are affected by the maintenance window.",
+			"displayName": "Object scopes",
+			"documentation": "",
+			"properties": {
+				"syntheticMonitors": {
+					"default": {
+						"disableSyntheticMonitors": false
+					},
+					"description": "",
+					"displayName": "Synthetic monitors",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/SyntheticMonitorSettings"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"OnceTrigger": {
 			"description": "Once trigger definition.",
 			"displayName": "Once Trigger",
@@ -209,6 +245,53 @@
 					"type": {
 						"$ref": "#/types/Trigger"
 					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SyntheticMonitorSettings": {
+			"description": "Configuration for pausing synthetic monitors during the maintenance window.",
+			"displayName": "Synthetic monitor disablement",
+			"documentation": "",
+			"properties": {
+				"disableSyntheticMonitorFilter": {
+					"constraints": [
+						{
+							"customValidatorId": "filter-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"description": "DQL filter selecting which synthetic monitors to pause. Required when synthetic monitors are disabled.",
+					"displayName": "Synthetic monitor filter",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"expectedValue": true,
+						"property": "disableSyntheticMonitors",
+						"type": "EQUALS"
+					},
+					"type": "text"
+				},
+				"disableSyntheticMonitors": {
+					"default": false,
+					"description": "When enabled, synthetic monitors matching the filter are paused during the maintenance window.",
+					"displayName": "Disable synthetic monitors",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "boolean"
 				}
 			},
 			"summaryPattern": "",
@@ -333,5 +416,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1"
+	"version": "1.1"
 }
