@@ -20,15 +20,20 @@ package segments
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 
+	api2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 	segmentsclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/segments"
 
 	segments "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments/settings"
 )
+
+var defaultTimeout = time.Second * 30
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*segments.Segment], error) {
 	platformClient, err := clientSet.PlatformClient()
@@ -43,8 +48,21 @@ type service struct {
 	client *segmentsclient.Client
 }
 
-func (me *service) Get(ctx context.Context, id string, v *segments.Segment) (err error) {
-	response, err := me.client.Get(ctx, id)
+func (me *service) Get(ctx context.Context, id string, v *segments.Segment) error {
+	var response api2.Response
+	// Use retry logic to handle eventual consistency issues when retrieving the segment.
+	err := retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
+		var err error
+		response, err = me.client.Get(ctx, id)
+		if err != nil {
+			if rest.IsNotFoundError(err) {
+				return retry.RetryableError(err)
+			}
+			return retry.NonRetryableError(err)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
