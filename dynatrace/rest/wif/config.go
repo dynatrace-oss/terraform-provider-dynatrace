@@ -15,8 +15,6 @@
 * limitations under the License.
  */
 
-// This package must not import the surrounding rest package: that would put the responses of a token
-// service into the provider's HTTP logging, and those responses are the tokens themselves.
 package wif
 
 // Vendor identifies the workload identity provider that issues the OIDC token.

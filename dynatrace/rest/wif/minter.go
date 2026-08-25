@@ -19,7 +19,6 @@ package wif
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 )
 
@@ -37,6 +36,6 @@ func newMinter(config Config, httpClient *http.Client) (minter, error) {
 	case VendorGitHub:
 		return newGitHubMinter(config.Audience, httpClient)
 	default:
-		return nil, fmt.Errorf("`%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif_vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", config.Vendor, VendorGitHub)
+		return nil, unsupportedVendorError(config.Vendor)
 	}
 }

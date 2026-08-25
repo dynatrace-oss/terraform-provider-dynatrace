@@ -45,17 +45,21 @@ type githubMinter struct {
 	httpClient   *http.Client
 }
 
+func missingCredentialError(variableKey string) error {
+	return fmt.Errorf("unable to get %s environment variable. %s", variableKey, githubPermissionHint)
+}
+
 // newGitHubMinter reads the credentials GitHub injects into the job. They stay valid for the whole
 // job, which is what lets the provider mint a fresh token whenever it needs one.
 func newGitHubMinter(audience string, httpClient *http.Client) (minter, error) {
 	requestURL := envutils.ActionsIDTokenRequestURL.Get()
 	if len(requestURL) == 0 {
-		return nil, fmt.Errorf("unable to get %s environment variable. %s", envutils.ActionsIDTokenRequestURL.Key, githubPermissionHint)
+		return nil, missingCredentialError(envutils.ActionsIDTokenRequestURL.Key)
 	}
 
 	requestToken := envutils.ActionsIDTokenRequestToken.Get()
 	if len(requestToken) == 0 {
-		return nil, fmt.Errorf("unable to get %s environment variable. %s", envutils.ActionsIDTokenRequestToken.Key, githubPermissionHint)
+		return nil, missingCredentialError(envutils.ActionsIDTokenRequestToken.Key)
 	}
 
 	return &githubMinter{

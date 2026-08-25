@@ -43,7 +43,7 @@ func Validate(config Config) error {
 	}
 
 	if config.Vendor != VendorGitHub {
-		return fmt.Errorf("`%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif_vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", config.Vendor, VendorGitHub)
+		return unsupportedVendorError(config.Vendor)
 	}
 
 	if len(config.Audience) == 0 {
@@ -51,4 +51,8 @@ func Validate(config Config) error {
 	}
 
 	return nil
+}
+
+func unsupportedVendorError(vendor Vendor) error {
+	return fmt.Errorf("`%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif_vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", vendor, VendorGitHub)
 }

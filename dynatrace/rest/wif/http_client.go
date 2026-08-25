@@ -53,10 +53,7 @@ func mintingHTTPClient() *http.Client {
 	}
 }
 
-// retriableMintFailure widens the shared default, which only covers 429 and 503: a token service is
-// worth asking again after any server error, and after a round trip that never completed at all.
-// Both are ordinary flakiness on a CI runner, and the request carries nothing that could be applied
-// twice.
+// retriableMintFailure widens the shared default to any server error and to a round trip that never completed.
 func retriableMintFailure(response *http.Response, err error) bool {
 	if err != nil {
 		return true
