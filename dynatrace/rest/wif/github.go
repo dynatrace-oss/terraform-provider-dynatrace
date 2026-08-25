@@ -26,6 +26,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/retry"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
@@ -86,7 +87,7 @@ func (minter *githubMinter) mint(ctx context.Context) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to get ID token: %w", err)
 	}
-	defer drainAndClose(response.Body)
+	defer func() { _ = retry.DrainAndClose(response.Body) }()
 
 	if response.StatusCode != http.StatusOK {
 		// The body is left out: on success it is the ID token itself, and echoing it on failure is

@@ -19,74 +19,59 @@
 package wif
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"sync/atomic"
 	"testing"
-	"time"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/retry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-// answering starts a server that replies with the given status codes in order, repeating the last one
-// once they run out, and returns a retrying client aimed at it together with the request counter. Its
-// backoff is negligible, so the retries can be observed without waiting for the production one.
-func answering(t *testing.T, statusCodes ...int) (*http.Client, string, *atomic.Int64) {
-	t.Helper()
+func TestRetriableMintFailureByStatus(t *testing.T) {
+	retriableByStatus := map[int]bool{
+		http.StatusOK:                  false,
+		http.StatusBadRequest:          false,
+		http.StatusUnauthorized:        false,
+		http.StatusForbidden:           false,
+		http.StatusNotFound:            false,
+		http.StatusTooManyRequests:     true,
+		http.StatusInternalServerError: true,
+		http.StatusBadGateway:          true,
+		http.StatusServiceUnavailable:  true,
+		http.StatusGatewayTimeout:      true,
+	}
 
+	for status, retriable := range retriableByStatus {
+		t.Run(fmt.Sprintf("status_%d", status), func(t *testing.T) {
+			assert.Equal(t, retriable, retriableMintFailure(&http.Response{StatusCode: status}, nil))
+		})
+	}
+}
+
+func TestRetriableMintFailureOnFailedRoundTrip(t *testing.T) {
+	assert.True(t, retriableMintFailure(nil, assert.AnError))
+}
+
+// TestMintingHTTPClientRetriesServerError verifies that retriableMintFailure reaches the transport:
+// HTTP 500 is a status the shared default would have handed back on the first attempt.
+func TestMintingHTTPClientRetriesServerError(t *testing.T) {
 	var requests atomic.Int64
-	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-		attempt := int(requests.Add(1)) - 1
-		writer.WriteHeader(statusCodes[min(attempt, len(statusCodes)-1)])
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
+		if requests.Add(1) == 1 {
+			writer.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		writer.WriteHeader(http.StatusOK)
 	}))
 	t.Cleanup(server.Close)
 
-	client := &http.Client{Transport: &retryTransport{base: http.DefaultTransport, backoff: time.Millisecond}}
-
-	return client, server.URL, &requests
-}
-
-func TestRetryTransportRetriesServerError(t *testing.T) {
-	client, url, requests := answering(t, http.StatusInternalServerError, http.StatusOK)
-
-	response, err := client.Get(url)
+	response, err := mintingHTTPClient().Get(server.URL)
 	require.NoError(t, err)
-	defer drainAndClose(response.Body)
+	defer func() { _ = retry.DrainAndClose(response.Body) }()
 
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 	assert.Equal(t, int64(2), requests.Load())
-}
-
-func TestRetryTransportRetriesTooManyRequests(t *testing.T) {
-	client, url, requests := answering(t, http.StatusTooManyRequests, http.StatusOK)
-
-	response, err := client.Get(url)
-	require.NoError(t, err)
-	defer drainAndClose(response.Body)
-
-	assert.Equal(t, http.StatusOK, response.StatusCode)
-	assert.Equal(t, int64(2), requests.Load())
-}
-
-func TestRetryTransportDoesNotRetryClientError(t *testing.T) {
-	client, url, requests := answering(t, http.StatusForbidden)
-
-	response, err := client.Get(url)
-	require.NoError(t, err)
-	defer drainAndClose(response.Body)
-
-	assert.Equal(t, http.StatusForbidden, response.StatusCode)
-	assert.Equal(t, int64(1), requests.Load())
-}
-
-func TestRetryTransportGivesUpAfterMaxAttempts(t *testing.T) {
-	client, url, requests := answering(t, http.StatusInternalServerError)
-
-	response, err := client.Get(url)
-	require.NoError(t, err)
-	defer drainAndClose(response.Body)
-
-	assert.Equal(t, http.StatusInternalServerError, response.StatusCode)
-	assert.Equal(t, int64(mintAttempts), requests.Load())
 }
