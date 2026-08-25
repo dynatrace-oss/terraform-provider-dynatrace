@@ -130,7 +130,6 @@ func SuppressJSONorEOT(k, old, new string, d *schema.ResourceData) bool {
 	return equalLineByLine(old, new)
 }
 
-
 func Println(path string, message string, b ...bool) {
 	if !envutils.DynatraceDashboardTests.Get() {
 		return

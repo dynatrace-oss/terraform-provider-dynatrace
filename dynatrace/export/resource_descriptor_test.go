@@ -101,6 +101,18 @@ func (m *mockService[T]) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
+// emptyGetter is a mock implementation of config.Getter that returns empty values for any key
+type emptyGetter struct {
+}
+
+func (e emptyGetter) Get(key string) any {
+	return ""
+}
+
+func getEmptyProviderConfiguration(t *testing.T) *config.ProviderConfiguration {
+	return config.ProviderConfigureGeneric(t.Context(), &emptyGetter{})
+}
+
 func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 	t.Run("adds weak ID dependency for Settings 2.0 with insert after", func(t *testing.T) {
 		// Create a resource with Settings 2.0 schema that has InsertAfter
@@ -118,7 +130,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
+		AddInsertAfterWeakIDDependencies(resources, getEmptyProviderConfiguration(t))
 
 		// Verify
 		descriptor := resources[testResType]
@@ -142,7 +154,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
+		AddInsertAfterWeakIDDependencies(resources, getEmptyProviderConfiguration(t))
 
 		// Verify
 		descriptor := resources[testResType]
@@ -166,7 +178,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
+		AddInsertAfterWeakIDDependencies(resources, getEmptyProviderConfiguration(t))
 
 		// Verify - no dependency should be added for non-Settings 2.0 schema
 		descriptor := resources[testResType]
@@ -189,7 +201,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
+		AddInsertAfterWeakIDDependencies(resources, getEmptyProviderConfiguration(t))
 
 		// Verify - no dependency should be added for schema without InsertAfter
 		descriptor := resources[testResType]
@@ -213,7 +225,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
+		AddInsertAfterWeakIDDependencies(resources, getEmptyProviderConfiguration(t))
 
 		// Verify - should still have only one dependency
 		descriptor := resources[testResType]
@@ -257,7 +269,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
+		AddInsertAfterWeakIDDependencies(resources, getEmptyProviderConfiguration(t))
 
 		// Verify each resource was processed correctly
 		assert.True(t, resources[resTypeWithInsertAfter].HasWeakIDDependencyTo(resTypeWithInsertAfter),
@@ -287,7 +299,7 @@ func TestAddInsertAfterWeakIDDependencies(t *testing.T) {
 		}
 
 		// Execute
-		AddInsertAfterWeakIDDependencies(resources, &config.ProviderConfiguration{})
+		AddInsertAfterWeakIDDependencies(resources, getEmptyProviderConfiguration(t))
 
 		// Verify - should have both the existing dep and the new weak ID dep
 		descriptor := resources[testResType]

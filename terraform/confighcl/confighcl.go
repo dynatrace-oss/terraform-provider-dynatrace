@@ -27,7 +27,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-
 type bootstrapDecoder struct {
 	Reader schema.FieldReader
 }

@@ -22,13 +22,13 @@ package hostheaders_test
 import (
 	"context"
 	"fmt"
-	"os"
 	"testing"
 
 	hostheadersvc "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/hostheaders"
 	hostheaders "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/rum/hostheaders/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/stretchr/testify/assert"
@@ -40,17 +40,11 @@ import (
 // builtin:rum.host-headers is used as the test vehicle because it has no custom
 // validators, no side-effects, and a single plain-text field.
 func TestValidateDoesNotCreateObjects(t *testing.T) {
-	envURL := os.Getenv("DYNATRACE_ENV_URL")
-	apiToken := os.Getenv("DYNATRACE_API_TOKEN")
-	if envURL == "" || apiToken == "" {
-		t.Skip("Environment Variables DYNATRACE_ENV_URL and DYNATRACE_API_TOKEN must be specified")
-	}
+	pc := config.ProviderConfigureGeneric(t.Context(), testing2.EnvironmentGetter(t))
+	service, err := settings20.Service[*hostheaders.Settings](pc, hostheadersvc.SchemaID, hostheadersvc.SchemaVersion)
+	require.NoError(t, err)
 
 	headerName := acctest.RandStringFromCharSet(10, acctest.CharSetAlpha)
-
-	clientSet := &config.ProviderConfiguration{EnvironmentURL: envURL, APIToken: apiToken}
-	service, err := settings20.Service[*hostheaders.Settings](clientSet, hostheadersvc.SchemaID, hostheadersvc.SchemaVersion)
-	require.NoError(t, err)
 
 	// If Validate accidentally creates an object, clean it up so subsequent
 	// test runs are not polluted.

@@ -49,10 +49,10 @@ type ProviderConfiguration struct {
 
 func (c *ProviderConfiguration) Credentials() *rest.Credentials {
 	credentials := &rest.Credentials{
-		Token:    c.APIToken,
-		URL:      c.EnvironmentURL,
-		IAM:      c.IAM,
-		Platform: c.Platform,
+		Token:                 c.APIToken,
+		ClassicEnvironmentURL: c.EnvironmentURL,
+		IAM:                   c.IAM,
+		Platform:              c.Platform,
 	}
 	credentials.Cluster.URL = c.ClusterAPIV2URL
 	credentials.Cluster.Token = c.ClusterAPIToken

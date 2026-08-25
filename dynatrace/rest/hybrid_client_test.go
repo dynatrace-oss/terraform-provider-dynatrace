@@ -17,18 +17,17 @@
 * limitations under the License.
  */
 
-package rest
+package rest_test
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"strings"
 	"testing"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -36,136 +35,91 @@ import (
 
 const mockToken = "########"
 
-var credential_repo = map[string]Credentials{
-	"unconfigured":                           {URL: TestCaseEnvURL},
-	"api-token":                              {URL: TestCaseEnvURL, Token: mockToken},
-	"oauth":                                  {URL: TestCaseEnvURL, Platform: PlatformCredentials{ClientID: mockToken, ClientSecret: mockToken}},
-	"platform-token":                         {URL: TestCaseEnvURL, Platform: PlatformCredentials{PlatformToken: mockToken}},
-	"api-token-and-oauth":                    {URL: TestCaseEnvURL, Token: mockToken, Platform: PlatformCredentials{ClientID: mockToken, ClientSecret: mockToken}},
-	"api-token-and-platform-token":           {URL: TestCaseEnvURL, Token: mockToken, Platform: PlatformCredentials{PlatformToken: mockToken}},
-	"oauth-and-platform-token":               {URL: TestCaseEnvURL, Platform: PlatformCredentials{ClientID: mockToken, ClientSecret: mockToken, PlatformToken: mockToken}},
-	"api-token-and-oauth-and-platform-token": {URL: TestCaseEnvURL, Token: mockToken, Platform: PlatformCredentials{PlatformToken: mockToken, ClientID: mockToken, ClientSecret: mockToken}},
-}
-
-type testcase struct {
-	credentials      creds_with_name
-	IsOAuthPreferred bool
-	Expected         error
-}
-
-func (t testcase) Credentials() *Credentials {
-	return &t.credentials.Credentials
-}
-
-var expectedAPITokenError = errors.New("No API Token has been specified")
-var expectedOAuthCredsError = errors.New("Neither OAuth Credentials nor Platform Token have been specified")
-var classicChosen = errors.New("classic")
-var platformChosen = errors.New("platform")
-
-type creds_with_name struct {
-	Name        string
-	Credentials Credentials
-}
-
-func credentials(name string) creds_with_name {
-	return creds_with_name{Name: name, Credentials: credential_repo[name]}
-}
-
-var testcases = []testcase{
-	{
-		credentials:      credentials("unconfigured"),
-		IsOAuthPreferred: false,
-		Expected:         expectedAPITokenError,
-	},
-	{
-		credentials:      credentials("unconfigured"),
-		IsOAuthPreferred: true,
-		Expected:         expectedOAuthCredsError,
-	},
-	{
-		credentials:      credentials("api-token"),
-		IsOAuthPreferred: false,
-		Expected:         classicChosen,
-	},
-	{
-		credentials:      credentials("api-token"),
-		IsOAuthPreferred: true,
-		Expected:         classicChosen,
-	},
-	{
-		credentials:      credentials("oauth"),
-		IsOAuthPreferred: false,
-		Expected:         platformChosen,
-	},
-	{
-		credentials:      credentials("oauth"),
-		IsOAuthPreferred: true,
-		Expected:         platformChosen,
-	},
-	{
-		credentials:      credentials("platform-token"),
-		IsOAuthPreferred: false,
-		Expected:         platformChosen,
-	},
-	{
-		credentials:      credentials("platform-token"),
-		IsOAuthPreferred: true,
-		Expected:         platformChosen,
-	},
-	{
-		credentials:      credentials("oauth-and-platform-token"),
-		IsOAuthPreferred: false,
-		Expected:         platformChosen,
-	},
-	{
-		credentials:      credentials("oauth-and-platform-token"),
-		IsOAuthPreferred: true,
-		Expected:         platformChosen,
-	},
-	{
-		credentials:      credentials("api-token-and-oauth"),
-		IsOAuthPreferred: false,
-		Expected:         classicChosen,
-	},
-	{
-		credentials:      credentials("api-token-and-oauth"),
-		IsOAuthPreferred: true,
-		Expected:         platformChosen,
-	},
-	{
-		credentials:      credentials("api-token-and-platform-token"),
-		IsOAuthPreferred: false,
-		Expected:         classicChosen,
-	},
-	{
-		credentials:      credentials("api-token-and-platform-token"),
-		IsOAuthPreferred: true,
-		Expected:         platformChosen,
-	},
-	{
-		credentials:      credentials("api-token-and-oauth-and-platform-token"),
-		IsOAuthPreferred: false,
-		Expected:         classicChosen,
-	},
-	{
-		credentials:      credentials("api-token-and-oauth-and-platform-token"),
-		IsOAuthPreferred: true,
-		Expected:         platformChosen,
-	},
-}
-
 func TestHybridClient(t *testing.T) {
-	for _, testcase := range testcases {
-		testCaseName := testcase.credentials.Name
-		if testcase.IsOAuthPreferred {
-			testCaseName = testCaseName + "/oauth-pref"
-		}
-		t.Run(testCaseName, func(t *testing.T) {
-			t.Parallel()
-			ctx := context.WithValue(t.Context(), envutils.DynatraceHTTPOAuthPreference.Key, testcase.IsOAuthPreferred)
-			expect(t, testcase.Expected, HybridClient(testcase.Credentials()).Get(ctx, "").Finish())
+	baseURL, tokenURL := newHybridTestServer(t)
+
+	oauth := rest.PlatformCredentials{EnvironmentURL: baseURL, ClientID: mockToken, ClientSecret: mockToken, TokenURL: tokenURL}
+	oauthAndPlatformToken := rest.PlatformCredentials{EnvironmentURL: baseURL, ClientID: mockToken, ClientSecret: mockToken, TokenURL: tokenURL, PlatformToken: mockToken}
+	platformToken := rest.PlatformCredentials{EnvironmentURL: baseURL, PlatformToken: mockToken}
+
+	tests := []struct {
+		name           string
+		creds          *rest.Credentials
+		oauthPreferred bool
+		wantErr        error
+		wantClassic    bool
+		wantPlatform   bool
+	}{
+		{name: "unconfigured", creds: &rest.Credentials{}, wantErr: rest.NoAPITokenError},
+		{name: "unconfigured, oauth preferred", creds: &rest.Credentials{}, oauthPreferred: true, wantErr: rest.NoOAuthCredentialsError},
+
+		{name: "api token", creds: &rest.Credentials{ClassicEnvironmentURL: baseURL, Token: mockToken}, wantClassic: true},
+		{name: "api token, oauth preferred", creds: &rest.Credentials{ClassicEnvironmentURL: baseURL, Token: mockToken}, oauthPreferred: true, wantClassic: true},
+		{name: "oauth", creds: &rest.Credentials{Platform: oauth}, wantPlatform: true},
+		{name: "oauth, oauth preferred", creds: &rest.Credentials{Platform: oauth}, oauthPreferred: true, wantPlatform: true},
+
+		{name: "oauth and platform token", creds: &rest.Credentials{Platform: oauthAndPlatformToken}, wantPlatform: true},
+		{name: "oauth and platform token, oauth preferred", creds: &rest.Credentials{Platform: oauthAndPlatformToken}, oauthPreferred: true, wantPlatform: true},
+
+		{name: "api token and oauth", creds: &rest.Credentials{ClassicEnvironmentURL: baseURL, Token: mockToken, Platform: oauth}, wantClassic: true},
+		{name: "api token and oauth, oauth preferred", creds: &rest.Credentials{ClassicEnvironmentURL: baseURL, Token: mockToken, Platform: oauth}, oauthPreferred: true, wantPlatform: true},
+
+		{name: "api token and platform token", creds: &rest.Credentials{ClassicEnvironmentURL: baseURL, Token: mockToken, Platform: platformToken}, wantClassic: true},
+		{name: "api token and platform token, oauth preferred", creds: &rest.Credentials{ClassicEnvironmentURL: baseURL, Token: mockToken, Platform: platformToken}, oauthPreferred: true, wantPlatform: true},
+
+		{name: "api token, oauth and platform token", creds: &rest.Credentials{ClassicEnvironmentURL: baseURL, Token: mockToken, Platform: oauthAndPlatformToken}, wantClassic: true},
+		{name: "api token, oauth and platform token, oauth preferred", creds: &rest.Credentials{ClassicEnvironmentURL: baseURL, Token: mockToken, Platform: oauthAndPlatformToken}, oauthPreferred: true, wantPlatform: true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctx := t.Context()
+			if tt.oauthPreferred {
+				ctx = context.WithValue(ctx, envutils.DynatraceHTTPOAuthPreference.Key, true)
+			}
+
+			var v struct {
+				Classic  bool `json:"classic"`
+				Platform bool `json:"platform"`
+			}
+			err := rest.HybridClient(tt.creds).Get(ctx, "").Finish(&v)
+
+			if tt.wantErr != nil {
+				assert.ErrorIs(t, err, tt.wantErr)
+				return
+			}
+			require.NoError(t, err)
+			assert.Equal(t, tt.wantClassic, v.Classic)
+			assert.Equal(t, tt.wantPlatform, v.Platform)
 		})
 	}
+}
+
+func newHybridTestServer(t *testing.T) (baseURL, tokenURL string) {
+	tokenPath := "/sso/oauth2/token"
+
+	writeJSON := func(w http.ResponseWriter, body string) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, err := w.Write([]byte(body))
+		require.NoError(t, err)
+	}
+
+	mux := http.NewServeMux()
+	mux.HandleFunc(tokenPath, func(w http.ResponseWriter, r *http.Request) {
+		writeJSON(w, `{"access_token": "tok","token_type":"Bearer","expires_in":3600}`)
+	})
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.Header.Get("Authorization"), "Api-Token") {
+			writeJSON(w, `{"classic": true}`)
+			return
+		}
+		writeJSON(w, `{"platform": true}`)
+	})
+
+	srv := httptest.NewServer(mux)
+	t.Cleanup(srv.Close)
+	return srv.URL, srv.URL + tokenPath
 }
 
 func TestApiTokenClient(t *testing.T) {
@@ -179,15 +133,14 @@ func TestApiTokenClient(t *testing.T) {
 			expectedURL, err := url.JoinPath(activeGatePostfix, endpoint)
 			require.NoError(t, err)
 			require.Equal(t, expectedURL, r.URL.Path)
-			require.Equal(t, expectedURL, r.URL.Path)
 			w.WriteHeader(http.StatusOK)
 			_, _ = w.Write([]byte("{}"))
 		}))
 		activeGateURL, err := url.JoinPath(server.URL, activeGatePostfix)
 		require.NoError(t, err)
 
-		cred := Credentials{URL: activeGateURL, Token: mockToken}
-		client := HybridClient(&cred)
+		cred := rest.Credentials{ClassicEnvironmentURL: activeGateURL, Token: mockToken}
+		client := rest.HybridClient(&cred)
 
 		req := client.Get(t.Context(), endpoint)
 		err = req.Finish()
@@ -195,72 +148,21 @@ func TestApiTokenClient(t *testing.T) {
 	})
 
 	t.Run("Errors on empty env URL", func(t *testing.T) {
-		cred := Credentials{URL: "", Token: mockToken}
-		client := HybridClient(&cred)
+		cred := rest.Credentials{ClassicEnvironmentURL: "", Token: mockToken}
+		client := rest.HybridClient(&cred)
 
 		req := client.Get(t.Context(), endpoint)
 		err := req.Finish()
-		assert.ErrorIs(t, err, NoClassicURLDefinedErr)
+		assert.ErrorIs(t, err, rest.NoClassicURLDefinedErr)
 	})
 
 	t.Run("Errors on invalid path", func(t *testing.T) {
-		cred := Credentials{URL: "my-url", Token: mockToken}
-		client := HybridClient(&cred)
+		cred := rest.Credentials{ClassicEnvironmentURL: "my-url", Token: mockToken}
+		client := rest.HybridClient(&cred)
 
 		req := client.Get(t.Context(), ":/invalid-url")
 		err := req.Finish()
 		expectedErr := &url.Error{}
 		assert.ErrorAs(t, err, &expectedErr)
 	})
-
-	t.Run("Sets correct headers", func(t *testing.T) {
-		customHeaderName := "my-header"
-		customHeaderValue := "my-value"
-		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			expectedURL, err := url.JoinPath(activeGatePostfix, endpoint)
-			require.NoError(t, err)
-			require.Equal(t, expectedURL, r.URL.Path)
-			require.Equal(t, fmt.Sprintf("Api-Token %s", mockToken), r.Header.Get("Authorization"))
-			require.Equal(t, customHeaderValue, r.Header.Get(customHeaderName))
-			w.WriteHeader(http.StatusOK)
-			_, _ = w.Write([]byte("{}"))
-		}))
-		activeGateURL, err := url.JoinPath(server.URL, activeGatePostfix)
-		require.NoError(t, err)
-
-		cred := Credentials{URL: activeGateURL, Token: mockToken}
-		client := HybridClient(&cred)
-
-		req := client.Get(t.Context(), endpoint)
-		req.SetHeader(customHeaderName, customHeaderValue)
-		err = req.Finish()
-		assert.NoError(t, err)
-	})
-}
-
-func expect(t *testing.T, expected error, actual error) {
-	if expected == nil {
-		if actual == nil {
-			return
-		}
-		actualError := actual.Error()
-		if idx := strings.Index(actualError, "."); idx >= 0 {
-			actualError = actualError[:idx]
-		}
-		t.Errorf("expected no error, actual: %s", actualError)
-		t.FailNow()
-	}
-	if actual == nil {
-		t.Errorf("expected: '%s...', but no error", expected.Error())
-		t.FailNow()
-	}
-	if strings.HasPrefix(actual.Error(), expected.Error()) {
-		return
-	}
-	actualError := actual.Error()
-	if idx := strings.Index(actualError, "."); idx >= 0 {
-		actualError = actualError[:idx]
-	}
-	t.Errorf("expected: '%s...', actual: '%s'", expected.Error(), actualError)
-	t.FailNow()
 }

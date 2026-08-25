@@ -22,7 +22,6 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strings"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
@@ -56,7 +55,7 @@ func (me *api_token_client) Get(ctx context.Context, url string, expectedStatusC
 }
 
 func (me *api_token_client) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload, headers: map[string]string{"Content-Type": "application/json"}}
+	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
@@ -64,7 +63,7 @@ func (me *api_token_client) Post(ctx context.Context, url string, payload any, e
 }
 
 func (me *api_token_client) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload, headers: map[string]string{"Content-Type": "application/json"}}
+	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
@@ -79,16 +78,28 @@ func (me *api_token_client) Delete(ctx context.Context, url string, expectedStat
 	return req
 }
 
-func (me *api_token_request) Finish(vs ...any) error {
+func (me *api_token_request) Finish(optionalTarget ...any) error {
 	credentials := me.client.Credentials()
 	if !credentials.ContainsAPIToken() {
 		return NoAPITokenError
 	}
-	classicRequest := classic_request(*me)
-	if credentials.URL == TestCaseEnvURL {
-		return errors.New("classic")
+
+	var target any
+	if len(optionalTarget) > 0 {
+		target = optionalTarget[0]
 	}
-	return classicRequest.Finish(vs...)
+
+	client, err := createAPITokenClient(me.client.Credentials().ClassicEnvironmentURL, me.client.Credentials().Token)
+	if err != nil {
+		return err
+	}
+
+	pathURL, err := url.Parse(me.url)
+	if err != nil {
+		return err
+	}
+
+	return request(*me).HandleResponse(client, pathURL, target)
 }
 
 type api_token_request request
@@ -103,29 +114,20 @@ func (me *api_token_request) OnResponse(onResponse func(resp *http.Response)) Re
 	return me
 }
 
-func (me *api_token_request) SetHeader(name string, value string) {
-	if me.headers == nil {
-		me.headers = map[string]string{}
-	}
-	me.headers[name] = value
-}
+var apiTokenClientCache = map[string]*rest.Client{}
 
-type classic_request request
+var apiTokenClientCacheMutex sync.Mutex
 
-var classicClientCache = map[string]*rest.Client{}
-
-var classicClientCacheMutex sync.Mutex
-
-func createClassicClient(classicURL string, apiToken string) (*rest.Client, error) {
+func createAPITokenClient(classicURL string, apiToken string) (*rest.Client, error) {
 	if classicURL == "" {
 		// sanity check - this should not be empty anymore at this point
 		return nil, NoClassicURLDefinedErr
 	}
 
-	classicClientCacheMutex.Lock()
-	defer classicClientCacheMutex.Unlock()
+	apiTokenClientCacheMutex.Lock()
+	defer apiTokenClientCacheMutex.Unlock()
 
-	if client, found := classicClientCache[classicURL]; found {
+	if client, found := apiTokenClientCache[classicURL]; found {
 		return client, nil
 	}
 
@@ -141,41 +143,7 @@ func createClassicClient(classicURL string, apiToken string) (*rest.Client, erro
 		return nil, err
 	}
 
-	classicClientCache[classicURL] = client
+	apiTokenClientCache[classicURL] = client
 
 	return client, nil
-}
-
-func (me *classic_request) Finish(optionalTarget ...any) error {
-	var target any
-	if len(optionalTarget) > 0 {
-		target = optionalTarget[0]
-	}
-	classicURL := EvalClassicURL(me.client.Credentials().URL)
-
-	client, err := createClassicClient(classicURL, me.client.Credentials().Token)
-	if err != nil {
-		return err
-	}
-	for headername, headervalue := range me.headers {
-		client.SetHeader(headername, headervalue)
-	}
-
-	pathURL, err := url.Parse(me.url)
-	if err != nil {
-		return err
-	}
-
-	return request(*me).HandleResponse(client, pathURL, target)
-}
-
-func EvalClassicURL(envURL string) string {
-	envURL = strings.TrimSuffix(strings.TrimSpace(envURL), "/")
-	if len(envURL) == 0 {
-		return envURL
-	}
-	envURL = strings.ReplaceAll(envURL, ".dev.apps.dynatracelabs.", ".dev.dynatracelabs.")
-	envURL = strings.ReplaceAll(envURL, ".sprint.apps.dynatracelabs.", ".sprint.dynatracelabs.")
-	envURL = strings.ReplaceAll(envURL, ".apps.dynatrace.", ".live.dynatrace.")
-	return envURL
 }

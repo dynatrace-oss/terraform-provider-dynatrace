@@ -168,9 +168,7 @@ func (me *service) Create(ctx context.Context, v *extension_config.Settings) (*a
 func (me *service) ensureInstalled(ctx context.Context, name string, version string) error {
 	client := rest.APITokenClient(me.clientSet.Credentials())
 	if strings.HasPrefix(name, "custom:") {
-		request := client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/%s", url.PathEscape(name), url.QueryEscape(version)), 200)
-		request.SetHeader("Accept", "application/json; charset=utf-8")
-		return request.Finish()
+		return client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/%s", url.PathEscape(name), url.QueryEscape(version)), 200).Finish()
 	}
 	response := struct {
 		Name    string `json:"extensionName"`

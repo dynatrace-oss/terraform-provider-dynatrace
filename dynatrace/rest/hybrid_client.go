@@ -19,7 +19,6 @@ package rest
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
@@ -48,7 +47,7 @@ func (me *hybrid_client) Get(ctx context.Context, url string, expectedStatusCode
 }
 
 func (me *hybrid_client) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload, headers: headers.ContentType.ApplicationJSON}
+	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
@@ -56,7 +55,7 @@ func (me *hybrid_client) Post(ctx context.Context, url string, payload any, expe
 }
 
 func (me *hybrid_client) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload, headers: headers.ContentType.ApplicationJSON}
+	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
@@ -95,11 +94,8 @@ func (me *hybrid_request) Finish(optionalTarget ...any) error {
 		if !credentials.ContainsAPIToken() {
 			return NoAPITokenError
 		}
-		classicRequest := classic_request(*me)
-		if credentials.URL == TestCaseEnvURL {
-			return errors.New("classic")
-		}
-		return classicRequest.Finish(optionalTarget...)
+		apiTokenRequest := api_token_request(*me)
+		return apiTokenRequest.Finish(optionalTarget...)
 	}
 
 	if !credentials.ContainsOAuthOrPlatformToken() {
@@ -107,9 +103,6 @@ func (me *hybrid_request) Finish(optionalTarget ...any) error {
 	}
 
 	platformRequest := platform_request(*me)
-	if credentials.URL == TestCaseEnvURL {
-		return errors.New("platform")
-	}
 	return platformRequest.Finish(optionalTarget...)
 }
 
@@ -123,13 +116,6 @@ func (me *hybrid_request) Expect(codes ...int) Request {
 func (me *hybrid_request) OnResponse(onResponse func(resp *http.Response)) Request {
 	me.onResponse = onResponse
 	return me
-}
-
-func (me *hybrid_request) SetHeader(name string, value string) {
-	if me.headers == nil {
-		me.headers = map[string]string{}
-	}
-	me.headers[name] = value
 }
 
 func NewPreferOAuthContext(ctx context.Context) context.Context {

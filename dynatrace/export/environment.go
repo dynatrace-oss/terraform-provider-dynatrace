@@ -64,7 +64,7 @@ type Environment struct {
 }
 
 func (me *Environment) TenantID() string {
-	envURL := me.ClientSet.Credentials().URL
+	envURL := me.ClientSet.Credentials().ClassicEnvironmentURL
 
 	var tenant string
 	if strings.Contains(envURL, "/e/") {

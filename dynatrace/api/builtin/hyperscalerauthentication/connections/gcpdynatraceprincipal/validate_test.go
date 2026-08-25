@@ -20,7 +20,6 @@
 package gcpdynatraceprincipal_test
 
 import (
-	"os"
 	"testing"
 
 	gcpservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcp"
@@ -28,6 +27,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/gcpdynatraceprincipal"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
+	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -37,14 +37,8 @@ import (
 // Dynatrace GCP Principal creation as a side effect of submitting ValidConnection to the validate
 // endpoint; if the payload is rejected, no principal will ever be created.
 func TestValidateIsSuccessfulForGcpConnection(t *testing.T) {
-	envURL := os.Getenv("DYNATRACE_ENV_URL")
-	apiToken := os.Getenv("DYNATRACE_API_TOKEN")
-	if envURL == "" || apiToken == "" {
-		t.Skip("Environment Variables DYNATRACE_ENV_URL and DYNATRACE_API_TOKEN must be specified")
-	}
-
-	clientSet := &config.ProviderConfiguration{EnvironmentURL: envURL, APIToken: apiToken}
-	service, err := settings20.Service[*gcpsettings.Settings](clientSet, gcpservice.SchemaID, gcpservice.SchemaVersion)
+	pc := config.ProviderConfigureGeneric(t.Context(), testing2.EnvironmentGetter(t))
+	service, err := settings20.Service[*gcpsettings.Settings](pc, gcpservice.SchemaID, gcpservice.SchemaVersion)
 	require.NoError(t, err)
 
 	validator, ok := service.(settings.Validator[*gcpsettings.Settings])

@@ -44,7 +44,7 @@ func DataSourceRead(d *schema.ResourceData, m any) error {
 		return err
 	}
 
-	envURL := clientSet.Credentials().URL
+	envURL := clientSet.Credentials().ClassicEnvironmentURL
 	if len(envURL) == 0 {
 		d.SetId("")
 		return nil
