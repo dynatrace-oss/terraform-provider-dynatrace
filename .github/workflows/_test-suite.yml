@@ -270,7 +270,9 @@ jobs:
           merge-multiple: true
 
       - name: 🧮 Collect test results
-        run: go run ./tools/testresults --input junit-results --out-junit tests-results.xml --out-list test-report.txt
+        env:
+          JOB_CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: go run ./tools/testresults --input junit-results --output test-report.json
 
       - name: 📡 Send test results to Dynatrace
         if: always()
@@ -278,17 +280,15 @@ jobs:
         with:
           platform_url: ${{ secrets.SFM_PLATFORM_URL }}
           platform_token: ${{ secrets.SFM_PLATFORM_TOKEN }}
-          events_path: 'v1/custom/events.sdlc/cacapiingest'
-          tests_file: test-report.txt
+          events_path: 'custom/events.sdlc/cacapiingest'
+          tests_file: test-report.json
 
       - name: ⬆️ Archive test results
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
         if: always()
         with:
           name: test-results
-          path: |
-            tests-results.xml
-            test-report.txt
+          path: test-report.json
 
   sonar_scan:
     name: SonarQube lint and test coverage
