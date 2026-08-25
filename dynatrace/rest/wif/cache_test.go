@@ -112,7 +112,7 @@ func TestTokenSourceForRejectsInvalidConfiguration(t *testing.T) {
 
 	_, err := TokenSourceFor(Config{Vendor: VendorGitHub})
 
-	assert.EqualError(t, err, "No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
+	assert.EqualError(t, err, "no audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
 }
 
 // A cached failure would outlive a fix to the environment.

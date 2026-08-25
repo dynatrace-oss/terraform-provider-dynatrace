@@ -50,12 +50,12 @@ type githubMinter struct {
 func newGitHubMinter(audience string, httpClient *http.Client) (minter, error) {
 	requestURL := envutils.ActionsIDTokenRequestURL.Get()
 	if len(requestURL) == 0 {
-		return nil, ConfigError{fmt.Sprintf("Unable to get %s environment variable. %s", envutils.ActionsIDTokenRequestURL.Key, githubPermissionHint)}
+		return nil, fmt.Errorf("unable to get %s environment variable. %s", envutils.ActionsIDTokenRequestURL.Key, githubPermissionHint)
 	}
 
 	requestToken := envutils.ActionsIDTokenRequestToken.Get()
 	if len(requestToken) == 0 {
-		return nil, ConfigError{fmt.Sprintf("Unable to get %s environment variable. %s", envutils.ActionsIDTokenRequestToken.Key, githubPermissionHint)}
+		return nil, fmt.Errorf("unable to get %s environment variable. %s", envutils.ActionsIDTokenRequestToken.Key, githubPermissionHint)
 	}
 
 	return &githubMinter{

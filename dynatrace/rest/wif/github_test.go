@@ -162,7 +162,7 @@ func TestGitHubMinterRequiresRequestURLVariable(t *testing.T) {
 
 	_, err := newGitHubMinter("dynatrace", http.DefaultClient)
 
-	assert.EqualError(t, err, "Unable to get ACTIONS_ID_TOKEN_REQUEST_URL environment variable. `wif_vendor = \"github\"` only works inside a GitHub Actions job that is allowed to request an OIDC token. Add `permissions: { id-token: write }` to the workflow or to the job.")
+	assert.EqualError(t, err, "unable to get ACTIONS_ID_TOKEN_REQUEST_URL environment variable. `wif_vendor = \"github\"` only works inside a GitHub Actions job that is allowed to request an OIDC token. Add `permissions: { id-token: write }` to the workflow or to the job.")
 }
 
 func TestGitHubMinterRequiresRequestTokenVariable(t *testing.T) {
@@ -171,5 +171,5 @@ func TestGitHubMinterRequiresRequestTokenVariable(t *testing.T) {
 
 	_, err := newGitHubMinter("dynatrace", http.DefaultClient)
 
-	assert.EqualError(t, err, "Unable to get ACTIONS_ID_TOKEN_REQUEST_TOKEN environment variable. `wif_vendor = \"github\"` only works inside a GitHub Actions job that is allowed to request an OIDC token. Add `permissions: { id-token: write }` to the workflow or to the job.")
+	assert.EqualError(t, err, "unable to get ACTIONS_ID_TOKEN_REQUEST_TOKEN environment variable. `wif_vendor = \"github\"` only works inside a GitHub Actions job that is allowed to request an OIDC token. Add `permissions: { id-token: write }` to the workflow or to the job.")
 }

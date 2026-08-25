@@ -18,6 +18,7 @@
 package wif
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -31,22 +32,22 @@ func Validate(config Config) error {
 	}
 
 	if len(config.Vendor) > 0 && len(config.StaticToken) > 0 {
-		return ConfigError{"A Workload Identity Federation vendor and a pre-minted OIDC token have both been specified. These options are mutually exclusive. Unset either `wif_vendor` (`DYNATRACE_WIF_VENDOR`) or `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`)"}
+		return errors.New("a Workload Identity Federation vendor and a pre-minted OIDC token have both been specified. These options are mutually exclusive. Unset either `wif_vendor` (`DYNATRACE_WIF_VENDOR`) or `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`)")
 	}
 
 	if len(config.StaticToken) > 0 {
 		if strings.Count(config.StaticToken, ".") != jwtSegmentCount-1 {
-			return ConfigError{"The value of `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`) is not a JWT: expected three dot-separated segments"}
+			return errors.New("the value of `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`) is not a JWT: expected three dot-separated segments")
 		}
 		return nil
 	}
 
 	if config.Vendor != VendorGitHub {
-		return ConfigError{fmt.Sprintf("`%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif_vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", config.Vendor, VendorGitHub)}
+		return fmt.Errorf("`%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif_vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", config.Vendor, VendorGitHub)
 	}
 
 	if len(config.Audience) == 0 {
-		return ConfigError{"No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that"}
+		return errors.New("no audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
 	}
 
 	return nil

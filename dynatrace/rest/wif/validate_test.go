@@ -35,7 +35,7 @@ func TestValidateAcceptsVendorWithAudience(t *testing.T) {
 func TestValidateRejectsVendorWithoutAudience(t *testing.T) {
 	err := Validate(Config{Vendor: VendorGitHub})
 
-	assert.EqualError(t, err, "No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
+	assert.EqualError(t, err, "no audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
 }
 
 func TestValidateRejectsUnsupportedVendor(t *testing.T) {
@@ -52,11 +52,11 @@ func TestValidateAcceptsStaticTokenWithoutAudience(t *testing.T) {
 func TestValidateRejectsStaticTokenThatIsNotAJWT(t *testing.T) {
 	err := Validate(Config{StaticToken: "not-a-jwt"})
 
-	assert.EqualError(t, err, "The value of `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`) is not a JWT: expected three dot-separated segments")
+	assert.EqualError(t, err, "the value of `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`) is not a JWT: expected three dot-separated segments")
 }
 
 func TestValidateRejectsVendorAndStaticTokenTogether(t *testing.T) {
 	err := Validate(Config{Vendor: VendorGitHub, Audience: "dynatrace", StaticToken: jwtWithPayload(`{"exp":1767225600}`)})
 
-	assert.EqualError(t, err, "A Workload Identity Federation vendor and a pre-minted OIDC token have both been specified. These options are mutually exclusive. Unset either `wif_vendor` (`DYNATRACE_WIF_VENDOR`) or `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`)")
+	assert.EqualError(t, err, "a Workload Identity Federation vendor and a pre-minted OIDC token have both been specified. These options are mutually exclusive. Unset either `wif_vendor` (`DYNATRACE_WIF_VENDOR`) or `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`)")
 }
