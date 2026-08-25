@@ -48,8 +48,8 @@ type TokenSource interface {
 }
 
 type tokenSource struct {
-	// Held rather than passed, because oauth2.TokenSource.Token takes no context while the context
-	// the provider is configured with does not outlive the configure call.
+	// Held rather than passed, because oauth2.TokenSource.Token takes no context. Must outlive every
+	// request that uses this source, so it bounds the provider's lifetime rather than one request.
 	mintContext context.Context
 	minter      minter
 
@@ -151,7 +151,7 @@ func (source *staticTokenSource) Token() (*oauth2.Token, error) {
 	return source.token, nil
 }
 
-// Returns the rejected token itself: the provider cannot replace a token it did not mint.
+// Replace returns the rejected token itself: the provider cannot replace a token it did not mint.
 func (source *staticTokenSource) Replace(string) (*oauth2.Token, error) {
 	return source.token, nil
 }

@@ -42,9 +42,9 @@ func TestTokenSourceForReusesSourceForSameConfiguration(t *testing.T) {
 	withEmptyCache(t)
 	config := Config{Vendor: VendorGitHub, Audience: "dynatrace"}
 
-	first, err := TokenSourceFor(config)
+	first, err := TokenSourceFor(t.Context(), config)
 	require.NoError(t, err)
-	second, err := TokenSourceFor(config)
+	second, err := TokenSourceFor(t.Context(), config)
 	require.NoError(t, err)
 
 	assert.Same(t, first, second)
@@ -53,9 +53,9 @@ func TestTokenSourceForReusesSourceForSameConfiguration(t *testing.T) {
 func TestTokenSourceForSeparatesSourcesByAudience(t *testing.T) {
 	withEmptyCache(t)
 
-	first, err := TokenSourceFor(Config{Vendor: VendorGitHub, Audience: "dynatrace"})
+	first, err := TokenSourceFor(t.Context(), Config{Vendor: VendorGitHub, Audience: "dynatrace"})
 	require.NoError(t, err)
-	second, err := TokenSourceFor(Config{Vendor: VendorGitHub, Audience: "another-audience"})
+	second, err := TokenSourceFor(t.Context(), Config{Vendor: VendorGitHub, Audience: "another-audience"})
 	require.NoError(t, err)
 
 	assert.NotSame(t, first, second)
@@ -65,7 +65,7 @@ func TestTokenSourceForReturnsSuppliedStaticToken(t *testing.T) {
 	withEmptyCache(t)
 	rawToken := jwtWithPayload(`{"exp":1767225600}`)
 
-	source, err := TokenSourceFor(Config{StaticToken: rawToken})
+	source, err := TokenSourceFor(t.Context(), Config{StaticToken: rawToken})
 	require.NoError(t, err)
 
 	token, err := source.Token()
@@ -77,7 +77,7 @@ func TestTokenSourceForReturnsSuppliedStaticToken(t *testing.T) {
 func TestTokenSourceForLeavesSuppliedStaticTokenWithoutExpiry(t *testing.T) {
 	withEmptyCache(t)
 
-	source, err := TokenSourceFor(Config{StaticToken: jwtWithPayload(`{"exp":1767225600}`)})
+	source, err := TokenSourceFor(t.Context(), Config{StaticToken: jwtWithPayload(`{"exp":1767225600}`)})
 	require.NoError(t, err)
 
 	token, err := source.Token()
@@ -89,7 +89,7 @@ func TestTokenSourceForCannotReplaceSuppliedStaticToken(t *testing.T) {
 	withEmptyCache(t)
 	rawToken := jwtWithPayload(`{"exp":1767225600}`)
 
-	source, err := TokenSourceFor(Config{StaticToken: rawToken})
+	source, err := TokenSourceFor(t.Context(), Config{StaticToken: rawToken})
 	require.NoError(t, err)
 
 	token, err := source.Replace(rawToken)
@@ -101,7 +101,7 @@ func TestTokenSourceForCannotReplaceSuppliedStaticToken(t *testing.T) {
 func TestTokenSourceForDoesNotCacheSuppliedStaticToken(t *testing.T) {
 	withEmptyCache(t)
 
-	_, err := TokenSourceFor(Config{StaticToken: jwtWithPayload(`{"exp":1767225600}`)})
+	_, err := TokenSourceFor(t.Context(), Config{StaticToken: jwtWithPayload(`{"exp":1767225600}`)})
 
 	require.NoError(t, err)
 	assert.Empty(t, tokenSourceCache)
@@ -110,7 +110,7 @@ func TestTokenSourceForDoesNotCacheSuppliedStaticToken(t *testing.T) {
 func TestTokenSourceForRejectsInvalidConfiguration(t *testing.T) {
 	withEmptyCache(t)
 
-	_, err := TokenSourceFor(Config{Vendor: VendorGitHub})
+	_, err := TokenSourceFor(t.Context(), Config{Vendor: VendorGitHub})
 
 	assert.EqualError(t, err, "no audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
 }
@@ -120,7 +120,7 @@ func TestTokenSourceForDoesNotCacheCredentialFailure(t *testing.T) {
 	withEmptyCache(t)
 	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "")
 
-	_, err := TokenSourceFor(Config{Vendor: VendorGitHub, Audience: "dynatrace"})
+	_, err := TokenSourceFor(t.Context(), Config{Vendor: VendorGitHub, Audience: "dynatrace"})
 
 	require.Error(t, err)
 	assert.Empty(t, tokenSourceCache)

@@ -34,9 +34,13 @@ var (
 
 // TokenSourceFor returns the token source for the given configuration, creating it on first use.
 //
+// ctx is what every mint by this source is bounded by, so it has to outlive the request that
+// happens to create it. Sources are cached, which means the context of the first caller for a
+// configuration is the one that is kept.
+//
 // Callers must not wrap the result in an [oauth2.ReuseTokenSource]: that caches until ten seconds
 // before the token's stated expiry and would override the refresh margin the source keeps.
-func TokenSourceFor(config Config) (TokenSource, error) {
+func TokenSourceFor(ctx context.Context, config Config) (TokenSource, error) {
 	if err := Validate(config); err != nil {
 		return nil, err
 	}
@@ -60,7 +64,7 @@ func TokenSourceFor(config Config) (TokenSource, error) {
 		return nil, err
 	}
 
-	source := &tokenSource{mintContext: context.Background(), minter: minter}
+	source := &tokenSource{mintContext: ctx, minter: minter}
 	tokenSourceCache[config.CacheKey()] = source
 
 	return source, nil

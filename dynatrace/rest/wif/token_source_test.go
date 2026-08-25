@@ -35,13 +35,15 @@ import (
 // Running out of prepared tokens is a test error rather than a silent repeat, so that a test
 // claiming a token was reused cannot pass by accident.
 type recordingMinter struct {
-	tokens []string
-	err    error
-	calls  int
+	tokens      []string
+	err         error
+	calls       int
+	lastContext context.Context
 }
 
 func (minter *recordingMinter) mint(ctx context.Context) (string, error) {
 	minter.calls++
+	minter.lastContext = ctx
 	if minter.err != nil {
 		return "", minter.err
 	}
@@ -88,21 +90,21 @@ func callConcurrently(call func(caller int)) {
 	finished.Wait()
 }
 
-func newTokenSource(minter minter) *tokenSource {
-	return &tokenSource{mintContext: context.Background(), minter: minter}
+func newTokenSource(t *testing.T, minter minter) *tokenSource {
+	return &tokenSource{mintContext: t.Context(), minter: minter}
 }
 
 func TestTokenSourceReturnsMintedToken(t *testing.T) {
 	rawToken := tokenExpiringIn(time.Hour)
 
-	token, err := newTokenSource(&recordingMinter{tokens: []string{rawToken}}).Token()
+	token, err := newTokenSource(t, &recordingMinter{tokens: []string{rawToken}}).Token()
 
 	require.NoError(t, err)
 	assert.Equal(t, rawToken, token.AccessToken)
 }
 
 func TestTokenSourceLeavesTokenTypeEmpty(t *testing.T) {
-	token, err := newTokenSource(&recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}}).Token()
+	token, err := newTokenSource(t, &recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}}).Token()
 
 	require.NoError(t, err)
 	assert.Equal(t, "", token.TokenType)
@@ -112,7 +114,7 @@ func TestTokenSourceReportsExpiryClaimedByToken(t *testing.T) {
 	expiry := time.Now().Add(time.Hour)
 	rawToken := jwtWithPayload(fmt.Sprintf(`{"exp":%d}`, expiry.Unix()))
 
-	token, err := newTokenSource(&recordingMinter{tokens: []string{rawToken}}).Token()
+	token, err := newTokenSource(t, &recordingMinter{tokens: []string{rawToken}}).Token()
 
 	require.NoError(t, err)
 	assert.Equal(t, time.Unix(expiry.Unix(), 0), token.Expiry)
@@ -120,7 +122,7 @@ func TestTokenSourceReportsExpiryClaimedByToken(t *testing.T) {
 
 func TestTokenSourceReusesTokenUntilRefreshTime(t *testing.T) {
 	minter := &recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}}
-	source := newTokenSource(minter)
+	source := newTokenSource(t, minter)
 
 	first, err := source.Token()
 	require.NoError(t, err)
@@ -135,7 +137,7 @@ func TestTokenSourceReusesTokenUntilRefreshTime(t *testing.T) {
 // input they cannot supply directly.
 func TestTokenSourceMintsReplacementAfterRefreshTime(t *testing.T) {
 	minter := &recordingMinter{tokens: []string{tokenExpiringIn(time.Hour), tokenExpiringIn(2 * time.Hour)}}
-	source := newTokenSource(minter)
+	source := newTokenSource(t, minter)
 
 	_, err := source.Token()
 	require.NoError(t, err)
@@ -150,7 +152,7 @@ func TestTokenSourceMintsReplacementAfterRefreshTime(t *testing.T) {
 
 func TestTokenSourceMintsOnceForConcurrentCallers(t *testing.T) {
 	minter := &concurrentMinter{}
-	source := newTokenSource(minter)
+	source := newTokenSource(t, minter)
 
 	callConcurrently(func(int) {
 		_, err := source.Token()
@@ -161,7 +163,7 @@ func TestTokenSourceMintsOnceForConcurrentCallers(t *testing.T) {
 }
 
 func TestTokenSourceRefreshesAheadOfExpiry(t *testing.T) {
-	source := newTokenSource(&recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}})
+	source := newTokenSource(t, &recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}})
 
 	token, err := source.Token()
 
@@ -170,7 +172,7 @@ func TestTokenSourceRefreshesAheadOfExpiry(t *testing.T) {
 }
 
 func TestTokenSourceFloorsRefreshTimeForShortLivedToken(t *testing.T) {
-	source := newTokenSource(&recordingMinter{tokens: []string{tokenExpiringIn(10 * time.Second)}})
+	source := newTokenSource(t, &recordingMinter{tokens: []string{tokenExpiringIn(10 * time.Second)}})
 
 	_, err := source.Token()
 
@@ -181,13 +183,13 @@ func TestTokenSourceFloorsRefreshTimeForShortLivedToken(t *testing.T) {
 func TestTokenSourcePropagatesMintingFailure(t *testing.T) {
 	mintErr := errors.New("the token service is unreachable")
 
-	_, err := newTokenSource(&recordingMinter{err: mintErr}).Token()
+	_, err := newTokenSource(t, &recordingMinter{err: mintErr}).Token()
 
 	assert.ErrorIs(t, err, mintErr)
 }
 
 func TestTokenSourceServesUnexpiredTokenWhenMintingFails(t *testing.T) {
-	source := newTokenSource(&recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}})
+	source := newTokenSource(t, &recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}})
 	held, err := source.Token()
 	require.NoError(t, err)
 	source.refreshAt = time.Now().Add(-time.Second)
@@ -203,7 +205,7 @@ func TestTokenSourcePropagatesMintingFailureOnceTokenHasExpired(t *testing.T) {
 	mintErr := errors.New("the token service is unreachable")
 	// Arriving expired is the shortest route to a source holding an expired token; the refresh margin
 	// means it never happens this way outside a test.
-	source := newTokenSource(&recordingMinter{tokens: []string{tokenExpiringIn(-time.Second)}})
+	source := newTokenSource(t, &recordingMinter{tokens: []string{tokenExpiringIn(-time.Second)}})
 	_, err := source.Token()
 	require.NoError(t, err)
 	source.refreshAt = time.Now().Add(-time.Second)
@@ -215,7 +217,7 @@ func TestTokenSourcePropagatesMintingFailureOnceTokenHasExpired(t *testing.T) {
 }
 
 func TestTokenSourcePostponesMintingAfterFailure(t *testing.T) {
-	source := newTokenSource(&recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}})
+	source := newTokenSource(t, &recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}})
 	_, err := source.Token()
 	require.NoError(t, err)
 	source.refreshAt = time.Now().Add(-time.Second)
@@ -228,7 +230,7 @@ func TestTokenSourcePostponesMintingAfterFailure(t *testing.T) {
 }
 
 func TestTokenSourcePostponesMintingNoFurtherThanExpiry(t *testing.T) {
-	source := newTokenSource(&recordingMinter{tokens: []string{tokenExpiringIn(mintRetryInterval / 2)}})
+	source := newTokenSource(t, &recordingMinter{tokens: []string{tokenExpiringIn(mintRetryInterval / 2)}})
 	held, err := source.Token()
 	require.NoError(t, err)
 	source.refreshAt = time.Now().Add(-time.Second)
@@ -241,14 +243,14 @@ func TestTokenSourcePostponesMintingNoFurtherThanExpiry(t *testing.T) {
 }
 
 func TestTokenSourceRejectsTokenWithoutExpiry(t *testing.T) {
-	_, err := newTokenSource(&recordingMinter{tokens: []string{jwtWithPayload(`{"aud":"dynatrace"}`)}}).Token()
+	_, err := newTokenSource(t, &recordingMinter{tokens: []string{jwtWithPayload(`{"aud":"dynatrace"}`)}}).Token()
 
 	assert.EqualError(t, err, "the ID token has no `exp` claim, so the provider cannot tell when to obtain a replacement")
 }
 
 func TestTokenSourceReplacesRejectedToken(t *testing.T) {
 	minter := &recordingMinter{tokens: []string{tokenExpiringIn(time.Hour), tokenExpiringIn(2 * time.Hour)}}
-	source := newTokenSource(minter)
+	source := newTokenSource(t, minter)
 	rejected, err := source.Token()
 	require.NoError(t, err)
 
@@ -258,9 +260,22 @@ func TestTokenSourceReplacesRejectedToken(t *testing.T) {
 	assert.Equal(t, minter.tokens[1], replacement.AccessToken)
 }
 
+// The cancellation is only a marker, identifying the context the minter was handed.
+func TestTokenSourceMintsWithTheContextItWasGiven(t *testing.T) {
+	minter := &recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}}
+	cancelledContext, cancel := context.WithCancel(t.Context())
+	cancel()
+	source := &tokenSource{mintContext: cancelledContext, minter: minter}
+
+	_, err := source.Token()
+
+	require.NoError(t, err)
+	assert.ErrorIs(t, minter.lastContext.Err(), context.Canceled)
+}
+
 func TestTokenSourceKeepsTokenThatWasAlreadyReplaced(t *testing.T) {
 	minter := &recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}}
-	source := newTokenSource(minter)
+	source := newTokenSource(t, minter)
 	held, err := source.Token()
 	require.NoError(t, err)
 
@@ -273,7 +288,7 @@ func TestTokenSourceKeepsTokenThatWasAlreadyReplaced(t *testing.T) {
 
 func TestTokenSourceReplacesOnceForConcurrentRejections(t *testing.T) {
 	minter := &concurrentMinter{}
-	source := newTokenSource(minter)
+	source := newTokenSource(t, minter)
 	rejected, err := source.Token()
 	require.NoError(t, err)
 
@@ -291,7 +306,7 @@ func TestTokenSourceReplacesOnceForConcurrentRejections(t *testing.T) {
 
 func TestTokenSourceDoesNotFallBackOnRejectedToken(t *testing.T) {
 	mintErr := errors.New("the token service is unreachable")
-	source := newTokenSource(&recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}})
+	source := newTokenSource(t, &recordingMinter{tokens: []string{tokenExpiringIn(time.Hour)}})
 	rejected, err := source.Token()
 	require.NoError(t, err)
 	source.minter = &recordingMinter{err: mintErr}
