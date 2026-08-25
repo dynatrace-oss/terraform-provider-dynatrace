@@ -34,7 +34,7 @@ import (
 
 func ClusterV1Client(credentials *Credentials) Client {
 	creds := *credentials
-	creds.URL = strings.TrimSuffix(credentials.Cluster.URL, "/") + "/api/v1.0/onpremise"
+	creds.ClassicEnvironmentURL = strings.TrimSuffix(credentials.Cluster.URL, "/") + "/api/v1.0/onpremise"
 	creds.Token = credentials.Cluster.Token
 	return &cluster_v1_client{credentials: &creds}
 }
@@ -56,7 +56,7 @@ func (me *cluster_v1_client) Get(ctx context.Context, url string, expectedStatus
 }
 
 func (me *cluster_v1_client) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload, headers: headers.ContentType.ApplicationJSON}
+	req := &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
@@ -64,7 +64,7 @@ func (me *cluster_v1_client) Post(ctx context.Context, url string, payload any, 
 }
 
 func (me *cluster_v1_client) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload, headers: headers.ContentType.ApplicationJSON}
+	req := &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload}
 	if len(expectedStatusCodes) > 0 {
 		req.expect = statuscodes(expectedStatusCodes)
 	}
@@ -135,11 +135,4 @@ func (me *cluster_v1_request) Expect(codes ...int) Request {
 func (me *cluster_v1_request) OnResponse(onResponse func(resp *http.Response)) Request {
 	me.onResponse = onResponse
 	return me
-}
-
-func (me *cluster_v1_request) SetHeader(name string, value string) {
-	if me.headers == nil {
-		me.headers = map[string]string{}
-	}
-	me.headers[name] = value
 }

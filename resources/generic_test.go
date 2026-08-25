@@ -34,6 +34,20 @@ import (
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
+type envURLGetter struct {
+}
+
+func (e envURLGetter) Get(key string) any {
+	if key == "dt_env_url" {
+		return "https://dynatrace.com"
+	}
+	return ""
+}
+
+func getProviderConfigurationWithFixedEnvironmentURL(t *testing.T) *config.ProviderConfiguration {
+	return config.ProviderConfigureGeneric(t.Context(), &envURLGetter{})
+}
+
 func TestGeneric_Read(t *testing.T) {
 	t.Run("resource not found error should set the ID to empty", func(t *testing.T) {
 		gen := resources.Generic{
@@ -41,9 +55,7 @@ func TestGeneric_Read(t *testing.T) {
 		}
 		d := schema.TestResourceDataRaw(t, new(mockSchema).Schema(), nil)
 		d.SetId("test")
-		m := &config.ProviderConfiguration{
-			EnvironmentURL: "https://dynatrace.com",
-		}
+		m := getProviderConfigurationWithFixedEnvironmentURL(t)
 
 		diags := gen.Read(t.Context(), d, m)
 		assert.False(t, diags.HasError())
@@ -56,9 +68,7 @@ func TestGeneric_Read(t *testing.T) {
 		}
 		d := schema.TestResourceDataRaw(t, new(mockSchema).Schema(), nil)
 		d.SetId("test")
-		m := &config.ProviderConfiguration{
-			EnvironmentURL: "https://dynatrace.com",
-		}
+		m := getProviderConfigurationWithFixedEnvironmentURL(t)
 
 		diags := gen.Read(t.Context(), d, m)
 		assert.False(t, diags.HasError())
@@ -71,9 +81,7 @@ func TestGeneric_Read(t *testing.T) {
 		}
 		d := schema.TestResourceDataRaw(t, new(mockSchema).Schema(), nil)
 		d.SetId("test")
-		m := &config.ProviderConfiguration{
-			EnvironmentURL: "https://dynatrace.com",
-		}
+		m := getProviderConfigurationWithFixedEnvironmentURL(t)
 
 		diags := gen.Read(t.Context(), d, m)
 		assert.True(t, diags.HasError())
@@ -91,9 +99,7 @@ func TestGeneric_Delete(t *testing.T) {
 		}
 		d := schema.TestResourceDataRaw(t, new(mockSchema).Schema(), nil)
 		d.SetId("test")
-		m := &config.ProviderConfiguration{
-			EnvironmentURL: "https://dynatrace.com",
-		}
+		m := getProviderConfigurationWithFixedEnvironmentURL(t)
 
 		diags := gen.Delete(t.Context(), d, m)
 		assert.False(t, diags.HasError())
@@ -106,9 +112,7 @@ func TestGeneric_Delete(t *testing.T) {
 		}
 		d := schema.TestResourceDataRaw(t, new(mockSchema).Schema(), nil)
 		d.SetId("test")
-		m := &config.ProviderConfiguration{
-			EnvironmentURL: "https://dynatrace.com",
-		}
+		m := getProviderConfigurationWithFixedEnvironmentURL(t)
 
 		diags := gen.Delete(t.Context(), d, m)
 		assert.False(t, diags.HasError())
@@ -121,9 +125,7 @@ func TestGeneric_Delete(t *testing.T) {
 		}
 		d := schema.TestResourceDataRaw(t, new(mockSchema).Schema(), nil)
 		d.SetId("test")
-		m := &config.ProviderConfiguration{
-			EnvironmentURL: "https://dynatrace.com",
-		}
+		m := getProviderConfigurationWithFixedEnvironmentURL(t)
 
 		diags := gen.Delete(t.Context(), d, m)
 		assert.True(t, diags.HasError())
@@ -145,9 +147,7 @@ func TestGeneric_Create(t *testing.T) {
 			}})),
 		}
 		d := schema.TestResourceDataRaw(t, new(mockSchema).Schema(), nil)
-		m := &config.ProviderConfiguration{
-			EnvironmentURL: "https://dynatrace.com",
-		}
+		m := getProviderConfigurationWithFixedEnvironmentURL(t)
 
 		diags := gen.Create(t.Context(), d, m)
 		assert.True(t, diags.HasError())
@@ -161,9 +161,7 @@ func TestGeneric_Create(t *testing.T) {
 			Descriptor: export.NewResourceDescriptor(MockService(nil, rest.Error{Code: http.StatusBadRequest, Message: "My message"})),
 		}
 		d := schema.TestResourceDataRaw(t, new(mockSchema).Schema(), nil)
-		m := &config.ProviderConfiguration{
-			EnvironmentURL: "https://dynatrace.com",
-		}
+		m := getProviderConfigurationWithFixedEnvironmentURL(t)
 
 		diags := gen.Create(t.Context(), d, m)
 		assert.True(t, diags.HasError())
@@ -185,9 +183,7 @@ func TestGeneric_Create(t *testing.T) {
 			Descriptor: export.NewResourceDescriptor(MockService(nil, apiErr)),
 		}
 		d := schema.TestResourceDataRaw(t, new(mockSchema).Schema(), nil)
-		m := &config.ProviderConfiguration{
-			EnvironmentURL: "https://dynatrace.com",
-		}
+		m := getProviderConfigurationWithFixedEnvironmentURL(t)
 
 		diags := gen.Create(t.Context(), d, m)
 		assert.True(t, diags.HasError())

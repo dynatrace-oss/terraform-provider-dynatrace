@@ -33,7 +33,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -57,50 +56,59 @@ func TestProviderLogging(t *testing.T) {
 	t.Setenv("DYNATRACE_LOG_HTTP", "true")
 	t.Setenv("DYNATRACE_HTTP_RESPONSE", "true")
 
-	connectionTests := []struct {
-		name      string
-		clientSet func(url string) rest.ClientSet
-	}{
-		{
-			name: "log HTTP requests and responses only once for platform token",
-			clientSet: func(url string) rest.ClientSet {
-				return &config.ProviderConfiguration{
-					EnvironmentURL: url,
-					Platform: rest.PlatformCredentials{
-						PlatformToken: "my-token",
-					},
-				}
-			},
-		},
-		{
-			name: "log HTTP requests and responses only once for classic",
-			clientSet: func(url string) rest.ClientSet {
-				return &config.ProviderConfiguration{
-					EnvironmentURL: url,
-					APIToken:       "my-token",
-				}
-			},
-		},
-	}
-	for _, tc := range connectionTests {
-		t.Run(tc.name, func(t *testing.T) {
-			builder := newTestLogger(t)
-			mux := http.ServeMux{}
-			mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(`{"objectId": "test-id", "value": {}}`))
-				require.NoError(t, err)
-			})
-			httpServer := httptest.NewServer(&mux)
-			defer httpServer.Close()
-
-			service, err := connection.Service(tc.clientSet(httpServer.URL))
+	t.Run("log HTTP requests and responses only once for platform token", func(t *testing.T) {
+		builder := newTestLogger(t)
+		mux := http.ServeMux{}
+		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+			_, err := w.Write([]byte(`{"objectId": "test-id", "value": {}}`))
 			require.NoError(t, err)
-			err = service.Get(t.Context(), "test-id", new(set.Settings))
-			require.NoError(t, err)
-			assertLoggedOnce(t, builder.String())
 		})
-	}
+		httpServer := httptest.NewServer(&mux)
+		defer httpServer.Close()
+
+		creds := &rest.Credentials{
+			Platform: rest.PlatformCredentials{
+				EnvironmentURL: httpServer.URL,
+				PlatformToken:  "my-token",
+			},
+		}
+		clientSet := &testing2.MockClientSet{CredentialsValue: creds}
+
+		service, err := connection.Service(clientSet)
+		require.NoError(t, err)
+
+		err = service.Get(t.Context(), "test-id", new(set.Settings))
+		require.NoError(t, err)
+
+		assertLoggedOnce(t, builder.String())
+	})
+
+	t.Run("log HTTP requests and responses only once for classic", func(t *testing.T) {
+		builder := newTestLogger(t)
+		mux := http.ServeMux{}
+		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+			_, err := w.Write([]byte(`{"objectId": "test-id", "value": {}}`))
+			require.NoError(t, err)
+		})
+		httpServer := httptest.NewServer(&mux)
+		defer httpServer.Close()
+
+		creds := &rest.Credentials{
+			ClassicEnvironmentURL: httpServer.URL,
+			Token:                 "my-token",
+		}
+		clientSet := &testing2.MockClientSet{CredentialsValue: creds}
+
+		service, err := connection.Service(clientSet)
+		require.NoError(t, err)
+
+		err = service.Get(t.Context(), "test-id", new(set.Settings))
+		require.NoError(t, err)
+
+		assertLoggedOnce(t, builder.String())
+	})
 
 	t.Run("log HTTP requests and responses only once for IAM", func(t *testing.T) {
 		builder := newTestLogger(t)
@@ -136,8 +144,10 @@ func TestProviderLogging(t *testing.T) {
 
 		service, err := boundaries.Service(clientSet)
 		require.NoError(t, err)
+
 		err = service.Get(t.Context(), "test-id", new(setboundaries.PolicyBoundary))
 		require.NoError(t, err)
+
 		assertLoggedOnce(t, builder.String())
 	})
 }

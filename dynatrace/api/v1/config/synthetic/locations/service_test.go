@@ -23,33 +23,29 @@ import (
 	"context"
 	"encoding/json"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations"
 	locsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/locations/settings"
+	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 )
 
 func TestSyntheticLocations(t *testing.T) {
-	envURL := os.Getenv("DYNATRACE_ENV_URL")
-	apiToken := os.Getenv("DYNATRACE_API_TOKEN")
-	if envURL == "" || apiToken == "" {
-		t.Skip("Environment Variables DYNATRACE_ENV_URL and DYNATRACE_API_TOKEN must be specified")
-		return
-	}
-	clientSet := &config.ProviderConfiguration{EnvironmentURL: envURL, APIToken: apiToken}
-	service, err := locations.Service(clientSet)
+	pc := config.ProviderConfigureGeneric(t.Context(), testing2.EnvironmentGetter(t))
+	service, err := locations.Service(pc)
 	if err != nil {
 		t.Error(err)
 		return
 	}
+
 	var stubs api.Stubs
 	if stubs, err = service.List(context.Background()); err != nil {
 		t.Error(err)
 		return
 	}
+
 	foundPublic := false
 	foundPrivate := false
 	for _, stub := range stubs {
@@ -74,10 +70,12 @@ func TestSyntheticLocations(t *testing.T) {
 			return
 		}
 	}
+
 	if !foundPublic {
 		t.Error("Expected to find public synthetic locations - found none")
 		return
 	}
+
 	if !foundPrivate {
 		t.Error("Expected to find private synthetic locations - found none")
 		return

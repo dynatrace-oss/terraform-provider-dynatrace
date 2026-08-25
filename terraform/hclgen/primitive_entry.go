@@ -30,7 +30,6 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-
 type primitiveEntry struct {
 	Indent      string
 	Key         string
