@@ -1,6 +1,6 @@
 name: Test Suite
 
-# Reusable pipeline shared by tests.yml and nightly_tests.yml. Callers must pass `secrets: inherit`.
+# Reusable pipeline shared by tests.yml and nightly-tests.yml.
 # This pipeline
 #  - runs the unit tests and create coverage report
 #  - runs static code analysis (linting)
@@ -15,6 +15,37 @@ on:
         description: 'Collect JUnit results across all test jobs and ingest them to Dynatrace'
         type: boolean
         default: false
+    secrets:
+      DYNATRACE_ENV_URL:
+        description: 'Environment URL of the Dynatrace tenant the tests run against'
+        required: true
+      DYNATRACE_API_TOKEN:
+        description: 'API token for the Dynatrace tenant the tests run against'
+        required: true
+      DT_CLIENT_ID:
+        description: 'OAuth client ID used by the platform resources under test'
+        required: true
+      DT_CLIENT_SECRET:
+        description: 'OAuth client secret used by the platform resources under test'
+        required: true
+      DT_ACCOUNT_ID:
+        description: 'Account ID used by the account management resources under test'
+        required: true
+      DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT:
+        description: 'GCP service account that cannot be impersonated, used by the GCP integration tests'
+        required: true
+      DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT:
+        description: 'GCP service account that can be impersonated, used by the GCP integration tests'
+        required: true
+      SONAR_TOKEN:
+        description: 'Token for publishing coverage and lint results to SonarQube'
+        required: true
+      SFM_PLATFORM_URL:
+        description: 'Platform URL the collected test results are ingested to. Only required when collect-results is true'
+        required: false
+      SFM_PLATFORM_TOKEN:
+        description: 'Platform token for ingesting the collected test results. Only required when collect-results is true'
+        required: false
 
 jobs:
   unit-tests:

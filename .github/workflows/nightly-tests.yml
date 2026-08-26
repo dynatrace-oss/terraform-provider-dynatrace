@@ -21,4 +21,14 @@ jobs:
     with:
       # Scheduled and push runs always collect; a manual run honors the toggle.
       collect-results: ${{ github.event_name != 'workflow_dispatch' || inputs.collect-results }}
-    secrets: inherit
+    secrets:
+      DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+      DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+      DT_CLIENT_ID: ${{ secrets.DT_CLIENT_ID }}
+      DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
+      DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
+      DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
+      DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SFM_PLATFORM_URL: ${{ secrets.SFM_PLATFORM_URL }}
+      SFM_PLATFORM_TOKEN: ${{ secrets.SFM_PLATFORM_TOKEN }}
