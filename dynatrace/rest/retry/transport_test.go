@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package rest_test
+package retry_test
 
 import (
 	"bytes"
@@ -27,10 +27,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/retry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"golang.org/x/oauth2"
 )
 
 // rtFunc lets an ordinary function act as an http.RoundTripper.
@@ -55,8 +54,8 @@ func emptyResponse(status int, headers map[string]string) *http.Response {
 // returned immediately without any retry.
 func TestRetryTransport_SuccessOnFirstAttempt(t *testing.T) {
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			return emptyResponse(http.StatusOK, nil), nil
 		}),
@@ -86,8 +85,8 @@ func TestRetryTransport_NonRetriableStatusCodes(t *testing.T) {
 	for _, status := range nonRetryStatusCodes {
 		t.Run(fmt.Sprintf("status_%d", status), func(t *testing.T) {
 			calls := 0
-			tr := &rest.RetryTransport{
-				Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+			tr := &retry.Transport{
+				Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 					calls++
 					return emptyResponse(status, nil), nil
 				}),
@@ -106,8 +105,8 @@ func TestRetryTransport_NonRetriableStatusCodes(t *testing.T) {
 // TestRetryTransport_TransportError verifies that an error from the underlying
 // transport is propagated immediately without retrying.
 func TestRetryTransport_TransportError(t *testing.T) {
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			return nil, assert.AnError
 		}),
 	}
@@ -119,10 +118,83 @@ func TestRetryTransport_TransportError(t *testing.T) {
 	assert.ErrorIs(t, err, assert.AnError)
 }
 
+// TestRetryTransport_ShouldRetryOverridesDefaultStatuses verifies that a ShouldRetry accepting a
+// status the default gives up on, HTTP 500, makes the transport retry it.
+func TestRetryTransport_ShouldRetryOverridesDefaultStatuses(t *testing.T) {
+	calls := 0
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
+			calls++
+			if calls == 1 {
+				return emptyResponse(http.StatusInternalServerError, nil), nil
+			}
+			return emptyResponse(http.StatusOK, nil), nil
+		}),
+		BaseBackoff: 10 * time.Millisecond,
+		ShouldRetry: func(resp *http.Response, err error) bool {
+			return err == nil && resp.StatusCode == http.StatusInternalServerError
+		},
+	}
+
+	req, _ := http.NewRequest(http.MethodGet, "https://dynatrace.com", nil)
+	resp, err := tr.RoundTrip(req)
+
+	require.NoError(t, err)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	assert.Equal(t, 2, calls)
+}
+
+// TestRetryTransport_ShouldRetryRepeatsFailedRoundTrip verifies that a ShouldRetry accepting a round
+// trip that never produced a response makes the transport retry it, which the default does not.
+func TestRetryTransport_ShouldRetryRepeatsFailedRoundTrip(t *testing.T) {
+	calls := 0
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
+			calls++
+			if calls < 3 {
+				return nil, assert.AnError
+			}
+			return emptyResponse(http.StatusOK, nil), nil
+		}),
+		BaseBackoff: 10 * time.Millisecond,
+		ShouldRetry: func(_ *http.Response, err error) bool { return err != nil },
+	}
+
+	req, _ := http.NewRequest(http.MethodGet, "https://dynatrace.com", nil)
+	resp, err := tr.RoundTrip(req)
+
+	require.NoError(t, err)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	assert.Equal(t, 3, calls)
+}
+
+// TestRetryTransport_ShouldRetryExhaustedOnFailedRoundTrip verifies that the error of the last
+// failed round trip reaches the caller once the retries are used up.
+func TestRetryTransport_ShouldRetryExhaustedOnFailedRoundTrip(t *testing.T) {
+	const maxRetries = 2
+	calls := 0
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
+			calls++
+			return nil, assert.AnError
+		}),
+		MaxRetries:  maxRetries,
+		BaseBackoff: 10 * time.Millisecond,
+		ShouldRetry: func(_ *http.Response, err error) bool { return err != nil },
+	}
+
+	req, _ := http.NewRequest(http.MethodGet, "https://dynatrace.com", nil)
+	resp, err := tr.RoundTrip(req)
+
+	assert.Nil(t, resp)
+	assert.ErrorIs(t, err, assert.AnError)
+	assert.Equal(t, maxRetries+1, calls, "expected MaxRetries+1 = %d total attempts", maxRetries+1)
+}
+
 // TestRetryTransport_NilBody verifies that requests without a body are handled correctly.
 func TestRetryTransport_NilBody(t *testing.T) {
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			return emptyResponse(http.StatusOK, nil), nil
 		}),
 	}
@@ -137,8 +209,8 @@ func TestRetryTransport_NilBody(t *testing.T) {
 // TestRetryTransport_BodyReadError verifies that an error while buffering the request
 // body is returned immediately without calling the underlying transport.
 func TestRetryTransport_BodyReadError(t *testing.T) {
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			t.Fatal("transport should not be called when the body cannot be read")
 			return nil, nil
 		}),
@@ -157,8 +229,8 @@ func TestRetryTransport_BodyReplayed(t *testing.T) {
 	const payload = "hello-retry"
 	var receivedBodies []string
 
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(req *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(req *http.Request) (*http.Response, error) {
 			if req.Body != nil {
 				data, _ := io.ReadAll(req.Body)
 				receivedBodies = append(receivedBodies, string(data))
@@ -186,8 +258,8 @@ func TestRetryTransport_BodyReplayed(t *testing.T) {
 // Uses Retry-After: 1 – test duration ~2 seconds.
 func TestRetryTransport_RetriesOn429_EventualSuccess(t *testing.T) {
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			if calls < 3 {
 				return emptyResponse(http.StatusTooManyRequests, nil), nil
@@ -210,8 +282,8 @@ func TestRetryTransport_RetriesOn429_EventualSuccess(t *testing.T) {
 // Uses Retry-After: 1 – test duration ~2 seconds.
 func TestRetryTransport_RetriesOn503_EventualSuccess(t *testing.T) {
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			if calls < 3 {
 				return emptyResponse(http.StatusServiceUnavailable, nil), nil
@@ -234,8 +306,8 @@ func TestRetryTransport_RetriesOn503_EventualSuccess(t *testing.T) {
 // Test duration ~1 second.
 func TestRetryTransport_RetryAfterSeconds(t *testing.T) {
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			if calls == 1 {
 				return emptyResponse(http.StatusTooManyRequests, map[string]string{"Retry-After": "1"}), nil
@@ -262,8 +334,8 @@ func TestRetryTransport_RetryAfterHTTPDate(t *testing.T) {
 	retryAfterDate := time.Now().Add(2 * time.Second).UTC().Format(http.TimeFormat)
 
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			if calls == 1 {
 				return emptyResponse(http.StatusTooManyRequests, map[string]string{"Retry-After": retryAfterDate}), nil
@@ -288,8 +360,8 @@ func TestRetryTransport_RetryAfterHTTPDate(t *testing.T) {
 func TestRetryTransport_ExponentialBackoff(t *testing.T) {
 	const base = 100 * time.Millisecond
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			if calls == 1 {
 				// No Retry-After header → exponential backoff applies.
@@ -318,8 +390,8 @@ func TestRetryTransport_ExponentialBackoff(t *testing.T) {
 func TestRetryTransport_MaxRetriesExhausted(t *testing.T) {
 	const maxRetries = 3
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			return emptyResponse(http.StatusTooManyRequests, nil), nil
 		}),
@@ -336,24 +408,13 @@ func TestRetryTransport_MaxRetriesExhausted(t *testing.T) {
 	assert.Equal(t, maxRetries+1, calls, "expected MaxRetries+1 = %d total attempts", maxRetries+1)
 }
 
-// NewContextWithOAuthRetryClient verifies that the context is enriched with an
-// HTTP client whose transport is a *RetryTransport.
-func TestNewContextWithOAuthRetryClient(t *testing.T) {
-	ctx := rest.NewContextWithOAuthRetryClient(t.Context())
-
-	client, ok := ctx.Value(oauth2.HTTPClient).(*http.Client)
-	require.True(t, ok, "context should contain an *http.Client")
-	_, isRetry := client.Transport.(*rest.RetryTransport)
-	assert.True(t, isRetry, "the client's transport should be a *RetryTransport")
-}
-
 // TestRetryTransport_RetryAfterZero verifies that a Retry-After value of 0 is treated as
 // invalid and the transport falls back to exponential back-off instead.
 func TestRetryTransport_RetryAfterZero_FallsBackToBackoff(t *testing.T) {
 	const base = 30 * time.Millisecond
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			if calls == 1 {
 				return emptyResponse(http.StatusTooManyRequests, map[string]string{"Retry-After": "0"}), nil
@@ -379,8 +440,8 @@ func TestRetryTransport_RetryAfterZero_FallsBackToBackoff(t *testing.T) {
 func TestRetryTransport_RetryAfterNegative_FallsBackToBackoff(t *testing.T) {
 	const base = 30 * time.Millisecond
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			if calls == 1 {
 				return emptyResponse(http.StatusTooManyRequests, map[string]string{"Retry-After": "-5"}), nil
@@ -407,8 +468,8 @@ func TestRetryTransport_RetryAfterPastDate_FallsBackToBackoff(t *testing.T) {
 	const base = 30 * time.Millisecond
 	pastDate := time.Now().Add(-10 * time.Second).UTC().Format(http.TimeFormat)
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			if calls == 1 {
 				return emptyResponse(http.StatusTooManyRequests, map[string]string{"Retry-After": pastDate}), nil
@@ -434,8 +495,8 @@ func TestRetryTransport_RetryAfterPastDate_FallsBackToBackoff(t *testing.T) {
 func TestRetryTransport_RetryAfterCapped(t *testing.T) {
 	const cap = 50 * time.Millisecond
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			if calls == 1 {
 				return emptyResponse(http.StatusTooManyRequests, map[string]string{"Retry-After": "99999"}), nil
@@ -462,8 +523,8 @@ func TestRetryTransport_RetryAfterCapped(t *testing.T) {
 func TestRetryTransport_BackoffCapped(t *testing.T) {
 	const cap = 50 * time.Millisecond
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			return emptyResponse(http.StatusTooManyRequests, nil), nil
 		}),
@@ -490,8 +551,8 @@ func TestRetryTransport_ContextCancelled(t *testing.T) {
 	ctx, cancel := context.WithCancel(t.Context())
 
 	calls := 0
-	tr := &rest.RetryTransport{
-		Transport: rtFunc(func(_ *http.Request) (*http.Response, error) {
+	tr := &retry.Transport{
+		Base: rtFunc(func(_ *http.Request) (*http.Response, error) {
 			calls++
 			// Cancel the context so the upcoming retry wait fires the Done branch.
 			cancel()

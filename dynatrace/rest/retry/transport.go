@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package rest
+package retry
 
 import (
 	"bytes"
-	"context"
+	"fmt"
 	"io"
 	"math"
 	"math/rand/v2"
@@ -27,7 +27,6 @@ import (
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
-	"golang.org/x/oauth2"
 )
 
 const (
@@ -36,48 +35,62 @@ const (
 	defaultMaxBackoff  = 60 * time.Second
 )
 
-// RetryTransport is an http.RoundTripper that automatically retries requests
-// when the server returns HTTP 429 (Too Many Requests) or HTTP 503 (Service Unavailable).
-// MaxRetries, BaseBackoff, and MaxBackoff can be set to non-zero values to override the
-// defaults, which is useful in tests to keep execution time short.
-type RetryTransport struct {
-	Transport   http.RoundTripper
+// Transport is an http.RoundTripper that automatically repeats a request whose outcome ShouldRetry
+// accepts, by default when the server returns HTTP 429 (Too Many Requests) or HTTP 503 (Service
+// Unavailable). MaxRetries, BaseBackoff, and MaxBackoff can be set to non-zero values to override
+// the defaults, which is useful in tests to keep execution time short.
+type Transport struct {
+	Base        http.RoundTripper
 	MaxRetries  int
 	BaseBackoff time.Duration
 	MaxBackoff  time.Duration
+
+	// ShouldRetry decides whether an attempt is worth repeating. It receives the response, or nil
+	// and the error when the round trip itself did not complete. Defaults to
+	// IfTooManyRequestsOrServiceUnavailable.
+	ShouldRetry func(*http.Response, error) bool
 }
 
-// transport returns the configured RoundTripper, falling back to http.DefaultTransport when nil.
-func (t *RetryTransport) transport() http.RoundTripper {
-	if t.Transport != nil {
-		return t.Transport
+// IfTooManyRequestsOrServiceUnavailable repeats a request the server answered with HTTP 429 or 503,
+// and gives up on anything else, including a round trip that failed outright.
+func IfTooManyRequestsOrServiceUnavailable(resp *http.Response, err error) bool {
+	return err == nil && (resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode == http.StatusServiceUnavailable)
+}
+
+// base returns the configured RoundTripper, falling back to http.DefaultTransport when nil.
+func (t *Transport) base() http.RoundTripper {
+	if t.Base != nil {
+		return t.Base
 	}
 	return http.DefaultTransport
 }
 
-func (t *RetryTransport) maxRetries() int {
+func (t *Transport) shouldRetry(resp *http.Response, err error) bool {
+	if t.ShouldRetry != nil {
+		return t.ShouldRetry(resp, err)
+	}
+	return IfTooManyRequestsOrServiceUnavailable(resp, err)
+}
+
+func (t *Transport) maxRetries() int {
 	if t.MaxRetries > 0 {
 		return t.MaxRetries
 	}
 	return defaultMaxRetries
 }
 
-func (t *RetryTransport) baseBackoff() time.Duration {
+func (t *Transport) baseBackoff() time.Duration {
 	if t.BaseBackoff > 0 {
 		return t.BaseBackoff
 	}
 	return defaultBaseBackoff
 }
 
-func (t *RetryTransport) maxBackoff() time.Duration {
+func (t *Transport) maxBackoff() time.Duration {
 	if t.MaxBackoff > 0 {
 		return t.MaxBackoff
 	}
 	return defaultMaxBackoff
-}
-
-func isRetriableStatus(statusCode int) bool {
-	return statusCode == http.StatusTooManyRequests || statusCode == http.StatusServiceUnavailable
 }
 
 // bufferRequestBody reads and closes req.Body, returning its contents.
@@ -93,8 +106,18 @@ func bufferRequestBody(req *http.Request) ([]byte, error) {
 	return body, err
 }
 
-// drainAndClose drains body into /dev/null and closes it, allowing TCP
-// connection reuse. The drain error takes precedence over the close error.
+// cloneRequestWithBody returns a copy of req that can be sent on its own, with the previously
+// buffered body put back in place of the one the last attempt consumed.
+func cloneRequestWithBody(req *http.Request, body []byte) *http.Request {
+	clone := req.Clone(req.Context())
+	if body != nil {
+		clone.Body = io.NopCloser(bytes.NewReader(body))
+	}
+	return clone
+}
+
+// drainAndClose drains body into /dev/null and closes it, allowing TCP connection reuse. The drain
+// error takes precedence over the close error.
 func drainAndClose(body io.ReadCloser) error {
 	_, copyErr := io.Copy(io.Discard, body)
 	closeErr := body.Close()
@@ -104,7 +127,7 @@ func drainAndClose(body io.ReadCloser) error {
 	return closeErr
 }
 
-func (t *RetryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	// Buffer the request body so it can be replayed on retries.
 	bodyBytes, err := bufferRequestBody(req)
 	if err != nil {
@@ -114,26 +137,20 @@ func (t *RetryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	maxRetries := t.maxRetries()
 
 	for attempt := 0; ; attempt++ {
-		// Clone the request and restore the body for each attempt.
-		clone := req.Clone(req.Context())
-		if bodyBytes != nil {
-			clone.Body = io.NopCloser(bytes.NewReader(bodyBytes))
-		}
+		clone := cloneRequestWithBody(req, bodyBytes)
 
-		resp, err := t.transport().RoundTrip(clone)
-		if err != nil {
-			return nil, err
-		}
-
-		if !isRetriableStatus(resp.StatusCode) || attempt >= maxRetries {
-			return resp, nil
+		resp, err := t.base().RoundTrip(clone)
+		if !t.shouldRetry(resp, err) || attempt >= maxRetries {
+			return resp, err
 		}
 
 		ctx := clone.Context()
 		wait := t.sleepDuration(resp, attempt)
-		logging.Logger.Printf(ctx, "[RetryTransport] Received HTTP %d, retrying in %s (attempt %d/%d)", resp.StatusCode, wait, attempt+1, maxRetries)
-		if err := drainAndClose(resp.Body); err != nil {
-			return nil, err
+		logging.Logger.Printf(ctx, "[RetryTransport] %s, retrying in %s (attempt %d/%d)", retryReason(resp, err), wait, attempt+1, maxRetries)
+		if resp != nil {
+			if err := drainAndClose(resp.Body); err != nil {
+				return nil, err
+			}
 		}
 		select {
 		case <-time.After(wait):
@@ -143,10 +160,21 @@ func (t *RetryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	}
 }
 
+// retryReason describes the outcome that ShouldRetry accepted, for the log line.
+func retryReason(resp *http.Response, err error) string {
+	if err != nil {
+		return fmt.Sprintf("Request failed (%s)", err)
+	}
+	return fmt.Sprintf("Received HTTP %d", resp.StatusCode)
+}
+
 // getRetryAfterHeaderAsSleepTime parses the Retry-After response header and returns the
-// indicated wait duration. Returns 0 if the header is absent,
+// indicated wait duration. Returns 0 if there is no response, or if the header is absent,
 // cannot be parsed, or indicates a non-positive delay.
 func getRetryAfterHeaderAsSleepTime(resp *http.Response) time.Duration {
+	if resp == nil {
+		return 0
+	}
 	ra := resp.Header.Get("Retry-After")
 	if ra == "" {
 		return 0
@@ -175,7 +203,7 @@ func computeBackoffSleepTime(base time.Duration, attempt int) time.Duration {
 // sleepDuration determines how long to wait before the next retry attempt.
 // It honours the Retry-After response header when present (capped at maxBackoff);
 // otherwise it falls back to exponential back-off with jitter.
-func (t *RetryTransport) sleepDuration(resp *http.Response, attempt int) time.Duration {
+func (t *Transport) sleepDuration(resp *http.Response, attempt int) time.Duration {
 	d := getRetryAfterHeaderAsSleepTime(resp)
 	if d <= 0 {
 		d = computeBackoffSleepTime(t.baseBackoff(), attempt)
@@ -184,10 +212,4 @@ func (t *RetryTransport) sleepDuration(resp *http.Response, attempt int) time.Du
 		return maxWait
 	}
 	return d
-}
-
-func NewContextWithOAuthRetryClient(ctx context.Context) context.Context {
-	return context.WithValue(ctx, oauth2.HTTPClient, &http.Client{
-		Transport: &RetryTransport{},
-	})
 }
