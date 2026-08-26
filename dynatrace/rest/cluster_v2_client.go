@@ -22,7 +22,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
@@ -32,19 +31,16 @@ import (
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients"
 )
 
-func ClusterV2Client(credentials *Credentials) Client {
-	creds := *credentials
-	creds.ClassicEnvironmentURL = strings.TrimSuffix(credentials.Cluster.URL, "/") + "/api/cluster/v2"
-	creds.Token = credentials.Cluster.Token
-	return &cluster_v2_client{credentials: &creds}
+func ClusterV2Client(clientSet ClientSet) Client {
+	return &cluster_v2_client{clientSet: clientSet}
 }
 
 type cluster_v2_client struct {
-	credentials *Credentials
+	clientSet ClientSet
 }
 
-func (me *cluster_v2_client) Credentials() *Credentials {
-	return me.credentials
+func (me *cluster_v2_client) ClientSet() ClientSet {
+	return me.clientSet
 }
 
 func (me *cluster_v2_client) Get(ctx context.Context, url string, expectedStatusCodes ...int) Request {
@@ -81,41 +77,20 @@ func (me *cluster_v2_client) Delete(ctx context.Context, url string, expectedSta
 
 type cluster_v2_request request
 
-var clusterV2ClientCache = map[string]*rest.Client{}
-
-var clusterV2ClientCacheMutex sync.Mutex
-
-func createClusterV2Client(baseURL string, apiToken string) (*rest.Client, error) {
-	clusterV2ClientCacheMutex.Lock()
-	defer clusterV2ClientCacheMutex.Unlock()
-
-	if client, found := clusterV2ClientCache[baseURL]; found {
-		return client, nil
-	}
-
-	client, err := clients.Factory().
+func CreateClusterV2Client(ctx context.Context, baseURL string, apiToken string) (*rest.Client, error) {
+	clusterV2URL := strings.TrimSuffix(baseURL, "/") + "/api/cluster/v2"
+	return clients.Factory().
 		WithUserAgent(version.UserAgent()).
-		WithClassicURL(baseURL).
+		WithClassicURL(clusterV2URL).
 		WithAccessToken(apiToken).
 		WithRetryOptions(defaultRetryOptions).
 		WithHTTPListener(logging.HTTPListener("clustv2 ")).
-		CreateClassicClient()
-
-	if client != nil && err == nil {
-		clusterV2ClientCache[baseURL] = client
-	}
-
-	return client, err
+		CreateClassicClientWithContext(ctx)
 }
 
 func (me *cluster_v2_request) Finish(optionalTarget ...any) error {
-	var target any
-	if len(optionalTarget) > 0 {
-		target = optionalTarget[0]
-	}
-	clusterV2URL := strings.TrimSuffix(me.client.Credentials().Cluster.URL, "/") + "/api/cluster/v2"
 
-	client, err := createClusterV2Client(clusterV2URL, me.client.Credentials().Cluster.Token)
+	client, err := me.client.ClientSet().ClusterV2Client()
 	if err != nil {
 		return err
 	}
@@ -123,6 +98,11 @@ func (me *cluster_v2_request) Finish(optionalTarget ...any) error {
 	fullURL, err := url.Parse(me.url)
 	if err != nil {
 		return err
+	}
+
+	var target any
+	if len(optionalTarget) > 0 {
+		target = optionalTarget[0]
 	}
 
 	return request(*me).HandleResponse(client, fullURL, target)

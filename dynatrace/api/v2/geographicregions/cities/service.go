@@ -32,7 +32,7 @@ import (
 const SchemaID = "v2:geographicregions:cities"
 
 func Service(clientSet rest.ClientSet) (settings.RService[*cities.Settings], error) {
-	return &service{client: rest.APITokenClient(clientSet.Credentials())}, nil
+	return &service{client: rest.APITokenClient(clientSet)}, nil
 }
 
 type service struct {

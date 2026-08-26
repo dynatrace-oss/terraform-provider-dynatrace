@@ -44,7 +44,7 @@ type service struct {
 var entityIdSelectorRegexp = regexp.MustCompile("entityId\\((.*)\\)")
 
 func (me *service) Get(ctx context.Context, selector string, v *customtags.Settings) (err error) {
-	client := rest.APITokenClient(me.clientSet.Credentials())
+	client := rest.APITokenClient(me.clientSet)
 	if err = client.Get(ctx, fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(selector)), 200).Finish(v); err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	return list.List(ctx, rest.APITokenClient(me.clientSet.Credentials()))
+	return list.List(ctx, rest.APITokenClient(me.clientSet))
 }
 
 func (me *service) Validate(ctx context.Context, v *customtags.Settings) error {
@@ -88,7 +88,7 @@ func (me *service) Update(ctx context.Context, id string, v *customtags.Settings
 	var err error
 
 	var settingsObj customtags.Settings
-	client := rest.APITokenClient(me.clientSet.Credentials())
+	client := rest.APITokenClient(me.clientSet)
 	if err = client.Post(ctx, fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=now-3y&to=now", url.QueryEscape(v.EntitySelector)), v, 200).Finish(&settingsObj); err != nil {
 		return err
 	}
@@ -106,7 +106,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 }
 
 func (me *service) DeleteValue(ctx context.Context, v *customtags.Settings) error {
-	client := rest.APITokenClient(me.clientSet.Credentials())
+	client := rest.APITokenClient(me.clientSet)
 	for _, tag := range v.Tags {
 		if tag.Value == nil || len(*tag.Value) == 0 {
 			if err := client.Delete(ctx, fmt.Sprintf("/api/v2/tags?key=%s&entitySelector=%s", url.QueryEscape(tag.Key), url.QueryEscape(v.EntitySelector)), 200).Finish(); err != nil {

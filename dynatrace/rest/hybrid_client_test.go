@@ -28,6 +28,7 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
+	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -82,7 +83,7 @@ func TestHybridClient(t *testing.T) {
 				Classic  bool `json:"classic"`
 				Platform bool `json:"platform"`
 			}
-			err := rest.HybridClient(tt.creds).Get(ctx, "").Finish(&v)
+			err := rest.HybridClient(createMockClientSet(t, tt.creds)).Get(ctx, "").Finish(&v)
 
 			if tt.wantErr != nil {
 				assert.ErrorIs(t, err, tt.wantErr)
@@ -139,8 +140,8 @@ func TestApiTokenClient(t *testing.T) {
 		activeGateURL, err := url.JoinPath(server.URL, activeGatePostfix)
 		require.NoError(t, err)
 
-		cred := rest.Credentials{ClassicEnvironmentURL: activeGateURL, Token: mockToken}
-		client := rest.HybridClient(&cred)
+		cred := &rest.Credentials{ClassicEnvironmentURL: activeGateURL, Token: mockToken}
+		client := rest.HybridClient(createMockClientSet(t, cred))
 
 		req := client.Get(t.Context(), endpoint)
 		err = req.Finish()
@@ -148,21 +149,28 @@ func TestApiTokenClient(t *testing.T) {
 	})
 
 	t.Run("Errors on empty env URL", func(t *testing.T) {
-		cred := rest.Credentials{ClassicEnvironmentURL: "", Token: mockToken}
-		client := rest.HybridClient(&cred)
+		cred := &rest.Credentials{ClassicEnvironmentURL: "", Token: mockToken}
+		client := rest.HybridClient(createMockClientSet(t, cred))
 
 		req := client.Get(t.Context(), endpoint)
 		err := req.Finish()
-		assert.ErrorIs(t, err, rest.NoClassicURLDefinedErr)
+		assert.ErrorContains(t, err, "no classic API URL provided")
 	})
 
 	t.Run("Errors on invalid path", func(t *testing.T) {
-		cred := rest.Credentials{ClassicEnvironmentURL: "my-url", Token: mockToken}
-		client := rest.HybridClient(&cred)
+		cred := &rest.Credentials{ClassicEnvironmentURL: "my-url", Token: mockToken}
+		client := rest.HybridClient(createMockClientSet(t, cred))
 
 		req := client.Get(t.Context(), ":/invalid-url")
 		err := req.Finish()
 		expectedErr := &url.Error{}
 		assert.ErrorAs(t, err, &expectedErr)
 	})
+}
+
+func createMockClientSet(t *testing.T, creds *rest.Credentials) *testing2.MockClientSet {
+	clientSet := &testing2.MockClientSet{CredentialsValue: creds}
+	clientSet.PlatformClientValue, clientSet.PlatformClientErr = rest.CreatePlatformClient(t.Context(), creds.Platform.EnvironmentURL, creds)
+	clientSet.APITokenClientValue, clientSet.APITokenClientErr = rest.CreateAPITokenClient(t.Context(), creds.ClassicEnvironmentURL, creds.Token)
+	return clientSet
 }

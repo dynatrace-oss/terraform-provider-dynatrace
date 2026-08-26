@@ -41,7 +41,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*sharing.DashboardS
 		return nil, err
 	}
 	return &service{
-		client:           rest.APITokenClient(clientSet.Credentials()),
+		client:           rest.APITokenClient(clientSet),
 		dashboardService: dashboardService,
 	}, nil
 }

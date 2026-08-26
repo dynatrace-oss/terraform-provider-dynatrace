@@ -35,7 +35,7 @@ const SchemaID = "v1:config:anomaly-detection:process-groups"
 const BasePath = "/api/config/v1/anomalyDetection/processGroups"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*processgroups.AnomalyDetection], error) {
-	return &service{client: rest.APITokenClient(clientSet.Credentials()), clientSet: clientSet}, nil
+	return &service{client: rest.APITokenClient(clientSet), clientSet: clientSet}, nil
 }
 
 type service struct {

@@ -45,6 +45,18 @@ type ProviderConfiguration struct {
 
 	platformClient    *rest2.Client
 	platformClientErr error
+
+	classicPlatformClient    *rest2.Client
+	classicPlatformClientErr error
+
+	apiTokenClient    *rest2.Client
+	apiTokenClientErr error
+
+	clusterV1Client    *rest2.Client
+	clusterV1ClientErr error
+
+	clusterV2Client    *rest2.Client
+	clusterV2ClientErr error
 }
 
 func (c *ProviderConfiguration) Credentials() *rest.Credentials {
@@ -65,6 +77,22 @@ func (c *ProviderConfiguration) IAMClient() (rest.IAMClient, error) {
 
 func (c *ProviderConfiguration) PlatformClient() (*rest2.Client, error) {
 	return c.platformClient, c.platformClientErr
+}
+
+func (c *ProviderConfiguration) APITokenClient() (*rest2.Client, error) {
+	return c.apiTokenClient, c.apiTokenClientErr
+}
+
+func (c *ProviderConfiguration) ClassicPlatformClient() (*rest2.Client, error) {
+	return c.classicPlatformClient, c.classicPlatformClientErr
+}
+
+func (c *ProviderConfiguration) ClusterV1Client() (*rest2.Client, error) {
+	return c.clusterV1Client, c.clusterV1ClientErr
+}
+
+func (c *ProviderConfiguration) ClusterV2Client() (*rest2.Client, error) {
+	return c.clusterV2Client, c.clusterV2ClientErr
 }
 
 type Getter interface {
@@ -137,7 +165,10 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 
 	pc.iamClient, pc.iamClientErr = rest.NewIAMClient(clientCtx, pc.Credentials())
 	pc.platformClient, pc.platformClientErr = rest.CreatePlatformClient(clientCtx, pc.Platform.EnvironmentURL, pc.Credentials())
-
+	pc.classicPlatformClient, pc.classicPlatformClientErr = rest.CreatePlatformClient(clientCtx, pc.EnvironmentURL, pc.Credentials())
+	pc.apiTokenClient, pc.apiTokenClientErr = rest.CreateAPITokenClient(clientCtx, pc.EnvironmentURL, pc.APIToken)
+	pc.clusterV1Client, pc.clusterV1ClientErr = rest.CreateClusterV1Client(clientCtx, pc.ClusterAPIV2URL, pc.ClusterAPIToken)
+	pc.clusterV2Client, pc.clusterV2ClientErr = rest.CreateClusterV2Client(clientCtx, pc.ClusterAPIV2URL, pc.ClusterAPIToken)
 	return pc
 }
 

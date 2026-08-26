@@ -29,7 +29,7 @@ import (
 )
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*apitokens.APIToken], error) {
-	return ServiceWithClient(rest.APITokenClient(clientSet.Credentials()))
+	return ServiceWithClient(rest.APITokenClient(clientSet))
 }
 
 func ServiceWithClient(client rest.Client) (settings.CRUDService[*apitokens.APIToken], error) {

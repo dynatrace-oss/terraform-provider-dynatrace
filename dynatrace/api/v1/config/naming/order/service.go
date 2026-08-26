@@ -28,7 +28,7 @@ import (
 )
 
 func Service(clientSet rest.ClientSet, schemaID string, staticID string, staticName string, basePath string) (settings.CRUDService[*order.Settings], error) {
-	return &service{client: rest.APITokenClient(clientSet.Credentials()), schemaID: schemaID, StaticID: staticID, StaticName: staticName, BasePath: basePath}, nil
+	return &service{client: rest.APITokenClient(clientSet), schemaID: schemaID, StaticID: staticID, StaticName: staticName, BasePath: basePath}, nil
 }
 
 type service struct {

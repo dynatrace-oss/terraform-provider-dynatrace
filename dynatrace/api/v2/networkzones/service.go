@@ -36,7 +36,7 @@ import (
 const SchemaID = "v2:environment:network-zones"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*networkzones.NetworkZone], error) {
-	return &service{client: rest.APITokenClient(clientSet.Credentials()), clientSet: clientSet}, nil
+	return &service{client: rest.APITokenClient(clientSet), clientSet: clientSet}, nil
 }
 
 type service struct {

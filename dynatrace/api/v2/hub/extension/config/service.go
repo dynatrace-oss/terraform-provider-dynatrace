@@ -48,7 +48,7 @@ func (me *service) Get(ctx context.Context, id string, v *extension_config.Setti
 	name, configurationID := splitID(id)
 
 	var response GetMonitoringConfigurationResponse
-	client := rest.APITokenClient(me.clientSet.Credentials())
+	client := rest.APITokenClient(me.clientSet)
 
 	urlPath := fmt.Sprintf(
 		"/api/v2/extensions/%s/monitoringConfigurations/%s",
@@ -95,7 +95,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
 
 	var extensionsList ExtensionsList
-	client := rest.APITokenClient(me.clientSet.Credentials())
+	client := rest.APITokenClient(me.clientSet)
 
 	nextPageKey := "first"
 	for len(nextPageKey) > 0 {
@@ -143,7 +143,7 @@ func (me *service) Create(ctx context.Context, v *extension_config.Settings) (*a
 	if err := me.ensureInstalled(ctx, name, version); err != nil {
 		return nil, err
 	}
-	client := rest.APITokenClient(me.clientSet.Credentials())
+	client := rest.APITokenClient(me.clientSet)
 	createResponse := []CreateMonitoringConfigResponse{}
 	retry := 10
 	for retry > 0 {
@@ -166,7 +166,7 @@ func (me *service) Create(ctx context.Context, v *extension_config.Settings) (*a
 }
 
 func (me *service) ensureInstalled(ctx context.Context, name string, version string) error {
-	client := rest.APITokenClient(me.clientSet.Credentials())
+	client := rest.APITokenClient(me.clientSet)
 	if strings.HasPrefix(name, "custom:") {
 		return client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/%s", url.PathEscape(name), url.QueryEscape(version)), 200).Finish()
 	}
@@ -195,7 +195,7 @@ func (me *service) Update(ctx context.Context, id string, v *extension_config.Se
 	if err := me.ensureInstalled(ctx, name, version); err != nil {
 		return err
 	}
-	client := rest.APITokenClient(me.clientSet.Credentials())
+	client := rest.APITokenClient(me.clientSet)
 	createResponse := CreateMonitoringConfigResponse{}
 	payload := MonitoringConfigCreateDto{Value: []byte(v.Value)}
 	if err := client.Put(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configID)), &payload, 200).Finish(&createResponse); err != nil {
@@ -209,7 +209,7 @@ func (me *service) Update(ctx context.Context, id string, v *extension_config.Se
 
 func (me *service) Delete(ctx context.Context, id string) error {
 	name, configID := splitID(id)
-	client := rest.APITokenClient(me.clientSet.Credentials())
+	client := rest.APITokenClient(me.clientSet)
 	if err := client.Delete(ctx, fmt.Sprintf("/api/v2/extensions/%s/monitoringConfigurations/%s", url.PathEscape(name), url.PathEscape(configID)), 200).Finish(nil); err != nil {
 		// Potential response when the configuration contains
 		//    import {

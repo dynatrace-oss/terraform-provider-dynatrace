@@ -42,7 +42,7 @@ func Service[T settings.Settings](clientSet rest.ClientSet, schemaID string, sch
 	return &service[T]{
 		schemaID: schemaID,
 		// schemaVersion: schemaVersion,
-		client:  rest.HybridClient(clientSet.Credentials()),
+		client:  rest.HybridClient(clientSet),
 		options: opts,
 	}, nil
 }

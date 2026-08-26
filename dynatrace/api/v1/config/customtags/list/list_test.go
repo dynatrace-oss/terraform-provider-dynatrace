@@ -60,7 +60,7 @@ func (client *TestClient) Put(ctx context.Context, url string, payload any, expe
 func (client *TestClient) Delete(ctx context.Context, url string, expectedStatusCodes ...int) rest.Request {
 	panic("unsupported operation")
 }
-func (client *TestClient) Credentials() *rest.Credentials {
+func (client *TestClient) ClientSet() rest.ClientSet {
 	panic("unsupported operation")
 }
 
