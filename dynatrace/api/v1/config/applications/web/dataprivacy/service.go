@@ -41,7 +41,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*dataprivacy.Applic
 	}
 	return &service{
 		schemaID:      SchemaID,
-		client:        rest.APITokenClient(clientSet.Credentials()),
+		client:        rest.APITokenClient(clientSet),
 		webAppService: webAppService}, nil
 }
 

@@ -48,7 +48,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*managementzones.Se
 	return &service{
 		service:    svc,
 		sloService: sloService,
-		client:     rest.HybridClient(clientSet.Credentials()),
+		client:     rest.HybridClient(clientSet),
 	}, nil
 }
 

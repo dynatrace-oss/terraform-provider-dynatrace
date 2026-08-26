@@ -33,7 +33,7 @@ type PolicyServiceClient struct {
 }
 
 func NewPolicyService(clientSet rest.ClientSet) *PolicyServiceClient {
-	return &PolicyServiceClient{client: rest.ClusterV2Client(clientSet.Credentials())}
+	return &PolicyServiceClient{client: rest.ClusterV2Client(clientSet)}
 }
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*policies.Policy], error) {

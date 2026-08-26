@@ -26,5 +26,5 @@ type Client interface {
 	Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request
 	Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request
 	Delete(ctx context.Context, url string, expectedStatusCodes ...int) Request
-	Credentials() *Credentials
+	ClientSet() ClientSet
 }

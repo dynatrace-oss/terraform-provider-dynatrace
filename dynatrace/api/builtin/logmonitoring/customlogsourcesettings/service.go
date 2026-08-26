@@ -39,7 +39,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*customlogsourceset
 	}
 	return &service{
 		service: svc,
-		client:  rest.HybridClient(clientSet.Credentials()),
+		client:  rest.HybridClient(clientSet),
 	}, nil
 }
 

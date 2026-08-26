@@ -25,17 +25,16 @@ import (
 
 // ClassicHybridClient prefers classic over platform requests and doesn't consider the DYNATRACE_HTTP_OAUTH_PREFERENCE env variable.
 func ClassicHybridClient(clientSet ClientSet) Client {
-	credentials := clientSet.Credentials()
-	return &classic_hybrid_client{client: HybridClient(credentials), credentials: credentials}
+	return &classic_hybrid_client{client: HybridClient(clientSet), clientSet: clientSet}
 }
 
 type classic_hybrid_client struct {
-	client      Client
-	credentials *Credentials
+	client    Client
+	clientSet ClientSet
 }
 
-func (me *classic_hybrid_client) Credentials() *Credentials {
-	return me.credentials
+func (me *classic_hybrid_client) ClientSet() ClientSet {
+	return me.clientSet
 }
 
 func (me *classic_hybrid_client) Get(ctx context.Context, url string, expectedStatusCodes ...int) Request {

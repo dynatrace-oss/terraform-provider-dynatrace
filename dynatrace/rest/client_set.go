@@ -28,4 +28,11 @@ type ClientSet interface {
 	Credentials() *Credentials
 	IAMClient() (IAMClient, error)
 	PlatformClient() (*rest2.Client, error)
+
+	// ClassicPlatformClient returns a client that uses OAuth or platform token authentication to make requests on classic URLs.
+	ClassicPlatformClient() (*rest2.Client, error)
+
+	APITokenClient() (*rest2.Client, error)
+	ClusterV1Client() (*rest2.Client, error)
+	ClusterV2Client() (*rest2.Client, error)
 }

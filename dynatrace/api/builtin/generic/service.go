@@ -45,7 +45,7 @@ type service struct {
 }
 
 func (me *service) Client() rest.Client {
-	return rest.HybridClient(me.clientSet.Credentials())
+	return rest.HybridClient(me.clientSet)
 }
 
 func (me *service) Get(ctx context.Context, id string, v *generic.Settings) error {

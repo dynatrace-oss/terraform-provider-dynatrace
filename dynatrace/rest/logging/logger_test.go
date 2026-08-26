@@ -74,6 +74,7 @@ func TestProviderLogging(t *testing.T) {
 			},
 		}
 		clientSet := &testing2.MockClientSet{CredentialsValue: creds}
+		clientSet.PlatformClientValue, clientSet.PlatformClientErr = rest.CreatePlatformClient(t.Context(), creds.Platform.EnvironmentURL, creds)
 
 		service, err := connection.Service(clientSet)
 		require.NoError(t, err)
@@ -100,6 +101,7 @@ func TestProviderLogging(t *testing.T) {
 			Token:                 "my-token",
 		}
 		clientSet := &testing2.MockClientSet{CredentialsValue: creds}
+		clientSet.APITokenClientValue, clientSet.APITokenClientErr = rest.CreateAPITokenClient(t.Context(), creds.ClassicEnvironmentURL, creds.Token)
 
 		service, err := connection.Service(clientSet)
 		require.NoError(t, err)

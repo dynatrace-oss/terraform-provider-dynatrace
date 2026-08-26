@@ -66,7 +66,7 @@ func (me *service) SchemaID() string {
 }
 
 func NewPolicyService(clientSet rest.ClientSet) *BindingServiceClient {
-	return &BindingServiceClient{client: rest.ClusterV2Client(clientSet.Credentials())}
+	return &BindingServiceClient{client: rest.ClusterV2Client(clientSet)}
 }
 
 type service struct {

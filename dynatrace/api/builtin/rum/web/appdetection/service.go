@@ -41,7 +41,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*appdetection.Setti
 	}
 	return &service{
 		service: svc,
-		client:  rest.HybridClient(clientSet.Credentials()),
+		client:  rest.HybridClient(clientSet),
 	}, nil
 }
 

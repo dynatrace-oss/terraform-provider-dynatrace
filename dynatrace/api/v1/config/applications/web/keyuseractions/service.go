@@ -41,7 +41,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*keyuseractions.Set
 		return nil, err
 	}
 	return &service{
-		client:        rest.APITokenClient(clientSet.Credentials()),
+		client:        rest.APITokenClient(clientSet),
 		webAppService: webAppService}, nil
 }
 

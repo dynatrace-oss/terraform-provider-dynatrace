@@ -37,7 +37,7 @@ var smu sync.Mutex
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*services.Settings], error) {
 	return &service{
-		client:     rest.APITokenClient(clientSet.Credentials()),
+		client:     rest.APITokenClient(clientSet),
 		supService: NewSupportedServicesService(clientSet),
 	}, nil
 }
