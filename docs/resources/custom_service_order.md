@@ -9,6 +9,7 @@ description: |-
 # dynatrace_custom_service_order (Resource)
 
 -> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Write configuration** (`WriteConfig`)
+or the OAuth scopes `settings:objects:read` and `settings:objects:write`
 
 ## Dynatrace Documentation
 
@@ -104,4 +105,3 @@ resource "dynatrace_custom_service" "dotnet-second" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
- 

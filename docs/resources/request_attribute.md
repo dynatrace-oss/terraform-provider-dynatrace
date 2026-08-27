@@ -9,6 +9,7 @@ description: |-
 # dynatrace_request_attribute (Resource)
 
 -> This resource requires the API token scopes **Read configuration** (`ReadConfig`) and **Capture request data** (`CaptureRequestData`)
+or the OAuth scopes `settings:objects:read` and `settings:objects:write`
 
 ## Dynatrace Documentation
 
@@ -301,4 +302,3 @@ Optional:
 
 - `negate` (Boolean) Negate the comparison
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
- 

@@ -8,6 +8,9 @@ description: |-
 
 # dynatrace_request_naming (Data Source)
 
+-> This data source requires the API token scope **Read configuration** (`ReadConfig`)
+or the OAuth scope `settings:objects:read`
+
 The `dynatrace_request_naming` data source allows the request naming rule ID to be retrieved by its name.
 
 - `name` (String) - The name to be assigned to matching requests.

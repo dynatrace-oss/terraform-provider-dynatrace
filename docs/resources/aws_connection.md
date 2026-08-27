@@ -116,7 +116,7 @@ resource "dynatrace_aws_connection_role_arn" "test-aws-connection-arn" {
 
 Optional:
 
-- `consumers` (Set of String) Dynatrace integrations that can use this connection. Possible values: `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`
+- `consumers` (Set of String) Dynatrace integrations that can use this connection. Possible values: `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`
 
 
 <a id="nestedblock--web_identity"></a>

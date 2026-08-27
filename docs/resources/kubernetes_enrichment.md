@@ -25,8 +25,9 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_kubernetes_enrichment" "#name#" {
+resource "dynatrace_kubernetes_enrichment" "example" {
   scope = "environment"
+  use_ingest_enrichment_config_schema = true
   rules {
     rule {
       type    = "LABEL"
@@ -89,6 +90,8 @@ resource "dynatrace_kubernetes_enrichment" "#name#" {
 
   To learn more, please refer to our [documentation](https://dt-url.net/pn22sye). (see [below for nested schema](#nestedblock--rules))
 - `scope` (String) The scope of this setting (KUBERNETES_CLUSTER). Omit this property if you want to cover the whole environment.
+- `use_ingest_enrichment_config_schema` (Boolean) Opt-in to experience the new unified enrichment settings view ahead of future rollout.
+ Enabling this toggle may trigger migration of rules to the new enrichment settings. Learn more in our [documentation](https://dt-url.net/qm02uk2).
 
 ### Read-Only
 
