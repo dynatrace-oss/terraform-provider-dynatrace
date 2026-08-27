@@ -44,7 +44,7 @@ resource "dynatrace_attack_alerting" "#name#" {
 
 ### Optional
 
-- `enabled_attack_mitigations` (Set of String) Attack State
+- `enabled_attack_mitigations` (Set of String) Attack State. Possible values: `BLOCKED_WITH_EXCEPTION`, `NONE_ALLOWLISTED`, `NONE_BLOCKING_DISABLED`
 
 ### Read-Only
 

@@ -1,12 +1,14 @@
 ---
 layout: ""
 page_title: "dynatrace_network_zone Resource - terraform-provider-dynatrace"
-subcategory: "Environment Settings"
+subcategory: "Deprecated"
 description: |-
   The resource `dynatrace_network_zone` covers configuration for network zones
 ---
 
 # dynatrace_network_zone (Resource)
+
+!> The resource API endpoint has been deprecated, please use [dynatrace_network_zone_v2](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/network_zone_v2) instead.
 
 -> This resource requires the API token scopes **Read network zones** (`networkZones.read`) and **Write network zones** (`networkZones.write`)
 
@@ -39,4 +41,3 @@ The full documentation of the export feature is available [here](https://dt-url.
 ### Read-Only
 
 - `id` (String) The ID of this resource.
- 

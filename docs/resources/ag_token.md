@@ -13,6 +13,7 @@ description: |-
 -> The token value can be retrieved with `dynatrace_ag_token.<#name#>.token` after apply.
 
 -> This resource requires the API token scopes **Create ActiveGate tokens** (`activeGateTokenManagement.create`), **Read ActiveGate tokens** (`activeGateTokenManagement.read`) and **Write ActiveGate tokens** (`activeGateTokenManagement.write`)
+or the OAuth scopes `fleet-management:activegate.tokens:create`, `fleet-management:activegate.tokens:read`, `fleet-management:activegate.tokens:write` and `fleet-management:oneagent.connection-info:read` (`environment-api:activegate-tokens:create`, `environment-api:activegate-tokens:read`, `environment-api:activegate-tokens:write`, `environment-api:deployment:download`)
 
 ## Dynatrace Documentation
 
@@ -60,4 +61,3 @@ resource "dynatrace_ag_token" "#name#" {
 - `id` (String) The ID of this resource.
 - `tenant_token` (String, Sensitive) The tenant token. This information isn't directly related to the Active Gate Token. It's included for convenience. You require the permission `InstallerDownload` for that attribute to get populated
 - `token` (String, Sensitive) The secret of the token.
- 

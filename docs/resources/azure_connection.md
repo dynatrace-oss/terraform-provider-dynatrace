@@ -85,7 +85,7 @@ resource "dynatrace_azure_connection" "example" {
     application_id = azuread_application_registration.example.client_id
     directory_id   = var.azure_tenant_id
     consumers = [
-      "DA"
+      "SVC:com.dynatrace.da"
     ]
   }
 }
@@ -186,7 +186,7 @@ Required:
 
 Optional:
 
-- `consumers` (List of String) Dynatrace integrations that can use this connection. Possible values: `DA`, `NONE`, `SVC:com.dynatrace.da`
+- `consumers` (List of String) Dynatrace integrations that can use this connection. Possible values: `SVC:com.dynatrace.da`
 
 
 <a id="nestedblock--federated_identity_credential"></a>
@@ -194,7 +194,7 @@ Optional:
 
 Optional:
 
-- `consumers` (List of String) Consumers that can use the connection. Possible values: `APP:dynatrace.microsoft.azure.connector`, `DA`, `NONE`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`
+- `consumers` (List of String) Consumers that can use the connection. Possible values: `APP:dynatrace.microsoft.azure.connector`, `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`
 
 
 <a id="nestedblock--timeouts"></a>

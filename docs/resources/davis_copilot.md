@@ -52,6 +52,8 @@ resource "dynatrace_davis_copilot" "#name#" {
 - `enable_agentic_ai` (Boolean) Please note that once agentic AI is enabled, the Dynatrace Assist interface is allowed to call tools and run Grail queries. You still need to [assign permissions](https://dt-url.net/agentic-ai "Dynatrace Agentic AI permissions") to the relevant user groups.
 - `enable_document_suggestion` (Boolean) By enabling document suggestions, Dynatrace Intelligence can find similarities between Problems and existing Notebooks and Dashboards in order to suggest relevant troubleshooting guides. Learn more about [document suggestions](https://dt-url.net/xy02gpo "Dynatrace AI document suggestions").
 - `enable_tenant_aware_data_mining` (Boolean) You can enrich Dynatrace generative and agentic AI with your environment data. This lets you generate more accurate queries that identify and reference relevant entities, events, spans, logs, and metrics from your environment. Once enabled, Dynatrace Intelligence periodically scans your Grail data to create its own semantic index. Please note, it can take up to 24 hours to reflect changes. Learn more about [environment-aware queries](https://dt-url.net/4g42iu7 "Dynatrace Generative AI environment aware queries").
+- `pii_blocking_enabled` (Boolean) Enable PII blocking
+- `pii_blocking_types` (Block List, Max: 1) PII blocking types (see [below for nested schema](#nestedblock--pii_blocking_types))
 
 ### Read-Only
 
@@ -69,6 +71,23 @@ Required:
 
 Required:
 
-- `name` (String) no documentation available
+- `name` (String) No documentation available
 - `type` (String) Possible values: `BUCKET`, `TABLE`
+
+
+
+<a id="nestedblock--pii_blocking_types"></a>
+### Nested Schema for `pii_blocking_types`
+
+Required:
+
+- `canadian_social_insurance_number` (Boolean) Canadian social insurance number
+- `credit_card_number` (Boolean) Credit card number
+- `email_address` (Boolean) Email address
+- `iban_bank_account` (Boolean) IBAN bank account
+- `ip_address` (Boolean) IP address
+- `phone_number` (Boolean) Phone number
+- `url_query_parameters` (Boolean) URL query parameters
+- `us_bank_number` (Boolean) US bank number
+- `us_social_security_number` (Boolean) US social security number
  

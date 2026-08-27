@@ -8,6 +8,9 @@ description: |-
 
 # dynatrace_request_attribute (Data Source)
 
+-> This data source requires the API token scope **Read configuration** (`ReadConfig`)
+or the OAuth scope `settings:objects:read`
+
 The `dynatrace_request_attribute` data source allows the request attribute ID to be retrieved by its name.
 
 - `name` (String) - The name of the request attribute

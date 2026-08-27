@@ -8,6 +8,8 @@ description: |-
 
 # dynatrace_api_token (Data Source)
 
+-> This data source requires the API token scope **Read API tokens** (`apiTokens.read`)
+
 The API token data source allows a single access token to be retrieved by its name, note the token value is not included in the response.
 
 If multiple tokens match the given name, the first result will be retrieved. To retrieve multiple tokens of the same name, please utilize the `dynatrace_api_tokens` data source.

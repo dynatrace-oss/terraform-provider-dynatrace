@@ -32,6 +32,13 @@ resource "dynatrace_maintenance_windows" "recurring_window" {
   auto_delete = true
   enabled     = true
 
+  object_scopes {
+    synthetic_monitors {
+      disable_synthetic_monitor_filter = "status == \"OPEN\" AND severity == \"HIGH\""
+      disable_synthetic_monitors       = true
+    }
+  }
+
   schedule {
     duration = 60
     timezone = "UTC"
@@ -85,6 +92,7 @@ resource "dynatrace_maintenance_windows" "once_window" {
 ### Optional
 
 - `description` (String) Description
+- `object_scopes` (Block List, Max: 1) Object scopes (see [below for nested schema](#nestedblock--object_scopes))
 
 ### Read-Only
 
@@ -134,3 +142,24 @@ Optional:
 - `earliest_start` (String) Earliest start date for when the first instance of this maintenance window should be created.
 - `rule` (String) Reference to rule which specifies on which days instance of this maintenance window should be created.
 - `until` (String) Date after which instances of this recurring maintenance window should no longer be created.
+
+
+
+
+<a id="nestedblock--object_scopes"></a>
+### Nested Schema for `object_scopes`
+
+Required:
+
+- `synthetic_monitors` (Block List, Min: 1, Max: 1) Synthetic monitors (see [below for nested schema](#nestedblock--object_scopes--synthetic_monitors))
+
+<a id="nestedblock--object_scopes--synthetic_monitors"></a>
+### Nested Schema for `object_scopes.synthetic_monitors`
+
+Required:
+
+- `disable_synthetic_monitors` (Boolean) When enabled, synthetic monitors matching the filter are paused during the maintenance window.
+
+Optional:
+
+- `disable_synthetic_monitor_filter` (String) DQL filter selecting which synthetic monitors to pause. Required when synthetic monitors are disabled.
