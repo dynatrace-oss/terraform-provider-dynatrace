@@ -302,8 +302,9 @@ jobs:
 
       - name: 🧮 Collect test results
         env:
+          DT_SETTINGS_STAGE: PROD
           JOB_CHECK_RUN_ID: ${{ job.check_run_id }}
-        run: go run ./tools/testresults --input junit-results --output test-report.json
+        run: go run ./tools/testresults --input junit-results --sourceRoot . --output test-report.json
 
       - name: 📡 Send test results to Dynatrace
         if: always()
