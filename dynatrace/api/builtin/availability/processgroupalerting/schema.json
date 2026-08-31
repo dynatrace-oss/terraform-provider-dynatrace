@@ -1,0 +1,83 @@
+{
+  "dynatrace": "1",
+  "schemaId": "builtin:availability.process-group-alerting",
+  "displayName": "Process group availability monitoring",
+  "description": "Dynatrace continuously monitors the availability of this process group. Use the settings below to define the approach that Dynatrace should use for monitoring the availability of this process group.",
+  "documentation": "",
+  "version": "1",
+  "multiObject": false,
+  "maxObjects": 1,
+  "maturity": "GENERAL_AVAILABILITY",
+  "allowedScopes": [
+    "PROCESS_GROUP"
+  ],
+  "enums": {
+    "AlertingMode": {
+      "displayName": "AlertingMode",
+      "description": "",
+      "documentation": "",
+      "items": [
+        {
+          "value": "ON_PGI_UNAVAILABILITY",
+          "displayName": "if any process becomes unavailable"
+        },
+        {
+          "value": "ON_INSTANCE_COUNT_VIOLATION",
+          "displayName": "if minimum threshold is not met"
+        }
+      ],
+      "type": "enum"
+    }
+  },
+  "types": {},
+  "properties": {
+    "enabled": {
+      "displayName": "Enable process group availability monitoring",
+      "description": "",
+      "documentation": "",
+      "type": "boolean",
+      "nullable": false,
+      "maxObjects": 1,
+      "modificationPolicy": "DEFAULT",
+      "default": false
+    },
+    "alertingMode": {
+      "displayName": "Open a new problem",
+      "description": "**if any process becomes unavailable:**\nDynatrace will open a new problem if a single process in this group shuts down or crashes. \n\n**if minimum threshold is not met:**\nDynatrace tracks the number of process instances that comprise this process group and treats the group as a cluster. This setting enables you to define a minimum number of process instances that must be available. A problem will be opened if this process group has fewer than the minimum number of required process instances. \n\n Details of the related impact on service requests will be included in the problem summary.\n\n**Note:** If a process is intentionally shutdown or retired while this setting is active, you'll need to manually close the problem.",
+      "documentation": "",
+      "type": {
+        "$ref": "#/enums/AlertingMode"
+      },
+      "nullable": false,
+      "precondition": {
+        "type": "EQUALS",
+        "property": "enabled",
+        "expectedValue": true
+      },
+      "maxObjects": 1,
+      "modificationPolicy": "DEFAULT",
+      "default": "ON_PGI_UNAVAILABILITY"
+    },
+    "minimumInstanceThreshold": {
+      "displayName": "Open a new problem if the number of active process instances in the group is fewer than:",
+      "description": "",
+      "documentation": "",
+      "type": "integer",
+      "nullable": false,
+      "constraints": [
+        {
+          "type": "RANGE",
+          "minimum": 1
+        }
+      ],
+      "precondition": {
+        "type": "EQUALS",
+        "property": "alertingMode",
+        "expectedValue": "ON_INSTANCE_COUNT_VIOLATION"
+      },
+      "maxObjects": 1,
+      "modificationPolicy": "DEFAULT",
+      "default": 1
+    }
+  }
+}
