@@ -62,10 +62,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	}
 	d.SetId(email)
 
-	clientSet, err := config.ClientSet(m, config.CredValIAM)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	var user usr.User
 	service, err := users.Service(clientSet)

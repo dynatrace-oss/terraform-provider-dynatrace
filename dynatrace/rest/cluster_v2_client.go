@@ -78,6 +78,10 @@ func (me *cluster_v2_client) Delete(ctx context.Context, url string, expectedSta
 type cluster_v2_request request
 
 func CreateClusterV2Client(ctx context.Context, baseURL string, apiToken string) (*rest.Client, error) {
+	if len(baseURL) == 0 {
+		return nil, NoClusterURLError
+	}
+
 	clusterV2URL := strings.TrimSuffix(baseURL, "/") + "/api/cluster/v2"
 	return clients.Factory().
 		WithUserAgent(version.UserAgent()).

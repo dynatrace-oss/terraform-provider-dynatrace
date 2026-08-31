@@ -69,10 +69,7 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	clientSet, err := config.ClientSet(m, config.CredValIAM)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	service, err := serviceusers.NewService(clientSet)
 	if err != nil {

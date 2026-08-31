@@ -79,10 +79,7 @@ func DataSourceReadMultiple(ctx context.Context, d *schema.ResourceData, m any) 
 
 	d.SetId(fmt.Sprintf("generic_settings[%s][%s][%s]", query.Schema, query.Scope, query.Filter))
 
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	var stubs api.Stubs
 	myService, err := srv.Service(clientSet)

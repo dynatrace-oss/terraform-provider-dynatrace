@@ -176,6 +176,12 @@ Specifying an API Token:
 - environment variable 'DYNATRACE_API_TOKEN'
 - provider configuration attribute 'dt_api_token'`)
 
+var NoClusterURLError = errors.New(`No Cluster URL has been specified.
+
+Specifying a Cluster URL:
+- environment variable 'DYNATRACE_CLUSTER_URL'
+- provider configuration attribute 'dt_cluster_url'`)
+
 var NoOAuthCredentialsError = errors.New(`Neither OAuth Credentials nor Platform Token have been specified.
 
 Specifying OAuth credentials:

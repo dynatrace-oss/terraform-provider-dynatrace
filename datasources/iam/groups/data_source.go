@@ -57,10 +57,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
-	clientSet, err := config.ClientSet(m, config.CredValIAM)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	var stubs api.Stubs
 	// Groups Service updates the revision string every time

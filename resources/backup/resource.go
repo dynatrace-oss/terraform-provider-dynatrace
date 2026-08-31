@@ -51,10 +51,6 @@ func NewService(m any) (*backup.ServiceClient, error) {
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.ClientSet(m, config.CredValCluster)
-	if err != nil {
-		return diag.FromErr(err)
-	}
 	config := new(backup_settings.Settings)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
@@ -88,10 +84,6 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.ClientSet(m, config.CredValCluster)
-	if err != nil {
-		return diag.FromErr(err)
-	}
 	config := new(backup_settings.Settings)
 	if err := config.UnmarshalHCL(hcl.DecoderFrom(d)); err != nil {
 		return diag.FromErr(err)
@@ -124,11 +116,6 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	_, err := config.ClientSet(m, config.CredValCluster)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	stateDecoder := confighcl.StateDecoderFrom(d, Resource())
 	stateConfig := new(backup_settings.Settings)
 	if val, ok := stateDecoder.GetOk("current_state"); ok {

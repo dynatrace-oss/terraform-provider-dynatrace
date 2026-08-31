@@ -73,10 +73,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	if name == "" && typ == "" && scope == "" {
 		return diag.FromErr(fmt.Errorf("at least one of `name`, `type` or `scope` needs to be specified as a non empty string"))
 	}
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	service, err := export.Service(clientSet, export.ResourceTypes.Credentials)
 	if err != nil {

@@ -93,10 +93,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		to = ""
 	}
 
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	var settings entities.Settings
 	service, err := srv.Service(entityType, "", entitySelector, from, to, clientSet)
