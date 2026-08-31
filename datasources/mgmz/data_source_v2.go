@@ -53,10 +53,7 @@ func DataSourceReadV2(ctx context.Context, d *schema.ResourceData, m any) diag.D
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	service, err := export.Service(clientSet, export.ResourceTypes.ManagementZoneV2)
 	if err != nil {

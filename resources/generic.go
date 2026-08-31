@@ -38,29 +38,18 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func NewGeneric(resourceType export.ResourceType, credVal ...int) *Generic {
+func NewGeneric(resourceType export.ResourceType) *Generic {
 	descriptor := export.AllResources[resourceType]
-	cv := CredValDefault
-	if len(credVal) > 0 {
-		cv = credVal[0]
-	}
-	return &Generic{Type: resourceType, Descriptor: descriptor, CredentialValidation: cv}
+	return &Generic{Type: resourceType, Descriptor: descriptor}
 }
 
 type Computer interface {
 	IsComputer() bool
 }
 
-const (
-	CredValDefault = iota
-	CredValIAM
-	CredValNone
-)
-
 type Generic struct {
-	Type                 export.ResourceType
-	Descriptor           export.ResourceDescriptor
-	CredentialValidation int
+	Type       export.ResourceType
+	Descriptor export.ResourceDescriptor
 }
 
 type Deprecated interface {
@@ -165,29 +154,12 @@ func (me *Generic) Resource() *schema.Resource {
 	return resRes
 }
 
-func (me *Generic) clientSet(m any) (rest.ClientSet, error) {
-	// By default credential validation follows the default route
-	// (EnvURL, APIToken)
-	cv := config.CredValDefault
-	// Unless `me.CredentialValidation` vetoes it
-	// Example `dynatrace_iam_*` resources don't require environment URL
-	// But instead need OAuth Credentials
-	if me.CredentialValidation != cv {
-		cv = me.CredentialValidation
-	}
-	return config.ClientSet(m, cv)
-}
-
 func (me *Generic) Settings() settings.Settings {
 	return me.Descriptor.NewSettings()
 }
 
 func (me *Generic) Service(m any) (settings.CRUDService[settings.Settings], error) {
-	clientSet, err := me.clientSet(m)
-	if err != nil {
-		return nil, err
-	}
-	return me.Descriptor.Service(clientSet)
+	return me.Descriptor.Service(config.ClientSet(m))
 }
 
 func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {

@@ -109,10 +109,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		name = v.(string)
 	}
 
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 	service, err := slo.Service(clientSet)
 	if err != nil {
 		return diag.FromErr(err)

@@ -72,10 +72,7 @@ func UniqueDataSourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 			ips = vt
 		}
 	}
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 	service, err := locations.Service(clientSet)
 	if err != nil {
 		return diag.FromErr(err)

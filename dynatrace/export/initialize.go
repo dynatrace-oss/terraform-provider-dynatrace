@@ -155,18 +155,18 @@ func Initialize(pc *config.ProviderConfiguration) (environment *Environment, err
 		os.RemoveAll(targetFolder)
 	}
 
-	dwValidationStrategy := config.CredValExport
-	for key, _ := range resArgs {
+	requiresIAM := false
+	for key := range resArgs {
 		if strings.Contains(key, "_iam_") {
-			dwValidationStrategy = config.CredValExportIAM
+			requiresIAM = true
 			break
 		}
 	}
-
-	clientSet, err := config.ClientSet(pc, dwValidationStrategy)
-	if err != nil {
+	if err := validateExportCredentials(pc, requiresIAM); err != nil {
 		return nil, err
 	}
+
+	clientSet := config.ClientSet(pc)
 
 	// If ONLY child resources are getting exported we
 	// don't treat them as such. Request from Omar Zaal
@@ -190,6 +190,22 @@ func Initialize(pc *config.ProviderConfiguration) (environment *Environment, err
 		ResArgs:               resArgs,
 		ChildResourceOverride: requestingOnlyChildResources,
 	}, nil
+}
+
+// validateExportCredentials fails fast before the export does any real work: unlike the provider,
+// the CLI would otherwise only learn about missing credentials after building the whole environment.
+func validateExportCredentials(pc *config.ProviderConfiguration, requiresIAM bool) error {
+	if requiresIAM && len(pc.IAM.AccountID) == 0 {
+		return fmt.Errorf(" No Account ID has been specified for export IAM validation")
+	}
+	if len(pc.EnvironmentURL) == 0 {
+		return fmt.Errorf(" No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
+	}
+	credentials := pc.Credentials()
+	if len(pc.APIToken) == 0 && !credentials.ContainsPlatformToken() && !credentials.ContainsOAuth() {
+		return fmt.Errorf(" No API Token, Platform Token, or OAuth has been specified for export. More detailed information can be found in the documentation at https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#configure-the-dynatrace-provider")
+	}
+	return nil
 }
 
 func createFlags() (flags Flags, tailArgs []string) {

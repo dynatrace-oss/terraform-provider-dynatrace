@@ -50,10 +50,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 		return diag.FromErr(err)
 	}
 
-	clientSet, err := cfg.ClientSet(m, cfg.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := cfg.ClientSet(m)
 	service, err := activegatetokens.Service(clientSet)
 	if err != nil {
 		return diag.FromErr(err)
@@ -84,10 +81,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
 	}
-	clientSet, err := cfg.ClientSet(m, cfg.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := cfg.ClientSet(m)
 
 	service, err := activegatetokens.Service(clientSet)
 	if err != nil {
@@ -102,10 +96,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	clientSet, err := cfg.ClientSet(m, cfg.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := cfg.ClientSet(m)
 	service, err := activegatetokens.Service(clientSet)
 	if err != nil {
 		return diag.FromErr(err)
@@ -131,10 +122,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	clientSet, err := cfg.ClientSet(m, cfg.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := cfg.ClientSet(m)
 
 	service, err := activegatetokens.Service(clientSet)
 	if err != nil {

@@ -46,10 +46,7 @@ func DataSource() *schema.Resource {
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	d.SetId("dynatrace_geo_countries")
 
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 	service, err := srv.Service(clientSet)
 	if err != nil {
 		return diag.FromErr(err)

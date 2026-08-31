@@ -186,10 +186,7 @@ func TestSSOTokenURL(t *testing.T) {
 
 func createCredentials(getter config.Getter) *rest.Credentials {
 	configResult := config.ProviderConfigureGeneric(context.Background(), getter)
-	clientSet, err := config.ClientSet(configResult, config.CredValNone)
-	if err != nil {
-		return nil
-	}
+	clientSet := config.ClientSet(configResult)
 	return clientSet.Credentials()
 }
 

@@ -133,10 +133,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	}
 
 	dataSourceID := fmt.Sprintf("%#v.%#v.%#v.%#v", global, environments, accounts, groupIDs)
-	clientSet, err := config.ClientSet(m, config.CredValIAM)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	discoveredLevels := map[string]string{}
 

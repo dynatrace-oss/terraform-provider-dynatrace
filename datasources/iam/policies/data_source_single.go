@@ -73,10 +73,7 @@ func DataSourceSingleRead(ctx context.Context, d *schema.ResourceData, m any) di
 		global = LevelID("*")
 	}
 
-	clientSet, err := config.ClientSet(m, config.CredValIAM)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	service, err := policies.ServiceWithGlobals(clientSet)
 	if err != nil {

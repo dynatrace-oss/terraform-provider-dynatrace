@@ -45,10 +45,7 @@ func Resource() *schema.Resource {
 
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	var err error
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	config := new(settings.Settings)
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
@@ -79,10 +76,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 }
 
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 	config := new(settings.Settings)
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
@@ -109,10 +103,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 }
 
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	var configToMarshal *settings.Settings
 
@@ -151,10 +142,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 }
 
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 	service, err := generic.Service(clientSet)
 	if err != nil {
 		return diag.FromErr(err)

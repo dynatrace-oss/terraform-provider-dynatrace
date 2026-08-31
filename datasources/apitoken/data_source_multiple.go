@@ -47,10 +47,7 @@ func DataSourceMultiple() *schema.Resource {
 func DataSourceReadMultiple(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	d.SetId("dynatrace_api_tokens")
 
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	service, err := srv.Service(clientSet) // use srv.ServiceWithClient(rest.ClassicHybridClient(clientSet)) once the API is fixed
 	if err != nil {

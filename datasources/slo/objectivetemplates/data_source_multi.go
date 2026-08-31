@@ -59,10 +59,7 @@ func DataSourceMulti() *schema.Resource {
 var staticID = uuid.NewString()
 
 func DataSourceMultiRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	restClient, err := clientSet.PlatformClient()
 	if err != nil {

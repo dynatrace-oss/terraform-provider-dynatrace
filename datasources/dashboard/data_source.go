@@ -54,10 +54,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		owner = v.(string)
 	}
 	nameOwner := name + " owned by " + owner
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	service, err := export.Service(clientSet, export.ResourceTypes.Dashboard)
 	if err != nil {

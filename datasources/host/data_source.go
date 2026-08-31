@@ -63,10 +63,7 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 		tagList = sTags.List()
 		dscommon.StringsToTags(tagList, &tags)
 	}
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	service, err := hosts.Service(clientSet)
 	if err != nil {

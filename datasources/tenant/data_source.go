@@ -39,10 +39,7 @@ func DataSource() *schema.Resource {
 }
 
 func DataSourceRead(d *schema.ResourceData, m any) error {
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return err
-	}
+	clientSet := config.ClientSet(m)
 
 	envURL := clientSet.Credentials().ClassicEnvironmentURL
 	if len(envURL) == 0 {

@@ -104,16 +104,6 @@ type ConfigGetter struct {
 }
 
 const (
-	CredValDefault = iota
-	CredValIAM
-	CredValCluster
-	CredValPlatform
-	CredValNone
-	CredValExport
-	CredValExportIAM
-)
-
-const (
 	ProdTokenURL   = "https://sso.dynatrace.com/sso/oauth2/token"
 	SprintTokenURL = "https://sso-sprint.dynatracelabs.com/sso/oauth2/token"
 	DevTokenURL    = "https://sso-dev.dynatracelabs.com/sso/oauth2/token"
@@ -172,79 +162,11 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 	return pc
 }
 
-func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) error {
-	switch CredentialValidation {
-	case CredValDefault:
-		if len(conf.EnvironmentURL) == 0 {
-			return fmt.Errorf(" No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
-		}
-		if !strings.HasPrefix(conf.EnvironmentURL, "https://") && !strings.HasPrefix(conf.EnvironmentURL, "http://") {
-			return fmt.Errorf(" The Environment URL `%s` neither starts with `https://` nor with `http://`. Please check your configuration.\nFor SaaS environments: `https://######.live.dynatrace.com`.\nFor Managed environments: `https://############/e/########-####-####-####-############`", conf.EnvironmentURL)
-		}
-		// We cannot check for the existence of an API Token
-		// OAuth and Platform Tokens are quite possible
-	case CredValIAM:
-		if len(conf.IAM.AccountID) == 0 {
-			return fmt.Errorf(" No OAuth Account ID has been specified. Use either the environment variable `DT_ACCOUNT_ID` or the configuration attribute `iam_account_id` of the provider for that")
-		}
-		if len(conf.IAM.ClientID) == 0 {
-			return fmt.Errorf(" No OAuth Client ID has been specified. Use either the environment variable `DT_CLIENT_ID` or the configuration attribute `iam_client_id` of the provider for that")
-		}
-		if len(conf.IAM.ClientSecret) == 0 {
-			return fmt.Errorf(" No OAuth Client Secret has been specified. Use either the environment variable `DT_CLIENT_SECRET` or the configuration attribute `iam_client_secret` of the provider for that")
-		}
-		// We don't complain about a missing Token URL anymore
-		// It is either getting deducted from the Environment URL or assumed to be the default for a SaaS Production Tenant
-		//
-		// if len(conf.IAM.TokenURL) == 0 {
-		// 	return fmt.Errorf(" No OAuth TokenURL has been specified. Use either the environment variable `DT_TOKEN_URL` or the configuration attribute `iam_token_url` of the provider for that")
-		// }
-	case CredValCluster:
-		if len(conf.ClusterAPIToken) == 0 {
-			return fmt.Errorf(" No Cluster API Token has been specified. Use either the environment variable `DT_CLUSTER_API_TOKEN` or the configuration attribute `dt_cluster_api_token` of the provider for that")
-		}
-		if len(conf.ClusterAPIV2URL) == 0 {
-			return fmt.Errorf(" No Cluster URL has been specified. Use either the environment variable `DT_CLUSTER_URL` or the configuration attribute `dt_cluster_url` of the provider for that")
-		}
-	case CredValPlatform:
-		if len(conf.Platform.ClientID) == 0 {
-			return fmt.Errorf(" No OAuth Client ID for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_ID` or the configuration attribute `automation_client_id` of the provider for that")
-		}
-		if len(conf.Platform.ClientSecret) == 0 {
-			return fmt.Errorf(" No OAuth Client Secret for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_SECRET` or the configuration attribute `automation_client_secret` of the provider for that")
-		}
-		if len(conf.Platform.TokenURL) == 0 {
-			return fmt.Errorf(" No Token URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_TOKEN_URL` or the configuration attribute `automation_token_url` of the provider for that")
-		}
-		if len(conf.Platform.EnvironmentURL) == 0 {
-			return fmt.Errorf(" No Environment URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_ENVIRONMENT_URL` or the configuration attribute `automation_env_url` of the provider for that")
-		}
-	case CredValExport:
-		if len(conf.EnvironmentURL) == 0 {
-			return fmt.Errorf(" No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
-		}
-		if len(conf.APIToken) == 0 && len(conf.Platform.PlatformToken) == 0 && validateCredentials(conf, CredValPlatform) != nil {
-			return fmt.Errorf(" No API Token, Platform Token, or OAuth has been specified for export. More detailed information can be found in the documentation at https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#configure-the-dynatrace-provider")
-		}
-	case CredValExportIAM:
-		if conf.IAM.AccountID == "" {
-			return fmt.Errorf(" No Account ID has been specified for export IAM validation")
-		}
-
-		return validateCredentials(conf, CredValExport)
-	}
-	return nil
-}
-
-// ClientSet validates the provider meta and returns it as a rest.ClientSet. *ProviderConfiguration
-// implements rest.ClientSet (see client_set.go), so services/resources/datasources depend on the
-// interface rather than the concrete credentials.
-func ClientSet(m any, CredentialValidation int) (rest.ClientSet, error) {
-	conf := m.(*ProviderConfiguration)
-	if err := validateCredentials(conf, CredentialValidation); err != nil {
-		return nil, err
-	}
-	return conf, nil
+// ClientSet returns the provider meta as a rest.ClientSet. *ProviderConfiguration implements
+// rest.ClientSet (see client_set.go), so services/resources/datasources depend on the interface
+// rather than the concrete configuration.
+func ClientSet(m any) rest.ClientSet {
+	return m.(*ProviderConfiguration)
 }
 
 // getClassicEnvironmentURL retrieves the classic environment URL from the "dt_env_url" key in the provided configuration.

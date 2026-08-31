@@ -50,10 +50,7 @@ func Resource() *schema.Resource {
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
 func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 
 	config := new(settings.Settings)
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
@@ -89,10 +86,7 @@ func Create(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Update expects the configuration within the given ResourceData and send them to the Dynatrace Server in order to update that resource
 func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 	config := new(settings.Settings)
 	if err := config.UnmarshalHCL(confighcl.DecoderFrom(d, Resource())); err != nil {
 		return diag.FromErr(err)
@@ -157,10 +151,7 @@ func Update(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics
 
 // Read queries the Dynatrace Server for the configuration
 func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 	stateDecoder := confighcl.StateDecoderFrom(d, Resource())
 	stateConfig := new(settings.Settings)
 
@@ -210,10 +201,7 @@ func Read(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 
 // Delete the configuration
 func Delete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
-	clientSet, err := config.ClientSet(m, config.CredValDefault)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	clientSet := config.ClientSet(m)
 	stateDecoder := confighcl.StateDecoderFrom(d, Resource())
 	stateConfig := new(settings.Settings)
 	if val, ok := stateDecoder.GetOk("entity_selector"); ok {
