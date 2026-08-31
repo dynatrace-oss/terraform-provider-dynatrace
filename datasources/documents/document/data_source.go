@@ -24,7 +24,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	documents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document"
 	settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/documents/document/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -92,10 +91,6 @@ func DataSource() *schema.Resource {
 func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	clientSet := config.ClientSet(m)
 
-	return dataSourceRead(ctx, d, clientSet)
-}
-
-func dataSourceRead(ctx context.Context, d *schema.ResourceData, clientSet rest.ClientSet) diag.Diagnostics {
 	var values []map[string]any
 	var docType string
 	if v, ok := d.GetOk("type"); ok {
