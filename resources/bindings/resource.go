@@ -44,7 +44,7 @@ func Resource() *schema.Resource {
 }
 
 func NewService(m any) *bindings_service.BindingServiceClient {
-	return bindings_service.NewPolicyService(m.(*config.ProviderConfiguration))
+	return bindings_service.NewPolicyService(config.ClientSet(m))
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource

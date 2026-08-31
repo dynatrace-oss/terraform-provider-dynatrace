@@ -21,7 +21,6 @@ import (
 	"context"
 	"os"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	restlogging "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -48,16 +47,12 @@ func XResource() *schema.Resource {
 	}
 }
 
-func clientSet(m any) rest.ClientSet {
-	return m.(*config.ProviderConfiguration)
-}
-
 func Settings() settings.Settings {
 	return export.AllResources[ResourceType].NewSettings()
 }
 
 func Service(m any) (settings.CRUDService[settings.Settings], error) {
-	return export.AllResources[ResourceType].Service(clientSet(m))
+	return export.AllResources[ResourceType].Service(config.ClientSet(m))
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource
