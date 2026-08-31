@@ -22,6 +22,7 @@ package config_test
 import (
 	"testing"
 
+	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/stretchr/testify/assert"
 )
@@ -377,5 +378,21 @@ func TestProviderConfigureGeneric(t *testing.T) {
 			"iam_endpoint_url": "https://custom-endpoint.example.com/",
 		})
 		assert.Equal(t, "https://custom-endpoint.example.com", cfg.IAM.EndpointURL)
+	})
+}
+
+func TestClientSet(t *testing.T) {
+	t.Run("Provider configuration", func(t *testing.T) {
+		cfg := config.ProviderConfigureGeneric(t.Context(), mockResourceData{"dt_env_url": "https://foo.live.dynatrace.com"})
+
+		assert.Same(t, cfg, config.ClientSet(cfg))
+	})
+
+	t.Run("Test double", func(t *testing.T) {
+		// The meta is asserted to rest.ClientSet, not to *config.ProviderConfiguration, so any
+		// implementation of the interface can be used as provider meta.
+		clientSet := &testing2.MockClientSet{}
+
+		assert.Same(t, clientSet, config.ClientSet(clientSet))
 	})
 }

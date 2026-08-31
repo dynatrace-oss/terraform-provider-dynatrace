@@ -46,7 +46,7 @@ func Resource() *schema.Resource {
 }
 
 func NewService(m any) (*backup.ServiceClient, error) {
-	return backup.NewService(m.(*config.ProviderConfiguration))
+	return backup.NewService(config.ClientSet(m))
 }
 
 // Create expects the configuration within the given ResourceData and sends it to the Dynatrace Server in order to create that resource

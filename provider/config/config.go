@@ -162,11 +162,12 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 	return pc
 }
 
-// ClientSet returns the provider meta as a rest.ClientSet. *ProviderConfiguration implements
-// rest.ClientSet (see client_set.go), so services/resources/datasources depend on the interface
-// rather than the concrete configuration.
+// ClientSet returns the provider meta as a rest.ClientSet. The plugin SDK hands resources and
+// datasources their meta as `any`; *ProviderConfiguration (see client_set.go) is the production
+// implementation, but asserting to the interface keeps call sites free of the concrete type and
+// allows test doubles to be used as meta.
 func ClientSet(m any) rest.ClientSet {
-	return m.(*ProviderConfiguration)
+	return m.(rest.ClientSet)
 }
 
 // getClassicEnvironmentURL retrieves the classic environment URL from the "dt_env_url" key in the provided configuration.
