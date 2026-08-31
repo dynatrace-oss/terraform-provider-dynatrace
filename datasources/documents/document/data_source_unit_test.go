@@ -105,7 +105,7 @@ func TestDataSourceRead(t *testing.T) {
 		requestedIDs = nil
 		resourceData := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{"type": "dashboard"})
 
-		diags := dataSourceRead(t.Context(), resourceData, platformClientSet(t, server.URL))
+		diags := DataSourceRead(t.Context(), resourceData, platformClientSet(t, server.URL))
 
 		require.Empty(t, diags)
 		assert.Equal(t, []string{"dashboard-id"}, requestedIDs, "only documents of the requested type must be fetched")
@@ -127,7 +127,7 @@ func TestDataSourceRead(t *testing.T) {
 		requestedIDs = nil
 		resourceData := schema.TestResourceDataRaw(t, DataSource().Schema, map[string]any{})
 
-		diags := dataSourceRead(t.Context(), resourceData, platformClientSet(t, server.URL))
+		diags := DataSourceRead(t.Context(), resourceData, platformClientSet(t, server.URL))
 
 		require.Empty(t, diags)
 		assert.ElementsMatch(t, []string{"dashboard-id", "notebook-id"}, requestedIDs)
