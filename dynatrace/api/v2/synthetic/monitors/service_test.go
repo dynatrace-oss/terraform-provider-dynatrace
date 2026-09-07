@@ -29,6 +29,6 @@ func TestAccNetworkAvailabilityMonitors(t *testing.T) {
 	api.TestAcc(t)
 }
 
-func TestConstraintRemoval(t *testing.T) {
+func TestAccTestCasesNetworkMonitors(t *testing.T) {
 	api.TestAccTestCases(t)
 }

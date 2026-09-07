@@ -22,6 +22,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	defaultTagSource  = TagSources.User
+	defaultTagContext = "CONTEXTLESS"
+)
+
 type TagsWithSourceInfo []*TagWithSourceInfo
 
 func (me *TagsWithSourceInfo) Schema() map[string]*schema.Schema {
@@ -40,7 +45,13 @@ func (me TagsWithSourceInfo) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *TagsWithSourceInfo) UnmarshalHCL(decoder hcl.Decoder) error {
-	return decoder.DecodeSlice("tag", me)
+	if err := decoder.DecodeSlice("tag", me); err != nil {
+		return err
+	}
+
+	// The API already filters empty tags, but to be resilient against potential future server-side changes, they are filtered here as well.
+	*me = hcl.FilterEmpty(*me, TagWithSourceInfo{Source: &defaultTagSource, Context: &defaultTagContext})
+	return nil
 }
 
 // Tag with source of a Dynatrace entity
@@ -57,11 +68,13 @@ func (me *TagWithSourceInfo) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The source of the tag, possible values: `AUTO`, `RULE_BASED` or `USER`",
 			Optional:    true,
+			Default:     string(defaultTagSource),
 		},
 		"context": {
 			Type:        schema.TypeString,
 			Description: "The origin of the tag, such as AWS or Cloud Foundry.\n\nCustom tags use the CONTEXTLESS value",
 			Optional:    true,
+			Default:     defaultTagContext,
 		},
 		"key": {
 			Type:        schema.TypeString,
