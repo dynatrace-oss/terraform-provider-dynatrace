@@ -80,7 +80,7 @@ func (me *hybrid_request) Finish(optionalTarget ...any) error {
 
 	credentials := me.client.ClientSet().Credentials()
 
-	if !credentials.ContainsAPIToken() && !credentials.ContainsOAuthOrPlatformToken() {
+	if !credentials.ContainsAPIToken() && !credentials.ContainsPlatformCredentials() {
 		if isOAuthPreferred {
 			return NoOAuthCredentialsError
 		}
@@ -88,9 +88,9 @@ func (me *hybrid_request) Finish(optionalTarget ...any) error {
 	}
 
 	isAPITokenPossible := credentials.ContainsAPIToken()
-	isOAuthPossible := credentials.ContainsOAuthOrPlatformToken()
+	isPlatformPossible := credentials.ContainsPlatformCredentials()
 
-	if (isAPITokenPossible && !isOAuthPossible) || (isAPITokenPossible && !isOAuthPreferred) {
+	if (isAPITokenPossible && !isPlatformPossible) || (isAPITokenPossible && !isOAuthPreferred) {
 		if !credentials.ContainsAPIToken() {
 			return NoAPITokenError
 		}
@@ -98,7 +98,7 @@ func (me *hybrid_request) Finish(optionalTarget ...any) error {
 		return apiTokenRequest.Finish(optionalTarget...)
 	}
 
-	if !credentials.ContainsOAuthOrPlatformToken() {
+	if !credentials.ContainsPlatformCredentials() {
 		return NoOAuthCredentialsError
 	}
 

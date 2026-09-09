@@ -17,6 +17,8 @@
 
 package rest
 
+import "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/wif"
+
 type IAMCredentials struct {
 	ClientID     string
 	AccountID    string
@@ -26,11 +28,12 @@ type IAMCredentials struct {
 }
 
 type PlatformCredentials struct {
-	ClientID       string
-	ClientSecret   string
-	TokenURL       string
-	EnvironmentURL string
-	PlatformToken  string
+	ClientID                         string
+	ClientSecret                     string
+	TokenURL                         string
+	EnvironmentURL                   string
+	PlatformToken                    string
+	WorkloadIdentityFederationConfig wif.Config
 }
 
 type ClusterCredentials struct {
@@ -46,6 +49,10 @@ type Credentials struct {
 	Cluster               ClusterCredentials
 }
 
+func (c *Credentials) ContainsWorkloadIdentityFederationConfig() bool {
+	return c.Platform.WorkloadIdentityFederationConfig.Configured()
+}
+
 func (c *Credentials) ContainsOAuth() bool {
 	return len(c.Platform.ClientID) > 0 && len(c.Platform.ClientSecret) > 0
 }
@@ -58,6 +65,6 @@ func (c *Credentials) ContainsAPIToken() bool {
 	return len(c.Token) > 0
 }
 
-func (c *Credentials) ContainsOAuthOrPlatformToken() bool {
-	return c.ContainsOAuth() || c.ContainsPlatformToken()
+func (c *Credentials) ContainsPlatformCredentials() bool {
+	return c.ContainsWorkloadIdentityFederationConfig() || c.ContainsOAuth() || c.ContainsPlatformToken()
 }

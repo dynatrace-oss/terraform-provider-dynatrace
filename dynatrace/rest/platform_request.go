@@ -24,6 +24,7 @@ import (
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/wif"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/version"
 	"golang.org/x/oauth2/clientcredentials"
 
@@ -38,7 +39,7 @@ var eligiblePlatformRequests = map[string]string{
 
 type platform_request request
 
-var NoPlatformCredentialsErr = errors.New("neither oauth credentials nor platform token present")
+var ErrNoPlatformCredentials = errors.New("neither workload identity federation, oauth credentials, nor platform token present")
 
 func CreatePlatformClient(ctx context.Context, platformURL string, credentials *Credentials) (*rest.Client, error) {
 	factory := clients.Factory().
@@ -46,6 +47,17 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 		WithRateLimiter(true).
 		WithRetryOptions(defaultRetryOptions).
 		WithUserAgent(version.UserAgent())
+
+	if credentials.ContainsWorkloadIdentityFederationConfig() {
+		tokenSource, err := wif.TokenSourceFor(ctx, credentials.Platform.WorkloadIdentityFederationConfig)
+		if err != nil {
+			return nil, err
+		}
+		return factory.
+			WithHTTPListener(logging.HTTPListener("plat/wif")).
+			WithPlatformTokenSource(tokenSource).
+			CreatePlatformClient(ctx)
+	}
 
 	if credentials.ContainsPlatformToken() {
 		return factory.
@@ -65,7 +77,7 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 			CreatePlatformClient(NewContextWithOAuthRetryClient(ctx))
 	}
 
-	return nil, NoPlatformCredentialsErr
+	return nil, ErrNoPlatformCredentials
 }
 
 func (me *platform_request) Finish(optionalTarget ...any) error {
