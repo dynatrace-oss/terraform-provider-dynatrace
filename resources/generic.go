@@ -209,7 +209,7 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 			}
 			return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: restWarning.Message}}
 		}
-		return toDiagError(err)
+		return diag.Diagnostics{toDiagError(err)}
 	}
 	if stub == nil {
 		return diag.FromErr(errors.New("stub was nil"))
@@ -241,9 +241,9 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 }
 
 // toDiagError returns a diag.Diagnostics containing a single error with the message "API error: " followed by the violation message of the given error
-func toDiagError(err error) diag.Diagnostics {
+func toDiagError(err error) diag.Diagnostic {
 	if err == nil {
-		return nil
+		return diag.Diagnostic{}
 	}
 
 	var restError rest.Error
@@ -257,12 +257,10 @@ func toDiagError(err error) diag.Diagnostics {
 }
 
 // newAPIDiagError returns a new error with the message "API error: " followed by the given message
-func newAPIDiagError(msg string) diag.Diagnostics {
-	return diag.Diagnostics{
-		diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "API error: " + msg,
-		},
+func newAPIDiagError(msg string) diag.Diagnostic {
+	return diag.Diagnostic{
+		Severity: diag.Error,
+		Summary:  "API error: " + msg,
 	}
 }
 
@@ -305,7 +303,17 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 		if restWarning, ok := err.(rest.Warning); ok {
 			return diag.Diagnostics{diag.Diagnostic{Severity: diag.Warning, Summary: restWarning.Message}}
 		}
-		return toDiagError(err)
+		diags := diag.Diagnostics{toDiagError(err)}
+		// On a failed update the SDK would otherwise persist the (rejected)
+		// planned values into state. Restore the prior state so state isn't corrupted.
+		if revertErr := me.revertToState(d); revertErr != nil {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  revertErr.Error(),
+			})
+		}
+
+		return diags
 	}
 	if settings.RefersToMissingID(sttngs) {
 		settingName := settings.Name(sttngs, "")
@@ -335,6 +343,26 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 		return diag.Diagnostics{}
 	}
 	return me.Read(ctx, d, m)
+}
+
+// revertToState writes the prior state back into d, undoing the diff-applied
+// (new) values. Used on a failed update so the rejected values don't get
+// persisted. StateDecoderFrom reads d.GetRawState() (the prior state), which is
+// untouched by the diff.
+func (me *Generic) revertToState(d *schema.ResourceData) error {
+	stateConfig := me.Settings()
+	if err := stateConfig.UnmarshalHCL(confighcl.StateDecoderFrom(d, me.Resource())); err != nil {
+		return err
+	}
+	marshalled := hcl.Properties{}
+	if err := stateConfig.MarshalHCL(marshalled); err != nil {
+		return err
+	}
+	var errs []error
+	for k, v := range marshalled {
+		errs = append(errs, d.Set(k, v))
+	}
+	return errors.Join(errs...)
 }
 
 type IDGenerator interface {
@@ -473,7 +501,7 @@ func (me *Generic) Read(ctx context.Context, d *schema.ResourceData, m any) diag
 			d.SetId("")
 			return diag.Diagnostics{}
 		}
-		return newAPIDiagError(err.Error())
+		return diag.Diagnostics{newAPIDiagError(err.Error())}
 	}
 	return me.ReadForSettings(ctx, d, m, sttngs)
 }
@@ -526,7 +554,7 @@ func (me *Generic) Delete(ctx context.Context, d *schema.ResourceData, m any) di
 			d.SetId("")
 			return diag.Diagnostics{}
 		}
-		return newAPIDiagError(err.Error())
+		return diag.Diagnostics{newAPIDiagError(err.Error())}
 	}
 	return diag.Diagnostics{}
 }
