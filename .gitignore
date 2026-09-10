@@ -36,3 +36,4 @@ __debug_bin*
 
 # generated files
 schemaSupport.json
+event.json
