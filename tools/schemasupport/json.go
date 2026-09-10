@@ -22,18 +22,14 @@ import (
 	"os"
 	"sort"
 	"strings"
-)
 
-type schemaEntry struct {
-	ResourceName string `json:"resourceName"`
-	SchemaID     string `json:"schemaId"`
-	Version      string `json:"version"`
-}
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/tools/internal/schema"
+)
 
 // expandRows joins the schema infos with the resource mapping and returns one
 // entry per resource name per schema.
 // It also returns the schemaIds that had no matching resource name.
-func expandRows(infos []schemaInfo, schemaToResources map[string][]string) (entries []schemaEntry, missing []string) {
+func expandRows(infos []schemaInfo, schemaToResources map[string][]string) (entries []schema.Entry, missing []string) {
 	for _, info := range infos {
 		resources, found := schemaToResources[info.SchemaID]
 		if !found || len(resources) == 0 {
@@ -41,14 +37,14 @@ func expandRows(infos []schemaInfo, schemaToResources map[string][]string) (entr
 			continue
 		}
 		for _, res := range resources {
-			entries = append(entries, schemaEntry{ResourceName: res, SchemaID: info.SchemaID, Version: info.Version})
+			entries = append(entries, schema.Entry{ResourceName: res, SchemaID: info.SchemaID, Version: info.Version})
 		}
 	}
 	return entries, missing
 }
 
 // sortRows sorts entries first by resource name, then by schemaId.
-func sortRows(entries []schemaEntry) {
+func sortRows(entries []schema.Entry) {
 	sort.Slice(entries, func(i, j int) bool {
 		if entries[i].ResourceName != entries[j].ResourceName {
 			return entries[i].ResourceName < entries[j].ResourceName
@@ -58,7 +54,7 @@ func sortRows(entries []schemaEntry) {
 }
 
 // writeJSON writes entries as a JSON array of {resourceName, schemaId, version} objects to path.
-func writeJSON(path string, entries []schemaEntry) error {
+func writeJSON(path string, entries []schema.Entry) error {
 	data, err := json.MarshalIndent(entries, "", "  ")
 	if err != nil {
 		return fmt.Errorf("marshal JSON: %w", err)

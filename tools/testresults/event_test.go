@@ -27,17 +27,21 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/tools/internal/githubevent"
 )
 
 func sampleEnvironmentEvent() environmentEvent {
 	return environmentEvent{
-		DtSettingsStage:  "dev",
-		GithubRepository: "dynatrace-oss/terraform-provider-dynatrace",
-		GithubRef:        "refs/heads/main",
-		GithubEventName:  "push",
-		GithubActor:      "some-actor",
-		GithubRunID:      "123456",
-		GithubJob:        "987654321",
+		DtSettingsStage: "dev",
+		Event: githubevent.Event{
+			Repository: "dynatrace-oss/terraform-provider-dynatrace",
+			Ref:        "refs/heads/main",
+			EventName:  "push",
+			Actor:      "some-actor",
+			RunID:      "123456",
+			Job:        "987654321",
+		},
 	}
 }
 
@@ -70,7 +74,7 @@ func TestGetEnvironmentEvent_IgnoresGithubJob(t *testing.T) {
 	t.Setenv("GITHUB_JOB", "collect-test-results")
 	t.Setenv("JOB_CHECK_RUN_ID", "987654321")
 
-	assert.Equal(t, "987654321", getEnvironmentEvent().GithubJob)
+	assert.Equal(t, "987654321", getEnvironmentEvent().Job)
 }
 
 // ----- buildResultsValue -----

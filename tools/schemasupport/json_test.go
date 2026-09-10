@@ -25,6 +25,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/tools/internal/schema"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -73,7 +74,7 @@ func TestExpandRows_RowContents(t *testing.T) {
 
 	entries, _ := expandRows(infos, mapping)
 	require.Len(t, entries, 3)
-	assert.ElementsMatch(t, []schemaEntry{
+	assert.ElementsMatch(t, []schema.Entry{
 		{
 			ResourceName: "res_a",
 			SchemaID:     "schema-a",
@@ -103,7 +104,7 @@ func TestExpandRows_EmptyInputs(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestSortRows_ByResourceName(t *testing.T) {
-	entries := []schemaEntry{
+	entries := []schema.Entry{
 		{ResourceName: "zzz", SchemaID: "s1", Version: "1.0"},
 		{ResourceName: "aaa", SchemaID: "s2", Version: "1.0"},
 		{ResourceName: "mmm", SchemaID: "s3", Version: "1.0"},
@@ -115,7 +116,7 @@ func TestSortRows_ByResourceName(t *testing.T) {
 }
 
 func TestSortRows_SameResourceNameThenBySchemaId(t *testing.T) {
-	entries := []schemaEntry{
+	entries := []schema.Entry{
 		{ResourceName: "res", SchemaID: "z-schema", Version: "1.0"},
 		{ResourceName: "res", SchemaID: "a-schema", Version: "1.0"},
 		{ResourceName: "res", SchemaID: "m-schema", Version: "1.0"},
@@ -127,7 +128,7 @@ func TestSortRows_SameResourceNameThenBySchemaId(t *testing.T) {
 }
 
 func TestSortRows_AlreadySorted(t *testing.T) {
-	entries := []schemaEntry{
+	entries := []schema.Entry{
 		{ResourceName: "a", SchemaID: "s1", Version: "1.0"},
 		{ResourceName: "b", SchemaID: "s2", Version: "1.0"},
 	}
@@ -138,7 +139,7 @@ func TestSortRows_AlreadySorted(t *testing.T) {
 
 func TestSortRows_Empty(t *testing.T) {
 	assert.NotPanics(t, func() { sortRows(nil) })
-	assert.NotPanics(t, func() { sortRows([]schemaEntry{}) })
+	assert.NotPanics(t, func() { sortRows([]schema.Entry{}) })
 }
 
 // ---------------------------------------------------------------------------
@@ -148,7 +149,7 @@ func TestSortRows_Empty(t *testing.T) {
 func TestWriteJSON_HeaderAndRows(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "out.json")
 
-	entries := []schemaEntry{
+	entries := []schema.Entry{
 		{ResourceName: "res_a", SchemaID: "schema-a", Version: "1.0"},
 		{ResourceName: "res_b", SchemaID: "schema-b", Version: "2.0"},
 	}
@@ -157,7 +158,7 @@ func TestWriteJSON_HeaderAndRows(t *testing.T) {
 	content, err := os.ReadFile(path)
 	require.NoError(t, err)
 
-	var got []schemaEntry
+	var got []schema.Entry
 	require.NoError(t, json.Unmarshal(content, &got))
 
 	require.Len(t, got, 2)
@@ -172,14 +173,14 @@ func TestWriteJSON_EmptyRows(t *testing.T) {
 	content, err := os.ReadFile(path)
 	require.NoError(t, err)
 
-	var got []schemaEntry
+	var got []schema.Entry
 	require.NoError(t, json.Unmarshal(content, &got))
 	assert.Empty(t, got)
 }
 
 func TestWriteJSON_ValidJSON(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "out.json")
-	require.NoError(t, writeJSON(path, []schemaEntry{{ResourceName: "r", SchemaID: "s", Version: "v"}}))
+	require.NoError(t, writeJSON(path, []schema.Entry{{ResourceName: "r", SchemaID: "s", Version: "v"}}))
 
 	content, err := os.ReadFile(path)
 	require.NoError(t, err)

@@ -20,27 +20,19 @@ import (
 	"encoding/json"
 	"os"
 	"time"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/tools/internal/githubevent"
 )
 
 type environmentEvent struct {
-	DtSettingsStage  string `json:"dt.settings.stage"`
-	GithubRepository string `json:"github.repository"`
-	GithubRef        string `json:"github.ref"`
-	GithubEventName  string `json:"github.event_name"`
-	GithubActor      string `json:"github.actor"`
-	GithubRunID      string `json:"github.run_id"`
-	GithubJob        string `json:"github.job"`
+	DtSettingsStage string `json:"dt.settings.stage"`
+	githubevent.Event
 }
 
 func getEnvironmentEvent() environmentEvent {
 	return environmentEvent{
-		DtSettingsStage:  os.Getenv("DT_SETTINGS_STAGE"),
-		GithubRepository: os.Getenv("GITHUB_REPOSITORY"),
-		GithubRef:        os.Getenv("GITHUB_REF"),
-		GithubEventName:  os.Getenv("GITHUB_EVENT_NAME"),
-		GithubActor:      os.Getenv("GITHUB_ACTOR"),
-		GithubRunID:      os.Getenv("GITHUB_RUN_ID"),
-		GithubJob:        os.Getenv("JOB_CHECK_RUN_ID"),
+		DtSettingsStage: os.Getenv("DT_SETTINGS_STAGE"),
+		Event:           githubevent.Get(),
 	}
 }
 
