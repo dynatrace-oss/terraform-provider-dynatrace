@@ -153,6 +153,7 @@ resource "dynatrace_browser_monitor" "monitor" {
           validate {
             validation {
               type = "text_match"
+              match = "test"
             }
           }
           wait {
