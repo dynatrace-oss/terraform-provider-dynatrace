@@ -308,12 +308,12 @@ jobs:
 
       - name: 📡 Send test results to Dynatrace
         if: always()
-        uses: ./.github/actions/send-test-result-events
+        uses: ./.github/actions/send-sdlc-events
         with:
           platform_url: ${{ secrets.SFM_PLATFORM_URL }}
           platform_token: ${{ secrets.SFM_PLATFORM_TOKEN }}
           events_path: 'custom/events.sdlc/cacapiingest'
-          tests_file: test-report.json
+          events_file: test-report.json
 
       - name: ⬆️ Archive test results
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1

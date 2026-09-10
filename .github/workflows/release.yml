@@ -26,12 +26,12 @@ jobs:
 
       - name: 📡 Send schema support events to Dynatrace
         if: always()
-        uses: ./.github/actions/send-test-result-events
+        uses: ./.github/actions/send-sdlc-events
         with:
           platform_url: ${{ secrets.SFM_PLATFORM_URL }}
           platform_token: ${{ secrets.SFM_PLATFORM_TOKEN }}
           events_path: 'custom/events.sdlc/cacapiingest'
-          tests_file: event.json
+          events_file: event.json
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@2dc316deee8e90f13e1a351ab510b4d5bc0c82cd
