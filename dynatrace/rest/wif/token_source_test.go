@@ -224,11 +224,11 @@ func TestTokenSourceForLeavesSuppliedStaticTokenWithoutExpiry(t *testing.T) {
 func TestTokenSourceForRejectsUnconfiguredFederation(t *testing.T) {
 	_, err := TokenSourceFor(t.Context(), Config{})
 
-	assert.ErrorIs(t, err, errNotConfigured)
+	assert.ErrorIs(t, err, ErrNotConfigured)
 }
 
 func TestTokenSourceForRejectsInvalidConfiguration(t *testing.T) {
 	_, err := TokenSourceFor(t.Context(), Config{Vendor: VendorGitHub})
 
-	assert.ErrorIs(t, err, errNoAudience)
+	assert.ErrorIs(t, err, ErrNoAudience)
 }

@@ -239,6 +239,67 @@ jobs:
           name: junit-results-integration-${{ matrix.config.slug }}
           path: test-results
 
+  wif-integration-tests:
+    name: WIF Integration Tests - ${{ matrix.config.name }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # without this GitHub injects no ACTIONS_ID_TOKEN_REQUEST_* variables
+    # Exploratory for now: nothing has yet confirmed that the Dynatrace environment accepts a
+    # GitHub-issued federated token, and the trust for the audience below has to be set up on the
+    # Dynatrace side. Drop this once both probes are green so they start gating.
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          # The classic probe is the interesting one: `/api/config/v1/` routes to the classic platform
+          # client, so it pairs platform-style auth with the classic host.
+          - { name: "platform (documents)", slug: "platform", path: "./dynatrace/api/documents/document/..." }
+          - { name: "classic (request attributes)", slug: "classic", path: "./dynatrace/api/v1/config/requestattributes/..." }
+    steps:
+      - name: ⬇️ Check out code into the Go module directory
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+
+      - name: 🛠️ Set up Go 1.x
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # 7.0.0
+        with:
+          go-version-file: ./go.mod
+
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e #v4.0.1
+        with:
+          terraform_wrapper: false
+
+      - name: 📊 Install gotestsum
+        run: go install gotest.tools/gotestsum@c4a0df2e75a225d979a444342dd3db752b53619f #v1.13.0
+
+      - name: Run WIF Integration Tests - ${{ matrix.config.name }}
+        # No API token, no platform token and no OAuth client on purpose: with nothing else left to
+        # serve these requests, a green run can only mean the federated token was accepted.
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: "true"
+          DYNATRACE_DEBUG: "true"
+          DT_NO_REPAIR_INPUT: "false"
+          DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
+          DYNATRACE_WIF_VENDOR: "github"
+          # An audience identifies who a token is meant for, so it is not a credential - but it has to
+          # match what the Dynatrace environment was told to expect.
+          DYNATRACE_WIF_AUDIENCE: "my-test-audience"
+        run: |
+          mkdir -p test-results/${{ matrix.config.slug }}
+          gotestsum --junitfile test-results/${{ matrix.config.slug }}/test-results.xml --format testdox --format-icons hivis -- -tags="integration monitored connector" -v -p 1 ${{ matrix.config.path }}
+
+      - name: ⬆️ Archive WIF e2e test results - ${{ matrix.config.name }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        if: ${{ always() }}
+        # Deliberately outside the junit-results-integration-* pattern that collect-test-results picks
+        # up: these results run the same test names as the regular matrix does, and while the job is
+        # exploratory they would distort the collected signal rather than add to it.
+        with:
+          name: junit-results-wif-${{ matrix.config.slug }}
+          path: test-results
+
   sequential-integration-tests:
     name: Sequential Integration Tests
     runs-on: ubuntu-latest

@@ -19,6 +19,7 @@ package config
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -26,9 +27,11 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/wif"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 // ProviderConfiguration contains credentials and clients to communicate with the Dynatrace API
@@ -147,11 +150,12 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 			EndpointURL:  getIAMEndpointURL(d),
 		},
 		Platform: rest.PlatformCredentials{
-			PlatformToken:  getString(d, "platform_token"),
-			ClientID:       getPlatformClientID(d),
-			ClientSecret:   getPlatformClientSecret(d),
-			TokenURL:       getPlatformTokenURL(d),
-			EnvironmentURL: getPlatformEnvironmentURL(d),
+			PlatformToken:                    getString(d, "platform_token"),
+			ClientID:                         getPlatformClientID(d),
+			ClientSecret:                     getPlatformClientSecret(d),
+			TokenURL:                         getPlatformTokenURL(d),
+			EnvironmentURL:                   getPlatformEnvironmentURL(d),
+			WorkloadIdentityFederationConfig: getWorkloadIdentityFederationCredentials(d),
 		},
 	}
 
@@ -165,6 +169,7 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 
 	pc.iamClient, pc.iamClientErr = rest.NewIAMClient(clientCtx, pc.Credentials())
 	pc.platformClient, pc.platformClientErr = rest.CreatePlatformClient(clientCtx, pc.Platform.EnvironmentURL, pc.Credentials())
+	// TODO: classic platform client will maybe not work with WIF
 	pc.classicPlatformClient, pc.classicPlatformClientErr = rest.CreatePlatformClient(clientCtx, pc.EnvironmentURL, pc.Credentials())
 	pc.apiTokenClient, pc.apiTokenClientErr = rest.CreateAPITokenClient(clientCtx, pc.EnvironmentURL, pc.APIToken)
 	pc.clusterV1Client, pc.clusterV1ClientErr = rest.CreateClusterV1Client(clientCtx, pc.ClusterAPIV2URL, pc.ClusterAPIToken)
@@ -207,6 +212,9 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 			return fmt.Errorf(" No Cluster URL has been specified. Use either the environment variable `DT_CLUSTER_URL` or the configuration attribute `dt_cluster_url` of the provider for that")
 		}
 	case CredValPlatform:
+		if conf.Platform.WorkloadIdentityFederationConfig.Configured() {
+			return validateWorkloadIdentityFederation(conf.Platform.WorkloadIdentityFederationConfig)
+		}
 		if len(conf.Platform.ClientID) == 0 {
 			return fmt.Errorf(" No OAuth Client ID for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_ID` or the configuration attribute `automation_client_id` of the provider for that")
 		}
@@ -224,7 +232,7 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 			return fmt.Errorf(" No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
 		}
 		if len(conf.APIToken) == 0 && len(conf.Platform.PlatformToken) == 0 && validateCredentials(conf, CredValPlatform) != nil {
-			return fmt.Errorf(" No API Token, Platform Token, or OAuth has been specified for export. More detailed information can be found in the documentation at https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#configure-the-dynatrace-provider")
+			return fmt.Errorf(" No API Token, Platform Token, Workload Identity Federation, or OAuth has been specified for export. More detailed information can be found in the documentation at https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#configure-the-dynatrace-provider")
 		}
 	case CredValExportIAM:
 		if conf.IAM.AccountID == "" {
@@ -348,6 +356,44 @@ func getPlatformClientSecret(d Getter) string {
 		return clientSecret
 	}
 	return getString(d, "iam_client_secret")
+}
+
+// validateWorkloadIdentityFederation restates the rules the wif package enforces in terms of the
+// provider attributes and environment variables that set them. That package deliberately does not
+// know those names, so naming them is this layer's job.
+func validateWorkloadIdentityFederation(config wif.Config) error {
+	err := config.Validate()
+
+	switch {
+	case err == nil:
+		return nil
+	case errors.Is(err, wif.ErrVendorAndStaticToken):
+		return fmt.Errorf(" A Workload Identity Federation vendor and a pre-minted OIDC token have both been specified. These options are mutually exclusive. Unset either `wif_vendor` (`DYNATRACE_WIF_VENDOR`) or `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`)")
+	case errors.Is(err, wif.ErrStaticTokenNotAJWT):
+		return fmt.Errorf(" The value of `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`) is not a JWT: expected three dot-separated segments")
+	case errors.Is(err, wif.ErrUnsupportedVendor):
+		return fmt.Errorf(" `%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif_vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", config.Vendor, wif.VendorGitHub)
+	case errors.Is(err, wif.ErrNoAudience):
+		return fmt.Errorf(" No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
+	default:
+		return fmt.Errorf(" %s", err)
+	}
+}
+
+// getWorkloadIdentityFederationCredentials retrieves the Workload Identity Federation settings from the provided
+// configuration. The values are passed through unjudged, so that validateWorkloadIdentityFederation can report a single,
+// actionable problem rather than several partial ones.
+func getWorkloadIdentityFederationCredentials(d Getter) wif.Config {
+	return wif.Config{
+		// The provider schema rejects a misspelled vendor before this is reached, but the export
+		// command reads the configuration without going through schema validation. Lowering here
+		// keeps DYNATRACE_WIF_VENDOR=GitHub working there rather than failing as an unknown vendor.
+		Vendor:   strings.ToLower(strings.TrimSpace(getString(d, "wif_vendor"))),
+		Audience: strings.TrimSpace(getString(d, "wif_audience")),
+		// A token that traveled through a CI secret often arrives with a trailing newline, and
+		// "Bearer <token>\n" is not a valid header value.
+		StaticToken: strings.TrimSpace(getString(d, "wif_oidc_token")),
+	}
 }
 
 // getPlatformTokenURL returns the SSO token URL for platform based on the provided configuration.
