@@ -28,6 +28,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestIAMClientID(t *testing.T) {
@@ -180,6 +182,21 @@ func TestSSOTokenURL(t *testing.T) {
 			if !assert.Equal(config.DevTokenURL, credentials.Platform.TokenURL, "credentials.Automation.TokenURL") {
 				return
 			}
+		})
+	}
+}
+
+func TestWIFAudienceIsReadFromTheEnvironment(t *testing.T) {
+	for _, envVarName := range []string{"DYNATRACE_WIF_AUDIENCE", "DT_WIF_AUDIENCE"} {
+		t.Run(envVarName, func(t *testing.T) {
+			t.Setenv("DYNATRACE_WIF_AUDIENCE", "")
+			t.Setenv("DT_WIF_AUDIENCE", "")
+			t.Setenv(envVarName, "dynatrace")
+
+			credentials := createCredentials(&config.ConfigGetter{Provider: provider.Provider()})
+
+			require.NotNil(t, credentials)
+			assert.Equal(t, "dynatrace", credentials.Platform.WorkloadIdentityFederationAudience)
 		})
 	}
 }
