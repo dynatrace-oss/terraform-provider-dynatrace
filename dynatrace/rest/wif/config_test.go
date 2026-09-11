@@ -27,7 +27,7 @@ import (
 // Callers for which federation is optional guard with Configured, so absence is a problem by the time
 // Validate is asked.
 func TestValidateRejectsUnconfigured(t *testing.T) {
-	assert.ErrorIs(t, Config{}.Validate(), errNotConfigured)
+	assert.ErrorIs(t, Config{}.Validate(), ErrNotConfigured)
 }
 
 func TestValidateAcceptsVendorWithAudience(t *testing.T) {
@@ -37,7 +37,7 @@ func TestValidateAcceptsVendorWithAudience(t *testing.T) {
 func TestValidateRejectsVendorWithoutAudience(t *testing.T) {
 	err := Config{Vendor: VendorGitHub}.Validate()
 
-	assert.ErrorIs(t, err, errNoAudience)
+	assert.ErrorIs(t, err, ErrNoAudience)
 }
 
 func TestValidateRejectsUnsupportedVendor(t *testing.T) {
@@ -54,11 +54,11 @@ func TestValidateAcceptsStaticTokenWithoutAudience(t *testing.T) {
 func TestValidateRejectsStaticTokenThatIsNotAJWT(t *testing.T) {
 	err := Config{StaticToken: "not-a-jwt"}.Validate()
 
-	assert.ErrorIs(t, err, errStaticTokenNotAJWT)
+	assert.ErrorIs(t, err, ErrStaticTokenNotAJWT)
 }
 
 func TestValidateRejectsVendorAndStaticTokenTogether(t *testing.T) {
 	err := Config{Vendor: VendorGitHub, Audience: "dynatrace", StaticToken: jwtWithPayload(`{"exp":1767225600}`)}.Validate()
 
-	assert.ErrorIs(t, err, errVendorAndStaticToken)
+	assert.ErrorIs(t, err, ErrVendorAndStaticToken)
 }

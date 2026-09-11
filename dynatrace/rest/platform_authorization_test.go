@@ -181,6 +181,44 @@ func TestCreatePlatformClientMintsIndependentlyPerCall(t *testing.T) {
 	assert.Equal(t, int64(2), mintRequests.Load())
 }
 
+// federatedCredentials points the two hosts a platform request can be routed to at their own
+// stand-in, so that a test can tell which of them served the request.
+func federatedCredentials(t *testing.T, token string) (credentials *rest.Credentials, classicAuthorization, platformAuthorization *string) {
+	t.Helper()
+
+	classicURL, classicAuthorization := platformAPI(t)
+	platformURL, platformAuthorization := platformAPI(t)
+
+	return &rest.Credentials{
+		ClassicEnvironmentURL: classicURL,
+		Platform: rest.PlatformCredentials{
+			EnvironmentURL:                   platformURL,
+			WorkloadIdentityFederationConfig: wif.Config{StaticToken: token},
+		},
+	}, classicAuthorization, platformAuthorization
+}
+
+func TestClassicConfigRequestsGoToTheClassicHostWithTheFederatedToken(t *testing.T) {
+	token := idToken("repo:dynatrace-oss/terraform-provider-dynatrace:ref:refs/heads/main")
+	credentials, classicAuthorization, platformAuthorization := federatedCredentials(t, token)
+
+	require.NoError(t, rest.HybridClient(createMockClientSet(t, credentials)).Get(t.Context(), "/api/config/v1/service/requestAttributes").Finish())
+
+	assert.Equal(t, "Bearer "+token, *classicAuthorization)
+	assert.Equal(t, "", *platformAuthorization)
+}
+
+// The counterpart of the test above, differing only in the requested path.
+func TestNonClassicRequestsGoToThePlatformHostWithTheFederatedToken(t *testing.T) {
+	token := idToken("repo:dynatrace-oss/terraform-provider-dynatrace:ref:refs/heads/main")
+	credentials, classicAuthorization, platformAuthorization := federatedCredentials(t, token)
+
+	require.NoError(t, rest.HybridClient(createMockClientSet(t, credentials)).Get(t.Context(), "/platform/management/v1/environment").Finish())
+
+	assert.Equal(t, "", *classicAuthorization)
+	assert.Equal(t, "Bearer "+token, *platformAuthorization)
+}
+
 func TestCreatePlatformClientReportsFailureToObtainOIDCToken(t *testing.T) {
 	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "")
 	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "")

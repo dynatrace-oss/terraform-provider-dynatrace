@@ -23,11 +23,14 @@ import (
 	"strings"
 )
 
+// These are exported so that a caller can tell the rules apart and restate them in its own
+// vocabulary - this package deliberately does not know what the provider calls its attributes.
 var (
-	errNotConfigured        = errors.New("no Workload Identity Federation has been configured")
-	errVendorAndStaticToken = errors.New("a vendor and a pre-minted OIDC token are mutually exclusive, specify only one of them")
-	errStaticTokenNotAJWT   = errors.New("the pre-minted OIDC token is not a JWT: expected three dot-separated segments")
-	errNoAudience           = errors.New("no audience has been specified")
+	ErrNotConfigured        = errors.New("no Workload Identity Federation has been configured")
+	ErrVendorAndStaticToken = errors.New("a vendor and a pre-minted OIDC token are mutually exclusive, specify only one of them")
+	ErrStaticTokenNotAJWT   = errors.New("the pre-minted OIDC token is not a JWT: expected three dot-separated segments")
+	ErrNoAudience           = errors.New("no audience has been specified")
+	ErrUnsupportedVendor    = errors.New("unsupported vendor")
 )
 
 // Vendor identifies the workload identity provider that issues the OIDC token.
@@ -52,16 +55,16 @@ func (config Config) Configured() bool {
 // to guard with [Config.Configured] - only they can decide whether its absence is a problem.
 func (config Config) Validate() error {
 	if !config.Configured() {
-		return errNotConfigured
+		return ErrNotConfigured
 	}
 
 	if len(config.Vendor) > 0 && len(config.StaticToken) > 0 {
-		return errVendorAndStaticToken
+		return ErrVendorAndStaticToken
 	}
 
 	if len(config.StaticToken) > 0 {
 		if strings.Count(config.StaticToken, ".") != jwtSegmentCount-1 {
-			return errStaticTokenNotAJWT
+			return ErrStaticTokenNotAJWT
 		}
 		return nil
 	}
@@ -71,12 +74,20 @@ func (config Config) Validate() error {
 	}
 
 	if len(config.Audience) == 0 {
-		return errNoAudience
+		return ErrNoAudience
 	}
 
 	return nil
 }
 
-func unsupportedVendorError(vendor Vendor) error {
-	return fmt.Errorf("`%s` is not a supported vendor, the only supported one is `%s`", vendor, VendorGitHub)
+// unsupportedVendorError names the offending vendor while staying matchable against
+// [ErrUnsupportedVendor]. Wrapping with %w would append the sentinel's text to the message.
+type unsupportedVendorError Vendor
+
+func (vendor unsupportedVendorError) Error() string {
+	return fmt.Sprintf("`%s` is not a supported vendor, the only supported one is `%s`", string(vendor), VendorGitHub)
+}
+
+func (vendor unsupportedVendorError) Unwrap() error {
+	return ErrUnsupportedVendor
 }
