@@ -26,6 +26,8 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
+	hclv2 "github.com/hashicorp/hcl/v2"
+	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/stretchr/testify/assert"
@@ -152,6 +154,137 @@ func TestWriteEntries(t *testing.T) {
 
 		assert.Less(t, alphaIdx, betaIdx)
 		assert.Less(t, betaIdx, gammaIdx)
+	})
+}
+
+// renderPrimitive writes a single primitiveEntry with key "message" into a
+// resource block and returns the rendered HCL.
+func renderPrimitive(t *testing.T, value any) string {
+	t.Helper()
+	return renderBlockBody(t, func(block *hclwrite.Block) {
+		require.NoError(t, (&primitiveEntry{Key: "message", Value: value}).Write(block.Body(), ""))
+	})
+}
+
+// assertHCLParses guards against emitting HCL that doesn't parse (e.g. a heredoc
+// terminator sharing its line with following tokens).
+func assertHCLParses(t *testing.T, out string) {
+	t.Helper()
+	_, diags := hclsyntax.ParseConfig([]byte(out), "test.tf", hclv2.InitialPos)
+	require.False(t, diags.HasErrors(), diags.Error())
+}
+
+func TestPrimitiveEntryHeredoc(t *testing.T) {
+	// heredoc rendering is gated on envutils.DynatraceHeredoc, which defaults to true.
+	t.Run("multiline value ending in newline renders a bare heredoc", func(t *testing.T) {
+		out := renderPrimitive(t, "line1\nline2\n")
+		assertHCLParses(t, out)
+		assert.Contains(t, out, "<<-EOT")
+		assert.NotContains(t, out, "trimsuffix")
+	})
+
+	t.Run("multiline value without trailing newline is wrapped in trimsuffix", func(t *testing.T) {
+		out := renderPrimitive(t, "line1\nline2")
+		assertHCLParses(t, out)
+		assert.Contains(t, out, "trimsuffix(<<-EOT")
+		assert.Contains(t, out, `, "\n")`)
+	})
+
+	t.Run("single-line value stays a quoted string", func(t *testing.T) {
+		out := renderPrimitive(t, "just one line")
+		assertHCLParses(t, out)
+		assert.Contains(t, out, `message = "just one line"`)
+		assert.NotContains(t, out, "EOT")
+	})
+
+	t.Run("string pointer is handled like a string", func(t *testing.T) {
+		v := "line1\nline2"
+		out := renderPrimitive(t, &v)
+		assertHCLParses(t, out)
+		assert.Contains(t, out, "trimsuffix(<<-EOT")
+	})
+
+	t.Run("EOT terminator is dedented to the attribute indent", func(t *testing.T) {
+		out := renderPrimitive(t, "line1\nline2\n")
+		// indent "" → content at 2 spaces, EOT flush left.
+		assert.Contains(t, out, "\n  line1\n")
+		assert.Contains(t, out, "\nEOT\n")
+	})
+}
+
+// TestPrimitiveEntryWriteBranches covers the remaining primitiveEntry.Write
+// branches (the "HCL-UNQUOTE-" prefix, string slices, JSON detection, quote-heavy
+// single-line strings, and non-string values).
+func TestPrimitiveEntryWriteBranches(t *testing.T) {
+	ptr := func(v string) *string { return &v }
+
+	t.Run("HCL-UNQUOTE- prefix renders an unquoted expression", func(t *testing.T) {
+		out := renderPrimitive(t, "HCL-UNQUOTE-var.foo")
+		assertHCLParses(t, out)
+		assert.Contains(t, out, "message = var.foo")
+		assert.NotContains(t, out, `"var.foo"`)
+	})
+
+	t.Run("HCL-UNQUOTE- prefix on a *string renders unquoted", func(t *testing.T) {
+		out := renderPrimitive(t, ptr("HCL-UNQUOTE-var.bar"))
+		assertHCLParses(t, out)
+		assert.Contains(t, out, "message = var.bar")
+	})
+
+	t.Run("string slice renders a list", func(t *testing.T) {
+		out := renderPrimitive(t, []string{"a", "b"})
+		assertHCLParses(t, out)
+		assert.Contains(t, out, `message = [ "a", "b" ]`)
+	})
+
+	t.Run("string slice keeps HCL-UNQUOTE- elements unquoted", func(t *testing.T) {
+		out := renderPrimitive(t, []string{"HCL-UNQUOTE-var.x", "y"})
+		assertHCLParses(t, out)
+		assert.Contains(t, out, `message = [ var.x, "y" ]`)
+	})
+
+	t.Run("JSON string renders via jsonencode", func(t *testing.T) {
+		out := renderPrimitive(t, `{"a":1,"b":"x"}`)
+		assertHCLParses(t, out)
+		assert.Contains(t, out, "jsonencode(")
+		assert.Contains(t, out, `"a": 1`)
+	})
+
+	t.Run("JSON *string renders via jsonencode", func(t *testing.T) {
+		out := renderPrimitive(t, ptr(`{"k":true}`))
+		assertHCLParses(t, out)
+		assert.Contains(t, out, "jsonencode(")
+		assert.Contains(t, out, `"k": true`)
+	})
+
+	t.Run("quote-heavy single-line string renders as a trimsuffix heredoc", func(t *testing.T) {
+		// Matches the strings.Count(s, `"`) > 3 heredoc branch: a value with many
+		// embedded quotes avoids escape noise via a heredoc. Being single-line it
+		// has no trailing newline, so it's wrapped in trimsuffix to stay exact.
+		out := renderPrimitive(t, `a "b" c "d" e`)
+		assertHCLParses(t, out)
+		assert.Contains(t, out, "trimsuffix(<<-EOT")
+		assert.Contains(t, out, `a "b" c "d" e`)
+		assert.NotContains(t, out, `\"`) // quotes are literal inside the heredoc
+	})
+
+	t.Run("string with few quotes stays a quoted string", func(t *testing.T) {
+		out := renderPrimitive(t, `a "b" c`)
+		assertHCLParses(t, out)
+		assert.Contains(t, out, `message = "a \"b\" c"`)
+		assert.NotContains(t, out, "EOT")
+	})
+
+	t.Run("int value renders as a bare number", func(t *testing.T) {
+		out := renderPrimitive(t, 42)
+		assertHCLParses(t, out)
+		assert.Contains(t, out, "message = 42")
+	})
+
+	t.Run("bool value renders as a bare literal", func(t *testing.T) {
+		out := renderPrimitive(t, true)
+		assertHCLParses(t, out)
+		assert.Contains(t, out, "message = true")
 	})
 }
 

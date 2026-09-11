@@ -78,6 +78,26 @@ func finalizeString(s string, indent string) string {
 	return finalString
 }
 
+// wantHeredoc returns true if EOT should be used (newline or heavily quoted string)
+func wantHeredoc(s string) bool {
+	return envutils.DynatraceHeredoc.Get() && (strings.Contains(s, "\n") || strings.Count(s, `"`) > 3)
+}
+
+func heredocBody(body string, indent string) string {
+	return "<<-EOT\n" + indent + "  " + finalizeString(body, indent) + "\n" + indent + "EOT"
+}
+
+// heredocOrTrimmed renders a multiline s as a heredoc (EOT).
+// If the string doesn't end with a newline, EOT is within a "trimsuffix"
+func heredocOrTrimmed(s string, indent string) string {
+	if before, ok := strings.CutSuffix(s, "\n"); ok {
+		return heredocBody(before, indent)
+	}
+	// The closing arg must sit on its own line; a heredoc terminator can't share
+	// its line with following tokens.
+	return "trimsuffix(" + heredocBody(s, indent) + "\n" + indent + ", \"\\n\")"
+}
+
 /*
  */
 func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
@@ -106,24 +126,10 @@ func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(toJSONencode(strVal, indent))}})
 	} else if strValP, ok := me.Value.(*string); ok && strValP != nil && isJSON(*strValP) {
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(toJSONencode(*strValP, indent))}})
-	} else if strVal, ok := me.Value.(string); ok && envutils.DynatraceHeredoc.Get() && strings.Contains(strVal, "\n") {
-		var eotIndent string
-		// If we always add a newline before the EOT end, then we end up with an extra blank line at the end of the string if the string already ends with a newline.
-		// This would cause a non-empty terraform plan
-		if !strings.HasSuffix(strVal, "\n") {
-			eotIndent = "\n" + indent
-		}
-		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(strVal, indent) + eotIndent + "EOT"
-		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
-	} else if strVal, ok := me.Value.(string); ok && envutils.DynatraceHeredoc.Get() && strings.Count(strVal, "\"") > 3 {
-		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(strVal, indent) + "\n" + indent + "EOT"
-		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
-	} else if strValP, ok := me.Value.(*string); ok && envutils.DynatraceHeredoc.Get() && strValP != nil && strings.Count(*strValP, "\"") > 3 {
-		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(*strValP, indent) + "\n" + indent + "EOT"
-		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
-	} else if strValP, ok := me.Value.(*string); ok && envutils.DynatraceHeredoc.Get() && strValP != nil && strings.Contains(*strValP, "\n") {
-		mlstr := "<<-EOT\n" + indent + "  " + finalizeString(*strValP, indent) + "\n" + indent + "EOT"
-		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(mlstr)}})
+	} else if strVal, ok := me.Value.(string); ok && wantHeredoc(strVal) {
+		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(heredocOrTrimmed(strVal, indent))}})
+	} else if strValP, ok := me.Value.(*string); ok && strValP != nil && wantHeredoc(*strValP) {
+		w.SetAttributeRaw(me.Key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(heredocOrTrimmed(*strValP, indent))}})
 	} else if strVal, ok := me.Value.(string); ok {
 		w.SetAttributeRaw(me.Key, hclwrite.Tokens{
 			&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte{' '}},
