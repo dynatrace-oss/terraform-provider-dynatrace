@@ -76,8 +76,42 @@ func TestWIFOIDCTokenIsTrimmed(t *testing.T) {
 	assert.Equal(t, suppliedToken, cfg.Platform.WorkloadIdentityFederationConfig.StaticToken)
 }
 
+func TestWIFGitHubTokenRequestURLIsParsed(t *testing.T) {
+	cfg := configuredWith(t, map[string]any{
+		"wif_vendor":                   "github",
+		"wif_audience":                 "dynatrace",
+		"wif_github_token_request_url": "https://token.actions.githubusercontent.com/",
+	})
+
+	assert.Equal(t, "https://token.actions.githubusercontent.com/", cfg.Platform.WorkloadIdentityFederationConfig.GitHubTokenRequestURL)
+}
+
+func TestWIFGitHubTokenRequestTokenIsParsed(t *testing.T) {
+	cfg := configuredWith(t, map[string]any{
+		"wif_vendor":                     "github",
+		"wif_audience":                   "dynatrace",
+		"wif_github_token_request_token": "request-token",
+	})
+
+	assert.Equal(t, "request-token", cfg.Platform.WorkloadIdentityFederationConfig.GitHubTokenRequestToken)
+}
+
+// wifCredentials returns a credential map with all fields needed for a fully configured GitHub WIF setup.
+func wifCredentials(overrides map[string]any) map[string]any {
+	credentials := map[string]any{
+		"wif_vendor":                     "github",
+		"wif_audience":                   "dynatrace",
+		"wif_github_token_request_url":   "https://token.service.invalid/",
+		"wif_github_token_request_token": "request-token",
+	}
+	for key, value := range overrides {
+		credentials[key] = value
+	}
+	return credentials
+}
+
 func TestPlatformValidationAcceptsWIFWithoutOAuth(t *testing.T) {
-	cfg := configuredWith(t, map[string]any{"wif_vendor": "github", "wif_audience": "dynatrace"})
+	cfg := configuredWith(t, wifCredentials(nil))
 
 	_, err := config.ClientSet(cfg, config.CredValPlatform)
 
@@ -85,11 +119,27 @@ func TestPlatformValidationAcceptsWIFWithoutOAuth(t *testing.T) {
 }
 
 func TestPlatformValidationRejectsWIFWithoutAudience(t *testing.T) {
-	cfg := configuredWith(t, map[string]any{"wif_vendor": "github"})
+	cfg := configuredWith(t, wifCredentials(map[string]any{"wif_audience": ""}))
 
 	_, err := config.ClientSet(cfg, config.CredValPlatform)
 
 	assert.EqualError(t, err, " No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
+}
+
+func TestPlatformValidationRejectsWIFWithoutGitHubTokenRequestURL(t *testing.T) {
+	cfg := configuredWith(t, wifCredentials(map[string]any{"wif_github_token_request_url": ""}))
+
+	_, err := config.ClientSet(cfg, config.CredValPlatform)
+
+	assert.EqualError(t, err, " No GitHub Actions token request URL has been configured. Use either the configuration attribute `wif_github_token_request_url` or run this job in GitHub Actions with `permissions: { id-token: write }` (which injects `ACTIONS_ID_TOKEN_REQUEST_URL`)")
+}
+
+func TestPlatformValidationRejectsWIFWithoutGitHubTokenRequestToken(t *testing.T) {
+	cfg := configuredWith(t, wifCredentials(map[string]any{"wif_github_token_request_token": ""}))
+
+	_, err := config.ClientSet(cfg, config.CredValPlatform)
+
+	assert.EqualError(t, err, " No GitHub Actions token request token has been configured. Use either the configuration attribute `wif_github_token_request_token` or run this job in GitHub Actions with `permissions: { id-token: write }` (which injects `ACTIONS_ID_TOKEN_REQUEST_TOKEN`)")
 }
 
 func TestPlatformValidationRejectsUnsupportedVendor(t *testing.T) {
@@ -114,7 +164,7 @@ func TestPlatformValidationRejectsVendorAndOIDCTokenTogether(t *testing.T) {
 }
 
 func TestExportValidationAcceptsWIF(t *testing.T) {
-	cfg := configuredWith(t, map[string]any{"wif_vendor": "github", "wif_audience": "dynatrace"})
+	cfg := configuredWith(t, wifCredentials(nil))
 
 	_, err := config.ClientSet(cfg, config.CredValExport)
 

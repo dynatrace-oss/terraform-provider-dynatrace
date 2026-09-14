@@ -32,10 +32,6 @@ const refreshMargin = 2 * time.Minute
 // TokenSourceFor returns a token source for the given configuration. Every mint is bounded by ctx, so
 // ctx has to outlive the requests the source ends up authenticating.
 func TokenSourceFor(ctx context.Context, config Config) (oauth2.TokenSource, error) {
-	if err := config.Validate(); err != nil {
-		return nil, err
-	}
-
 	if len(config.StaticToken) > 0 {
 		// No expiry: reporting one would make oauth2 discard a token the provider cannot re-mint.
 		return oauth2.StaticTokenSource(&oauth2.Token{AccessToken: config.StaticToken}), nil

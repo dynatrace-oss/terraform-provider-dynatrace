@@ -19,7 +19,6 @@ package config
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -358,26 +357,31 @@ func getPlatformClientSecret(d Getter) string {
 	return getString(d, "iam_client_secret")
 }
 
-// validateWorkloadIdentityFederation restates the rules the wif package enforces in terms of the
-// provider attributes and environment variables that set them. That package deliberately does not
-// know those names, so naming them is this layer's job.
+// validateWorkloadIdentityFederation validates the Workload Identity Federation configuration in
+// terms of the provider attributes and environment variables that set them.
 func validateWorkloadIdentityFederation(config wif.Config) error {
-	err := config.Validate()
-
-	switch {
-	case err == nil:
-		return nil
-	case errors.Is(err, wif.ErrVendorAndStaticToken):
+	if len(config.Vendor) > 0 && len(config.StaticToken) > 0 {
 		return fmt.Errorf(" A Workload Identity Federation vendor and a pre-minted OIDC token have both been specified. These options are mutually exclusive. Unset either `wif_vendor` (`DYNATRACE_WIF_VENDOR`) or `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`)")
-	case errors.Is(err, wif.ErrStaticTokenNotAJWT):
-		return fmt.Errorf(" The value of `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`) is not a JWT: expected three dot-separated segments")
-	case errors.Is(err, wif.ErrUnsupportedVendor):
-		return fmt.Errorf(" `%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif_vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", config.Vendor, wif.VendorGitHub)
-	case errors.Is(err, wif.ErrNoAudience):
-		return fmt.Errorf(" No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
-	default:
-		return fmt.Errorf(" %s", err)
 	}
+	if len(config.StaticToken) > 0 {
+		if strings.Count(config.StaticToken, ".") != 2 {
+			return fmt.Errorf(" The value of `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`) is not a JWT: expected three dot-separated segments")
+		}
+		return nil
+	}
+	if config.Vendor != wif.VendorGitHub {
+		return fmt.Errorf(" `%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif_vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", config.Vendor, wif.VendorGitHub)
+	}
+	if len(config.Audience) == 0 {
+		return fmt.Errorf(" No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
+	}
+	if len(config.GitHubTokenRequestURL) == 0 {
+		return fmt.Errorf(" No GitHub Actions token request URL has been configured. Use either the configuration attribute `wif_github_token_request_url` or run this job in GitHub Actions with `permissions: { id-token: write }` (which injects `ACTIONS_ID_TOKEN_REQUEST_URL`)")
+	}
+	if len(config.GitHubTokenRequestToken) == 0 {
+		return fmt.Errorf(" No GitHub Actions token request token has been configured. Use either the configuration attribute `wif_github_token_request_token` or run this job in GitHub Actions with `permissions: { id-token: write }` (which injects `ACTIONS_ID_TOKEN_REQUEST_TOKEN`)")
+	}
+	return nil
 }
 
 // getWorkloadIdentityFederationCredentials retrieves the Workload Identity Federation settings from the provided
@@ -392,7 +396,9 @@ func getWorkloadIdentityFederationCredentials(d Getter) wif.Config {
 		Audience: strings.TrimSpace(getString(d, "wif_audience")),
 		// A token that traveled through a CI secret often arrives with a trailing newline, and
 		// "Bearer <token>\n" is not a valid header value.
-		StaticToken: strings.TrimSpace(getString(d, "wif_oidc_token")),
+		StaticToken:             strings.TrimSpace(getString(d, "wif_oidc_token")),
+		GitHubTokenRequestURL:   getString(d, "wif_github_token_request_url"),
+		GitHubTokenRequestToken: getString(d, "wif_github_token_request_token"),
 	}
 }
 

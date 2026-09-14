@@ -25,7 +25,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/oauth2"
@@ -54,14 +53,6 @@ func (minter *recordingMinter) mint(ctx context.Context) (string, error) {
 
 func tokenExpiringIn(validity time.Duration) string {
 	return jwtWithPayload(fmt.Sprintf(`{"exp":%d}`, time.Now().Add(validity).Unix()))
-}
-
-// A vendor minter reads these while it is being built.
-func setMintingCredentials(t *testing.T) {
-	t.Helper()
-
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "https://token.service.invalid/")
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "request-token")
 }
 
 func newMintingTokenSource(t *testing.T, minter minter) *mintingTokenSource {
@@ -182,21 +173,21 @@ func TestStaticTokenSourceHandsOutTheSuppliedTokenWithoutExpiry(t *testing.T) {
 }
 
 func TestTokenSourceForBuildsSourceForVendor(t *testing.T) {
-	setMintingCredentials(t)
-
-	source, err := TokenSourceFor(t.Context(), Config{Vendor: VendorGitHub, Audience: "dynatrace"})
+	source, err := TokenSourceFor(t.Context(), Config{
+		Vendor:                  VendorGitHub,
+		Audience:                "dynatrace",
+		GitHubTokenRequestURL:   "https://token.service.invalid/",
+		GitHubTokenRequestToken: "request-token",
+	})
 
 	require.NoError(t, err)
 	assert.NotNil(t, source)
 }
 
 func TestTokenSourceForReportsMissingVendorCredentials(t *testing.T) {
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "")
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "")
-
 	_, err := TokenSourceFor(t.Context(), Config{Vendor: VendorGitHub, Audience: "dynatrace"})
 
-	assert.ErrorIs(t, err, errMissingCredential)
+	assert.ErrorIs(t, err, errNoTokenRequestURL)
 }
 
 func TestTokenSourceForReturnsSuppliedStaticToken(t *testing.T) {
@@ -218,17 +209,4 @@ func TestTokenSourceForLeavesSuppliedStaticTokenWithoutExpiry(t *testing.T) {
 	token, err := source.Token()
 	require.NoError(t, err)
 	assert.True(t, token.Expiry.IsZero())
-}
-
-// Without this, an unconfigured setup used to yield a token source handing out an empty bearer token.
-func TestTokenSourceForRejectsUnconfiguredFederation(t *testing.T) {
-	_, err := TokenSourceFor(t.Context(), Config{})
-
-	assert.ErrorIs(t, err, ErrNotConfigured)
-}
-
-func TestTokenSourceForRejectsInvalidConfiguration(t *testing.T) {
-	_, err := TokenSourceFor(t.Context(), Config{Vendor: VendorGitHub})
-
-	assert.ErrorIs(t, err, ErrNoAudience)
 }

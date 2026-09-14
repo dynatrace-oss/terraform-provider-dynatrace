@@ -41,6 +41,8 @@ func validateProviderConfig(t *testing.T, config map[string]any) diag.Diagnostic
 		"DYNATRACE_WIF_VENDOR", "DT_WIF_VENDOR",
 		"DYNATRACE_WIF_AUDIENCE", "DT_WIF_AUDIENCE",
 		"DYNATRACE_WIF_OIDC_TOKEN", "DT_WIF_OIDC_TOKEN",
+		"ACTIONS_ID_TOKEN_REQUEST_URL",
+		"ACTIONS_ID_TOKEN_REQUEST_TOKEN",
 	} {
 		t.Setenv(variable, "")
 	}
