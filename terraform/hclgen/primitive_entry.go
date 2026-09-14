@@ -58,10 +58,14 @@ func toJSONencode(s string, indent string) string {
 	m := map[string]any{}
 	json.Unmarshal([]byte(s), &m)
 	out, _ := json.MarshalIndent(m, "", indent)
-	return " jsonencode(" + finalizeString(string(out), indent) + ")"
+	return " jsonencode(" + escapeHCLTemplate(string(out), indent) + ")"
 }
 
-func finalizeString(s string, indent string) string {
+// escapeHCLTemplate prepares a multiline raw string for embedding in HCL (heredoc
+// body or jsonencode output): it re-indents every line to match indent, and escapes
+// Terraform interpolation/directive markers (${, %{) while preserving genuine
+// references to data. and dynatrace_ resources.
+func escapeHCLTemplate(s string, indent string) string {
 	finalString := strings.ReplaceAll(s, "\r\n", "\n"+indent+"  ")
 	finalString = strings.ReplaceAll(finalString, "\n", "\n"+indent+"  ")
 	finalString = strings.ReplaceAll(finalString, "\r", "\n"+indent+"  ")
@@ -84,7 +88,7 @@ func wantHeredoc(s string) bool {
 }
 
 func heredocBody(body string, indent string) string {
-	return "<<-EOT\n" + indent + "  " + finalizeString(body, indent) + "\n" + indent + "EOT"
+	return "<<-EOT\n" + indent + "  " + escapeHCLTemplate(body, indent) + "\n" + indent + "EOT"
 }
 
 // heredocOrTrimmed renders a multiline s as a heredoc (EOT).
