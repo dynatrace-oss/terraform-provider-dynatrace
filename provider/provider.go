@@ -252,6 +252,19 @@ func Provider() *schema.Provider {
 				DefaultFunc:   schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_OIDC_TOKEN", "DT_WIF_OIDC_TOKEN"}, nil),
 				ConflictsWith: []string{"wif_vendor"},
 			},
+			"wif_github_token_request_url": {
+				Type:        schema.TypeString,
+				Description: "The URL of the GitHub Actions OIDC token request endpoint. Defaults to the `ACTIONS_ID_TOKEN_REQUEST_URL` environment variable injected by GitHub Actions when the job has `permissions: { id-token: write }`. Only used when `wif_vendor` is `github`.",
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("ACTIONS_ID_TOKEN_REQUEST_URL", nil),
+			},
+			"wif_github_token_request_token": {
+				Type:        schema.TypeString,
+				Description: "The bearer token for the GitHub Actions OIDC token request endpoint. Defaults to the `ACTIONS_ID_TOKEN_REQUEST_TOKEN` environment variable injected by GitHub Actions when the job has `permissions: { id-token: write }`. Only used when `wif_vendor` is `github`.",
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.EnvDefaultFunc("ACTIONS_ID_TOKEN_REQUEST_TOKEN", nil),
+			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"dynatrace_alerting_profiles":               alerting.DataSource(),

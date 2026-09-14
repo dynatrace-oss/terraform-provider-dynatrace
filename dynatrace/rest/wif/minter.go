@@ -19,6 +19,7 @@ package wif
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
@@ -32,8 +33,8 @@ type minter interface {
 func newMinter(config Config, httpClient *http.Client) (minter, error) {
 	switch config.Vendor {
 	case VendorGitHub:
-		return newGitHubMinter(config.Audience, httpClient)
+		return newGitHubMinter(config.GitHubTokenRequestURL, config.GitHubTokenRequestToken, config.Audience, httpClient)
 	default:
-		return nil, unsupportedVendorError(config.Vendor)
+		return nil, fmt.Errorf("`%s` is not a supported vendor, the only supported one is `%s`", config.Vendor, VendorGitHub)
 	}
 }

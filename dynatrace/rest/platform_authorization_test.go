@@ -30,7 +30,6 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/wif"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -118,12 +117,14 @@ func TestCreatePlatformClientMintsOIDCTokenFromGitHubActions(t *testing.T) {
 	}))
 	t.Cleanup(tokenService.Close)
 
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, tokenService.URL)
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "request-token")
-
 	serverURL, authorization := platformAPI(t)
 
-	require.NoError(t, callPlatformAPI(t, serverURL, rest.PlatformCredentials{WorkloadIdentityFederationConfig: wif.Config{Vendor: wif.VendorGitHub, Audience: t.Name()}}))
+	require.NoError(t, callPlatformAPI(t, serverURL, rest.PlatformCredentials{WorkloadIdentityFederationConfig: wif.Config{
+		Vendor:                  wif.VendorGitHub,
+		Audience:                t.Name(),
+		GitHubTokenRequestURL:   tokenService.URL,
+		GitHubTokenRequestToken: "request-token",
+	}}))
 
 	assert.Equal(t, "Bearer "+token, *authorization)
 }
@@ -137,11 +138,13 @@ func TestCreatePlatformClientReusesMintedTokenAcrossRequests(t *testing.T) {
 	}))
 	t.Cleanup(tokenService.Close)
 
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, tokenService.URL)
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "request-token")
-
 	serverURL, _ := platformAPI(t)
-	platform := rest.PlatformCredentials{EnvironmentURL: serverURL, WorkloadIdentityFederationConfig: wif.Config{Vendor: wif.VendorGitHub, Audience: t.Name()}}
+	platform := rest.PlatformCredentials{EnvironmentURL: serverURL, WorkloadIdentityFederationConfig: wif.Config{
+		Vendor:                  wif.VendorGitHub,
+		Audience:                t.Name(),
+		GitHubTokenRequestURL:   tokenService.URL,
+		GitHubTokenRequestToken: "request-token",
+	}}
 	clientSet := createMockClientSet(t, &rest.Credentials{Platform: platform})
 
 	require.NoError(t, rest.HybridClient(clientSet).Get(t.Context(), "/platform/management/v1/environment").Finish())
@@ -162,11 +165,13 @@ func TestCreatePlatformClientMintsIndependentlyPerCall(t *testing.T) {
 	}))
 	t.Cleanup(tokenService.Close)
 
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, tokenService.URL)
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "request-token")
-
 	serverURL, _ := platformAPI(t)
-	credentials := &rest.Credentials{Platform: rest.PlatformCredentials{EnvironmentURL: serverURL, WorkloadIdentityFederationConfig: wif.Config{Vendor: wif.VendorGitHub, Audience: t.Name()}}}
+	credentials := &rest.Credentials{Platform: rest.PlatformCredentials{EnvironmentURL: serverURL, WorkloadIdentityFederationConfig: wif.Config{
+		Vendor:                  wif.VendorGitHub,
+		Audience:                t.Name(),
+		GitHubTokenRequestURL:   tokenService.URL,
+		GitHubTokenRequestToken: "request-token",
+	}}}
 
 	first, err := rest.CreatePlatformClient(t.Context(), serverURL, credentials)
 	require.NoError(t, err)
@@ -220,14 +225,11 @@ func TestNonClassicRequestsGoToThePlatformHostWithTheFederatedToken(t *testing.T
 }
 
 func TestCreatePlatformClientReportsFailureToObtainOIDCToken(t *testing.T) {
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "")
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "")
-
 	serverURL, _ := platformAPI(t)
 
 	err := callPlatformAPI(t, serverURL, rest.PlatformCredentials{WorkloadIdentityFederationConfig: wif.Config{Vendor: wif.VendorGitHub, Audience: t.Name()}})
 
-	assert.EqualError(t, err, "unable to get ACTIONS_ID_TOKEN_REQUEST_URL environment variable: an OIDC token can only be requested from a GitHub Actions job with `permissions: { id-token: write }`")
+	assert.EqualError(t, err, "no GitHub Actions token request URL has been configured: use `wif_github_token_request_url` or run this job in GitHub Actions with `permissions: { id-token: write }`")
 }
 
 func TestCreatePlatformClientReportsNoCredentials(t *testing.T) {

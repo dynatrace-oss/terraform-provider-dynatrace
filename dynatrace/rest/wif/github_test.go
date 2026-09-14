@@ -24,7 +24,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -43,10 +42,7 @@ func tokenServiceHandler(t *testing.T, respond func(writer http.ResponseWriter, 
 func gitHubMinterFor(t *testing.T, requestURL string, audience string) minter {
 	t.Helper()
 
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, requestURL)
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "request-token")
-
-	minter, err := newGitHubMinter(audience, http.DefaultClient)
+	minter, err := newGitHubMinter(requestURL, "request-token", audience, http.DefaultClient)
 	require.NoError(t, err)
 
 	return minter
@@ -148,28 +144,19 @@ func TestGitHubMinterRejectsResponseWithoutToken(t *testing.T) {
 // The parse happens once, at construction, so a malformed URL is reported alongside the missing one
 // rather than on every mint. The wrapped cause carries the offending value.
 func TestGitHubMinterRejectsRequestURLThatIsNotAURL(t *testing.T) {
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "://")
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "request-token")
+	_, err := newGitHubMinter("://", "request-token", "dynatrace", http.DefaultClient)
 
-	_, err := newGitHubMinter("dynatrace", http.DefaultClient)
-
-	assert.EqualError(t, err, `ACTIONS_ID_TOKEN_REQUEST_URL does not hold a valid URL: parse "://": missing protocol scheme`)
+	assert.EqualError(t, err, `the GitHub Actions token request URL is not valid: parse "://": missing protocol scheme`)
 }
 
-func TestGitHubMinterRequiresRequestURLVariable(t *testing.T) {
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "")
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "request-token")
+func TestGitHubMinterRequiresRequestURL(t *testing.T) {
+	_, err := newGitHubMinter("", "request-token", "dynatrace", http.DefaultClient)
 
-	_, err := newGitHubMinter("dynatrace", http.DefaultClient)
-
-	assert.EqualError(t, err, "unable to get ACTIONS_ID_TOKEN_REQUEST_URL environment variable: an OIDC token can only be requested from a GitHub Actions job with `permissions: { id-token: write }`")
+	assert.ErrorIs(t, err, errNoTokenRequestURL)
 }
 
-func TestGitHubMinterRequiresRequestTokenVariable(t *testing.T) {
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "https://token.service.invalid/")
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "")
+func TestGitHubMinterRequiresRequestToken(t *testing.T) {
+	_, err := newGitHubMinter("https://token.service.invalid/", "", "dynatrace", http.DefaultClient)
 
-	_, err := newGitHubMinter("dynatrace", http.DefaultClient)
-
-	assert.EqualError(t, err, "unable to get ACTIONS_ID_TOKEN_REQUEST_TOKEN environment variable: an OIDC token can only be requested from a GitHub Actions job with `permissions: { id-token: write }`")
+	assert.ErrorIs(t, err, errNoTokenRequestToken)
 }
