@@ -361,45 +361,71 @@ func getPlatformClientSecret(d Getter) string {
 // terms of the provider attributes and environment variables that set them.
 func validateWorkloadIdentityFederation(config wif.Config) error {
 	if len(config.Vendor) > 0 && len(config.StaticToken) > 0 {
-		return fmt.Errorf(" A Workload Identity Federation vendor and a pre-minted OIDC token have both been specified. These options are mutually exclusive. Unset either `wif_vendor` (`DYNATRACE_WIF_VENDOR`) or `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`)")
+		return fmt.Errorf(" A Workload Identity Federation vendor and a pre-minted OIDC token have both been specified. These options are mutually exclusive. Unset either `wif.vendor` (`DYNATRACE_WIF_VENDOR`) or `wif.oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`)")
 	}
 	if len(config.StaticToken) > 0 {
 		if strings.Count(config.StaticToken, ".") != 2 {
-			return fmt.Errorf(" The value of `wif_oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`) is not a JWT: expected three dot-separated segments")
+			return fmt.Errorf(" The value of `wif.oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`) is not a JWT: expected three dot-separated segments")
 		}
 		return nil
 	}
 	if config.Vendor != wif.VendorGitHub {
-		return fmt.Errorf(" `%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif_vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", config.Vendor, wif.VendorGitHub)
+		return fmt.Errorf(" `%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif.vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", config.Vendor, wif.VendorGitHub)
 	}
 	if len(config.Audience) == 0 {
-		return fmt.Errorf(" No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif_audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
+		return fmt.Errorf(" No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif.audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
 	}
 	if len(config.GitHubTokenRequestURL) == 0 {
-		return fmt.Errorf(" No GitHub Actions token request URL has been configured. Use either the configuration attribute `wif_github_token_request_url` or run this job in GitHub Actions with `permissions: { id-token: write }` (which injects `ACTIONS_ID_TOKEN_REQUEST_URL`)")
+		return fmt.Errorf(" No GitHub Actions token request URL has been configured. Use either the configuration attribute `wif.github.token_request_url` or run this job in GitHub Actions with `permissions: { id-token: write }` (which injects `ACTIONS_ID_TOKEN_REQUEST_URL`)")
 	}
 	if len(config.GitHubTokenRequestToken) == 0 {
-		return fmt.Errorf(" No GitHub Actions token request token has been configured. Use either the configuration attribute `wif_github_token_request_token` or run this job in GitHub Actions with `permissions: { id-token: write }` (which injects `ACTIONS_ID_TOKEN_REQUEST_TOKEN`)")
+		return fmt.Errorf(" No GitHub Actions token request token has been configured. Use either the configuration attribute `wif.github.token_request_token` or run this job in GitHub Actions with `permissions: { id-token: write }` (which injects `ACTIONS_ID_TOKEN_REQUEST_TOKEN`)")
 	}
 	return nil
 }
 
-// getWorkloadIdentityFederationCredentials retrieves the Workload Identity Federation settings from the provided
-// configuration. The values are passed through unjudged, so that validateWorkloadIdentityFederation can report a single,
-// actionable problem rather than several partial ones.
+// getWorkloadIdentityFederationCredentials retrieves the Workload Identity Federation settings from
+// the provided configuration. Values are passed through unjudged so that
+// validateWorkloadIdentityFederation can report a single, actionable problem.
 func getWorkloadIdentityFederationCredentials(d Getter) wif.Config {
-	return wif.Config{
-		// The provider schema rejects a misspelled vendor before this is reached, but the export
-		// command reads the configuration without going through schema validation. Lowering here
-		// keeps DYNATRACE_WIF_VENDOR=GitHub working there rather than failing as an unknown vendor.
-		Vendor:   strings.ToLower(strings.TrimSpace(getString(d, "wif_vendor"))),
-		Audience: strings.TrimSpace(getString(d, "wif_audience")),
-		// A token that traveled through a CI secret often arrives with a trailing newline, and
-		// "Bearer <token>\n" is not a valid header value.
-		StaticToken:             strings.TrimSpace(getString(d, "wif_oidc_token")),
-		GitHubTokenRequestURL:   getString(d, "wif_github_token_request_url"),
-		GitHubTokenRequestToken: getString(d, "wif_github_token_request_token"),
+	raw := d.Get("wif")
+	list, ok := raw.([]interface{})
+	if !ok || len(list) == 0 {
+		return wif.Config{}
 	}
+	block, ok := list[0].(map[string]interface{})
+	if !ok || block == nil {
+		return wif.Config{}
+	}
+
+	var tokenRequestURL, tokenRequestToken string
+	if githubRaw, ok := block["github"]; ok {
+		if githubList, ok := githubRaw.([]interface{}); ok && len(githubList) > 0 {
+			if githubBlock, ok := githubList[0].(map[string]interface{}); ok {
+				tokenRequestURL = blockString(githubBlock, "token_request_url")
+				tokenRequestToken = blockString(githubBlock, "token_request_token")
+			}
+		}
+	}
+
+	return wif.Config{
+		// The export command reads config without schema validation. Lowercasing keeps
+		// DYNATRACE_WIF_VENDOR=GitHub working there rather than failing as an unknown vendor.
+		Vendor:                  strings.ToLower(strings.TrimSpace(blockString(block, "vendor"))),
+		Audience:                strings.TrimSpace(blockString(block, "audience")),
+		StaticToken:             strings.TrimSpace(blockString(block, "oidc_token")),
+		GitHubTokenRequestURL:   tokenRequestURL,
+		GitHubTokenRequestToken: tokenRequestToken,
+	}
+}
+
+func blockString(block map[string]interface{}, key string) string {
+	if v, ok := block[key]; ok {
+		if s, ok := v.(string); ok {
+			return s
+		}
+	}
+	return ""
 }
 
 // getPlatformTokenURL returns the SSO token URL for platform based on the provided configuration.
@@ -531,14 +557,19 @@ func getString(d Getter, key string) string {
 }
 
 func (me ConfigGetter) Get(key string) any {
-	schema, found := me.Provider.Schema[key]
+	s, found := me.Provider.Schema[key]
 	if !found {
 		return ""
 	}
-	if schema.DefaultFunc == nil {
+	if s.Type == schema.TypeList && s.MaxItems == 1 {
+		if resource, ok := s.Elem.(*schema.Resource); ok {
+			return me.buildBlock(resource)
+		}
+	}
+	if s.DefaultFunc == nil {
 		return ""
 	}
-	result, _ := schema.DefaultFunc()
+	result, _ := s.DefaultFunc()
 	if result == nil {
 		return ""
 	}
@@ -562,6 +593,28 @@ func (me ConfigGetter) Get(key string) any {
 			return sourceValue
 		}
 	}
-
 	return result
+}
+
+// buildBlock constructs the []interface{}{map[string]interface{}{...}} representation of a
+// MaxItems=1 TypeList block by calling each attribute's DefaultFunc. This lets the export command
+// (which has no schema.ResourceData) read nested-block attributes from environment variables.
+func (me ConfigGetter) buildBlock(resource *schema.Resource) []interface{} {
+	block := map[string]interface{}{}
+	for name, attr := range resource.Schema {
+		if attr.Type == schema.TypeList && attr.MaxItems == 1 {
+			if subResource, ok := attr.Elem.(*schema.Resource); ok {
+				block[name] = me.buildBlock(subResource)
+				continue
+			}
+		}
+		var value interface{} = ""
+		if attr.DefaultFunc != nil {
+			if v, err := attr.DefaultFunc(); err == nil && v != nil {
+				value = v
+			}
+		}
+		block[name] = value
+	}
+	return []interface{}{block}
 }

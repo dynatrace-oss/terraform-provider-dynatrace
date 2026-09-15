@@ -69,17 +69,19 @@ func TestProviderSchemaIsInternallyValid(t *testing.T) {
 
 func TestWIFVendorConflictsWithWIFOIDCToken(t *testing.T) {
 	diagnostics := validateProviderConfig(t, map[string]any{
-		"wif_vendor":     "github",
-		"wif_audience":   "dynatrace",
-		"wif_oidc_token": "header.payload.signature",
+		"wif": []interface{}{map[string]any{
+			"vendor":     "github",
+			"audience":   "dynatrace",
+			"oidc_token": "header.payload.signature",
+		}},
 	})
 
 	// Both attributes declare the conflict, so each one is reported. The order they arrive in follows
 	// map iteration, hence the sort.
 	require.Len(t, diagnostics, 2)
 	assert.Equal(t, []string{
-		`"wif_oidc_token": conflicts with wif_vendor`,
-		`"wif_vendor": conflicts with wif_oidc_token`,
+		`"wif.0.oidc_token": conflicts with wif.0.vendor`,
+		`"wif.0.vendor": conflicts with wif.0.oidc_token`,
 	}, detailsOf(diagnostics))
 }
 
@@ -87,25 +89,31 @@ func TestWIFVendorConflictsWithWIFOIDCToken(t *testing.T) {
 // environment variable, and because the export command never runs schema validation. The credential
 // validation rejects it instead - see TestPlatformValidationRejectsWIFWithoutAudience.
 func TestWIFVendorWithoutAudienceIsNotASchemaError(t *testing.T) {
-	diagnostics := validateProviderConfig(t, map[string]any{"wif_vendor": "github"})
+	diagnostics := validateProviderConfig(t, map[string]any{
+		"wif": []interface{}{map[string]any{"vendor": "github"}},
+	})
 
 	assert.Empty(t, diagnostics)
 }
 
 func TestWIFVendorRejectsUnsupportedVendor(t *testing.T) {
 	diagnostics := validateProviderConfig(t, map[string]any{
-		"wif_vendor":   "gitlab",
-		"wif_audience": "dynatrace",
+		"wif": []interface{}{map[string]any{
+			"vendor":   "gitlab",
+			"audience": "dynatrace",
+		}},
 	})
 
 	require.Len(t, diagnostics, 1)
-	assert.Equal(t, `expected wif_vendor to be one of ["github"], got gitlab`, diagnostics[0].Summary)
+	assert.Equal(t, `expected wif.0.vendor to be one of ["github"], got gitlab`, diagnostics[0].Summary)
 }
 
 func TestWIFVendorAcceptsSupportedVendor(t *testing.T) {
 	diagnostics := validateProviderConfig(t, map[string]any{
-		"wif_vendor":   "github",
-		"wif_audience": "dynatrace",
+		"wif": []interface{}{map[string]any{
+			"vendor":   "github",
+			"audience": "dynatrace",
+		}},
 	})
 
 	assert.Empty(t, diagnostics)
@@ -113,7 +121,9 @@ func TestWIFVendorAcceptsSupportedVendor(t *testing.T) {
 
 // A supplied token stands on its own: it needs no vendor and no audience.
 func TestWIFOIDCTokenNeedsNoOtherAttribute(t *testing.T) {
-	diagnostics := validateProviderConfig(t, map[string]any{"wif_oidc_token": "header.payload.signature"})
+	diagnostics := validateProviderConfig(t, map[string]any{
+		"wif": []interface{}{map[string]any{"oidc_token": "header.payload.signature"}},
+	})
 
 	assert.Empty(t, diagnostics)
 }
