@@ -18,6 +18,12 @@ on:
 jobs:
   suite:
     uses: ./.github/workflows/_test-suite.yml
+    # A called workflow can only narrow these, so id-token has to be granted here for the Workload
+    # Identity Federation job to be able to request a token.
+    permissions:
+      contents: read
+      id-token: write
+      checks: write # sonar_scan publishes a check run
     with:
       # Scheduled and push runs always collect; a manual run honors the toggle.
       collect-results: ${{ github.event_name != 'workflow_dispatch' || inputs.collect-results }}

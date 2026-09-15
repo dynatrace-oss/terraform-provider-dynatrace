@@ -25,14 +25,13 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 const maxTokenResponseSize = 1 << 20
 
 var (
-	errMissingCredential    = errors.New("an OIDC token can only be requested from a GitHub Actions job with `permissions: { id-token: write }`")
+	errNoTokenRequestURL    = errors.New("no GitHub Actions token request URL has been configured: use `wif_github_token_request_url` or run this job in GitHub Actions with `permissions: { id-token: write }`")
+	errNoTokenRequestToken  = errors.New("no GitHub Actions token request token has been configured: use `wif_github_token_request_token` or run this job in GitHub Actions with `permissions: { id-token: write }`")
 	errResponseNotJSON      = errors.New("failed to get ID token: the response of the token service is not valid JSON")
 	errResponseWithoutToken = errors.New("failed to get ID token: the response of the token service does not contain a token")
 )
@@ -44,31 +43,25 @@ type githubMinter struct {
 	httpClient   *http.Client
 }
 
-func missingCredentialError(variableKey string) error {
-	return fmt.Errorf("unable to get %s environment variable: %w", variableKey, errMissingCredential)
-}
-
 // The credentials GitHub injects stay valid for the whole job, which is what lets the provider mint
 // a fresh token whenever it needs one.
-func newGitHubMinter(audience string, httpClient *http.Client) (minter, error) {
-	rawRequestURL := envutils.ActionsIDTokenRequestURL.Get()
-	if len(rawRequestURL) == 0 {
-		return nil, missingCredentialError(envutils.ActionsIDTokenRequestURL.Key)
+func newGitHubMinter(tokenRequestURL, tokenRequestToken, audience string, httpClient *http.Client) (minter, error) {
+	if len(tokenRequestURL) == 0 {
+		return nil, errNoTokenRequestURL
 	}
 
-	requestURL, err := url.Parse(rawRequestURL)
+	requestURL, err := url.Parse(tokenRequestURL)
 	if err != nil {
-		return nil, fmt.Errorf("%s does not hold a valid URL: %w", envutils.ActionsIDTokenRequestURL.Key, err)
+		return nil, fmt.Errorf("the GitHub Actions token request URL is not valid: %w", err)
 	}
 
-	requestToken := envutils.ActionsIDTokenRequestToken.Get()
-	if len(requestToken) == 0 {
-		return nil, missingCredentialError(envutils.ActionsIDTokenRequestToken.Key)
+	if len(tokenRequestToken) == 0 {
+		return nil, errNoTokenRequestToken
 	}
 
 	return &githubMinter{
 		requestURL:   requestURL,
-		requestToken: requestToken,
+		requestToken: tokenRequestToken,
 		audience:     audience,
 		httpClient:   httpClient,
 	}, nil

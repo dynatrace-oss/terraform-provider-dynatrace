@@ -26,9 +26,11 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/wif"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 // ProviderConfiguration contains credentials and clients to communicate with the Dynatrace API
@@ -147,11 +149,12 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 			EndpointURL:  getIAMEndpointURL(d),
 		},
 		Platform: rest.PlatformCredentials{
-			PlatformToken:  getString(d, "platform_token"),
-			ClientID:       getPlatformClientID(d),
-			ClientSecret:   getPlatformClientSecret(d),
-			TokenURL:       getPlatformTokenURL(d),
-			EnvironmentURL: getPlatformEnvironmentURL(d),
+			PlatformToken:                    getString(d, "platform_token"),
+			ClientID:                         getPlatformClientID(d),
+			ClientSecret:                     getPlatformClientSecret(d),
+			TokenURL:                         getPlatformTokenURL(d),
+			EnvironmentURL:                   getPlatformEnvironmentURL(d),
+			WorkloadIdentityFederationConfig: getWorkloadIdentityFederationCredentials(d),
 		},
 	}
 
@@ -165,6 +168,7 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 
 	pc.iamClient, pc.iamClientErr = rest.NewIAMClient(clientCtx, pc.Credentials())
 	pc.platformClient, pc.platformClientErr = rest.CreatePlatformClient(clientCtx, pc.Platform.EnvironmentURL, pc.Credentials())
+	// TODO: classic platform client will maybe not work with WIF
 	pc.classicPlatformClient, pc.classicPlatformClientErr = rest.CreatePlatformClient(clientCtx, pc.EnvironmentURL, pc.Credentials())
 	pc.apiTokenClient, pc.apiTokenClientErr = rest.CreateAPITokenClient(clientCtx, pc.EnvironmentURL, pc.APIToken)
 	pc.clusterV1Client, pc.clusterV1ClientErr = rest.CreateClusterV1Client(clientCtx, pc.ClusterAPIV2URL, pc.ClusterAPIToken)
@@ -207,6 +211,9 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 			return fmt.Errorf(" No Cluster URL has been specified. Use either the environment variable `DT_CLUSTER_URL` or the configuration attribute `dt_cluster_url` of the provider for that")
 		}
 	case CredValPlatform:
+		if conf.Platform.WorkloadIdentityFederationConfig.Configured() {
+			return validateWorkloadIdentityFederation(conf.Platform.WorkloadIdentityFederationConfig)
+		}
 		if len(conf.Platform.ClientID) == 0 {
 			return fmt.Errorf(" No OAuth Client ID for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_ID` or the configuration attribute `automation_client_id` of the provider for that")
 		}
@@ -224,7 +231,7 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 			return fmt.Errorf(" No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
 		}
 		if len(conf.APIToken) == 0 && len(conf.Platform.PlatformToken) == 0 && validateCredentials(conf, CredValPlatform) != nil {
-			return fmt.Errorf(" No API Token, Platform Token, or OAuth has been specified for export. More detailed information can be found in the documentation at https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#configure-the-dynatrace-provider")
+			return fmt.Errorf(" No API Token, Platform Token, Workload Identity Federation, or OAuth has been specified for export. More detailed information can be found in the documentation at https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#configure-the-dynatrace-provider")
 		}
 	case CredValExportIAM:
 		if conf.IAM.AccountID == "" {
@@ -348,6 +355,66 @@ func getPlatformClientSecret(d Getter) string {
 		return clientSecret
 	}
 	return getString(d, "iam_client_secret")
+}
+
+// validateWorkloadIdentityFederation validates the Workload Identity Federation configuration in
+// terms of the provider attributes and environment variables that set them.
+func validateWorkloadIdentityFederation(config wif.Config) error {
+	if config.Vendor != wif.VendorGitHub {
+		return fmt.Errorf(" `%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif.vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", config.Vendor, wif.VendorGitHub)
+	}
+	if len(config.Audience) == 0 {
+		return fmt.Errorf(" No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif.audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
+	}
+	if len(config.GitHub.TokenRequestURL) == 0 {
+		return fmt.Errorf(" No GitHub Actions token request URL has been configured. Use either the configuration attribute `wif.github.token_request_url` or run this job in GitHub Actions with `permissions: { id-token: write }` (which injects `ACTIONS_ID_TOKEN_REQUEST_URL`)")
+	}
+	if len(config.GitHub.TokenRequestToken) == 0 {
+		return fmt.Errorf(" No GitHub Actions token request token has been configured. Use either the configuration attribute `wif.github.token_request_token` or run this job in GitHub Actions with `permissions: { id-token: write }` (which injects `ACTIONS_ID_TOKEN_REQUEST_TOKEN`)")
+	}
+	return nil
+}
+
+// getWorkloadIdentityFederationCredentials retrieves the Workload Identity Federation settings from
+// the provided configuration. Values are passed through unjudged so that
+// validateWorkloadIdentityFederation can report a single, actionable problem.
+func getWorkloadIdentityFederationCredentials(d Getter) wif.Config {
+	raw := d.Get("wif")
+	list, ok := raw.([]interface{})
+	if !ok || len(list) == 0 {
+		return wif.Config{}
+	}
+	block, ok := list[0].(map[string]interface{})
+	if !ok || block == nil {
+		return wif.Config{}
+	}
+
+	var tokenRequestURL, tokenRequestToken string
+	if githubRaw, ok := block["github"]; ok {
+		if githubList, ok := githubRaw.([]interface{}); ok && len(githubList) > 0 {
+			if githubBlock, ok := githubList[0].(map[string]interface{}); ok {
+				tokenRequestURL = blockString(githubBlock, "token_request_url")
+				tokenRequestToken = blockString(githubBlock, "token_request_token")
+			}
+		}
+	}
+
+	return wif.Config{
+		// The export command reads config without schema validation. Lowercasing keeps
+		// DYNATRACE_WIF_VENDOR=GitHub working there rather than failing as an unknown vendor.
+		Vendor:   strings.ToLower(strings.TrimSpace(blockString(block, "vendor"))),
+		Audience: strings.TrimSpace(blockString(block, "audience")),
+		GitHub:   wif.GitHubConfig{TokenRequestURL: tokenRequestURL, TokenRequestToken: tokenRequestToken},
+	}
+}
+
+func blockString(block map[string]interface{}, key string) string {
+	if v, ok := block[key]; ok {
+		if s, ok := v.(string); ok {
+			return s
+		}
+	}
+	return ""
 }
 
 // getPlatformTokenURL returns the SSO token URL for platform based on the provided configuration.
@@ -479,14 +546,19 @@ func getString(d Getter, key string) string {
 }
 
 func (me ConfigGetter) Get(key string) any {
-	schema, found := me.Provider.Schema[key]
+	s, found := me.Provider.Schema[key]
 	if !found {
 		return ""
 	}
-	if schema.DefaultFunc == nil {
+	if s.Type == schema.TypeList && s.MaxItems == 1 {
+		if resource, ok := s.Elem.(*schema.Resource); ok {
+			return me.buildBlock(resource)
+		}
+	}
+	if s.DefaultFunc == nil {
 		return ""
 	}
-	result, _ := schema.DefaultFunc()
+	result, _ := s.DefaultFunc()
 	if result == nil {
 		return ""
 	}
@@ -510,6 +582,28 @@ func (me ConfigGetter) Get(key string) any {
 			return sourceValue
 		}
 	}
-
 	return result
+}
+
+// buildBlock constructs the []interface{}{map[string]interface{}{...}} representation of a
+// MaxItems=1 TypeList block by calling each attribute's DefaultFunc. This lets the export command
+// (which has no schema.ResourceData) read nested-block attributes from environment variables.
+func (me ConfigGetter) buildBlock(resource *schema.Resource) []interface{} {
+	block := map[string]interface{}{}
+	for name, attr := range resource.Schema {
+		if attr.Type == schema.TypeList && attr.MaxItems == 1 {
+			if subResource, ok := attr.Elem.(*schema.Resource); ok {
+				block[name] = me.buildBlock(subResource)
+				continue
+			}
+		}
+		var value interface{} = ""
+		if attr.DefaultFunc != nil {
+			if v, err := attr.DefaultFunc(); err == nil && v != nil {
+				value = v
+			}
+		}
+		block[name] = value
+	}
+	return []interface{}{block}
 }

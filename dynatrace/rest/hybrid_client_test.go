@@ -168,9 +168,13 @@ func TestApiTokenClient(t *testing.T) {
 	})
 }
 
+// createMockClientSet builds the clients the way ProviderConfiguration does, so that a test exercises
+// the same routing - including the classic platform client, which is a platform client pointed at the
+// classic environment URL.
 func createMockClientSet(t *testing.T, creds *rest.Credentials) *testing2.MockClientSet {
 	clientSet := &testing2.MockClientSet{CredentialsValue: creds}
 	clientSet.PlatformClientValue, clientSet.PlatformClientErr = rest.CreatePlatformClient(t.Context(), creds.Platform.EnvironmentURL, creds)
+	clientSet.ClassicPlatformClientValue, clientSet.ClassicPlatformClientErr = rest.CreatePlatformClient(t.Context(), creds.ClassicEnvironmentURL, creds)
 	clientSet.APITokenClientValue, clientSet.APITokenClientErr = rest.CreateAPITokenClient(t.Context(), creds.ClassicEnvironmentURL, creds.Token)
 	return clientSet
 }
