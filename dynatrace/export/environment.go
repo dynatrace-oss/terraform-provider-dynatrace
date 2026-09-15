@@ -555,6 +555,7 @@ func (me *Environment) Module(resType ResourceType) *Module {
 		ModuleMutex:          new(sync.Mutex),
 		DataSourceLock:       new(sync.Mutex),
 		ChildModules:         map[ResourceType]*Module{},
+		AdminAccess:          me.Flags.AdminAccess,
 	}
 
 	me.Modules[resType] = module

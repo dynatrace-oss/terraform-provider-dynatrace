@@ -27,6 +27,7 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/address"
+	context2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/context"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/multiuse"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -57,6 +58,7 @@ type Resource struct {
 	ExtractedIdsPerDependencyModule map[string]map[string]bool
 	ResourceMutex                   *sync.Mutex
 	StatusMutex                     sync.Mutex
+	AdminAccess                     bool
 }
 
 func (me *Resource) GetStatus() ResourceStatus {
@@ -272,7 +274,8 @@ func (me *Resource) Download() error {
 
 	getID := multiuse.EncodeIDParent(me.ID, me.ParentID)
 
-	if err = service.Get(context.Background(), getID, settngs); err != nil {
+	ctx := context2.NewContextWithAdminAccess(context.Background(), me.AdminAccess)
+	if err = service.Get(ctx, getID, settngs); err != nil {
 		if restError, ok := err.(rest.Error); ok {
 			if strings.HasPrefix(restError.Message, "Editing or deleting a non user specific dashboard preset is not allowed.") {
 				me.SetStatus(ResourceStati.Erronous)

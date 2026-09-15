@@ -33,6 +33,7 @@ import (
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	context2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/context"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
@@ -62,6 +63,7 @@ type Module struct {
 	DataSourceLock         *sync.Mutex
 	DescriptorLock         sync.Mutex
 	StatusLock             sync.Mutex
+	AdminAccess            bool
 
 	DiscoveryLock sync.Mutex
 	DownloadLock  sync.Mutex
@@ -291,6 +293,7 @@ func (me *Module) Resource(id string) *Resource {
 		PrivateStatus:                   ResourceStati.Discovered,
 		ExtractedIdsPerDependencyModule: map[string]map[string]bool{},
 		ResourceMutex:                   new(sync.Mutex),
+		AdminAccess:                     me.AdminAccess,
 	}
 	me.Resources[id] = res
 	return res
@@ -1318,7 +1321,8 @@ func (me *Module) Discover() error {
 	var err error
 
 	var stubs api.Stubs
-	if stubs, err = me.Service.List(context.Background()); err != nil {
+	ctx := context2.NewContextWithAdminAccess(context.Background(), me.AdminAccess)
+	if stubs, err = me.Service.List(ctx); err != nil {
 		if strings.Contains(err.Error(), "Token is missing required scope") {
 			logging.Debug.Info.Printf("[DISCOVER] [%s] Module will not get exported. Token is missing required scope.", me.Type)
 			me.SetStatus(ModuleStati.Erronous)

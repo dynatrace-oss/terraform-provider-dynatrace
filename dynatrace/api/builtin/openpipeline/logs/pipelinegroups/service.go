@@ -28,5 +28,7 @@ const SchemaVersion = "1.69"
 const SchemaID = "builtin:openpipeline.logs.pipeline-groups"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
-	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion, &settings20.ServiceOptions[*service.Settings]{
+		SupportsAdminAccess: true,
+	})
 }
