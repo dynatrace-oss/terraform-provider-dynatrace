@@ -24,10 +24,12 @@ import (
 	"net/url"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	context2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/context"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/shutdown"
@@ -82,8 +84,9 @@ func (me *service[T]) LegacyID() func(id string) string {
 func (me *service[T]) Get(ctx context.Context, id string, v T) error {
 	var err error
 	var settingsObject SettingsObject
+	adminAccess := me.options != nil && me.options.SupportsAdminAccess && context2.GetAdminAccess(ctx)
 
-	req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id))).Expect(200)
+	req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects/%s?adminAccess=%s", url.PathEscape(id), strconv.FormatBool(adminAccess))).Expect(200)
 	if err = req.Finish(&settingsObject); err != nil {
 		return err
 	}
@@ -274,14 +277,20 @@ func (me *service[T]) listIDs(ctx context.Context) ([]string, error) {
 
 func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 	var err error
+	var ids []string
 
-	ids, err := me.listIDs(ctx)
-	if err != nil {
-		return api.Stubs{}, err
+	// admin access schemas don't support ordering
+	supportsAdminAccess := me.options != nil && me.options.SupportsAdminAccess
+	if !supportsAdminAccess {
+		ids, err = me.listIDs(ctx)
+		if err != nil {
+			return api.Stubs{}, err
+		}
 	}
 
 	stubs := api.Stubs{}
 	nextPage := true
+	adminAccess := supportsAdminAccess && context2.GetAdminAccess(ctx)
 
 	var nextPageKey *string
 	for nextPage {
@@ -290,7 +299,7 @@ func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 		if nextPageKey != nil {
 			urlStr = fmt.Sprintf("/api/v2/settings/objects?nextPageKey=%s", url.QueryEscape(*nextPageKey))
 		} else {
-			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion"))
+			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100&adminAccess=%s", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion"), strconv.FormatBool(adminAccess))
 		}
 		req := me.client.Get(ctx, urlStr, 200)
 		if err = req.Finish(&sol); err != nil {
@@ -310,15 +319,18 @@ func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 					settings.SetLegacyID(item.ObjectID, me.options.LegacyID, newItem)
 				}
 				settings.SetScope(newItem, item.Scope)
-				insertBefore, insertAfter, err := me.getInsertIDs(ctx, item.ObjectID, ids)
-				if err != nil {
-					return api.Stubs{}, err
-				}
-				if insertBefore != nil {
-					settings.SetInsertBefore(newItem, *insertBefore)
-				}
-				if insertAfter != nil {
-					settings.SetInsertAfter(newItem, *insertAfter)
+				// adminAccess doesn't support ordering, that's why we don't need to check any insertAfter/Before here
+				if !supportsAdminAccess {
+					insertBefore, insertAfter, err := me.getInsertIDs(ctx, item.ObjectID, ids)
+					if err != nil {
+						return api.Stubs{}, err
+					}
+					if insertBefore != nil {
+						settings.SetInsertBefore(newItem, *insertBefore)
+					}
+					if insertAfter != nil {
+						settings.SetInsertAfter(newItem, *insertAfter)
+					}
 				}
 				var itemName string
 				if me.options != nil && me.options.Name != nil {
