@@ -33,7 +33,7 @@ type minter interface {
 func newMinter(config Config, httpClient *http.Client) (minter, error) {
 	switch config.Vendor {
 	case VendorGitHub:
-		return newGitHubMinter(config.GitHubTokenRequestURL, config.GitHubTokenRequestToken, config.Audience, httpClient)
+		return newGitHubMinter(config.GitHub.TokenRequestURL, config.GitHub.TokenRequestToken, config.Audience, httpClient)
 	default:
 		return nil, fmt.Errorf("`%s` is not a supported vendor, the only supported one is `%s`", config.Vendor, VendorGitHub)
 	}

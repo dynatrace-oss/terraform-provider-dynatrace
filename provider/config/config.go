@@ -360,25 +360,16 @@ func getPlatformClientSecret(d Getter) string {
 // validateWorkloadIdentityFederation validates the Workload Identity Federation configuration in
 // terms of the provider attributes and environment variables that set them.
 func validateWorkloadIdentityFederation(config wif.Config) error {
-	if len(config.Vendor) > 0 && len(config.StaticToken) > 0 {
-		return fmt.Errorf(" A Workload Identity Federation vendor and a pre-minted OIDC token have both been specified. These options are mutually exclusive. Unset either `wif.vendor` (`DYNATRACE_WIF_VENDOR`) or `wif.oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`)")
-	}
-	if len(config.StaticToken) > 0 {
-		if strings.Count(config.StaticToken, ".") != 2 {
-			return fmt.Errorf(" The value of `wif.oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`) is not a JWT: expected three dot-separated segments")
-		}
-		return nil
-	}
 	if config.Vendor != wif.VendorGitHub {
 		return fmt.Errorf(" `%s` is not a supported Workload Identity Federation vendor. The only supported value for `wif.vendor` (`DYNATRACE_WIF_VENDOR`) is `%s`", config.Vendor, wif.VendorGitHub)
 	}
 	if len(config.Audience) == 0 {
 		return fmt.Errorf(" No audience has been specified for Workload Identity Federation. Use either the configuration attribute `wif.audience` or the environment variable `DYNATRACE_WIF_AUDIENCE` for that")
 	}
-	if len(config.GitHubTokenRequestURL) == 0 {
+	if len(config.GitHub.TokenRequestURL) == 0 {
 		return fmt.Errorf(" No GitHub Actions token request URL has been configured. Use either the configuration attribute `wif.github.token_request_url` or run this job in GitHub Actions with `permissions: { id-token: write }` (which injects `ACTIONS_ID_TOKEN_REQUEST_URL`)")
 	}
-	if len(config.GitHubTokenRequestToken) == 0 {
+	if len(config.GitHub.TokenRequestToken) == 0 {
 		return fmt.Errorf(" No GitHub Actions token request token has been configured. Use either the configuration attribute `wif.github.token_request_token` or run this job in GitHub Actions with `permissions: { id-token: write }` (which injects `ACTIONS_ID_TOKEN_REQUEST_TOKEN`)")
 	}
 	return nil
@@ -411,11 +402,9 @@ func getWorkloadIdentityFederationCredentials(d Getter) wif.Config {
 	return wif.Config{
 		// The export command reads config without schema validation. Lowercasing keeps
 		// DYNATRACE_WIF_VENDOR=GitHub working there rather than failing as an unknown vendor.
-		Vendor:                  strings.ToLower(strings.TrimSpace(blockString(block, "vendor"))),
-		Audience:                strings.TrimSpace(blockString(block, "audience")),
-		StaticToken:             strings.TrimSpace(blockString(block, "oidc_token")),
-		GitHubTokenRequestURL:   tokenRequestURL,
-		GitHubTokenRequestToken: tokenRequestToken,
+		Vendor:   strings.ToLower(strings.TrimSpace(blockString(block, "vendor"))),
+		Audience: strings.TrimSpace(blockString(block, "audience")),
+		GitHub:   wif.GitHubConfig{TokenRequestURL: tokenRequestURL, TokenRequestToken: tokenRequestToken},
 	}
 }
 

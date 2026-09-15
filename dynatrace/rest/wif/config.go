@@ -24,17 +24,19 @@ type Vendor = string
 const VendorGitHub Vendor = "github"
 
 type Config struct {
-	Vendor      Vendor
-	Audience    string
-	StaticToken string
-	// GitHubTokenRequestURL and GitHubTokenRequestToken are the credentials GitHub injects into a
-	// job with id-token: write permission. They may also be supplied via the provider configuration.
-	// Consulted only when Vendor is VendorGitHub.
-	GitHubTokenRequestURL   string
-	GitHubTokenRequestToken string
+	Vendor   Vendor
+	Audience string
+	GitHub   GitHubConfig
 }
 
-// Configured reports whether any form of Workload Identity Federation was requested.
+// GitHubConfig holds the GitHub Actions OIDC token service credentials. GitHub injects these into
+// a job with id-token: write permission; they may also be supplied via the provider configuration.
+type GitHubConfig struct {
+	TokenRequestURL   string
+	TokenRequestToken string
+}
+
+// Configured reports whether Workload Identity Federation was requested.
 func (config Config) Configured() bool {
-	return len(config.Vendor) > 0 || len(config.StaticToken) > 0
+	return len(config.Vendor) > 0
 }

@@ -26,8 +26,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const suppliedToken = "header.payload.signature"
-
 // configuredWith builds a provider configuration around a valid environment URL, so that a test only
 // has to state the credentials it is about.
 func configuredWith(t *testing.T, credentials map[string]any) *config.ProviderConfiguration {
@@ -46,9 +44,8 @@ func configuredWith(t *testing.T, credentials map[string]any) *config.ProviderCo
 // a key with a []interface{} value to replace the github sub-block entirely.
 func wifBlock(overrides map[string]any) []interface{} {
 	block := map[string]any{
-		"vendor":     "github",
-		"audience":   "dynatrace",
-		"oidc_token": "",
+		"vendor":   "github",
+		"audience": "dynatrace",
 		"github": []interface{}{map[string]any{
 			"token_request_url":   "https://token.service.invalid/",
 			"token_request_token": "request-token",
@@ -81,30 +78,6 @@ func TestWIFAudienceIsParsed(t *testing.T) {
 	assert.Equal(t, "https://dynatrace.com", cfg.Platform.WorkloadIdentityFederationConfig.Audience)
 }
 
-func TestWIFOIDCTokenIsParsed(t *testing.T) {
-	cfg := configuredWith(t, map[string]any{"wif": []interface{}{map[string]any{
-		"vendor":     "",
-		"audience":   "",
-		"oidc_token": suppliedToken,
-		"github":     []interface{}{map[string]any{"token_request_url": "", "token_request_token": ""}},
-	}}})
-
-	assert.Equal(t, suppliedToken, cfg.Platform.WorkloadIdentityFederationConfig.StaticToken)
-}
-
-// The counterpart of the test above, differing only in the trailing newline that a token picks up on
-// its way through a CI secret. "Bearer <token>\n" is not a valid header value.
-func TestWIFOIDCTokenIsTrimmed(t *testing.T) {
-	cfg := configuredWith(t, map[string]any{"wif": []interface{}{map[string]any{
-		"vendor":     "",
-		"audience":   "",
-		"oidc_token": suppliedToken + "\n",
-		"github":     []interface{}{map[string]any{"token_request_url": "", "token_request_token": ""}},
-	}}})
-
-	assert.Equal(t, suppliedToken, cfg.Platform.WorkloadIdentityFederationConfig.StaticToken)
-}
-
 func TestWIFGitHubTokenRequestURLIsParsed(t *testing.T) {
 	cfg := configuredWith(t, map[string]any{"wif": wifBlock(map[string]any{
 		"github": []interface{}{map[string]any{
@@ -113,7 +86,7 @@ func TestWIFGitHubTokenRequestURLIsParsed(t *testing.T) {
 		}},
 	})})
 
-	assert.Equal(t, "https://token.actions.githubusercontent.com/", cfg.Platform.WorkloadIdentityFederationConfig.GitHubTokenRequestURL)
+	assert.Equal(t, "https://token.actions.githubusercontent.com/", cfg.Platform.WorkloadIdentityFederationConfig.GitHub.TokenRequestURL)
 }
 
 func TestWIFGitHubTokenRequestTokenIsParsed(t *testing.T) {
@@ -124,7 +97,7 @@ func TestWIFGitHubTokenRequestTokenIsParsed(t *testing.T) {
 		}},
 	})})
 
-	assert.Equal(t, "my-request-token", cfg.Platform.WorkloadIdentityFederationConfig.GitHubTokenRequestToken)
+	assert.Equal(t, "my-request-token", cfg.Platform.WorkloadIdentityFederationConfig.GitHub.TokenRequestToken)
 }
 
 func TestPlatformValidationAcceptsWIFWithoutOAuth(t *testing.T) {
@@ -169,15 +142,6 @@ func TestPlatformValidationRejectsUnsupportedVendor(t *testing.T) {
 	_, err := config.ClientSet(cfg, config.CredValPlatform)
 
 	assert.EqualError(t, err, " `gitlab` is not a supported Workload Identity Federation vendor. The only supported value for `wif.vendor` (`DYNATRACE_WIF_VENDOR`) is `github`")
-}
-
-// The schema rejects this combination too, but the export command never runs schema validation.
-func TestPlatformValidationRejectsVendorAndOIDCTokenTogether(t *testing.T) {
-	cfg := configuredWith(t, map[string]any{"wif": wifBlock(map[string]any{"oidc_token": suppliedToken})})
-
-	_, err := config.ClientSet(cfg, config.CredValPlatform)
-
-	assert.EqualError(t, err, " A Workload Identity Federation vendor and a pre-minted OIDC token have both been specified. These options are mutually exclusive. Unset either `wif.vendor` (`DYNATRACE_WIF_VENDOR`) or `wif.oidc_token` (`DYNATRACE_WIF_OIDC_TOKEN`)")
 }
 
 func TestExportValidationAcceptsWIF(t *testing.T) {
