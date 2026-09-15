@@ -1,6 +1,6 @@
-resource "dynatrace_custom_units" "#name#" {
+resource "dynatrace_custom_units" "unit" {
   name        = "#name#"
   description = "Created by Terraform"
   plural_name = "TerraformUnits"
-  symbol      = "T/u"
+  symbol      = "symbol_#name#"
 }

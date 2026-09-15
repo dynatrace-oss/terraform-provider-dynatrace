@@ -1,6 +1,6 @@
-resource "dynatrace_user_session_metrics" "#name#" {
+resource "dynatrace_user_session_metrics" "metric" {
   enabled    = false
-  metric_key = "uscm.TerraformTest"
+  metric_key = "uscm.#name#"
   filters {
     filter {
       field_name = "useraction.application"
