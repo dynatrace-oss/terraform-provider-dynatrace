@@ -238,26 +238,17 @@ func Provider() *schema.Provider {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"vendor": {
-							Type:          schema.TypeString,
-							Optional:      true,
-							Description:   "The workload identity provider to obtain an OIDC token from. The only supported value is `github`. Conflicts with `oidc_token`.",
-							DefaultFunc:   schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_VENDOR", "DT_WIF_VENDOR"}, nil),
-							ValidateFunc:  validation.StringInSlice([]string{wif.VendorGitHub}, false),
-							ConflictsWith: []string{"wif.0.oidc_token"},
+							Type:         schema.TypeString,
+							Required:     true,
+							Description:  "The workload identity provider to obtain an OIDC token from. The only supported value is `github`.",
+							DefaultFunc:  schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_VENDOR", "DT_WIF_VENDOR"}, nil),
+							ValidateFunc: validation.StringInSlice([]string{wif.VendorGitHub}, false),
 						},
 						"audience": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Required:    true,
 							Description: "The audience (`aud` claim) to request for the OIDC token. Must match what the Dynatrace environment expects.",
 							DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_AUDIENCE", "DT_WIF_AUDIENCE"}, nil),
-						},
-						"oidc_token": {
-							Type:          schema.TypeString,
-							Optional:      true,
-							Sensitive:     true,
-							Description:   "A pre-minted OIDC token (JWT) sent to platform APIs as-is. Conflicts with `vendor`. This token is never refreshed and will expire during long `terraform apply` runs. Prefer `vendor` when the workload runs on a supported CI platform.",
-							DefaultFunc:   schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_OIDC_TOKEN", "DT_WIF_OIDC_TOKEN"}, nil),
-							ConflictsWith: []string{"wif.0.vendor"},
 						},
 						"github": {
 							Type:     schema.TypeList,

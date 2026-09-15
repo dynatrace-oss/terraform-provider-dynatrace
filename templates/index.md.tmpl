@@ -145,7 +145,7 @@ DYNATRACE_WIF_VENDOR=github
 DYNATRACE_WIF_AUDIENCE=<<AUDIENCE>>
 ```
 
-Alternatively, you can use the `wif_vendor` and `wif_audience` attributes in the provider configuration. `wif_audience` has no default: the value has to match the audience that your Dynatrace environment expects.
+Alternatively, you can use the `wif` block in the provider configuration. `audience` has no default: the value has to match the audience that your Dynatrace environment expects.
 For information about how to configure the Dynatrace tenant, have a look at the documentation for [Workload identity federation](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/workload-identity-federation).
 
 The job needs the `id-token: write` permission, otherwise GitHub does not issue an OIDC token to it:
@@ -180,18 +180,6 @@ jobs:
 The provider obtains a new token shortly before the current one expires, so a long-running `terraform apply` does not fail halfway through when the token reaches the end of its short lifetime.
 
 Workload Identity Federation applies to the Dynatrace **platform** APIs only. IAM (Account Management) resources still require OAuth credentials, and classic resources still require an API token. When it is configured, it takes precedence over `platform_token` and over OAuth credentials for platform requests, and the provider emits a warning naming the credentials that are being ignored.
-
-#### Using an OIDC token obtained elsewhere
-
-If you obtain the token by other means, you can pass it directly:
-
-```
-DYNATRACE_WIF_OIDC_TOKEN=<<OIDC_TOKEN>>
-```
-
-or use the `wif_oidc_token` attribute. It conflicts with `wif_vendor` - specify one or the other, never both.
-
-> **Warning:** A token supplied this way is **never replaced**. It carries a fixed `exp` claim and can expire in the middle of a long-running `terraform apply`, which shows up as `401` responses partway through. Prefer `wif_vendor` whenever the workload runs on a supported CI platform.
 
 
 ## Exporting existing configuration from a Dynatrace environment

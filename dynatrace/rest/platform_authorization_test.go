@@ -75,36 +75,45 @@ func TestCreatePlatformClientUsesPlatformTokenAsBearerToken(t *testing.T) {
 	assert.Equal(t, "Bearer dt0s16.ABCDEF", *authorization)
 }
 
-func TestCreatePlatformClientUsesSuppliedOIDCTokenAsBearerToken(t *testing.T) {
-	serverURL, authorization := platformAPI(t)
-	token := idToken("repo:dynatrace-oss/terraform-provider-dynatrace:ref:refs/heads/main")
-
-	require.NoError(t, callPlatformAPI(t, serverURL, rest.PlatformCredentials{WorkloadIdentityFederationConfig: wif.Config{StaticToken: token}}))
-
-	assert.Equal(t, "Bearer "+token, *authorization)
-}
-
 func TestCreatePlatformClientPrefersWIFOverPlatformToken(t *testing.T) {
-	serverURL, authorization := platformAPI(t)
 	token := idToken("repo:dynatrace-oss/terraform-provider-dynatrace:ref:refs/heads/main")
+	tokenService := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		_, _ = fmt.Fprintf(writer, `{"count":1,"value":%q}`, token)
+	}))
+	t.Cleanup(tokenService.Close)
+
+	serverURL, authorization := platformAPI(t)
 
 	require.NoError(t, callPlatformAPI(t, serverURL, rest.PlatformCredentials{
-		PlatformToken:                    "dt0s16.ABCDEF",
-		WorkloadIdentityFederationConfig: wif.Config{StaticToken: token},
+		PlatformToken: "dt0s16.ABCDEF",
+		WorkloadIdentityFederationConfig: wif.Config{
+			Vendor:   wif.VendorGitHub,
+			Audience: t.Name(),
+			GitHub:   wif.GitHubConfig{TokenRequestURL: tokenService.URL, TokenRequestToken: "request-token"},
+		},
 	}))
 
 	assert.Equal(t, "Bearer "+token, *authorization)
 }
 
 func TestCreatePlatformClientPrefersWIFOverOAuth(t *testing.T) {
-	serverURL, authorization := platformAPI(t)
 	token := idToken("repo:dynatrace-oss/terraform-provider-dynatrace:ref:refs/heads/main")
+	tokenService := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		_, _ = fmt.Fprintf(writer, `{"count":1,"value":%q}`, token)
+	}))
+	t.Cleanup(tokenService.Close)
+
+	serverURL, authorization := platformAPI(t)
 
 	require.NoError(t, callPlatformAPI(t, serverURL, rest.PlatformCredentials{
-		ClientID:                         "dt0s02.CLIENT",
-		ClientSecret:                     "dt0s02.SECRET",
-		TokenURL:                         "https://sso.invalid/sso/oauth2/token",
-		WorkloadIdentityFederationConfig: wif.Config{StaticToken: token},
+		ClientID:     "dt0s02.CLIENT",
+		ClientSecret: "dt0s02.SECRET",
+		TokenURL:     "https://sso.invalid/sso/oauth2/token",
+		WorkloadIdentityFederationConfig: wif.Config{
+			Vendor:   wif.VendorGitHub,
+			Audience: t.Name(),
+			GitHub:   wif.GitHubConfig{TokenRequestURL: tokenService.URL, TokenRequestToken: "request-token"},
+		},
 	}))
 
 	assert.Equal(t, "Bearer "+token, *authorization)
@@ -120,10 +129,9 @@ func TestCreatePlatformClientMintsOIDCTokenFromGitHubActions(t *testing.T) {
 	serverURL, authorization := platformAPI(t)
 
 	require.NoError(t, callPlatformAPI(t, serverURL, rest.PlatformCredentials{WorkloadIdentityFederationConfig: wif.Config{
-		Vendor:                  wif.VendorGitHub,
-		Audience:                t.Name(),
-		GitHubTokenRequestURL:   tokenService.URL,
-		GitHubTokenRequestToken: "request-token",
+		Vendor:   wif.VendorGitHub,
+		Audience: t.Name(),
+		GitHub:   wif.GitHubConfig{TokenRequestURL: tokenService.URL, TokenRequestToken: "request-token"},
 	}}))
 
 	assert.Equal(t, "Bearer "+token, *authorization)
@@ -140,10 +148,9 @@ func TestCreatePlatformClientReusesMintedTokenAcrossRequests(t *testing.T) {
 
 	serverURL, _ := platformAPI(t)
 	platform := rest.PlatformCredentials{EnvironmentURL: serverURL, WorkloadIdentityFederationConfig: wif.Config{
-		Vendor:                  wif.VendorGitHub,
-		Audience:                t.Name(),
-		GitHubTokenRequestURL:   tokenService.URL,
-		GitHubTokenRequestToken: "request-token",
+		Vendor:   wif.VendorGitHub,
+		Audience: t.Name(),
+		GitHub:   wif.GitHubConfig{TokenRequestURL: tokenService.URL, TokenRequestToken: "request-token"},
 	}}
 	clientSet := createMockClientSet(t, &rest.Credentials{Platform: platform})
 
@@ -167,10 +174,9 @@ func TestCreatePlatformClientMintsIndependentlyPerCall(t *testing.T) {
 
 	serverURL, _ := platformAPI(t)
 	credentials := &rest.Credentials{Platform: rest.PlatformCredentials{EnvironmentURL: serverURL, WorkloadIdentityFederationConfig: wif.Config{
-		Vendor:                  wif.VendorGitHub,
-		Audience:                t.Name(),
-		GitHubTokenRequestURL:   tokenService.URL,
-		GitHubTokenRequestToken: "request-token",
+		Vendor:   wif.VendorGitHub,
+		Audience: t.Name(),
+		GitHub:   wif.GitHubConfig{TokenRequestURL: tokenService.URL, TokenRequestToken: "request-token"},
 	}}}
 
 	first, err := rest.CreatePlatformClient(t.Context(), serverURL, credentials)
@@ -191,14 +197,23 @@ func TestCreatePlatformClientMintsIndependentlyPerCall(t *testing.T) {
 func federatedCredentials(t *testing.T, token string) (credentials *rest.Credentials, classicAuthorization, platformAuthorization *string) {
 	t.Helper()
 
+	tokenService := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		_, _ = fmt.Fprintf(writer, `{"count":1,"value":%q}`, token)
+	}))
+	t.Cleanup(tokenService.Close)
+
 	classicURL, classicAuthorization := platformAPI(t)
 	platformURL, platformAuthorization := platformAPI(t)
 
 	return &rest.Credentials{
 		ClassicEnvironmentURL: classicURL,
 		Platform: rest.PlatformCredentials{
-			EnvironmentURL:                   platformURL,
-			WorkloadIdentityFederationConfig: wif.Config{StaticToken: token},
+			EnvironmentURL: platformURL,
+			WorkloadIdentityFederationConfig: wif.Config{
+				Vendor:   wif.VendorGitHub,
+				Audience: t.Name(),
+				GitHub:   wif.GitHubConfig{TokenRequestURL: tokenService.URL, TokenRequestToken: "request-token"},
+			},
 		},
 	}, classicAuthorization, platformAuthorization
 }

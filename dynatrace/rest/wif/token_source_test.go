@@ -27,7 +27,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"golang.org/x/oauth2"
 )
 
 // Running out of prepared tokens is a test error rather than a silent repeat, so that a test
@@ -163,21 +162,11 @@ func TestReusingTokenSourcePropagatesMintingFailure(t *testing.T) {
 	assert.ErrorIs(t, err, mintErr)
 }
 
-// Handing oauth2 a token without an expiry is what keeps it from discarding a supplied one.
-func TestStaticTokenSourceHandsOutTheSuppliedTokenWithoutExpiry(t *testing.T) {
-	token, err := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: "supplied.id.token"}).Token()
-
-	require.NoError(t, err)
-	assert.Equal(t, "supplied.id.token", token.AccessToken)
-	assert.True(t, token.Expiry.IsZero())
-}
-
 func TestTokenSourceForBuildsSourceForVendor(t *testing.T) {
 	source, err := TokenSourceFor(t.Context(), Config{
-		Vendor:                  VendorGitHub,
-		Audience:                "dynatrace",
-		GitHubTokenRequestURL:   "https://token.service.invalid/",
-		GitHubTokenRequestToken: "request-token",
+		Vendor:   VendorGitHub,
+		Audience: "dynatrace",
+		GitHub:   GitHubConfig{TokenRequestURL: "https://token.service.invalid/", TokenRequestToken: "request-token"},
 	})
 
 	require.NoError(t, err)
@@ -188,25 +177,4 @@ func TestTokenSourceForReportsMissingVendorCredentials(t *testing.T) {
 	_, err := TokenSourceFor(t.Context(), Config{Vendor: VendorGitHub, Audience: "dynatrace"})
 
 	assert.ErrorIs(t, err, errNoTokenRequestURL)
-}
-
-func TestTokenSourceForReturnsSuppliedStaticToken(t *testing.T) {
-	rawToken := jwtWithPayload(`{"exp":1767225600}`)
-
-	source, err := TokenSourceFor(t.Context(), Config{StaticToken: rawToken})
-	require.NoError(t, err)
-
-	token, err := source.Token()
-	require.NoError(t, err)
-	assert.Equal(t, rawToken, token.AccessToken)
-}
-
-// Reporting an expiry would make oauth2 discard the token and leave the request unauthenticated.
-func TestTokenSourceForLeavesSuppliedStaticTokenWithoutExpiry(t *testing.T) {
-	source, err := TokenSourceFor(t.Context(), Config{StaticToken: jwtWithPayload(`{"exp":1767225600}`)})
-	require.NoError(t, err)
-
-	token, err := source.Token()
-	require.NoError(t, err)
-	assert.True(t, token.Expiry.IsZero())
 }

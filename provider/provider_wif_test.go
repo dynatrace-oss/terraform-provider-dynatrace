@@ -19,7 +19,6 @@
 package provider_test
 
 import (
-	"sort"
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
@@ -40,7 +39,6 @@ func validateProviderConfig(t *testing.T, config map[string]any) diag.Diagnostic
 	for _, variable := range []string{
 		"DYNATRACE_WIF_VENDOR", "DT_WIF_VENDOR",
 		"DYNATRACE_WIF_AUDIENCE", "DT_WIF_AUDIENCE",
-		"DYNATRACE_WIF_OIDC_TOKEN", "DT_WIF_OIDC_TOKEN",
 		"ACTIONS_ID_TOKEN_REQUEST_URL",
 		"ACTIONS_ID_TOKEN_REQUEST_TOKEN",
 	} {
@@ -50,16 +48,6 @@ func validateProviderConfig(t *testing.T, config map[string]any) diag.Diagnostic
 	return provider.Provider().Validate(terraform.NewResourceConfigRaw(config))
 }
 
-func detailsOf(diagnostics diag.Diagnostics) []string {
-	details := make([]string, 0, len(diagnostics))
-	for _, diagnostic := range diagnostics {
-		details = append(details, diagnostic.Detail)
-	}
-	sort.Strings(details)
-
-	return details
-}
-
 // InternalValidate is the only thing that catches a ConflictsWith or RequiredWith naming an
 // attribute that does not exist. The other tests in this package skip, so without this the provider
 // schema is never checked at all.
@@ -67,33 +55,22 @@ func TestProviderSchemaIsInternallyValid(t *testing.T) {
 	require.NoError(t, provider.Provider().InternalValidate())
 }
 
-func TestWIFVendorConflictsWithWIFOIDCToken(t *testing.T) {
+func TestWIFRequiresVendor(t *testing.T) {
 	diagnostics := validateProviderConfig(t, map[string]any{
-		"wif": []interface{}{map[string]any{
-			"vendor":     "github",
-			"audience":   "dynatrace",
-			"oidc_token": "header.payload.signature",
-		}},
+		"wif": []interface{}{map[string]any{"audience": "dynatrace"}},
 	})
 
-	// Both attributes declare the conflict, so each one is reported. The order they arrive in follows
-	// map iteration, hence the sort.
-	require.Len(t, diagnostics, 2)
-	assert.Equal(t, []string{
-		`"wif.0.oidc_token": conflicts with wif.0.vendor`,
-		`"wif.0.vendor": conflicts with wif.0.oidc_token`,
-	}, detailsOf(diagnostics))
+	require.Len(t, diagnostics, 1)
+	assert.Equal(t, `The argument "wif.0.vendor" is required, but no definition was found.`, diagnostics[0].Detail)
 }
 
-// A missing audience is not a schema rule, because the audience may just as well arrive through an
-// environment variable, and because the export command never runs schema validation. The credential
-// validation rejects it instead - see TestPlatformValidationRejectsWIFWithoutAudience.
-func TestWIFVendorWithoutAudienceIsNotASchemaError(t *testing.T) {
+func TestWIFRequiresAudience(t *testing.T) {
 	diagnostics := validateProviderConfig(t, map[string]any{
 		"wif": []interface{}{map[string]any{"vendor": "github"}},
 	})
 
-	assert.Empty(t, diagnostics)
+	require.Len(t, diagnostics, 1)
+	assert.Equal(t, `The argument "wif.0.audience" is required, but no definition was found.`, diagnostics[0].Detail)
 }
 
 func TestWIFVendorRejectsUnsupportedVendor(t *testing.T) {
@@ -114,15 +91,6 @@ func TestWIFVendorAcceptsSupportedVendor(t *testing.T) {
 			"vendor":   "github",
 			"audience": "dynatrace",
 		}},
-	})
-
-	assert.Empty(t, diagnostics)
-}
-
-// A supplied token stands on its own: it needs no vendor and no audience.
-func TestWIFOIDCTokenNeedsNoOtherAttribute(t *testing.T) {
-	diagnostics := validateProviderConfig(t, map[string]any{
-		"wif": []interface{}{map[string]any{"oidc_token": "header.payload.signature"}},
 	})
 
 	assert.Empty(t, diagnostics)
