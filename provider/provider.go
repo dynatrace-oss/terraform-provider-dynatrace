@@ -228,43 +228,63 @@ func Provider() *schema.Provider {
 				Sensitive:   true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_PLATFORM_TOKEN", "DT_PLATFORM_TOKEN"}, nil),
 			},
-			"wif_vendor": {
-				Type:         schema.TypeString,
-				Description:  "Obtains a short lived OIDC token from the given workload identity provider and uses it for platform APIs. The only supported value is `github`, which requires the job to run in GitHub Actions with the `id-token: write` permission. Requires `wif_audience` and conflicts with `wif_oidc_token`. When specified, it is used in preference to `platform_token` and to OAuth credentials for platform requests. Workload Identity Federation can't be used for IAM (Account Management) or classic resources.",
-				Optional:     true,
-				DefaultFunc:  schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_VENDOR", "DT_WIF_VENDOR"}, nil),
-				ValidateFunc: validation.StringInSlice([]string{wif.VendorGitHub}, false),
-				// A missing audience is deliberately left to the credential validation rather than
-				// declared as RequiredWith here. That path reaches the export command too, which does
-				// not run schema validation at all, and it can say which environment variable to set.
-				ConflictsWith: []string{"wif_oidc_token"},
-			},
-			"wif_audience": {
-				Type:        schema.TypeString,
-				Description: "The audience (`aud` claim) requested for the Workload Identity Federation OIDC token. Required whenever `wif_vendor` is specified. There is no default: the value has to match the audience that the Dynatrace environment expects.",
-				Optional:    true,
-				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_AUDIENCE", "DT_WIF_AUDIENCE"}, nil),
-			},
-			"wif_oidc_token": {
-				Type:          schema.TypeString,
-				Description:   "An already obtained OIDC token (JWT) that is sent to the platform APIs as it is. Conflicts with `wif_vendor`. This token is never replaced: it carries a fixed `exp` claim and can expire in the middle of a long running `terraform apply`. Prefer `wif_vendor` whenever the workload runs on a supported CI platform.",
-				Optional:      true,
-				Sensitive:     true,
-				DefaultFunc:   schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_OIDC_TOKEN", "DT_WIF_OIDC_TOKEN"}, nil),
-				ConflictsWith: []string{"wif_vendor"},
-			},
-			"wif_github_token_request_url": {
-				Type:        schema.TypeString,
-				Description: "The URL of the GitHub Actions OIDC token request endpoint. Defaults to the `ACTIONS_ID_TOKEN_REQUEST_URL` environment variable injected by GitHub Actions when the job has `permissions: { id-token: write }`. Only used when `wif_vendor` is `github`.",
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("ACTIONS_ID_TOKEN_REQUEST_URL", nil),
-			},
-			"wif_github_token_request_token": {
-				Type:        schema.TypeString,
-				Description: "The bearer token for the GitHub Actions OIDC token request endpoint. Defaults to the `ACTIONS_ID_TOKEN_REQUEST_TOKEN` environment variable injected by GitHub Actions when the job has `permissions: { id-token: write }`. Only used when `wif_vendor` is `github`.",
-				Optional:    true,
-				Sensitive:   true,
-				DefaultFunc: schema.EnvDefaultFunc("ACTIONS_ID_TOKEN_REQUEST_TOKEN", nil),
+			"wif": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Description: "Configures Workload Identity Federation as the authentication method for platform APIs. " +
+					"When specified, it takes precedence over `platform_token` and OAuth credentials. " +
+					"Cannot be used for IAM (Account Management) or classic resources.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"vendor": {
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   "The workload identity provider to obtain an OIDC token from. The only supported value is `github`. Conflicts with `oidc_token`.",
+							DefaultFunc:   schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_VENDOR", "DT_WIF_VENDOR"}, nil),
+							ValidateFunc:  validation.StringInSlice([]string{wif.VendorGitHub}, false),
+							ConflictsWith: []string{"wif.0.oidc_token"},
+						},
+						"audience": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The audience (`aud` claim) to request for the OIDC token. Must match what the Dynatrace environment expects.",
+							DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_AUDIENCE", "DT_WIF_AUDIENCE"}, nil),
+						},
+						"oidc_token": {
+							Type:          schema.TypeString,
+							Optional:      true,
+							Sensitive:     true,
+							Description:   "A pre-minted OIDC token (JWT) sent to platform APIs as-is. Conflicts with `vendor`. This token is never refreshed and will expire during long `terraform apply` runs. Prefer `vendor` when the workload runs on a supported CI platform.",
+							DefaultFunc:   schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_OIDC_TOKEN", "DT_WIF_OIDC_TOKEN"}, nil),
+							ConflictsWith: []string{"wif.0.vendor"},
+						},
+						"github": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Description: "GitHub Actions-specific token service credentials. " +
+								"When the job has `permissions: { id-token: write }`, GitHub injects these automatically as environment variables.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"token_request_url": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The GitHub Actions OIDC token request endpoint URL. Defaults to `ACTIONS_ID_TOKEN_REQUEST_URL`.",
+										DefaultFunc: schema.EnvDefaultFunc("ACTIONS_ID_TOKEN_REQUEST_URL", nil),
+									},
+									"token_request_token": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Sensitive:   true,
+										Description: "The bearer token for the GitHub Actions OIDC token request endpoint. Defaults to `ACTIONS_ID_TOKEN_REQUEST_TOKEN`.",
+										DefaultFunc: schema.EnvDefaultFunc("ACTIONS_ID_TOKEN_REQUEST_TOKEN", nil),
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
