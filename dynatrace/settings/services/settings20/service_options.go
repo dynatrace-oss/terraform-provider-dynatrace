@@ -25,10 +25,11 @@ import (
 )
 
 type ServiceOptions[T settings.Settings] struct {
-	LegacyID       func(id string) string
-	Name           func(ctx context.Context, id string, v T) (string, error)
-	HijackOnCreate func(err error, service settings.RService[T], v T) (*api.Stub, error)
-	CreateRetry    func(v T, err error) T
-	UpdateRetry    func(v T, err error) T
-	Duplicates     func(ctx context.Context, service settings.RService[T], v T) (*api.Stub, error)
+	LegacyID            func(id string) string
+	Name                func(ctx context.Context, id string, v T) (string, error)
+	HijackOnCreate      func(err error, service settings.RService[T], v T) (*api.Stub, error)
+	CreateRetry         func(v T, err error) T
+	UpdateRetry         func(v T, err error) T
+	Duplicates          func(ctx context.Context, service settings.RService[T], v T) (*api.Stub, error)
+	SupportsAdminAccess bool
 }
