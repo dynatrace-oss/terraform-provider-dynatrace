@@ -10,7 +10,7 @@ resource "dynatrace_gcp_connection" "auth_failure" {
   service_account_impersonation {
     service_account_id = var.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT
     consumers = [
-      "SVC:com.dynatrace.da"
+      "SVC:com.dynatrace.openpipeline"
     ]
   }
 
