@@ -72,6 +72,8 @@ func (me *TokenSubscription) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Subscription token",
 			Required:    true,
+			// This is a channel ID. No need to set it to sensitive
+			// It's also not sensitive in the settings schema
 		},
 	}
 }
