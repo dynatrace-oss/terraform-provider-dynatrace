@@ -20,6 +20,7 @@ package notifications
 import (
 	"encoding/json"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
@@ -84,6 +85,7 @@ func (me *TrelloConfig) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The application token for the Trello account",
 			Optional:    true,
+			Sensitive:   true,
 		},
 		"board_id": {
 			Type:        schema.TypeString,
@@ -103,13 +105,6 @@ func (me *TrelloConfig) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (me *TrelloConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
-	if value, ok := decoder.GetOk("trello.0.authorization_token"); ok && len(value.(string)) > 0 {
-		me.AuthorizationToken = new(value.(string))
-	}
-	return nil
-}
-
 func (me *TrelloConfig) FillDemoValues() []string {
 	me.AuthorizationToken = new("#######")
 	return []string{"The REST API didn't provide the credentials"}
@@ -119,37 +114,18 @@ func (me *TrelloConfig) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(me.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("name", me.Name); err != nil {
-		return err
-	}
-	if err := properties.Encode("active", me.Active); err != nil {
-		return err
-	}
-	if err := properties.Encode("alerting_profile", me.AlertingProfile); err != nil {
-		return err
-	}
-	if err := properties.Encode("resolved_list_id", me.ResolvedListID); err != nil {
-		return err
-	}
-	if err := properties.Encode("text", me.Text); err != nil {
-		return err
-	}
-	if err := properties.Encode("application_key", me.ApplicationKey); err != nil {
-		return err
-	}
-	if err := properties.Encode("authorization_token", me.AuthorizationToken); err != nil {
-		return err
-	}
-	if err := properties.Encode("board_id", me.BoardID); err != nil {
-		return err
-	}
-	if err := properties.Encode("description", me.Description); err != nil {
-		return err
-	}
-	if err := properties.Encode("list_id", me.ListID); err != nil {
-		return err
-	}
-	return nil
+	return properties.EncodeAll(map[string]any{
+		"name":                me.Name,
+		"active":              me.Active,
+		"alerting_profile":    me.AlertingProfile,
+		"resolved_list_id":    me.ResolvedListID,
+		"text":                me.Text,
+		"application_key":     me.ApplicationKey,
+		"authorization_token": sensitive.SecretValue,
+		"board_id":            me.BoardID,
+		"description":         me.Description,
+		"list_id":             me.ListID,
+	})
 }
 
 func (me *TrelloConfig) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -174,37 +150,18 @@ func (me *TrelloConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 			me.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("name"); ok {
-		me.Name = value.(string)
-	}
-	if value, ok := decoder.GetOk("active"); ok {
-		me.Active = value.(bool)
-	}
-	if value, ok := decoder.GetOk("alerting_profile"); ok {
-		me.AlertingProfile = value.(string)
-	}
-	if value, ok := decoder.GetOk("resolved_list_id"); ok {
-		me.ResolvedListID = value.(string)
-	}
-	if value, ok := decoder.GetOk("text"); ok {
-		me.Text = value.(string)
-	}
-	if value, ok := decoder.GetOk("application_key"); ok {
-		me.ApplicationKey = value.(string)
-	}
-	if value, ok := decoder.GetOk("authorization_token"); ok {
-		me.AuthorizationToken = new(value.(string))
-	}
-	if value, ok := decoder.GetOk("board_id"); ok {
-		me.BoardID = value.(string)
-	}
-	if value, ok := decoder.GetOk("description"); ok {
-		me.Description = value.(string)
-	}
-	if value, ok := decoder.GetOk("list_id"); ok {
-		me.ListID = value.(string)
-	}
-	return nil
+	return decoder.DecodeAll(map[string]any{
+		"name":                &me.Name,
+		"active":              &me.Active,
+		"alerting_profile":    &me.AlertingProfile,
+		"resolved_list_id":    &me.ResolvedListID,
+		"text":                &me.Text,
+		"application_key":     &me.ApplicationKey,
+		"authorization_token": &me.AuthorizationToken,
+		"board_id":            &me.BoardID,
+		"description":         &me.Description,
+		"list_id":             &me.ListID,
+	})
 }
 
 func (me *TrelloConfig) MarshalJSON() ([]byte, error) {

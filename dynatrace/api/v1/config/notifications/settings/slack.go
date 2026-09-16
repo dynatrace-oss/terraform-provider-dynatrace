@@ -20,6 +20,7 @@ package notifications
 import (
 	"encoding/json"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
@@ -70,6 +71,7 @@ func (me *SlackConfig) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The URL of the Slack WebHook.  This is confidential information, therefore GET requests return this field with the `null` value, and it is optional for PUT requests",
 			Optional:    true,
+			Sensitive:   true,
 		},
 		"channel": {
 			Type:        schema.TypeString,
@@ -77,13 +79,6 @@ func (me *SlackConfig) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 	}
-}
-
-func (me *SlackConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
-	if value, ok := decoder.GetOk("slack.0.url"); ok && len(value.(string)) > 0 {
-		me.URL = new(value.(string))
-	}
-	return nil
 }
 
 func (me *SlackConfig) FillDemoValues() []string {
@@ -95,28 +90,14 @@ func (me *SlackConfig) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(me.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("name", me.Name); err != nil {
-		return err
-	}
-	if err := properties.Encode("active", me.Active); err != nil {
-		return err
-	}
-	if err := properties.Encode("alerting_profile", me.AlertingProfile); err != nil {
-		return err
-	}
-	if err := properties.Encode("title", me.Title); err != nil {
-		return err
-	}
-	if err := properties.Encode("url", me.URL); err != nil {
-		return err
-	}
-	if err := properties.Encode("url", me.URL); err != nil {
-		return err
-	}
-	if err := properties.Encode("channel", me.Channel); err != nil {
-		return err
-	}
-	return nil
+	return properties.EncodeAll(map[string]any{
+		"name":             me.Name,
+		"active":           me.Active,
+		"alerting_profile": me.AlertingProfile,
+		"title":            me.Title,
+		"url":              sensitive.SecretValue,
+		"channel":          me.Channel,
+	})
 }
 
 func (me *SlackConfig) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -137,25 +118,14 @@ func (me *SlackConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 			me.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("name"); ok {
-		me.Name = value.(string)
-	}
-	if value, ok := decoder.GetOk("active"); ok {
-		me.Active = value.(bool)
-	}
-	if value, ok := decoder.GetOk("alerting_profile"); ok {
-		me.AlertingProfile = value.(string)
-	}
-	if value, ok := decoder.GetOk("title"); ok {
-		me.Title = value.(string)
-	}
-	if value, ok := decoder.GetOk("url"); ok {
-		me.URL = new(value.(string))
-	}
-	if value, ok := decoder.GetOk("channel"); ok {
-		me.Channel = value.(string)
-	}
-	return nil
+	return decoder.DecodeAll(map[string]any{
+		"name":             &me.Name,
+		"active":           &me.Active,
+		"alerting_profile": &me.AlertingProfile,
+		"title":            &me.Title,
+		"url":              &me.URL,
+		"channel":          &me.Channel,
+	})
 }
 
 func (me *SlackConfig) MarshalJSON() ([]byte, error) {
