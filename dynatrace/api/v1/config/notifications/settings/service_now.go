@@ -20,6 +20,7 @@ package notifications
 import (
 	"encoding/json"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
@@ -99,15 +100,9 @@ func (me *ServiceNowConfig) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The username to the ServiceNow account",
 			Optional:    true,
+			Sensitive:   true,
 		},
 	}
-}
-
-func (me *ServiceNowConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
-	if password, ok := decoder.GetOk("service_now.0.password"); ok && len(password.(string)) > 0 {
-		me.Password = new(password.(string))
-	}
-	return nil
 }
 
 func (me *ServiceNowConfig) FillDemoValues() []string {
@@ -119,38 +114,18 @@ func (me *ServiceNowConfig) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(me.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("name", me.Name); err != nil {
-		return err
-	}
-	if err := properties.Encode("active", me.Active); err != nil {
-		return err
-	}
-	if err := properties.Encode("alerting_profile", me.AlertingProfile); err != nil {
-		return err
-	}
-	if err := properties.Encode("send_events", me.SendEvents); err != nil {
-		return err
-	}
-	if err := properties.Encode("send_incidents", me.SendIncidents); err != nil {
-		return err
-	}
-	if err := properties.Encode("url", me.URL); err != nil {
-		return err
-	}
-	if err := properties.Encode("username", me.Username); err != nil {
-		return err
-	}
-	if err := properties.Encode("instance_name", me.InstanceName); err != nil {
-		return err
-	}
-	if err := properties.Encode("message", me.Message); err != nil {
-		return err
-	}
-	if err := properties.Encode("password", me.Password); err != nil {
-		return err
-	}
-
-	return nil
+	return properties.EncodeAll(map[string]any{
+		"name":             me.Name,
+		"active":           me.Active,
+		"alerting_profile": me.AlertingProfile,
+		"send_events":      me.SendEvents,
+		"send_incidents":   me.SendIncidents,
+		"url":              me.URL,
+		"username":         me.Username,
+		"instance_name":    me.InstanceName,
+		"message":          me.Message,
+		"password":         sensitive.SecretValue,
+	})
 }
 
 func (me *ServiceNowConfig) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -175,37 +150,18 @@ func (me *ServiceNowConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 			me.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("name"); ok {
-		me.Name = value.(string)
-	}
-	if value, ok := decoder.GetOk("active"); ok {
-		me.Active = value.(bool)
-	}
-	if value, ok := decoder.GetOk("alerting_profile"); ok {
-		me.AlertingProfile = value.(string)
-	}
-	if value, ok := decoder.GetOk("send_events"); ok {
-		me.SendEvents = value.(bool)
-	}
-	if value, ok := decoder.GetOk("send_incidents"); ok {
-		me.SendIncidents = value.(bool)
-	}
-	if value, ok := decoder.GetOk("url"); ok {
-		me.URL = new(value.(string))
-	}
-	if value, ok := decoder.GetOk("username"); ok {
-		me.Username = value.(string)
-	}
-	if value, ok := decoder.GetOk("instance_name"); ok {
-		me.InstanceName = new(value.(string))
-	}
-	if value, ok := decoder.GetOk("message"); ok {
-		me.Message = value.(string)
-	}
-	if value, ok := decoder.GetOk("password"); ok {
-		me.Password = new(value.(string))
-	}
-	return nil
+	return decoder.DecodeAll(map[string]any{
+		"name":             &me.Name,
+		"active":           &me.Active,
+		"alerting_profile": &me.AlertingProfile,
+		"send_events":      &me.SendEvents,
+		"send_incidents":   &me.SendIncidents,
+		"url":              &me.URL,
+		"username":         &me.Username,
+		"instance_name":    &me.InstanceName,
+		"message":          &me.Message,
+		"password":         &me.Password,
+	})
 }
 
 func (me *ServiceNowConfig) MarshalJSON() ([]byte, error) {

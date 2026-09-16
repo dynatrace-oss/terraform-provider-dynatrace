@@ -20,6 +20,7 @@ package notifications
 import (
 	"encoding/json"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
@@ -70,6 +71,7 @@ func (me *PagerDutyConfig) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The API key to access PagerDuty",
 			Optional:    true,
+			Sensitive:   true,
 		},
 		"service_name": {
 			Type:        schema.TypeString,
@@ -77,13 +79,6 @@ func (me *PagerDutyConfig) Schema() map[string]*schema.Schema {
 			Required:    true,
 		},
 	}
-}
-
-func (me *PagerDutyConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
-	if value, ok := decoder.GetOk("pager_duty.0.service_api_key"); ok && len(value.(string)) > 0 {
-		me.ServiceAPIKey = new(value.(string))
-	}
-	return nil
 }
 
 func (me *PagerDutyConfig) FillDemoValues() []string {
@@ -95,27 +90,14 @@ func (me *PagerDutyConfig) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(me.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("name", me.Name); err != nil {
-		return err
-	}
-	if err := properties.Encode("active", me.Active); err != nil {
-		return err
-	}
-	if err := properties.Encode("alerting_profile", me.AlertingProfile); err != nil {
-		return err
-	}
-	if err := properties.Encode("account", me.Account); err != nil {
-		return err
-	}
-	if err := properties.Encode("service_api_key", me.ServiceAPIKey); err != nil {
-		return err
-	}
-
-	if err := properties.Encode("service_name", me.ServiceName); err != nil {
-		return err
-	}
-
-	return nil
+	return properties.EncodeAll(map[string]any{
+		"name":             me.Name,
+		"active":           me.Active,
+		"alerting_profile": me.AlertingProfile,
+		"account":          me.Account,
+		"service_api_key":  sensitive.SecretValue,
+		"service_name":     me.ServiceName,
+	})
 }
 
 func (me *PagerDutyConfig) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -136,25 +118,14 @@ func (me *PagerDutyConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 			me.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("name"); ok {
-		me.Name = value.(string)
-	}
-	if value, ok := decoder.GetOk("active"); ok {
-		me.Active = value.(bool)
-	}
-	if value, ok := decoder.GetOk("alerting_profile"); ok {
-		me.AlertingProfile = value.(string)
-	}
-	if value, ok := decoder.GetOk("account"); ok {
-		me.Account = value.(string)
-	}
-	if value, ok := decoder.GetOk("service_api_key"); ok {
-		me.ServiceAPIKey = new(value.(string))
-	}
-	if value, ok := decoder.GetOk("service_name"); ok {
-		me.ServiceName = value.(string)
-	}
-	return nil
+	return decoder.DecodeAll(map[string]any{
+		"name":             &me.Name,
+		"active":           &me.Active,
+		"alerting_profile": &me.AlertingProfile,
+		"account":          &me.Account,
+		"service_api_key":  &me.ServiceAPIKey,
+		"service_name":     &me.ServiceName,
+	})
 }
 
 func (me *PagerDutyConfig) MarshalJSON() ([]byte, error) {

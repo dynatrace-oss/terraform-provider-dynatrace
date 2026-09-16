@@ -22,6 +22,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
@@ -90,6 +91,7 @@ func (me *AnsibleTowerConfig) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The password for the Ansible Tower account",
 			Optional:    true,
+			Sensitive:   true,
 		},
 		"username": {
 			Type:        schema.TypeString,
@@ -112,9 +114,6 @@ func (me *AnsibleTowerConfig) FillDemoValues() []string {
 }
 
 func (me *AnsibleTowerConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
-	if password, ok := decoder.GetOk("ansible_tower.0.password"); ok && len(password.(string)) > 0 {
-		me.Password = new(password.(string))
-	}
 	if job_template_id, ok := decoder.GetOk("ansible_tower.0.job_template_id"); ok && job_template_id.(int) != 0 {
 		me.JobTemplateID = int32(job_template_id.(int))
 	}
@@ -133,34 +132,17 @@ func (me *AnsibleTowerConfig) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(me.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("name", me.Name); err != nil {
-		return err
-	}
-	if err := properties.Encode("active", me.Active); err != nil {
-		return err
-	}
-	if err := properties.Encode("alerting_profile", me.AlertingProfile); err != nil {
-		return err
-	}
-	if err := properties.Encode("accept_any_certificate", me.AcceptAnyCertificate); err != nil {
-		return err
-	}
-	if err := properties.Encode("custom_message", me.CustomMessage); err != nil {
-		return err
-	}
-	if err := properties.Encode("job_template_id", int(me.JobTemplateID)); err != nil {
-		return err
-	}
-	if err := properties.Encode("job_template_url", me.JobTemplateURL); err != nil {
-		return err
-	}
-	if err := properties.Encode("password", me.Password); err != nil {
-		return err
-	}
-	if err := properties.Encode("username", me.Username); err != nil {
-		return err
-	}
-	return nil
+	return properties.EncodeAll(map[string]any{
+		"name":                   me.Name,
+		"active":                 me.Active,
+		"alerting_profile":       me.AlertingProfile,
+		"accept_any_certificate": me.AcceptAnyCertificate,
+		"custom_message":         me.CustomMessage,
+		"job_template_id":        int(me.JobTemplateID),
+		"job_template_url":       me.JobTemplateURL,
+		"password":               sensitive.SecretValue,
+		"username":               me.Username,
+	})
 }
 
 func (me *AnsibleTowerConfig) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -184,34 +166,21 @@ func (me *AnsibleTowerConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 			me.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("name"); ok {
-		me.Name = value.(string)
-	}
-	if value, ok := decoder.GetOk("active"); ok {
-		me.Active = value.(bool)
-	}
-	if value, ok := decoder.GetOk("alerting_profile"); ok {
-		me.AlertingProfile = value.(string)
-	}
-	if value, ok := decoder.GetOk("accept_any_certificate"); ok {
-		me.AcceptAnyCertificate = value.(bool)
-	}
-	if value, ok := decoder.GetOk("custom_message"); ok {
-		me.CustomMessage = value.(string)
-	}
+
 	if value, ok := decoder.GetOk("job_template_id"); ok {
 		me.JobTemplateID = int32(value.(int))
 	}
-	if value, ok := decoder.GetOk("job_template_url"); ok {
-		me.JobTemplateURL = value.(string)
-	}
-	if value, ok := decoder.GetOk("password"); ok {
-		me.Password = new(value.(string))
-	}
-	if value, ok := decoder.GetOk("username"); ok {
-		me.Username = value.(string)
-	}
-	return nil
+
+	return decoder.DecodeAll(map[string]any{
+		"name":                   &me.Name,
+		"active":                 &me.Active,
+		"alerting_profile":       &me.AlertingProfile,
+		"accept_any_certificate": &me.AcceptAnyCertificate,
+		"custom_message":         &me.CustomMessage,
+		"job_template_url":       &me.JobTemplateURL,
+		"password":               &me.Password,
+		"username":               &me.Username,
+	})
 }
 
 func (me *AnsibleTowerConfig) MarshalJSON() ([]byte, error) {

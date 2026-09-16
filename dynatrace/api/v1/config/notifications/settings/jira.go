@@ -20,6 +20,7 @@ package notifications
 import (
 	"encoding/json"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
@@ -74,6 +75,7 @@ func (me *JiraConfig) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The password for the Jira profile",
 			Optional:    true,
+			Sensitive:   true,
 		},
 		"project_key": {
 			Type:        schema.TypeString,
@@ -103,13 +105,6 @@ func (me *JiraConfig) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (me *JiraConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
-	if value, ok := decoder.GetOk("jira.0.password"); ok && len(value.(string)) > 0 {
-		me.Password = new(value.(string))
-	}
-	return nil
-}
-
 func (me *JiraConfig) FillDemoValues() []string {
 	me.Password = new("#######")
 	return []string{"The REST API didn't provide the credentials"}
@@ -119,37 +114,18 @@ func (me *JiraConfig) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(me.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("name", me.Name); err != nil {
-		return err
-	}
-	if err := properties.Encode("active", me.Active); err != nil {
-		return err
-	}
-	if err := properties.Encode("alerting_profile", me.AlertingProfile); err != nil {
-		return err
-	}
-	if err := properties.Encode("issue_type", me.IssueType); err != nil {
-		return err
-	}
-	if err := properties.Encode("password", me.Password); err != nil {
-		return err
-	}
-	if err := properties.Encode("project_key", me.ProjectKey); err != nil {
-		return err
-	}
-	if err := properties.Encode("summary", me.Summary); err != nil {
-		return err
-	}
-	if err := properties.Encode("url", me.URL); err != nil {
-		return err
-	}
-	if err := properties.Encode("username", me.Username); err != nil {
-		return err
-	}
-	if err := properties.Encode("description", me.Description); err != nil {
-		return err
-	}
-	return nil
+	return properties.EncodeAll(map[string]any{
+		"name":             me.Name,
+		"active":           me.Active,
+		"alerting_profile": me.AlertingProfile,
+		"issue_type":       me.IssueType,
+		"password":         sensitive.SecretValue,
+		"project_key":      me.ProjectKey,
+		"summary":          me.Summary,
+		"url":              me.URL,
+		"username":         me.Username,
+		"description":      me.Description,
+	})
 }
 
 func (me *JiraConfig) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -174,37 +150,18 @@ func (me *JiraConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 			me.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("name"); ok {
-		me.Name = value.(string)
-	}
-	if value, ok := decoder.GetOk("active"); ok {
-		me.Active = value.(bool)
-	}
-	if value, ok := decoder.GetOk("alerting_profile"); ok {
-		me.AlertingProfile = value.(string)
-	}
-	if value, ok := decoder.GetOk("issue_type"); ok {
-		me.IssueType = value.(string)
-	}
-	if value, ok := decoder.GetOk("password"); ok {
-		me.Password = new(value.(string))
-	}
-	if value, ok := decoder.GetOk("project_key"); ok {
-		me.ProjectKey = value.(string)
-	}
-	if value, ok := decoder.GetOk("summary"); ok {
-		me.Summary = value.(string)
-	}
-	if value, ok := decoder.GetOk("url"); ok {
-		me.URL = value.(string)
-	}
-	if value, ok := decoder.GetOk("username"); ok {
-		me.Username = value.(string)
-	}
-	if value, ok := decoder.GetOk("description"); ok {
-		me.Description = value.(string)
-	}
-	return nil
+	return decoder.DecodeAll(map[string]any{
+		"name":             &me.Name,
+		"active":           &me.Active,
+		"alerting_profile": &me.AlertingProfile,
+		"issue_type":       &me.IssueType,
+		"password":         &me.Password,
+		"project_key":      &me.ProjectKey,
+		"summary":          &me.Summary,
+		"url":              &me.URL,
+		"username":         &me.Username,
+		"description":      &me.Description,
+	})
 }
 
 func (me *JiraConfig) MarshalJSON() ([]byte, error) {

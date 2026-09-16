@@ -20,6 +20,7 @@ package notifications
 import (
 	"encoding/json"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/xjson"
@@ -65,6 +66,7 @@ func (me *OpsGenieConfig) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "The API key to access OpsGenie",
 			Optional:    true,
+			Sensitive:   true,
 		},
 		"domain": {
 			Type:        schema.TypeString,
@@ -79,13 +81,6 @@ func (me *OpsGenieConfig) Schema() map[string]*schema.Schema {
 	}
 }
 
-func (me *OpsGenieConfig) PrepareMarshalHCL(decoder hcl.Decoder) error {
-	if value, ok := decoder.GetOk("ops_genie.0.api_key"); ok && len(value.(string)) > 0 {
-		me.APIKey = new(value.(string))
-	}
-	return nil
-}
-
 func (me *OpsGenieConfig) FillDemoValues() []string {
 	me.APIKey = new("#######")
 	return []string{"The REST API didn't provide the credentials"}
@@ -95,26 +90,14 @@ func (me *OpsGenieConfig) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Unknowns(me.Unknowns); err != nil {
 		return err
 	}
-	if err := properties.Encode("name", me.Name); err != nil {
-		return err
-	}
-	if err := properties.Encode("active", me.Active); err != nil {
-		return err
-	}
-	if err := properties.Encode("alerting_profile", me.AlertingProfile); err != nil {
-		return err
-	}
-	if err := properties.Encode("api_key", me.APIKey); err != nil {
-		return err
-	}
-
-	if err := properties.Encode("domain", me.Domain); err != nil {
-		return err
-	}
-	if err := properties.Encode("message", me.Message); err != nil {
-		return err
-	}
-	return nil
+	return properties.EncodeAll(map[string]any{
+		"name":             me.Name,
+		"active":           me.Active,
+		"alerting_profile": me.AlertingProfile,
+		"api_key":          sensitive.SecretValue,
+		"domain":           me.Domain,
+		"message":          me.Message,
+	})
 }
 
 func (me *OpsGenieConfig) UnmarshalHCL(decoder hcl.Decoder) error {
@@ -135,26 +118,14 @@ func (me *OpsGenieConfig) UnmarshalHCL(decoder hcl.Decoder) error {
 			me.Unknowns = nil
 		}
 	}
-	if value, ok := decoder.GetOk("name"); ok {
-		me.Name = value.(string)
-	}
-	if value, ok := decoder.GetOk("active"); ok {
-		me.Active = value.(bool)
-	}
-	if value, ok := decoder.GetOk("alerting_profile"); ok {
-		me.AlertingProfile = value.(string)
-	}
-	if value, ok := decoder.GetOk("api_key"); ok {
-		me.APIKey = new(value.(string))
-	}
-	if value, ok := decoder.GetOk("domain"); ok {
-		me.Domain = value.(string)
-	}
-	if value, ok := decoder.GetOk("message"); ok {
-		me.Message = value.(string)
-	}
-
-	return nil
+	return decoder.DecodeAll(map[string]any{
+		"name":             &me.Name,
+		"active":           &me.Active,
+		"alerting_profile": &me.AlertingProfile,
+		"api_key":          &me.APIKey,
+		"domain":           &me.Domain,
+		"message":          &me.Message,
+	})
 }
 
 func (me *OpsGenieConfig) MarshalJSON() ([]byte, error) {
