@@ -18,6 +18,7 @@
 package integration
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
@@ -27,6 +28,7 @@ import (
 
 type Settings struct {
 	Enabled            bool               `json:"enabled"`            // This setting is enabled (`true`) or disabled (`false`)
+	InsertAfter        *string            `json:"-"`                  // Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 	Issuelabel         string             `json:"issuelabel"`         // Set a label to identify these issues, for example, `release_blocker` or `non-critical`
 	Issuequery         string             `json:"issuequery"`         // You can use the following placeholders to automatically insert values from the **Release monitoring** page in your query: `{NAME}`, `{VERSION}`, `{STAGE}`, `{PRODUCT}`.
 	Issuetheme         IssueTheme         `json:"issuetheme"`         // Select the issue type to be displayed. Possible values: `ERROR`, `INFO`, `RESOLVED`
@@ -35,7 +37,6 @@ type Settings struct {
 	Token              *string            `json:"token,omitempty"`    // Token
 	Url                string             `json:"url"`                // For Jira, use the base URL (for example, https://jira.yourcompany.com); for GitHub, use the repository URL (for example, https://github.com/org/repo); for GitLab, use the specific project API for a single project (for example, https://gitlab.com/api/v4/projects/:projectId), and the specific group API for a multiple projects (for example, https://gitlab.com/api/v4/groups/:groupId); for ServiceNow, use your company instance URL (for example, https://yourinstance.service-now.com/)
 	Username           string             `json:"username"`           // Username
-	InsertAfter        string             `json:"-"`
 }
 
 func (me *Settings) Name() string {
@@ -48,6 +49,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "This setting is enabled (`true`) or disabled (`false`)",
 			Required:    true,
+		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Computed:    true,
+			Optional:    true,
 		},
 		"issuelabel": {
 			Type:        schema.TypeString,
@@ -74,6 +81,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Password",
 			Optional:    true, // nullable & precondition
+			Sensitive:   true,
 		},
 		"token": {
 			Type:        schema.TypeString,
@@ -91,12 +99,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Username",
 			Required:    true,
 		},
-		"insert_after": {
-			Type:        schema.TypeString,
-			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
-			Optional:    true,
-			Computed:    true,
-		},
 	}
 }
 
@@ -104,22 +106,32 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(sensitive.ConditionalIgnoreChangesMap(
 		me.Schema(), map[string]any{
 			"enabled":            me.Enabled,
+			"insert_after":       me.InsertAfter,
 			"issuelabel":         me.Issuelabel,
 			"issuequery":         me.Issuequery,
 			"issuetheme":         me.Issuetheme,
 			"issuetrackersystem": me.Issuetrackersystem,
-			"password":           me.Password,
-			"token":              "${state.secret_value}",
+			"password":           sensitive.SecretValue,
+			"token":              sensitive.SecretValue,
 			"url":                me.Url,
 			"username":           me.Username,
-			"insert_after":       me.InsertAfter,
-		},
-	))
+		}))
+}
+
+func (me *Settings) HandlePreconditions() error {
+	if (me.Password != nil) && (!slices.Contains([]string{"JIRA", "JIRA_ON_PREMISE", "SERVICENOW"}, string(me.Issuetrackersystem))) {
+		return fmt.Errorf("'password' must not be specified unless 'issuetrackersystem' is one of ['JIRA', 'JIRA_ON_PREMISE', 'SERVICENOW']; got 'issuetrackersystem'='%v'", me.Issuetrackersystem)
+	}
+	if (me.Token != nil) && (!slices.Contains([]string{"JIRA", "GITHUB", "GITLAB", "JIRA_CLOUD"}, string(me.Issuetrackersystem))) {
+		return fmt.Errorf("'token' must not be specified unless 'issuetrackersystem' is one of ['JIRA', 'GITHUB', 'GITLAB', 'JIRA_CLOUD']; got 'issuetrackersystem'='%v'", me.Issuetrackersystem)
+	}
+	return nil
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"enabled":            &me.Enabled,
+		"insert_after":       &me.InsertAfter,
 		"issuelabel":         &me.Issuelabel,
 		"issuequery":         &me.Issuequery,
 		"issuetheme":         &me.Issuetheme,
@@ -128,7 +140,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"token":              &me.Token,
 		"url":                &me.Url,
 		"username":           &me.Username,
-		"insert_after":       &me.InsertAfter,
 	})
 }
 
@@ -137,6 +148,10 @@ const credsNotProvided = "REST API didn't provide token data"
 func (me *Settings) FillDemoValues() []string {
 	if slices.Contains([]string{"JIRA", "GITHUB", "GITLAB", "JIRA_CLOUD"}, string(me.Issuetrackersystem)) {
 		me.Token = new("################")
+		return []string{credsNotProvided}
+	}
+	if slices.Contains([]string{"JIRA", "JIRA_ON_PREMISE", "SERVICENOW"}, string(me.Issuetrackersystem)) {
+		me.Password = new("################")
 		return []string{credsNotProvided}
 	}
 	return nil
