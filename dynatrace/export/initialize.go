@@ -30,8 +30,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
-func Initialize(pc *config.ProviderConfiguration) (environment *Environment, err error) {
-	flags, tailArgs := createFlags()
+func Initialize(pc *config.ProviderConfiguration, args []string) (environment *Environment, err error) {
+	flags, tailArgs := createFlags(args)
 	if flags.FlagMigrationOutput && flags.FollowReferences {
 		return nil, errors.New("-ref and -migrate are mutually exclusive")
 	}
@@ -43,7 +43,6 @@ func Initialize(pc *config.ProviderConfiguration) (environment *Environment, err
 		return nil, errors.New("unable to configure log file for REST activity: " + err.Error())
 	}
 
-	args := os.Args
 	if len(args) == 1 {
 		return nil, nil
 	}
@@ -192,23 +191,26 @@ func Initialize(pc *config.ProviderConfiguration) (environment *Environment, err
 	}, nil
 }
 
-func createFlags() (flags Flags, tailArgs []string) {
-	flag.Bool("export", true, "")
-	refArg := flag.Bool("ref", false, "enable data sources and dependencies. mutually exclusive with -migrate")
-	dataSourceArg := flag.Bool("datasources", false, "when resolving dependencies eligible resources will be referred as data sources")
-	comIdArg := flag.Bool("id", false, "enable commented ids")
-	migrateArg := flag.Bool("migrate", false, "enable migration output. mutually exclusive with -ref")
-	verbose := flag.Bool("v", false, "enable verbose logging")
-	linkArg := flag.Bool("link", false, "enable hard links for .requires_attention and .flawed")
-	preview := flag.Bool("preview", false, "preview resource statistics for environment export")
-	flat := flag.Bool("flat", false, "prevent creating a module structure")
-	importStateV2 := flag.Bool("import-state-v2", false, "deprecated - use `import-state`")
-	importState := flag.Bool("import-state", false, "automatically initialize the terraform module and import downloaded resources to the state")
-	exclude := flag.Bool("exclude", false, "exclude specified resources")
-	skipTerraformInit := flag.Bool("skip-terraform-init", false, "prevent the command line `terraform init` from getting executed after all the configuration files have been created")
-	adminAccess := flag.Bool("admin-access", false, "export OpenPipeline resources of all owners, not just the current user's")
+func createFlags(args []string) (flags Flags, tailArgs []string) {
+	flagSet := flag.NewFlagSet("export", flag.ExitOnError)
 
-	flag.Parse()
+	flagSet.Bool("export", true, "")
+	refArg := flagSet.Bool("ref", false, "enable data sources and dependencies. mutually exclusive with -migrate")
+	dataSourceArg := flagSet.Bool("datasources", false, "when resolving dependencies eligible resources will be referred as data sources")
+	comIdArg := flagSet.Bool("id", false, "enable commented ids")
+	migrateArg := flagSet.Bool("migrate", false, "enable migration output. mutually exclusive with -ref")
+	verbose := flagSet.Bool("v", false, "enable verbose logging")
+	linkArg := flagSet.Bool("link", false, "enable hard links for .requires_attention and .flawed")
+	preview := flagSet.Bool("preview", false, "preview resource statistics for environment export")
+	flat := flagSet.Bool("flat", false, "prevent creating a module structure")
+	importStateV2 := flagSet.Bool("import-state-v2", false, "deprecated - use `import-state`")
+	importState := flagSet.Bool("import-state", false, "automatically initialize the terraform module and import downloaded resources to the state")
+	exclude := flagSet.Bool("exclude", false, "exclude specified resources")
+	skipTerraformInit := flagSet.Bool("skip-terraform-init", false, "prevent the command line `terraform init` from getting executed after all the configuration files have been created")
+	adminAccess := flagSet.Bool("admin-access", false, "export OpenPipeline resources of all owners, not just the current user's")
+
+	// ExitOnError doesn't return errors.
+	_ = flagSet.Parse(args[1:])
 
 	importStateFlag := (importState != nil && *importState == true) || (importStateV2 != nil && *importStateV2 == true)
 
@@ -225,7 +227,7 @@ func createFlags() (flags Flags, tailArgs []string) {
 		DataSources:         *dataSourceArg,
 		SkipTerraformInit:   *skipTerraformInit,
 		AdminAccess:         *adminAccess,
-	}, flag.Args()
+	}, flagSet.Args()
 }
 
 func ToParent(keyVal string) string {
