@@ -29,19 +29,16 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-func Export(args []string, cfgGetter config.Getter) bool {
-	if len(args) == 1 {
-		return false
-	}
+// IsExport return true if the arguments start with "-export"
+func IsExport(args []string) bool {
+	return len(args) > 1 && args[1] == "-export"
+}
 
-	if strings.TrimSpace(args[1]) != "-export" {
-		return false
-	}
-
+func Export(args []string, cfgGetter config.Getter) error {
 	if slices.ContainsFunc(args, func(arg string) bool { return strings.TrimSpace(arg) == "-list-exclusions" }) {
 		if len(args) > 3 {
 			fmt.Println("-list-exclusions cannot be combined with other flags\nUsage: terraform-provider-dynatrace -export -list-exclusions")
-			return true
+			return nil
 		}
 
 		for _, group := range export.GetExcludeListedResourceGroups() {
@@ -63,16 +60,13 @@ func Export(args []string, cfgGetter config.Getter) bool {
 			}
 			fmt.Println()
 		}
-		return true
+		return nil
 	}
 	// defer export.CleanUp.Finish()
-	if err := runExport(cfgGetter); err != nil {
-		fmt.Println(err.Error())
-	}
-	return true
+	return runExport(cfgGetter, args)
 }
 
-func runExport(cfgGetter config.Getter) (err error) {
+func runExport(cfgGetter config.Getter, args []string) (err error) {
 	start := time.Now()
 	defer func() {
 		fmt.Printf("... finished after %v seconds\n", int64(time.Since(start).Seconds()))
@@ -86,7 +80,7 @@ func runExport(cfgGetter config.Getter) (err error) {
 	export.AddInsertAfterWeakIDDependencies(export.AllResources, pc)
 
 	var environment *export.Environment
-	if environment, err = export.Initialize(pc); err != nil {
+	if environment, err = export.Initialize(pc, args); err != nil {
 		return err
 	}
 

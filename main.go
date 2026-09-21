@@ -19,6 +19,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace"
@@ -32,7 +33,10 @@ import (
 func main() {
 	defer export.CleanUp.Finish()
 
-	if dynatrace.Export(os.Args, config.ConfigGetter{Provider: provider.Provider()}) {
+	if dynatrace.IsExport(os.Args) {
+		if err := dynatrace.Export(os.Args, config.ConfigGetter{Provider: provider.Provider()}); err != nil {
+			fmt.Println(err.Error())
+		}
 		return
 	}
 
