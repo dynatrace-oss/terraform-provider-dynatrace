@@ -18,13 +18,16 @@
 package monitoringrule
 
 import (
+	"fmt"
+	"slices"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type ContainerCondition struct {
-	Operator ConditionOperator `json:"operator"`        // Possible Values: `CONTAINS`, `ENDS`, `EQUALS`, `EXISTS`, `NOT_CONTAINS`, `NOT_ENDS`, `NOT_EQUALS`, `NOT_EXISTS`, `NOT_STARTS`, `STARTS`
-	Property ContainerItem     `json:"property"`        // Possible Values: `CONTAINER_NAME`, `IMAGE_NAME`, `KUBERNETES_BASEPODNAME`, `KUBERNETES_CONTAINERNAME`, `KUBERNETES_FULLPODNAME`, `KUBERNETES_NAMESPACE`, `KUBERNETES_PODUID`
+	Operator ConditionOperator `json:"operator"`        // Condition operator. Possible values: `CONTAINS`, `ENDS`, `EQUALS`, `EXISTS`, `NOT_CONTAINS`, `NOT_ENDS`, `NOT_EQUALS`, `NOT_EXISTS`, `NOT_STARTS`, `STARTS`
+	Property ContainerItem     `json:"property"`        // Container property. Possible values: `CONTAINER_NAME`, `IMAGE_NAME`, `KUBERNETES_BASEPODNAME`, `KUBERNETES_CONTAINERNAME`, `KUBERNETES_FULLPODNAME`, `KUBERNETES_NAMESPACE`, `KUBERNETES_PODUID`
 	Value    *string           `json:"value,omitempty"` // Condition value
 }
 
@@ -32,18 +35,18 @@ func (me *ContainerCondition) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"operator": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `CONTAINS`, `ENDS`, `EQUALS`, `EXISTS`, `NOT_CONTAINS`, `NOT_ENDS`, `NOT_EQUALS`, `NOT_EXISTS`, `NOT_STARTS`, `STARTS`",
+			Description: "Condition operator. Possible values: `CONTAINS`, `ENDS`, `EQUALS`, `EXISTS`, `NOT_CONTAINS`, `NOT_ENDS`, `NOT_EQUALS`, `NOT_EXISTS`, `NOT_STARTS`, `STARTS`",
 			Required:    true,
 		},
 		"property": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `CONTAINER_NAME`, `IMAGE_NAME`, `KUBERNETES_BASEPODNAME`, `KUBERNETES_CONTAINERNAME`, `KUBERNETES_FULLPODNAME`, `KUBERNETES_NAMESPACE`, `KUBERNETES_PODUID`",
+			Description: "Container property. Possible values: `CONTAINER_NAME`, `IMAGE_NAME`, `KUBERNETES_BASEPODNAME`, `KUBERNETES_CONTAINERNAME`, `KUBERNETES_FULLPODNAME`, `KUBERNETES_NAMESPACE`, `KUBERNETES_PODUID`",
 			Required:    true,
 		},
 		"value": {
 			Type:        schema.TypeString,
 			Description: "Condition value",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 	}
 }
@@ -54,6 +57,16 @@ func (me *ContainerCondition) MarshalHCL(properties hcl.Properties) error {
 		"property": me.Property,
 		"value":    me.Value,
 	})
+}
+
+func (me *ContainerCondition) HandlePreconditions() error {
+	if (me.Value != nil) && (slices.Contains([]string{"EXISTS", "NOT_EXISTS"}, string(me.Operator))) {
+		return fmt.Errorf("'value' must not be specified unless 'operator' is not one of ['EXISTS', 'NOT_EXISTS']; got 'operator'='%v'", me.Operator)
+	}
+	if (me.Value == nil) && (!slices.Contains([]string{"EXISTS", "NOT_EXISTS"}, string(me.Operator))) {
+		return fmt.Errorf("'value' must be specified when 'operator' is not one of ['EXISTS', 'NOT_EXISTS']; got 'operator'='%v'", me.Operator)
+	}
+	return nil
 }
 
 func (me *ContainerCondition) UnmarshalHCL(decoder hcl.Decoder) error {

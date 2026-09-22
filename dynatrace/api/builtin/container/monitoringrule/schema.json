@@ -108,6 +108,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"minAgentVersion": "1.171"
@@ -164,8 +165,8 @@
 		"value": {
 			"constraints": [
 				{
-					"customMessage": "Colon, comma and semicolon are not allowed",
-					"pattern": "^[^;:,]*$",
+					"customMessage": "Colon, comma, semicolon, square brackets and line breaks are not allowed",
+					"pattern": "^[^;:,\\r\\n\\[\\]]*$",
 					"type": "PATTERN"
 				},
 				{
@@ -233,8 +234,8 @@
 				"value": {
 					"constraints": [
 						{
-							"customMessage": "Colon, comma and semicolon are not allowed",
-							"pattern": "^[^;:,]*$",
+							"customMessage": "Colon, comma, semicolon, square brackets and line breaks are not allowed",
+							"pattern": "^[^;:,\\r\\n\\[\\]]*$",
 							"type": "PATTERN"
 						},
 						{
@@ -291,5 +292,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.2"
+	"version": "0.0.3"
 }
