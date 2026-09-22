@@ -232,6 +232,13 @@
 	"schemaId": "builtin:failure-detection.environment.rules",
 	"types": {
 		"condition": {
+			"constraints": [
+				{
+					"customValidatorId": "pg-tag-condition-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
 			"description": "A condition that checks a service or process group attribute using a predicate. All conditions of a rule must be fulfilled for the rule to match.",
 			"displayName": "condition",
 			"documentation": "",
@@ -492,5 +499,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.10"
+	"version": "1.0.12"
 }
