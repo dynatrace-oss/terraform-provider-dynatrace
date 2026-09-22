@@ -48,8 +48,8 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 		WithRetryOptions(defaultRetryOptions).
 		WithUserAgent(version.UserAgent())
 
-	if credentials.ContainsWorkloadIdentityFederationConfig() {
-		tokenSource, err := wif.TokenSourceFor(ctx, credentials.Platform.WorkloadIdentityFederationConfig)
+	if credentials.Platform.ContainsWorkloadIdentityFederation() {
+		tokenSource, err := wif.TokenSourceFor(ctx, credentials.Platform.WorkloadIdentityFederationAudience)
 		if err != nil {
 			return nil, err
 		}

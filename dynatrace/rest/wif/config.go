@@ -17,26 +17,26 @@
 
 package wif
 
-// Vendor identifies the workload identity provider that issues the OIDC token.
-type Vendor = string
+import (
+	"errors"
+	"net/http"
+)
 
-// VendorGitHub obtains tokens from the GitHub Actions OIDC token service.
-const VendorGitHub Vendor = "github"
-
-type Config struct {
-	Vendor   Vendor
-	Audience string
-	GitHub   GitHubConfig
+// vendorConfig is what one workload identity provider needs in order to issue an OIDC token. Every
+// value in it except the audience is discovered from the environment the provider runs in.
+type vendorConfig interface {
+	createMinter(httpClient *http.Client) (minter, error)
 }
 
-// GitHubConfig holds the GitHub Actions OIDC token service credentials. GitHub injects these into
-// a job with id-token: write permission; they may also be supplied via the provider configuration.
-type GitHubConfig struct {
-	TokenRequestURL   string
-	TokenRequestToken string
-}
+var errNoVendorDetected = errors.New("no supported workload identity provider was detected: the only supported one is GitHub Actions, which injects the required `ACTIONS_ID_TOKEN_REQUEST_*` variables only into a job with `permissions: { id-token: write }`")
 
-// Configured reports whether Workload Identity Federation was requested.
-func (config Config) Configured() bool {
-	return len(config.Vendor) > 0
+// inferVendorConfig decides which workload identity provider mints the OIDC token by looking at the
+// credentials its token service leaves in the environment. The provider configuration names none of
+// them; it only states the audience the token has to be valid for.
+func inferVendorConfig(audience string) (vendorConfig, error) {
+	if config, detected := inferGitHubConfig(audience); detected {
+		return config, nil
+	}
+
+	return nil, errNoVendorDetected
 }

@@ -162,19 +162,29 @@ func TestReusingTokenSourcePropagatesMintingFailure(t *testing.T) {
 	assert.ErrorIs(t, err, mintErr)
 }
 
-func TestTokenSourceForBuildsSourceForVendor(t *testing.T) {
-	source, err := TokenSourceFor(t.Context(), Config{
-		Vendor:   VendorGitHub,
-		Audience: "dynatrace",
-		GitHub:   GitHubConfig{TokenRequestURL: "https://token.service.invalid/", TokenRequestToken: "request-token"},
-	})
+func TestTokenSourceForBuildsSourceForDetectedVendor(t *testing.T) {
+	injectGitHubCredentials(t, "https://token.service.invalid/", "request-token")
+
+	source, err := TokenSourceFor(t.Context(), "dynatrace")
 
 	require.NoError(t, err)
 	assert.NotNil(t, source)
 }
 
-func TestTokenSourceForReportsMissingVendorCredentials(t *testing.T) {
-	_, err := TokenSourceFor(t.Context(), Config{Vendor: VendorGitHub, Audience: "dynatrace"})
+func TestTokenSourceForReportsThatNoVendorWasDetected(t *testing.T) {
+	injectGitHubCredentials(t, "", "")
 
-	assert.ErrorIs(t, err, errNoTokenRequestURL)
+	_, err := TokenSourceFor(t.Context(), "dynatrace")
+
+	assert.ErrorIs(t, err, errNoVendorDetected)
+}
+
+// Detection only asks whether the credentials are there, so a malformed URL among them surfaces one
+// step later - still before any token is minted.
+func TestTokenSourceForReportsUnusableVendorCredentials(t *testing.T) {
+	injectGitHubCredentials(t, "://", "request-token")
+
+	_, err := TokenSourceFor(t.Context(), "dynatrace")
+
+	assert.EqualError(t, err, `the GitHub Actions token request URL is not valid: parse "://": missing protocol scheme`)
 }

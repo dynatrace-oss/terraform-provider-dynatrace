@@ -29,10 +29,16 @@ import (
 // the platform's.
 const refreshMargin = 2 * time.Minute
 
-// TokenSourceFor returns a token source for the given configuration. Every mint is bounded by ctx, so
-// ctx has to outlive the requests the source ends up authenticating.
-func TokenSourceFor(ctx context.Context, config Config) (oauth2.TokenSource, error) {
-	minter, err := newMinter(config, mintingHTTPClient())
+// TokenSourceFor returns a token source minting tokens for the given audience from the workload
+// identity provider detected in the environment. Every mint is bounded by ctx, so ctx has to outlive
+// the requests the source ends up authenticating.
+func TokenSourceFor(ctx context.Context, audience string) (oauth2.TokenSource, error) {
+	config, err := inferVendorConfig(audience)
+	if err != nil {
+		return nil, err
+	}
+
+	minter, err := config.createMinter(mintingHTTPClient())
 	if err != nil {
 		return nil, err
 	}

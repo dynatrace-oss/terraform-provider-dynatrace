@@ -289,20 +289,24 @@ jobs:
         run: go install gotest.tools/gotestsum@c4a0df2e75a225d979a444342dd3db752b53619f #v1.13.0
 
       - name: Run WIF Integration Tests - ${{ matrix.config.name }}
-        # No API token, no platform token and no OAuth client on purpose: with nothing else left to
-        # serve these requests, a green run can only mean the federated token was accepted.
         # ACTIONS_ID_TOKEN_REQUEST_URL and ACTIONS_ID_TOKEN_REQUEST_TOKEN are injected automatically
         # by GitHub Actions when the job has id-token: write permission.
+        # With WIF audience specified, WIF authentication takes precedence over OAuth where appropriate
         env:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: "true"
           DYNATRACE_DEBUG: "true"
           DT_NO_REPAIR_INPUT: "false"
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
-          DYNATRACE_WIF_VENDOR: "github"
           # An audience identifies who a token is meant for, so it is not a credential - but it has to
           # match what the Dynatrace environment was told to expect.
           DYNATRACE_WIF_AUDIENCE: "my-test-audience"
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          DT_CLIENT_ID: ${{ secrets.DT_CLIENT_ID }}
+          DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
+          DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
+          TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
+          TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
         run: |
           mkdir -p test-results/${{ matrix.config.slug }}
           gotestsum --junitfile test-results/${{ matrix.config.slug }}/test-results.xml --format testdox --format-icons hivis -- -tags="integration monitored connector" -v -p 1 ${{ matrix.config.path }}
@@ -342,14 +346,22 @@ jobs:
         run: go install gotest.tools/gotestsum@c4a0df2e75a225d979a444342dd3db752b53619f #v1.13.0
 
       - name: Run WIF Sequential Integration Tests
+        # ACTIONS_ID_TOKEN_REQUEST_URL and ACTIONS_ID_TOKEN_REQUEST_TOKEN are injected automatically
+        # by GitHub Actions when the job has id-token: write permission.
+        # With WIF audience specified, WIF authentication takes precedence over OAuth where appropriate
         env:
           GOPROXY: "https://proxy.golang.org"
           TF_ACC: "true"
           DYNATRACE_DEBUG: "true"
           DT_NO_REPAIR_INPUT: "false"
           DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
-          DYNATRACE_WIF_VENDOR: "github"
           DYNATRACE_WIF_AUDIENCE: "my-test-audience"
+          DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_API_TOKEN }}
+          DT_CLIENT_ID: ${{ secrets.DT_CLIENT_ID }}
+          DT_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET }}
+          DT_ACCOUNT_ID: ${{ secrets.DT_ACCOUNT_ID }}
+          TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
+          TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
         run: |
           mkdir -p test-results/sequential
           gotestsum --junitfile test-results/sequential/test-results.xml --format testdox --format-icons hivis -- -tags="sequential_integration monitored connector" -v -p 1 ./...

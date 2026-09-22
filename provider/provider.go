@@ -92,10 +92,8 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/usergroups"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/resources/users"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest/wif"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 // ResourceSpecification has no documentation
@@ -228,54 +226,14 @@ func Provider() *schema.Provider {
 				Sensitive:   true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_PLATFORM_TOKEN", "DT_PLATFORM_TOKEN"}, nil),
 			},
-			"wif": {
-				Type:     schema.TypeList,
+			"wif_audience": {
+				Type:     schema.TypeString,
 				Optional: true,
-				MaxItems: 1,
-				Description: "Configures Workload Identity Federation as the authentication method for platform APIs. " +
-					"When specified, it takes precedence over `platform_token` and OAuth credentials. " +
-					"Cannot be used for IAM (Account Management) or classic resources.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"vendor": {
-							Type:         schema.TypeString,
-							Required:     true,
-							Description:  "The workload identity provider to obtain an OIDC token from. The only supported value is `github`.",
-							DefaultFunc:  schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_VENDOR", "DT_WIF_VENDOR"}, nil),
-							ValidateFunc: validation.StringInSlice([]string{wif.VendorGitHub}, false),
-						},
-						"audience": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "The audience (`aud` claim) to request for the OIDC token. Must match what the Dynatrace environment expects.",
-							DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_AUDIENCE", "DT_WIF_AUDIENCE"}, nil),
-						},
-						"github": {
-							Type:     schema.TypeList,
-							Optional: true,
-							MaxItems: 1,
-							Description: "GitHub Actions-specific token service credentials. " +
-								"When the job has `permissions: { id-token: write }`, GitHub injects these automatically as environment variables.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"token_request_url": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Description: "The GitHub Actions OIDC token request endpoint URL. Defaults to `ACTIONS_ID_TOKEN_REQUEST_URL`.",
-										DefaultFunc: schema.EnvDefaultFunc("ACTIONS_ID_TOKEN_REQUEST_URL", nil),
-									},
-									"token_request_token": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Sensitive:   true,
-										Description: "The bearer token for the GitHub Actions OIDC token request endpoint. Defaults to `ACTIONS_ID_TOKEN_REQUEST_TOKEN`.",
-										DefaultFunc: schema.EnvDefaultFunc("ACTIONS_ID_TOKEN_REQUEST_TOKEN", nil),
-									},
-								},
-							},
-						},
-					},
-				},
+				Description: "The audience (`aud` claim) to request for the OIDC token. Must match what the Dynatrace environment expects. " +
+					"Specifying it selects Workload Identity Federation as the authentication method for platform APIs, which takes precedence over " +
+					"`platform_token` and OAuth credentials. The workload identity provider issuing the token is inferred from the environment; " +
+					"GitHub Actions is the only supported one. Cannot be used for IAM (Account Management) or classic resources.",
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_AUDIENCE", "DT_WIF_AUDIENCE"}, nil),
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
