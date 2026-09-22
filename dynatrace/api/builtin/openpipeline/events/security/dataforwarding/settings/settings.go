@@ -29,15 +29,16 @@ type Settings struct {
 	AzureConnection      *AzureConnection   `json:"azureConnection,omitempty"`      // Azure Connection
 	BuiltinIngestSources []string           `json:"builtinIngestSources,omitempty"` // List of built-in ingest sources
 	BuiltinPipelines     []string           `json:"builtinPipelines,omitempty"`     // Built-in pipelines
-	BulkPattern          string             `json:"bulkPattern"`                    // Segmentation and prefix of the data
+	BulkPattern          *string            `json:"bulkPattern,omitempty"`          // Segmentation and prefix of the data
 	BulkSize             *int               `json:"bulkSize,omitempty"`             // Bulk size for transmission
-	CloudVendorType      CloudVendorType    `json:"cloudVendorType"`                // Cloud Vendor Type. Possible values: `aws`, `azure`, `gcp`
+	CloudVendorType      CloudVendorType    `json:"cloudVendorType"`                // Cloud Vendor Type. Possible values: `aws`, `azure`, `gcp`, `otlp`
 	DataForwardingType   DataForwardingType `json:"dataForwardingType"`             // Pipeline Type. Possible values: `processed`, `raw`
 	Enabled              bool               `json:"enabled"`                        // This setting is enabled (`true`) or disabled (`false`)
 	ForwardingName       string             `json:"forwardingName"`                 // Forwarding name
 	GcpConnection        *GcpConnection     `json:"gcpConnection,omitempty"`        // GCP Connection
 	IngestSources        []string           `json:"ingestSources,omitempty"`        // List of ingest sources
 	Matcher              string             `json:"matcher"`                        // Query which determines whether the record should be routed to the target pipeline of this rule.
+	OtlpConnection       *OtlpConnection    `json:"otlpConnection,omitempty"`       // [IN_DEVELOPMENT]
 	Pipelines            []string           `json:"pipelines,omitempty"`            // Pipelines
 	Processing           *Stage             `json:"processing,omitempty"`           // Processing
 }
@@ -79,16 +80,16 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"bulk_pattern": {
 			Type:        schema.TypeString,
 			Description: "Segmentation and prefix of the data",
-			Required:    true,
+			Optional:    true, // precondition
 		},
 		"bulk_size": {
 			Type:        schema.TypeInt,
 			Description: "Bulk size for transmission",
-			Optional:    true, // nullable
+			Optional:    true, // nullable & precondition
 		},
 		"cloud_vendor_type": {
 			Type:        schema.TypeString,
-			Description: "Cloud Vendor Type. Possible values: `aws`, `azure`, `gcp`",
+			Description: "Cloud Vendor Type. Possible values: `aws`, `azure`, `gcp`, `otlp`",
 			Required:    true,
 		},
 		"data_forwarding_type": {
@@ -125,6 +126,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Query which determines whether the record should be routed to the target pipeline of this rule.",
 			Required:    true,
 		},
+		"otlp_connection": {
+			Type:        schema.TypeList,
+			Description: "[IN_DEVELOPMENT]",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(OtlpConnection).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"pipelines": {
 			Type:        schema.TypeSet,
 			Description: "Pipelines",
@@ -157,6 +166,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"gcp_connection":         me.GcpConnection,
 		"ingest_sources":         me.IngestSources,
 		"matcher":                me.Matcher,
+		"otlp_connection":        me.OtlpConnection,
 		"pipelines":              me.Pipelines,
 		"processing":             me.Processing,
 	})
@@ -175,11 +185,26 @@ func (me *Settings) HandlePreconditions() error {
 	if (me.AzureConnection == nil) && (string(me.CloudVendorType) == "azure") {
 		return fmt.Errorf("'azure_connection' must be specified when 'cloud_vendor_type' is set to 'azure'; got 'cloud_vendor_type'='%v'", me.CloudVendorType)
 	}
+	if (me.BulkPattern != nil) && (string(me.CloudVendorType) == "otlp") {
+		return fmt.Errorf("'bulk_pattern' must not be specified unless 'cloud_vendor_type' is not set to 'otlp'; got 'cloud_vendor_type'='%v'", me.CloudVendorType)
+	}
+	if (me.BulkPattern == nil) && (string(me.CloudVendorType) != "otlp") {
+		return fmt.Errorf("'bulk_pattern' must be specified when 'cloud_vendor_type' is not set to 'otlp'; got 'cloud_vendor_type'='%v'", me.CloudVendorType)
+	}
+	if (me.BulkSize != nil) && (string(me.CloudVendorType) == "otlp") {
+		return fmt.Errorf("'bulk_size' must not be specified unless 'cloud_vendor_type' is not set to 'otlp'; got 'cloud_vendor_type'='%v'", me.CloudVendorType)
+	}
 	if (me.GcpConnection != nil) && (string(me.CloudVendorType) != "gcp") {
 		return fmt.Errorf("'gcp_connection' must not be specified unless 'cloud_vendor_type' is set to 'gcp'; got 'cloud_vendor_type'='%v'", me.CloudVendorType)
 	}
 	if (me.GcpConnection == nil) && (string(me.CloudVendorType) == "gcp") {
 		return fmt.Errorf("'gcp_connection' must be specified when 'cloud_vendor_type' is set to 'gcp'; got 'cloud_vendor_type'='%v'", me.CloudVendorType)
+	}
+	if (me.OtlpConnection != nil) && (string(me.CloudVendorType) != "otlp") {
+		return fmt.Errorf("'otlp_connection' must not be specified unless 'cloud_vendor_type' is set to 'otlp'; got 'cloud_vendor_type'='%v'", me.CloudVendorType)
+	}
+	if (me.OtlpConnection == nil) && (string(me.CloudVendorType) == "otlp") {
+		return fmt.Errorf("'otlp_connection' must be specified when 'cloud_vendor_type' is set to 'otlp'; got 'cloud_vendor_type'='%v'", me.CloudVendorType)
 	}
 	// ---- BuiltinIngestSources []string -> {"preconditions":[{"expectedValue":"raw","property":"dataForwardingType","type":"EQUALS"}],"type":"AND"}
 	// ---- BuiltinPipelines []string -> {"preconditions":[{"expectedValue":"processed","property":"dataForwardingType","type":"EQUALS"}],"type":"AND"}
@@ -203,6 +228,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"gcp_connection":         &me.GcpConnection,
 		"ingest_sources":         &me.IngestSources,
 		"matcher":                &me.Matcher,
+		"otlp_connection":        &me.OtlpConnection,
 		"pipelines":              &me.Pipelines,
 		"processing":             &me.Processing,
 	})

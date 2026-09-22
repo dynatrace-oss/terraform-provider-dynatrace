@@ -45,10 +45,12 @@ var CloudVendorTypes = struct {
 	Aws   CloudVendorType
 	Azure CloudVendorType
 	Gcp   CloudVendorType
+	Otlp  CloudVendorType
 }{
 	"aws",
 	"azure",
 	"gcp",
+	"otlp",
 }
 
 type DataForwardingType string
