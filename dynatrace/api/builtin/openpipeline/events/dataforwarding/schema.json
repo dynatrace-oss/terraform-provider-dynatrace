@@ -67,6 +67,11 @@
 				{
 					"displayName": "GCP",
 					"value": "gcp"
+				},
+				{
+					"description": "[IN_DEVELOPMENT]",
+					"displayName": "OTLP",
+					"value": "otlp"
 				}
 			],
 			"type": "enum"
@@ -453,6 +458,14 @@
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
+			"precondition": {
+				"precondition": {
+					"expectedValue": "otlp",
+					"property": "cloudVendorType",
+					"type": "EQUALS"
+				},
+				"type": "NOT"
+			},
 			"type": "text"
 		},
 		"bulkSize": {
@@ -469,6 +482,14 @@
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": true,
+			"precondition": {
+				"precondition": {
+					"expectedValue": "otlp",
+					"property": "cloudVendorType",
+					"type": "EQUALS"
+				},
+				"type": "NOT"
+			},
 			"type": "integer"
 		},
 		"cloudVendorType": {
@@ -586,6 +607,22 @@
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
 			"type": "text"
+		},
+		"otlpConnection": {
+			"description": "[IN_DEVELOPMENT]",
+			"displayName": "OTLP Connection",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"precondition": {
+				"expectedValue": "otlp",
+				"property": "cloudVendorType",
+				"type": "EQUALS"
+			},
+			"type": {
+				"$ref": "#/types/OtlpConnection"
+			}
 		},
 		"pipelines": {
 			"description": "",
@@ -1981,6 +2018,34 @@
 				}
 			},
 			"summaryPattern": "{sourceField} -\u003e {destinationField}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"OtlpConnection": {
+			"description": "[IN_DEVELOPMENT]",
+			"displayName": "OtlpConnection",
+			"documentation": "",
+			"properties": {
+				"connectionId": {
+					"constraints": [
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "OTLP connection",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "",
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
@@ -3803,5 +3868,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.69"
+	"version": "1.70"
 }
