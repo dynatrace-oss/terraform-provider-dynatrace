@@ -235,8 +235,8 @@
 							"type": "LENGTH"
 						},
 						{
-							"customMessage": "Separators (comma, colon, semicolon) aren't allowed.",
-							"pattern": "^[^,:;]*$",
+							"customMessage": "Separators (comma, colon, semicolon), square brackets and line breaks aren't allowed.",
+							"pattern": "^[^,:;\\r\\n\\[\\]]*$",
 							"type": "PATTERN"
 						}
 					],
@@ -269,8 +269,8 @@
 							"type": "LENGTH"
 						},
 						{
-							"customMessage": "Separators (comma, colon, semicolon) aren't allowed.",
-							"pattern": "^[^,:;]*$",
+							"customMessage": "Separators (comma, colon, semicolon), square brackets and line breaks aren't allowed.",
+							"pattern": "^[^,:;\\r\\n\\[\\]]*$",
 							"type": "PATTERN"
 						}
 					],
@@ -714,5 +714,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "2.4.7"
+	"version": "2.4.8"
 }

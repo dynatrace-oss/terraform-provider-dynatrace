@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "2.4.7"
+const SchemaVersion = "2.4.8"
 const SchemaID = "builtin:process-grouping-rules"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
