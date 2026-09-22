@@ -286,12 +286,15 @@ func (me *BindingServiceClient) FetchEnvironmentBindings(ctx context.Context) ch
 		var stubs api.Stubs
 		for _, environmentID := range environmentIDs {
 			var policyBindings ListPolicyBindingsResponse
+			// An account can contain environments the configured credentials are not
+			// permitted to read. Skipping just that environment keeps the bindings of
+			// every other environment - aborting here would silently drop all of them.
 			response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/repo/environment/%s/bindings", environmentID), rest2.RequestOptions{})
 			if err != nil {
-				return
+				continue
 			}
 			if err = json.Unmarshal(response.Data, &policyBindings); err != nil {
-				return
+				continue
 			}
 
 			groupIds := map[string]bool{}
