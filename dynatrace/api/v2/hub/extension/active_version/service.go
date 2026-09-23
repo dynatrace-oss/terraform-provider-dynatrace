@@ -46,7 +46,7 @@ type service struct {
 func (me *service) Get(ctx context.Context, id string, v *active_version.Settings) error {
 	var response GetActiveEnvironmentConfigurationResponse
 	client := rest.APITokenClient(me.clientSet)
-	if err := client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/environmentConfiguration", url.PathEscape(id)), 200).Finish(&response); err != nil {
+	if err := client.Get(ctx, fmt.Sprintf("/api/v2/extensions/%s/environmentConfiguration", url.PathEscape(id))).Finish(&response); err != nil {
 		return err
 	}
 	v.Version = response.Version
@@ -86,7 +86,7 @@ func (me *service) Create(ctx context.Context, v *active_version.Settings) (*api
 	retry := 10
 	for retry > 0 {
 		payload := SetActiveEnvironmentConfigurationRequest{Version: version}
-		if err := client.Put(ctx, fmt.Sprintf("/api/v2/extensions/%s/environmentConfiguration", url.PathEscape(name)), &payload, 200).Finish(&createResponse); err != nil {
+		if err := client.Put(ctx, fmt.Sprintf("/api/v2/extensions/%s/environmentConfiguration", url.PathEscape(name)), &payload).Finish(&createResponse); err != nil {
 			return nil, err
 		}
 		retry = 0
@@ -100,7 +100,7 @@ func (me *service) ensureInstalled(ctx context.Context, name string, version str
 		Name    string `json:"extensionName"`
 		Version string `json:"extensionVersion"`
 	}{}
-	if err := client.Post(ctx, fmt.Sprintf("/api/v2/extensions/%s?version=%s", url.PathEscape(name), url.QueryEscape(version)), nil, 200).Finish(&response); err != nil {
+	if err := client.Post(ctx, fmt.Sprintf("/api/v2/extensions/%s?version=%s", url.PathEscape(name), url.QueryEscape(version)), nil).Finish(&response); err != nil {
 		if restErr, ok := err.(rest.Error); ok {
 			if (restErr.Code == 400) && restErr.Message == fmt.Sprintf("Extension %s has already been added to environment", name) {
 				return nil

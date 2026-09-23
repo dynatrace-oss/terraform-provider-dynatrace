@@ -62,13 +62,13 @@ func (me *service) Get(ctx context.Context, id string, v *mysettings.CalculatedW
 }
 
 func (me *service) get(ctx context.Context, id string, v *mysettings.CalculatedWebMetric) error {
-	return me.client.Get(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id)), 200).Finish(v)
+	return me.client.Get(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id))).Finish(v)
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
-	req := me.client.Get(ctx, "/api/config/v1/calculatedMetrics/rum", 200)
+	req := me.client.Get(ctx, "/api/config/v1/calculatedMetrics/rum")
 	var stubList api.StubList
 	if err = req.Finish(&stubList); err != nil {
 		return nil, err
@@ -80,7 +80,7 @@ func (me *service) Validate(ctx context.Context, v *mysettings.CalculatedWebMetr
 	var err error
 	client := me.client
 
-	req := client.Post(ctx, "/api/config/v1/calculatedMetrics/rum/validator", v, 204)
+	req := client.Post(ctx, "/api/config/v1/calculatedMetrics/rum/validator", v)
 	if err = req.Finish(); err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func (me *service) Create(ctx context.Context, v *mysettings.CalculatedWebMetric
 	var stub api.Stub
 
 	err := retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
-		err := me.client.Post(ctx, "/api/config/v1/calculatedMetrics/rum", v, 201).Finish(&stub)
+		err := me.client.Post(ctx, "/api/config/v1/calculatedMetrics/rum", v).Finish(&stub)
 		return classifyRetryError(err, createErrs...)
 	})
 
@@ -127,14 +127,14 @@ func classifyRetryError(err error, expectedErrs ...string) *retry.RetryError {
 
 func (me *service) Update(ctx context.Context, id string, v *mysettings.CalculatedWebMetric) error {
 	return retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
-		err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id)), v, 204).Finish()
+		err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id)), v).Finish()
 		return classifyRetryError(err, getErr)
 	})
 }
 
 func (me *service) delete(ctx context.Context, id string) error {
 	return retry.RetryContext(ctx, defaultTimeout, func() *retry.RetryError {
-		err := me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id)), 204, 200).Finish()
+		err := me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/rum/%s", url.PathEscape(id))).Finish()
 		return classifyRetryError(err, deleteErr)
 	})
 }

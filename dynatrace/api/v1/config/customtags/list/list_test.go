@@ -48,16 +48,16 @@ func NewTestClient(latency time.Duration) *TestClient {
 	return &TestClient{latency: latency}
 }
 
-func (client *TestClient) Get(ctx context.Context, url string, expectedStatusCodes ...int) rest.Request {
+func (client *TestClient) Get(ctx context.Context, url string) rest.Request {
 	return &Request{client: client, ctx: ctx}
 }
-func (client *TestClient) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) rest.Request {
+func (client *TestClient) Post(ctx context.Context, url string, payload any) rest.Request {
 	panic("unsupported operation")
 }
-func (client *TestClient) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) rest.Request {
+func (client *TestClient) Put(ctx context.Context, url string, payload any) rest.Request {
 	panic("unsupported operation")
 }
-func (client *TestClient) Delete(ctx context.Context, url string, expectedStatusCodes ...int) rest.Request {
+func (client *TestClient) Delete(ctx context.Context, url string) rest.Request {
 	panic("unsupported operation")
 }
 func (client *TestClient) ClientSet() rest.ClientSet {
@@ -157,10 +157,6 @@ func (request *Request) Finish(v ...any) error {
 	}
 }
 
-func (request *Request) Expect(codes ...int) rest.Request {
-	panic("unsupported operation")
-
-}
 func (request *Request) OnResponse(onresponse func(resp *http.Response)) rest.Request {
 	panic("unsupported operation")
 }

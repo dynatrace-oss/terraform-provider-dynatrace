@@ -91,7 +91,7 @@ func (cs *ServiceClient) Create(ctx context.Context, userConfig *users.UserConfi
 	var err error
 
 	var createdUserConfig users.UserConfig
-	if err = cs.client.Post(ctx, "/users", userConfig, 200).Finish(&createdUserConfig); err != nil {
+	if err = cs.client.Post(ctx, "/users", userConfig).Finish(&createdUserConfig); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: createdUserConfig.UserName, Name: createdUserConfig.UserName}, nil
@@ -99,7 +99,7 @@ func (cs *ServiceClient) Create(ctx context.Context, userConfig *users.UserConfi
 
 // Update TODO: documentation
 func (cs *ServiceClient) Update(ctx context.Context, userConfig *users.UserConfig) error {
-	return cs.client.Put(ctx, "/users", userConfig, 200).Finish()
+	return cs.client.Put(ctx, "/users", userConfig).Finish()
 }
 
 // Delete TODO: documentation
@@ -107,7 +107,7 @@ func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 	if len(id) == 0 {
 		return errors.New("empty ID provided for the user to delete")
 	}
-	return cs.client.Delete(ctx, fmt.Sprintf("/users/%s", id), 200).Finish()
+	return cs.client.Delete(ctx, fmt.Sprintf("/users/%s", id)).Finish()
 }
 
 // Get TODO: documentation
@@ -117,7 +117,7 @@ func (cs *ServiceClient) Get(ctx context.Context, id string, v *users.UserConfig
 	}
 
 	var err error
-	if err = cs.client.Get(ctx, fmt.Sprintf("/users/%s", id), 200).Finish(&v); err != nil {
+	if err = cs.client.Get(ctx, fmt.Sprintf("/users/%s", id)).Finish(&v); err != nil {
 		if strings.HasPrefix(err.Error(), "Not Found (GET) ") {
 			return rest.Error{Code: 404, Message: fmt.Sprintf("user '%s' doesn't exist", id)}
 		}
@@ -131,7 +131,7 @@ func (cs *ServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var stubs api.Stubs
 	var users []*users.UserConfig
-	if err = cs.client.Get(ctx, "/users", 200).Finish(&users); err != nil {
+	if err = cs.client.Get(ctx, "/users").Finish(&users); err != nil {
 		return nil, err
 	}
 	for _, user := range users {

@@ -52,7 +52,7 @@ func GETEntities(ctx context.Context, entityType string, client rest.Client, c c
 			u = fmt.Sprintf("/api/v2/entities?nextPageKey=%s", url.QueryEscape(nextPageKey))
 		}
 		var response GETEntitiesResponse
-		err := client.Get(ctx, u, 200).Finish(&response)
+		err := client.Get(ctx, u).Finish(&response)
 		if err != nil {
 			close(c)
 			return err
@@ -79,7 +79,7 @@ func GETEntitiesWithTags(ctx context.Context, entityType string, tags []Tag, cli
 				u = fmt.Sprintf("/api/v2/entities?nextPageKey=%s", url.QueryEscape(nextPageKey))
 			}
 			var response GETEntitiesResponse
-			err := client.Get(ctx, u, 200).Finish(&response)
+			err := client.Get(ctx, u).Finish(&response)
 			if err != nil {
 				close(c)
 				return err

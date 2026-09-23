@@ -33,9 +33,9 @@ import (
 
 	eventattribute "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/span/eventattribute/settings"
 
-	allowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist"
 	allowlistsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/allowlist/settings"
-	masking "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/masking"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/masking"
 	maskingsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/attribute/masking/settings"
 )
 
@@ -63,7 +63,7 @@ func (me *service) Create(ctx context.Context, v *eventattribute.Settings) (*api
 		Value:         v,
 	}
 
-	req := me.client.Post(ctx, "/api/v2/settings/objects", []settings20.SettingsObjectCreate{soc}).Expect(200)
+	req := me.client.Post(ctx, "/api/v2/settings/objects", []settings20.SettingsObjectCreate{soc})
 	resp := []settings20.SettingsObjectCreateResponse{}
 
 	var stub *api.Stub
@@ -106,9 +106,9 @@ func (me *service) Create(ctx context.Context, v *eventattribute.Settings) (*api
 }
 
 func (me *service) Update(ctx context.Context, id string, v *eventattribute.Settings) error {
-	if err := me.client.Get(ctx, "/api/v2/settings/schemas/builtin%3Aspan-event-attribute", 200).Finish(); err == nil {
+	if err := me.client.Get(ctx, "/api/v2/settings/schemas/builtin%3Aspan-event-attribute").Finish(); err == nil {
 		sou := settings20.SettingsObjectUpdate{Value: v, SchemaVersion: SchemaVersion}
-		if err := me.client.Put(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200).Finish(); err != nil {
+		if err := me.client.Put(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou).Finish(); err != nil {
 			return err
 		}
 	} else {
@@ -203,8 +203,8 @@ func (me *service) Validate(v *eventattribute.Settings) error {
 
 func (me *service) Delete(ctx context.Context, id string) error {
 	var err error
-	if err = me.client.Get(ctx, "/api/v2/settings/schemas/builtin%3Aspan-event-attribute", 200).Finish(); err == nil {
-		if err = me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish(); err != nil {
+	if err = me.client.Get(ctx, "/api/v2/settings/schemas/builtin%3Aspan-event-attribute").Finish(); err == nil {
+		if err = me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id))).Finish(); err != nil {
 			return err
 		}
 	} else {
@@ -232,7 +232,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 				}
 			}
 			if allowlistId != nil {
-				if err = me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(*allowlistId)), 204).Finish(); err != nil {
+				if err = me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(*allowlistId))).Finish(); err != nil {
 					return err
 				}
 			}
@@ -254,7 +254,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 				}
 			}
 			if maskingId != nil {
-				if err = me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(*maskingId)), 204).Finish(); err != nil {
+				if err = me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(*maskingId))).Finish(); err != nil {
 					return err
 				}
 			}
@@ -269,8 +269,8 @@ func (me *service) Delete(ctx context.Context, id string) error {
 func (me *service) Get(ctx context.Context, id string, v *eventattribute.Settings) error {
 	var err error
 	var settingsObject settings20.SettingsObject
-	if err = me.client.Get(ctx, "/api/v2/settings/schemas/builtin%3Aspan-event-attribute", 200).Finish(); err == nil {
-		req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id))).Expect(200)
+	if err = me.client.Get(ctx, "/api/v2/settings/schemas/builtin%3Aspan-event-attribute").Finish(); err == nil {
+		req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)))
 		if err = req.Finish(&settingsObject); err != nil {
 			return err
 		}
@@ -344,7 +344,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 		} else {
 			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion"))
 		}
-		req := me.client.Get(ctx, urlStr, 200)
+		req := me.client.Get(ctx, urlStr)
 		if err = req.Finish(&sol); err != nil {
 			return nil, err
 		}

@@ -38,36 +38,20 @@ func (me *hybrid_client) ClientSet() ClientSet {
 	return me.clientSet
 }
 
-func (me *hybrid_client) Get(ctx context.Context, url string, expectedStatusCodes ...int) Request {
-	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodGet}
-	if len(expectedStatusCodes) > 0 {
-		req.expect = statuscodes(expectedStatusCodes)
-	}
-	return req
+func (me *hybrid_client) Get(ctx context.Context, url string) Request {
+	return &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodGet}
 }
 
-func (me *hybrid_client) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload}
-	if len(expectedStatusCodes) > 0 {
-		req.expect = statuscodes(expectedStatusCodes)
-	}
-	return req
+func (me *hybrid_client) Post(ctx context.Context, url string, payload any) Request {
+	return &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload}
 }
 
-func (me *hybrid_client) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload}
-	if len(expectedStatusCodes) > 0 {
-		req.expect = statuscodes(expectedStatusCodes)
-	}
-	return req
+func (me *hybrid_client) Put(ctx context.Context, url string, payload any) Request {
+	return &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload}
 }
 
-func (me *hybrid_client) Delete(ctx context.Context, url string, expectedStatusCodes ...int) Request {
-	req := &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodDelete}
-	if len(expectedStatusCodes) > 0 {
-		req.expect = statuscodes(expectedStatusCodes)
-	}
-	return req
+func (me *hybrid_client) Delete(ctx context.Context, url string) Request {
+	return &hybrid_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodDelete}
 }
 
 func (me *hybrid_request) Finish(optionalTarget ...any) error {
@@ -107,11 +91,6 @@ func (me *hybrid_request) Finish(optionalTarget ...any) error {
 }
 
 type hybrid_request request
-
-func (me *hybrid_request) Expect(codes ...int) Request {
-	me.expect = statuscodes(codes)
-	return me
-}
 
 func (me *hybrid_request) OnResponse(onResponse func(resp *http.Response)) Request {
 	me.onResponse = onResponse

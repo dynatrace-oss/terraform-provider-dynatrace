@@ -42,7 +42,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *order.Order) error {
-	return me.client.Get(ctx, "/api/config/v1/service/requestNaming", 200).Finish(v)
+	return me.client.Get(ctx, "/api/config/v1/service/requestNaming").Finish(v)
 }
 
 func (me *service) SchemaID() string {
@@ -50,14 +50,14 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) Create(ctx context.Context, v *order.Order) (*api.Stub, error) {
-	if err := me.client.Put(ctx, "/api/config/v1/service/requestNaming/order", v, 204).Finish(); err != nil {
+	if err := me.client.Put(ctx, "/api/config/v1/service/requestNaming/order", v).Finish(); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: "dynatrace_request_namings", Name: "dynatrace_request_namings"}, nil
 }
 
 func (me *service) Update(ctx context.Context, id string, v *order.Order) error {
-	return me.client.Put(ctx, "/api/config/v1/service/requestNaming/order", v, 204).Finish()
+	return me.client.Put(ctx, "/api/config/v1/service/requestNaming/order", v).Finish()
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {

@@ -43,7 +43,7 @@ func (cs *ServiceClient) Create(ctx context.Context, smtpConfig *smtp.Settings) 
 
 // Update TODO: documentation
 func (cs *ServiceClient) Update(ctx context.Context, smtpConfig *smtp.Settings) error {
-	return cs.client.Post(ctx, "/smtp", smtpConfig, 200).Finish()
+	return cs.client.Post(ctx, "/smtp", smtpConfig).Finish()
 }
 
 // Delete TODO: documentation
@@ -55,7 +55,7 @@ func (cs *ServiceClient) Delete() error {
 func (cs *ServiceClient) Get(ctx context.Context) (*smtp.Settings, error) {
 	var err error
 	var smtpConfig smtp.Settings
-	if err = cs.client.Get(ctx, "/smtp", 200).Finish(&smtpConfig); err != nil {
+	if err = cs.client.Get(ctx, "/smtp").Finish(&smtpConfig); err != nil {
 		return nil, err
 	}
 	return &smtpConfig, nil

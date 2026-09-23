@@ -59,7 +59,7 @@ func (me *service) Get(ctx context.Context, id string, v *customservices.CustomS
 }
 
 func (me *service) GetWithTechnology(ctx context.Context, id string, technology string, v *customservices.CustomService) error {
-	req := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s/%s?includeProcessGroupReferences=true", url.PathEscape(technology), url.PathEscape(id))).Expect(200)
+	req := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s/%s?includeProcessGroupReferences=true", url.PathEscape(technology), url.PathEscape(id)))
 	if err := req.Finish(v); err != nil {
 		return err
 	}
@@ -73,7 +73,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	client := me.client
 
 	for _, technology := range []customservices.Technology{customservices.Technologies.NodeJS, customservices.Technologies.DotNet, customservices.Technologies.Go, customservices.Technologies.Java, customservices.Technologies.PHP} {
-		req := client.Get(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s", url.PathEscape(string(technology))), 200)
+		req := client.Get(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s", url.PathEscape(string(technology))))
 		var stubList api.StubList
 		if err = req.Finish(&stubList); err != nil {
 			return nil, err
@@ -91,7 +91,7 @@ func (me *service) Validate(ctx context.Context, v *customservices.CustomService
 }
 
 func (me *service) ValidateWithTechnology(ctx context.Context, technology string, v any) error {
-	return me.client.Post(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s/validator", url.PathEscape(technology)), v, 204).Finish()
+	return me.client.Post(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s/validator", url.PathEscape(technology)), v).Finish()
 }
 
 func (me *service) Create(ctx context.Context, v *customservices.CustomService) (*api.Stub, error) {
@@ -101,7 +101,7 @@ func (me *service) Create(ctx context.Context, v *customservices.CustomService) 
 func (me *service) CreateWithTechnology(ctx context.Context, technology string, v any) (*api.Stub, error) {
 	var err error
 
-	req := me.client.Post(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s", url.PathEscape(technology)), v, 201)
+	req := me.client.Post(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s", url.PathEscape(technology)), v)
 
 	var stub api.Stub
 	if err = req.Finish(&stub); err != nil {
@@ -121,7 +121,7 @@ func (me *service) Update(ctx context.Context, id string, v *customservices.Cust
 func (me *service) UpdateWithTechnology(ctx context.Context, id string, technology string, v any) error {
 	var err error
 
-	req := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s/%s", url.PathEscape(technology), url.PathEscape(id)), v, 204)
+	req := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s/%s", url.PathEscape(technology), url.PathEscape(id)), v)
 
 	if err = req.Finish(); err != nil {
 		return err
@@ -148,7 +148,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 }
 
 func (me *service) DeleteWithTechnology(ctx context.Context, id string, technology string) error {
-	return me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s/%s", url.PathEscape(technology), url.PathEscape(id))).Expect(204).Finish()
+	return me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/service/customServices/%s/%s", url.PathEscape(technology), url.PathEscape(id))).Finish()
 }
 
 func (me *service) SchemaID() string {

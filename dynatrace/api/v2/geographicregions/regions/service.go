@@ -39,7 +39,7 @@ type service struct {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *regions.Settings) (err error) {
-	return me.client.Get(ctx, fmt.Sprintf("/api/v2/rum/regions/%s", id), 200).Finish(v)
+	return me.client.Get(ctx, fmt.Sprintf("/api/v2/rum/regions/%s", id)).Finish(v)
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {

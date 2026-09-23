@@ -57,7 +57,7 @@ func (s *service) Get(ctx context.Context, id string, v *order.Settings) (err er
 			ID string `json:"id"`
 		} `json:"values"`
 	}
-	req := s.client.Get(ctx, s.BasePath, 200)
+	req := s.client.Get(ctx, s.BasePath)
 	if err = req.Finish(&listResponse); err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ func (s *service) Update(ctx context.Context, id string, v *order.Settings) (err
 			ID string `json:"id"`
 		}{ID: id})
 	}
-	return s.client.Put(ctx, s.BasePath+"/order", &payload, 204).Finish()
+	return s.client.Put(ctx, s.BasePath+"/order", &payload).Finish()
 }
 
 func (s *service) Delete(ctx context.Context, id string) error {

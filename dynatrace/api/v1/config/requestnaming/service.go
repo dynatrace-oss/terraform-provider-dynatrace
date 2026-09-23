@@ -69,7 +69,7 @@ func (me *service) Create(ctx context.Context, v *requestnaming.RequestNaming) (
 	retries := 30
 
 	for range retries {
-		req = me.client.Post(ctx, BasePath, v).Expect(201)
+		req = me.client.Post(ctx, BasePath, v)
 		if err = req.Finish(&stub); err != nil {
 			if !strings.Contains(err.Error(), "Unknown management zone.") {
 				return nil, err

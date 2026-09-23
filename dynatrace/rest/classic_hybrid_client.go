@@ -37,20 +37,20 @@ func (me *classic_hybrid_client) ClientSet() ClientSet {
 	return me.clientSet
 }
 
-func (me *classic_hybrid_client) Get(ctx context.Context, url string, expectedStatusCodes ...int) Request {
-	return me.client.Get(newDisableOAuthPreferenceContext(ctx), url, expectedStatusCodes...)
+func (me *classic_hybrid_client) Get(ctx context.Context, url string) Request {
+	return me.client.Get(newDisableOAuthPreferenceContext(ctx), url)
 }
 
-func (me *classic_hybrid_client) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	return me.client.Post(newDisableOAuthPreferenceContext(ctx), url, payload, expectedStatusCodes...)
+func (me *classic_hybrid_client) Post(ctx context.Context, url string, payload any) Request {
+	return me.client.Post(newDisableOAuthPreferenceContext(ctx), url, payload)
 }
 
-func (me *classic_hybrid_client) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	return me.client.Put(newDisableOAuthPreferenceContext(ctx), url, payload, expectedStatusCodes...)
+func (me *classic_hybrid_client) Put(ctx context.Context, url string, payload any) Request {
+	return me.client.Put(newDisableOAuthPreferenceContext(ctx), url, payload)
 }
 
-func (me *classic_hybrid_client) Delete(ctx context.Context, url string, expectedStatusCodes ...int) Request {
-	return me.client.Delete(newDisableOAuthPreferenceContext(ctx), url, expectedStatusCodes...)
+func (me *classic_hybrid_client) Delete(ctx context.Context, url string) Request {
+	return me.client.Delete(newDisableOAuthPreferenceContext(ctx), url)
 }
 
 func newDisableOAuthPreferenceContext(ctx context.Context) context.Context {

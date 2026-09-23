@@ -38,24 +38,24 @@ func NewService(clientSet rest.ClientSet) (*ServiceClient, error) {
 
 // Create TODO: documentation
 func (cs *ServiceClient) Create(ctx context.Context, config *internetproxy.Settings) error {
-	return cs.client.Put(ctx, "/proxy/configuration", config, 201).Finish()
+	return cs.client.Put(ctx, "/proxy/configuration", config).Finish()
 }
 
 // Update TODO: documentation
 func (cs *ServiceClient) Update(ctx context.Context, config *internetproxy.Settings) error {
-	return cs.client.Put(ctx, "/proxy/configuration", config, 204).Finish()
+	return cs.client.Put(ctx, "/proxy/configuration", config).Finish()
 }
 
 // Delete TODO: documentation
 func (cs *ServiceClient) Delete(ctx context.Context) error {
-	return cs.client.Delete(ctx, "/proxy/configuration", 200).Finish()
+	return cs.client.Delete(ctx, "/proxy/configuration").Finish()
 }
 
 // Get TODO: documentation
 func (cs *ServiceClient) Get(ctx context.Context) (*internetproxy.Settings, error) {
 	var err error
 	var config internetproxy.Settings
-	if err = cs.client.Get(ctx, "/proxy/configuration", 200).Finish(&config); err != nil {
+	if err = cs.client.Get(ctx, "/proxy/configuration").Finish(&config); err != nil {
 		return nil, err
 	}
 	return &config, nil

@@ -48,7 +48,7 @@ func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub,
 		EntityId string `json:"entityId"`
 	}{}
 	client := rest.APITokenClient(me.clientSet)
-	if err = client.Post(ctx, BasePath, v, 201).Finish(&resp); err != nil {
+	if err = client.Post(ctx, BasePath, v).Finish(&resp); err != nil {
 		return nil, err
 	}
 
@@ -57,7 +57,7 @@ func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub,
 	// Second loop: Tag configuration takes a while to propagate across the cluster
 	successes := 0
 	for {
-		if err = client.Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(resp.EntityId)), 200).Finish(); err == nil {
+		if err = client.Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(resp.EntityId))).Finish(); err == nil {
 			successes = successes + 1
 			if successes >= envutils.DynatraceCreateConfirmSyntheticMonitorsV2.Get() {
 				break
@@ -73,7 +73,7 @@ func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub,
 		successes = 0
 		for {
 			validateMonitor := monitors.Settings{}
-			if err = client.Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(resp.EntityId)), 200).Finish(&validateMonitor); err == nil {
+			if err = client.Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(resp.EntityId))).Finish(&validateMonitor); err == nil {
 				if len(v.Tags) == len(validateMonitor.Tags) {
 					successes = successes + 1
 					if successes >= envutils.DynatraceCreateConfirmSyntheticMonitorsV2.Get() {
@@ -91,7 +91,7 @@ func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub,
 }
 
 func (me *service) Get(ctx context.Context, id string, v *monitors.Settings) error {
-	if err := rest.APITokenClient(me.clientSet).Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), 200).Finish(v); err != nil {
+	if err := rest.APITokenClient(me.clientSet).Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id))).Finish(v); err != nil {
 		return err
 	}
 
@@ -111,7 +111,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 	var monitors monitorList
 
-	if err = rest.APITokenClient(me.clientSet).Get(ctx, BasePath, 200).Finish(&monitors); err != nil {
+	if err = rest.APITokenClient(me.clientSet).Get(ctx, BasePath).Finish(&monitors); err != nil {
 		return nil, err
 	}
 	stubs := api.Stubs{}
@@ -126,7 +126,7 @@ func (me *service) Validate(v *monitors.Settings) error {
 }
 
 func (me *service) Update(ctx context.Context, id string, v *monitors.Settings) error {
-	err := rest.APITokenClient(me.clientSet).Put(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), v, 200).Finish()
+	err := rest.APITokenClient(me.clientSet).Put(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), v).Finish()
 	if err != nil {
 		return err
 	}
@@ -135,7 +135,7 @@ func (me *service) Update(ctx context.Context, id string, v *monitors.Settings) 
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return rest.APITokenClient(me.clientSet).Delete(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), 204).Finish()
+	return rest.APITokenClient(me.clientSet).Delete(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id))).Finish()
 }
 
 func (me *service) New() *monitors.Settings {

@@ -43,7 +43,7 @@ func (cs *ServiceClient) Create(ctx context.Context, config *backup.Settings) er
 
 // Update TODO: documentation
 func (cs *ServiceClient) Update(ctx context.Context, config *backup.Settings) error {
-	return cs.client.Put(ctx, "/backup/config", config, 200).Finish()
+	return cs.client.Put(ctx, "/backup/config", config).Finish()
 }
 
 // Delete TODO: documentation
@@ -55,7 +55,7 @@ func (cs *ServiceClient) Delete(config *backup.Settings) error {
 func (cs *ServiceClient) Get(ctx context.Context) (*backup.Settings, error) {
 	var err error
 	var config backup.Settings
-	if err = cs.client.Get(ctx, "/backup/config", 200).Finish(&config); err != nil {
+	if err = cs.client.Get(ctx, "/backup/config").Finish(&config); err != nil {
 		return nil, err
 	}
 	return &config, nil

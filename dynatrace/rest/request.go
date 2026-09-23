@@ -34,18 +34,14 @@ import (
 
 type Request interface {
 	Finish(v ...any) error
-	Expect(codes ...int) Request
 	OnResponse(func(resp *http.Response)) Request
 }
-
-type statuscodes []int
 
 type request struct {
 	id         string
 	ctx        context.Context
 	client     Client
 	url        string
-	expect     statuscodes
 	method     string
 	payload    any
 	fileName   string
