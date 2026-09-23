@@ -51,7 +51,7 @@ type defaultService[T Settings] struct {
 }
 
 func (me *defaultService[T]) Get(ctx context.Context, id string, v T) error {
-	if err := me.client.Get(ctx, me.getURL(id), 200).Finish(v); err != nil {
+	if err := me.client.Get(ctx, me.getURL(id)).Finish(v); err != nil {
 		return err
 	}
 	if me.options.CompleteGet != nil {
@@ -131,7 +131,7 @@ func (me *defaultService[T]) stubs() api.RecordStubs {
 func (me *defaultService[T]) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
-	req := me.client.Get(ctx, me.listURL(), 200)
+	req := me.client.Get(ctx, me.listURL())
 	stubs := me.stubs()
 	if err = req.Finish(stubs); err != nil {
 		return nil, err
@@ -156,7 +156,7 @@ func (me *defaultService[T]) Validate(ctx context.Context, v T) error {
 	var err error
 
 	client := me.client
-	req := client.Post(ctx, me.validateURL(v), v).Expect(204)
+	req := client.Post(ctx, me.validateURL(v), v)
 
 	if err = req.Finish(); err != nil {
 		return err
@@ -180,7 +180,7 @@ func (me *defaultService[T]) Create(ctx context.Context, v T) (*api.Stub, error)
 			stubName := struct {
 				Name string `json:"name"`
 			}{}
-			if err = me.client.Get(ctx, me.getURL(stub.ID), 200).Finish(&stubName); err == nil {
+			if err = me.client.Get(ctx, me.getURL(stub.ID)).Finish(&stubName); err == nil {
 				// For some settings the original response doesn't deliver a name
 				// In here (when confirming that the whole cluster knows the new settings) we
 				// receive the whole configuration anyways.
@@ -222,7 +222,7 @@ func (me *defaultService[T]) create(ctx context.Context, v T) (*api.Stub, error)
 	}
 
 	client := me.client
-	req := client.Post(ctx, me.createURL(v), v).Expect(200, 201)
+	req := client.Post(ctx, me.createURL(v), v)
 
 	var stub api.Stub
 	if err = req.Finish(&stub); err != nil {
@@ -238,7 +238,7 @@ func (me *defaultService[T]) create(ctx context.Context, v T) (*api.Stub, error)
 			}
 		} else if me.options.CreateRetry != nil {
 			if modifiedPayload := me.options.CreateRetry(v, err); fmt.Sprintf("%v", modifiedPayload) != "<nil>" {
-				if err = client.Post(ctx, me.createURL(modifiedPayload), modifiedPayload, 200, 201).Finish(&stub); err != nil {
+				if err = client.Post(ctx, me.createURL(modifiedPayload), modifiedPayload).Finish(&stub); err != nil {
 					return nil, err
 				}
 				return (&api.Stubs{&stub}).ToStubs()[0], nil
@@ -288,7 +288,7 @@ func (me *defaultService[T]) update(ctx context.Context, id string, v T) error {
 	// We're re-trying at least two more times before the update fails for good
 	var retries = 3
 	for retries > 0 {
-		err = me.client.Put(ctx, me.updateURL(id, v), v, 204).Finish()
+		err = me.client.Put(ctx, me.updateURL(id, v), v).Finish()
 		if err != nil {
 			if strings.Contains(err.Error(), "Internal Server Error occurred. It has been logged and will be investigated") {
 				retries--
@@ -306,7 +306,7 @@ func (me *defaultService[T]) Delete(ctx context.Context, id string) error {
 	var err error
 	numRetries := 0
 	for {
-		if err = me.client.Delete(ctx, me.deleteURL(id)).Expect(204, 200, 404).Finish(); err != nil {
+		if err = me.client.Delete(ctx, me.deleteURL(id)).Finish(); err != nil {
 			if me.options != nil && me.options.DeleteRetry != nil {
 				retry, e2 := me.options.DeleteRetry(ctx, id, err)
 				if e2 != nil {

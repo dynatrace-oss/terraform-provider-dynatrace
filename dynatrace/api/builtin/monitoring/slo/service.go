@@ -118,7 +118,7 @@ func (me *service) Validate(ctx context.Context, v *slo.Settings) error {
 		Value:         v,
 	}
 
-	if err := me.client.Post(ctx, "/api/v2/settings/objects?validateOnly=true", []settings20.SettingsObjectCreate{soc}).Expect(200).Finish(); err != nil {
+	if err := me.client.Post(ctx, "/api/v2/settings/objects?validateOnly=true", []settings20.SettingsObjectCreate{soc}).Finish(); err != nil {
 		return err
 	}
 
@@ -158,7 +158,7 @@ func (me *service) Get(ctx context.Context, id string, v *slo.Settings) error {
 	if err != nil {
 		if err.Error() == "Cannot access a disabled SLO." {
 			settingsObject := settings20.SettingsObject{}
-			req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", id), 200)
+			req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", id))
 			if err = req.Finish(&settingsObject); err != nil {
 				return err
 			}
@@ -185,7 +185,7 @@ func (me *service) get(ctx context.Context, id string, v *slo.Settings) error {
 	slo := new(sloGet)
 
 	client := rest.APITokenClient(me.clientSet)
-	req := client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(legacyId)), 200)
+	req := client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(legacyId)))
 	if err := req.Finish(slo); err != nil {
 		return err
 	}
@@ -215,7 +215,7 @@ func (me *service) listSettings20(ctx context.Context) (api.Stubs, error) {
 		} else {
 			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion"))
 		}
-		req := me.client.Get(ctx, urlStr, 200)
+		req := me.client.Get(ctx, urlStr)
 		if err = req.Finish(&sol); err != nil {
 			return nil, err
 		}

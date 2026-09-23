@@ -38,7 +38,7 @@ type service struct {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *countries.Settings) (err error) {
-	return me.client.Get(ctx, "/api/v2/rum/countries", 200).Finish(v)
+	return me.client.Get(ctx, "/api/v2/rum/countries").Finish(v)
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {

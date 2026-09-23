@@ -43,7 +43,7 @@ func (cs *ServiceClient) Create(ctx context.Context, config *remoteaccess.Settin
 	config.State = nil
 
 	response := remoteaccess.Settings{}
-	if err := cs.client.Post(ctx, "/remoteaccess/requests", config, 201).Finish(&response); err != nil {
+	if err := cs.client.Post(ctx, "/remoteaccess/requests", config).Finish(&response); err != nil {
 		return nil, err
 	}
 
@@ -52,7 +52,7 @@ func (cs *ServiceClient) Create(ctx context.Context, config *remoteaccess.Settin
 
 // Update TODO: documentation
 func (cs *ServiceClient) Update(ctx context.Context, id string, config *remoteaccess.UpdateSettings) error {
-	return cs.client.Put(ctx, fmt.Sprintf("/remoteaccess/requests/%s/state", id), config, 200).Finish()
+	return cs.client.Put(ctx, fmt.Sprintf("/remoteaccess/requests/%s/state", id), config).Finish()
 }
 
 // Delete TODO: documentation
@@ -64,7 +64,7 @@ func (cs *ServiceClient) Delete() error {
 func (cs *ServiceClient) Get(ctx context.Context, id string) (*remoteaccess.Settings, error) {
 	var err error
 	var config remoteaccess.Settings
-	if err = cs.client.Get(ctx, fmt.Sprintf("/remoteaccess/requests/%s", id), 200).Finish(&config); err != nil {
+	if err = cs.client.Get(ctx, fmt.Sprintf("/remoteaccess/requests/%s", id)).Finish(&config); err != nil {
 		return nil, err
 	}
 	return &config, nil

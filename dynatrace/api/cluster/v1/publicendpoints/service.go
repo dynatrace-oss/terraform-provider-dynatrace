@@ -53,25 +53,25 @@ func (cs *ServiceClient) Create(ctx context.Context, config *publicendpoints.Set
 func (cs *ServiceClient) Update(ctx context.Context, config *publicendpoints.Settings) error {
 	if config.WebUiAddress != nil {
 		webUiAddress := AddressSettings{config.WebUiAddress}
-		if err := cs.client.Post(ctx, "/endpoint/webUiAddress", webUiAddress, 200).Finish(); err != nil {
+		if err := cs.client.Post(ctx, "/endpoint/webUiAddress", webUiAddress).Finish(); err != nil {
 			return err
 		}
 	}
 	if len(config.AdditionalWebUiAddresses) > 0 {
 		additionalWebUiAddresses := AdditionalAddressesSettings{config.AdditionalWebUiAddresses}
-		if err := cs.client.Post(ctx, "/endpoint/additionalWebUiAddresses", additionalWebUiAddresses, 200).Finish(); err != nil {
+		if err := cs.client.Post(ctx, "/endpoint/additionalWebUiAddresses", additionalWebUiAddresses).Finish(); err != nil {
 			return err
 		}
 	}
 	if config.BeaconForwarderAddress != nil {
 		beaconForwarderAddress := AddressSettings{config.BeaconForwarderAddress}
-		if err := cs.client.Post(ctx, "/endpoint/beaconForwarderAddress", beaconForwarderAddress, 200).Finish(); err != nil {
+		if err := cs.client.Post(ctx, "/endpoint/beaconForwarderAddress", beaconForwarderAddress).Finish(); err != nil {
 			return err
 		}
 	}
 	if config.CDNAddress != nil {
 		cdnAddress := AddressSettings{config.CDNAddress}
-		if err := cs.client.Post(ctx, "/endpoint/cdnAddress", cdnAddress, 200).Finish(); err != nil {
+		if err := cs.client.Post(ctx, "/endpoint/cdnAddress", cdnAddress).Finish(); err != nil {
 			return err
 		}
 	}
@@ -92,16 +92,16 @@ func (cs *ServiceClient) Get(ctx context.Context) (*publicendpoints.Settings, er
 	beaconForwarderAddress := AddressSettings{}
 	cdnAddress := AddressSettings{}
 
-	if err = cs.client.Get(ctx, "/endpoint/webUiAddress", 200).Finish(&webUiAddress); err != nil {
+	if err = cs.client.Get(ctx, "/endpoint/webUiAddress").Finish(&webUiAddress); err != nil {
 		return nil, err
 	}
-	if err = cs.client.Get(ctx, "/endpoint/additionalWebUiAddresses", 200).Finish(&additionalWebUiAddresses); err != nil {
+	if err = cs.client.Get(ctx, "/endpoint/additionalWebUiAddresses").Finish(&additionalWebUiAddresses); err != nil {
 		return nil, err
 	}
-	if err = cs.client.Get(ctx, "/endpoint/beaconForwarderAddress", 200).Finish(&beaconForwarderAddress); err != nil {
+	if err = cs.client.Get(ctx, "/endpoint/beaconForwarderAddress").Finish(&beaconForwarderAddress); err != nil {
 		return nil, err
 	}
-	if err = cs.client.Get(ctx, "/endpoint/cdnAddress", 200).Finish(&cdnAddress); err != nil {
+	if err = cs.client.Get(ctx, "/endpoint/cdnAddress").Finish(&cdnAddress); err != nil {
 		return nil, err
 	}
 
@@ -118,7 +118,7 @@ func (cs *ServiceClient) Get(ctx context.Context) (*publicendpoints.Settings, er
 // Get TODO: documentation
 func (cs *ServiceClient) GetWebUiAddress(ctx context.Context) (*string, error) {
 	webUiAddress := AddressSettings{}
-	if err := cs.client.Get(ctx, "/endpoint/webUiAddress", 200).Finish(&webUiAddress); err != nil {
+	if err := cs.client.Get(ctx, "/endpoint/webUiAddress").Finish(&webUiAddress); err != nil {
 		return nil, err
 	}
 
@@ -128,7 +128,7 @@ func (cs *ServiceClient) GetWebUiAddress(ctx context.Context) (*string, error) {
 // Get TODO: documentation
 func (cs *ServiceClient) GetAdditionalWebUiAddresses(ctx context.Context) ([]string, error) {
 	additionalWebUiAddresses := AdditionalAddressesSettings{}
-	if err := cs.client.Get(ctx, "/endpoint/additionalWebUiAddresses", 200).Finish(&additionalWebUiAddresses); err != nil {
+	if err := cs.client.Get(ctx, "/endpoint/additionalWebUiAddresses").Finish(&additionalWebUiAddresses); err != nil {
 		return nil, err
 	}
 
@@ -138,7 +138,7 @@ func (cs *ServiceClient) GetAdditionalWebUiAddresses(ctx context.Context) ([]str
 // Get TODO: documentation
 func (cs *ServiceClient) GetBeaconForwarderAddress(ctx context.Context) (*string, error) {
 	beaconForwarderAddress := AddressSettings{}
-	if err := cs.client.Get(ctx, "/endpoint/beaconForwarderAddress", 200).Finish(&beaconForwarderAddress); err != nil {
+	if err := cs.client.Get(ctx, "/endpoint/beaconForwarderAddress").Finish(&beaconForwarderAddress); err != nil {
 		return nil, err
 	}
 
@@ -148,7 +148,7 @@ func (cs *ServiceClient) GetBeaconForwarderAddress(ctx context.Context) (*string
 // Get TODO: documentation
 func (cs *ServiceClient) GetCDNAddress(ctx context.Context) (*string, error) {
 	cdnAddress := AddressSettings{}
-	if err := cs.client.Get(ctx, "/endpoint/cdnAddress", 200).Finish(&cdnAddress); err != nil {
+	if err := cs.client.Get(ctx, "/endpoint/cdnAddress").Finish(&cdnAddress); err != nil {
 		return nil, err
 	}
 

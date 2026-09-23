@@ -56,7 +56,7 @@ func (me *service) Get(ctx context.Context, id string, v *generic.Settings) erro
 	if err != nil {
 		return newSettingsURLJoinError(err)
 	}
-	err = client.Get(ctx, u, 200).Finish(&settingsObject)
+	err = client.Get(ctx, u).Finish(&settingsObject)
 	if err != nil {
 		return err
 	}
@@ -79,7 +79,7 @@ type schemataResponse struct {
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	client := me.Client()
 	var schemata schemataResponse
-	err := client.Get(ctx, settingsSchemaEndpoint, 200).Finish(&schemata)
+	err := client.Get(ctx, settingsSchemaEndpoint).Finish(&schemata)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +127,7 @@ func (me *service) list(ctx context.Context, client rest.Client, schemaID string
 	}
 
 	var objectsResponse settings20.SettingsObjectList
-	err := client.Get(ctx, u.String(), 200).Finish(&objectsResponse)
+	err := client.Get(ctx, u.String()).Finish(&objectsResponse)
 
 	if err != nil {
 		return nil, err

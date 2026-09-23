@@ -43,7 +43,7 @@ func (cs *ServiceClient) Create(ctx context.Context, config *preferences.Setting
 
 // Update TODO: documentation
 func (cs *ServiceClient) Update(ctx context.Context, config *preferences.Settings) error {
-	return cs.client.Post(ctx, "/preferences", config, 200).Finish()
+	return cs.client.Post(ctx, "/preferences", config).Finish()
 }
 
 // Delete TODO: documentation
@@ -55,7 +55,7 @@ func (cs *ServiceClient) Delete(config *preferences.Settings) error {
 func (cs *ServiceClient) Get(ctx context.Context) (*preferences.Settings, error) {
 	var err error
 	var config preferences.Settings
-	if err = cs.client.Get(ctx, "/preferences", 200).Finish(&config); err != nil {
+	if err = cs.client.Get(ctx, "/preferences").Finish(&config); err != nil {
 		return nil, err
 	}
 	return &config, nil

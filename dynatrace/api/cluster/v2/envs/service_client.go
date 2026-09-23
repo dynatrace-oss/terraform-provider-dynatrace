@@ -71,7 +71,7 @@ func (cs *ServiceClient) Create(ctx context.Context, environment *Environment) (
 	var stub api.Stub
 	retry := true
 	for retry {
-		if err = cs.client.Post(ctx, "/environments", environment, 201).Finish(&stub); err != nil {
+		if err = cs.client.Post(ctx, "/environments", environment).Finish(&stub); err != nil {
 			switch rerr := err.(type) {
 			case *rest.Error:
 				retry = evalRetry(rerr, environment)
@@ -93,7 +93,7 @@ func (cs *ServiceClient) Update(ctx context.Context, environment *Environment) e
 	retry := true
 
 	for retry {
-		if err = cs.client.Put(ctx, fmt.Sprintf("/environments/%s", opt.String(environment.ID)), environment, 204).Finish(); err != nil {
+		if err = cs.client.Put(ctx, fmt.Sprintf("/environments/%s", opt.String(environment.ID)), environment).Finish(); err != nil {
 			switch rerr := err.(type) {
 			case *rest.Error:
 				retry = evalRetry(rerr, environment)
@@ -136,7 +136,7 @@ func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 			}
 		}
 	}
-	return cs.client.Delete(ctx, fmt.Sprintf("/environments/%s", id), 204).Finish()
+	return cs.client.Delete(ctx, fmt.Sprintf("/environments/%s", id)).Finish()
 }
 
 // Get TODO: documentation
@@ -148,7 +148,7 @@ func (cs *ServiceClient) Get(ctx context.Context, id string) (*Environment, erro
 	var err error
 
 	var environment Environment
-	if err = cs.client.Get(ctx, fmt.Sprintf("/environments/%s?includeConsumptionInfo=true&includeStorageInfo=true", id), 200).Finish(&environment); err != nil {
+	if err = cs.client.Get(ctx, fmt.Sprintf("/environments/%s?includeConsumptionInfo=true&includeStorageInfo=true", id)).Finish(&environment); err != nil {
 		return nil, err
 	}
 	return &environment, nil
@@ -159,7 +159,7 @@ func (cs *ServiceClient) ListAll(ctx context.Context) (*EnvironmentList, error) 
 	var err error
 
 	var environmentList EnvironmentList
-	if err = cs.client.Get(ctx, "/environments", 200).Finish(&environmentList); err != nil {
+	if err = cs.client.Get(ctx, "/environments").Finish(&environmentList); err != nil {
 		return nil, err
 	}
 	return &environmentList, nil

@@ -43,36 +43,20 @@ func (me *cluster_v1_client) ClientSet() ClientSet {
 	return me.clientSet
 }
 
-func (me *cluster_v1_client) Get(ctx context.Context, url string, expectedStatusCodes ...int) Request {
-	req := &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodGet}
-	if len(expectedStatusCodes) > 0 {
-		req.expect = statuscodes(expectedStatusCodes)
-	}
-	return req
+func (me *cluster_v1_client) Get(ctx context.Context, url string) Request {
+	return &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodGet}
 }
 
-func (me *cluster_v1_client) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload}
-	if len(expectedStatusCodes) > 0 {
-		req.expect = statuscodes(expectedStatusCodes)
-	}
-	return req
+func (me *cluster_v1_client) Post(ctx context.Context, url string, payload any) Request {
+	return &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload}
 }
 
-func (me *cluster_v1_client) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload}
-	if len(expectedStatusCodes) > 0 {
-		req.expect = statuscodes(expectedStatusCodes)
-	}
-	return req
+func (me *cluster_v1_client) Put(ctx context.Context, url string, payload any) Request {
+	return &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload}
 }
 
-func (me *cluster_v1_client) Delete(ctx context.Context, url string, expectedStatusCodes ...int) Request {
-	req := &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodDelete}
-	if len(expectedStatusCodes) > 0 {
-		req.expect = statuscodes(expectedStatusCodes)
-	}
-	return req
+func (me *cluster_v1_client) Delete(ctx context.Context, url string) Request {
+	return &cluster_v1_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodDelete}
 }
 
 type cluster_v1_request request
@@ -105,11 +89,6 @@ func (me *cluster_v1_request) Finish(optionalTarget ...any) error {
 		target = optionalTarget[0]
 	}
 	return request(*me).HandleResponse(client, fullURL, target)
-}
-
-func (me *cluster_v1_request) Expect(codes ...int) Request {
-	me.expect = statuscodes(codes)
-	return me
 }
 
 func (me *cluster_v1_request) OnResponse(onResponse func(resp *http.Response)) Request {

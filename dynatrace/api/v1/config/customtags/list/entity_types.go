@@ -58,7 +58,7 @@ func GETEntityTypes(ctx context.Context, client rest.Client) ([]EntityType, erro
 			u = fmt.Sprintf("/api/v2/entityTypes?nextPageKey=%s", url.QueryEscape(nextPageKey))
 		}
 		var response GetEntityTypesResponse
-		err := client.Get(ctx, u, 200).Finish(&response)
+		err := client.Get(ctx, u).Finish(&response)
 		if err != nil {
 			return nil, err
 		}
@@ -75,7 +75,7 @@ func GETEntityTypes(ctx context.Context, client rest.Client) ([]EntityType, erro
 func (et EntityType) GetCustomTags(ctx context.Context, client rest.Client) ([]Tag, error) {
 	u := fmt.Sprintf("/api/v2/tags?entitySelector=%s&from=%s", url.QueryEscape(fmt.Sprintf("type(%s)", et.Type)), url.QueryEscape(TIME_FRAME))
 	var response GetCustomTagsResponse
-	err := client.Get(ctx, u, 200).Finish(&response)
+	err := client.Get(ctx, u).Finish(&response)
 	if err != nil {
 		return nil, err
 	}

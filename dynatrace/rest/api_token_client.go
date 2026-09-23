@@ -42,36 +42,20 @@ func (me *api_token_client) ClientSet() ClientSet {
 	return me.clientSet
 }
 
-func (me *api_token_client) Get(ctx context.Context, url string, expectedStatusCodes ...int) Request {
-	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodGet}
-	if len(expectedStatusCodes) > 0 {
-		req.expect = statuscodes(expectedStatusCodes)
-	}
-	return req
+func (me *api_token_client) Get(ctx context.Context, url string) Request {
+	return &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodGet}
 }
 
-func (me *api_token_client) Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload}
-	if len(expectedStatusCodes) > 0 {
-		req.expect = statuscodes(expectedStatusCodes)
-	}
-	return req
+func (me *api_token_client) Post(ctx context.Context, url string, payload any) Request {
+	return &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPost, payload: payload}
 }
 
-func (me *api_token_client) Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request {
-	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload}
-	if len(expectedStatusCodes) > 0 {
-		req.expect = statuscodes(expectedStatusCodes)
-	}
-	return req
+func (me *api_token_client) Put(ctx context.Context, url string, payload any) Request {
+	return &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodPut, payload: payload}
 }
 
-func (me *api_token_client) Delete(ctx context.Context, url string, expectedStatusCodes ...int) Request {
-	req := &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodDelete}
-	if len(expectedStatusCodes) > 0 {
-		req.expect = statuscodes(expectedStatusCodes)
-	}
-	return req
+func (me *api_token_client) Delete(ctx context.Context, url string) Request {
+	return &api_token_request{id: uuid.NewString(), ctx: ctx, client: me, url: url, method: http.MethodDelete}
 }
 
 func (me *api_token_request) Finish(optionalTarget ...any) error {
@@ -93,11 +77,6 @@ func (me *api_token_request) Finish(optionalTarget ...any) error {
 }
 
 type api_token_request request
-
-func (me *api_token_request) Expect(codes ...int) Request {
-	me.expect = statuscodes(codes)
-	return me
-}
 
 func (me *api_token_request) OnResponse(onResponse func(resp *http.Response)) Request {
 	me.onResponse = onResponse

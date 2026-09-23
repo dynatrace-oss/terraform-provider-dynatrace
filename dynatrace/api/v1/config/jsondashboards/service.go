@@ -111,7 +111,7 @@ func AfterCreate(ctx context.Context, client rest.Client, stub *api.Stub) (stubs
 
 func ValidatePreset(ctx context.Context, client rest.Client, payload *DashboardPresetPayload) (validated bool, err error) {
 	p := []*DashboardPresetPayload{payload}
-	err = client.Post(ctx, "/api/v2/settings/objects?repairInput=true&validateOnly=true", &p, 200).Finish(nil)
+	err = client.Post(ctx, "/api/v2/settings/objects?repairInput=true&validateOnly=true", &p).Finish(nil)
 	if err != nil {
 		if restErr, ok := err.(rest.Error); ok {
 			for _, violation := range restErr.ConstraintViolations {

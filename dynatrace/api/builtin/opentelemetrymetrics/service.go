@@ -318,7 +318,7 @@ func resolveMode(v, stateConfig *opentelemetrymetrics.Settings) opentelemetrymet
 func (me *service) fetchExistingRecord(ctx context.Context) (*opentelemetrymetrics.Settings, error) {
 	var err error
 	var sol settings20.SettingsObjectList
-	req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=1", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion")), 200)
+	req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=1", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion")))
 	if err = req.Finish(&sol); err != nil {
 		return nil, err
 	}

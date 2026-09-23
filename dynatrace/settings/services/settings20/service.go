@@ -85,7 +85,7 @@ func (me *service[T]) Get(ctx context.Context, id string, v T) error {
 	var settingsObject SettingsObject
 	adminAccess := me.options != nil && me.options.SupportsAdminAccess && context2.GetAdminAccess(ctx)
 
-	req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects/%s?adminAccess=%t", url.PathEscape(id), adminAccess)).Expect(200)
+	req := me.client.Get(ctx, fmt.Sprintf("/api/v2/settings/objects/%s?adminAccess=%t", url.PathEscape(id), adminAccess))
 	if err = req.Finish(&settingsObject); err != nil {
 		return err
 	}
@@ -216,7 +216,7 @@ func (me *service[T]) ListIDs(ctx context.Context) (api.Stubs, error) {
 		} else {
 			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,summary,modificationInfo,scope,schemaVersion"))
 		}
-		req := me.client.Get(ctx, urlStr, 200)
+		req := me.client.Get(ctx, urlStr)
 		if err = req.Finish(&sol); err != nil {
 			return nil, err
 		}
@@ -254,7 +254,7 @@ func (me *service[T]) listIDs(ctx context.Context) ([]string, error) {
 		} else {
 			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,scope,schemaVersion"))
 		}
-		req := me.client.Get(ctx, urlStr, 200)
+		req := me.client.Get(ctx, urlStr)
 		if err = req.Finish(&sol); err != nil {
 			return nil, err
 		}
@@ -300,7 +300,7 @@ func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 		} else {
 			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100&adminAccess=%t", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion"), adminAccess)
 		}
-		req := me.client.Get(ctx, urlStr, 200)
+		req := me.client.Get(ctx, urlStr)
 		if err = req.Finish(&sol); err != nil {
 			return nil, err
 		}
@@ -371,7 +371,7 @@ func (me *service[T]) Validate(ctx context.Context, v T) error {
 	if !me.skipRepairInput() {
 		postUrl = postUrl + "&repairInput=true"
 	}
-	req = me.client.Post(ctx, postUrl, []SettingsObjectCreate{soc}).Expect(200)
+	req = me.client.Post(ctx, postUrl, []SettingsObjectCreate{soc})
 
 	return req.Finish()
 }
@@ -447,9 +447,9 @@ func (me *service[T]) create(ctx context.Context, v T, retry bool, noInsertAfter
 
 	var req rest.Request
 	if me.skipRepairInput() {
-		req = me.client.Post(ctx, "/api/v2/settings/objects", []SettingsObjectCreate{soc}).Expect(200, 201)
+		req = me.client.Post(ctx, "/api/v2/settings/objects", []SettingsObjectCreate{soc})
 	} else {
-		req = me.client.Post(ctx, "/api/v2/settings/objects?repairInput=true", []SettingsObjectCreate{soc}).Expect(200, 201)
+		req = me.client.Post(ctx, "/api/v2/settings/objects?repairInput=true", []SettingsObjectCreate{soc})
 	}
 
 	objectID := []SettingsObjectCreateResponse{}
@@ -532,9 +532,9 @@ func (me *service[T]) update(ctx context.Context, id string, v T, retry bool, no
 	}
 	var req rest.Request
 	if me.skipRepairInput() {
-		req = me.client.Put(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou, 200)
+		req = me.client.Put(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), &sou)
 	} else {
-		req = me.client.Put(ctx, fmt.Sprintf("/api/v2/settings/objects/%s?repairInput=true", url.PathEscape(id)), &sou, 200)
+		req = me.client.Put(ctx, fmt.Sprintf("/api/v2/settings/objects/%s?repairInput=true", url.PathEscape(id)), &sou)
 	}
 
 	if err := req.Finish(); err != nil {
@@ -569,7 +569,7 @@ func (me *service[T]) Delete(ctx context.Context, id string) error {
 }
 
 func (me *service[T]) delete(ctx context.Context, id string, numRetries int) error {
-	err := me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id)), 204).Finish()
+	err := me.client.Delete(ctx, fmt.Sprintf("/api/v2/settings/objects/%s", url.PathEscape(id))).Finish()
 	if err != nil && strings.Contains(err.Error(), "Deletion of value(s) is not allowed") {
 		return nil
 	}

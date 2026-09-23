@@ -27,7 +27,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
 	processgroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/anomalies/processgroups/settings"
-	entities "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities"
 	entitiesSettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/entities/settings"
 )
 
@@ -59,7 +59,7 @@ func (me *service) Create(ctx context.Context, config *processgroups.AnomalyDete
 func (me *service) Update(ctx context.Context, id string, config *processgroups.AnomalyDetection) error {
 	id = strings.TrimSuffix(id, "-anomalydetection")
 
-	if err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), config, 204).Finish(); err != nil {
+	if err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), config).Finish(); err != nil {
 		return err
 	}
 
@@ -70,7 +70,7 @@ func (me *service) Update(ctx context.Context, id string, config *processgroups.
 func (me *service) Validate(ctx context.Context, config *processgroups.AnomalyDetection) error {
 	id := strings.TrimSuffix(config.ProcessGroupId, "-anomalydetection")
 
-	if err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s/validator", id), config, 204).Finish(); err != nil {
+	if err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s/validator", id), config).Finish(); err != nil {
 		return err
 	}
 
@@ -81,7 +81,7 @@ func (me *service) Validate(ctx context.Context, config *processgroups.AnomalyDe
 func (me *service) Delete(ctx context.Context, id string) error {
 	id = strings.TrimSuffix(id, "-anomalydetection")
 
-	if err := me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), 204).Finish(); err != nil {
+	if err := me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id)).Finish(); err != nil {
 		return err
 	}
 
@@ -92,7 +92,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 func (me *service) Get(ctx context.Context, id string, v *processgroups.AnomalyDetection) error {
 	id = strings.TrimSuffix(id, "-anomalydetection")
 
-	if err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id), 200).Finish(v); err != nil {
+	if err := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/anomalyDetection/processGroups/%s", id)).Finish(v); err != nil {
 		return err
 	}
 	v.ProcessGroupId = id

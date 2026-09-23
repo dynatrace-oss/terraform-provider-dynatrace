@@ -43,7 +43,7 @@ type service struct {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *entity.Entity) error {
-	return me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities/%s?from=%s`, url.PathEscape(id), url.QueryEscape("now-3y")), 200).Finish(v)
+	return me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities/%s?from=%s`, url.PathEscape(id), url.QueryEscape("now-3y"))).Finish(v)
 }
 
 func (me *service) SchemaID() string {
@@ -65,7 +65,7 @@ type dataSourceService struct {
 func (me *dataSourceService) Get(ctx context.Context, id string, v *entity.Entity) error {
 	entityType := evalEntityType(id)
 	if len(entityType) == 0 {
-		return me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities/%s?from=%s&fields=tags`, url.PathEscape(id), url.QueryEscape("now-3y")), 200).Finish(v)
+		return me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities/%s?from=%s&fields=tags`, url.PathEscape(id), url.QueryEscape("now-3y"))).Finish(v)
 	}
 
 	var result *entity.Entity
@@ -176,7 +176,7 @@ func getEntityByID(ctx context.Context, client rest.Client, id string) *entity.E
 			u = fmt.Sprintf("/api/v2/entities?pageSize=4000&entitySelector=%s&from=%s&fields=tags", url.QueryEscape(entitySelector), url.QueryEscape("now-3y"))
 		}
 		var response EntitiesListResponse
-		if err := client.Get(ctx, u, 200).Finish(&response); err != nil {
+		if err := client.Get(ctx, u).Finish(&response); err != nil {
 			return nil
 		}
 		for _, elem := range response.Entities {
@@ -211,7 +211,7 @@ func fetchEntities(ctx context.Context, client rest.Client, record *EntitiesReco
 			u = fmt.Sprintf("/api/v2/entities?pageSize=4000&entitySelector=%s&from=%s&fields=tags", url.QueryEscape(entitySelector), url.QueryEscape("now-3y"))
 		}
 		var response EntitiesListResponse
-		if err := client.Get(ctx, u, 200).Finish(&response); err != nil {
+		if err := client.Get(ctx, u).Finish(&response); err != nil {
 			return nil
 		}
 		for _, elem := range response.Entities {

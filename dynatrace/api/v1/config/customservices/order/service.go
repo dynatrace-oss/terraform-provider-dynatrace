@@ -82,7 +82,7 @@ func (s *service) get(ctx context.Context, technology string) (ids []string, err
 			ID string `json:"id"`
 		} `json:"values"`
 	}
-	req := s.client.Get(ctx, fmt.Sprintf(BasePath, technology), 200)
+	req := s.client.Get(ctx, fmt.Sprintf(BasePath, technology))
 	if err = req.Finish(&listResponse); err != nil {
 		return nil, err
 	}
@@ -135,7 +135,7 @@ func (s *service) update(ctx context.Context, technology string, ids []string) (
 			ID string `json:"id"`
 		}{ID: uuid})
 	}
-	return s.client.Put(ctx, fmt.Sprintf(BasePath, technology)+"/order", &payload, 204).Finish()
+	return s.client.Put(ctx, fmt.Sprintf(BasePath, technology)+"/order", &payload).Finish()
 }
 
 func (s *service) Delete(ctx context.Context, id string) error {

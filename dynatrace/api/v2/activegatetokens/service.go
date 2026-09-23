@@ -50,12 +50,12 @@ type service struct {
 func (me *service) Get(ctx context.Context, id string, v *activegatetokens.Settings) error {
 	var err error
 
-	req := me.client.Get(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id))).Expect(200)
+	req := me.client.Get(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id)))
 	if err = req.Finish(v); err != nil {
 		return err
 	}
 	var ttr TenantTokenResponse
-	req = me.client.Get(ctx, "/api/v1/deployment/installer/agent/connectioninfo").Expect(200)
+	req = me.client.Get(ctx, "/api/v1/deployment/installer/agent/connectioninfo")
 	if err = req.Finish(&ttr); err == nil {
 		v.TenantToken = &ttr.TenantToken
 	}
@@ -79,14 +79,14 @@ func (me *service) Create(ctx context.Context, v *activegatetokens.Settings) (*a
 	var err error
 
 	response := TokenCreateResponse{}
-	if err = me.client.Post(ctx, "/api/v2/activeGateTokens", v, 201).Finish(&response); err != nil {
+	if err = me.client.Post(ctx, "/api/v2/activeGateTokens", v).Finish(&response); err != nil {
 		return nil, err
 	}
 	v.ExpirationDate = response.ExpirationDate
 	v.Token = response.Token
 
 	var ttr TenantTokenResponse
-	req := me.client.Get(ctx, "/api/v1/deployment/installer/agent/connectioninfo").Expect(200)
+	req := me.client.Get(ctx, "/api/v1/deployment/installer/agent/connectioninfo")
 	if err = req.Finish(&ttr); err == nil {
 		v.TenantToken = &ttr.TenantToken
 	}
@@ -99,7 +99,7 @@ func (me *service) Update(ctx context.Context, id string, v *activegatetokens.Se
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return me.client.Delete(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id)), 204).Finish()
+	return me.client.Delete(ctx, fmt.Sprintf("/api/v2/activeGateTokens/%s", url.PathEscape(id))).Finish()
 }
 
 func (me *service) New() *activegatetokens.Settings {

@@ -48,7 +48,7 @@ func (me *service) Get(ctx context.Context, id string, v *cities.Settings) (err 
 	} else {
 		return fmt.Errorf("invalid ID format: {countrycode}-{regioncode}")
 	}
-	return me.client.Get(ctx, fmt.Sprintf("/api/v2/rum/cities/%s/%s", countryCode, regionCode), 200).Finish(v)
+	return me.client.Get(ctx, fmt.Sprintf("/api/v2/rum/cities/%s/%s", countryCode, regionCode)).Finish(v)
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {

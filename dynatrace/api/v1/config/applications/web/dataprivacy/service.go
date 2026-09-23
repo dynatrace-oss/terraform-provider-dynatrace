@@ -63,7 +63,7 @@ func extractApplicationID(id string) string {
 func (me *service) Get(ctx context.Context, id string, v *dataprivacy.ApplicationDataPrivacy) error {
 	id = extractApplicationID(id)
 
-	req := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/dataPrivacy", url.PathEscape(id)), 200)
+	req := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/dataPrivacy", url.PathEscape(id)))
 
 	if err := req.Finish(v); err != nil {
 		return err
@@ -89,7 +89,7 @@ func (me *service) Get(ctx context.Context, id string, v *dataprivacy.Applicatio
 
 func (me *service) Update(ctx context.Context, id string, v *dataprivacy.ApplicationDataPrivacy) error {
 	id = extractApplicationID(id)
-	err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/dataPrivacy", id), v, 201, 204).Finish()
+	err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/dataPrivacy", id), v).Finish()
 	if err != nil && strings.HasPrefix(err.Error(), "No Content (PUT)") {
 		return nil
 	}
@@ -125,7 +125,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 func (me *service) Validate(ctx context.Context, v *dataprivacy.ApplicationDataPrivacy) error {
 	id := *v.WebApplicationID
 	id = extractApplicationID(id)
-	err := me.client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/dataPrivacy/validator", id), v, 204).Finish()
+	err := me.client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/dataPrivacy/validator", id), v).Finish()
 	if err != nil && strings.HasPrefix(err.Error(), "No Content (PUT)") {
 		return nil
 	}

@@ -41,13 +41,13 @@ type service struct {
 }
 
 func (me *service) Get(ctx context.Context, id string, v *mysettings.CalculatedMobileMetric) error {
-	return me.client.Get(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/mobile/%s", url.PathEscape(id)), 200).Finish(v)
+	return me.client.Get(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/mobile/%s", url.PathEscape(id))).Finish(v)
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
-	req := me.client.Get(ctx, "/api/config/v1/calculatedMetrics/mobile", 200)
+	req := me.client.Get(ctx, "/api/config/v1/calculatedMetrics/mobile")
 	var stubList api.StubList
 	if err = req.Finish(&stubList); err != nil {
 		return nil, err
@@ -59,7 +59,7 @@ func (me *service) Validate(ctx context.Context, v *mysettings.CalculatedMobileM
 	var err error
 	client := me.client
 
-	req := client.Post(ctx, "/api/config/v1/calculatedMetrics/mobile/validator", v, 204)
+	req := client.Post(ctx, "/api/config/v1/calculatedMetrics/mobile/validator", v)
 	if err = req.Finish(); err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (me *service) Create(ctx context.Context, v *mysettings.CalculatedMobileMet
 	client := me.client
 	var stub api.Stub
 
-	req := client.Post(ctx, "/api/config/v1/calculatedMetrics/mobile", v, 201)
+	req := client.Post(ctx, "/api/config/v1/calculatedMetrics/mobile", v)
 	if err = req.Finish(&stub); err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func (me *service) Create(ctx context.Context, v *mysettings.CalculatedMobileMet
 }
 
 func (me *service) Update(ctx context.Context, id string, v *mysettings.CalculatedMobileMetric) error {
-	if err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/mobile/%s", url.PathEscape(id)), v, 204).Finish(); err != nil {
+	if err := me.client.Put(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/mobile/%s", url.PathEscape(id)), v).Finish(); err != nil {
 		return err
 	}
 	return nil
@@ -92,7 +92,7 @@ func (me *service) Delete(ctx context.Context, id string) error {
 	attempts := 30
 
 	for range attempts {
-		if err = me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/mobile/%s", url.PathEscape(id)), 204, 200).Finish(); err != nil {
+		if err = me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/calculatedMetrics/mobile/%s", url.PathEscape(id))).Finish(); err != nil {
 			if strings.Contains(err.Error(), fmt.Sprintf("Metric with key \"%s\" does not exist", id)) {
 				return nil
 			}

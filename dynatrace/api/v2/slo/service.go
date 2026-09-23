@@ -57,7 +57,7 @@ func (me *service) get(ctx context.Context, id string, v *slo.SLO) error {
 	var err error
 
 	client := rest.APITokenClient(me.clientSet)
-	req := client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s?evaluate=false", url.PathEscape(id)), 200)
+	req := client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s?evaluate=false", url.PathEscape(id)))
 	if err = req.Finish(v); err != nil {
 		return err
 	}
@@ -84,7 +84,7 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 	var err error
 
 	client := rest.APITokenClient(me.clientSet)
-	req := client.Get(ctx, "/api/v2/slo?pageSize=4000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", 200)
+	req := client.Get(ctx, "/api/v2/slo?pageSize=4000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false")
 	var slos sloList
 	if err = req.Finish(&slos); err != nil {
 		return nil, err
@@ -110,7 +110,7 @@ func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
 	var id string
 
 	client := rest.APITokenClient(me.clientSet)
-	req := client.Post(ctx, "/api/v2/slo", v, 201).OnResponse(func(resp *http.Response) {
+	req := client.Post(ctx, "/api/v2/slo", v).OnResponse(func(resp *http.Response) {
 		if resp == nil {
 			return
 		}
@@ -150,7 +150,7 @@ func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
 		length := 0
 		for length == 0 {
 			var slos sloList
-			if err = client.Get(ctx, fmt.Sprintf("/api/v2/slo?sloSelector=%s&pageSize=10000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", url.QueryEscape(fmt.Sprintf("id(\"%s\")", id))), 200).Finish(&slos); err != nil {
+			if err = client.Get(ctx, fmt.Sprintf("/api/v2/slo?sloSelector=%s&pageSize=10000&sort=name&timeFrame=CURRENT&pageIdx=1&demo=false&evaluate=false", url.QueryEscape(fmt.Sprintf("id(\"%s\")", id)))).Finish(&slos); err != nil {
 				return &api.Stub{ID: id, Name: v.Name}, err
 			}
 			length = len(slos.SLOs)
@@ -168,7 +168,7 @@ func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
 		retry = true
 		numRequiredSuccesses := 20
 		for retry {
-			req = client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s?evaluate=false", url.PathEscape(id)), 200)
+			req = client.Get(ctx, fmt.Sprintf("/api/v2/slo/%s?evaluate=false", url.PathEscape(id)))
 			if err = req.Finish(v); err != nil {
 				if !strings.Contains(err.Error(), "not found") {
 					return &api.Stub{ID: id, Name: v.Name}, err
@@ -190,11 +190,11 @@ func (me *service) Create(ctx context.Context, v *slo.SLO) (*api.Stub, error) {
 }
 
 func (me *service) Update(ctx context.Context, id string, v *slo.SLO) error {
-	return rest.APITokenClient(me.clientSet).Put(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), v, 200).Finish()
+	return rest.APITokenClient(me.clientSet).Put(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), v).Finish()
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	return rest.APITokenClient(me.clientSet).Delete(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id)), 204).Finish()
+	return rest.APITokenClient(me.clientSet).Delete(ctx, fmt.Sprintf("/api/v2/slo/%s", url.PathEscape(id))).Finish()
 }
 
 func (me *service) New() *slo.SLO {

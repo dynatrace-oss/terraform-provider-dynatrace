@@ -102,7 +102,7 @@ func (cs *ServiceClient) Create(ctx context.Context, permission *mgmz.Permission
 			},
 		},
 	}
-	if err = cs.client.Put(ctx, "/groups/managementZones", permissionDTO, 200).Finish(); err != nil {
+	if err = cs.client.Put(ctx, "/groups/managementZones", permissionDTO).Finish(); err != nil {
 		return nil, err
 	}
 	return &api.Stub{ID: toID(permission), Name: toID(permission)}, nil
@@ -124,7 +124,7 @@ func (cs *ServiceClient) Update(ctx context.Context, permission *mgmz.Permission
 			},
 		},
 	}
-	if err = cs.client.Put(ctx, "/groups/managementZones", permissionDTO, 200).Finish(); err != nil {
+	if err = cs.client.Put(ctx, "/groups/managementZones", permissionDTO).Finish(); err != nil {
 		return err
 	}
 	return nil
@@ -150,7 +150,7 @@ func (cs *ServiceClient) Delete(ctx context.Context, id string) error {
 			},
 		},
 	}
-	if err = cs.client.Put(ctx, "/groups/managementZones", permissionDTO, 200).Finish(); err != nil {
+	if err = cs.client.Put(ctx, "/groups/managementZones", permissionDTO).Finish(); err != nil {
 		// if either environment or management zone don't exist anymore, it safe to say the permission doesn't exist anymore
 		if err.Error() == fmt.Sprintf("Management zone with ID %s doesn't exist within environment %s", permission.ManagementZoneID, permission.EnvironmentID) {
 			return nil
@@ -171,7 +171,7 @@ func (cs *ServiceClient) Get(ctx context.Context, id string, permission *mgmz.Pe
 	}
 
 	permissionDTO := mgmz.PermissionDTO{}
-	if err = cs.client.Get(ctx, fmt.Sprintf("/groups/managementZones/%s", permission.GroupID), 200).Finish(&permissionDTO); err != nil {
+	if err = cs.client.Get(ctx, fmt.Sprintf("/groups/managementZones/%s", permission.GroupID)).Finish(&permissionDTO); err != nil {
 		return err
 	}
 	for _, envperm := range permissionDTO.EnvironmentPermissions {
@@ -201,7 +201,7 @@ func (cs *ServiceClient) List(ctx context.Context) (api.Stubs, error) {
 	var stubs api.Stubs
 
 	response := ListResponse{}
-	if err = cs.client.Get(ctx, "/groups/managementZones", 200).Finish(&response); err != nil {
+	if err = cs.client.Get(ctx, "/groups/managementZones").Finish(&response); err != nil {
 		return nil, err
 	}
 

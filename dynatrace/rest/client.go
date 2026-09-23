@@ -22,9 +22,9 @@ import (
 )
 
 type Client interface {
-	Get(ctx context.Context, url string, expectedStatusCodes ...int) Request
-	Post(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request
-	Put(ctx context.Context, url string, payload any, expectedStatusCodes ...int) Request
-	Delete(ctx context.Context, url string, expectedStatusCodes ...int) Request
+	Get(ctx context.Context, url string) Request
+	Post(ctx context.Context, url string, payload any) Request
+	Put(ctx context.Context, url string, payload any) Request
+	Delete(ctx context.Context, url string) Request
 	ClientSet() ClientSet
 }

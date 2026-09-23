@@ -84,7 +84,7 @@ func (me *service) Create(ctx context.Context, v *appdetection.Settings) (*api.S
 			break
 		}
 		if !checkedAppExists {
-			cerr := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s", url.PathEscape(applicationID))).Expect(200).Finish()
+			cerr := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s", url.PathEscape(applicationID))).Finish()
 			if cerr != nil {
 				break
 			}

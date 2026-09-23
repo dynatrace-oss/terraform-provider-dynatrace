@@ -77,7 +77,7 @@ func (me *service) Get(ctx context.Context, id string, v *web.Application) error
 	}
 	var err error
 	var kual web.KeyUserActionList
-	req := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(id)), 200)
+	req := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(id)))
 	if err = req.Finish(&kual); err != nil {
 		return err
 	}
@@ -119,7 +119,7 @@ func (me *service) Create(ctx context.Context, v *web.Application) (*api.Stub, e
 	}
 	if len(v.KeyUserActions) > 0 {
 		for _, keyUserAction := range v.KeyUserActions {
-			req := me.client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(stub.ID)), keyUserAction, 201)
+			req := me.client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(stub.ID)), keyUserAction)
 			if err = req.Finish(); err != nil {
 				return nil, err
 			}
@@ -171,7 +171,7 @@ func (me *service) Update(ctx context.Context, id string, v *web.Application) er
 		}
 	}
 	for _, keyUserAction := range keyUserActionsToCreate {
-		req := me.client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(id)), keyUserAction, 201)
+		req := me.client.Post(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(id)), keyUserAction)
 		if err = req.Finish(); err != nil {
 			return err
 		}
@@ -215,7 +215,7 @@ func (me *service) Update(ctx context.Context, id string, v *web.Application) er
 		// execute deletions
 		for _, keyUserActionID := range keyUserActionsToDelete {
 			var err error
-			req := me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions/%s", url.PathEscape(id), url.PathEscape(keyUserActionID)), 204)
+			req := me.client.Delete(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions/%s", url.PathEscape(id), url.PathEscape(keyUserActionID)))
 			if err = req.Finish(); err != nil {
 				return err
 			}
@@ -242,7 +242,7 @@ func (me *service) pollUntilKeyUserActionsCreated(ctx context.Context, id string
 		}{}
 
 		for range maxTries {
-			if err = me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&&entitySelector=type("APPLICATION_METHOD"),fromRelationships.isApplicationMethodOf(entityId("%s"))&fields=fromRelationships`, id), 200).Finish(&response); err != nil {
+			if err = me.client.Get(ctx, fmt.Sprintf(`/api/v2/entities?pageSize=4000&from=now-3y&&entitySelector=type("APPLICATION_METHOD"),fromRelationships.isApplicationMethodOf(entityId("%s"))&fields=fromRelationships`, id)).Finish(&response); err != nil {
 				return err
 			}
 
@@ -279,7 +279,7 @@ func (me *service) pollUntilKeyUserActionsCreated(ctx context.Context, id string
 func (me *service) fetchKeyUserActions(ctx context.Context, id string) (map[string]*web.KeyUserAction, error) {
 	actions := map[string]*web.KeyUserAction{}
 	var err error
-	req := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(id))).Expect(200)
+	req := me.client.Get(ctx, fmt.Sprintf("/api/config/v1/applications/web/%s/keyUserActions", url.PathEscape(id)))
 	kual := struct {
 		KeyUserActions []struct {
 			ID     string                `json:"meIdentifier"`

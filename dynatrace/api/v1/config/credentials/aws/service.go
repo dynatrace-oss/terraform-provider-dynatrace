@@ -49,7 +49,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*aws.AWSCredentials
 				numRetries := 0
 				configIsValid := false
 				for !configIsValid && numRetries < 30 {
-					client.Get(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", stub.ID), 200).Finish(&cfg)
+					client.Get(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", stub.ID)).Finish(&cfg)
 					if cfg.AuthenticationData == nil || cfg.AuthenticationData.RoleBasedAuthentication == nil || (cfg.AuthenticationData.RoleBasedAuthentication.ExternalID != nil && len(*cfg.AuthenticationData.RoleBasedAuthentication.ExternalID) > 0) {
 						configIsValid = true
 						break
@@ -76,7 +76,7 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*aws.AWSCredentials
 					tokenResponse := struct {
 						Token string `json:"token"`
 					}{}
-					client.Get(ctx, "/api/config/v1/aws/iamExternalId", 200).Finish(&tokenResponse)
+					client.Get(ctx, "/api/config/v1/aws/iamExternalId").Finish(&tokenResponse)
 					if len(tokenResponse.Token) > 0 {
 						v.AuthenticationData.RoleBasedAuthentication.ExternalID = &tokenResponse.Token
 					}
@@ -144,7 +144,7 @@ func (me *service) Create(ctx context.Context, v *aws.AWSCredentialsConfig) (*ap
 		return nil, err
 	}
 	if v.RemoveDefaults {
-		err = me.client.Put(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s/services", stub.ID), map[string]any{"services": []string{}}, 204).Finish()
+		err = me.client.Put(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s/services", stub.ID), map[string]any{"services": []string{}}).Finish()
 	}
 	return stub, err
 }
@@ -169,7 +169,7 @@ func (me *service) Update(ctx context.Context, id string, v *aws.AWSCredentialsC
 	}
 	updv.TagsToMonitor = validTags
 
-	return me.client.Put(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", id), &updv, 204, 201).Finish()
+	return me.client.Put(ctx, fmt.Sprintf("/api/config/v1/aws/credentials/%s", id), &updv).Finish()
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
