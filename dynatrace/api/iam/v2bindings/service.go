@@ -86,6 +86,19 @@ func deductPolicyID(policyID string, levelType string, levelID string, existing 
 	return fmt.Sprintf("%s#-#%s#-#%s", policyID, levelType, levelID)
 }
 
+// unresolvedPolicyID returns the ID to use for a policy whose level could not be
+// determined. The configuration may already refer to it in the concatenated form,
+// so that spelling is kept to avoid a permanent diff; otherwise the bare UUID is
+// used, which the resource accepts as well.
+func unresolvedPolicyID(policyID string, existing []*bindings.Policy) string {
+	for _, policy := range existing {
+		if strings.Contains(policy.ID, policyID) {
+			return policy.ID
+		}
+	}
+	return policyID
+}
+
 type BindingDetails struct {
 	PolicyUUID string            `json:"policyUuid"`
 	GroupUUIDs []string          `json:"groups"`
@@ -143,7 +156,9 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 		filteredBindings := getFilteredBindings(policyBindings.BindingsDetails, policyID)
 
 		if len(filteredBindings) == 0 {
-			continue
+			// The policy is bound to the group, the response just carries no details
+			// for it. Dropping it here would remove the binding from the state.
+			filteredBindings = []BindingDetails{{PolicyUUID: policyID}}
 		}
 
 		resolvedPolicies, err := me.resolvePolicies(ctx, policyID, filteredBindings, stateConfig)
@@ -174,11 +189,15 @@ func (me *BindingServiceClient) resolvePolicies(ctx context.Context, uuid string
 		if stateConfig != nil {
 			existingPolicies = stateConfig.Policies
 		}
-		levelType, levelID, _, err := policies.ResolvePolicyLevel(ctx, me.client, uuid)
-		if err != nil {
-			return nil, err
+		// A policy whose level cannot be determined - it may live in an environment
+		// these credentials cannot read - is still bound to the group. The resource
+		// accepts the bare UUID as well, so fall back to it instead of failing the
+		// whole binding.
+		policyID := unresolvedPolicyID(uuid, existingPolicies)
+		if levelType, levelID, _, err := policies.ResolvePolicyLevel(ctx, me.client, uuid); err == nil {
+			policyID = deductPolicyID(uuid, levelType, levelID, existingPolicies)
 		}
-		policy := &bindings.Policy{ID: deductPolicyID(uuid, levelType, levelID, existingPolicies)}
+		policy := &bindings.Policy{ID: policyID}
 		if len(policyBinding.Parameters) > 0 {
 			policy.Parameters = map[string]string{}
 			maps.Copy(policy.Parameters, policyBinding.Parameters)
@@ -286,12 +305,15 @@ func (me *BindingServiceClient) FetchEnvironmentBindings(ctx context.Context) ch
 		var stubs api.Stubs
 		for _, environmentID := range environmentIDs {
 			var policyBindings ListPolicyBindingsResponse
+			// An account can contain environments the configured credentials are not
+			// permitted to read. Skipping just that environment keeps the bindings of
+			// every other environment - aborting here would silently drop all of them.
 			response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/repo/environment/%s/bindings", environmentID), rest2.RequestOptions{})
 			if err != nil {
-				return
+				continue
 			}
 			if err = json.Unmarshal(response.Data, &policyBindings); err != nil {
-				return
+				continue
 			}
 
 			groupIds := map[string]bool{}

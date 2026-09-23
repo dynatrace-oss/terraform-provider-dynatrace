@@ -98,8 +98,12 @@ func fetchPolicyLevel(ctx context.Context, client rest.IAMClient, uuid string) (
 		return "", "", name, err
 	}
 	for _, environmentID := range environmentIDs {
-		if exists, name, err = CheckPolicyExists(ctx, client, "environment", environmentID, uuid); err != nil {
-			return "", "", name, err
+		// The credentials may not be permitted to read every environment of the
+		// account. Such an environment cannot tell us anything about the policy,
+		// so it is skipped - failing here would make every policy unresolvable.
+		exists, name, err = CheckPolicyExists(ctx, client, "environment", environmentID, uuid)
+		if err != nil {
+			continue
 		}
 		if exists {
 			return "environment", environmentID, name, nil
