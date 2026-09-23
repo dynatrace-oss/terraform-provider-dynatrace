@@ -67,7 +67,7 @@ func (me *Validation) Schema() map[string]*schema.Schema {
 		},
 		"match": {
 			Type:        schema.TypeString,
-			Description: "The content to look for on the page. Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.",
+			Description: "The content to look for on the page. Regular expressions are allowed. In that case set `regex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.",
 			Optional:    true,
 		},
 		"regex": {
