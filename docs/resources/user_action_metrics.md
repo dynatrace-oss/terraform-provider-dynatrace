@@ -25,10 +25,10 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_user_action_metrics" "#name#" {
+resource "dynatrace_user_action_metrics" "metric" {
   enabled    = true
   dimensions = [ "application" ]
-  metric_key = "uacm.TerraformTest"
+  metric_key = "uacm.#name#"
   filters {
     filter {
       field_name = "type"
