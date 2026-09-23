@@ -90,7 +90,7 @@ resource "dynatrace_gcp_connection" "my_gcp_connection" {
   service_account_impersonation {
     service_account_id = google_service_account.impersonable_service_account.email
     consumers = [
-      "SVC:com.dynatrace.da"
+      "SVC:com.dynatrace.openpipeline"
     ]
   }
 

@@ -149,8 +149,7 @@ resource "dynatrace_gcp_connection" "connection" {
 
 ### Required
 
-- `bulk_pattern` (String) Segmentation and prefix of the data
-- `cloud_vendor_type` (String) Cloud Vendor Type. Possible values: `aws`, `azure`, `gcp`
+- `cloud_vendor_type` (String) Cloud Vendor Type. Possible values: `aws`, `azure`, `gcp`, `otlp`
 - `data_forwarding_type` (String) Pipeline Type. Possible values: `processed`, `raw`
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `forwarding_name` (String) Forwarding name
@@ -162,9 +161,11 @@ resource "dynatrace_gcp_connection" "connection" {
 - `azure_connection` (Block List, Max: 1) Azure Connection (see [below for nested schema](#nestedblock--azure_connection))
 - `builtin_ingest_sources` (Set of String) List of built-in ingest sources
 - `builtin_pipelines` (Set of String) Built-in pipelines
+- `bulk_pattern` (String) Segmentation and prefix of the data
 - `bulk_size` (Number) Bulk size for transmission
 - `gcp_connection` (Block List, Max: 1) GCP Connection (see [below for nested schema](#nestedblock--gcp_connection))
 - `ingest_sources` (Set of String) List of ingest sources
+- `otlp_connection` (Block List, Max: 1) [IN_DEVELOPMENT] (see [below for nested schema](#nestedblock--otlp_connection))
 - `pipelines` (Set of String) Pipelines
 - `processing` (Block List, Max: 1) Processing (see [below for nested schema](#nestedblock--processing))
 
@@ -197,6 +198,14 @@ Required:
 
 - `bucket_name` (String) GCS Bucket Name
 - `connection_id` (String) GCP connection
+
+
+<a id="nestedblock--otlp_connection"></a>
+### Nested Schema for `otlp_connection`
+
+Required:
+
+- `connection_id` (String) OTLP connection
 
 
 <a id="nestedblock--processing"></a>

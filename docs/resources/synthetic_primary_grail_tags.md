@@ -41,7 +41,7 @@ resource "dynatrace_synthetic_primary_grail_tags" "example" {
 
 resource "dynatrace_http_monitor" "monitor" {
   name      = "#name#"
-  frequency = 1
+  frequency = 5
   locations = [data.dynatrace_synthetic_location.location.id]
   anomaly_detection {
     loading_time_thresholds {

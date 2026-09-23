@@ -540,13 +540,12 @@ Required:
 
 Required:
 
-- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element), `text_match` (check page for the specific text).
 
 Optional:
 
 - `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- `match` (String) The content to look for on the page.
-Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
+- `match` (String) The content to look for on the page. Regular expressions are allowed. In that case set `regex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.
 - `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
 - `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--click--validate--validation--target))
 
@@ -597,13 +596,12 @@ The maximum allowed value is 60000. Required for the type `validation`, not appl
 
 Required:
 
-- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element), `text_match` (check page for the specific text).
 
 Optional:
 
 - `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- `match` (String) The content to look for on the page.
-Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
+- `match` (String) The content to look for on the page. Regular expressions are allowed. In that case set `regex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.
 - `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
 - `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--click--wait--validation--target))
 
@@ -723,13 +721,12 @@ The maximum allowed value is 60000. Required for the type `validation`, not appl
 
 Required:
 
-- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element), `text_match` (check page for the specific text).
 
 Optional:
 
 - `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- `match` (String) The content to look for on the page.
-Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
+- `match` (String) The content to look for on the page. Regular expressions are allowed. In that case set `regex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.
 - `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
 - `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--javascript--wait--validation--target))
 
@@ -824,13 +821,12 @@ Required:
 
 Required:
 
-- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element), `text_match` (check page for the specific text).
 
 Optional:
 
 - `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- `match` (String) The content to look for on the page.
-Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
+- `match` (String) The content to look for on the page. Regular expressions are allowed. In that case set `regex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.
 - `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
 - `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--keystrokes--validate--validation--target))
 
@@ -881,13 +877,12 @@ The maximum allowed value is 60000. Required for the type `validation`, not appl
 
 Required:
 
-- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element), `text_match` (check page for the specific text).
 
 Optional:
 
 - `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- `match` (String) The content to look for on the page.
-Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
+- `match` (String) The content to look for on the page. Regular expressions are allowed. In that case set `regex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.
 - `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
 - `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--keystrokes--wait--validation--target))
 
@@ -986,13 +981,12 @@ Required:
 
 Required:
 
-- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element), `text_match` (check page for the specific text).
 
 Optional:
 
 - `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- `match` (String) The content to look for on the page.
-Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
+- `match` (String) The content to look for on the page. Regular expressions are allowed. In that case set `regex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.
 - `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
 - `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--navigate--validate--validation--target))
 
@@ -1043,13 +1037,12 @@ The maximum allowed value is 60000. Required for the type `validation`, not appl
 
 Required:
 
-- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element), `text_match` (check page for the specific text).
 
 Optional:
 
 - `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- `match` (String) The content to look for on the page.
-Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
+- `match` (String) The content to look for on the page. Regular expressions are allowed. In that case set `regex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.
 - `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
 - `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--navigate--wait--validation--target))
 
@@ -1150,13 +1143,12 @@ Required:
 
 Required:
 
-- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element), `text_match` (check page for the specific text).
 
 Optional:
 
 - `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- `match` (String) The content to look for on the page.
-Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
+- `match` (String) The content to look for on the page. Regular expressions are allowed. In that case set `regex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.
 - `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
 - `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--select--validate--validation--target))
 
@@ -1207,13 +1199,12 @@ The maximum allowed value is 60000. Required for the type `validation`, not appl
 
 Required:
 
-- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element), `text_match` (check page for the specific text).
 
 Optional:
 
 - `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- `match` (String) The content to look for on the page.
-Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
+- `match` (String) The content to look for on the page. Regular expressions are allowed. In that case set `regex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.
 - `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
 - `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--select--wait--validation--target))
 
@@ -1297,13 +1288,12 @@ Required:
 
 Required:
 
-- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element), `text_match` (check page for the specific text).
 
 Optional:
 
 - `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- `match` (String) The content to look for on the page.
-Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
+- `match` (String) The content to look for on the page. Regular expressions are allowed. In that case set `regex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.
 - `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
 - `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--validate--validation--target))
 
@@ -1354,13 +1344,12 @@ The maximum allowed value is 60000. Required for the type `validation`, not appl
 
 Required:
 
-- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element).
+- `type` (String) The goal of the validation. `content_match` (check page for the specific content. Not allowed for validation inside of wait condition), `element_match` (check page for the specific element), `text_match` (check page for the specific text).
 
 Optional:
 
 - `fail_if_found` (Boolean) The condition of the validation. `false` means the validation succeeds if the specified content/element is found. `true` means the validation fails if the specified content/element is found
-- `match` (String) The content to look for on the page.
-Regular expressions are allowed. In that case set `isRegex` as `true`. Required for `content_match`, optional for `element_match`.
+- `match` (String) The content to look for on the page. Regular expressions are allowed. In that case set `regex` as `true`. Required for `content_match` and `text_match`, optional for `element_match`.
 - `regex` (Boolean) Defines whether `match` is plain text (`false`) or a regular expression (`true`)
 - `target` (Block List, Max: 1) The elemnt to look for on the page (see [below for nested schema](#nestedblock--script--events--event--tap--wait--validation--target))
 

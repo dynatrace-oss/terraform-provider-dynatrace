@@ -82,7 +82,7 @@ Required:
 
 Optional:
 
-- `password` (String) The password for the Ansible Tower account
+- `password` (String, Sensitive) The password for the Ansible Tower account
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
@@ -137,7 +137,7 @@ Required:
 
 Optional:
 
-- `password` (String) The password for the Jira profile
+- `password` (String, Sensitive) The password for the Jira profile
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
@@ -154,7 +154,7 @@ Required:
 
 Optional:
 
-- `api_key` (String) The API key to access OpsGenie
+- `api_key` (String, Sensitive) The API key to access OpsGenie
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
@@ -171,7 +171,7 @@ Required:
 
 Optional:
 
-- `service_api_key` (String) The API key to access PagerDuty
+- `service_api_key` (String, Sensitive) The API key to access PagerDuty
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
@@ -191,7 +191,7 @@ Required:
 Optional:
 
 - `instance_name` (String) The ServiceNow instance identifier. It refers to the first part of your own ServiceNow URL.   This field is mutually exclusive with the **url** field. You can only use one of them
-- `password` (String) The username to the ServiceNow account
+- `password` (String, Sensitive) The username to the ServiceNow account
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 - `url` (String) The URL of the on-premise ServiceNow installation.   This field is mutually exclusive with the **instanceName** field. You can only use one of them
 
@@ -210,7 +210,7 @@ Required:
 Optional:
 
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
-- `url` (String) The URL of the Slack WebHook.  This is confidential information, therefore GET requests return this field with the `null` value, and it is optional for PUT requests
+- `url` (String, Sensitive) The URL of the Slack WebHook.  This is confidential information, therefore GET requests return this field with the `null` value, and it is optional for PUT requests
 
 
 <a id="nestedblock--trello"></a>
@@ -230,7 +230,7 @@ Required:
 
 Optional:
 
-- `authorization_token` (String) The application token for the Trello account
+- `authorization_token` (String, Sensitive) The application token for the Trello account
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 
@@ -247,7 +247,7 @@ Required:
 
 Optional:
 
-- `api_key` (String) The API key for the target VictorOps account
+- `api_key` (String, Sensitive) The API key for the target VictorOps account
 - `unknowns` (String) allows for configuring properties that are not explicitly supported by the current version of this provider
 
 

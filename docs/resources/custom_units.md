@@ -23,11 +23,11 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_custom_units" "#name#" {
+resource "dynatrace_custom_units" "unit" {
   name        = "#name#"
   description = "Created by Terraform"
   plural_name = "TerraformUnits"
-  symbol      = "T/u"
+  symbol      = "symbol_#name#"
 }
 ```
 
