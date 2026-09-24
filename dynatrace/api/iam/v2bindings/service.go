@@ -21,7 +21,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"maps"
 	"net/url"
 	"strings"
 
@@ -30,6 +29,7 @@ import (
 	bindings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/v2bindings/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
+
 	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
@@ -121,7 +121,6 @@ func (me *BindingServiceClient) getGroupPolicyBindings(ctx context.Context, id s
 }
 
 func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.PolicyBinding) error {
-	stateConfig := getStateConfig(ctx)
 	groupID, levelType, levelID, err := splitID(id)
 	if err != nil {
 		return err
@@ -137,62 +136,23 @@ func (me *BindingServiceClient) Get(ctx context.Context, id string, v *bindings.
 		v.Environment = levelID
 	}
 	v.GroupID = groupID
-	policies := []*bindings.Policy{}
+	v.Policies = make([]*bindings.Policy, 0, len(policyBindings.BindingsDetails))
+	existingPolicies := make([]*bindings.Policy, 0)
+	stateConfig := getStateConfig(ctx)
 
-	for _, policyID := range policyBindings.PolicyUuids {
-		filteredBindings := getFilteredBindings(policyBindings.BindingsDetails, policyID)
-
-		if len(filteredBindings) == 0 {
-			continue
-		}
-
-		resolvedPolicies, err := me.resolvePolicies(ctx, policyID, filteredBindings, stateConfig)
-		if err != nil {
-			return err
-		}
-		policies = append(policies, resolvedPolicies...)
+	if stateConfig != nil {
+		existingPolicies = stateConfig.Policies
 	}
-	v.Policies = policies
+
+	for _, bindingDetail := range policyBindings.BindingsDetails {
+		v.Policies = append(v.Policies, &bindings.Policy{
+			ID:         deductPolicyID(bindingDetail.PolicyUUID, levelType, levelID, existingPolicies),
+			Parameters: bindingDetail.Parameters,
+			Metadata:   bindingDetail.Metadata,
+			Boundaries: bindingDetail.Boundaries,
+		})
+	}
 	return nil
-}
-
-// getFilteredBindings returns the bindings for a specific policyID. Because the API returns all bindings for a group and not separated by policyID, we need to filter them here.
-func getFilteredBindings(policyBindingDetails []BindingDetails, policyID string) []BindingDetails {
-	var filteredBindings []BindingDetails
-	for _, bindingDetails := range policyBindingDetails {
-		if bindingDetails.PolicyUUID == policyID {
-			filteredBindings = append(filteredBindings, bindingDetails)
-		}
-	}
-	return filteredBindings
-}
-
-func (me *BindingServiceClient) resolvePolicies(ctx context.Context, uuid string, bindingDetails []BindingDetails, stateConfig *bindings.PolicyBinding) ([]*bindings.Policy, error) {
-	results := []*bindings.Policy{}
-	for _, policyBinding := range bindingDetails {
-		existingPolicies := []*bindings.Policy{}
-		if stateConfig != nil {
-			existingPolicies = stateConfig.Policies
-		}
-		levelType, levelID, _, err := policies.ResolvePolicyLevel(ctx, me.client, uuid)
-		if err != nil {
-			return nil, err
-		}
-		policy := &bindings.Policy{ID: deductPolicyID(uuid, levelType, levelID, existingPolicies)}
-		if len(policyBinding.Parameters) > 0 {
-			policy.Parameters = map[string]string{}
-			maps.Copy(policy.Parameters, policyBinding.Parameters)
-		}
-		if len(policyBinding.Metadata) > 0 {
-			policy.Metadata = map[string]string{}
-			maps.Copy(policy.Metadata, policyBinding.Metadata)
-		}
-		if len(policyBinding.Boundaries) > 0 {
-			policy.Boundaries = append([]string{}, policyBinding.Boundaries...)
-		}
-		results = append(results, policy)
-	}
-	return results, nil
 }
 
 type bindingPayload = struct {

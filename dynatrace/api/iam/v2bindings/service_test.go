@@ -19,10 +19,14 @@
 package v2bindings_test
 
 import (
+	"net/url"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAccTestCasesV2Bindings(t *testing.T) {
@@ -41,5 +45,20 @@ func setAccountEnv(t *testing.T) {
 	if accountID == "" {
 		accountID = os.Getenv("DYNATRACE_ACCOUNT_ID")
 	}
+	t.Setenv("TF_VAR_ENVIRONMENT_ID", getEnvIdFromURL(t, envutils.DynatraceEnvURL.Get()))
 	t.Setenv("TF_VAR_ACCOUNT_ID", accountID)
+}
+
+func getEnvIdFromURL(t *testing.T, envURL string) string {
+	t.Helper()
+
+	u, err := url.Parse(envURL)
+	require.NoError(t, err)
+
+	host := u.Hostname() // strips scheme, port, trailing slash
+	envId, _, found := strings.Cut(host, ".")
+	require.True(t, found)
+	require.NotEmpty(t, envId)
+
+	return envId
 }
