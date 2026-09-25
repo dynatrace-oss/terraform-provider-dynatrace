@@ -28,7 +28,7 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       DEV_ENV_URL: ${{ secrets.DEV_ENV_URL }}
       DEV_API_TOKEN: ${{ secrets.DEV_API_TOKEN }}
-      DEV_OAUTH_CLIENT: ${{ secrets.DEV_OAUTH_CLIENT }}
-      DEV_OAUTH_CLIENT_SECRET: ${{ secrets.DEV_OAUTH_CLIENT_SECRET }}
-      DEV_ACCOUNT_ID: ${{ secrets.DEV_ACCOUNT_ID }}
-      DEV_OAUTH_ENDPOINT: ${{ secrets.DEV_OAUTH_ENDPOINT }}
+#      DEV_OAUTH_CLIENT: ${{ secrets.DEV_OAUTH_CLIENT }}
+#      DEV_OAUTH_CLIENT_SECRET: ${{ secrets.DEV_OAUTH_CLIENT_SECRET }}
+#      DEV_ACCOUNT_ID: ${{ secrets.DEV_ACCOUNT_ID }}
+#      DEV_OAUTH_ENDPOINT: ${{ secrets.DEV_OAUTH_ENDPOINT }}

@@ -58,18 +58,18 @@ on:
       DEV_API_TOKEN:
         description: 'API token for the DEV tenant used by the WIF integration tests'
         required: false
-      DEV_OAUTH_CLIENT:
-        description: 'OAuth client ID for the DEV tenant used by the WIF integration tests'
-        required: false
-      DEV_OAUTH_CLIENT_SECRET:
-        description: 'OAuth client secret for the DEV tenant used by the WIF integration tests'
-        required: false
-      DEV_ACCOUNT_ID:
-        description: 'Account ID for the DEV tenant used by the WIF integration tests'
-        required: false
-      DEV_OAUTH_ENDPOINT:
-        description: 'OAuth token endpoint for the DEV tenant used by the WIF integration tests'
-        required: false
+#      DEV_OAUTH_CLIENT:
+#        description: 'OAuth client ID for the DEV tenant used by the WIF integration tests'
+#        required: false
+#      DEV_OAUTH_CLIENT_SECRET:
+#        description: 'OAuth client secret for the DEV tenant used by the WIF integration tests'
+#        required: false
+#      DEV_ACCOUNT_ID:
+#        description: 'Account ID for the DEV tenant used by the WIF integration tests'
+#        required: false
+#      DEV_OAUTH_ENDPOINT:
+#        description: 'OAuth token endpoint for the DEV tenant used by the WIF integration tests'
+#        required: false
 
 jobs:
   unit-tests:
@@ -320,10 +320,10 @@ jobs:
           # match what the Dynatrace environment was told to expect.
           DYNATRACE_WIF_AUDIENCE: "my-test-audience"
           DYNATRACE_API_TOKEN: ${{ secrets.DEV_API_TOKEN }}
-          DT_CLIENT_ID: ${{ secrets.DEV_OAUTH_CLIENT }}
-          DT_CLIENT_SECRET: ${{ secrets.DEV_OAUTH_CLIENT_SECRET }}
-          DT_ACCOUNT_ID: ${{ secrets.DEV_ACCOUNT_ID }}
-          DT_TOKEN_URL: ${{ secrets.DEV_OAUTH_ENDPOINT }}
+#          DT_CLIENT_ID: ${{ secrets.DEV_OAUTH_CLIENT }}
+#          DT_CLIENT_SECRET: ${{ secrets.DEV_OAUTH_CLIENT_SECRET }}
+#          DT_ACCOUNT_ID: ${{ secrets.DEV_ACCOUNT_ID }}
+#          DT_TOKEN_URL: ${{ secrets.DEV_OAUTH_ENDPOINT }}
           TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
           TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
         run: |
@@ -378,10 +378,10 @@ jobs:
           # match what the Dynatrace environment was told to expect.
           DYNATRACE_WIF_AUDIENCE: "my-test-audience"
           DYNATRACE_API_TOKEN: ${{ secrets.DEV_API_TOKEN }}
-          DT_CLIENT_ID: ${{ secrets.DEV_OAUTH_CLIENT }}
-          DT_CLIENT_SECRET: ${{ secrets.DEV_OAUTH_CLIENT_SECRET }}
-          DT_ACCOUNT_ID: ${{ secrets.DEV_ACCOUNT_ID }}
-          DT_TOKEN_URL: ${{ secrets.DEV_OAUTH_ENDPOINT }}
+#          DT_CLIENT_ID: ${{ secrets.DEV_OAUTH_CLIENT }}
+#          DT_CLIENT_SECRET: ${{ secrets.DEV_OAUTH_CLIENT_SECRET }}
+#          DT_ACCOUNT_ID: ${{ secrets.DEV_ACCOUNT_ID }}
+#          DT_TOKEN_URL: ${{ secrets.DEV_OAUTH_ENDPOINT }}
           TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
           TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
         run: |
