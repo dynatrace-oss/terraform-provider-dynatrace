@@ -52,6 +52,24 @@ on:
       SFM_PLATFORM_TOKEN:
         description: 'Platform token for ingesting the collected test results. Only required when collect-results is true'
         required: false
+      DEV_ENV_URL:
+        description: 'Environment URL of the DEV tenant used by the WIF integration tests'
+        required: false
+      DEV_API_TOKEN:
+        description: 'API token for the DEV tenant used by the WIF integration tests'
+        required: false
+#      DEV_OAUTH_CLIENT:
+#        description: 'OAuth client ID for the DEV tenant used by the WIF integration tests'
+#        required: false
+#      DEV_OAUTH_CLIENT_SECRET:
+#        description: 'OAuth client secret for the DEV tenant used by the WIF integration tests'
+#        required: false
+#      DEV_ACCOUNT_ID:
+#        description: 'Account ID for the DEV tenant used by the WIF integration tests'
+#        required: false
+#      DEV_OAUTH_ENDPOINT:
+#        description: 'OAuth token endpoint for the DEV tenant used by the WIF integration tests'
+#        required: false
 
 jobs:
   unit-tests:
@@ -237,6 +255,144 @@ jobs:
         if: ${{ always() }} # always archive results for debugging purposes as they also contain the timestamp
         with:
           name: junit-results-integration-${{ matrix.config.slug }}
+          path: test-results
+
+  wif-integration-tests:
+    name: WIF Integration Tests - ${{ matrix.config.name }}
+    runs-on: ubuntu-latest
+    needs: [ run-setup ]
+    permissions:
+      contents: read
+      id-token: write # without this GitHub injects no ACTIONS_ID_TOKEN_REQUEST_* variables
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { name: "app", slug: "app", path: "./dynatrace/api/app/..." }
+          - { name: "automation", slug: "automation", path: "./dynatrace/api/automation/..." }
+          - { name: "cluster", slug: "cluster", path: "./dynatrace/api/cluster/..." }
+          - { name: "documents", slug: "documents", path: "./dynatrace/api/documents/..." }
+          - { name: "extensions", slug: "extensions", path: "./dynatrace/api/extensions/..." }
+          - { name: "grail", slug: "grail", path: "./dynatrace/api/grail/..." }
+          - { name: "iam", slug: "iam", path: "./dynatrace/api/iam/..." }
+          - { name: "openpipeline", slug: "openpipeline", path: "./dynatrace/api/openpipeline/..." }
+          - { name: "platform", slug: "platform", path: "./dynatrace/api/platform/..." }
+          - { name: "service", slug: "service", path: "./dynatrace/api/service/..." }
+          - { name: "slo", slug: "slo", path: "./dynatrace/api/slo/..." }
+          - { name: "v1 (a-d)", slug: "v1-a-d", path: "$(go list ./dynatrace/api/v1/config/... | grep -E '^.+/dynatrace/api/v1/config/[a-d][^/]*/?')" }
+          - { name: "v1 (e-z)", slug: "v1-e-z", path: "$(go list ./dynatrace/api/v1/config/... | grep -E '^.+/dynatrace/api/v1/config/[e-z][^/]*/?')" }
+          - { name: "v2", slug: "v2", path: "./dynatrace/api/v2/..." }
+          - { name: "builtin (a-b)", slug: "builtin-a-b", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[a-b][^/]*/?')" }
+          - { name: "builtin (c-e)", slug: "builtin-c-e", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[c-e][^/]*/?')" }
+          - { name: "builtin (f-m)", slug: "builtin-f-m", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[f-m][^/]*/?')" }
+          - { name: "builtin (n-o)", slug: "builtin-n-o", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[n-o][^/]*/?')" }
+          - { name: "builtin (p-s)", slug: "builtin-p-s", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[p-s][^/]*/?')" }
+          - { name: "builtin (t-z)", slug: "builtin-t-z", path: "$(go list ./dynatrace/api/builtin/... | grep -E '^.+/dynatrace/api/builtin/[t-z][^/]*/?')" }
+          - { name: "data sources", slug: "data-sources", path: "./datasources/..." }
+    steps:
+      - name: ⬇️ Check out code into the Go module directory
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+
+      - name: 🛠️ Set up Go 1.x
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # 7.0.0
+        with:
+          go-version-file: ./go.mod
+
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e #v4.0.1
+        with:
+          terraform_wrapper: false
+
+      - name: 📊 Install gotestsum
+        run: go install gotest.tools/gotestsum@c4a0df2e75a225d979a444342dd3db752b53619f #v1.13.0
+
+      - name: Run WIF Integration Tests - ${{ matrix.config.name }}
+        # ACTIONS_ID_TOKEN_REQUEST_URL and ACTIONS_ID_TOKEN_REQUEST_TOKEN are injected automatically
+        # by GitHub Actions when the job has id-token: write permission.
+        # With WIF audience specified, WIF authentication takes precedence over OAuth where appropriate
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: "true"
+          DYNATRACE_DEBUG: "true"
+          DT_NO_REPAIR_INPUT: "false"
+          DYNATRACE_ENV_URL: ${{ secrets.DEV_ENV_URL }}
+          # An audience identifies who a token is meant for, so it is not a credential - but it has to
+          # match what the Dynatrace environment was told to expect.
+          DYNATRACE_WIF_AUDIENCE: "my-test-audience"
+          DYNATRACE_API_TOKEN: ${{ secrets.DEV_API_TOKEN }}
+#          DT_CLIENT_ID: ${{ secrets.DEV_OAUTH_CLIENT }}
+#          DT_CLIENT_SECRET: ${{ secrets.DEV_OAUTH_CLIENT_SECRET }}
+#          DT_ACCOUNT_ID: ${{ secrets.DEV_ACCOUNT_ID }}
+#          DT_TOKEN_URL: ${{ secrets.DEV_OAUTH_ENDPOINT }}
+          TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
+          TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
+        run: |
+          mkdir -p test-results/${{ matrix.config.slug }}
+          gotestsum --junitfile test-results/${{ matrix.config.slug }}/test-results.xml --format testdox --format-icons hivis -- -tags="integration monitored connector" -v -p 1 ${{ matrix.config.path }}
+
+      - name: ⬆️ Archive WIF e2e test results - ${{ matrix.config.name }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        if: ${{ always() }}
+        with:
+          name: junit-results-wif-${{ matrix.config.slug }}
+          path: test-results
+
+  wif-sequential-integration-tests:
+    name: WIF Sequential Integration Tests
+    runs-on: ubuntu-latest
+    needs: [ run-setup ]
+    permissions:
+      contents: read
+      id-token: write # without this GitHub injects no ACTIONS_ID_TOKEN_REQUEST_* variables
+    concurrency:
+      group: sequential-integration-tests # only one run at a time, globally
+      cancel-in-progress: false # queue, don't cancel
+    continue-on-error: true
+    steps:
+      - name: ⬇️ Check out code into the Go module directory
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+
+      - name: 🛠️ Set up Go 1.x
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # 7.0.0
+        with:
+          go-version-file: ./go.mod
+
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e #v4.0.1
+        with:
+          terraform_wrapper: false
+
+      - name: 📊 Install gotestsum
+        run: go install gotest.tools/gotestsum@c4a0df2e75a225d979a444342dd3db752b53619f #v1.13.0
+
+      - name: Run WIF Sequential Integration Tests
+        # ACTIONS_ID_TOKEN_REQUEST_URL and ACTIONS_ID_TOKEN_REQUEST_TOKEN are injected automatically
+        # by GitHub Actions when the job has id-token: write permission.
+        # With WIF audience specified, WIF authentication takes precedence over OAuth where appropriate
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          TF_ACC: "true"
+          DYNATRACE_DEBUG: "true"
+          DT_NO_REPAIR_INPUT: "false"
+          DYNATRACE_ENV_URL: ${{ secrets.DEV_ENV_URL }}
+          # An audience identifies who a token is meant for, so it is not a credential - but it has to
+          # match what the Dynatrace environment was told to expect.
+          DYNATRACE_WIF_AUDIENCE: "my-test-audience"
+          DYNATRACE_API_TOKEN: ${{ secrets.DEV_API_TOKEN }}
+#          DT_CLIENT_ID: ${{ secrets.DEV_OAUTH_CLIENT }}
+#          DT_CLIENT_SECRET: ${{ secrets.DEV_OAUTH_CLIENT_SECRET }}
+#          DT_ACCOUNT_ID: ${{ secrets.DEV_ACCOUNT_ID }}
+#          DT_TOKEN_URL: ${{ secrets.DEV_OAUTH_ENDPOINT }}
+          TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
+          TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
+        run: |
+          mkdir -p test-results/sequential
+          gotestsum --junitfile test-results/sequential/test-results.xml --format testdox --format-icons hivis -- -tags="sequential_integration monitored connector" -v -p 1 ./...
+
+      - name: ⬆️ Archive WIF sequential e2e test results
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        if: ${{ always() }}
+        with:
+          name: junit-results-wif-sequential
           path: test-results
 
   sequential-integration-tests:

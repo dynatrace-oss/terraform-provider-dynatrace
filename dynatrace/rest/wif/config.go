@@ -19,64 +19,24 @@ package wif
 
 import (
 	"errors"
-	"fmt"
-	"strings"
+	"net/http"
 )
 
-var (
-	errNotConfigured        = errors.New("no Workload Identity Federation has been configured")
-	errVendorAndStaticToken = errors.New("a vendor and a pre-minted OIDC token are mutually exclusive, specify only one of them")
-	errStaticTokenNotAJWT   = errors.New("the pre-minted OIDC token is not a JWT: expected three dot-separated segments")
-	errNoAudience           = errors.New("no audience has been specified")
-)
-
-// Vendor identifies the workload identity provider that issues the OIDC token.
-type Vendor = string
-
-// VendorGitHub obtains tokens from the GitHub Actions OIDC token service.
-const VendorGitHub Vendor = "github"
-
-type Config struct {
-	Vendor      Vendor
-	Audience    string
-	StaticToken string
+// vendorConfig is what one workload identity provider needs in order to issue an OIDC token. Every
+// value in it except the audience is discovered from the environment the provider runs in.
+type vendorConfig interface {
+	createMinter(httpClient *http.Client) (minter, error)
 }
 
-// Configured reports whether any form of Workload Identity Federation was requested.
-func (config Config) Configured() bool {
-	return len(config.Vendor) > 0 || len(config.StaticToken) > 0
-}
+var errNoVendorDetected = errors.New("no supported workload identity provider was detected: the only supported one is GitHub Actions, which injects the required `ACTIONS_ID_TOKEN_REQUEST_*` variables only into a job with `permissions: { id-token: write }`")
 
-// Validate reports whether the configuration describes a usable setup, as far as that can be judged
-// without contacting a token service. Callers for which Workload Identity Federation is optional have
-// to guard with [Config.Configured] - only they can decide whether its absence is a problem.
-func (config Config) Validate() error {
-	if !config.Configured() {
-		return errNotConfigured
+// inferVendorConfig decides which workload identity provider mints the OIDC token by looking at the
+// credentials its token service leaves in the environment. The provider configuration names none of
+// them; it only states the audience the token has to be valid for.
+func inferVendorConfig(audience string) (vendorConfig, error) {
+	if config, detected := inferGitHubConfig(audience); detected {
+		return config, nil
 	}
 
-	if len(config.Vendor) > 0 && len(config.StaticToken) > 0 {
-		return errVendorAndStaticToken
-	}
-
-	if len(config.StaticToken) > 0 {
-		if strings.Count(config.StaticToken, ".") != jwtSegmentCount-1 {
-			return errStaticTokenNotAJWT
-		}
-		return nil
-	}
-
-	if config.Vendor != VendorGitHub {
-		return unsupportedVendorError(config.Vendor)
-	}
-
-	if len(config.Audience) == 0 {
-		return errNoAudience
-	}
-
-	return nil
-}
-
-func unsupportedVendorError(vendor Vendor) error {
-	return fmt.Errorf("`%s` is not a supported vendor, the only supported one is `%s`", vendor, VendorGitHub)
+	return nil, errNoVendorDetected
 }

@@ -24,7 +24,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -43,13 +42,61 @@ func tokenServiceHandler(t *testing.T, respond func(writer http.ResponseWriter, 
 func gitHubMinterFor(t *testing.T, requestURL string, audience string) minter {
 	t.Helper()
 
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, requestURL)
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "request-token")
-
-	minter, err := newGitHubMinter(audience, http.DefaultClient)
+	config := gitHubConfig{audience: audience, tokenRequestURL: requestURL, tokenRequestToken: "request-token"}
+	minter, err := config.createMinter(http.DefaultClient)
 	require.NoError(t, err)
 
 	return minter
+}
+
+// injectGitHubCredentials sets the variables GitHub injects into a job with the id-token: write
+// permission. Every test about detection sets them, because the machine running the tests may be
+// such a job itself.
+func injectGitHubCredentials(t *testing.T, tokenRequestURL string, tokenRequestToken string) {
+	t.Helper()
+
+	t.Setenv("ACTIONS_ID_TOKEN_REQUEST_URL", tokenRequestURL)
+	t.Setenv("ACTIONS_ID_TOKEN_REQUEST_TOKEN", tokenRequestToken)
+}
+
+func TestGitHubIsDetectedFromInjectedCredentials(t *testing.T) {
+	injectGitHubCredentials(t, "https://token.service.invalid/", "request-token")
+
+	config, detected := inferGitHubConfig("dynatrace")
+
+	require.True(t, detected)
+	assert.Equal(t, gitHubConfig{
+		audience:          "dynatrace",
+		tokenRequestURL:   "https://token.service.invalid/",
+		tokenRequestToken: "request-token",
+	}, config)
+}
+
+func TestGitHubIsNotDetectedWithoutTokenRequestURL(t *testing.T) {
+	injectGitHubCredentials(t, "", "request-token")
+
+	_, detected := inferGitHubConfig("dynatrace")
+
+	assert.False(t, detected)
+}
+
+// The counterpart of the test above, differing only in which of the two credentials is missing.
+func TestGitHubIsNotDetectedWithoutTokenRequestToken(t *testing.T) {
+	injectGitHubCredentials(t, "https://token.service.invalid/", "")
+
+	_, detected := inferGitHubConfig("dynatrace")
+
+	assert.False(t, detected)
+}
+
+// Whitespace is all the value holds, so without the trim it would count as a credential and GitHub
+// would be detected.
+func TestGitHubIsNotDetectedFromBlankTokenRequestURL(t *testing.T) {
+	injectGitHubCredentials(t, "   ", "request-token")
+
+	_, detected := inferGitHubConfig("dynatrace")
+
+	assert.False(t, detected)
 }
 
 func TestGitHubMinterReturnsTokenFromTokenService(t *testing.T) {
@@ -145,31 +192,12 @@ func TestGitHubMinterRejectsResponseWithoutToken(t *testing.T) {
 	assert.ErrorIs(t, err, errResponseWithoutToken)
 }
 
-// The parse happens once, at construction, so a malformed URL is reported alongside the missing one
-// rather than on every mint. The wrapped cause carries the offending value.
+// The parse happens once, while the minter is built, so a malformed URL is reported then rather than
+// on every mint. The wrapped cause carries the offending value.
 func TestGitHubMinterRejectsRequestURLThatIsNotAURL(t *testing.T) {
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "://")
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "request-token")
+	config := gitHubConfig{audience: "dynatrace", tokenRequestURL: "://", tokenRequestToken: "request-token"}
 
-	_, err := newGitHubMinter("dynatrace", http.DefaultClient)
+	_, err := config.createMinter(http.DefaultClient)
 
-	assert.EqualError(t, err, `ACTIONS_ID_TOKEN_REQUEST_URL does not hold a valid URL: parse "://": missing protocol scheme`)
-}
-
-func TestGitHubMinterRequiresRequestURLVariable(t *testing.T) {
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "")
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "request-token")
-
-	_, err := newGitHubMinter("dynatrace", http.DefaultClient)
-
-	assert.EqualError(t, err, "unable to get ACTIONS_ID_TOKEN_REQUEST_URL environment variable: an OIDC token can only be requested from a GitHub Actions job with `permissions: { id-token: write }`")
-}
-
-func TestGitHubMinterRequiresRequestTokenVariable(t *testing.T) {
-	t.Setenv(envutils.ActionsIDTokenRequestURL.Key, "https://token.service.invalid/")
-	t.Setenv(envutils.ActionsIDTokenRequestToken.Key, "")
-
-	_, err := newGitHubMinter("dynatrace", http.DefaultClient)
-
-	assert.EqualError(t, err, "unable to get ACTIONS_ID_TOKEN_REQUEST_TOKEN environment variable: an OIDC token can only be requested from a GitHub Actions job with `permissions: { id-token: write }`")
+	assert.EqualError(t, err, `the GitHub Actions token request URL is not valid: parse "://": missing protocol scheme`)
 }

@@ -22,43 +22,28 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-// Callers for which federation is optional guard with Configured, so absence is a problem by the time
-// Validate is asked.
-func TestValidateRejectsUnconfigured(t *testing.T) {
-	assert.ErrorIs(t, Config{}.Validate(), errNotConfigured)
+// The audience is the only value the configuration contributes, so asserting on the whole config is
+// what shows it reaches the vendor it was inferred for.
+func TestInferVendorConfigDetectsGitHub(t *testing.T) {
+	injectGitHubCredentials(t, "https://token.service.invalid/", "request-token")
+
+	config, err := inferVendorConfig("dynatrace")
+
+	require.NoError(t, err)
+	assert.Equal(t, gitHubConfig{
+		audience:          "dynatrace",
+		tokenRequestURL:   "https://token.service.invalid/",
+		tokenRequestToken: "request-token",
+	}, config)
 }
 
-func TestValidateAcceptsVendorWithAudience(t *testing.T) {
-	assert.NoError(t, Config{Vendor: VendorGitHub, Audience: "dynatrace"}.Validate())
-}
+func TestInferVendorConfigReportsThatNoVendorWasDetected(t *testing.T) {
+	injectGitHubCredentials(t, "", "")
 
-func TestValidateRejectsVendorWithoutAudience(t *testing.T) {
-	err := Config{Vendor: VendorGitHub}.Validate()
+	_, err := inferVendorConfig("dynatrace")
 
-	assert.ErrorIs(t, err, errNoAudience)
-}
-
-func TestValidateRejectsUnsupportedVendor(t *testing.T) {
-	err := Config{Vendor: "aws", Audience: "dynatrace"}.Validate()
-
-	assert.EqualError(t, err, "`aws` is not a supported vendor, the only supported one is `github`")
-}
-
-// The audience belongs to the vendor that mints a token, so a supplied one is complete without it.
-func TestValidateAcceptsStaticTokenWithoutAudience(t *testing.T) {
-	assert.NoError(t, Config{StaticToken: jwtWithPayload(`{"exp":1767225600}`)}.Validate())
-}
-
-func TestValidateRejectsStaticTokenThatIsNotAJWT(t *testing.T) {
-	err := Config{StaticToken: "not-a-jwt"}.Validate()
-
-	assert.ErrorIs(t, err, errStaticTokenNotAJWT)
-}
-
-func TestValidateRejectsVendorAndStaticTokenTogether(t *testing.T) {
-	err := Config{Vendor: VendorGitHub, Audience: "dynatrace", StaticToken: jwtWithPayload(`{"exp":1767225600}`)}.Validate()
-
-	assert.ErrorIs(t, err, errVendorAndStaticToken)
+	assert.ErrorIs(t, err, errNoVendorDetected)
 }

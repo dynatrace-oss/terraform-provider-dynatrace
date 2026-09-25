@@ -226,6 +226,15 @@ func Provider() *schema.Provider {
 				Sensitive:   true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_PLATFORM_TOKEN", "DT_PLATFORM_TOKEN"}, nil),
 			},
+			"wif_audience": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: "The audience (`aud` claim) to request for the OIDC token. Must match what the Dynatrace environment expects. " +
+					"Specifying it selects Workload Identity Federation as the authentication method for platform APIs, which takes precedence over " +
+					"`platform_token` and OAuth credentials. The workload identity provider issuing the token is inferred from the environment; " +
+					"GitHub Actions is the only supported one. Cannot be used for IAM (Account Management) or classic resources.",
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"DYNATRACE_WIF_AUDIENCE", "DT_WIF_AUDIENCE"}, nil),
+			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"dynatrace_alerting_profiles":               alerting.DataSource(),

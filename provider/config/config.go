@@ -26,9 +26,10 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
-	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	rest2 "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
 // ProviderConfiguration contains credentials and clients to communicate with the Dynatrace API
@@ -147,11 +148,12 @@ func ProviderConfigureGeneric(ctx context.Context, d Getter) *ProviderConfigurat
 			EndpointURL:  getIAMEndpointURL(d),
 		},
 		Platform: rest.PlatformCredentials{
-			PlatformToken:  getString(d, "platform_token"),
-			ClientID:       getPlatformClientID(d),
-			ClientSecret:   getPlatformClientSecret(d),
-			TokenURL:       getPlatformTokenURL(d),
-			EnvironmentURL: getPlatformEnvironmentURL(d),
+			PlatformToken:                      getString(d, "platform_token"),
+			ClientID:                           getPlatformClientID(d),
+			ClientSecret:                       getPlatformClientSecret(d),
+			TokenURL:                           getPlatformTokenURL(d),
+			EnvironmentURL:                     getPlatformEnvironmentURL(d),
+			WorkloadIdentityFederationAudience: getWorkloadIdentityFederationAudience(d),
 		},
 	}
 
@@ -207,6 +209,11 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 			return fmt.Errorf(" No Cluster URL has been specified. Use either the environment variable `DT_CLUSTER_URL` or the configuration attribute `dt_cluster_url` of the provider for that")
 		}
 	case CredValPlatform:
+		// The audience is all that Workload Identity Federation is configured with, so nothing is left
+		// to check: whether the environment can issue an OIDC token is reported by the platform client.
+		if conf.Platform.ContainsWorkloadIdentityFederation() {
+			return nil
+		}
 		if len(conf.Platform.ClientID) == 0 {
 			return fmt.Errorf(" No OAuth Client ID for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_ID` or the configuration attribute `automation_client_id` of the provider for that")
 		}
@@ -224,7 +231,7 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 			return fmt.Errorf(" No Environment URL has been specified. Use either the environment variable `DYNATRACE_ENV_URL` or the configuration attribute `dt_env_url` of the provider for that")
 		}
 		if len(conf.APIToken) == 0 && len(conf.Platform.PlatformToken) == 0 && validateCredentials(conf, CredValPlatform) != nil {
-			return fmt.Errorf(" No API Token, Platform Token, or OAuth has been specified for export. More detailed information can be found in the documentation at https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#configure-the-dynatrace-provider")
+			return fmt.Errorf(" No API Token, Platform Token, Workload Identity Federation, or OAuth has been specified for export. More detailed information can be found in the documentation at https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs#configure-the-dynatrace-provider")
 		}
 	case CredValExportIAM:
 		if conf.IAM.AccountID == "" {
@@ -348,6 +355,12 @@ func getPlatformClientSecret(d Getter) string {
 		return clientSecret
 	}
 	return getString(d, "iam_client_secret")
+}
+
+// getWorkloadIdentityFederationAudience retrieves the audience to request OIDC tokens for. A
+// non-empty value is what selects Workload Identity Federation.
+func getWorkloadIdentityFederationAudience(d Getter) string {
+	return strings.TrimSpace(getString(d, "wif_audience"))
 }
 
 // getPlatformTokenURL returns the SSO token URL for platform based on the provided configuration.
