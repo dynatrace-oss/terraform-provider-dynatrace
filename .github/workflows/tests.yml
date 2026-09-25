@@ -26,3 +26,12 @@ jobs:
       DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
       DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      DEV_ENV_URL: ${{ secrets.DEV_ENV_URL }}
+      # An audience identifies who a token is meant for, so it is not a credential - but it has to
+      # match what the Dynatrace environment was told to expect.
+      DYNATRACE_WIF_AUDIENCE: "my-test-audience"
+      DEV_API_TOKEN: ${{ secrets.DEV_API_TOKEN }}
+      DEV_OAUTH_CLIENT: ${{ secrets.DEV_OAUTH_CLIENT }}
+      DEV_OAUTH_CLIENT_SECRET: ${{ secrets.DEV_OAUTH_CLIENT_SECRET }}
+      DEV_ACCOUNT_ID: ${{ secrets.DEV_ACCOUNT_ID }}
+      DEV_OAUTH_ENDPOINT: ${{ secrets.DEV_OAUTH_ENDPOINT }}
