@@ -52,6 +52,24 @@ on:
       SFM_PLATFORM_TOKEN:
         description: 'Platform token for ingesting the collected test results. Only required when collect-results is true'
         required: false
+      DEV_ENV_URL:
+        description: 'Environment URL of the DEV tenant used by the WIF integration tests'
+        required: false
+      DEV_API_TOKEN:
+        description: 'API token for the DEV tenant used by the WIF integration tests'
+        required: false
+      DEV_OAUTH_CLIENT:
+        description: 'OAuth client ID for the DEV tenant used by the WIF integration tests'
+        required: false
+      DEV_OAUTH_CLIENT_SECRET:
+        description: 'OAuth client secret for the DEV tenant used by the WIF integration tests'
+        required: false
+      DEV_ACCOUNT_ID:
+        description: 'Account ID for the DEV tenant used by the WIF integration tests'
+        required: false
+      DEV_OAUTH_ENDPOINT:
+        description: 'OAuth token endpoint for the DEV tenant used by the WIF integration tests'
+        required: false
 
 jobs:
   unit-tests:
