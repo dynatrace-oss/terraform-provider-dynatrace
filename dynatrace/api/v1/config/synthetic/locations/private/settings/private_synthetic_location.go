@@ -43,9 +43,9 @@ type PrivateSyntheticLocation struct {
 	MinActiveGateCount               *int            `json:"minActiveGateCount"`
 	MaxActiveGateCount               *int            `json:"maxActiveGateCount"`
 	NodeSize                         *string         `json:"nodeSize"`
-	NAMExecutionSupported            *bool           `json:"namExecutionSupported,omitempty"`   // Boolean value describes if icmp monitors will be executed on this location
-	UseNewKubernetesVersion          *bool           `json:"useNewKubernetesVersion,omitempty"` // Boolean value describes which kubernetes version will be used
-	FipsMode                         *FipsMode       `json:"fipsMode,omitempty"`                // Containerized location property indicating whether FIPS mode is enabled on this location. Possible values: `DISABLED`, `ENABLED`, `ENABLED_WITH_CORPORATE_PROXY`
+	NAMExecutionSupported            *bool           `json:"namExecutionSupported,omitempty"` // Boolean value describes if icmp monitors will be executed on this location
+	UseNewKubernetesVersion          bool            `json:"useNewKubernetesVersion"`         // Boolean value describes which kubernetes version will be used
+	FipsMode                         *FipsMode       `json:"fipsMode,omitempty"`              // Containerized location property indicating whether FIPS mode is enabled on this location. Possible values: `DISABLED`, `ENABLED`, `ENABLED_WITH_CORPORATE_PROXY`
 }
 
 func (me *PrivateSyntheticLocation) Schema() map[string]*schema.Schema {
@@ -140,8 +140,9 @@ func (me *PrivateSyntheticLocation) Schema() map[string]*schema.Schema {
 		},
 		"use_new_kubernetes_version": {
 			Type:        schema.TypeBool,
-			Description: "Boolean value describes which kubernetes version will be used",
+			Description: "Boolean value describes which Kubernetes version will be used. Set to `false` for version 1.23+ and older than version 1.26. Set to `true` for version 1.26+",
 			Optional:    true,
+			Default:     true,
 		},
 		"fips_mode": {
 			Type:        schema.TypeString,
@@ -270,9 +271,7 @@ func (me *PrivateSyntheticLocation) UnmarshalHCL(decoder hcl.Decoder) error {
 	if value, ok := decoder.GetOk("nam_execution_supported"); ok {
 		me.NAMExecutionSupported = new(value.(bool))
 	}
-	if value, ok := decoder.GetOk("use_new_kubernetes_version"); ok {
-		me.UseNewKubernetesVersion = new(value.(bool))
-	}
+	me.UseNewKubernetesVersion = decoder.Get("use_new_kubernetes_version").(bool)
 	if value, ok := decoder.GetOk("fips_mode"); ok {
 		me.FipsMode = FipsMode(value.(string)).Ref()
 	}
