@@ -20,11 +20,57 @@
 package locations_test
 
 import (
+	"path"
 	"testing"
+	"time"
 
-	api "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccSyntheticLocations(t *testing.T) {
 	api.TestAcc(t)
+}
+
+func TestAccSyntheticLocation_UseNewKubernetesVersion(t *testing.T) {
+	if !api.AccEnvsGiven(t) {
+		return
+	}
+
+	const testcaseFolder = "testcases/use-new-kubernetes-version"
+	const resourceNameIdentifier = "dynatrace_synthetic_location.location"
+
+	// A freshly created location rejects updates with a misleading `404 Location <id> not found`
+	// for a short while, so every step but the first waits for the location to settle.
+	const settleDelay = 5 * time.Second
+	settle := func() { time.Sleep(settleDelay) }
+
+	configOmitted, identifier := api.ReadTfConfig(t, path.Join(testcaseFolder, "omitted.tf"))
+	configExplicitTrue := api.ReadTfConfigWithIdentifier(t, path.Join(testcaseFolder, "explicit_true.tf"), identifier)
+	configExplicitFalse := api.ReadTfConfigWithIdentifier(t, path.Join(testcaseFolder, "explicit_false.tf"), identifier)
+
+	resource.Test(t, resource.TestCase{
+		ProviderFactories: api.GetProviderFactories(),
+		Steps: []resource.TestStep{
+			{
+				Config: configOmitted,
+				Check:  resource.TestCheckResourceAttr(resourceNameIdentifier, "use_new_kubernetes_version", "true"),
+			},
+			{
+				PreConfig: settle,
+				Config:    configExplicitTrue,
+				Check:     resource.TestCheckResourceAttr(resourceNameIdentifier, "use_new_kubernetes_version", "true"),
+			},
+			{
+				PreConfig: settle,
+				Config:    configExplicitFalse,
+				Check:     resource.TestCheckResourceAttr(resourceNameIdentifier, "use_new_kubernetes_version", "false"),
+			},
+			{
+				PreConfig: settle,
+				Config:    configOmitted,
+				Check:     resource.TestCheckResourceAttr(resourceNameIdentifier, "use_new_kubernetes_version", "true"),
+			},
+		},
+	})
 }
