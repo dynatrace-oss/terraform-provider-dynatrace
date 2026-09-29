@@ -44,6 +44,8 @@ type TestAccOptions struct {
 	ExternalProviders  map[string]resource.ExternalProvider
 	// preset identifier to replace "#name#" and "${randomize}" in the config, if empty a random string will be generated
 	Identifier string
+	// optional Check function that can be provided to run additional checks on the configuration
+	Check func(s *terraform.State) error
 }
 
 func AccEnvsGiven(t *testing.T) bool {
@@ -303,6 +305,10 @@ func createTestCaseWithOptions(t *testing.T, config string, opts []TestAccOption
 				var errs []error
 				for key := range s.RootModule().Outputs {
 					err := resource.TestMatchOutput(key, regexp.MustCompile(`.+`))(s)
+					errs = append(errs, err)
+				}
+				if options.Check != nil {
+					err := options.Check(s)
 					errs = append(errs, err)
 				}
 				return errors.Join(errs...)
