@@ -28,9 +28,9 @@ import (
 )
 
 type Settings struct {
-	Name  string         `json:"-"`
-	Scope string         `json:"scope"`
-	Value map[string]any `json:"value"`
+	Name  string          `json:"-"`
+	Scope string          `json:"scope"`
+	Value json.RawMessage `json:"value"`
 }
 
 type valueBody struct {
@@ -82,14 +82,9 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
-	valueJSON, err := json.Marshal(me.Value)
-	if err != nil {
-		return err
-	}
-
 	return properties.EncodeAll(map[string]any{
 		"name":  me.Name,
-		"value": string(valueJSON),
+		"value": string(me.Value),
 		"scope": me.Scope,
 	})
 }
@@ -106,7 +101,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 
 	if valueString != "" {
-		return json.Unmarshal([]byte(valueString), &me.Value)
+		me.Value = []byte(valueString)
 	}
 	return nil
 }
