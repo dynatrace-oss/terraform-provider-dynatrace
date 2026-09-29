@@ -25,54 +25,12 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations"
 	serviceSettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	testing2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	coreapi "github.com/dynatrace/dynatrace-configuration-as-code-core/api"
 )
-
-// mockExtensionClient implements ExtensionClient for testing.
-type mockExtensionClient struct {
-	listExtensionsFn                func(ctx context.Context) (coreapi.PagedListResponse, error)
-	listMonitoringConfigurationsFn  func(ctx context.Context, extensionName string) (coreapi.PagedListResponse, error)
-	getMonitoringConfigurationFn    func(ctx context.Context, extensionName string, configurationID string) (coreapi.Response, error)
-	createMonitoringConfigurationFn func(ctx context.Context, extensionName string, data []byte) (coreapi.Response, error)
-	updateMonitoringConfigurationFn func(ctx context.Context, extensionName string, configurationID string, data []byte) (coreapi.Response, error)
-	deleteMonitoringConfigurationFn func(ctx context.Context, extensionName string, configurationID string) error
-}
-
-func (m *mockExtensionClient) ListExtensions(ctx context.Context) (coreapi.PagedListResponse, error) {
-	return m.listExtensionsFn(ctx)
-}
-func (m *mockExtensionClient) ListMonitoringConfigurations(ctx context.Context, extensionName string) (coreapi.PagedListResponse, error) {
-	return m.listMonitoringConfigurationsFn(ctx, extensionName)
-}
-func (m *mockExtensionClient) GetMonitoringConfiguration(ctx context.Context, extensionName string, configurationID string) (coreapi.Response, error) {
-	return m.getMonitoringConfigurationFn(ctx, extensionName, configurationID)
-}
-func (m *mockExtensionClient) CreateMonitoringConfiguration(ctx context.Context, extensionName string, data []byte) (coreapi.Response, error) {
-	return m.createMonitoringConfigurationFn(ctx, extensionName, data)
-}
-func (m *mockExtensionClient) UpdateMonitoringConfiguration(ctx context.Context, extensionName string, configurationID string, data []byte) (coreapi.Response, error) {
-	return m.updateMonitoringConfigurationFn(ctx, extensionName, configurationID, data)
-}
-func (m *mockExtensionClient) DeleteMonitoringConfiguration(ctx context.Context, extensionName string, configurationID string) error {
-	return m.deleteMonitoringConfigurationFn(ctx, extensionName, configurationID)
-}
-
-func mockClientGetter(client *mockExtensionClient) func(ctx context.Context, credentials rest.ClientSet) (monitoringconfigurations.ExtensionClient, error) {
-	return func(ctx context.Context, credentials rest.ClientSet) (monitoringconfigurations.ExtensionClient, error) {
-		return client, nil
-	}
-}
-
-func failingClientGetter(err error) func(ctx context.Context, credentials rest.ClientSet) (monitoringconfigurations.ExtensionClient, error) {
-	return func(ctx context.Context, credentials rest.ClientSet) (monitoringconfigurations.ExtensionClient, error) {
-		return nil, err
-	}
-}
 
 func pagedResponse(objects ...[]byte) coreapi.PagedListResponse {
 	return coreapi.PagedListResponse{
@@ -89,8 +47,8 @@ func TestServiceCreationFailsIfMissingClient(t *testing.T) {
 
 func TestService_Get(t *testing.T) {
 	t.Run("Returns error when GetMonitoringConfiguration fails", func(t *testing.T) {
-		mock := &mockExtensionClient{
-			getMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string) (coreapi.Response, error) {
+		mock := &testing2.MockExtensionClient{
+			GetMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string) (coreapi.Response, error) {
 				return coreapi.Response{}, assert.AnError
 			},
 		}
@@ -100,8 +58,8 @@ func TestService_Get(t *testing.T) {
 	})
 
 	t.Run("Returns error on invalid response JSON", func(t *testing.T) {
-		mock := &mockExtensionClient{
-			getMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string) (coreapi.Response, error) {
+		mock := &testing2.MockExtensionClient{
+			GetMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string) (coreapi.Response, error) {
 				return coreapi.Response{Data: []byte("not-json")}, nil
 			},
 		}
@@ -116,8 +74,8 @@ func TestService_Get(t *testing.T) {
 			"value": map[string]any{"key": "val"},
 		})
 		var capturedExtName, capturedCfgID string
-		mock := &mockExtensionClient{
-			getMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string) (coreapi.Response, error) {
+		mock := &testing2.MockExtensionClient{
+			GetMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string) (coreapi.Response, error) {
 				capturedExtName = extensionName
 				capturedCfgID = configurationID
 				return coreapi.Response{Data: responseData}, nil
@@ -136,8 +94,8 @@ func TestService_Get(t *testing.T) {
 
 func TestService_List(t *testing.T) {
 	t.Run("Returns error when ListExtensions fails", func(t *testing.T) {
-		mock := &mockExtensionClient{
-			listExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
+		mock := &testing2.MockExtensionClient{
+			ListExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
 				return nil, assert.AnError
 			},
 		}
@@ -147,8 +105,8 @@ func TestService_List(t *testing.T) {
 	})
 
 	t.Run("Returns error on invalid extension JSON", func(t *testing.T) {
-		mock := &mockExtensionClient{
-			listExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
+		mock := &testing2.MockExtensionClient{
+			ListExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
 				return pagedResponse([]byte("bad-json")), nil
 			},
 		}
@@ -159,11 +117,11 @@ func TestService_List(t *testing.T) {
 
 	t.Run("Returns error when ListMonitoringConfigurations fails", func(t *testing.T) {
 		extJSON, _ := json.Marshal(map[string]string{"extensionName": "com.example.ext"})
-		mock := &mockExtensionClient{
-			listExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
+		mock := &testing2.MockExtensionClient{
+			ListExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
 				return pagedResponse(extJSON), nil
 			},
-			listMonitoringConfigurationsFn: func(ctx context.Context, extensionName string) (coreapi.PagedListResponse, error) {
+			ListMonitoringConfigurationsFn: func(ctx context.Context, extensionName string, filter string) (coreapi.PagedListResponse, error) {
 				return nil, assert.AnError
 			},
 		}
@@ -174,11 +132,11 @@ func TestService_List(t *testing.T) {
 
 	t.Run("Returns error on invalid configuration JSON", func(t *testing.T) {
 		extJSON, _ := json.Marshal(map[string]string{"extensionName": "com.example.ext"})
-		mock := &mockExtensionClient{
-			listExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
+		mock := &testing2.MockExtensionClient{
+			ListExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
 				return pagedResponse(extJSON), nil
 			},
-			listMonitoringConfigurationsFn: func(ctx context.Context, extensionName string) (coreapi.PagedListResponse, error) {
+			ListMonitoringConfigurationsFn: func(ctx context.Context, extensionName string, filter string) (coreapi.PagedListResponse, error) {
 				return pagedResponse([]byte("bad-json")), nil
 			},
 		}
@@ -192,11 +150,11 @@ func TestService_List(t *testing.T) {
 		ext2JSON, _ := json.Marshal(map[string]string{"extensionName": "com.example.ext2"})
 		cfg1JSON, _ := json.Marshal(map[string]string{"objectId": "cfg-1"})
 		cfg2JSON, _ := json.Marshal(map[string]string{"objectId": "cfg-2"})
-		mock := &mockExtensionClient{
-			listExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
+		mock := &testing2.MockExtensionClient{
+			ListExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
 				return pagedResponse(ext1JSON, ext2JSON), nil
 			},
-			listMonitoringConfigurationsFn: func(ctx context.Context, extensionName string) (coreapi.PagedListResponse, error) {
+			ListMonitoringConfigurationsFn: func(ctx context.Context, extensionName string, filter string) (coreapi.PagedListResponse, error) {
 				switch extensionName {
 				case "com.example.ext1":
 					return pagedResponse(cfg1JSON), nil
@@ -217,8 +175,8 @@ func TestService_List(t *testing.T) {
 	})
 
 	t.Run("Returns empty stubs when no extensions exist", func(t *testing.T) {
-		mock := &mockExtensionClient{
-			listExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
+		mock := &testing2.MockExtensionClient{
+			ListExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
 				return pagedResponse(), nil
 			},
 		}
@@ -230,11 +188,11 @@ func TestService_List(t *testing.T) {
 
 	t.Run("Returns empty stubs when extensions have no configurations", func(t *testing.T) {
 		extJSON, _ := json.Marshal(map[string]string{"extensionName": "com.example.ext"})
-		mock := &mockExtensionClient{
-			listExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
+		mock := &testing2.MockExtensionClient{
+			ListExtensionsFn: func(ctx context.Context) (coreapi.PagedListResponse, error) {
 				return pagedResponse(extJSON), nil
 			},
-			listMonitoringConfigurationsFn: func(ctx context.Context, extensionName string) (coreapi.PagedListResponse, error) {
+			ListMonitoringConfigurationsFn: func(ctx context.Context, extensionName string, filter string) (coreapi.PagedListResponse, error) {
 				return pagedResponse(), nil
 			},
 		}
@@ -247,8 +205,8 @@ func TestService_List(t *testing.T) {
 
 func TestService_Create(t *testing.T) {
 	t.Run("Returns error when CreateMonitoringConfiguration fails", func(t *testing.T) {
-		mock := &mockExtensionClient{
-			createMonitoringConfigurationFn: func(ctx context.Context, extensionName string, data []byte) (coreapi.Response, error) {
+		mock := &testing2.MockExtensionClient{
+			CreateMonitoringConfigurationFn: func(ctx context.Context, extensionName string, data []byte) (coreapi.Response, error) {
 				return coreapi.Response{}, assert.AnError
 			},
 		}
@@ -261,8 +219,8 @@ func TestService_Create(t *testing.T) {
 	})
 
 	t.Run("Returns error on invalid response JSON", func(t *testing.T) {
-		mock := &mockExtensionClient{
-			createMonitoringConfigurationFn: func(ctx context.Context, extensionName string, data []byte) (coreapi.Response, error) {
+		mock := &testing2.MockExtensionClient{
+			CreateMonitoringConfigurationFn: func(ctx context.Context, extensionName string, data []byte) (coreapi.Response, error) {
 				return coreapi.Response{Data: []byte("bad-json")}, nil
 			},
 		}
@@ -277,8 +235,8 @@ func TestService_Create(t *testing.T) {
 	t.Run("Sends correct payload and returns stub with joined ID on success", func(t *testing.T) {
 		var capturedExtName string
 		var capturedPayload serviceSettings.Settings
-		mock := &mockExtensionClient{
-			createMonitoringConfigurationFn: func(ctx context.Context, extensionName string, data []byte) (coreapi.Response, error) {
+		mock := &testing2.MockExtensionClient{
+			CreateMonitoringConfigurationFn: func(ctx context.Context, extensionName string, data []byte) (coreapi.Response, error) {
 				capturedExtName = extensionName
 				err := json.Unmarshal(data, &capturedPayload)
 				require.NoError(t, err)
@@ -290,7 +248,7 @@ func TestService_Create(t *testing.T) {
 		stub, err := svc.Create(t.Context(), &serviceSettings.Settings{
 			Name:  "com.example.ext",
 			Scope: "HOST-ABC123",
-			Value: map[string]any{"key": "val"},
+			Value: []byte(`{"key":"val"}`),
 		})
 		require.NoError(t, err)
 		assert.Equal(t, "com.example.ext#-#new-cfg-id", stub.ID)
@@ -301,8 +259,8 @@ func TestService_Create(t *testing.T) {
 
 func TestService_Update(t *testing.T) {
 	t.Run("Returns error when UpdateMonitoringConfiguration fails", func(t *testing.T) {
-		mock := &mockExtensionClient{
-			updateMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string, data []byte) (coreapi.Response, error) {
+		mock := &testing2.MockExtensionClient{
+			UpdateMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string, data []byte) (coreapi.Response, error) {
 				return coreapi.Response{}, assert.AnError
 			},
 		}
@@ -314,8 +272,8 @@ func TestService_Update(t *testing.T) {
 	t.Run("Splits compound ID and sends correct payload on success", func(t *testing.T) {
 		var capturedExtName, capturedCfgID string
 		var capturedPayload serviceSettings.Settings
-		mock := &mockExtensionClient{
-			updateMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string, data []byte) (coreapi.Response, error) {
+		mock := &testing2.MockExtensionClient{
+			UpdateMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string, data []byte) (coreapi.Response, error) {
 				capturedExtName = extensionName
 				capturedCfgID = configurationID
 				err := json.Unmarshal(data, &capturedPayload)
@@ -326,7 +284,7 @@ func TestService_Update(t *testing.T) {
 		svc := monitoringconfigurations.ServiceWithClient(mock)
 		err := svc.Update(t.Context(), "com.example.ext#-#cfg-1", &serviceSettings.Settings{
 			Scope: "HOST-ABC123",
-			Value: map[string]any{"key": "val"},
+			Value: []byte(`{"key": "val"}`),
 		})
 		require.NoError(t, err)
 		assert.Equal(t, "com.example.ext", capturedExtName)
@@ -337,8 +295,8 @@ func TestService_Update(t *testing.T) {
 
 func TestService_Delete(t *testing.T) {
 	t.Run("Returns error when DeleteMonitoringConfiguration fails", func(t *testing.T) {
-		mock := &mockExtensionClient{
-			deleteMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string) error {
+		mock := &testing2.MockExtensionClient{
+			DeleteMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string) error {
 				return assert.AnError
 			},
 		}
@@ -349,8 +307,8 @@ func TestService_Delete(t *testing.T) {
 
 	t.Run("Splits compound ID and returns nil on success", func(t *testing.T) {
 		var capturedExtName, capturedCfgID string
-		mock := &mockExtensionClient{
-			deleteMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string) error {
+		mock := &testing2.MockExtensionClient{
+			DeleteMonitoringConfigurationFn: func(ctx context.Context, extensionName string, configurationID string) error {
 				capturedExtName = extensionName
 				capturedCfgID = configurationID
 				return nil

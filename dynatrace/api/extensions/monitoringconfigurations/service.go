@@ -41,7 +41,7 @@ type ExtensionClient interface {
 	ListExtensions(ctx context.Context) (coreapi.PagedListResponse, error)
 
 	// ListMonitoringConfigurations returns all monitoring configurations for a given extension.
-	ListMonitoringConfigurations(ctx context.Context, extensionName string) (coreapi.PagedListResponse, error)
+	ListMonitoringConfigurations(ctx context.Context, extensionName string, filter string) (coreapi.PagedListResponse, error)
 
 	// GetMonitoringConfiguration returns a specific monitoring configuration by extension name and configuration ID.
 	GetMonitoringConfiguration(ctx context.Context, extensionName string, configurationID string) (coreapi.Response, error)
@@ -117,7 +117,7 @@ func (s *service) List(ctx context.Context) (api.Stubs, error) {
 			return nil, err
 		}
 
-		configurationsResponse, err := s.client.ListMonitoringConfigurations(ctx, extension.ExtensionName)
+		configurationsResponse, err := s.client.ListMonitoringConfigurations(ctx, extension.ExtensionName, "")
 		if err != nil {
 			return nil, err
 		}
