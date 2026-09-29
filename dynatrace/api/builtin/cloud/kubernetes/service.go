@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "3.1.1"
+const SchemaVersion = "3.1.2"
 const SchemaID = "builtin:cloud.kubernetes"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
