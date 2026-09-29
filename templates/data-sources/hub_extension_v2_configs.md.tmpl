@@ -1,0 +1,23 @@
+---
+layout: ""
+page_title: "dynatrace_hub_extension_v2_configs Data Source - terraform-provider-dynatrace"
+subcategory: "Extensions"
+description: |-
+  The `dynatrace_hub_extension_v2_configs` data source covers queries for hub extension configurations
+---
+
+# dynatrace_hub_extension_v2_configs (Data Source)
+
+-> This resource requires the OAuth scopes `extensions:configurations:read`, and `extensions:definitions:read`.
+
+The `dynatrace_hub_extension_v2_configs` data source retrieves all matching monitoring configurations of an extension.
+
+## Dynatrace Documentation
+
+- Extensions 2.0 - https://docs.dynatrace.com/docs/ingest-from/extensions
+
+## Example Usage
+
+{{ tffile "datasources/extensions/config/testdata/terraform/example.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
