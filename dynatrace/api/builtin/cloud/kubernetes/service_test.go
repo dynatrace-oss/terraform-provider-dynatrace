@@ -23,8 +23,9 @@ import (
 	"testing"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 )
 
 func TestAccKubernetes(t *testing.T) {
-	api.TestAcc(t)
+	api.TestAcc(t, api.TestAccOptions{Identifier: acctest.RandStringFromCharSet(10, "abcdef")})
 }
