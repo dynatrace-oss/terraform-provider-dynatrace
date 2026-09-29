@@ -26,6 +26,8 @@ func setComputedItem(item *schema.Schema) *schema.Schema {
 	item.Optional = false
 	item.Required = false
 	item.Computed = true
+	item.ValidateFunc = nil
+	item.ValidateDiagFunc = nil
 	return item
 }
 
