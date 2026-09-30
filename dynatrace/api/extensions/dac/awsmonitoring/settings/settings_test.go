@@ -1,3 +1,5 @@
+//go:build unit
+
 /**
 * @license
 * Copyright 2026 Dynatrace LLC
@@ -19,11 +21,11 @@ package settings_test
 
 import (
 	"encoding/json"
-	"reflect"
-	"sort"
 	"testing"
 
 	settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/dac/awsmonitoring/settings"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // TestMarshalWireShape pins the on-the-wire JSON shape we send to
@@ -42,64 +44,37 @@ func TestMarshalWireShape(t *testing.T) {
 	}
 
 	raw, err := json.Marshal(s)
-	if err != nil {
-		t.Fatalf("marshal: %v", err)
-	}
+	require.NoError(t, err, "marshal")
 
 	var got map[string]any
-	if err := json.Unmarshal(raw, &got); err != nil {
-		t.Fatalf("re-decode: %v", err)
-	}
+	require.NoError(t, json.Unmarshal(raw, &got), "re-decode")
 
-	if got["scope"] != settings.DefaultScope {
-		t.Fatalf("scope: got %v, want %s", got["scope"], settings.DefaultScope)
-	}
+	assert.Equal(t, settings.DefaultScope, got["scope"])
 
 	value, ok := got["value"].(map[string]any)
-	if !ok {
-		t.Fatalf("value: missing or wrong type: %T", got["value"])
-	}
-	wantTopLevel := map[string]any{
-		"enabled":           true,
-		"description":       "my-aws-monitoring",
-		"version":           "1.0.0",
-		"activationContext": "DATA_ACQUISITION",
-	}
-	for k, v := range wantTopLevel {
-		if !reflect.DeepEqual(value[k], v) {
-			t.Errorf("value.%s: got %v, want %v", k, value[k], v)
-		}
-	}
+	require.True(t, ok, "value: missing or wrong type: %T", got["value"])
 
-	fs, _ := value["featureSets"].([]any)
-	if len(fs) != 2 {
-		t.Errorf("featureSets length: got %d", len(fs))
-	}
+	assert.Equal(t, true, value["enabled"])
+	assert.Equal(t, "my-aws-monitoring", value["description"])
+	assert.Equal(t, "1.0.0", value["version"])
+	assert.Equal(t, "DATA_ACQUISITION", value["activationContext"])
+	assert.ElementsMatch(t, []any{"EC2_essential", "RDS_essential"}, value["featureSets"])
 
-	aws, _ := value["aws"].(map[string]any)
-	if aws == nil {
-		t.Fatalf("aws block missing")
-	}
-	if aws["deploymentRegion"] != "us-east-1" {
-		t.Errorf("deploymentRegion: got %v, want us-east-1 (defaulted from first region)", aws["deploymentRegion"])
-	}
-	creds, _ := aws["credentials"].([]any)
-	if len(creds) != 1 {
-		t.Fatalf("credentials length: got %d, want 1", len(creds))
-	}
-	cred := creds[0].(map[string]any)
-	if cred["connectionId"] != s.ConnectionID {
-		t.Errorf("connectionId mismatch")
-	}
-	if cred["accountId"] != "123456789012" {
-		t.Errorf("accountId: got %v", cred["accountId"])
-	}
+	aws, ok := value["aws"].(map[string]any)
+	require.True(t, ok, "aws block missing")
+	assert.Equal(t, "us-east-1", aws["deploymentRegion"], "defaulted from first region")
 
-	mc, _ := aws["metricsConfiguration"].(map[string]any)
-	regs, _ := mc["regions"].([]any)
-	if len(regs) != 2 {
-		t.Errorf("metricsConfiguration.regions length: got %d", len(regs))
-	}
+	creds, ok := aws["credentials"].([]any)
+	require.True(t, ok)
+	require.Len(t, creds, 1)
+	cred, ok := creds[0].(map[string]any)
+	require.True(t, ok)
+	assert.Equal(t, s.ConnectionID, cred["connectionId"])
+	assert.Equal(t, "123456789012", cred["accountId"])
+
+	mc, ok := aws["metricsConfiguration"].(map[string]any)
+	require.True(t, ok, "metricsConfiguration missing")
+	assert.ElementsMatch(t, []any{"us-east-1", "eu-central-1"}, mc["regions"])
 }
 
 func TestRoundTrip(t *testing.T) {
@@ -114,30 +89,16 @@ func TestRoundTrip(t *testing.T) {
 		DeploymentRegion: "us-east-1",
 	}
 	raw, err := json.Marshal(in)
-	if err != nil {
-		t.Fatalf("marshal: %v", err)
-	}
+	require.NoError(t, err, "marshal")
+
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	sort.Strings(in.FeatureSets)
-	sort.Strings(out.FeatureSets)
-	if !reflect.DeepEqual(in.Regions, out.Regions) {
-		t.Errorf("regions: got %v, want %v", out.Regions, in.Regions)
-	}
-	if !reflect.DeepEqual(in.FeatureSets, out.FeatureSets) {
-		t.Errorf("featureSets: got %v, want %v", out.FeatureSets, in.FeatureSets)
-	}
-	if out.ConnectionID != in.ConnectionID {
-		t.Errorf("connectionId: got %v", out.ConnectionID)
-	}
-	if out.AccountID != in.AccountID {
-		t.Errorf("accountId: got %v", out.AccountID)
-	}
-	if out.Name != in.Name {
-		t.Errorf("name (description): got %v", out.Name)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	assert.ElementsMatch(t, in.Regions, out.Regions)
+	assert.ElementsMatch(t, in.FeatureSets, out.FeatureSets)
+	assert.Equal(t, in.ConnectionID, out.ConnectionID)
+	assert.Equal(t, in.AccountID, out.AccountID)
+	assert.Equal(t, in.Name, out.Name, "name (description)")
 }
 
 func base() *settings.Settings {
@@ -154,38 +115,29 @@ func base() *settings.Settings {
 func awsBlock(t *testing.T, s *settings.Settings) map[string]any {
 	t.Helper()
 	raw, err := json.Marshal(s)
-	if err != nil {
-		t.Fatalf("marshal: %v", err)
-	}
+	require.NoError(t, err, "marshal")
 	var got map[string]any
-	if err := json.Unmarshal(raw, &got); err != nil {
-		t.Fatalf("decode: %v", err)
-	}
-	return got["value"].(map[string]any)["aws"].(map[string]any)
+	require.NoError(t, json.Unmarshal(raw, &got), "decode")
+	value, ok := got["value"].(map[string]any)
+	require.True(t, ok, "value block missing")
+	aws, ok := value["aws"].(map[string]any)
+	require.True(t, ok, "aws block missing")
+	return aws
 }
 
 func TestEnumDefaults(t *testing.T) {
-	s := base()
-	aws := awsBlock(t, s)
-	for k, want := range map[string]any{
-		"deploymentScope":   "SINGLE_ACCOUNT",
-		"deploymentMode":    "AUTOMATED",
-		"configurationMode": "QUICK_START",
-	} {
-		if aws[k] != want {
-			t.Errorf("aws.%s: got %v, want %v", k, aws[k], want)
-		}
-	}
+	aws := awsBlock(t, base())
+
+	assert.Equal(t, "SINGLE_ACCOUNT", aws["deploymentScope"])
+	assert.Equal(t, "AUTOMATED", aws["deploymentMode"])
+	assert.Equal(t, "QUICK_START", aws["configurationMode"])
+
 	// smartscape_enabled is hidden from the user-facing schema and
 	// force-set to true in applyDefaults; the wire payload must reflect that
 	// regardless of struct zero-value.
 	sm, ok := aws["smartscapeConfiguration"].(map[string]any)
-	if !ok {
-		t.Fatalf("smartscapeConfiguration missing/wrong type: %v", aws["smartscapeConfiguration"])
-	}
-	if sm["enabled"] != true {
-		t.Errorf("smartscapeConfiguration.enabled: got %v, want true (hardcoded)", sm["enabled"])
-	}
+	require.True(t, ok, "smartscapeConfiguration missing/wrong type: %v", aws["smartscapeConfiguration"])
+	assert.Equal(t, true, sm["enabled"], "hardcoded")
 }
 
 func TestTagFilterRoundTrip(t *testing.T) {
@@ -194,35 +146,25 @@ func TestTagFilterRoundTrip(t *testing.T) {
 		{Key: "env", Value: "prod", Condition: "INCLUDE"},
 		{Key: "team", Value: "infra", Condition: "EXCLUDE"},
 	}
-	raw, _ := json.Marshal(s)
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
+
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if len(out.TagFilters) != 2 {
-		t.Fatalf("tag filters: got %d, want 2", len(out.TagFilters))
-	}
-	if out.TagFilters[0].Key != "env" || out.TagFilters[0].Condition != "INCLUDE" {
-		t.Errorf("tag filter[0] mismatch: %+v", out.TagFilters[0])
-	}
-	if out.TagFilters[1].Condition != "EXCLUDE" {
-		t.Errorf("tag filter[1] condition mismatch: %+v", out.TagFilters[1])
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	assert.ElementsMatch(t, s.TagFilters, out.TagFilters)
 }
 
 func TestTagEnrichmentRoundTrip(t *testing.T) {
 	s := base()
 	s.TagEnrichment = []string{"owner", "cost-center"}
-	raw, _ := json.Marshal(s)
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
+
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	sort.Strings(out.TagEnrichment)
-	want := []string{"cost-center", "owner"}
-	if !reflect.DeepEqual(out.TagEnrichment, want) {
-		t.Errorf("tag enrichment: got %v, want %v", out.TagEnrichment, want)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	assert.ElementsMatch(t, []string{"owner", "cost-center"}, out.TagEnrichment)
 }
 
 func TestCloudWatchLogsRoundTrip(t *testing.T) {
@@ -231,17 +173,15 @@ func TestCloudWatchLogsRoundTrip(t *testing.T) {
 		Enabled: true,
 		Regions: []string{"eu-central-1", "us-east-1"},
 	}
-	raw, _ := json.Marshal(s)
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
+
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if out.CloudWatchLogs == nil {
-		t.Fatalf("cloud watch logs lost")
-	}
-	if !out.CloudWatchLogs.Enabled || len(out.CloudWatchLogs.Regions) != 2 {
-		t.Errorf("cwl: %+v", out.CloudWatchLogs)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	require.NotNil(t, out.CloudWatchLogs, "cloud watch logs lost")
+	assert.True(t, out.CloudWatchLogs.Enabled)
+	assert.ElementsMatch(t, s.CloudWatchLogs.Regions, out.CloudWatchLogs.Regions)
 }
 
 func TestCustomNamespaceWithMetricRoundTrip(t *testing.T) {
@@ -273,25 +213,26 @@ func TestCustomNamespaceWithMetricRoundTrip(t *testing.T) {
 			},
 		},
 	}
-	raw, _ := json.Marshal(s)
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
+
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if len(out.CustomNamespaces) != 2 {
-		t.Fatalf("namespaces: got %d, want 2", len(out.CustomNamespaces))
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	require.Len(t, out.CustomNamespaces, 2)
+
 	gs := out.CustomNamespaces[0]
-	if gs.Namespace != "AWS/GroundStation" || len(gs.Metrics) != 1 {
-		t.Fatalf("ground station: %+v", gs)
-	}
+	assert.Equal(t, "AWS/GroundStation", gs.Namespace)
+	require.Len(t, gs.Metrics, 1)
+
 	m := gs.Metrics[0]
-	if m.Name != "AzimuthAngle" || m.Type != "CUSTOM_AWS" || len(m.Aggregations) != 2 {
-		t.Errorf("metric: %+v", m)
-	}
-	if out.CustomNamespaces[1].Metrics[0].Type != "CUSTOM" {
-		t.Errorf("custom namespace type mismatch")
-	}
+	assert.Equal(t, "AzimuthAngle", m.Name)
+	assert.Equal(t, "CUSTOM_AWS", m.Type)
+	assert.ElementsMatch(t, []string{"Sum", "SampleCount"}, m.Aggregations)
+	assert.ElementsMatch(t, []string{"SatelliteId"}, m.Dimensions)
+
+	require.Len(t, out.CustomNamespaces[1].Metrics, 1)
+	assert.Equal(t, "CUSTOM", out.CustomNamespaces[1].Metrics[0].Type)
 }
 
 func TestDtLabelEnrichmentRoundTrip(t *testing.T) {
@@ -300,32 +241,19 @@ func TestDtLabelEnrichmentRoundTrip(t *testing.T) {
 		{Label: "dt.security_context", Literal: "my-app"},
 		{Label: "dt.cost.product", TagKey: "product"},
 	}
-	raw, _ := json.Marshal(s)
-	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if len(out.DTLabelEnrichments) != 2 {
-		t.Fatalf("labels: %d", len(out.DTLabelEnrichments))
-	}
-	// UnmarshalJSON sorts label keys alphabetically.
-	if out.DTLabelEnrichments[0].Label != "dt.cost.product" || out.DTLabelEnrichments[0].TagKey != "product" {
-		t.Errorf("label[0]: %+v", out.DTLabelEnrichments[0])
-	}
-	if out.DTLabelEnrichments[1].Label != "dt.security_context" || out.DTLabelEnrichments[1].Literal != "my-app" {
-		t.Errorf("label[1]: %+v", out.DTLabelEnrichments[1])
-	}
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
 
-	// Wire shape check
+	out := &settings.Settings{}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	// The wire representation is a JSON object, so the decoded order carries no
+	// meaning — compare as a set.
+	assert.ElementsMatch(t, s.DTLabelEnrichments, out.DTLabelEnrichments)
+
 	aws := awsBlock(t, s)
 	dtl, ok := aws["dtLabelsEnrichment"].(map[string]any)
-	if !ok {
-		t.Fatalf("dtLabelsEnrichment missing: %v", aws)
-	}
-	if !reflect.DeepEqual(dtl["dt.security_context"], map[string]any{"literal": "my-app"}) {
-		t.Errorf("literal entry wrong: %v", dtl["dt.security_context"])
-	}
-	if !reflect.DeepEqual(dtl["dt.cost.product"], map[string]any{"tagKey": "product"}) {
-		t.Errorf("tagKey entry wrong: %v", dtl["dt.cost.product"])
-	}
+	require.True(t, ok, "dtLabelsEnrichment missing: %v", aws)
+	assert.Equal(t, map[string]any{"literal": "my-app"}, dtl["dt.security_context"])
+	assert.Equal(t, map[string]any{"tagKey": "product"}, dtl["dt.cost.product"])
 }

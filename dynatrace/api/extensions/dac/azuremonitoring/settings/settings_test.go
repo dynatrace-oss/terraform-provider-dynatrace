@@ -1,3 +1,5 @@
+//go:build unit
+
 /**
 * @license
 * Copyright 2026 Dynatrace LLC
@@ -19,11 +21,11 @@ package settings_test
 
 import (
 	"encoding/json"
-	"reflect"
-	"sort"
 	"testing"
 
 	settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/dac/azuremonitoring/settings"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func base() *settings.Settings {
@@ -47,14 +49,14 @@ func base() *settings.Settings {
 func azureBlock(t *testing.T, s *settings.Settings) map[string]any {
 	t.Helper()
 	raw, err := json.Marshal(s)
-	if err != nil {
-		t.Fatalf("marshal: %v", err)
-	}
+	require.NoError(t, err, "marshal")
 	var got map[string]any
-	if err := json.Unmarshal(raw, &got); err != nil {
-		t.Fatalf("decode: %v", err)
-	}
-	return got["value"].(map[string]any)["azure"].(map[string]any)
+	require.NoError(t, json.Unmarshal(raw, &got), "decode")
+	value, ok := got["value"].(map[string]any)
+	require.True(t, ok, "value block missing")
+	azure, ok := value["azure"].(map[string]any)
+	require.True(t, ok, "azure block missing")
+	return azure
 }
 
 // TestMarshalWireShape pins the on-the-wire JSON shape we send to
@@ -65,87 +67,46 @@ func TestMarshalWireShape(t *testing.T) {
 	s := base()
 
 	raw, err := json.Marshal(s)
-	if err != nil {
-		t.Fatalf("marshal: %v", err)
-	}
+	require.NoError(t, err, "marshal")
 
 	var got map[string]any
-	if err := json.Unmarshal(raw, &got); err != nil {
-		t.Fatalf("re-decode: %v", err)
-	}
+	require.NoError(t, json.Unmarshal(raw, &got), "re-decode")
 
-	if got["scope"] != settings.DefaultScope {
-		t.Fatalf("scope: got %v, want %s", got["scope"], settings.DefaultScope)
-	}
+	assert.Equal(t, settings.DefaultScope, got["scope"])
 
 	value, ok := got["value"].(map[string]any)
-	if !ok {
-		t.Fatalf("value: missing or wrong type: %T", got["value"])
-	}
-	wantTopLevel := map[string]any{
-		"enabled":           true,
-		"description":       "my-azure-monitoring",
-		"version":           "2.0.0",
-		"activationContext": "DATA_ACQUISITION",
-	}
-	for k, v := range wantTopLevel {
-		if !reflect.DeepEqual(value[k], v) {
-			t.Errorf("value.%s: got %v, want %v", k, value[k], v)
-		}
-	}
+	require.True(t, ok, "value: missing or wrong type: %T", got["value"])
 
-	azure, _ := value["azure"].(map[string]any)
-	if azure == nil {
-		t.Fatalf("azure block missing")
-	}
-	wantAzure := map[string]any{
-		"subscriptionFilteringMode": "INCLUDE",
-		"configurationMode":         "ADVANCED",
-		"deploymentMode":            "AUTOMATED",
-		"deploymentScope":           "SUBSCRIPTION",
-	}
-	for k, v := range wantAzure {
-		if azure[k] != v {
-			t.Errorf("azure.%s: got %v, want %v", k, azure[k], v)
-		}
-	}
+	assert.Equal(t, true, value["enabled"])
+	assert.Equal(t, "my-azure-monitoring", value["description"])
+	assert.Equal(t, "2.0.0", value["version"])
+	assert.Equal(t, "DATA_ACQUISITION", value["activationContext"])
+
+	azure, ok := value["azure"].(map[string]any)
+	require.True(t, ok, "azure block missing")
+
+	assert.Equal(t, "INCLUDE", azure["subscriptionFilteringMode"])
+	assert.Equal(t, "ADVANCED", azure["configurationMode"])
+	assert.Equal(t, "AUTOMATED", azure["deploymentMode"])
+	assert.Equal(t, "SUBSCRIPTION", azure["deploymentScope"])
 
 	for _, key := range []string{"credentials", "locationFiltering", "subscriptionFiltering", "tagFiltering", "tagEnrichment"} {
-		if _, ok := azure[key]; !ok {
-			t.Errorf("azure.%s missing — wire shape requires the key even when empty", key)
-		}
+		assert.Contains(t, azure, key, "wire shape requires the key even when empty")
 	}
 
-	creds, _ := azure["credentials"].([]any)
-	if len(creds) != 1 {
-		t.Fatalf("credentials length: got %d, want 1", len(creds))
-	}
-	cred := creds[0].(map[string]any)
-	wantCred := map[string]any{
-		"connectionId":       "conn-objectid",
-		"servicePrincipalId": "00000000-0000-0000-0000-000000000001",
-		"type":               "FEDERATED",
-		"enabled":            true,
-	}
-	for k, v := range wantCred {
-		if !reflect.DeepEqual(cred[k], v) {
-			t.Errorf("credentials[0].%s: got %v, want %v", k, cred[k], v)
-		}
-	}
-	// description defaults to top-level name when not set
-	if cred["description"] != "my-azure-monitoring" {
-		t.Errorf("credentials[0].description: got %v, want defaulted to name", cred["description"])
-	}
+	creds, ok := azure["credentials"].([]any)
+	require.True(t, ok)
+	require.Len(t, creds, 1)
+	cred, ok := creds[0].(map[string]any)
+	require.True(t, ok)
+	assert.Equal(t, "conn-objectid", cred["connectionId"])
+	assert.Equal(t, "00000000-0000-0000-0000-000000000001", cred["servicePrincipalId"])
+	assert.Equal(t, "FEDERATED", cred["type"])
+	assert.Equal(t, true, cred["enabled"])
+	assert.Equal(t, "my-azure-monitoring", cred["description"], "defaults to the top-level name")
 
-	loc, _ := azure["locationFiltering"].([]any)
-	if len(loc) != 2 {
-		t.Errorf("locationFiltering length: got %d, want 2", len(loc))
-	}
-
-	fs, _ := value["featureSets"].([]any)
-	if len(fs) != 1 || fs[0] != "microsoft_compute.virtualmachines_essential" {
-		t.Errorf("featureSets: got %v", fs)
-	}
+	assert.ElementsMatch(t, []any{"eastus", "westeurope"}, azure["locationFiltering"])
+	assert.ElementsMatch(t, []any{"microsoft_compute.virtualmachines_essential"}, value["featureSets"])
 }
 
 func TestEnumDefaults(t *testing.T) {
@@ -156,72 +117,50 @@ func TestEnumDefaults(t *testing.T) {
 		},
 	}
 	azure := azureBlock(t, s)
-	for k, want := range map[string]any{
-		"configurationMode":         "ADVANCED",
-		"deploymentMode":            "AUTOMATED",
-		"deploymentScope":           "SUBSCRIPTION",
-		"subscriptionFilteringMode": "INCLUDE",
-	} {
-		if azure[k] != want {
-			t.Errorf("azure.%s: got %v, want %v", k, azure[k], want)
-		}
-	}
 
-	raw, _ := json.Marshal(s)
+	assert.Equal(t, "ADVANCED", azure["configurationMode"])
+	assert.Equal(t, "AUTOMATED", azure["deploymentMode"])
+	assert.Equal(t, "SUBSCRIPTION", azure["deploymentScope"])
+	assert.Equal(t, "INCLUDE", azure["subscriptionFilteringMode"])
+
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
 	var top map[string]any
-	_ = json.Unmarshal(raw, &top)
-	if top["scope"] != settings.DefaultScope {
-		t.Errorf("scope: got %v, want %s", top["scope"], settings.DefaultScope)
-	}
+	require.NoError(t, json.Unmarshal(raw, &top), "decode")
+	assert.Equal(t, settings.DefaultScope, top["scope"])
 
 	// Credential gets defaulted type FEDERATED.
-	creds := azure["credentials"].([]any)
-	if creds[0].(map[string]any)["type"] != "FEDERATED" {
-		t.Errorf("credential.type default: got %v, want FEDERATED", creds[0].(map[string]any)["type"])
-	}
+	creds, ok := azure["credentials"].([]any)
+	require.True(t, ok)
+	require.Len(t, creds, 1)
+	cred, ok := creds[0].(map[string]any)
+	require.True(t, ok)
+	assert.Equal(t, "FEDERATED", cred["type"])
 }
 
 func TestRoundTrip(t *testing.T) {
 	in := base()
 	in.SubscriptionFilter = []string{"00000000-0000-0000-0000-000000000abc"}
 	raw, err := json.Marshal(in)
-	if err != nil {
-		t.Fatalf("marshal: %v", err)
-	}
+	require.NoError(t, err, "marshal")
+
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	sort.Strings(in.Regions)
-	sort.Strings(out.Regions)
-	if !reflect.DeepEqual(in.Regions, out.Regions) {
-		t.Errorf("regions: got %v, want %v", out.Regions, in.Regions)
-	}
-	sort.Strings(in.FeatureSets)
-	sort.Strings(out.FeatureSets)
-	if !reflect.DeepEqual(in.FeatureSets, out.FeatureSets) {
-		t.Errorf("featureSets: got %v, want %v", out.FeatureSets, in.FeatureSets)
-	}
-	if len(out.Credentials) != 1 || out.Credentials[0].ConnectionID != in.Credentials[0].ConnectionID {
-		t.Errorf("credential lost: %+v", out.Credentials)
-	}
-	if out.Credentials[0].ServicePrincipalID != in.Credentials[0].ServicePrincipalID {
-		t.Errorf("servicePrincipalId mismatch")
-	}
-	if out.Credentials[0].Type != "FEDERATED" {
-		t.Errorf("credential.type: got %v", out.Credentials[0].Type)
-	}
-	if len(out.SubscriptionFilter) != 1 || out.SubscriptionFilter[0] != in.SubscriptionFilter[0] {
-		t.Errorf("subscriptionFilter lost: %+v", out.SubscriptionFilter)
-	}
-	if out.Name != in.Name {
-		t.Errorf("name (description): got %v", out.Name)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	assert.ElementsMatch(t, in.Regions, out.Regions)
+	assert.ElementsMatch(t, in.FeatureSets, out.FeatureSets)
+	assert.ElementsMatch(t, in.SubscriptionFilter, out.SubscriptionFilter)
+
+	require.Len(t, out.Credentials, 1)
+	assert.Equal(t, in.Credentials[0].ConnectionID, out.Credentials[0].ConnectionID)
+	assert.Equal(t, in.Credentials[0].ServicePrincipalID, out.Credentials[0].ServicePrincipalID)
+	assert.Equal(t, "FEDERATED", out.Credentials[0].Type)
+	assert.Equal(t, in.Name, out.Name, "name (description)")
 }
 
 func TestCredentialTypeDefaultedOnUnmarshal(t *testing.T) {
-	// Older configs in the live dump omit `type` on credentials. Make sure
-	// UnmarshalJSON injects FEDERATED so set comparison stays stable.
+	// Older configurations omit `type` on credentials. Make sure UnmarshalJSON
+	// injects FEDERATED so set comparison stays stable.
 	raw := []byte(`{
 		"scope":"integration-azure",
 		"value":{
@@ -234,15 +173,10 @@ func TestCredentialTypeDefaultedOnUnmarshal(t *testing.T) {
 		}
 	}`)
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if len(out.Credentials) != 1 {
-		t.Fatalf("credentials lost: %+v", out.Credentials)
-	}
-	if out.Credentials[0].Type != "FEDERATED" {
-		t.Errorf("credential.type: got %q, want FEDERATED", out.Credentials[0].Type)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	require.Len(t, out.Credentials, 1)
+	assert.Equal(t, "FEDERATED", out.Credentials[0].Type)
 }
 
 func TestAPIEchoArraysIgnored(t *testing.T) {
@@ -262,21 +196,12 @@ func TestAPIEchoArraysIgnored(t *testing.T) {
 		}
 	}`)
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
 	// Round-trip → the rendered payload must not carry those keys back.
-	rendered, err := json.Marshal(out)
-	if err != nil {
-		t.Fatalf("marshal: %v", err)
-	}
-	var got map[string]any
-	_ = json.Unmarshal(rendered, &got)
-	azure := got["value"].(map[string]any)["azure"].(map[string]any)
+	azure := azureBlock(t, out)
 	for _, forbidden := range []string{"namespaces", "eventHubsConfiguration"} {
-		if _, ok := azure[forbidden]; ok {
-			t.Errorf("azure.%s leaked back into the wire payload (eternal-drift trap)", forbidden)
-		}
+		assert.NotContains(t, azure, forbidden, "leaked back into the wire payload (eternal-drift trap)")
 	}
 }
 
@@ -286,35 +211,25 @@ func TestTagFilterRoundTrip(t *testing.T) {
 		{Key: "env", Value: "prod", Condition: "INCLUDE"},
 		{Key: "team", Value: "infra", Condition: "EXCLUDE"},
 	}
-	raw, _ := json.Marshal(s)
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
+
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if len(out.TagFilters) != 2 {
-		t.Fatalf("tag filters: got %d, want 2", len(out.TagFilters))
-	}
-	if out.TagFilters[0].Key != "env" || out.TagFilters[0].Condition != "INCLUDE" {
-		t.Errorf("tag filter[0] mismatch: %+v", out.TagFilters[0])
-	}
-	if out.TagFilters[1].Condition != "EXCLUDE" {
-		t.Errorf("tag filter[1] condition mismatch: %+v", out.TagFilters[1])
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	assert.ElementsMatch(t, s.TagFilters, out.TagFilters)
 }
 
 func TestTagEnrichmentRoundTrip(t *testing.T) {
 	s := base()
 	s.TagEnrichment = []string{"owner", "cost-center"}
-	raw, _ := json.Marshal(s)
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
+
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	sort.Strings(out.TagEnrichment)
-	want := []string{"cost-center", "owner"}
-	if !reflect.DeepEqual(out.TagEnrichment, want) {
-		t.Errorf("tag enrichment: got %v, want %v", out.TagEnrichment, want)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	assert.ElementsMatch(t, []string{"owner", "cost-center"}, out.TagEnrichment)
 }
 
 func TestDtLabelEnrichmentRoundTrip(t *testing.T) {
@@ -323,31 +238,19 @@ func TestDtLabelEnrichmentRoundTrip(t *testing.T) {
 		{Label: "dt.security_context", Literal: "my-app"},
 		{Label: "dt.cost.product", TagKey: "product"},
 	}
-	raw, _ := json.Marshal(s)
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
+
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if len(out.DTLabelEnrichments) != 2 {
-		t.Fatalf("labels: %d", len(out.DTLabelEnrichments))
-	}
-	// UnmarshalJSON sorts label keys alphabetically.
-	if out.DTLabelEnrichments[0].Label != "dt.cost.product" || out.DTLabelEnrichments[0].TagKey != "product" {
-		t.Errorf("label[0]: %+v", out.DTLabelEnrichments[0])
-	}
-	if out.DTLabelEnrichments[1].Label != "dt.security_context" || out.DTLabelEnrichments[1].Literal != "my-app" {
-		t.Errorf("label[1]: %+v", out.DTLabelEnrichments[1])
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	// The wire representation is a JSON object, so the decoded order carries no
+	// meaning — compare as a set.
+	assert.ElementsMatch(t, s.DTLabelEnrichments, out.DTLabelEnrichments)
 
 	azure := azureBlock(t, s)
 	dtl, ok := azure["dtLabelsEnrichment"].(map[string]any)
-	if !ok {
-		t.Fatalf("dtLabelsEnrichment missing: %v", azure)
-	}
-	if !reflect.DeepEqual(dtl["dt.security_context"], map[string]any{"literal": "my-app"}) {
-		t.Errorf("literal entry wrong: %v", dtl["dt.security_context"])
-	}
-	if !reflect.DeepEqual(dtl["dt.cost.product"], map[string]any{"tagKey": "product"}) {
-		t.Errorf("tagKey entry wrong: %v", dtl["dt.cost.product"])
-	}
+	require.True(t, ok, "dtLabelsEnrichment missing: %v", azure)
+	assert.Equal(t, map[string]any{"literal": "my-app"}, dtl["dt.security_context"])
+	assert.Equal(t, map[string]any{"tagKey": "product"}, dtl["dt.cost.product"])
 }

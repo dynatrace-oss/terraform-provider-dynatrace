@@ -1,3 +1,5 @@
+//go:build unit
+
 /**
 * @license
 * Copyright 2026 Dynatrace LLC
@@ -19,11 +21,11 @@ package settings_test
 
 import (
 	"encoding/json"
-	"reflect"
-	"sort"
 	"testing"
 
 	settings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/dac/gcpmonitoring/settings"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func base() *settings.Settings {
@@ -47,14 +49,14 @@ func base() *settings.Settings {
 func googleCloudBlock(t *testing.T, s *settings.Settings) map[string]any {
 	t.Helper()
 	raw, err := json.Marshal(s)
-	if err != nil {
-		t.Fatalf("marshal: %v", err)
-	}
+	require.NoError(t, err, "marshal")
 	var got map[string]any
-	if err := json.Unmarshal(raw, &got); err != nil {
-		t.Fatalf("decode: %v", err)
-	}
-	return got["value"].(map[string]any)["googleCloud"].(map[string]any)
+	require.NoError(t, json.Unmarshal(raw, &got), "decode")
+	value, ok := got["value"].(map[string]any)
+	require.True(t, ok, "value block missing")
+	gc, ok := value["googleCloud"].(map[string]any)
+	require.True(t, ok, "googleCloud block missing")
+	return gc
 }
 
 // TestMarshalWireShape pins the on-the-wire JSON shape we send to
@@ -65,39 +67,24 @@ func TestMarshalWireShape(t *testing.T) {
 	s := base()
 
 	raw, err := json.Marshal(s)
-	if err != nil {
-		t.Fatalf("marshal: %v", err)
-	}
+	require.NoError(t, err, "marshal")
 
 	var got map[string]any
-	if err := json.Unmarshal(raw, &got); err != nil {
-		t.Fatalf("re-decode: %v", err)
-	}
+	require.NoError(t, json.Unmarshal(raw, &got), "re-decode")
 
-	if got["scope"] != settings.DefaultScope {
-		t.Fatalf("scope: got %v, want %s", got["scope"], settings.DefaultScope)
-	}
+	assert.Equal(t, settings.DefaultScope, got["scope"])
 
 	value, ok := got["value"].(map[string]any)
-	if !ok {
-		t.Fatalf("value: missing or wrong type: %T", got["value"])
-	}
-	wantTopLevel := map[string]any{
-		"enabled":           true,
-		"description":       "my-gcp-monitoring",
-		"version":           "2.0.0",
-		"activationContext": "DATA_ACQUISITION",
-	}
-	for k, v := range wantTopLevel {
-		if !reflect.DeepEqual(value[k], v) {
-			t.Errorf("value.%s: got %v, want %v", k, value[k], v)
-		}
-	}
+	require.True(t, ok, "value: missing or wrong type: %T", got["value"])
 
-	gc, _ := value["googleCloud"].(map[string]any)
-	if gc == nil {
-		t.Fatalf("googleCloud block missing")
-	}
+	assert.Equal(t, true, value["enabled"])
+	assert.Equal(t, "my-gcp-monitoring", value["description"])
+	assert.Equal(t, "2.0.0", value["version"])
+	assert.Equal(t, "DATA_ACQUISITION", value["activationContext"])
+
+	gc, ok := value["googleCloud"].(map[string]any)
+	require.True(t, ok, "googleCloud block missing")
+
 	// Wire shape requires these keys even when empty so the API does not
 	// rewrite them with server-side defaults.
 	for _, key := range []string{
@@ -112,59 +99,31 @@ func TestMarshalWireShape(t *testing.T) {
 		"smartscapeConfiguration",
 		"resources",
 	} {
-		if _, ok := gc[key]; !ok {
-			t.Errorf("googleCloud.%s missing — wire shape requires the key", key)
-		}
+		assert.Contains(t, gc, key, "wire shape requires the key")
 	}
 
-	creds, _ := gc["credentials"].([]any)
-	if len(creds) != 1 {
-		t.Fatalf("credentials length: got %d, want 1", len(creds))
-	}
-	cred := creds[0].(map[string]any)
-	wantCred := map[string]any{
-		"connectionId":   "conn-objectid",
-		"serviceAccount": "dynatrace-integration@example.iam.gserviceaccount.com",
-		"enabled":        true,
-	}
-	for k, v := range wantCred {
-		if !reflect.DeepEqual(cred[k], v) {
-			t.Errorf("credentials[0].%s: got %v, want %v", k, cred[k], v)
-		}
-	}
-	// description defaults to top-level name when not set
-	if cred["description"] != "my-gcp-monitoring" {
-		t.Errorf("credentials[0].description: got %v, want defaulted to name", cred["description"])
-	}
-	// GCP credentials must NOT carry a `type` field — there is only one auth mode.
-	if _, ok := cred["type"]; ok {
-		t.Errorf("credentials[0].type must be absent on GCP (has only one auth mode)")
-	}
+	creds, ok := gc["credentials"].([]any)
+	require.True(t, ok)
+	require.Len(t, creds, 1)
+	cred, ok := creds[0].(map[string]any)
+	require.True(t, ok)
+	assert.Equal(t, "conn-objectid", cred["connectionId"])
+	assert.Equal(t, "dynatrace-integration@example.iam.gserviceaccount.com", cred["serviceAccount"])
+	assert.Equal(t, true, cred["enabled"])
+	assert.Equal(t, "my-gcp-monitoring", cred["description"], "defaults to the top-level name")
+	assert.NotContains(t, cred, "type", "GCP has only one auth mode")
 
-	loc, _ := gc["locationFiltering"].([]any)
-	if len(loc) != 2 {
-		t.Errorf("locationFiltering length: got %d, want 2", len(loc))
-	}
-
-	fs, _ := value["featureSets"].([]any)
-	if len(fs) != 1 || fs[0] != "compute_engine_essential" {
-		t.Errorf("featureSets: got %v", fs)
-	}
+	assert.ElementsMatch(t, []any{"us-central1", "europe-west1"}, gc["locationFiltering"])
+	assert.ElementsMatch(t, []any{"compute_engine_essential"}, value["featureSets"])
 
 	// smartscapeConfiguration must be the object {enabled: bool}, not a plain bool.
 	sc, ok := gc["smartscapeConfiguration"].(map[string]any)
-	if !ok {
-		t.Fatalf("smartscapeConfiguration must be an object, got %T", gc["smartscapeConfiguration"])
-	}
-	if sc["enabled"] != true {
-		t.Errorf("smartscapeConfiguration.enabled: got %v, want true", sc["enabled"])
-	}
+	require.True(t, ok, "smartscapeConfiguration must be an object, got %T", gc["smartscapeConfiguration"])
+	assert.Equal(t, true, sc["enabled"])
 
 	// observabilityScopesEnabled defaults to false — must not be emitted at all
 	// (omitempty semantics — keeps the payload minimal).
-	if _, ok := gc["observabilityScopesEnabled"]; ok {
-		t.Errorf("observabilityScopesEnabled must be omitted when false")
-	}
+	assert.NotContains(t, gc, "observabilityScopesEnabled", "must be omitted when false")
 }
 
 func TestApplyDefaults(t *testing.T) {
@@ -174,20 +133,25 @@ func TestApplyDefaults(t *testing.T) {
 			{ConnectionID: "c", ServiceAccount: "sa@x.iam.gserviceaccount.com", Enabled: true},
 		},
 	}
-	raw, _ := json.Marshal(s)
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
+
 	var top map[string]any
-	_ = json.Unmarshal(raw, &top)
-	if top["scope"] != settings.DefaultScope {
-		t.Errorf("scope default: got %v, want %s", top["scope"], settings.DefaultScope)
-	}
-	if v := top["value"].(map[string]any)["activationContext"]; v != settings.DefaultActivationContext {
-		t.Errorf("activationContext default: got %v, want %s", v, settings.DefaultActivationContext)
-	}
-	gc := top["value"].(map[string]any)["googleCloud"].(map[string]any)
-	creds := gc["credentials"].([]any)
-	if creds[0].(map[string]any)["description"] != "x" {
-		t.Errorf("credential.description default: got %v, want 'x' (top-level name)", creds[0].(map[string]any)["description"])
-	}
+	require.NoError(t, json.Unmarshal(raw, &top), "decode")
+	assert.Equal(t, settings.DefaultScope, top["scope"])
+
+	value, ok := top["value"].(map[string]any)
+	require.True(t, ok, "value block missing")
+	assert.Equal(t, settings.DefaultActivationContext, value["activationContext"])
+
+	gc, ok := value["googleCloud"].(map[string]any)
+	require.True(t, ok, "googleCloud block missing")
+	creds, ok := gc["credentials"].([]any)
+	require.True(t, ok)
+	require.Len(t, creds, 1)
+	cred, ok := creds[0].(map[string]any)
+	require.True(t, ok)
+	assert.Equal(t, "x", cred["description"], "defaults to the top-level name")
 }
 
 func TestRoundTrip(t *testing.T) {
@@ -197,60 +161,28 @@ func TestRoundTrip(t *testing.T) {
 	in.TagEnrichment = []string{"tagKeys/owner"}
 	in.LabelEnrichment = []string{"team"}
 	raw, err := json.Marshal(in)
-	if err != nil {
-		t.Fatalf("marshal: %v", err)
-	}
+	require.NoError(t, err, "marshal")
+
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	sort.Strings(in.Regions)
-	sort.Strings(out.Regions)
-	if !reflect.DeepEqual(in.Regions, out.Regions) {
-		t.Errorf("regions: got %v, want %v", out.Regions, in.Regions)
-	}
-	sort.Strings(in.ProjectFilter)
-	sort.Strings(out.ProjectFilter)
-	if !reflect.DeepEqual(in.ProjectFilter, out.ProjectFilter) {
-		t.Errorf("projectFilter: got %v, want %v", out.ProjectFilter, in.ProjectFilter)
-	}
-	sort.Strings(in.FolderFilter)
-	sort.Strings(out.FolderFilter)
-	if !reflect.DeepEqual(in.FolderFilter, out.FolderFilter) {
-		t.Errorf("folderFilter: got %v, want %v", out.FolderFilter, in.FolderFilter)
-	}
-	sort.Strings(in.TagEnrichment)
-	sort.Strings(out.TagEnrichment)
-	if !reflect.DeepEqual(in.TagEnrichment, out.TagEnrichment) {
-		t.Errorf("tagEnrichment: got %v, want %v", out.TagEnrichment, in.TagEnrichment)
-	}
-	sort.Strings(in.LabelEnrichment)
-	sort.Strings(out.LabelEnrichment)
-	if !reflect.DeepEqual(in.LabelEnrichment, out.LabelEnrichment) {
-		t.Errorf("labelEnrichment: got %v, want %v", out.LabelEnrichment, in.LabelEnrichment)
-	}
-	sort.Strings(in.FeatureSets)
-	sort.Strings(out.FeatureSets)
-	if !reflect.DeepEqual(in.FeatureSets, out.FeatureSets) {
-		t.Errorf("featureSets: got %v, want %v", out.FeatureSets, in.FeatureSets)
-	}
-	if len(out.Credentials) != 1 || out.Credentials[0].ConnectionID != in.Credentials[0].ConnectionID {
-		t.Errorf("credential lost: %+v", out.Credentials)
-	}
-	if out.Credentials[0].ServiceAccount != in.Credentials[0].ServiceAccount {
-		t.Errorf("serviceAccount mismatch: got %v", out.Credentials[0].ServiceAccount)
-	}
-	if out.Name != in.Name {
-		t.Errorf("name (description): got %v", out.Name)
-	}
-	if !out.SmartscapeEnabled {
-		t.Errorf("smartscape: got %v, want true (round-tripped)", out.SmartscapeEnabled)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	assert.ElementsMatch(t, in.Regions, out.Regions)
+	assert.ElementsMatch(t, in.ProjectFilter, out.ProjectFilter)
+	assert.ElementsMatch(t, in.FolderFilter, out.FolderFilter)
+	assert.ElementsMatch(t, in.TagEnrichment, out.TagEnrichment)
+	assert.ElementsMatch(t, in.LabelEnrichment, out.LabelEnrichment)
+	assert.ElementsMatch(t, in.FeatureSets, out.FeatureSets)
+
+	require.Len(t, out.Credentials, 1)
+	assert.Equal(t, in.Credentials[0].ConnectionID, out.Credentials[0].ConnectionID)
+	assert.Equal(t, in.Credentials[0].ServiceAccount, out.Credentials[0].ServiceAccount)
+	assert.Equal(t, in.Name, out.Name, "name (description)")
+	assert.True(t, out.SmartscapeEnabled, "round-tripped")
 }
 
-// TestTagsVsLabelsSeparation guards spec §5: GCP tags (`tagKeys/…` resource-
-// manager tags) and labels (per-resource key/value pairs) are two distinct
-// filtering inputs that must NOT collide on the wire.
+// TestTagsVsLabelsSeparation guards that GCP tags (`tagKeys/…` resource-manager
+// tags) and labels (per-resource key/value pairs) are two distinct filtering
+// inputs that must NOT collide on the wire.
 func TestTagsVsLabelsSeparation(t *testing.T) {
 	s := base()
 	s.TagFilters = settings.TagFilters{
@@ -261,40 +193,35 @@ func TestTagsVsLabelsSeparation(t *testing.T) {
 	}
 	gc := googleCloudBlock(t, s)
 
-	tags, _ := gc["tagFiltering"].([]any)
-	labels, _ := gc["labelFiltering"].([]any)
-	if len(tags) != 1 {
-		t.Fatalf("tagFiltering length: got %d, want 1", len(tags))
-	}
-	if len(labels) != 1 {
-		t.Fatalf("labelFiltering length: got %d, want 1", len(labels))
-	}
-	tag := tags[0].(map[string]any)
-	if tag["key"] != "tagKeys/env" || tag["condition"] != "INCLUDE" {
-		t.Errorf("tagFiltering[0] mismatch: %+v", tag)
-	}
-	label := labels[0].(map[string]any)
-	if label["key"] != "team" || label["condition"] != "EXCLUDE" {
-		t.Errorf("labelFiltering[0] mismatch: %+v", label)
-	}
+	tags, ok := gc["tagFiltering"].([]any)
+	require.True(t, ok)
+	require.Len(t, tags, 1)
+	labels, ok := gc["labelFiltering"].([]any)
+	require.True(t, ok)
+	require.Len(t, labels, 1)
 
-	// Round-trip
-	raw, _ := json.Marshal(s)
+	tag, ok := tags[0].(map[string]any)
+	require.True(t, ok)
+	assert.Equal(t, "tagKeys/env", tag["key"])
+	assert.Equal(t, "INCLUDE", tag["condition"])
+
+	label, ok := labels[0].(map[string]any)
+	require.True(t, ok)
+	assert.Equal(t, "team", label["key"])
+	assert.Equal(t, "EXCLUDE", label["condition"])
+
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if len(out.TagFilters) != 1 || out.TagFilters[0].Key != "tagKeys/env" {
-		t.Errorf("tag filters lost: %+v", out.TagFilters)
-	}
-	if len(out.LabelFilters) != 1 || out.LabelFilters[0].Key != "team" {
-		t.Errorf("label filters lost: %+v", out.LabelFilters)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	assert.ElementsMatch(t, s.TagFilters, out.TagFilters)
+	assert.ElementsMatch(t, s.LabelFilters, out.LabelFilters)
 }
 
-// TestAPIEchoArraysGuard validates spec §5 gotcha #2: server returns empty
-// arrays (`featureSetConfiguration`, `resources` when nothing set, etc.) that
-// must NOT surface as state — otherwise plan drift is eternal.
+// TestAPIEchoArraysGuard validates that the empty arrays the server echoes
+// back (`featureSetConfiguration`, `resources` when nothing is set, and the
+// filtering lists) do NOT surface as state — otherwise plan drift is eternal.
 func TestAPIEchoArraysGuard(t *testing.T) {
 	raw := []byte(`{
 		"scope":"integration-gcp",
@@ -316,35 +243,18 @@ func TestAPIEchoArraysGuard(t *testing.T) {
 		}
 	}`)
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
 	// All optional slices must come back as nil (not empty), so that
 	// Terraform sees "unchanged" rather than "moved from null to []".
-	if out.ProjectFilter != nil {
-		t.Errorf("ProjectFilter: got %v, want nil", out.ProjectFilter)
-	}
-	if out.FolderFilter != nil {
-		t.Errorf("FolderFilter: got %v, want nil", out.FolderFilter)
-	}
-	if out.TagFilters != nil {
-		t.Errorf("TagFilters: got %v, want nil", out.TagFilters)
-	}
-	if out.LabelFilters != nil {
-		t.Errorf("LabelFilters: got %v, want nil", out.LabelFilters)
-	}
-	if out.TagEnrichment != nil {
-		t.Errorf("TagEnrichment: got %v, want nil", out.TagEnrichment)
-	}
-	if out.LabelEnrichment != nil {
-		t.Errorf("LabelEnrichment: got %v, want nil", out.LabelEnrichment)
-	}
-	if out.ResourceAutodiscovery != nil {
-		t.Errorf("ResourceAutodiscovery: got %v, want nil", out.ResourceAutodiscovery)
-	}
-	if out.FeatureSets != nil {
-		t.Errorf("FeatureSets: got %v, want nil", out.FeatureSets)
-	}
+	assert.Nil(t, out.ProjectFilter)
+	assert.Nil(t, out.FolderFilter)
+	assert.Nil(t, out.TagFilters)
+	assert.Nil(t, out.LabelFilters)
+	assert.Nil(t, out.TagEnrichment)
+	assert.Nil(t, out.LabelEnrichment)
+	assert.Nil(t, out.ResourceAutodiscovery)
+	assert.Nil(t, out.FeatureSets)
 }
 
 // TestSmartscapeAlwaysTrue guards the hidden-attribute contract: smartscape
@@ -363,12 +273,8 @@ func TestSmartscapeAlwaysTrue(t *testing.T) {
 		}
 	}`)
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if !out.SmartscapeEnabled {
-		t.Errorf("smartscape missing in response: got %v, want forced true", out.SmartscapeEnabled)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+	assert.True(t, out.SmartscapeEnabled, "smartscape missing in response must be forced true")
 
 	// 2. Response with smartscapeConfiguration.enabled=false → still forced true.
 	raw = []byte(`{
@@ -382,12 +288,8 @@ func TestSmartscapeAlwaysTrue(t *testing.T) {
 		}
 	}`)
 	out = &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if !out.SmartscapeEnabled {
-		t.Errorf("smartscape explicit false echoed by API: got %v, want forced true (hidden-attribute drift guard)", out.SmartscapeEnabled)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+	assert.True(t, out.SmartscapeEnabled, "explicit false echoed by the API must be forced true")
 
 	// 3. Caller stuffs SmartscapeEnabled=false into the struct → wire payload still true.
 	s := &settings.Settings{
@@ -398,12 +300,8 @@ func TestSmartscapeAlwaysTrue(t *testing.T) {
 	}
 	gc := googleCloudBlock(t, s)
 	sc, ok := gc["smartscapeConfiguration"].(map[string]any)
-	if !ok {
-		t.Fatalf("smartscapeConfiguration must be an object, got %T", gc["smartscapeConfiguration"])
-	}
-	if sc["enabled"] != true {
-		t.Errorf("smartscapeConfiguration.enabled: got %v, want true (hardcoded)", sc["enabled"])
-	}
+	require.True(t, ok, "smartscapeConfiguration must be an object, got %T", gc["smartscapeConfiguration"])
+	assert.Equal(t, true, sc["enabled"], "hardcoded")
 }
 
 // TestObservabilityScopesEnabled exercises the omitempty boolean: true →
@@ -412,19 +310,13 @@ func TestObservabilityScopesEnabled(t *testing.T) {
 	s := base()
 	s.ObservabilityScopesEnabled = true
 	gc := googleCloudBlock(t, s)
-	if gc["observabilityScopesEnabled"] != true {
-		t.Errorf("observabilityScopesEnabled: got %v, want true", gc["observabilityScopesEnabled"])
-	}
+	assert.Equal(t, true, gc["observabilityScopesEnabled"])
 
-	// Round-trip true.
-	raw, _ := json.Marshal(s)
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if !out.ObservabilityScopesEnabled {
-		t.Errorf("ObservabilityScopesEnabled: got %v, want true (round-tripped)", out.ObservabilityScopesEnabled)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+	assert.True(t, out.ObservabilityScopesEnabled, "round-tripped")
 }
 
 // TestResourceAutodiscoveryRoundTrip exercises per-resource-type overrides
@@ -443,40 +335,25 @@ func TestResourceAutodiscoveryRoundTrip(t *testing.T) {
 		},
 	}
 	gc := googleCloudBlock(t, s)
-	res, _ := gc["resources"].([]any)
-	if len(res) != 2 {
-		t.Fatalf("resources length: got %d, want 2", len(res))
-	}
-	r0 := res[0].(map[string]any)
-	if r0["resourceType"] != "compute.googleapis.com/Instance" || r0["autoDiscoveryEnabled"] != true {
-		t.Errorf("resources[0] mismatch: %+v", r0)
-	}
-	exc, _ := r0["autodiscoveryExcludeMetricType"].([]any)
-	if len(exc) != 1 || exc[0] != "compute.googleapis.com/instance/disk/read_bytes_count" {
-		t.Errorf("resources[0].autodiscoveryExcludeMetricType: got %v", exc)
-	}
-	r1 := res[1].(map[string]any)
-	if r1["autoDiscoveryEnabled"] != false {
-		t.Errorf("resources[1].autoDiscoveryEnabled: got %v, want false", r1["autoDiscoveryEnabled"])
-	}
-	// When ExcludeMetricType is empty the key is omitted.
-	if _, ok := r1["autodiscoveryExcludeMetricType"]; ok {
-		t.Errorf("resources[1].autodiscoveryExcludeMetricType must be omitted when empty")
-	}
+	res, ok := gc["resources"].([]any)
+	require.True(t, ok)
+	require.Len(t, res, 2)
 
-	// Round-trip
-	raw, _ := json.Marshal(s)
+	r0, ok := res[0].(map[string]any)
+	require.True(t, ok)
+	assert.Equal(t, "compute.googleapis.com/Instance", r0["resourceType"])
+	assert.Equal(t, true, r0["autoDiscoveryEnabled"])
+	assert.ElementsMatch(t, []any{"compute.googleapis.com/instance/disk/read_bytes_count"}, r0["autodiscoveryExcludeMetricType"])
+
+	r1, ok := res[1].(map[string]any)
+	require.True(t, ok)
+	assert.Equal(t, false, r1["autoDiscoveryEnabled"])
+	assert.NotContains(t, r1, "autodiscoveryExcludeMetricType", "must be omitted when empty")
+
+	raw, err := json.Marshal(s)
+	require.NoError(t, err, "marshal")
 	out := &settings.Settings{}
-	if err := json.Unmarshal(raw, out); err != nil {
-		t.Fatalf("unmarshal: %v", err)
-	}
-	if len(out.ResourceAutodiscovery) != 2 {
-		t.Fatalf("ResourceAutodiscovery lost: %+v", out.ResourceAutodiscovery)
-	}
-	if out.ResourceAutodiscovery[0].ResourceType != "compute.googleapis.com/Instance" {
-		t.Errorf("ResourceAutodiscovery[0].ResourceType: got %v", out.ResourceAutodiscovery[0].ResourceType)
-	}
-	if len(out.ResourceAutodiscovery[0].ExcludeMetricType) != 1 {
-		t.Errorf("ResourceAutodiscovery[0].ExcludeMetricType lost: %v", out.ResourceAutodiscovery[0].ExcludeMetricType)
-	}
+	require.NoError(t, json.Unmarshal(raw, out), "unmarshal")
+
+	assert.ElementsMatch(t, s.ResourceAutodiscovery, out.ResourceAutodiscovery)
 }
