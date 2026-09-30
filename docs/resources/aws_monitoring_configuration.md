@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_aws_monitoring_configuration (Resource)
 
--> This resource is part of the Dynatrace Application Cloud (DAC) typed-resource set. It wraps an Extensions 2.0 monitoring configuration object (extension `com.dynatrace.extension.da-aws`) with a strongly-typed schema, mirroring the wire shape produced by `dtctl create aws`.
+-> This resource wraps an Extensions 2.0 monitoring configuration object (extension `com.dynatrace.extension.da-aws`) in a strongly-typed schema, so the configuration is expressed as Terraform attributes instead of a hand-maintained JSON document.
 
 -> This resource requires the platform token scopes **Read settings** (`settings:objects:read`) and **Write settings** (`settings:objects:write`), plus **Read extensions** (`extensions.read`) and **Write extension monitoring configurations** (`extensionConfigurations.write`).
 
@@ -26,7 +26,7 @@ This resource depends on a `dynatrace_aws_connection` (HAS) and the correspondin
 ```terraform
 resource "dynatrace_aws_monitoring_configuration" "this" {
   # Assumes a pre-existing dynatrace_aws_connection + dynatrace_aws_connection_role_arn.
-  name              = "dac-tf-poc-monitoring"
+  name              = "example-monitoring"
   enabled           = true
   extension_version = "1.0.1" # omit to pin the highest version installed on the tenant at Create
   connection_id     = "vu9U3hXa3q0AAAABACdidWlsdGluOmh5cGVyc2NhbGVyLWF1dGhlbnRpY2F0aW9uOmF3cw"
@@ -78,7 +78,7 @@ resource "dynatrace_aws_monitoring_configuration" "this" {
 - `deployment_region` (String) AWS region the extension workload runs in. Defaults to the first entry in `regions`.
 - `dt_label_enrichment` (Block List) Dynatrace labels (`dt.*`) applied to every monitored entity. Each block sets exactly one of `literal` or `tag_key`. (see [below for nested schema](#nestedblock--dt_label_enrichment))
 - `enabled` (Boolean) Whether the monitoring configuration is active. Defaults to true.
-- `extension_version` (String) Version of `com.dynatrace.extension.da-aws` that this configuration targets. Optional — when omitted at create time, the provider picks the highest semver version installed on the tenant (same behavior as `dtctl create aws`). The resolved value is persisted to state. On subsequent refreshes the provider reads back whatever version Dynatrace currently reports for this configuration; if the extension was auto-updated (or bumped manually) the new version surfaces as drift in `terraform plan`, but no Terraform-driven update silently re-resolves it. To pin a version, set it explicitly here (typical: `dynatrace_extension.aws.version`).
+- `extension_version` (String) Version of `com.dynatrace.extension.da-aws` that this configuration targets. Optional — when omitted, the provider resolves the highest semver version installed on the tenant at create time. The resolved value is persisted to state so subsequent plans are stable.
 - `feature_sets` (Set of String) CloudWatch metric feature sets to enable (e.g. `EC2_essential`). When empty the extension defaults are used.
 - `scope` (String) Settings 2.0 scope. Defaults to `integration-aws`. Changing it forces recreation.
 - `tag_enrichment` (Set of String) AWS tag keys whose values are copied as Dynatrace tags on monitored entities.
