@@ -1,7 +1,7 @@
 ---
 layout: ""
 page_title: "dynatrace_aws_monitoring_configuration Resource - terraform-provider-dynatrace"
-subcategory: "Extensions 2.0"
+subcategory: "Extensions"
 description: |-
   The resource `dynatrace_aws_monitoring_configuration` manages an Extensions 2.0 monitoring configuration for `com.dynatrace.extension.da-aws`.
 ---
