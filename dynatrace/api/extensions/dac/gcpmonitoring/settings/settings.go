@@ -35,7 +35,7 @@ import (
 // monitoring configuration.
 const GCPExtensionName = "com.dynatrace.extension.da-gcp"
 
-// DefaultScope is the Settings 2.0 scope used by GCP DAC monitoring configs.
+// DefaultScope is the Settings 2.0 scope used by GCP monitoring configurations.
 const DefaultScope = "integration-gcp"
 
 // Wire-level defaults expected by com.dynatrace.extension.da-gcp.

@@ -26,7 +26,7 @@ This resource depends on a `dynatrace_aws_connection` (HAS) and the correspondin
 ```terraform
 resource "dynatrace_aws_monitoring_configuration" "this" {
   # Assumes a pre-existing dynatrace_aws_connection + dynatrace_aws_connection_role_arn.
-  name              = "dac-tf-poc-monitoring"
+  name              = "example-monitoring"
   enabled           = true
   extension_version = "1.0.1" # omit to pin the highest version installed on the tenant at Create
   connection_id     = "vu9U3hXa3q0AAAABACdidWlsdGluOmh5cGVyc2NhbGVyLWF1dGhlbnRpY2F0aW9uOmF3cw"

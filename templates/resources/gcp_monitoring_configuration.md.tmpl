@@ -33,7 +33,7 @@ The GCP APIs the extension calls (`compute.googleapis.com`, `monitoring.googleap
 resource "dynatrace_gcp_principal" "this" {}
 
 resource "google_service_account" "monitoring" {
-  account_id   = "dynatrace-dac"
+  account_id   = "dynatrace-monitoring"
   display_name = "Dynatrace monitoring account"
   project      = var.gcp_project_id
 }
@@ -51,7 +51,7 @@ resource "google_service_account_iam_member" "dynatrace_token_creator" {
 }
 
 resource "dynatrace_gcp_connection" "this" {
-  name               = "dac-tf-poc-connection"
+  name               = "example-connection"
   service_account_id = google_service_account.monitoring.email
   oauth_consumers    = ["SVC:com.dynatrace.da"]
 }
@@ -62,7 +62,7 @@ resource "dynatrace_gcp_monitoring_configuration" "this" {
     google_service_account_iam_member.dynatrace_token_creator,
   ]
 
-  name    = "dac-tf-poc-monitoring"
+  name    = "example-monitoring"
   enabled = true
 
   credential {

@@ -35,7 +35,7 @@ import (
 // monitoring configuration.
 const AWSExtensionName = "com.dynatrace.extension.da-aws"
 
-// DefaultScope is the Settings 2.0 scope used by AWS DAC monitoring configs.
+// DefaultScope is the Settings 2.0 scope used by AWS monitoring configurations.
 const DefaultScope = "integration-aws"
 
 // Wire-level defaults expected by com.dynatrace.extension.da-aws.

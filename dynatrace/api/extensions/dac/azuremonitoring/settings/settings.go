@@ -35,7 +35,7 @@ import (
 // Azure monitoring configuration.
 const AzureExtensionName = "com.dynatrace.extension.da-azure"
 
-// DefaultScope is the Settings 2.0 scope used by Azure DAC monitoring configs.
+// DefaultScope is the Settings 2.0 scope used by Azure monitoring configurations.
 const DefaultScope = "integration-azure"
 
 // Wire-level defaults expected by com.dynatrace.extension.da-azure.
