@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_azure_monitoring_configuration (Resource)
 
--> This resource is part of the Dynatrace Application Cloud (DAC) typed-resource set. It wraps an Extensions 2.0 monitoring configuration object (extension `com.dynatrace.extension.da-azure`) with a strongly-typed schema, mirroring the wire shape produced by `dtctl create azure`.
+-> This resource wraps an Extensions 2.0 monitoring configuration object (extension `com.dynatrace.extension.da-azure`) in a strongly-typed schema, so the configuration is expressed as Terraform attributes instead of a hand-maintained JSON document.
 
 -> This resource requires the platform token scopes **Read settings** (`settings:objects:read`) and **Write settings** (`settings:objects:write`), plus **Read extensions** (`extensions.read`) and **Write extension monitoring configurations** (`extensionConfigurations.write`).
 
@@ -120,6 +120,6 @@ resource "dynatrace_azure_monitoring_configuration" "this" {
 
 - `extension_version` is **sticky in state**. When omitted on Create, the provider queries the installed extension list and pins the highest version available on the tenant. Updates do not touch the pinned version unless the user changes it explicitly.
 - The wire API echoes `namespaces[]` and `eventHubsConfiguration[]` arrays assembled server-side from the configured feature sets and tag-based Event Hub autodiscovery (`dt-log-ingest-activated` tag). The provider deliberately ignores those echoes during read to avoid eternal drift — manual per-namespace pinning is not supported.
-- `credential.type` defaults to `FEDERATED` when absent in the API response, matching dtctl's `ResolveCredential` behaviour.
+- `credential.type` defaults to `FEDERATED` when absent in the API response.
 
 {{ .SchemaMarkdown | trimspace }}

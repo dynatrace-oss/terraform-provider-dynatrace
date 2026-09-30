@@ -59,7 +59,8 @@ func googleCloudBlock(t *testing.T, s *settings.Settings) map[string]any {
 
 // TestMarshalWireShape pins the on-the-wire JSON shape we send to
 // /platform/extensions/v2/extensions/com.dynatrace.extension.da-gcp/monitoringConfigurations.
-// Shape derived from dtctl pkg/resources/gcpmonitoringconfig.
+// Shape pinned against the payload the monitoringConfigurations endpoint
+// accepts for com.dynatrace.extension.da-gcp.
 func TestMarshalWireShape(t *testing.T) {
 	s := base()
 
@@ -160,7 +161,7 @@ func TestMarshalWireShape(t *testing.T) {
 	}
 
 	// observabilityScopesEnabled defaults to false — must not be emitted at all
-	// (omitempty semantics — saves wire bytes and matches dtctl).
+	// (omitempty semantics — keeps the payload minimal).
 	if _, ok := gc["observabilityScopesEnabled"]; ok {
 		t.Errorf("observabilityScopesEnabled must be omitted when false")
 	}

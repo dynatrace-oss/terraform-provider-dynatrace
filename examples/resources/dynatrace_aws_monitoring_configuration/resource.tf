@@ -9,9 +9,8 @@ resource "dynatrace_aws_monitoring_configuration" "this" {
   regions       = ["eu-central-1", "us-east-1"]
 
   # extension_version is Optional+Computed: omit it and the provider
-  # resolves the highest semver installed on the tenant at create time
-  # (mirrors `dtctl create aws`). Pin it only when you need a specific
-  # version.
+  # resolves the highest semver installed on the tenant at create time.
+  # Pin it only when you need a specific version.
   # extension_version = "1.0.7"
 
   feature_sets = [

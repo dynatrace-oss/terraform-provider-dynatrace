@@ -38,7 +38,7 @@ const GCPExtensionName = "com.dynatrace.extension.da-gcp"
 // DefaultScope is the Settings 2.0 scope used by GCP DAC monitoring configs.
 const DefaultScope = "integration-gcp"
 
-// Wire-level defaults that match dtctl's `create gcp monitoring` behavior.
+// Wire-level defaults expected by com.dynatrace.extension.da-gcp.
 const (
 	DefaultActivationContext = "DATA_ACQUISITION"
 	DefaultSmartscapeEnabled = true
@@ -80,7 +80,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"extension_version": {
 			Type:        schema.TypeString,
-			Description: "Version of `com.dynatrace.extension.da-gcp` that this configuration targets. Optional — when omitted at create time, the provider picks the highest semver version installed on the tenant (same behavior as `dtctl create gcp monitoring`). The resolved value is persisted to state. On subsequent refreshes the provider reads back whatever version Dynatrace currently reports for this configuration; if the extension was auto-updated (or bumped manually) the new version surfaces as drift in `terraform plan`, but no Terraform-driven update silently re-resolves it. To pin a version, set it explicitly here.",
+			Description: "Version of `com.dynatrace.extension.da-gcp` that this configuration targets. Optional — when omitted at create time, the provider picks the highest semver version installed on the tenant. The resolved value is persisted to state. On subsequent refreshes the provider reads back whatever version Dynatrace currently reports for this configuration; if the extension was auto-updated (or bumped manually) the new version surfaces as drift in `terraform plan`, but no Terraform-driven update silently re-resolves it. To pin a version, set it explicitly here.",
 			Optional:    true,
 			Computed:    true,
 		},
@@ -99,7 +99,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"credential": {
 			Type:        schema.TypeList,
-			Description: "HAS connection + GCP service-account binding. At least one is required. dtctl always writes exactly one, but the API accepts a list.",
+			Description: "HAS connection + GCP service-account binding. At least one is required; the API accepts a list.",
 			Required:    true,
 			MinItems:    1,
 			Elem:        &schema.Resource{Schema: new(Credential).Schema()},

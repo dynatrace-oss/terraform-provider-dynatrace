@@ -187,8 +187,8 @@ func (s *service) Delete(ctx context.Context, id string) error {
 	return client.DeleteMonitoringConfiguration(ctx, serviceSettings.AzureExtensionName, id)
 }
 
-// resolveLatestExtensionVersion mirrors dtctl's GetLatestVersion: list all
-// installed versions of the extension and return the highest valid semver.
+// resolveLatestExtensionVersion lists every installed version of the extension
+// and returns the highest valid semver.
 func resolveLatestExtensionVersion(ctx context.Context, client ExtensionClient, extensionName string) (string, error) {
 	resp, err := client.ListExtensionVersions(ctx, extensionName)
 	if err != nil {

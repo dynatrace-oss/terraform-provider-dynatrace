@@ -38,7 +38,7 @@ const AWSExtensionName = "com.dynatrace.extension.da-aws"
 // DefaultScope is the Settings 2.0 scope used by AWS DAC monitoring configs.
 const DefaultScope = "integration-aws"
 
-// Wire-level defaults that match dtctl's `create aws` behavior.
+// Wire-level defaults expected by com.dynatrace.extension.da-aws.
 const (
 	DefaultActivationContext = "DATA_ACQUISITION"
 	DefaultDeploymentScope   = "SINGLE_ACCOUNT"
@@ -85,7 +85,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"extension_version": {
 			Type:        schema.TypeString,
-			Description: "Version of `com.dynatrace.extension.da-aws` that this configuration targets. Optional — when omitted, the provider resolves the highest semver version installed on the tenant at create time (same behavior as `dtctl create aws`). The resolved value is persisted to state so subsequent plans are stable.",
+			Description: "Version of `com.dynatrace.extension.da-aws` that this configuration targets. Optional — when omitted, the provider resolves the highest semver version installed on the tenant at create time. The resolved value is persisted to state so subsequent plans are stable.",
 			Optional:    true,
 			Computed:    true,
 		},

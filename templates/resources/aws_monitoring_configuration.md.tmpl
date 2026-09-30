@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_aws_monitoring_configuration (Resource)
 
--> This resource is part of the Dynatrace Application Cloud (DAC) typed-resource set. It wraps an Extensions 2.0 monitoring configuration object (extension `com.dynatrace.extension.da-aws`) with a strongly-typed schema, mirroring the wire shape produced by `dtctl create aws`.
+-> This resource wraps an Extensions 2.0 monitoring configuration object (extension `com.dynatrace.extension.da-aws`) in a strongly-typed schema, so the configuration is expressed as Terraform attributes instead of a hand-maintained JSON document.
 
 -> This resource requires the platform token scopes **Read settings** (`settings:objects:read`) and **Write settings** (`settings:objects:write`), plus **Read extensions** (`extensions.read`) and **Write extension monitoring configurations** (`extensionConfigurations.write`).
 

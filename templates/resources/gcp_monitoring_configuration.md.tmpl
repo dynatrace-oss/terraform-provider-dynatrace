@@ -8,7 +8,7 @@ description: |-
 
 # dynatrace_gcp_monitoring_configuration (Resource)
 
--> This resource is part of the Dynatrace Application Cloud (DAC) typed-resource set. It wraps an Extensions 2.0 monitoring configuration object (extension `com.dynatrace.extension.da-gcp`) with a strongly-typed schema, mirroring the wire shape produced by `dtctl create gcp monitoring`.
+-> This resource wraps an Extensions 2.0 monitoring configuration object (extension `com.dynatrace.extension.da-gcp`) in a strongly-typed schema, so the configuration is expressed as Terraform attributes instead of a hand-maintained JSON document.
 
 -> This resource requires the platform token scopes **Read settings** (`settings:objects:read`) and **Write settings** (`settings:objects:write`), plus **Read extensions** (`extensions.read`) and **Write extension monitoring configurations** (`extensionConfigurations.write`).
 
@@ -112,6 +112,6 @@ resource "dynatrace_gcp_monitoring_configuration" "this" {
 - `extension_version` is **sticky in state**. When omitted on Create, the provider queries the installed extension list and pins the highest version available on the tenant. Updates do not touch the pinned version unless the user changes it explicitly.
 - The GCP integration distinguishes between two GCP concepts that look similar but are distinct: **tags** (resource-manager tags addressed via `tagKeys/…`, modelled by `tag_filter` / `tag_enrichment`) and **labels** (classic per-resource key/value labels, modelled by `label_filter` / `label_enrichment`). Both arrays are written to separate top-level fields on the wire.
 - The wire API echoes `namespaces[]` and `services[]` arrays assembled server-side from the configured feature sets. The provider deliberately ignores those echoes during read to avoid eternal drift — manual per-namespace pinning is not supported.
-- `observability_scopes_enabled` is omitted from the wire payload when false to keep the JSON shape identical to `dtctl create gcp monitoring`.
+- `observability_scopes_enabled` is omitted from the wire payload when false to keep the payload minimal.
 
 {{ .SchemaMarkdown | trimspace }}
