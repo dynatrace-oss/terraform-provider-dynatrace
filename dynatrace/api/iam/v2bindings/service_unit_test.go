@@ -109,16 +109,15 @@ func TestBindingServiceClient_Get(t *testing.T) {
 		assert.Equal(t, []string{boundaryID}, binding.Policies[0].Boundaries)
 	})
 
-	t.Run("Returns a 404 rest.Error that mentions the forbidden environment for an unresolvable policy", func(t *testing.T) {
+	t.Run("Returns the permission error instead of a not found error for an unresolvable policy", func(t *testing.T) {
 		service := &BindingServiceClient{client: newMockClient(t, absentPolicyID)}
 
 		err := service.Get(t.Context(), bindingID("environment", readableEnv), &bindings.PolicyBinding{})
 
-		var restErr rest.Error
-		require.ErrorAs(t, err, &restErr)
-		assert.Equal(t, 404, restErr.Code)
-		assert.Contains(t, restErr.Message, absentPolicyID)
-		assert.Contains(t, restErr.Message, "403")
+		var apiErr api.APIError
+		require.ErrorAs(t, err, &apiErr)
+		assert.Equal(t, http.StatusForbidden, apiErr.StatusCode)
+		assert.False(t, rest.IsNotFoundError(err))
 	})
 }
 
