@@ -109,13 +109,11 @@ func fetchPolicyLevel(ctx context.Context, client rest.IAMClient, uuid string) (
 		}
 	}
 
-	// Keep returning a rest.Error with code 404 here. The export treats that as a failed
-	// resource and continues, while any other error type stops the download worker.
-	msg := fmt.Sprintf("unable to resolve levelType and levelID of policy `%s`", uuid)
 	if err = errors.Join(errs...); err != nil {
-		msg = fmt.Sprintf("%s: %s", msg, err.Error())
+		return "", "", name, err
 	}
-	return "", "", name, rest.Error{Code: 404, Message: msg}
+
+	return "", "", name, rest.Error{Code: 404, Message: fmt.Sprintf("unable to resolve levelType and levelID of policy `%s`", uuid)}
 }
 
 // ResolvePolicyLevel determines the `levelType` and `levelID` of a policy using different strategies
