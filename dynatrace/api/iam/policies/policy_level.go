@@ -20,6 +20,7 @@ package policies
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"sync"
 
@@ -97,13 +98,19 @@ func fetchPolicyLevel(ctx context.Context, client rest.IAMClient, uuid string) (
 	if environmentIDs, err = GetEnvironmentIDs(ctx, client); err != nil {
 		return "", "", name, err
 	}
+	var errs []error
 	for _, environmentID := range environmentIDs {
 		if exists, name, err = CheckPolicyExists(ctx, client, "environment", environmentID, uuid); err != nil {
-			return "", "", name, err
+			errs = append(errs, err)
+			continue
 		}
 		if exists {
 			return "environment", environmentID, name, nil
 		}
+	}
+
+	if err = errors.Join(errs...); err != nil {
+		return "", "", name, err
 	}
 
 	return "", "", name, rest.Error{Code: 404, Message: fmt.Sprintf("unable to resolve levelType and levelID of policy `%s`", uuid)}

@@ -286,12 +286,13 @@ func (me *BindingServiceClient) FetchEnvironmentBindings(ctx context.Context) ch
 		var stubs api.Stubs
 		for _, environmentID := range environmentIDs {
 			var policyBindings ListPolicyBindingsResponse
+			// skip environments the credentials cannot read instead of dropping all bindings
 			response, err := me.client.GET(ctx, fmt.Sprintf("/iam/v1/repo/environment/%s/bindings", environmentID), rest2.RequestOptions{})
 			if err != nil {
-				return
+				continue
 			}
 			if err = json.Unmarshal(response.Data, &policyBindings); err != nil {
-				return
+				continue
 			}
 
 			groupIds := map[string]bool{}
