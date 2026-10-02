@@ -20,6 +20,7 @@ package policies
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"sync"
 
@@ -97,12 +98,10 @@ func fetchPolicyLevel(ctx context.Context, client rest.IAMClient, uuid string) (
 	if environmentIDs, err = GetEnvironmentIDs(ctx, client); err != nil {
 		return "", "", name, err
 	}
+	var errs []error
 	for _, environmentID := range environmentIDs {
-		// The credentials may not be permitted to read every environment of the
-		// account. Such an environment cannot tell us anything about the policy,
-		// so it is skipped - failing here would make every policy unresolvable.
-		exists, name, err = CheckPolicyExists(ctx, client, "environment", environmentID, uuid)
-		if err != nil {
+		if exists, name, err = CheckPolicyExists(ctx, client, "environment", environmentID, uuid); err != nil {
+			errs = append(errs, err)
 			continue
 		}
 		if exists {
@@ -110,7 +109,13 @@ func fetchPolicyLevel(ctx context.Context, client rest.IAMClient, uuid string) (
 		}
 	}
 
-	return "", "", name, rest.Error{Code: 404, Message: fmt.Sprintf("unable to resolve levelType and levelID of policy `%s`", uuid)}
+	// Keep returning a rest.Error with code 404 here. The export treats that as a failed
+	// resource and continues, while any other error type stops the download worker.
+	msg := fmt.Sprintf("unable to resolve levelType and levelID of policy `%s`", uuid)
+	if err = errors.Join(errs...); err != nil {
+		msg = fmt.Sprintf("%s: %s", msg, err.Error())
+	}
+	return "", "", name, rest.Error{Code: 404, Message: msg}
 }
 
 // ResolvePolicyLevel determines the `levelType` and `levelID` of a policy using different strategies
