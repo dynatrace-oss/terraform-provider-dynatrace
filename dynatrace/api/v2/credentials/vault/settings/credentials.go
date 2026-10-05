@@ -166,6 +166,22 @@ func (me *Credentials) EnsurePredictableOrder() {
 	me.AllowedEntities = conds
 }
 
+func (me *Credentials) PrepareMarshalHCL(decoder hcl.Decoder) error {
+	// LocationForSynchronizationId isn't returned by the API. Therefore, we return the value in the state
+
+	if _, ok := decoder.GetOk("external.#"); !ok {
+		return nil
+	}
+	externalConfigState := new(externalvault.Config)
+	if err := externalConfigState.UnmarshalHCL(hcl.NewDecoder(decoder, "external", 0)); err != nil {
+		return err
+	}
+	if externalConfigState.LocationForSynchronizationId != nil && me.ExternalVault != nil {
+		me.ExternalVault.LocationForSynchronizationId = externalConfigState.LocationForSynchronizationId
+	}
+	return nil
+}
+
 func (me *Credentials) MarshalHCL(properties hcl.Properties) error {
 	if err := properties.Encode("name", me.Name); err != nil {
 		return err

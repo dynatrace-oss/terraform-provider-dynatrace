@@ -49,10 +49,11 @@ type Config struct {
 	UsernamePasswordForCPM *string `json:"usernamePasswordForCPM,omitempty"` // No documentation available
 
 	// CyberarkVaultAllowedLocation and CyberarkVaultUsernamePassword
-	ApplicationID *string `json:"applicationId,omitempty"`
-	SafeName      *string `json:"safeName,omitempty"`
-	FolderName    *string `json:"folderName,omitempty"`
-	AccountName   *string `json:"accountName,omitempty"`
+	ApplicationID                *string `json:"applicationId,omitempty"`
+	SafeName                     *string `json:"safeName,omitempty"`
+	FolderName                   *string `json:"folderName,omitempty"`
+	AccountName                  *string `json:"accountName,omitempty"`
+	LocationForSynchronizationId *string `json:"locationForSynchronizationId,omitempty"`
 }
 
 func (me *Config) Schema() map[string]*schema.Schema {
@@ -148,6 +149,15 @@ func (me *Config) Schema() map[string]*schema.Schema {
 			Description: "The name of the object that stores the username and password to retrieve and synchronize with the Dynatrace credential vault; this is not the name of the account logged into CyberArk Central Credential Provider.",
 			Optional:    true,
 		},
+		"location_for_synchronization_id": {
+			Type:        schema.TypeString,
+			Description: "Id of a location used by the synchronizing monitor",
+			Optional:    true,
+			// The API doesn't support returning and updating this field
+			// Background: The credentials API creates a Synthetic HTTP monitor with the location specified here.
+			// "It won't push updates to the created HTTP monitor"
+			ForceNew: true,
+		},
 	}
 }
 
@@ -212,6 +222,12 @@ func (me *Config) MarshalHCL(properties hcl.Properties) error {
 		return err
 	}
 
+	// "location_for_synchronization_id" is not returned by the API
+
+	if err := properties.Encode("location_for_synchronization_id", me.LocationForSynchronizationId); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -269,6 +285,10 @@ func (me *Config) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.AccountName = new(value.(string))
 	}
 
+	if value, ok := decoder.GetOk("location_for_synchronization_id"); ok {
+		me.LocationForSynchronizationId = new(value.(string))
+	}
+
 	// removed because this seems to get automatically assumed by the REST API
 	//
 	// if value, ok := decoder.GetOk("credentials_used_for_external_synchronization"); ok {
@@ -283,7 +303,7 @@ func (me *Config) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.SourceAuthMethod = SourceAuthMethods.HashicorpVaultAppRole
 	} else if me.UsernamePasswordForCPM != nil {
 		me.SourceAuthMethod = SourceAuthMethods.CyberarkVaultUsernamePassword
-	} else if me.ApplicationID != nil || me.SafeName != nil || me.FolderName != nil || me.AccountName != nil {
+	} else if me.ApplicationID != nil || me.SafeName != nil || me.FolderName != nil || me.AccountName != nil || me.LocationForSynchronizationId != nil {
 		me.SourceAuthMethod = SourceAuthMethods.CyberarkVaultAllowedLocation
 	} else if me.Certificate != nil {
 		me.SourceAuthMethod = SourceAuthMethods.HashicorpVaultCertificate
