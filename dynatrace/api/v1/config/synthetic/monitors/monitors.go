@@ -28,13 +28,22 @@ type Monitors struct {
 }
 
 func (me *Monitors) ToStubs() api.Stubs {
+	return getStubs(me.Monitors, false)
+}
+
+func getStubs(monitors []*MonitorCollectionElement, synchronized bool) api.Stubs {
 	stubs := api.Stubs{}
-	if len(me.Monitors) > 0 {
-		for _, monitor := range me.Monitors {
-			if !strings.Contains(monitor.Name, "synchronizing credentials with") {
-				stubs = append(stubs, &api.Stub{ID: monitor.EntityID, Name: monitor.Name})
-			}
+	for _, monitor := range monitors {
+		isSynchronized := strings.Contains(monitor.Name, "synchronizing credentials with")
+		if synchronized == isSynchronized {
+			stubs = append(stubs, &api.Stub{ID: monitor.EntityID, Name: monitor.Name})
 		}
 	}
 	return stubs
+}
+
+type SynchronizedMonitors Monitors
+
+func (me *SynchronizedMonitors) ToStubs() api.Stubs {
+	return getStubs(me.Monitors, true)
 }

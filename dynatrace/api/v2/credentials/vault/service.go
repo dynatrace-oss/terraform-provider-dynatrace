@@ -19,11 +19,14 @@ package vault
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"sync"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	smservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http"
+	http "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http/settings"
 	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/credentials/vault/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -56,14 +59,20 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*vault.Credentials]
 	if err != nil {
 		return nil, err
 	}
+	smService, err := smservice.ServiceSynchronized(clientSet)
+	if err != nil {
+		return nil, err
+	}
 
 	return &service{
-		service: svc,
+		service:   svc,
+		smService: smService,
 	}, nil
 }
 
 type service struct {
-	service settings.CRUDService[*vault.Credentials]
+	service   settings.CRUDService[*vault.Credentials]
+	smService settings.CRUDService[*http.SyntheticMonitor]
 }
 
 func (me *service) SchemaID() string {
@@ -87,13 +96,38 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
+	httpMonitorNameSuffix := fmt.Sprintf(" (%s)", id)
+	// Corner case (delete right after create): The monitor may not be available right after creation
+	syntheticErr := me.deleteSyntheticMonitor(ctx, httpMonitorNameSuffix)
+	if syntheticErr != nil {
+		syntheticErr = fmt.Errorf("associated HTTP monitor couldn't be deleted: %w", syntheticErr)
+	}
+
 	err := me.service.Delete(ctx, id)
 
-	// Credentials cannot be deleted while they are still associated with existing synthetic monitors.
-	// To prevent a failed destroy operation, the deletion will proceed but the credential will remain.
-	// Action Required: Remove the credential from all associated monitors, then manually delete the credential.
-	if err != nil && !strings.Contains(err.Error(), "as long as there are monitors assigned to it") {
+	if err != nil {
+		return errors.Join(err, syntheticErr)
+	}
+	if syntheticErr != nil {
+		return rest.Warning{Message: syntheticErr.Error()}
+	}
+	return nil
+}
+
+// deleteSyntheticMonitor deletes the associated Synthetic HTTP monitor, which the credential creates
+// The created monitor name ends with " (<credential-vault-id)"
+func (me *service) deleteSyntheticMonitor(ctx context.Context, httpMonitorNameSuffix string) error {
+	mon, err := me.smService.List(ctx)
+	if err != nil {
 		return err
+	}
+	for _, monitor := range mon {
+		if strings.HasSuffix(monitor.Name, httpMonitorNameSuffix) {
+			if err = me.smService.Delete(ctx, monitor.ID); err != nil && !rest.IsNotFoundError(err) {
+				return err
+			}
+			return nil
+		}
 	}
 	return nil
 }

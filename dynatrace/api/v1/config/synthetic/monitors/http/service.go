@@ -31,12 +31,12 @@ import (
 const SchemaID = "v1:synthetic:monitors:http"
 const BasePath = "/api/v1/synthetic/monitors"
 
-func Service(clientSet rest.ClientSet) (settings.CRUDService[*http.SyntheticMonitor], error) {
+func serviceWithStub(clientSet rest.ClientSet, stubs api.RecordStubs) (settings.CRUDService[*http.SyntheticMonitor], error) {
 	svc, err := settings.NewAPITokenService(clientSet, SchemaID, &settings.ServiceOptions[*http.SyntheticMonitor]{
 		Get:            settings.Path("/api/v1/synthetic/monitors/%s"),
 		List:           settings.Path("/api/v1/synthetic/monitors?type=HTTP"),
 		CreateURL:      func(v *http.SyntheticMonitor) string { return "/api/v1/synthetic/monitors" },
-		Stubs:          &monitors.Monitors{},
+		Stubs:          stubs,
 		HasNoValidator: true,
 		CreateConfirm:  30,
 	})
@@ -45,6 +45,15 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*http.SyntheticMoni
 	}
 
 	return &service{service: svc}, nil
+}
+
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*http.SyntheticMonitor], error) {
+	return serviceWithStub(clientSet, &monitors.Monitors{}) // gets rid of "synchronizing credentials with" monitors during List
+}
+
+// ServiceSynchronized returns during List only synchronized HTTP monitors
+func ServiceSynchronized(clientSet rest.ClientSet) (settings.CRUDService[*http.SyntheticMonitor], error) {
+	return serviceWithStub(clientSet, &monitors.SynchronizedMonitors{})
 }
 
 type service struct {
