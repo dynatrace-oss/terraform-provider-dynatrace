@@ -52,6 +52,12 @@ on:
       SFM_PLATFORM_TOKEN:
         description: 'Platform token for ingesting the collected test results. Only required when collect-results is true'
         required: false
+      CREDENTIAL_VAULT_CERT:
+        description: 'Certificate for the credential vault test'
+        required: true
+      CREDENTIAL_VAULT_PWD:
+        description: 'Password for the credential vault certificate'
+        required: true
 
 jobs:
   unit-tests:
@@ -228,6 +234,8 @@ jobs:
           DT_SOURCE_CLIENT_SECRET: ${{ secrets.DT_CLIENT_SECRET_SETTINGS_ADMIN }}
           TF_VAR_DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_UNIMPERSONABLE_SERVICE_ACCOUNT }}
           TF_VAR_DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT: ${{ secrets.DT_GCP_TEST_IMPERSONABLE_SERVICE_ACCOUNT }}
+          TF_VAR_CREDENTIAL_VAULT_CERT: ${{secrets.CREDENTIAL_VAULT_CERT}}
+          TF_VAR_CREDENTIAL_VAULT_PWD: ${{secrets.CREDENTIAL_VAULT_PWD}}
         run: |
           mkdir -p test-results/${{ matrix.config.slug }}
           gotestsum --junitfile test-results/${{ matrix.config.slug }}/test-results.xml --format testdox --format-icons hivis -- -tags="integration monitored connector" -v -p 1 ${{ matrix.config.path }}
