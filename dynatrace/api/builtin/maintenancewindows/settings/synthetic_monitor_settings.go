@@ -26,7 +26,7 @@ import (
 
 // Synthetic monitor disablement. Configuration for pausing synthetic monitors during the maintenance window.
 type SyntheticMonitorSettings struct {
-	DisableSyntheticMonitorFilter *string `json:"disableSyntheticMonitorFilter,omitempty"` // DQL filter selecting which synthetic monitors to pause. Required when synthetic monitors are disabled.
+	DisableSyntheticMonitorFilter *string `json:"disableSyntheticMonitorFilter,omitempty"` // DQL filter selecting which synthetic monitors to pause. Required when synthetic monitors are disabled. Supported fields: monitor.id, monitor.name, pg.tag, security.context.
 	DisableSyntheticMonitors      bool    `json:"disableSyntheticMonitors"`                // When enabled, synthetic monitors matching the filter are paused during the maintenance window.
 }
 
@@ -34,7 +34,7 @@ func (me *SyntheticMonitorSettings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"disable_synthetic_monitor_filter": {
 			Type:        schema.TypeString,
-			Description: "DQL filter selecting which synthetic monitors to pause. Required when synthetic monitors are disabled.",
+			Description: "DQL filter selecting which synthetic monitors to pause. Required when synthetic monitors are disabled. Supported fields: monitor.id, monitor.name, pg.tag, security.context.",
 			Optional:    true, // nullable & precondition
 		},
 		"disable_synthetic_monitors": {
