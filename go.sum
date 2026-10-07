@@ -104,8 +104,8 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1VwoXQT9A3Wy9MM3WgvqSxFWenqJduM=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20260929104223-19d9d885f7d6 h1:RsSCHPLYWAeeyOKv2kD1fEjmgFkRNj0iuB1uX8fFQis=
-github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20260929104223-19d9d885f7d6/go.mod h1:is7MWLk/oIQ9/GUrDLcnZJ8n2WPOOmJEOvTqk2AazoI=
+github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20261008115258-d42521c0d5f0 h1:UnJWOif2UjM40/SmkdGaJWQPGQM/gtyEWvS6VmRir34=
+github.com/dynatrace/dynatrace-configuration-as-code-core v0.9.1-0.20261008115258-d42521c0d5f0/go.mod h1:is7MWLk/oIQ9/GUrDLcnZJ8n2WPOOmJEOvTqk2AazoI=
 github.com/emirpasic/gods v1.12.0/go.mod h1:YfzfFFoVP/catgzJb4IKIqXjX78Ha8FMSDh3ymbK86o=
 github.com/emirpasic/gods v1.18.1 h1:FXtiHYKDGKCW2KzwZKx0iC0PQmdlorYgdFG9jPXJ1Bc=
 github.com/emirpasic/gods v1.18.1/go.mod h1:8tpGGwCnJ5H4r6BWwaV6OrWmMoPhUl5jm/FMNAnJvWQ=
