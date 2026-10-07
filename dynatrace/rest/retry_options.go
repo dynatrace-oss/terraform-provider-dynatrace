@@ -22,4 +22,15 @@ import (
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
 )
 
-var defaultRetryOptions = &rest.RetryOptions{MaxRetries: 30, DelayAfterRetry: 10 * time.Second, ShouldRetryFunc: rest.RetryIfTooManyRequestsOrServiceUnavailable}
+var defaultRetryOptions = &rest.RetryOptions{
+	MaxRetries:      30,
+	DelayAfterRetry: 10 * time.Second,
+	ShouldRetryFunc: rest.RetryIfTooManyRequestsOrServiceUnavailable,
+}
+
+var eofRetryOptions = &rest.RetryOptions{
+	MaxRetries:             30,
+	DelayAfterRetry:        10 * time.Second,
+	ShouldRetryFunc:        rest.RetryIfTooManyRequestsOrServiceUnavailable,
+	ShouldRetryOnErrorFunc: rest.RetryOnUnexpectedEOF,
+}

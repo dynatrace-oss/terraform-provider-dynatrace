@@ -45,7 +45,7 @@ func CreatePlatformClient(ctx context.Context, platformURL string, credentials *
 	factory := clients.Factory().
 		WithPlatformURL(platformURL).
 		WithRateLimiter(true).
-		WithRetryOptions(defaultRetryOptions).
+		WithRetryOptions(eofRetryOptions).
 		WithUserAgent(version.UserAgent())
 
 	if credentials.ContainsWorkloadIdentityFederationConfig() {
