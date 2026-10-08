@@ -515,9 +515,11 @@ func newSettings[T settings.Settings](sfn func(clientSet rest.ClientSet) (settin
 	return reflect.New(reflect.TypeOf(proto).Elem()).Interface().(T)
 }
 
+type ServiceFn[T settings.Settings] = func(clientSet rest.ClientSet) (settings.CRUDService[T], error)
+
 type ResourceDescriptor struct {
 	Dependencies []Dependency
-	Service      func(clientSet rest.ClientSet) (settings.CRUDService[settings.Settings], error)
+	Service      ServiceFn[settings.Settings]
 	protoType    settings.Settings
 	except       func(id string, name string) bool
 	Parent       *ResourceType
