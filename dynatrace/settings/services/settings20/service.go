@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -275,6 +276,10 @@ func (me *service[T]) listIDs(ctx context.Context) ([]string, error) {
 }
 
 func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
+	return me.ListWithFilter(ctx, "")
+}
+
+func (me *service[T]) ListWithFilter(ctx context.Context, filter string) (api.Stubs, error) {
 	var err error
 	var ids []string
 
@@ -298,7 +303,16 @@ func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 		if nextPageKey != nil {
 			urlStr = fmt.Sprintf("/api/v2/settings/objects?nextPageKey=%s", url.QueryEscape(*nextPageKey))
 		} else {
-			urlStr = fmt.Sprintf("/api/v2/settings/objects?schemaIds=%s&fields=%s&pageSize=100&adminAccess=%t", url.QueryEscape(me.SchemaID()), url.QueryEscape("objectId,value,scope,schemaVersion"), adminAccess)
+			queryParams := url.Values{
+				"adminAccess": []string{strconv.FormatBool(adminAccess)},
+				"fields":      []string{"objectId,value,scope,schemaVersion"},
+				"pageSize":    []string{"100"},
+				"schemaIds":   []string{me.SchemaID()},
+			}
+			if filter != "" {
+				queryParams.Add("filter", filter)
+			}
+			urlStr = fmt.Sprintf("/api/v2/settings/objects?%s", queryParams.Encode())
 		}
 		req := me.client.Get(ctx, urlStr)
 		if err = req.Finish(&sol); err != nil {
@@ -310,7 +324,7 @@ func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 
 		if len(sol.Items) > 0 {
 			for _, item := range sol.Items {
-				newItem := settings.NewSettings(me)
+				newItem := settings.NewSettings[T](me)
 				if err = json.Unmarshal(item.Value, &newItem); err != nil {
 					return nil, err
 				}

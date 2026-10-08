@@ -56,6 +56,10 @@ type CRUDService[T Settings] interface {
 	Delete(ctx context.Context, id string) error
 }
 
+type ListFilterService interface {
+	ListWithFilter(ctx context.Context, filter string) (api.Stubs, error)
+}
+
 type ListIDCRUDService[T Settings] interface {
 	CRUDService[T]
 	ListIDs(ctx context.Context) (api.Stubs, error)
