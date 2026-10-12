@@ -26,3 +26,8 @@ import "fmt"
 func ErrValidatorNotImplemented(schemaID string) error {
 	return fmt.Errorf("internal provider bug: the service for schema %q was expected to support validation but does not. Please reach out to support", schemaID)
 }
+
+// ErrListFilterNotImplemented refers to not implemented ListFilterService interfaces
+func ErrListFilterNotImplemented(schemaID string) error {
+	return fmt.Errorf("internal provider bug: the service for schema %q was expected to support list filters but does not. Please reach out to support", schemaID)
+}

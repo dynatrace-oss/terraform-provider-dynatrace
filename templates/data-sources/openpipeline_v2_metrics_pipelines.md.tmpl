@@ -1,0 +1,23 @@
+---
+layout: ""
+page_title: "dynatrace_openpipeline_v2_metrics_pipelines Data Source - terraform-provider-dynatrace"
+subcategory: "OpenPipeline V2"
+description: |-
+  The `dynatrace_openpipeline_v2_metrics_pipelines` data source covers queries for OpenPipeline metrics pipeline configurations
+---
+
+# dynatrace_openpipeline_v2_metrics_pipelines (Data Source)
+
+-> This data source requires the OAuth scope `settings:objects:read`.
+
+The `dynatrace_openpipeline_v2_metrics_pipelines` data source retrieves all matching metrics pipeline configurations.
+
+## Dynatrace Documentation
+
+- OpenPipeline - https://docs.dynatrace.com/docs/platform/openpipeline
+
+## Example Usage
+
+{{ tffile "datasources/openpipeline/pipelines/testdata/terraform/example-metrics.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
