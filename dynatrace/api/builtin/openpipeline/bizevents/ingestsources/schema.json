@@ -103,6 +103,30 @@
 			],
 			"type": "enum"
 		},
+		"FieldsAddValueType": {
+			"description": "",
+			"displayName": "Field value type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "string",
+					"value": "string"
+				},
+				{
+					"displayName": "boolean",
+					"value": "boolean"
+				},
+				{
+					"displayName": "long",
+					"value": "long"
+				},
+				{
+					"displayName": "double",
+					"value": "double"
+				}
+			],
+			"type": "enum"
+		},
 		"GeoOutputField": {
 			"description": "",
 			"displayName": "Geo output field",
@@ -305,8 +329,16 @@
 					"value": "geoLookup"
 				},
 				{
+					"displayName": "dataMasking",
+					"value": "dataMasking"
+				},
+				{
 					"displayName": "inlineLookup",
 					"value": "inlineLookup"
+				},
+				{
+					"displayName": "securityProblemExtraction",
+					"value": "securityProblemExtraction"
 				}
 			],
 			"type": "enum"
@@ -717,6 +749,68 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "text"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"DataMaskingAttributes": {
+			"description": "",
+			"displayName": "DataMaskingAttributes",
+			"documentation": "",
+			"properties": {
+				"dataMaskingFields": {
+					"description": "",
+					"displayName": "Data masking fields",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"type": "NOT_BLANK"
+							},
+							{
+								"maxLength": 256,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 10,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				},
+				"maskingRules": {
+					"constraints": [
+						{
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"dataType"
+							]
+						}
+					],
+					"description": "",
+					"displayName": "Masking rules",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/MaskingRule"
+						}
+					},
+					"maxObjects": 100,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
 				}
 			},
 			"summaryPattern": "",
@@ -1257,6 +1351,17 @@
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
 					"type": "text"
+				},
+				"valueType": {
+					"description": "",
+					"displayName": "Field value type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/enums/FieldsAddValueType"
+					}
 				}
 			},
 			"summaryPattern": "{name}-{value}",
@@ -1723,6 +1828,76 @@
 			"version": "0",
 			"versionInfo": ""
 		},
+		"MaskingRule": {
+			"description": "",
+			"displayName": "MaskingRule",
+			"documentation": "",
+			"properties": {
+				"dataType": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "unknown",
+					"description": "",
+					"displayName": "Data type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"maskedOutput": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 64,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Masked output",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"maskingStrategy": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 500,
+							"minLength": 1,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Masking strategy",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{dataType}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"MetadataEntry": {
 			"description": "",
 			"displayName": "MetadataEntry",
@@ -1854,6 +2029,22 @@
 					},
 					"type": {
 						"$ref": "#/types/CounterMetricAttributes"
+					}
+				},
+				"dataMasking": {
+					"description": "",
+					"displayName": "Data masking processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "dataMasking",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/DataMaskingAttributes"
 					}
 				},
 				"davis": {
@@ -2192,6 +2383,22 @@
 					},
 					"type": {
 						"$ref": "#/types/SecurityEventAttributes"
+					}
+				},
+				"securityProblemExtraction": {
+					"description": "",
+					"displayName": "Security problem extraction processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "securityProblemExtraction",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/SecurityProblemExtractionAttributes"
 					}
 				},
 				"smartscapeEdge": {
@@ -2816,6 +3023,73 @@
 					"nullable": false,
 					"type": {
 						"$ref": "#/types/FieldExtraction"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SecurityProblemExtractionAttributes": {
+			"description": "",
+			"displayName": "SecurityProblemExtractionAttributes",
+			"documentation": "",
+			"properties": {
+				"category": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 264,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "",
+					"displayName": "Category",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"idComponents": {
+					"constraints": [
+						{
+							"type": "UNIQUE",
+							"uniqueProperties": [
+								"idComponent"
+							]
+						}
+					],
+					"description": "",
+					"displayName": "ID components",
+					"documentation": "",
+					"items": {
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": {
+							"$ref": "#/types/SmartscapeIdComponentsEntry"
+						}
+					},
+					"maxObjects": 10,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				},
+				"nodeName": {
+					"description": "",
+					"displayName": "Node name",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/types/GenericValueAssignment"
 					}
 				}
 			},
@@ -3650,5 +3924,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.70"
+	"version": "1.75"
 }

@@ -45,8 +45,9 @@ func (me *FieldsAddAttributesEntries) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type FieldsAddAttributesEntry struct {
-	Name  string `json:"name"`  // Fields's name
-	Value string `json:"value"` // Field's value
+	Name      string              `json:"name"`                // Fields's name
+	Value     string              `json:"value"`               // Field's value
+	ValueType *FieldsAddValueType `json:"valueType,omitempty"` // Field value type. Possible values: `boolean`, `double`, `long`, `string`
 }
 
 func (me *FieldsAddAttributesEntry) Schema() map[string]*schema.Schema {
@@ -61,19 +62,26 @@ func (me *FieldsAddAttributesEntry) Schema() map[string]*schema.Schema {
 			Description: "Field's value",
 			Required:    true,
 		},
+		"value_type": {
+			Type:        schema.TypeString,
+			Description: "Field value type. Possible values: `boolean`, `double`, `long`, `string`",
+			Optional:    true, // nullable
+		},
 	}
 }
 
 func (me *FieldsAddAttributesEntry) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":  me.Name,
-		"value": me.Value,
+		"name":       me.Name,
+		"value":      me.Value,
+		"value_type": me.ValueType,
 	})
 }
 
 func (me *FieldsAddAttributesEntry) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":  &me.Name,
-		"value": &me.Value,
+		"name":       &me.Name,
+		"value":      &me.Value,
+		"value_type": &me.ValueType,
 	})
 }
