@@ -318,6 +318,11 @@
 					"customValidatorId": "ip-validation",
 					"skipAsyncValidation": false,
 					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"customValidatorId": "pg-tag-condition-validator-full-web-rules",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
 				}
 			],
 			"description": "Matches requests by comparing one detected attribute with one operation.",
@@ -1271,5 +1276,5 @@
 			]
 		}
 	},
-	"version": "2.1.15"
+	"version": "2.1.17"
 }

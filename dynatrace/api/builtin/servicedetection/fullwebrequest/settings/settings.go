@@ -27,9 +27,9 @@ type Settings struct {
 	Description     *string             `json:"description,omitempty"`     // A short description of the rule.
 	Enabled         bool                `json:"enabled"`                   // This setting is enabled (`true`) or disabled (`false`)
 	IdContributors  *IdContributorsType `json:"idContributors"`            // Contributors to the Service Identifier calculation. All of the Contributors are always applied.
+	InsertAfter     *string             `json:"-"`                         // Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched
 	ManagementZones []string            `json:"managementZones,omitempty"` // Define a management zone of the process group for which this service detection rule should be created.
 	Name            string              `json:"name"`                      // The name of the rule. It is used for identification and has no effect on the rule logic.
-	InsertAfter     string              `json:"-"`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -60,6 +60,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"insert_after": {
+			Type:        schema.TypeString,
+			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
+			Computed:    true,
+			Optional:    true,
+		},
 		"management_zones": {
 			Type:        schema.TypeSet,
 			Description: "Define a management zone of the process group for which this service detection rule should be created.",
@@ -71,12 +77,6 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "The name of the rule. It is used for identification and has no effect on the rule logic.",
 			Required:    true,
 		},
-		"insert_after": {
-			Type:        schema.TypeString,
-			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
-			Optional:    true,
-			Computed:    true,
-		},
 	}
 }
 
@@ -86,9 +86,9 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"description":      me.Description,
 		"enabled":          me.Enabled,
 		"id_contributors":  me.IdContributors,
+		"insert_after":     me.InsertAfter,
 		"management_zones": me.ManagementZones,
 		"name":             me.Name,
-		"insert_after":     me.InsertAfter,
 	})
 }
 
@@ -98,8 +98,8 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"description":      &me.Description,
 		"enabled":          &me.Enabled,
 		"id_contributors":  &me.IdContributors,
+		"insert_after":     &me.InsertAfter,
 		"management_zones": &me.ManagementZones,
 		"name":             &me.Name,
-		"insert_after":     &me.InsertAfter,
 	})
 }
