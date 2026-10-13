@@ -23,8 +23,8 @@ import (
 )
 
 type StageConfig struct {
-	Exclude []StageType     `json:"exclude,omitempty"` // exclude stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`
-	Include []StageType     `json:"include,omitempty"` // include stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`
+	Exclude []StageType     `json:"exclude,omitempty"` // exclude stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `security`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`
+	Include []StageType     `json:"include,omitempty"` // include stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `security`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`
 	Type    StageConfigType `json:"type"`              // Stage configuration type. Possible values: `exclude`, `include`, `includeAll`
 }
 
@@ -32,13 +32,13 @@ func (me *StageConfig) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"exclude": {
 			Type:        schema.TypeSet,
-			Description: "exclude stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`",
+			Description: "exclude stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `security`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`",
 			Optional:    true, // precondition
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"include": {
 			Type:        schema.TypeSet,
-			Description: "include stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`",
+			Description: "include stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `security`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`",
 			Optional:    true, // precondition
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
