@@ -1,8 +1,8 @@
 resource "dynatrace_openpipeline_v2_spans_pipelines" "example1" {
   display_name = "#name#"
-  custom_id = "#name#"
-  group_role = "compositionPipeline"
-  routing = "notRoutable"
+  custom_id    = "#name#"
+  group_role   = "compositionPipeline"
+  routing      = "notRoutable"
   processing {
     processors {
       processor {
@@ -21,8 +21,9 @@ resource "dynatrace_openpipeline_v2_spans_pipelines" "example1" {
         fields_add {
           fields {
             field {
-              name  = "is_warning"
-              value = "true"
+              name       = "is_warning"
+              value      = "true"
+              value_type = "boolean"
             }
           }
         }
@@ -37,7 +38,7 @@ resource "dynatrace_openpipeline_v2_spans_pipelines" "example1" {
         fields_remove {
           fields = ["record.details"]
         }
-        enabled     = true
+        enabled = true
       }
       processor {
         type        = "fieldsRename"
@@ -53,7 +54,7 @@ resource "dynatrace_openpipeline_v2_spans_pipelines" "example1" {
             }
           }
         }
-        enabled     = true
+        enabled = true
       }
       processor {
         type        = "dql"
@@ -64,7 +65,7 @@ resource "dynatrace_openpipeline_v2_spans_pipelines" "example1" {
         dql {
           script = "fieldsAdd record.name = concat(record.title, \" - \", record.summary)"
         }
-        enabled     = true
+        enabled = true
       }
     }
   }
@@ -94,8 +95,8 @@ resource "dynatrace_openpipeline_v2_spans_pipelines" "example1" {
               source_field_name = "dt.security_context"
             }
             dimension {
-              extraction_type   = "field"
-              strategy          = "equals"
+              extraction_type        = "field"
+              strategy               = "equals"
               source_field_name      = "record.category"
               destination_field_name = "warning_category"
             }
@@ -129,8 +130,8 @@ resource "dynatrace_openpipeline_v2_spans_pipelines" "example1" {
               source_field_name = "dt.security_context"
             }
             dimension {
-              extraction_type   = "field"
-              strategy          = "equals"
+              extraction_type        = "field"
+              strategy               = "equals"
               source_field_name      = "record.category"
               destination_field_name = "warning_category"
             }
@@ -145,8 +146,8 @@ resource "dynatrace_openpipeline_v2_spans_pipelines" "example1" {
 
 resource "dynatrace_openpipeline_v2_spans_pipelines" "example2" {
   display_name = "#name#-2"
-  custom_id = "#name#-2"
-  group_role = "memberPipeline"
+  custom_id    = "#name#-2"
+  group_role   = "memberPipeline"
 }
 
 resource "dynatrace_openpipeline_v2_spans_pipelinegroups" "example" {
@@ -158,7 +159,7 @@ resource "dynatrace_openpipeline_v2_spans_pipelinegroups" "example" {
     pipeline_group_composition {
       is_pipeline_placeholder = false
       stages {
-        type = "include"
+        type    = "include"
         include = ["processing", "metricExtraction"]
       }
       pipeline_id = dynatrace_openpipeline_v2_spans_pipelines.example1.id
@@ -166,7 +167,7 @@ resource "dynatrace_openpipeline_v2_spans_pipelinegroups" "example" {
   }
   member_stages {
     include = ["processing", "metricExtraction"]
-    type = "include"
+    type    = "include"
   }
   member_pipelines = [dynatrace_openpipeline_v2_spans_pipelines.example2.id]
 }

@@ -1,9 +1,9 @@
 resource "dynatrace_openpipeline_v2_metrics_pipelines" "max-pipeline" {
   display_name = "Warning pipeline"
-  custom_id = "pipeline_Warning_pipeline_2773_tf_#name#"
+  custom_id    = "pipeline_Warning_pipeline_2773_tf_#name#"
   metadata_list {
     metadata {
-      entry_key = "environment"
+      entry_key   = "environment"
       entry_value = "production"
     }
   }
@@ -25,8 +25,9 @@ resource "dynatrace_openpipeline_v2_metrics_pipelines" "max-pipeline" {
         fields_add {
           fields {
             field {
-              name  = "is_warning"
-              value = "true"
+              name       = "is_warning"
+              value      = "true"
+              value_type = "boolean"
             }
           }
         }
@@ -41,7 +42,7 @@ resource "dynatrace_openpipeline_v2_metrics_pipelines" "max-pipeline" {
         fields_remove {
           fields = ["record.details"]
         }
-        enabled     = true
+        enabled = true
       }
       processor {
         type        = "fieldsRename"
@@ -57,7 +58,7 @@ resource "dynatrace_openpipeline_v2_metrics_pipelines" "max-pipeline" {
             }
           }
         }
-        enabled     = true
+        enabled = true
       }
       processor {
         type        = "dql"
@@ -68,7 +69,7 @@ resource "dynatrace_openpipeline_v2_metrics_pipelines" "max-pipeline" {
         dql {
           script = "fieldsAdd record.name = concat(record.title, \" - \", record.summary)"
         }
-        enabled     = true
+        enabled = true
       }
     }
   }
@@ -96,7 +97,7 @@ resource "dynatrace_openpipeline_v2_metrics_pipelines" "max-pipeline" {
         matcher     = "isNull(dt.security_context)"
         security_context {
           value {
-            type = "multiValueConstant"
+            type                 = "multiValueConstant"
             multi_value_constant = ["ACME1", "ACME2"]
           }
         }

@@ -21,8 +21,9 @@ resource "dynatrace_openpipeline_v2_logs_pipelines" "example1" {
         fields_add {
           fields {
             field {
-              name  = "is_warning"
-              value = "true"
+              name       = "is_warning"
+              value      = "true"
+              value_type = "boolean"
             }
           }
         }

@@ -25,8 +25,9 @@ resource "dynatrace_openpipeline_v2_events_security_pipelines" "max-pipeline" {
         fields_add {
           fields {
             field {
-              name  = "is_warning"
-              value = "true"
+              name       = "is_warning"
+              value      = "true"
+              value_type = "boolean"
             }
           }
         }

@@ -1,16 +1,16 @@
 resource "dynatrace_openpipeline_v2_security_events_ingestsources" "maximal-source" {
-  enabled = true
+  enabled      = true
   display_name = "max-ingestsource"
   path_segment = "processor.ingestsource.path.max.tf.#name#"
-  source_type = "http"
+  source_type  = "http"
   static_routing {
-    pipeline_type = "builtin"
+    pipeline_type       = "builtin"
     builtin_pipeline_id = "default"
   }
   default_bucket = "default_events"
   metadata_list {
     metadata {
-      entry_key = "environment"
+      entry_key   = "environment"
       entry_value = "production"
     }
   }
@@ -25,26 +25,27 @@ resource "dynatrace_openpipeline_v2_security_events_ingestsources" "maximal-sour
       }
       processor {
         enabled     = true
-        type = "fieldsAdd"
+        type        = "fieldsAdd"
         id          = "processor_Add_error_flag_6132"
         description = "Add error flag"
-        matcher = "matchesPhrase(record.name, \"Error\")"
+        matcher     = "matchesPhrase(record.name, \"Error\")"
         sample_data = "{\n  \"record.name\": \"Error record\" \n}"
         fields_add {
           fields {
             field {
-              name = "is_error"
-              value = "true"
+              name       = "is_error"
+              value      = "true"
+              value_type = "boolean"
             }
           }
         }
       }
       processor {
         enabled     = true
-        type = "fieldsRemove"
+        type        = "fieldsRemove"
         id          = "processor_Remove_details_field_8919"
         description = "Remove details field"
-        matcher = "isNotNull(record.details)"
+        matcher     = "isNotNull(record.details)"
         sample_data = "{\n  \"record.name\": \"Error\",\n  \"record.details\": \"some record details\"\n}"
         fields_remove {
           fields = ["record.details"]
@@ -52,16 +53,16 @@ resource "dynatrace_openpipeline_v2_security_events_ingestsources" "maximal-sour
       }
       processor {
         enabled     = true
-        type = "fieldsRename"
+        type        = "fieldsRename"
         id          = "processor_Rename_name_to_title_5347"
         description = "Rename name to title"
-        matcher = "true"
+        matcher     = "true"
         sample_data = "{\n  \"record.name\": \"Error\"\n}"
         fields_rename {
           fields {
             field {
               from_name = "record.name"
-              to_name = "record.title"
+              to_name   = "record.title"
             }
           }
         }
