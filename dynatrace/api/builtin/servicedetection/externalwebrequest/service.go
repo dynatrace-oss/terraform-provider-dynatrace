@@ -18,15 +18,15 @@
 package externalwebrequest
 
 import (
-	externalwebrequest "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/externalwebrequest/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/servicedetection/externalwebrequest/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "2.1.14"
+const SchemaVersion = "2.1.15"
 const SchemaID = "builtin:service-detection.external-web-request"
 
-func Service(clientSet rest.ClientSet) (settings.CRUDService[*externalwebrequest.Settings], error) {
-	return settings20.Service[*externalwebrequest.Settings](clientSet, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }
