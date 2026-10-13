@@ -32,6 +32,7 @@ type Settings struct {
 	BulkPattern          *string            `json:"bulkPattern,omitempty"`          // Segmentation and prefix of the data
 	BulkSize             *int               `json:"bulkSize,omitempty"`             // Bulk size for transmission
 	CloudVendorType      CloudVendorType    `json:"cloudVendorType"`                // Cloud Vendor Type. Possible values: `aws`, `azure`, `gcp`, `otlp`
+	CompressionType      *CompressionType   `json:"compressionType,omitempty"`      // Compression type. Possible values: `gzip`, `zstd`
 	DataForwardingType   DataForwardingType `json:"dataForwardingType"`             // Pipeline Type. Possible values: `processed`, `raw`
 	Enabled              bool               `json:"enabled"`                        // This setting is enabled (`true`) or disabled (`false`)
 	ForwardingName       string             `json:"forwardingName"`                 // Forwarding name
@@ -91,6 +92,11 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Description: "Cloud Vendor Type. Possible values: `aws`, `azure`, `gcp`, `otlp`",
 			Required:    true,
+		},
+		"compression_type": {
+			Type:        schema.TypeString,
+			Description: "Compression type. Possible values: `gzip`, `zstd`",
+			Optional:    true, // nullable & precondition
 		},
 		"data_forwarding_type": {
 			Type:        schema.TypeString,
@@ -160,6 +166,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"bulk_pattern":           me.BulkPattern,
 		"bulk_size":              me.BulkSize,
 		"cloud_vendor_type":      me.CloudVendorType,
+		"compression_type":       me.CompressionType,
 		"data_forwarding_type":   me.DataForwardingType,
 		"enabled":                me.Enabled,
 		"forwarding_name":        me.ForwardingName,
@@ -194,6 +201,9 @@ func (me *Settings) HandlePreconditions() error {
 	if (me.BulkSize != nil) && (string(me.CloudVendorType) == "otlp") {
 		return fmt.Errorf("'bulk_size' must not be specified unless 'cloud_vendor_type' is not set to 'otlp'; got 'cloud_vendor_type'='%v'", me.CloudVendorType)
 	}
+	if (me.CompressionType != nil) && (string(me.CloudVendorType) == "otlp") {
+		return fmt.Errorf("'compression_type' must not be specified unless 'cloud_vendor_type' is not set to 'otlp'; got 'cloud_vendor_type'='%v'", me.CloudVendorType)
+	}
 	if (me.GcpConnection != nil) && (string(me.CloudVendorType) != "gcp") {
 		return fmt.Errorf("'gcp_connection' must not be specified unless 'cloud_vendor_type' is set to 'gcp'; got 'cloud_vendor_type'='%v'", me.CloudVendorType)
 	}
@@ -222,6 +232,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"bulk_pattern":           &me.BulkPattern,
 		"bulk_size":              &me.BulkSize,
 		"cloud_vendor_type":      &me.CloudVendorType,
+		"compression_type":       &me.CompressionType,
 		"data_forwarding_type":   &me.DataForwardingType,
 		"enabled":                &me.Enabled,
 		"forwarding_name":        &me.ForwardingName,
