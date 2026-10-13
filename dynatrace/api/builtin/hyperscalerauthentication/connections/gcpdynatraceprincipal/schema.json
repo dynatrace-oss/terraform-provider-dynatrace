@@ -2,12 +2,19 @@
 	"allowedScopes": [
 		"environment"
 	],
+	"deletionConstraints": [
+		{
+			"customMessage": "Could not validate deletion of the Dynatrace Principal Service Account.",
+			"customValidatorId": "hyperscaler-authentication.hyperscaler-authentication:8080/internal/settings-validation/v0.1/validate-deletion/gcpDynatracePrincipal",
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
 	"description": "GCP Dynatrace Principal for Dynatrace integrations",
 	"displayName": "GCP Dynatrace Principal",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
-	"maturity": "EARLY_ADOPTER",
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"metadata": {
 		"$ref": "#/types/Metadata"
@@ -35,5 +42,5 @@
 	},
 	"schemaId": "builtin:hyperscaler-authentication.connections.gcp-dynatrace-principal",
 	"types": {},
-	"version": "0.0.3"
+	"version": "1.1"
 }
