@@ -19,14 +19,14 @@ package externalwebrequest
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"golang.org/x/exp/slices"
 )
 
 type PublicDomainTransformationSet struct {
-	ContributionType ContributionTypeWithOverride `json:"contributionType"`           // Possible Values: `OriginalValue`, `OverrideValue`, `TransformValue`
+	ContributionType ContributionTypeWithOverride `json:"contributionType"`           // Defines whether the original value should be used or if a transformation set should be used to override a value or transform it. Possible values: `OriginalValue`, `OverrideValue`, `TransformValue`
 	CopyFromHostName *bool                        `json:"copyFromHostName,omitempty"` // Use the detected host name instead of the request's domain name.
 	Transformations  Transformations              `json:"transformations,omitempty"`  // Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**.
 	ValueOverride    *ValueOverride               `json:"valueOverride,omitempty"`    // The value to be used instead of the detected value.
@@ -36,7 +36,7 @@ func (me *PublicDomainTransformationSet) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"contribution_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `OriginalValue`, `OverrideValue`, `TransformValue`",
+			Description: "Defines whether the original value should be used or if a transformation set should be used to override a value or transform it. Possible values: `OriginalValue`, `OverrideValue`, `TransformValue`",
 			Required:    true,
 		},
 		"copy_from_host_name": {
@@ -73,14 +73,17 @@ func (me *PublicDomainTransformationSet) MarshalHCL(properties hcl.Properties) e
 }
 
 func (me *PublicDomainTransformationSet) HandlePreconditions() error {
-	if me.CopyFromHostName == nil && slices.Contains([]string{"OriginalValue", "TransformValue"}, string(me.ContributionType)) {
+	if (me.CopyFromHostName == nil) && (slices.Contains([]string{"OriginalValue", "TransformValue"}, string(me.ContributionType))) {
 		me.CopyFromHostName = new(false)
 	}
-	if me.ValueOverride == nil && (string(me.ContributionType) == "OverrideValue") {
-		return fmt.Errorf("'value_override' must be specified if 'contribution_type' is set to '%v'", me.ContributionType)
+	if (me.CopyFromHostName != nil) && (!slices.Contains([]string{"OriginalValue", "TransformValue"}, string(me.ContributionType))) {
+		return fmt.Errorf("'copy_from_host_name' must not be specified unless 'contribution_type' is one of ['OriginalValue', 'TransformValue']; got 'contribution_type'='%v'", me.ContributionType)
 	}
-	if me.ValueOverride != nil && (string(me.ContributionType) != "OverrideValue") {
-		return fmt.Errorf("'value_override' must not be specified if 'contribution_type' is set to '%v'", me.ContributionType)
+	if (me.ValueOverride != nil) && (string(me.ContributionType) != "OverrideValue") {
+		return fmt.Errorf("'value_override' must not be specified unless 'contribution_type' is set to 'OverrideValue'; got 'contribution_type'='%v'", me.ContributionType)
+	}
+	if (me.ValueOverride == nil) && (string(me.ContributionType) == "OverrideValue") {
+		return fmt.Errorf("'value_override' must be specified when 'contribution_type' is set to 'OverrideValue'; got 'contribution_type'='%v'", me.ContributionType)
 	}
 	// ---- Transformations Transformations -> {"expectedValue":"TransformValue","property":"contributionType","type":"EQUALS"}
 	return nil

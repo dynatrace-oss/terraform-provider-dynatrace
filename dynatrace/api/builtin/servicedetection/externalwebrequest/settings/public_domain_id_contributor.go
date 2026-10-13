@@ -38,7 +38,7 @@ func (me *PublicDomainIdContributor) Schema() map[string]*schema.Schema {
 		},
 		"service_id_contributor": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(PublicDomainTransformationSet).Schema()},
 			MinItems:    1,
@@ -55,11 +55,11 @@ func (me *PublicDomainIdContributor) MarshalHCL(properties hcl.Properties) error
 }
 
 func (me *PublicDomainIdContributor) HandlePreconditions() error {
-	if me.ServiceIdContributor == nil && me.EnableIdContributor {
-		return fmt.Errorf("'service_id_contributor' must be specified if 'enable_id_contributor' is set to '%v'", me.EnableIdContributor)
+	if (me.ServiceIdContributor != nil) && (!me.EnableIdContributor) {
+		return fmt.Errorf("'service_id_contributor' must not be specified unless 'enable_id_contributor' is set to 'true'; got 'enable_id_contributor'='%v'", me.EnableIdContributor)
 	}
-	if me.ServiceIdContributor != nil && !me.EnableIdContributor {
-		return fmt.Errorf("'service_id_contributor' must not be specified if 'enable_id_contributor' is set to '%v'", me.EnableIdContributor)
+	if (me.ServiceIdContributor == nil) && (me.EnableIdContributor) {
+		return fmt.Errorf("'service_id_contributor' must be specified when 'enable_id_contributor' is set to 'true'; got 'enable_id_contributor'='%v'", me.EnableIdContributor)
 	}
 	return nil
 }

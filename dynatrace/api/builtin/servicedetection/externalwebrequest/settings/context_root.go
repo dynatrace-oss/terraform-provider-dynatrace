@@ -24,8 +24,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// contextRoot. Configures how the detected URL context root contributes to the Service Id.
 type ContextRoot struct {
-	ContributionType ContributionType       `json:"contributionType"`          // Possible Values: `OriginalValue`, `OverrideValue`, `TransformURL`, `TransformValue`
+	ContributionType ContributionType       `json:"contributionType"`          // Defines whether the original value should be used or if a transformation set should be used to override a value or transform it. Possible values: `OriginalValue`, `OverrideValue`, `TransformURL`, `TransformValue`
 	SegmentCount     *int                   `json:"segmentCount,omitempty"`    // The number of segments of the URL to be kept. The URL is divided by slashes (/), the indexing starts with 1 at context root. For example, if you specify 2 for the `www.dynatrace.com/support/help/dynatrace-api/` URL, the value of `support/help` is used.
 	Transformations  ReducedTransformations `json:"transformations,omitempty"` // Choose how to transform a value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. The resulting value contributes to the Service Id and can be found on the **Service overview page** under **Properties and tags**.
 	ValueOverride    *ValueOverride         `json:"valueOverride,omitempty"`   // The value to be used instead of the detected value.
@@ -35,7 +36,7 @@ func (me *ContextRoot) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"contribution_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `OriginalValue`, `OverrideValue`, `TransformURL`, `TransformValue`",
+			Description: "Defines whether the original value should be used or if a transformation set should be used to override a value or transform it. Possible values: `OriginalValue`, `OverrideValue`, `TransformURL`, `TransformValue`",
 			Required:    true,
 		},
 		"segment_count": {
@@ -72,14 +73,17 @@ func (me *ContextRoot) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *ContextRoot) HandlePreconditions() error {
-	if me.SegmentCount == nil && (string(me.ContributionType) == "TransformURL") {
+	if (me.SegmentCount == nil) && (string(me.ContributionType) == "TransformURL") {
 		me.SegmentCount = new(0)
 	}
-	if me.ValueOverride == nil && (string(me.ContributionType) == "OverrideValue") {
-		return fmt.Errorf("'value_override' must be specified if 'contribution_type' is set to '%v'", me.ContributionType)
+	if (me.SegmentCount != nil) && (string(me.ContributionType) != "TransformURL") {
+		return fmt.Errorf("'segment_count' must not be specified unless 'contribution_type' is set to 'TransformURL'; got 'contribution_type'='%v'", me.ContributionType)
 	}
-	if me.ValueOverride != nil && (string(me.ContributionType) != "OverrideValue") {
-		return fmt.Errorf("'value_override' must not be specified if 'contribution_type' is set to '%v'", me.ContributionType)
+	if (me.ValueOverride != nil) && (string(me.ContributionType) != "OverrideValue") {
+		return fmt.Errorf("'value_override' must not be specified unless 'contribution_type' is set to 'OverrideValue'; got 'contribution_type'='%v'", me.ContributionType)
+	}
+	if (me.ValueOverride == nil) && (string(me.ContributionType) == "OverrideValue") {
+		return fmt.Errorf("'value_override' must be specified when 'contribution_type' is set to 'OverrideValue'; got 'contribution_type'='%v'", me.ContributionType)
 	}
 	// ---- Transformations ReducedTransformations -> {"expectedValues":["TransformValue","TransformURL"],"property":"contributionType","type":"IN"}
 	return nil
