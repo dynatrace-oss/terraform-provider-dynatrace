@@ -34,7 +34,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.3"
+const SchemaVersion = "1.1"
 const SchemaID = "builtin:hyperscaler-authentication.connections.gcp-dynatrace-principal"
 const principalCreationTimeout = 5 * time.Minute
 
