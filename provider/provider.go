@@ -57,6 +57,7 @@ import (
 	metricsds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/metrics/calculated/service"
 	mgmzds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mgmz"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/mobileapplication"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/openpipeline/ingestsources"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/openpipeline/pipelines"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/process"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/processgroup"
@@ -744,6 +745,7 @@ func Provider() *schema.Provider {
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
 	maps.Copy(prv.DataSourcesMap, pipelines.DataSources())
+	maps.Copy(prv.DataSourcesMap, ingestsources.DataSources())
 
 	incubator(prv)
 	return prv

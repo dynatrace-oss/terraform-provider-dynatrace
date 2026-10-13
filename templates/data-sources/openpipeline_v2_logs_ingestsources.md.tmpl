@@ -1,0 +1,23 @@
+---
+layout: ""
+page_title: "dynatrace_openpipeline_v2_logs_ingestsources Data Source - terraform-provider-dynatrace"
+subcategory: "OpenPipeline V2"
+description: |-
+  The `dynatrace_openpipeline_v2_logs_ingestsources` data source covers queries for OpenPipeline logs ingest source configurations
+---
+
+# dynatrace_openpipeline_v2_logs_ingestsources (Data Source)
+
+-> This data source requires the OAuth scope `settings:objects:read`.
+
+The `dynatrace_openpipeline_v2_logs_ingestsources` data source retrieves all matching logs ingest source configurations.
+
+## Dynatrace Documentation
+
+- OpenPipeline - https://docs.dynatrace.com/docs/platform/openpipeline
+
+## Example Usage
+
+{{ tffile "datasources/openpipeline/ingestsources/testdata/example-logs.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
