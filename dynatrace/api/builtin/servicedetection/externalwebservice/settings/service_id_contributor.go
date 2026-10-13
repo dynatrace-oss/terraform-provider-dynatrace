@@ -24,21 +24,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// serviceIdContributor. Enables and configures a Service Id contributor.. Set `enableIdContributor` to `true` to let the detected value contribute to the Service Id and configure the nested `serviceIdContributor` block. If the switch stays `false`, this contributor does not participate in service detection.
 type ServiceIdContributor struct {
-	EnableIdContributor  bool               `json:"enableIdContributor"` // Transform this value before letting it contribute to the Service Id
-	ServiceIdContributor *TransformationSet `json:"serviceIdContributor,omitempty"`
+	EnableIdContributor  bool               `json:"enableIdContributor"`            // When enabled, the detected value contributes to the Service Id.
+	ServiceIdContributor *TransformationSet `json:"serviceIdContributor,omitempty"` // Choose how to transform the detected value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one.
 }
 
 func (me *ServiceIdContributor) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"enable_id_contributor": {
 			Type:        schema.TypeBool,
-			Description: "Transform this value before letting it contribute to the Service Id",
+			Description: "When enabled, the detected value contributes to the Service Id.",
 			Required:    true,
 		},
 		"service_id_contributor": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "Choose how to transform the detected value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one.",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(TransformationSet).Schema()},
 			MinItems:    1,
@@ -55,11 +56,11 @@ func (me *ServiceIdContributor) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *ServiceIdContributor) HandlePreconditions() error {
-	if me.ServiceIdContributor == nil && me.EnableIdContributor {
-		return fmt.Errorf("'service_id_contributor' must be specified if 'enable_id_contributor' is set to '%v'", me.EnableIdContributor)
+	if (me.ServiceIdContributor != nil) && (!me.EnableIdContributor) {
+		return fmt.Errorf("'service_id_contributor' must not be specified unless 'enable_id_contributor' is set to 'true'; got 'enable_id_contributor'='%v'", me.EnableIdContributor)
 	}
-	if me.ServiceIdContributor != nil && !me.EnableIdContributor {
-		return fmt.Errorf("'service_id_contributor' must not be specified if 'enable_id_contributor' is set to '%v'", me.EnableIdContributor)
+	if (me.ServiceIdContributor == nil) && (me.EnableIdContributor) {
+		return fmt.Errorf("'service_id_contributor' must be specified when 'enable_id_contributor' is set to 'true'; got 'enable_id_contributor'='%v'", me.EnableIdContributor)
 	}
 	return nil
 }

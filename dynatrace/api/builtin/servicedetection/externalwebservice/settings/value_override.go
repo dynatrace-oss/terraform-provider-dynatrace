@@ -22,15 +22,16 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// Value override. Defines the constant value used when overriding a detected contributor value.. Provide the fixed value that should replace the detected one when `contributionType` is `OverrideValue`.
 type ValueOverride struct {
-	Value string `json:"value"`
+	Value string `json:"value"` // The value to be used instead of the detected value.
 }
 
 func (me *ValueOverride) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"value": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "The value to be used instead of the detected value.",
 			Required:    true,
 		},
 	}
