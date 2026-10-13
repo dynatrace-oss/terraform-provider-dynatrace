@@ -38,6 +38,7 @@ var StageTypes = struct {
 	Metricextraction         StageType
 	Processing               StageType
 	Productallocation        StageType
+	Security                 StageType
 	Securitycontext          StageType
 	Smartscapeedgeextraction StageType
 	Smartscapenodeextraction StageType
@@ -49,6 +50,7 @@ var StageTypes = struct {
 	"metricExtraction",
 	"processing",
 	"productAllocation",
+	"security",
 	"securityContext",
 	"smartscapeEdgeExtraction",
 	"smartscapeNodeExtraction",
