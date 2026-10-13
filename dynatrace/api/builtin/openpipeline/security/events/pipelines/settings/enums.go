@@ -71,6 +71,20 @@ var FieldValueExtractionTypes = struct {
 	"field",
 }
 
+type FieldsAddValueType string
+
+var FieldsAddValueTypes = struct {
+	Boolean FieldsAddValueType
+	Double  FieldsAddValueType
+	Long    FieldsAddValueType
+	String  FieldsAddValueType
+}{
+	"boolean",
+	"double",
+	"long",
+	"string",
+}
+
 type GeoOutputField string
 
 var GeoOutputFields = struct {
@@ -127,6 +141,7 @@ var ProcessorTypes = struct {
 	Bucketassignment             ProcessorType
 	Costallocation               ProcessorType
 	Countermetric                ProcessorType
+	Datamasking                  ProcessorType
 	Davis                        ProcessorType
 	Dql                          ProcessorType
 	Drop                         ProcessorType
@@ -144,6 +159,7 @@ var ProcessorTypes = struct {
 	Sdlcevent                    ProcessorType
 	Securitycontext              ProcessorType
 	Securityevent                ProcessorType
+	Securityproblemextraction    ProcessorType
 	Smartscapeedge               ProcessorType
 	Smartscapenode               ProcessorType
 	Technology                   ProcessorType
@@ -154,6 +170,7 @@ var ProcessorTypes = struct {
 	"bucketAssignment",
 	"costAllocation",
 	"counterMetric",
+	"dataMasking",
 	"davis",
 	"dql",
 	"drop",
@@ -171,6 +188,7 @@ var ProcessorTypes = struct {
 	"sdlcEvent",
 	"securityContext",
 	"securityEvent",
+	"securityProblemExtraction",
 	"smartscapeEdge",
 	"smartscapeNode",
 	"technology",

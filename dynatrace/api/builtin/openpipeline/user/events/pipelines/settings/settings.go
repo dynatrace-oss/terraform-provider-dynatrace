@@ -34,6 +34,7 @@ type Settings struct {
 	Processing               *Stage          `json:"processing,omitempty"`               // Processing stage
 	ProductAllocation        *Stage          `json:"productAllocation,omitempty"`        // Product allocation stage
 	Routing                  *Routing        `json:"routing,omitempty"`                  // Routing. Possible values: `notRoutable`, `routable`
+	Security                 *Stage          `json:"security,omitempty"`                 // Security stage
 	SecurityContext          *Stage          `json:"securityContext,omitempty"`          // Security context stage
 	SmartscapeEdgeExtraction *Stage          `json:"smartscapeEdgeExtraction,omitempty"` // Smartscape edge extraction stage
 	SmartscapeNodeExtraction *Stage          `json:"smartscapeNodeExtraction,omitempty"` // Smartscape node extraction stage
@@ -121,6 +122,14 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			ForceNew:    true,
 			Optional:    true, // nullable
 		},
+		"security": {
+			Type:        schema.TypeList,
+			Description: "Security stage",
+			Optional:    true, // nullable
+			Elem:        &schema.Resource{Schema: new(Stage).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"security_context": {
 			Type:        schema.TypeList,
 			Description: "Security context stage",
@@ -169,6 +178,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"processing":                 me.Processing,
 		"product_allocation":         me.ProductAllocation,
 		"routing":                    me.Routing,
+		"security":                   me.Security,
 		"security_context":           me.SecurityContext,
 		"smartscape_edge_extraction": me.SmartscapeEdgeExtraction,
 		"smartscape_node_extraction": me.SmartscapeNodeExtraction,
@@ -189,6 +199,7 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"processing":                 &me.Processing,
 		"product_allocation":         &me.ProductAllocation,
 		"routing":                    &me.Routing,
+		"security":                   &me.Security,
 		"security_context":           &me.SecurityContext,
 		"smartscape_edge_extraction": &me.SmartscapeEdgeExtraction,
 		"smartscape_node_extraction": &me.SmartscapeNodeExtraction,

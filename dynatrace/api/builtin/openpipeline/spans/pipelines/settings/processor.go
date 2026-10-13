@@ -53,6 +53,7 @@ type Processor struct {
 	BucketAssignment             *BucketAssignmentAttributes             `json:"bucketAssignment,omitempty"`   // Bucket assignment processor attributes
 	CostAllocation               *CostAllocationAttributes               `json:"costAllocation,omitempty"`     // Cost allocation processor attributes
 	CounterMetric                *CounterMetricAttributes                `json:"counterMetric,omitempty"`      // Counter metric processor attributes
+	DataMasking                  *DataMaskingAttributes                  `json:"dataMasking,omitempty"`        // Data masking processor attributes
 	Davis                        *DavisAttributes                        `json:"davis,omitempty"`              // Davis event extraction processor attributes
 	Description                  string                                  `json:"description"`
 	Dql                          *DqlAttributes                          `json:"dql,omitempty"`                          // DQL processor attributes
@@ -73,10 +74,11 @@ type Processor struct {
 	SdlcEvent                    *SdlcEventAttributes                    `json:"sdlcEvent,omitempty"`                    // SdlcEvent extraction processor attributes
 	SecurityContext              *SecurityContextAttributes              `json:"securityContext,omitempty"`              // Security context processor attributes
 	SecurityEvent                *SecurityEventAttributes                `json:"securityEvent,omitempty"`                // Security event extraction processor attributes
+	SecurityProblemExtraction    *SecurityProblemExtractionAttributes    `json:"securityProblemExtraction,omitempty"`    // Security problem extraction processor attributes
 	SmartscapeEdge               *SmartscapeEdgeAttributes               `json:"smartscapeEdge,omitempty"`               // Smartscape edge extraction processor attributes
 	SmartscapeNode               *SmartscapeNodeAttributes               `json:"smartscapeNode,omitempty"`               // Smartscape node extraction processor attributes
 	Technology                   *TechnologyAttributes                   `json:"technology,omitempty"`                   // Technology processor attributes
-	Type                         ProcessorType                           `json:"type"`                                   // Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+	Type                         ProcessorType                           `json:"type"`                                   // Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `dataMasking`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `securityProblemExtraction`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 	ValueMetric                  *ValueMetricAttributes                  `json:"valueMetric,omitempty"`                  // Value metric processor attributes
 }
 
@@ -119,6 +121,14 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 			Description: "Counter metric processor attributes",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(CounterMetricAttributes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"data_masking": {
+			Type:        schema.TypeList,
+			Description: "Data masking processor attributes",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(DataMaskingAttributes).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
@@ -267,6 +277,14 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"security_problem_extraction": {
+			Type:        schema.TypeList,
+			Description: "Security problem extraction processor attributes",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(SecurityProblemExtractionAttributes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"smartscape_edge": {
 			Type:        schema.TypeList,
 			Description: "Smartscape edge extraction processor attributes",
@@ -293,7 +311,7 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`",
+			Description: "Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `dataMasking`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `securityProblemExtraction`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`",
 			Required:    true,
 		},
 		"value_metric": {
@@ -314,6 +332,7 @@ func (me *Processor) MarshalHCL(properties hcl.Properties) error {
 		"bucket_assignment":               me.BucketAssignment,
 		"cost_allocation":                 me.CostAllocation,
 		"counter_metric":                  me.CounterMetric,
+		"data_masking":                    me.DataMasking,
 		"davis":                           me.Davis,
 		"description":                     me.Description,
 		"dql":                             me.Dql,
@@ -334,6 +353,7 @@ func (me *Processor) MarshalHCL(properties hcl.Properties) error {
 		"sdlc_event":                      me.SdlcEvent,
 		"security_context":                me.SecurityContext,
 		"security_event":                  me.SecurityEvent,
+		"security_problem_extraction":     me.SecurityProblemExtraction,
 		"smartscape_edge":                 me.SmartscapeEdge,
 		"smartscape_node":                 me.SmartscapeNode,
 		"technology":                      me.Technology,
@@ -372,6 +392,12 @@ func (me *Processor) HandlePreconditions() error {
 	}
 	if (me.CounterMetric == nil) && (string(me.Type) == "counterMetric") {
 		return fmt.Errorf("'counter_metric' must be specified when 'type' is set to 'counterMetric'; got 'type'='%v'", me.Type)
+	}
+	if (me.DataMasking != nil) && (string(me.Type) != "dataMasking") {
+		return fmt.Errorf("'data_masking' must not be specified unless 'type' is set to 'dataMasking'; got 'type'='%v'", me.Type)
+	}
+	if (me.DataMasking == nil) && (string(me.Type) == "dataMasking") {
+		return fmt.Errorf("'data_masking' must be specified when 'type' is set to 'dataMasking'; got 'type'='%v'", me.Type)
 	}
 	if (me.Davis != nil) && (string(me.Type) != "davis") {
 		return fmt.Errorf("'davis' must not be specified unless 'type' is set to 'davis'; got 'type'='%v'", me.Type)
@@ -469,6 +495,12 @@ func (me *Processor) HandlePreconditions() error {
 	if (me.SecurityEvent == nil) && (string(me.Type) == "securityEvent") {
 		return fmt.Errorf("'security_event' must be specified when 'type' is set to 'securityEvent'; got 'type'='%v'", me.Type)
 	}
+	if (me.SecurityProblemExtraction != nil) && (string(me.Type) != "securityProblemExtraction") {
+		return fmt.Errorf("'security_problem_extraction' must not be specified unless 'type' is set to 'securityProblemExtraction'; got 'type'='%v'", me.Type)
+	}
+	if (me.SecurityProblemExtraction == nil) && (string(me.Type) == "securityProblemExtraction") {
+		return fmt.Errorf("'security_problem_extraction' must be specified when 'type' is set to 'securityProblemExtraction'; got 'type'='%v'", me.Type)
+	}
 	if (me.SmartscapeEdge != nil) && (string(me.Type) != "smartscapeEdge") {
 		return fmt.Errorf("'smartscape_edge' must not be specified unless 'type' is set to 'smartscapeEdge'; got 'type'='%v'", me.Type)
 	}
@@ -503,6 +535,7 @@ func (me *Processor) UnmarshalHCL(decoder hcl.Decoder) error {
 		"bucket_assignment":               &me.BucketAssignment,
 		"cost_allocation":                 &me.CostAllocation,
 		"counter_metric":                  &me.CounterMetric,
+		"data_masking":                    &me.DataMasking,
 		"davis":                           &me.Davis,
 		"description":                     &me.Description,
 		"dql":                             &me.Dql,
@@ -523,6 +556,7 @@ func (me *Processor) UnmarshalHCL(decoder hcl.Decoder) error {
 		"sdlc_event":                      &me.SdlcEvent,
 		"security_context":                &me.SecurityContext,
 		"security_event":                  &me.SecurityEvent,
+		"security_problem_extraction":     &me.SecurityProblemExtraction,
 		"smartscape_edge":                 &me.SmartscapeEdge,
 		"smartscape_node":                 &me.SmartscapeNode,
 		"technology":                      &me.Technology,
