@@ -30,7 +30,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "0.0.5"
+const SchemaVersion = "1"
 const SchemaID = "builtin:hyperscaler-authentication.connections.gcp"
 
 // RetryableAuthenticationErrorMessage is the substring of the constraint-violation message the

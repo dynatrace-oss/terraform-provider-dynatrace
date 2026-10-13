@@ -47,8 +47,8 @@
 			"type": "enum"
 		}
 	},
-	"maturity": "EARLY_ADOPTER",
-	"maxObjects": 100,
+	"maturity": "GENERAL_AVAILABILITY",
+	"maxObjects": 500,
 	"metadata": {
 		"$ref": "#/types/Metadata"
 	},
@@ -169,5 +169,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "0.0.5"
+	"version": "1"
 }
