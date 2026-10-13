@@ -36,6 +36,7 @@ func assertComputed(t *testing.T, name string, item *schema.Schema) {
 	assert.Zero(t, item.MaxItems, "%s: expected MaxItems to be 0", name)
 	assert.Nil(t, item.ValidateFunc, "%s: expected ValidateFunc to be nil", name)
 	assert.Nil(t, item.ValidateDiagFunc, "%s: expected ValidateDiagFunc to be nil", name)
+	assert.Nil(t, item.Default, "%s: expected Default to be nil", name)
 }
 
 func TestSetComputedSchema_SetsTopLevelItemsComputed(t *testing.T) {
