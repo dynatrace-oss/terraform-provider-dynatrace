@@ -83,14 +83,14 @@ jobs:
           gotestsum --junitfile test-results/unit/test-results.xml --format testdox --format-icons hivis -- -coverprofile=cov.out -tags=unit -v ./...
 
       - name: ⬆️ Archive unit test results
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 #v7.0.2
         if: ${{ always() && inputs.collect-results }}
         with:
           name: junit-results-unit
           path: test-results
 
       - name: ⬆️ Archive code coverage results
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 #v7.0.2
         with:
           name: code-coverage-report
           path: cov.out
@@ -140,7 +140,7 @@ jobs:
           args: '--output.checkstyle.path=lint-report.xml --issues-exit-code=0' # if issues are found, don't exit with "1". Sonar decides if it fails or not
 
       - name: ⬆️ Archive lint results
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 #v7.0.2
         if: always()
         with:
           name: lint-report
@@ -241,7 +241,7 @@ jobs:
           gotestsum --junitfile test-results/${{ matrix.config.slug }}/test-results.xml --format testdox --format-icons hivis -- -tags="integration monitored connector" -v -p 1 ${{ matrix.config.path }}
 
       - name: ⬆️ Archive e2e test results - ${{ matrix.config.name }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 #v7.0.2
         if: ${{ always() }} # always archive results for debugging purposes as they also contain the timestamp
         with:
           name: junit-results-integration-${{ matrix.config.slug }}
@@ -290,7 +290,7 @@ jobs:
           gotestsum --junitfile test-results/sequential/test-results.xml --format testdox --format-icons hivis -- -tags="sequential_integration monitored connector" -v -p 1 ./...
 
       - name: ⬆️ Archive e2e test results - Sequential
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 #v7.0.2
         if: ${{ always() }} # always archive results for debugging purposes as they also contain the timestamp
         with:
           name: junit-results-integration-sequential
@@ -333,7 +333,7 @@ jobs:
           events_file: test-report.json
 
       - name: ⬆️ Archive test results
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 #v7.0.2
         if: always()
         with:
           name: test-results
