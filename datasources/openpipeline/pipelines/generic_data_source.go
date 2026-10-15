@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
@@ -46,7 +47,13 @@ func genericDataSource[T settings.Settings](serviceFn export.ServiceFn[T]) *sche
 				Type:          schema.TypeString,
 				Description:   "The custom id of the pipeline",
 				Optional:      true,
-				ConflictsWith: []string{"display_name"},
+				ConflictsWith: []string{"display_name", "group_role"},
+			},
+			"group_role": {
+				Type:          schema.TypeString,
+				Description:   "Group role of the pipeline. Possible values: `basePipeline`, `compositionPipeline`, `memberPipeline`",
+				Optional:      true,
+				ConflictsWith: []string{"custom_id"},
 			},
 			"items": {
 				Type:        schema.TypeList,
@@ -116,15 +123,21 @@ func dataSourceRead[T settings.Settings](ctx context.Context, d *schema.Resource
 }
 
 func getFilter(d *schema.ResourceData) string {
-	if val, ok := d.GetOk("display_name"); ok {
-		name := val.(string)
-		return fmt.Sprintf("value.displayName='%s'", settings.EscapeFilterString(name))
-	}
-
 	if val, ok := d.GetOk("custom_id"); ok {
 		customId := val.(string)
 		return fmt.Sprintf("value.customId='%s'", settings.EscapeFilterString(customId))
 	}
 
-	return ""
+	filters := make([]string, 0, 2)
+	if val, ok := d.GetOk("display_name"); ok {
+		name := val.(string)
+		filters = append(filters, fmt.Sprintf("value.displayName='%s'", settings.EscapeFilterString(name)))
+	}
+
+	if val, ok := d.GetOk("group_role"); ok {
+		role := val.(string)
+		filters = append(filters, fmt.Sprintf("value.groupRole='%s'", settings.EscapeFilterString(role)))
+	}
+
+	return strings.Join(filters, " and ")
 }

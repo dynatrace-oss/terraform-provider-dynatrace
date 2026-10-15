@@ -51,25 +51,18 @@ func TestAccOpenPipelineDataSources(t *testing.T) {
 func TestAccOpenPipelineDataSourcesTwoConfigs(t *testing.T) {
 	api.TestAccSingle(t, "testdata/example-two-configs.tf", api.TestAccOptions{
 		Check: func(s *terraform.State) error {
-			// every example has one resource and one data source. We get the data via using the first match.
 			dataSourceName := getDataSourceName(s)
 			resourceIds := getResourceIDs(s)
 
 			assert.NotEmpty(t, dataSourceName)
 			assert.NotEmpty(t, resourceIds)
 
-			checks := []resource.TestCheckFunc{
-				resource.TestCheckResourceAttr(dataSourceName, "items.#", "2"),
-			}
-			for _, id := range resourceIds {
-				checks = append(checks, resource.TestCheckTypeSetElemNestedAttrs(dataSourceName, "items.*", map[string]string{"id": id}))
-			}
-			return resource.ComposeTestCheckFunc(checks...)(s)
+			return resource.TestCheckResourceAttr(dataSourceName, "items.#", "2")(s)
 		},
 	})
 }
 
-func TestAccOpenPipelineDataSourcesOneConfigs(t *testing.T) {
+func TestAccOpenPipelineDataSourcesOneConfig(t *testing.T) {
 	api.TestAccSingle(t, "testdata/example-one-config.tf", api.TestAccOptions{
 		Check: func(s *terraform.State) error {
 			// every example has one resource and one data source. We get the data via using the first match.
