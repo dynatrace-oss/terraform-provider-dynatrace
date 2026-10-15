@@ -10,6 +10,8 @@ description: |-
 
 -> This resource requires the API token scope **Create and read synthetic monitors, locations, and nodes** (`ExternalSyntheticIntegration`)
 
+-> **Note**: With version 1.106.0 of the Terraform provider, the default value for `use_new_kubernetes_version` changed from `false` to `true`
+
 ## Dynatrace Documentation
 
 - Creating Private Synthetic Locations - https://www.dynatrace.com/support/help/how-to-use-dynatrace/synthetic-monitoring/private-synthetic-locations/create-a-private-synthetic-location
@@ -80,7 +82,7 @@ resource "dynatrace_synthetic_location" "#name#" {
 - `region_code` (String) The region code of the location. 
 
  To fetch the list of available region codes, use the [GET regions of the country](https://dt-url.net/az230x0) request
-- `use_new_kubernetes_version` (Boolean) Boolean value describes which kubernetes version will be used
+- `use_new_kubernetes_version` (Boolean) Boolean value describes which Kubernetes version will be used. Set to `false` for version 1.23+ and older than version 1.26. Set to `true` for version 1.26+
 
 ### Read-Only
 

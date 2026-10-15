@@ -64,8 +64,9 @@ resource "dynatrace_openpipeline_v2_bizevents_pipelines" "example1" {
         fields_add {
           fields {
             field {
-              name  = "is_warning"
-              value = "true"
+              name       = "is_warning"
+              value      = "true"
+              value_type = "boolean"
             }
           }
         }
@@ -237,8 +238,8 @@ Required:
 
 Optional:
 
-- `exclude` (Set of String) exclude stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`
-- `include` (Set of String) include stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`
+- `exclude` (Set of String) exclude stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `security`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`
+- `include` (Set of String) include stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `security`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`
 
 
 <a id="nestedblock--composition"></a>
@@ -269,5 +270,5 @@ Required:
 
 Optional:
 
-- `exclude` (Set of String) exclude stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`
-- `include` (Set of String) include stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`
+- `exclude` (Set of String) exclude stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `security`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`
+- `include` (Set of String) include stages. Possible values: `costAllocation`, `dataExtraction`, `davis`, `metricExtraction`, `processing`, `productAllocation`, `security`, `securityContext`, `smartscapeEdgeExtraction`, `smartscapeNodeExtraction`, `storage`

@@ -41,18 +41,18 @@ The full documentation of the export feature is available [here](https://dt-url.
 
 ```terraform
 resource "dynatrace_openpipeline_v2_logs_ingestsources" "maximal-source" {
-  enabled = true
+  enabled      = true
   display_name = "max-ingestsource"
   path_segment = "processor.ingestsource.path.max.tf.#name#"
-  source_type = "http"
+  source_type  = "http"
   static_routing {
-    pipeline_type = "builtin"
+    pipeline_type       = "builtin"
     builtin_pipeline_id = "default"
   }
   default_bucket = "default_events"
   metadata_list {
     metadata {
-      entry_key = "environment"
+      entry_key   = "environment"
       entry_value = "production"
     }
   }
@@ -67,26 +67,27 @@ resource "dynatrace_openpipeline_v2_logs_ingestsources" "maximal-source" {
       }
       processor {
         enabled     = true
-        type = "fieldsAdd"
+        type        = "fieldsAdd"
         id          = "processor_Add_error_flag_6132"
         description = "Add error flag"
-        matcher = "matchesPhrase(record.name, \"Error\")"
+        matcher     = "matchesPhrase(record.name, \"Error\")"
         sample_data = "{\n  \"record.name\": \"Error record\" \n}"
         fields_add {
           fields {
             field {
-              name = "is_error"
-              value = "true"
+              name       = "is_error"
+              value      = "true"
+              value_type = "boolean"
             }
           }
         }
       }
       processor {
         enabled     = true
-        type = "fieldsRemove"
+        type        = "fieldsRemove"
         id          = "processor_Remove_details_field_8919"
         description = "Remove details field"
-        matcher = "isNotNull(record.details)"
+        matcher     = "isNotNull(record.details)"
         sample_data = "{\n  \"record.name\": \"Error\",\n  \"record.details\": \"some record details\"\n}"
         fields_remove {
           fields = ["record.details"]
@@ -94,16 +95,16 @@ resource "dynatrace_openpipeline_v2_logs_ingestsources" "maximal-source" {
       }
       processor {
         enabled     = true
-        type = "fieldsRename"
+        type        = "fieldsRename"
         id          = "processor_Rename_name_to_title_5347"
         description = "Rename name to title"
-        matcher = "true"
+        matcher     = "true"
         sample_data = "{\n  \"record.name\": \"Error\"\n}"
         fields_rename {
           fields {
             field {
               from_name = "record.name"
-              to_name = "record.title"
+              to_name   = "record.title"
             }
           }
         }
@@ -188,7 +189,7 @@ Required:
 - `description` (String) No documentation available
 - `enabled` (Boolean) This setting is enabled (`true`) or disabled (`false`)
 - `id` (String) Processor identifier
-- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+- `type` (String) Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `dataMasking`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `securityProblemExtraction`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
 
 Optional:
 
@@ -197,6 +198,7 @@ Optional:
 - `bucket_assignment` (Block List, Max: 1) Bucket assignment processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--bucket_assignment))
 - `cost_allocation` (Block List, Max: 1) Cost allocation processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--cost_allocation))
 - `counter_metric` (Block List, Max: 1) Counter metric processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--counter_metric))
+- `data_masking` (Block List, Max: 1) Data masking processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--data_masking))
 - `davis` (Block List, Max: 1) Davis event extraction processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--davis))
 - `dql` (Block List, Max: 1) DQL processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--dql))
 - `fields_add` (Block List, Max: 1) Fields add processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--fields_add))
@@ -214,6 +216,7 @@ Optional:
 - `sdlc_event` (Block List, Max: 1) SdlcEvent extraction processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--sdlc_event))
 - `security_context` (Block List, Max: 1) Security context processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--security_context))
 - `security_event` (Block List, Max: 1) Security event extraction processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--security_event))
+- `security_problem_extraction` (Block List, Max: 1) Security problem extraction processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--security_problem_extraction))
 - `smartscape_edge` (Block List, Max: 1) Smartscape edge extraction processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--smartscape_edge))
 - `smartscape_node` (Block List, Max: 1) Smartscape node extraction processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--smartscape_node))
 - `technology` (Block List, Max: 1) Technology processor attributes (see [below for nested schema](#nestedblock--processing--processors--processor--technology))
@@ -436,6 +439,33 @@ Optional:
 
 
 
+<a id="nestedblock--processing--processors--processor--data_masking"></a>
+### Nested Schema for `processing.processors.processor.data_masking`
+
+Required:
+
+- `data_masking_fields` (List of String) Data masking fields
+- `masking_rules` (Block List, Min: 1, Max: 1) Masking rules (see [below for nested schema](#nestedblock--processing--processors--processor--data_masking--masking_rules))
+
+<a id="nestedblock--processing--processors--processor--data_masking--masking_rules"></a>
+### Nested Schema for `processing.processors.processor.data_masking.masking_rules`
+
+Required:
+
+- `masking_rule` (Block List, Min: 1) (see [below for nested schema](#nestedblock--processing--processors--processor--data_masking--masking_rules--masking_rule))
+
+<a id="nestedblock--processing--processors--processor--data_masking--masking_rules--masking_rule"></a>
+### Nested Schema for `processing.processors.processor.data_masking.masking_rules.masking_rule`
+
+Required:
+
+- `data_type` (String) Data type
+- `masked_output` (String) Masked output
+- `masking_strategy` (String) Masking strategy
+
+
+
+
 <a id="nestedblock--processing--processors--processor--davis"></a>
 ### Nested Schema for `processing.processors.processor.davis`
 
@@ -494,6 +524,10 @@ Required:
 
 - `name` (String) Fields's name
 - `value` (String) Field's value
+
+Optional:
+
+- `value_type` (String) Field value type. Possible values: `boolean`, `double`, `long`, `string`
 
 
 
@@ -966,6 +1000,62 @@ Optional:
 - `source_field_name` (String) Source field name
 - `strategy` (String) Strategy for field extraction. Possible values: `equals`, `startsWith`
 
+
+
+
+
+<a id="nestedblock--processing--processors--processor--security_problem_extraction"></a>
+### Nested Schema for `processing.processors.processor.security_problem_extraction`
+
+Required:
+
+- `category` (String) No documentation available
+- `id_components` (Block List, Min: 1, Max: 1) ID components (see [below for nested schema](#nestedblock--processing--processors--processor--security_problem_extraction--id_components))
+
+Optional:
+
+- `node_name` (Block List, Max: 1) Node name (see [below for nested schema](#nestedblock--processing--processors--processor--security_problem_extraction--node_name))
+
+<a id="nestedblock--processing--processors--processor--security_problem_extraction--id_components"></a>
+### Nested Schema for `processing.processors.processor.security_problem_extraction.id_components`
+
+Required:
+
+- `id_component` (Block List, Min: 1) (see [below for nested schema](#nestedblock--processing--processors--processor--security_problem_extraction--id_components--id_component))
+
+<a id="nestedblock--processing--processors--processor--security_problem_extraction--id_components--id_component"></a>
+### Nested Schema for `processing.processors.processor.security_problem_extraction.id_components.id_component`
+
+Required:
+
+- `id_component` (String) ID component
+- `referenced_field_name` (String) Referenced field name
+
+
+
+<a id="nestedblock--processing--processors--processor--security_problem_extraction--node_name"></a>
+### Nested Schema for `processing.processors.processor.security_problem_extraction.node_name`
+
+Required:
+
+- `type` (String) Type of value assignment. Possible values: `constant`, `field`, `multiValueConstant`
+
+Optional:
+
+- `constant` (String) Constant value
+- `field` (Block List, Max: 1) Value from field (see [below for nested schema](#nestedblock--processing--processors--processor--security_problem_extraction--node_name--field))
+- `multi_value_constant` (List of String) Constant multi value
+
+<a id="nestedblock--processing--processors--processor--security_problem_extraction--node_name--field"></a>
+### Nested Schema for `processing.processors.processor.security_problem_extraction.node_name.field`
+
+Required:
+
+- `source_field_name` (String) Source field name
+
+Optional:
+
+- `default_value` (String) Default value
 
 
 

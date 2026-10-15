@@ -27,8 +27,8 @@ The full documentation of the export feature is available [here](https://dt-url.
 ## Resource Example Usage
 
 ```terraform
-resource "dynatrace_hub_permissions" "#name#" {
-  email = "terraform@dynatrace.com"
+resource "dynatrace_hub_permissions" "permission" {
+  email = "#name#@dynatrace.com"
   description = "This is an example description"
 }
 ```

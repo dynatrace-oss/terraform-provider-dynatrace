@@ -34,7 +34,7 @@ resource "dynatrace_maintenance_windows" "recurring_window" {
 
   object_scopes {
     synthetic_monitors {
-      disable_synthetic_monitor_filter = "status == \"OPEN\" AND severity == \"HIGH\""
+      disable_synthetic_monitor_filter = "monitor.name == \"my-monitor\""
       disable_synthetic_monitors       = true
     }
   }
@@ -162,4 +162,4 @@ Required:
 
 Optional:
 
-- `disable_synthetic_monitor_filter` (String) DQL filter selecting which synthetic monitors to pause. Required when synthetic monitors are disabled.
+- `disable_synthetic_monitor_filter` (String) DQL filter selecting which synthetic monitors to pause. Required when synthetic monitors are disabled. Supported fields: monitor.id, monitor.name, pg.tag, security.context.
