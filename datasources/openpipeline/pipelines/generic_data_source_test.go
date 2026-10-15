@@ -31,6 +31,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -92,14 +93,33 @@ func readDataSource(t *testing.T, resource *schema.Resource, raw map[string]any,
 func TestGenericDataSource_Schema(t *testing.T) {
 	resource := genericDataSource(serviceFnReturning(&testutil.MockListFilterService[*testSettings]{}))
 
-	t.Run("display_name and custom_id are mutually exclusive", func(t *testing.T) {
+	t.Run("custom_id conflicts with display_name and group_role", func(t *testing.T) {
 		displayName := resource.Schema["display_name"]
 		assert.True(t, displayName.Optional)
 		assert.Equal(t, []string{"custom_id"}, displayName.ConflictsWith)
 
 		customID := resource.Schema["custom_id"]
 		assert.True(t, customID.Optional)
-		assert.Equal(t, []string{"display_name"}, customID.ConflictsWith)
+		assert.Equal(t, []string{"display_name", "group_role"}, customID.ConflictsWith)
+	})
+
+	t.Run("group_role conflicts with custom_id only", func(t *testing.T) {
+		groupRole := resource.Schema["group_role"]
+		assert.True(t, groupRole.Optional)
+		assert.Equal(t, schema.TypeString, groupRole.Type)
+		assert.Equal(t, []string{"custom_id"}, groupRole.ConflictsWith)
+	})
+
+	t.Run("group_role and custom_id are rejected together", func(t *testing.T) {
+		cfg := terraform.NewResourceConfigRaw(map[string]any{"custom_id": "my-custom-id", "group_role": "basePipeline"})
+		diags := resource.Validate(cfg)
+		assert.True(t, diags.HasError())
+	})
+
+	t.Run("group_role and display_name are accepted together", func(t *testing.T) {
+		cfg := terraform.NewResourceConfigRaw(map[string]any{"display_name": "my-pipeline", "group_role": "basePipeline"})
+		diags := resource.Validate(cfg)
+		assert.False(t, diags.HasError(), diags)
 	})
 
 	t.Run("items contain the computed settings schema and an id", func(t *testing.T) {
@@ -143,6 +163,16 @@ func TestGetFilter(t *testing.T) {
 			expected: "value.customId='my-custom-id'",
 		},
 		{
+			name:     "group_role",
+			raw:      map[string]any{"group_role": "basePipeline"},
+			expected: "value.groupRole='basePipeline'",
+		},
+		{
+			name:     "display_name and group_role are combined",
+			raw:      map[string]any{"display_name": "my-pipeline", "group_role": "memberPipeline"},
+			expected: "value.displayName='my-pipeline' and value.groupRole='memberPipeline'",
+		},
+		{
 			name:     "single quotes are escaped",
 			raw:      map[string]any{"display_name": "it's"},
 			expected: `value.displayName='it\'s'`,
@@ -152,6 +182,11 @@ func TestGetFilter(t *testing.T) {
 			name:     "backslashes are escaped",
 			raw:      map[string]any{"custom_id": `a\b\`},
 			expected: `value.customId='a\\b\\'`,
+		},
+		{
+			name:     "group_role is escaped",
+			raw:      map[string]any{"group_role": `it's\`},
+			expected: `value.groupRole='it\'s\\'`,
 		},
 		{
 			name:     "nothing set",
@@ -183,6 +218,22 @@ func TestDataSourceRead(t *testing.T) {
 		assert.Equal(t, []any{
 			map[string]any{"id": "id-1", "display_name": "pipeline"},
 			map[string]any{"id": "id-2", "display_name": "pipeline"},
+		}, d.Get("items"))
+	})
+
+	t.Run("uses the combined filter for display_name and group_role", func(t *testing.T) {
+		svc, filters := listFilterServiceRecorder(api.Stubs{
+			{ID: "id-1", Value: &testSettings{DisplayName: "pipeline"}},
+		}, nil)
+
+		d, diags := readDataSource(t, genericDataSource(serviceFnReturning(svc)), map[string]any{"display_name": "pipeline", "group_role": "compositionPipeline"}, validMeta())
+
+		expectedFilter := "value.displayName='pipeline' and value.groupRole='compositionPipeline'"
+		require.False(t, diags.HasError(), diags)
+		assert.Equal(t, []string{expectedFilter}, *filters)
+		assert.Equal(t, expectedFilter, d.Id())
+		assert.Equal(t, []any{
+			map[string]any{"id": "id-1", "display_name": "pipeline"},
 		}, d.Get("items"))
 	})
 
