@@ -103,7 +103,7 @@ Required:
 
 - `detect_as_web_request_service` (Boolean) Detect the matching requests as web request services instead of web services.
 
-This prevents detecting of matching requests as opaque web services. An opaque web request service is created instead. If you need to further modify the resulting web request service, you need to create a separate [Opaque/external web request rule](builtin:service-detection.full-web-request).
+  This prevents detecting of matching requests as opaque web services. An opaque web request service is created instead. If you need to further modify the resulting web request service, you need to create a separate [Opaque/external web request rule](builtin:service-detection.full-web-request).
 
 Optional:
 
@@ -115,18 +115,18 @@ Optional:
 
 Required:
 
-- `enable_id_contributor` (Boolean) Transform this value before letting it contribute to the Service Id
+- `enable_id_contributor` (Boolean) When enabled, the detected value contributes to the Service Id.
 
 Optional:
 
-- `service_id_contributor` (Block List, Max: 1) no documentation available (see [below for nested schema](#nestedblock--id_contributors--url_path--service_id_contributor))
+- `service_id_contributor` (Block List, Max: 1) Choose how to transform the detected value before it contributes to the Service Id. Note that all of the Transformations are always applied. Transformations are applied in the order they are specified, and the output of the previous transformation is the input for the next one. (see [below for nested schema](#nestedblock--id_contributors--url_path--service_id_contributor))
 
 <a id="nestedblock--id_contributors--url_path--service_id_contributor"></a>
 ### Nested Schema for `id_contributors.url_path.service_id_contributor`
 
 Required:
 
-- `contribution_type` (String) Possible Values: `OriginalValue`, `OverrideValue`, `TransformValue`
+- `contribution_type` (String) Defines whether the original value should be used or if a transformation set should be used to override a value or transform it. Possible values: `OriginalValue`, `OverrideValue`, `TransformValue`
 
 Optional:
 
@@ -145,19 +145,19 @@ Required:
 
 Required:
 
-- `transformation_type` (String) Possible Values: `AFTER`, `BEFORE`, `BETWEEN`, `REMOVE_CREDIT_CARDS`, `REMOVE_IBANS`, `REMOVE_IPS`, `REMOVE_NUMBERS`, `REPLACE_BETWEEN`, `SPLIT_SELECT`, `TAKE_SEGMENTS`
+- `transformation_type` (String) Defines what kind of transformation will be applied on the original value. Possible values: `AFTER`, `BEFORE`, `BETWEEN`, `REMOVE_CREDIT_CARDS`, `REMOVE_IBANS`, `REMOVE_IPS`, `REMOVE_NUMBERS`, `REPLACE_BETWEEN`, `SPLIT_SELECT`, `TAKE_SEGMENTS`
 
 Optional:
 
-- `include_hex_numbers` (Boolean) include hexadecimal numbers
-- `min_digit_count` (Number) min digit count
-- `prefix` (String) no documentation available
-- `replacement_value` (String) replacement
+- `include_hex_numbers` (Boolean) Whether to also remove hexadecimal numbers (sequences of at least `minDigitCount` hexadecimal digits preceded by '0x'). It is used only when the transformation type is `REMOVE_NUMBERS`.
+- `min_digit_count` (Number) The minimum number of digits that a numeric sequence must have to be removed. It is used only when the transformation type is `REMOVE_NUMBERS`.
+- `prefix` (String) The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.
+- `replacement_value` (String) The text that replaces the part between `prefix` and `suffix`. It is used only when the transformation type is `REPLACE_BETWEEN`.
 - `segment_count` (Number) How many segments should be taken.
-- `select_index` (Number) select index
-- `split_delimiter` (String) split by
-- `suffix` (String) no documentation available
-- `take_from_end` (Boolean) take from end
+- `select_index` (Number) The index of the element to keep after splitting. The index is zero-based. It is used only when the transformation type is `SPLIT_SELECT`.
+- `split_delimiter` (String) The delimiter used for splitting the text. It is used only when the transformation type is `SPLIT_SELECT` or `TAKE_SEGMENTS`.
+- `suffix` (String) The part of the text that serves as a reference point for the transformation. Its use depends on the transformation type.
+- `take_from_end` (Boolean) Whether to take segments from the end of the text instead of the beginning. It is used only when the transformation type is `TAKE_SEGMENTS`.
 
 
 
@@ -166,7 +166,7 @@ Optional:
 
 Required:
 
-- `value` (String) no documentation available
+- `value` (String) The value to be used instead of the detected value.
 
 
 
@@ -184,17 +184,27 @@ Required:
 
 Required:
 
-- `attribute` (String) Take the value of this attribute
-- `compare_operation_type` (String) Apply this operation
+- `attribute` (String) The detected attribute that should be compared with the specified operation.
+- `compare_operation_type` (String) The type of comparison operation that should be applied to the detected attribute.. When using this field over the Settings API, it is stored as a string and must use one of the fixed compare-operation identifiers. The available subset depends on the selected `attribute`.
+
+  - `Exists`, `NotExists`
+ - `BoolIsTrue`, `BoolIsFalse`
+ - `TagEquals`, `TagKeyEquals`
+ - `StringEquals`, `NotStringEquals`, `StringStartsWith`, `NotStringStartsWith`, `StringEndsWith`, `NotStringEndsWith`, `StringContains`, `NotStringContains`
+ - `FrameworkEquals`, `NotFrameworkEquals`
+ - `IpInRange`, `NotIpInRange`
+ - `IntEquals`, `NotIntEquals`, `IntGreaterThan`, `IntLessThan`
 
 Optional:
 
-- `framework` (Set of String) Technology
+- `framework` (Set of String) The technology that should be compared with the detected attribute.
+
+  Select one or more technologies. The condition matches if the detected attribute value equals (for `FrameworkEquals`) or does not equal (for `NotFrameworkEquals`) at least one of the selected technologies. Possible values: `AXIS`, `CXF`, `HESSIAN`, `JAX_WS_RI`, `JBOSS`, `JERSEY`, `PROGRESS`, `RESTEASY`, `RESTLET`, `SPRING`, `TIBCO`, `WEBLOGIC`, `WEBMETHODS`, `WEBSPHERE`, `WINK`
 - `ignore_case` (Boolean) Ignore case sensitivity for texts.
-- `int_value` (Number) Value
-- `int_values` (Set of Number) Values
-- `ip_range_from` (String) From
-- `ip_range_to` (String) To
-- `tag_values` (Set of String) If multiple values are specified, at least one of them must match for the condition to match
+- `int_value` (Number) The integer value to compare the detected attribute with.
+- `int_values` (Set of Number) If multiple values are specified, at least one of them must match for the condition to match.
+- `ip_range_from` (String) The beginning of the IP range. The condition matches if the detected attribute value is greater than or equal to this value (for `IpInRange`) or less than this value (for `NotIpInRange`).
+- `ip_range_to` (String) The end of the IP range. The condition matches if the detected attribute value is less than or equal to this value (for `IpInRange`) or greater than this value (for `NotIpInRange`).
+- `tag_values` (Set of String) If multiple values are specified, at least one of them must match for the condition to match.
 - `text_values` (Set of String) If multiple values are specified, at least one of them must match for the condition to match
  
