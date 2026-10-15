@@ -150,6 +150,7 @@ func TestAcc(t *testing.T, opts ...TestAccOptions) {
 func TestAccClassicHybrid(t *testing.T, opts ...TestAccOptions) {
 	t.Run("Classic", func(t *testing.T) {
 		t.Setenv("DT_CLIENT_SECRET", "")
+		t.Setenv("DYNATRACE_WIF_AUDIENCE", "")
 		TestAcc(t, opts...)
 	})
 
