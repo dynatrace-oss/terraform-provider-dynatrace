@@ -695,6 +695,7 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_security_events_pipelines":      resources.NewGeneric(export.ResourceTypes.OpenpipelineSecurityEventsPipelines).Resource(),
 			"dynatrace_openpipeline_v2_smartscape_events_pipelines":      resources.NewGeneric(export.ResourceTypes.OpenpipelineSmartscapeEventsPipelines).Resource(),
 			"dynatrace_openpipeline_v2_security_events_routing":        resources.NewGeneric(export.ResourceTypes.OpenpipelineSecurityEventsRouting).Resource(),
+			"dynatrace_openpipeline_v2_smartscape_events_routing":        resources.NewGeneric(export.ResourceTypes.OpenpipelineSmartscapeEventsRouting).Resource(),
 			"dynatrace_openpipeline_v2_spans_ingestsources":            resources.NewGeneric(export.ResourceTypes.OpenpipelineSpansIngestsources).Resource(),
 			"dynatrace_openpipeline_v2_spans_pipelines":                resources.NewGeneric(export.ResourceTypes.OpenpipelineSpansPipelines).Resource(),
 			"dynatrace_openpipeline_v2_spans_routing":                  resources.NewGeneric(export.ResourceTypes.OpenpipelineSpansRouting).Resource(),

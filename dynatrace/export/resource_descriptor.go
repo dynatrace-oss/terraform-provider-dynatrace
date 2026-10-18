@@ -443,6 +443,7 @@ import (
 	openpipelinesecurityeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelinegroups"
 	openpipelinesecurityeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelines"
 	openpipelinesecurityeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/routing"
+	openpipelinesmartscapeeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/smartscape/events/routing"
 	openpipelinesmartscapeeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/smartscape/events/pipelines"
 	openpipelinespansdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/dataforwarding"
 	openpipelinespansingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/ingestsources"
@@ -1853,6 +1854,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.OpenpipelineSecurityEventsRouting: NewResourceDescriptor(
 		openpipelinesecurityeventsrouting.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineSmartscapeEventsRouting: NewResourceDescriptor(
+		openpipelinesmartscapeeventsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsPipelines),
 	),
 	ResourceTypes.OpenpipelineSpansIngestsources: NewResourceDescriptor(
 		openpipelinespansingestsources.Service,
