@@ -720,6 +720,7 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_logs_pipelinegroups":            resources.NewGeneric(export.ResourceTypes.OpenpipelineLogsPipelinegroups).Resource(),
 			"dynatrace_openpipeline_v2_metrics_pipelinegroups":         resources.NewGeneric(export.ResourceTypes.OpenpipelineMetricsPipelinegroups).Resource(),
 			"dynatrace_openpipeline_v2_security_events_pipelinegroups": resources.NewGeneric(export.ResourceTypes.OpenpipelineSecurityEventsPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_smartscape_events_pipelinegroups": resources.NewGeneric(export.ResourceTypes.OpenpipelineSmartscapeEventsPipelinegroups).Resource(),
 			"dynatrace_openpipeline_v2_spans_pipelinegroups":           resources.NewGeneric(export.ResourceTypes.OpenpipelineSpansPipelinegroups).Resource(),
 			"dynatrace_openpipeline_v2_system_events_pipelinegroups":   resources.NewGeneric(export.ResourceTypes.OpenpipelineSystemEventsPipelinegroups).Resource(),
 			"dynatrace_openpipeline_v2_user_events_pipelinegroups":     resources.NewGeneric(export.ResourceTypes.OpenpipelineUserEventsPipelinegroups).Resource(),
