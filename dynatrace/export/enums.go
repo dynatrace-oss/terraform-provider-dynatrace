@@ -516,6 +516,7 @@ var ResourceTypes = struct {
 	OpenpipelineSecurityEventsIngestsources  ResourceType
 	OpenpipelineSecurityEventsPipelines      ResourceType
 	OpenpipelineSecurityEventsRouting        ResourceType
+	OpenpipelineSmartscapeEventsPipelines      ResourceType
 	OpenpipelineSpansIngestsources           ResourceType
 	OpenpipelineSpansPipelines               ResourceType
 	OpenpipelineSpansRouting                 ResourceType
@@ -957,6 +958,7 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v2_security_events_ingestsources",
 	"dynatrace_openpipeline_v2_security_events_pipelines",
 	"dynatrace_openpipeline_v2_security_events_routing",
+	"dynatrace_openpipeline_v2_smartscape_events_pipelines",
 	"dynatrace_openpipeline_v2_spans_ingestsources",
 	"dynatrace_openpipeline_v2_spans_pipelines",
 	"dynatrace_openpipeline_v2_spans_routing",
