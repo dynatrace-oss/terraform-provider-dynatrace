@@ -443,18 +443,6 @@ var ResourceTypes = struct {
 	DevObsAgentOptin                         ResourceType
 	DevObsDataMasking                        ResourceType
 	DavisCoPilot                             ResourceType
-	OpenPipelineLogs                         ResourceType
-	OpenPipelineEvents                       ResourceType
-	OpenPipelineSecurityEvents               ResourceType
-	OpenPipelineBusinessEvents               ResourceType
-	OpenPipelineSDLCEvents                   ResourceType
-	OpenPipelineMetrics                      ResourceType
-	OpenPipelineUserSessions                 ResourceType
-	OpenPipelineDavisProblems                ResourceType
-	OpenPipelineDavisEvents                  ResourceType
-	OpenPipelineSystemEvents                 ResourceType
-	OpenPipelineUserEvents                   ResourceType
-	OpenPipelineSpans                        ResourceType
 	CloudDevelopmentEnvironments             ResourceType
 	KubernetesSPM                            ResourceType
 	LogAgentFeatureFlags                     ResourceType
@@ -884,18 +872,6 @@ var ResourceTypes = struct {
 	"dynatrace_devobs_agent_optin",
 	"dynatrace_devobs_data_masking",
 	"dynatrace_davis_copilot",
-	"dynatrace_openpipeline_logs",
-	"dynatrace_openpipeline_events",
-	"dynatrace_openpipeline_security_events",
-	"dynatrace_openpipeline_business_events",
-	"dynatrace_openpipeline_sdlc_events",
-	"dynatrace_openpipeline_metrics",
-	"dynatrace_openpipeline_user_sessions",
-	"dynatrace_openpipeline_davis_problems",
-	"dynatrace_openpipeline_davis_events",
-	"dynatrace_openpipeline_system_events",
-	"dynatrace_openpipeline_user_events",
-	"dynatrace_openpipeline_spans",
 	"dynatrace_cloud_development_environments",
 	"dynatrace_kubernetes_spm",
 	"dynatrace_log_agent_feature_flags",

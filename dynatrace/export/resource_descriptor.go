@@ -28,7 +28,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/openpipeline"
 	settingsPermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -721,30 +720,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		directshares.Service, Dependencies.ID(ResourceTypes.Documents), Dependencies.ID(ResourceTypes.IAMUser), Dependencies.ID(ResourceTypes.IAMServiceUser), Dependencies.ID(ResourceTypes.IAMGroup),
 	),
 	ResourceTypes.HubExtensionV2Config: NewResourceDescriptor(monitoringconfigurations.Service),
-	ResourceTypes.OpenPipelineLogs: NewResourceDescriptor(
-		openpipeline.LogsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
-	ResourceTypes.OpenPipelineEvents: NewResourceDescriptor(
-		openpipeline.EventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
-	ResourceTypes.OpenPipelineSecurityEvents: NewResourceDescriptor(
-		openpipeline.SecurityEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
-	ResourceTypes.OpenPipelineBusinessEvents: NewResourceDescriptor(
-		openpipeline.BusinessEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
-	ResourceTypes.OpenPipelineSDLCEvents: NewResourceDescriptor(
-		openpipeline.SDLCEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
-	ResourceTypes.OpenPipelineMetrics: NewResourceDescriptor(
-		openpipeline.MetricsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
-	ResourceTypes.OpenPipelineUserSessions: NewResourceDescriptor(
-		openpipeline.UserSessionsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
-	ResourceTypes.OpenPipelineDavisProblems: NewResourceDescriptor(
-		openpipeline.DavisProblemsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
-	ResourceTypes.OpenPipelineDavisEvents: NewResourceDescriptor(
-		openpipeline.DavisEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
-	ResourceTypes.OpenPipelineSystemEvents: NewResourceDescriptor(
-		openpipeline.SystemEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
-	ResourceTypes.OpenPipelineUserEvents: NewResourceDescriptor(
-		openpipeline.UserEventsService, Dependencies.ID(ResourceTypes.PlatformBucket)),
-	ResourceTypes.OpenPipelineSpans: NewResourceDescriptor(
-		openpipeline.SpansService, Dependencies.ID(ResourceTypes.PlatformBucket)),
 	ResourceTypes.JSONDashboard: NewChildResourceDescriptor(
 		jsondashboards.Service,
 		ResourceTypes.JSONDashboardBase,
