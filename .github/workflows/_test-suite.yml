@@ -187,7 +187,6 @@ jobs:
           - { name: "extensions", slug: "extensions", path: "./dynatrace/api/extensions/..." }
           - { name: "grail", slug: "grail", path: "./dynatrace/api/grail/..." }
           - { name: "iam", slug: "iam", path: "./dynatrace/api/iam/..." }
-          - { name: "openpipeline", slug: "openpipeline", path: "./dynatrace/api/openpipeline/..." }
           - { name: "platform", slug: "platform", path: "./dynatrace/api/platform/..." }
           - { name: "service", slug: "service", path: "./dynatrace/api/service/..." }
           - { name: "slo", slug: "slo", path: "./dynatrace/api/slo/..." }
