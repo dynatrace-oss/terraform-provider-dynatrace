@@ -26,6 +26,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAccOpenPipelineDataSources(t *testing.T) {
@@ -65,15 +66,16 @@ func TestAccOpenPipelineDataSourcesTwoConfigs(t *testing.T) {
 func TestAccOpenPipelineDataSourcesOneConfig(t *testing.T) {
 	api.TestAccSingle(t, "testdata/example-one-config.tf", api.TestAccOptions{
 		Check: func(s *terraform.State) error {
-			// every example has one resource and one data source. We get the data via using the first match.
 			dataSourceName := getDataSourceName(s)
-			resourceId := getResourceID(s)
+			// We don't use the helper function here to get the first resource because we have two resources and a map is unordered
+			res := s.RootModule().Resources["dynatrace_openpipeline_v2_bizevents_pipelines.pipeline1"]
+			require.NotNil(t, res)
 
 			assert.NotEmpty(t, dataSourceName)
-			assert.NotEmpty(t, resourceId)
+			assert.NotEmpty(t, res.Primary.ID)
 
 			return resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttr(dataSourceName, "items.0.id", resourceId),
+				resource.TestCheckResourceAttr(dataSourceName, "items.0.id", res.Primary.ID),
 				resource.TestCheckResourceAttr(dataSourceName, "items.#", "1"),
 			)(s)
 		},
