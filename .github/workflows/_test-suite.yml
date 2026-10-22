@@ -136,7 +136,7 @@ jobs:
         if: always()
         with:
           install-mode: 'goinstall' # install mode goinstall in order to use hashes for the version
-          version: eabc2638a66daf5bb6c6fb052a32fa3ef7b6600d #v2.1.6
+          version: 25c5369a93aacb8cccea0d46e1569ca4a194564d #v2.15.0
           args: '--output.checkstyle.path=lint-report.xml --issues-exit-code=0' # if issues are found, don't exit with "1". Sonar decides if it fails or not
 
       - name: ⬆️ Archive lint results
