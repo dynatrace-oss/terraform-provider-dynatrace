@@ -375,11 +375,9 @@ func TestHCLGen(t *testing.T) {
 		// `enabled` is Optional+Computed bool → resOpt is true, resComputed is true.
 		// With value=false this would still write the attribute (no `#` prefix because Computed).
 		schemer := &fakeSchemer{
-			fakeMarshaler: fakeMarshaler{
-				fn: func(p hcl.Properties) error {
-					p["enabled"] = false
-					return nil
-				},
+			fn: func(p hcl.Properties) error {
+				p["enabled"] = false
+				return nil
 			},
 			schema: map[string]*schema.Schema{
 				"enabled": {Type: schema.TypeBool, Optional: true, Computed: true},
@@ -398,11 +396,9 @@ func TestHCLGen(t *testing.T) {
 	t.Run("Export comments out optional non-computed default values via schema", func(t *testing.T) {
 		// `enabled` is Optional (not Computed) → optional+default+not-computed → `#` prefix.
 		schemer := &fakeSchemer{
-			fakeMarshaler: fakeMarshaler{
-				fn: func(p hcl.Properties) error {
-					p["enabled"] = false
-					return nil
-				},
+			fn: func(p hcl.Properties) error {
+				p["enabled"] = false
+				return nil
 			},
 			schema: map[string]*schema.Schema{
 				"enabled": {Type: schema.TypeBool, Optional: true},
@@ -419,12 +415,10 @@ func TestHCLGen(t *testing.T) {
 	t.Run("Export drops computed-only fields", func(t *testing.T) {
 		// Computed-only (not Optional) → eval skips the entry entirely.
 		schemer := &fakeSchemer{
-			fakeMarshaler: fakeMarshaler{
-				fn: func(p hcl.Properties) error {
-					p["id"] = "generated"
-					p["name"] = "kept"
-					return nil
-				},
+			fn: func(p hcl.Properties) error {
+				p["id"] = "generated"
+				p["name"] = "kept"
+				return nil
 			},
 			schema: map[string]*schema.Schema{
 				"id":   {Type: schema.TypeString, Computed: true},
@@ -446,15 +440,13 @@ func TestHCLGen(t *testing.T) {
 		// value would normally trigger the `#` comment prefix — but Computed
 		// must suppress it.
 		schemer := &fakeSchemer{
-			fakeMarshaler: fakeMarshaler{
-				fn: func(p hcl.Properties) error {
-					p["outer"] = []any{
-						map[string]any{
-							"inner": false,
-						},
-					}
-					return nil
-				},
+			fn: func(p hcl.Properties) error {
+				p["outer"] = []any{
+					map[string]any{
+						"inner": false,
+					},
+				}
+				return nil
 			},
 			schema: map[string]*schema.Schema{
 				"outer": {

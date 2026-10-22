@@ -58,8 +58,7 @@ func ClassifyRetryError(err error) *retry.RetryError {
 		return nil
 	}
 
-	var restError rest.Error
-	if errors.As(err, &restError) {
+	if restError, ok := errors.AsType[rest.Error](err); ok {
 		code := restError.Code
 		// Retry on specific client errors that can be transient (eventual consistency).
 		if code == 400 || code == 404 {

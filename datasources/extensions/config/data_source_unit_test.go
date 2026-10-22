@@ -51,7 +51,7 @@ func newMockClient(call *listCall, response coreapi.PagedListResponse, err error
 
 // pagedResponse wraps the given JSON objects into a single page.
 func pagedResponse(objects ...string) coreapi.PagedListResponse {
-	page := coreapi.ListResponse{Response: coreapi.Response{StatusCode: 200}}
+	page := coreapi.ListResponse{StatusCode: 200}
 	for _, object := range objects {
 		page.Objects = append(page.Objects, []byte(object))
 	}

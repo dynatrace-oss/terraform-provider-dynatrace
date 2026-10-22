@@ -39,9 +39,9 @@ const (
 
 type TestClient struct {
 	latency     time.Duration // artificial per-request delay inside Finish
-	inFlight    int64         // current in-flight
-	maxInFlight int64         // max observed in-flight
-	total       int64         // total Finish calls
+	inFlight    atomic.Int64  // current in-flight
+	maxInFlight atomic.Int64  // max observed in-flight
+	total       atomic.Int64  // total Finish calls
 }
 
 func NewTestClient(latency time.Duration) *TestClient {
@@ -65,9 +65,9 @@ func (client *TestClient) ClientSet() rest.ClientSet {
 }
 
 // Accessors for assertions
-func (c *TestClient) MaxConcurrent() int64 { return atomic.LoadInt64(&c.maxInFlight) }
-func (c *TestClient) Total() int64         { return atomic.LoadInt64(&c.total) }
-func (c *TestClient) InFlight() int64      { return atomic.LoadInt64(&c.inFlight) }
+func (c *TestClient) MaxConcurrent() int64 { return c.maxInFlight.Load() }
+func (c *TestClient) Total() int64         { return c.total.Load() }
+func (c *TestClient) InFlight() int64      { return c.inFlight.Load() }
 
 type Request struct {
 	client *TestClient
@@ -78,23 +78,23 @@ func (request *Request) Finish(v ...any) error {
 	c := request.client
 
 	// increment in-flight
-	cur := atomic.AddInt64(&c.inFlight, 1)
+	cur := c.inFlight.Add(1)
 
 	// update maxInFlight if needed (lock-free CAS loop)
 	for {
-		max := atomic.LoadInt64(&c.maxInFlight)
+		max := c.maxInFlight.Load()
 		if cur <= max {
 			break
 		}
-		if atomic.CompareAndSwapInt64(&c.maxInFlight, max, cur) {
+		if c.maxInFlight.CompareAndSwap(max, cur) {
 			break
 		}
 	}
 
 	// count total requests
-	atomic.AddInt64(&c.total, 1)
+	c.total.Add(1)
 	defer func() {
-		atomic.AddInt64(&c.inFlight, -1)
+		c.inFlight.Add(-1)
 	}()
 
 	// simulate work/latency so goroutines overlap

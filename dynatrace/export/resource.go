@@ -327,13 +327,11 @@ func (me *Resource) Download() error {
 
 	idOnly, _, _ := settings.SplitID(me.ID)
 	address.AddToComplete(address.AddressComplete{
-		AddressOriginal: address.AddressOriginal{
-			TerraformSchemaID: service.SchemaID(),
-			OriginalID:        idOnly,
-		},
-		UniqueName:  me.UniqueName,
-		Type:        string(me.Type),
-		TrimmedType: me.Type.Trim(),
+		TerraformSchemaID: service.SchemaID(),
+		OriginalID:        idOnly,
+		UniqueName:        me.UniqueName,
+		Type:              string(me.Type),
+		TrimmedType:       me.Type.Trim(),
 	})
 	comments := settings.FillDemoValues(settngs)
 	comments = append(comments, settings.Validate(settngs)...)
