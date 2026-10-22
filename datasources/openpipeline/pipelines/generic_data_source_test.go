@@ -65,7 +65,7 @@ func (s *testSettings) UnmarshalHCL(decoder hcl.Decoder) error {
 func listFilterServiceRecorder(stubs api.Stubs, err error) (*testutil.MockListFilterService[*testSettings], *[]string) {
 	filters := &[]string{}
 	svc := &testutil.MockListFilterService[*testSettings]{
-		MockCRUDService: testutil.MockCRUDService[*testSettings]{SchemaIDValue: testSchemaID},
+		SchemaIDValue: testSchemaID,
 		ListWithFilterFn: func(_ context.Context, filter string) (api.Stubs, error) {
 			*filters = append(*filters, filter)
 			return stubs, err

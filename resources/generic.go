@@ -246,9 +246,8 @@ func toDiagError(err error) diag.Diagnostic {
 		return diag.Diagnostic{}
 	}
 
-	var restError rest.Error
 	var msg string
-	if errors.As(err, &restError) {
+	if restError, ok := errors.AsType[rest.Error](err); ok {
 		msg = restError.ViolationMessage()
 	} else {
 		msg = err.Error()

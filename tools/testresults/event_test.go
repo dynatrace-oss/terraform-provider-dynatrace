@@ -27,21 +27,17 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/tools/internal/githubevent"
 )
 
 func sampleEnvironmentEvent() environmentEvent {
 	return environmentEvent{
 		DtSettingsStage: "dev",
-		Event: githubevent.Event{
-			Repository: "dynatrace-oss/terraform-provider-dynatrace",
-			Ref:        "refs/heads/main",
-			EventName:  "push",
-			Actor:      "some-actor",
-			RunID:      "123456",
-			Job:        "987654321",
-		},
+		Repository:      "dynatrace-oss/terraform-provider-dynatrace",
+		Ref:             "refs/heads/main",
+		EventName:       "push",
+		Actor:           "some-actor",
+		RunID:           "123456",
+		Job:             "987654321",
 	}
 }
 
