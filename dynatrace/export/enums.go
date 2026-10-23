@@ -417,7 +417,6 @@ var ResourceTypes = struct {
 	HubExtensionConfig                       ResourceType
 	HubExtensionV2Config                     ResourceType
 	HubActiveExtensionVersion                ResourceType
-	DatabaseAppFeatureFlags                  ResourceType
 	EBPFServiceDiscovery                     ResourceType
 	DavisAnomalyDetectors                    ResourceType
 	LogDebugSettings                         ResourceType
@@ -841,7 +840,6 @@ var ResourceTypes = struct {
 	"dynatrace_hub_extension_config",
 	"dynatrace_hub_extension_v2_config",
 	"dynatrace_hub_extension_active_version",
-	"dynatrace_db_app_feature_flags",
 	"dynatrace_ebpf_service_discovery",
 	"dynatrace_davis_anomaly_detectors",
 	"dynatrace_log_debug_settings",

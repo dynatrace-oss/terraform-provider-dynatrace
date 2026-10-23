@@ -34,7 +34,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	msentraidconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection"
-	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/devobs/debugger/gitonprem"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/defaultrules"
 	githubconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/github/connector/connection"
@@ -1526,7 +1525,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ManagedNetworkZones:       NewResourceDescriptor(managednetworkzones.Service),
 	ResourceTypes.HubExtensionConfig:        NewResourceDescriptor(extension_config.Service),
 	ResourceTypes.HubActiveExtensionVersion: NewResourceDescriptor(active_version.Service),
-	ResourceTypes.DatabaseAppFeatureFlags:   NewResourceDescriptor(dbfeatureflags.Service),
 	ResourceTypes.EBPFServiceDiscovery:      NewResourceDescriptor(ebpf.Service),
 	ResourceTypes.DavisAnomalyDetectors:     NewResourceDescriptor(anomalydetectors.Service),
 	ResourceTypes.LogDebugSettings:          NewResourceDescriptor(logdebugsettings.Service),
