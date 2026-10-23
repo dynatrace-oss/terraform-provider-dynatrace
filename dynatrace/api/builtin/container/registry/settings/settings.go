@@ -26,6 +26,10 @@ type Settings struct {
 	ContainerRegistry *string `json:"containerRegistry,omitempty"` // Typically set without protocol. Leave empty to use default configuration
 }
 
+func (me *Settings) Deprecated() string {
+	return "This resource API endpoint has been deprecated."
+}
+
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"container_registry": {
