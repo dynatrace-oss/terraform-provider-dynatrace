@@ -406,7 +406,6 @@ var ResourceTypes = struct {
 	SlackForWorkflows                        ResourceType
 	Policy                                   ResourceType
 	KubernetesApp                            ResourceType
-	GrailMetricsAllowall                     ResourceType
 	GrailMetricsAllowlist                    ResourceType
 	WebAppBeaconEndpoint                     ResourceType
 	WebAppCustomConfigProperties             ResourceType
@@ -833,7 +832,6 @@ var ResourceTypes = struct {
 	"dynatrace_automation_workflow_slack",
 	"dynatrace_policy",
 	"dynatrace_kubernetes_app",
-	"dynatrace_grail_metrics_allowall",
 	"dynatrace_grail_metrics_allowlist",
 	"dynatrace_web_app_beacon_endpoint",
 	"dynatrace_web_app_custom_config_properties",

@@ -143,7 +143,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetectionrulesets"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/generic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/geosettings"
-	grailmetricsallowall "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/grail/metrics/allowall"
 	grailmetricsallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/grail/metrics/allowlist"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/histogrammetrics"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
@@ -1496,7 +1495,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		kubernetesapp.Service,
 		Coalesce(Dependencies.K8sCluster),
 	),
-	ResourceTypes.GrailMetricsAllowall:  NewResourceDescriptor(grailmetricsallowall.Service),
 	ResourceTypes.GrailMetricsAllowlist: NewResourceDescriptor(grailmetricsallowlist.Service),
 	ResourceTypes.WebAppBeaconEndpoint: NewResourceDescriptor(
 		webappbeaconendpoint.Service,
