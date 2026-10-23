@@ -221,7 +221,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/victorops"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/webhook"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/xmatters"
-	problemrecordpropagation "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/record/propagation/rules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/builtinprocessmonitoringrule"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
@@ -1583,7 +1582,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.HostGroup),
 		Coalesce(Dependencies.K8sCluster),
 	),
-	ResourceTypes.ProblemRecordPropagationRules:   NewResourceDescriptor(problemrecordpropagation.Service),
 	ResourceTypes.ProblemFields:                   NewResourceDescriptor(fields.Service),
 	ResourceTypes.AutomationControllerConnections: NewResourceDescriptor(automationcontroller.Service),
 	ResourceTypes.EventDrivenAnsibleConnections:   NewResourceDescriptor(edawebhookconnection.Service),
