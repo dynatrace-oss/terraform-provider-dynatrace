@@ -596,7 +596,6 @@ func Provider() *schema.Provider {
 			"dynatrace_document":                                       resources.NewGeneric(export.ResourceTypes.Documents).Resource(),
 			"dynatrace_direct_shares":                                  resources.NewGeneric(export.ResourceTypes.DirectShares).Resource(),
 			"dynatrace_db_app_feature_flags":                           resources.NewGeneric(export.ResourceTypes.DatabaseAppFeatureFlags).Resource(),
-			"dynatrace_infraops_app_feature_flags":                     resources.NewGeneric(export.ResourceTypes.InfraOpsAppFeatureFlags).Resource(),
 			"dynatrace_ebpf_service_discovery":                         resources.NewGeneric(export.ResourceTypes.EBPFServiceDiscovery).Resource(),
 			"dynatrace_davis_anomaly_detectors":                        resources.NewGeneric(export.ResourceTypes.DavisAnomalyDetectors).Resource(),
 			"dynatrace_log_debug_settings":                             resources.NewGeneric(export.ResourceTypes.LogDebugSettings).Resource(),
