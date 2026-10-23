@@ -37,7 +37,6 @@ import (
 	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/devobs/debugger/gitonprem"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/defaultrules"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/featureflags"
 	githubconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/github/connector/connection"
 	gitlabconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/gitlab/connector/connection"
 	hubpermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/hub/manage/permissions"
@@ -1559,7 +1558,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.WebAppCustomInjectionRules: NewResourceDescriptor(custominjectionrules.Service),
 	ResourceTypes.DiscoveryDefaultRules:      NewResourceDescriptor(defaultrules.Service),
-	ResourceTypes.DiscoveryFeatureFlags:      NewResourceDescriptor(featureflags.Service),
 	ResourceTypes.HistogramMetrics:           NewResourceDescriptor(histogrammetrics.Service),
 	ResourceTypes.KubernetesEnrichment: NewResourceDescriptor(
 		enrichment.Service,

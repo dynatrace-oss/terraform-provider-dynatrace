@@ -433,7 +433,6 @@ var ResourceTypes = struct {
 	K8sAutomationConnections                 ResourceType
 	WebAppCustomInjectionRules               ResourceType
 	DiscoveryDefaultRules                    ResourceType
-	DiscoveryFeatureFlags                    ResourceType
 	HistogramMetrics                         ResourceType
 	KubernetesEnrichment                     ResourceType
 	DevObsGitOnPrem                          ResourceType
@@ -862,7 +861,6 @@ var ResourceTypes = struct {
 	"dynatrace_automation_workflow_k8s_connections",
 	"dynatrace_web_app_custom_injection",
 	"dynatrace_discovery_default_rules",
-	"dynatrace_discovery_feature_flags",
 	"dynatrace_histogram_metrics",
 	"dynatrace_kubernetes_enrichment",
 	"dynatrace_devobs_git_onprem",
