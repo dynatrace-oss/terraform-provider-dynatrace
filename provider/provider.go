@@ -583,7 +583,6 @@ func Provider() *schema.Provider {
 			"dynatrace_automation_workflow_jira":                       resources.NewGeneric(export.ResourceTypes.JiraForWorkflows).Resource(),
 			"dynatrace_automation_workflow_slack":                      resources.NewGeneric(export.ResourceTypes.SlackForWorkflows).Resource(),
 			"dynatrace_kubernetes_app":                                 resources.NewGeneric(export.ResourceTypes.KubernetesApp).Resource(),
-			"dynatrace_grail_metrics_allowlist":                        resources.NewGeneric(export.ResourceTypes.GrailMetricsAllowlist).Resource(),
 			"dynatrace_web_app_beacon_endpoint":                        resources.NewGeneric(export.ResourceTypes.WebAppBeaconEndpoint).Resource(),
 			"dynatrace_web_app_custom_config_properties":               resources.NewGeneric(export.ResourceTypes.WebAppCustomConfigProperties).Resource(),
 			"dynatrace_web_app_injection_cookie":                       resources.NewGeneric(export.ResourceTypes.WebAppInjectionCookie).Resource(),
