@@ -406,8 +406,6 @@ var ResourceTypes = struct {
 	SlackForWorkflows                        ResourceType
 	Policy                                   ResourceType
 	KubernetesApp                            ResourceType
-	GrailMetricsAllowall                     ResourceType
-	GrailMetricsAllowlist                    ResourceType
 	WebAppBeaconEndpoint                     ResourceType
 	WebAppCustomConfigProperties             ResourceType
 	WebAppInjectionCookie                    ResourceType
@@ -419,8 +417,6 @@ var ResourceTypes = struct {
 	HubExtensionConfig                       ResourceType
 	HubExtensionV2Config                     ResourceType
 	HubActiveExtensionVersion                ResourceType
-	DatabaseAppFeatureFlags                  ResourceType
-	InfraOpsAppFeatureFlags                  ResourceType
 	EBPFServiceDiscovery                     ResourceType
 	DavisAnomalyDetectors                    ResourceType
 	LogDebugSettings                         ResourceType
@@ -433,7 +429,6 @@ var ResourceTypes = struct {
 	K8sAutomationConnections                 ResourceType
 	WebAppCustomInjectionRules               ResourceType
 	DiscoveryDefaultRules                    ResourceType
-	DiscoveryFeatureFlags                    ResourceType
 	HistogramMetrics                         ResourceType
 	KubernetesEnrichment                     ResourceType
 	DevObsGitOnPrem                          ResourceType
@@ -446,7 +441,6 @@ var ResourceTypes = struct {
 	CloudDevelopmentEnvironments             ResourceType
 	KubernetesSPM                            ResourceType
 	LogAgentFeatureFlags                     ResourceType
-	ProblemRecordPropagationRules            ResourceType
 	ProblemFields                            ResourceType
 	AutomationControllerConnections          ResourceType
 	EventDrivenAnsibleConnections            ResourceType
@@ -835,8 +829,6 @@ var ResourceTypes = struct {
 	"dynatrace_automation_workflow_slack",
 	"dynatrace_policy",
 	"dynatrace_kubernetes_app",
-	"dynatrace_grail_metrics_allowall",
-	"dynatrace_grail_metrics_allowlist",
 	"dynatrace_web_app_beacon_endpoint",
 	"dynatrace_web_app_custom_config_properties",
 	"dynatrace_web_app_injection_cookie",
@@ -848,8 +840,6 @@ var ResourceTypes = struct {
 	"dynatrace_hub_extension_config",
 	"dynatrace_hub_extension_v2_config",
 	"dynatrace_hub_extension_active_version",
-	"dynatrace_db_app_feature_flags",
-	"dynatrace_infraops_app_feature_flags",
 	"dynatrace_ebpf_service_discovery",
 	"dynatrace_davis_anomaly_detectors",
 	"dynatrace_log_debug_settings",
@@ -862,7 +852,6 @@ var ResourceTypes = struct {
 	"dynatrace_automation_workflow_k8s_connections",
 	"dynatrace_web_app_custom_injection",
 	"dynatrace_discovery_default_rules",
-	"dynatrace_discovery_feature_flags",
 	"dynatrace_histogram_metrics",
 	"dynatrace_kubernetes_enrichment",
 	"dynatrace_devobs_git_onprem",
@@ -875,7 +864,6 @@ var ResourceTypes = struct {
 	"dynatrace_cloud_development_environments",
 	"dynatrace_kubernetes_spm",
 	"dynatrace_log_agent_feature_flags",
-	"dynatrace_problem_record_propagation_rules",
 	"dynatrace_problem_fields",
 	"dynatrace_automation_controller_connections",
 	"dynatrace_event_driven_ansible_connections",

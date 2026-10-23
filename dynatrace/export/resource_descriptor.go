@@ -34,14 +34,11 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	msentraidconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/azure/connector/microsoftentraidentitydeveloperconnection"
-	dbfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/database/featureflags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/devobs/debugger/gitonprem"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/defaultrules"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/discovery/coverage/featureflags"
 	githubconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/github/connector/connection"
 	gitlabconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/gitlab/connector/connection"
 	hubpermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/hub/manage/permissions"
-	infraopsfeatureflags "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/featureflags"
 	infraopssettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings"
 	jenkinsconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jenkins/connector/connection"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/jiraconnection"
@@ -145,8 +142,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/failuredetectionrulesets"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/generic"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/geosettings"
-	grailmetricsallowall "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/grail/metrics/allowall"
-	grailmetricsallowlist "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/grail/metrics/allowlist"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/histogrammetrics"
 	hostmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring"
 	hostmonitoringadvanced "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/host/monitoring/advanced"
@@ -225,7 +220,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/victorops"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/webhook"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/notifications/xmatters"
-	problemrecordpropagation "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/problem/record/propagation/rules"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/builtinprocessmonitoringrule"
 	processmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring"
 	customprocessmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/process/monitoring/custom"
@@ -1498,8 +1492,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		kubernetesapp.Service,
 		Coalesce(Dependencies.K8sCluster),
 	),
-	ResourceTypes.GrailMetricsAllowall:  NewResourceDescriptor(grailmetricsallowall.Service),
-	ResourceTypes.GrailMetricsAllowlist: NewResourceDescriptor(grailmetricsallowlist.Service),
 	ResourceTypes.WebAppBeaconEndpoint: NewResourceDescriptor(
 		webappbeaconendpoint.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
@@ -1533,8 +1525,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.ManagedNetworkZones:       NewResourceDescriptor(managednetworkzones.Service),
 	ResourceTypes.HubExtensionConfig:        NewResourceDescriptor(extension_config.Service),
 	ResourceTypes.HubActiveExtensionVersion: NewResourceDescriptor(active_version.Service),
-	ResourceTypes.DatabaseAppFeatureFlags:   NewResourceDescriptor(dbfeatureflags.Service),
-	ResourceTypes.InfraOpsAppFeatureFlags:   NewResourceDescriptor(infraopsfeatureflags.Service),
 	ResourceTypes.EBPFServiceDiscovery:      NewResourceDescriptor(ebpf.Service),
 	ResourceTypes.DavisAnomalyDetectors:     NewResourceDescriptor(anomalydetectors.Service),
 	ResourceTypes.LogDebugSettings:          NewResourceDescriptor(logdebugsettings.Service),
@@ -1559,7 +1549,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.WebAppCustomInjectionRules: NewResourceDescriptor(custominjectionrules.Service),
 	ResourceTypes.DiscoveryDefaultRules:      NewResourceDescriptor(defaultrules.Service),
-	ResourceTypes.DiscoveryFeatureFlags:      NewResourceDescriptor(featureflags.Service),
 	ResourceTypes.HistogramMetrics:           NewResourceDescriptor(histogrammetrics.Service),
 	ResourceTypes.KubernetesEnrichment: NewResourceDescriptor(
 		enrichment.Service,
@@ -1591,7 +1580,6 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Coalesce(Dependencies.HostGroup),
 		Coalesce(Dependencies.K8sCluster),
 	),
-	ResourceTypes.ProblemRecordPropagationRules:   NewResourceDescriptor(problemrecordpropagation.Service),
 	ResourceTypes.ProblemFields:                   NewResourceDescriptor(fields.Service),
 	ResourceTypes.AutomationControllerConnections: NewResourceDescriptor(automationcontroller.Service),
 	ResourceTypes.EventDrivenAnsibleConnections:   NewResourceDescriptor(edawebhookconnection.Service),
