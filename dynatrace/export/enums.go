@@ -442,7 +442,6 @@ var ResourceTypes = struct {
 	CloudDevelopmentEnvironments             ResourceType
 	KubernetesSPM                            ResourceType
 	LogAgentFeatureFlags                     ResourceType
-	ProblemRecordPropagationRules            ResourceType
 	ProblemFields                            ResourceType
 	AutomationControllerConnections          ResourceType
 	EventDrivenAnsibleConnections            ResourceType
@@ -867,7 +866,6 @@ var ResourceTypes = struct {
 	"dynatrace_cloud_development_environments",
 	"dynatrace_kubernetes_spm",
 	"dynatrace_log_agent_feature_flags",
-	"dynatrace_problem_record_propagation_rules",
 	"dynatrace_problem_fields",
 	"dynatrace_automation_controller_connections",
 	"dynatrace_event_driven_ansible_connections",
