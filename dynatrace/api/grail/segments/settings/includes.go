@@ -28,7 +28,7 @@ func (me *Includes) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"items": {
 			Type:        schema.TypeSet,
-			Description: "TODO: No documentation available",
+			Description: "Data to include in the segment. To include entities, prefer `_all_entities` with `dt.smartscape.*` fields over legacy `dt.entity.*` attributes",
 			MaxItems:    20,
 			Optional:    true,
 			Elem:        &schema.Resource{Schema: new(Items).Schema()},
@@ -72,7 +72,7 @@ func (me *Items) Schema() map[string]*schema.Schema {
 		},
 		"apply_to": {
 			Type:        schema.TypeSet,
-			Description: "[Experimental] The tables that the entity-filter will be applied to`",
+			Description: "[Experimental] The tables that the entity-filter will be applied to",
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
