@@ -229,19 +229,19 @@ resource "dynatrace_segment" "#name#" {
 
 Optional:
 
-- `items` (Block Set, Max: 20) TODO: No documentation available (see [below for nested schema](#nestedblock--includes--items))
+- `items` (Block Set, Max: 20) Data to include in the segment. To include entities, prefer `_all_entities` with `dt.smartscape.*` fields over legacy `dt.entity.*` attributes (see [below for nested schema](#nestedblock--includes--items))
 
 <a id="nestedblock--includes--items"></a>
 ### Nested Schema for `includes.items`
 
 Required:
 
-- `data_object` (String) The data object that the filter will be applied to. Use '_all_data_object' to apply it to all dataObjects
+- `data_object` (String) The data object that the filter will be applied to. Use '_all_data_object' to apply it to all dataObjects, or '_all_entities' to apply it to all entities
 - `filter` (String) Data will be filtered by this value
 
 Optional:
 
-- `apply_to` (Set of String) [Experimental] The tables that the entity-filter will be applied to`
+- `apply_to` (Set of String) [Experimental] The tables that the entity-filter will be applied to
 - `relationship` (Block List, Max: 1) [Experimental] The relationship of an include which has to be be specified when the data object is an entity view (see [below for nested schema](#nestedblock--includes--items--relationship))
 
 <a id="nestedblock--includes--items--relationship"></a>
