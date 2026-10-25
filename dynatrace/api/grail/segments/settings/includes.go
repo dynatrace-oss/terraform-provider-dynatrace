@@ -66,7 +66,7 @@ func (me *Items) Schema() map[string]*schema.Schema {
 		},
 		"data_object": {
 			Type:             schema.TypeString,
-			Description:      "The data object that the filter will be applied to. Use '_all_data_object' to apply it to all dataObjects",
+			Description:      "The data object that the filter will be applied to. Use '_all_data_object' to apply it to all dataObjects, or '_all_entities' to apply it to all entities",
 			Required:         true,
 			ValidateDiagFunc: ValidateMaxLength(500),
 		},
