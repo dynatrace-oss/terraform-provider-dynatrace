@@ -498,6 +498,8 @@ var ResourceTypes = struct {
 	OpenpipelineSecurityEventsIngestsources  ResourceType
 	OpenpipelineSecurityEventsPipelines      ResourceType
 	OpenpipelineSecurityEventsRouting        ResourceType
+	OpenpipelineSmartscapeEventsRouting        ResourceType
+	OpenpipelineSmartscapeEventsPipelines      ResourceType
 	OpenpipelineSpansIngestsources           ResourceType
 	OpenpipelineSpansPipelines               ResourceType
 	OpenpipelineSpansRouting                 ResourceType
@@ -522,6 +524,7 @@ var ResourceTypes = struct {
 	OpenpipelineLogsPipelinegroups           ResourceType
 	OpenpipelineMetricsPipelinegroups        ResourceType
 	OpenpipelineSecurityEventsPipelinegroups ResourceType
+	OpenpipelineSmartscapeEventsPipelinegroups ResourceType
 	OpenpipelineSpansPipelinegroups          ResourceType
 	OpenpipelineSystemEventsPipelinegroups   ResourceType
 	OpenpipelineUserEventsPipelinegroups     ResourceType
@@ -921,6 +924,8 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v2_security_events_ingestsources",
 	"dynatrace_openpipeline_v2_security_events_pipelines",
 	"dynatrace_openpipeline_v2_security_events_routing",
+	"dynatrace_openpipeline_v2_smartscape_events_routing",
+	"dynatrace_openpipeline_v2_smartscape_events_pipelines",
 	"dynatrace_openpipeline_v2_spans_ingestsources",
 	"dynatrace_openpipeline_v2_spans_pipelines",
 	"dynatrace_openpipeline_v2_spans_routing",
@@ -945,6 +950,7 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v2_logs_pipelinegroups",
 	"dynatrace_openpipeline_v2_metrics_pipelinegroups",
 	"dynatrace_openpipeline_v2_security_events_pipelinegroups",
+	"dynatrace_openpipeline_v2_smartscape_events_pipelinegroups",
 	"dynatrace_openpipeline_v2_spans_pipelinegroups",
 	"dynatrace_openpipeline_v2_system_events_pipelinegroups",
 	"dynatrace_openpipeline_v2_user_events_pipelinegroups",

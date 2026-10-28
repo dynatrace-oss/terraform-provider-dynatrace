@@ -26,6 +26,7 @@ import (
 	log "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/logs/pipelines"
 	metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/pipelines"
 	secevents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelines"
+	smartscapeevents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/smartscape/events/pipelines"
 	spans "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/pipelines"
 	systemevents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/system/events/pipelines"
 	userevents "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/user/events/pipelines"
@@ -62,6 +63,7 @@ func dataSources() map[string]dataSource {
 		"dynatrace_openpipeline_v2_logs_pipelines":            newDataSource(log.Service),
 		"dynatrace_openpipeline_v2_metrics_pipelines":         newDataSource(metrics.Service),
 		"dynatrace_openpipeline_v2_security_events_pipelines": newDataSource(secevents.Service),
+		"dynatrace_openpipeline_v2_smartscape_events_pipelines": newDataSource(smartscapeevents.Service),
 		"dynatrace_openpipeline_v2_spans_pipelines":           newDataSource(spans.Service),
 		"dynatrace_openpipeline_v2_system_events_pipelines":   newDataSource(systemevents.Service),
 		"dynatrace_openpipeline_v2_user_events_pipelines":     newDataSource(userevents.Service),

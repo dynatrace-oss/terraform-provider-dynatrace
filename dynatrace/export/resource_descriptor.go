@@ -434,8 +434,11 @@ import (
 	openpipelinesecurityeventsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/dataforwarding"
 	openpipelinesecurityeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/ingestsources"
 	openpipelinesecurityeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelinegroups"
+	openpipelinesmartscapeeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/smartscape/events/pipelinegroups"
 	openpipelinesecurityeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelines"
 	openpipelinesecurityeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/routing"
+	openpipelinesmartscapeeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/smartscape/events/routing"
+	openpipelinesmartscapeeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/smartscape/events/pipelines"
 	openpipelinespansdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/dataforwarding"
 	openpipelinespansingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/ingestsources"
 	openpipelinespanspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/pipelinegroups"
@@ -1682,6 +1685,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineMetricsPipelines),
 		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsIngestsources),
 		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelines),
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsPipelines),
 		Dependencies.ID(ResourceTypes.OpenpipelineSpansIngestsources),
 		Dependencies.ID(ResourceTypes.OpenpipelineSpansPipelines),
 		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsIngestsources),
@@ -1699,6 +1703,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineLogsPipelinegroups),
 		Dependencies.ID(ResourceTypes.OpenpipelineMetricsPipelinegroups),
 		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsPipelinegroups),
 		Dependencies.ID(ResourceTypes.OpenpipelineSpansPipelinegroups),
 		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsPipelinegroups),
 		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsPipelinegroups),
@@ -1810,9 +1815,14 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelines),
 	),
 	ResourceTypes.OpenpipelineSecurityEventsPipelines: NewResourceDescriptor(openpipelinesecurityeventspipelines.Service),
+	ResourceTypes.OpenpipelineSmartscapeEventsPipelines: NewResourceDescriptor(openpipelinesmartscapeeventspipelines.Service),
 	ResourceTypes.OpenpipelineSecurityEventsRouting: NewResourceDescriptor(
 		openpipelinesecurityeventsrouting.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineSmartscapeEventsRouting: NewResourceDescriptor(
+		openpipelinesmartscapeeventsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsPipelines),
 	),
 	ResourceTypes.OpenpipelineSpansIngestsources: NewResourceDescriptor(
 		openpipelinespansingestsources.Service,
@@ -1891,6 +1901,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.OpenpipelineSecurityEventsPipelinegroups: NewResourceDescriptor(
 		openpipelinesecurityeventspipelinegroups.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineSecurityEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineSmartscapeEventsPipelinegroups: NewResourceDescriptor(
+		openpipelinesmartscapeeventspipelinegroups.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsPipelines),
 	),
 	ResourceTypes.OpenpipelineSpansPipelinegroups: NewResourceDescriptor(
 		openpipelinespanspipelinegroups.Service,
