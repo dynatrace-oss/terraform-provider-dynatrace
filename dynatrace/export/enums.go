@@ -543,6 +543,7 @@ var ResourceTypes = struct {
 	OpenpipelineSystemEventsDataforwarding   ResourceType
 	OpenpipelineUserEventsDataforwarding     ResourceType
 	OpenpipelineUsersessionsDataforwarding   ResourceType
+	OpenpipelinePrimaryGrailTag              ResourceType
 	SyntheticPrimarygrailtags                ResourceType
 	NetworkzonesZones                        ResourceType
 }{
@@ -966,6 +967,7 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v2_system_events_dataforwarding",
 	"dynatrace_openpipeline_v2_user_events_dataforwarding",
 	"dynatrace_openpipeline_v2_usersessions_dataforwarding",
+	"dynatrace_openpipeline_primary_grail_tag",
 	"dynatrace_synthetic_primary_grail_tags",
 	"dynatrace_network_zone_v2",
 }

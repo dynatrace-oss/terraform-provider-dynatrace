@@ -721,6 +721,7 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_system_events_dataforwarding":   resources.NewGeneric(export.ResourceTypes.OpenpipelineSystemEventsDataforwarding).Resource(),
 			"dynatrace_openpipeline_v2_user_events_dataforwarding":     resources.NewGeneric(export.ResourceTypes.OpenpipelineUserEventsDataforwarding).Resource(),
 			"dynatrace_openpipeline_v2_usersessions_dataforwarding":    resources.NewGeneric(export.ResourceTypes.OpenpipelineUsersessionsDataforwarding).Resource(),
+			"dynatrace_openpipeline_primary_grail_tag":                 resources.NewGeneric(export.ResourceTypes.OpenpipelinePrimaryGrailTag).Resource(),
 			"dynatrace_synthetic_primary_grail_tags":                   resources.NewGeneric(export.ResourceTypes.SyntheticPrimarygrailtags).Resource(),
 			"dynatrace_network_zone_v2":                                resources.NewGeneric(export.ResourceTypes.NetworkzonesZones).Resource(),
 		},
