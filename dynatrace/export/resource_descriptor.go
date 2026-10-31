@@ -431,6 +431,7 @@ import (
 	openpipelinemetricspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/pipelinegroups"
 	openpipelinemetricspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/pipelines"
 	openpipelinemetricsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/metrics/routing"
+	openpipelineprimarygrailtag "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/primarygrailtag"
 	openpipelinesecurityeventsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/dataforwarding"
 	openpipelinesecurityeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/ingestsources"
 	openpipelinesecurityeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelinegroups"
@@ -1980,8 +1981,9 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsPipelines),
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsIngestsources),
 	),
-	ResourceTypes.SyntheticPrimarygrailtags: NewResourceDescriptor(syntheticprimarygrailtags.Service),
-	ResourceTypes.NetworkzonesZones:         NewResourceDescriptor(networkzoneszones.Service),
+	ResourceTypes.OpenpipelinePrimaryGrailTag: NewResourceDescriptor(openpipelineprimarygrailtag.Service),
+	ResourceTypes.SyntheticPrimarygrailtags:   NewResourceDescriptor(syntheticprimarygrailtags.Service),
+	ResourceTypes.NetworkzonesZones:           NewResourceDescriptor(networkzoneszones.Service),
 }
 
 type ResourceExclusion struct {

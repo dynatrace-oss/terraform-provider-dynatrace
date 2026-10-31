@@ -1,0 +1,29 @@
+---
+layout: ""
+page_title: "dynatrace_openpipeline_primary_grail_tag Resource - terraform-provider-dynatrace"
+subcategory: "OpenPipeline"
+description: |-
+  The resource `dynatrace_openpipeline_primary_grail_tag` covers configuration of primary Grail tag rules in OpenPipeline
+---
+
+# dynatrace_openpipeline_primary_grail_tag (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`) or the OAuth scopes **Read settings** (`settings:objects:read`) and **Write settings** (`settings:objects:write`)
+
+## Dynatrace Documentation
+
+- Set primary Grail tag rules in OpenPipeline - https://docs.dynatrace.com/docs/platform/openpipeline/get-started/primary-grail-tags
+
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:openpipeline.primary-grail-tag`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_openpipeline_primary_grail_tag` downloads all existing primary Grail tag rules
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/openpipeline/primarygrailtag/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
