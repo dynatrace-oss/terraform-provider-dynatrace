@@ -1,0 +1,98 @@
+/**
+* @license
+* Copyright 2026 Dynatrace LLC
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+ */
+
+package segments
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
+	segmentservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
+	segmentsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
+
+func DataSource() *schema.Resource {
+	scm := hcl.SetComputedSchema(new(segmentsettings.Segment).Schema())
+	scm["name"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Description: "Name of the segment",
+		Required:    true,
+	}
+
+	return &schema.Resource{
+		ReadContext: logging.EnableDSCtx(DataSourceRead),
+		Schema:      scm,
+	}
+}
+
+func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	name := d.Get("name").(string)
+
+	clientSet, err := config.ClientSet(m, config.CredValDefault)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	service, err := segmentservice.Service(clientSet)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	stubs, err := service.List(ctx)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	stub := findStubByName(stubs, name)
+	if stub == nil {
+		return diag.FromErr(fmt.Errorf("no segment found with name '%s'", name))
+	}
+
+	var v segmentsettings.Segment
+	if err = service.Get(ctx, stub.ID, &v); err != nil {
+		return diag.FromErr(err)
+	}
+
+	marshalled := hcl.Properties{}
+	if err = v.MarshalHCL(marshalled); err != nil {
+		return diag.FromErr(err)
+	}
+
+	for k, val := range marshalled {
+		if err = d.Set(k, val); err != nil {
+			return diag.FromErr(err)
+		}
+	}
+
+	d.SetId(stub.ID)
+	return diag.Diagnostics{}
+}
+
+func findStubByName(stubs api.Stubs, name string) *api.Stub {
+	for _, stub := range stubs {
+		if stub.Name == name {
+			return stub
+		}
+	}
+	return nil
+}
