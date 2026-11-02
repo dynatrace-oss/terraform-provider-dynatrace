@@ -49,3 +49,11 @@ output "id" {
 output "is_public" {
   value = data.dynatrace_segment.segment.is_public
 }
+
+data "dynatrace_segments" "all" {
+  depends_on = [dynatrace_segment.segment]
+}
+
+output "segment_names" {
+  value = data.dynatrace_segments.all.values[*].name
+}
