@@ -262,6 +262,7 @@ func Provider() *schema.Provider {
 			"dynatrace_slo":                             slo.DataSource(),
 			"dynatrace_platform_slo":                    platformslo.DataSource(),
 			"dynatrace_segment":                         segments.DataSource(),
+			"dynatrace_segments":                        segments.DataSourceMulti(),
 			"dynatrace_azure_supported_services":        azure_supported_services.DataSource(),
 			"dynatrace_aws_supported_services":          aws_supported_services.DataSource(),
 			"dynatrace_failure_detection_parameters":    failure_detection_parameters.DataSource(),
