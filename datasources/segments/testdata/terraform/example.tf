@@ -42,12 +42,20 @@ data "dynatrace_segment" "segment" {
   name = dynatrace_segment.segment.name
 }
 
+data "dynatrace_segment" "by_id" {
+  id = dynatrace_segment.segment.id
+}
+
 output "id" {
   value = data.dynatrace_segment.segment.id
 }
 
+output "name_by_id" {
+  value = data.dynatrace_segment.by_id.name
+}
+
 output "is_public" {
-  value = data.dynatrace_segment.segment.is_public
+  value = tostring(data.dynatrace_segment.segment.is_public)
 }
 
 data "dynatrace_segments" "all" {
@@ -55,5 +63,5 @@ data "dynatrace_segments" "all" {
 }
 
 output "segment_names" {
-  value = data.dynatrace_segments.all.values[*].name
+  value = join(",", data.dynatrace_segments.all.values[*].name)
 }
