@@ -1,0 +1,33 @@
+---
+layout: ""
+page_title: "dynatrace_segment Data Source - terraform-provider-dynatrace"
+subcategory: "Grail"
+description: |-
+  The data source `dynatrace_segment` covers queries for segments
+---
+
+# dynatrace_segment (Data Source)
+
+-> **Dynatrace SaaS only**
+
+-> This data source requires the OAuth permission **View Filter-Segments** (`storage:filter-segments:read`)
+
+The `dynatrace_segment` data source allows to get a segment and all its data by its name. Ready-made segments are not returned.
+
+## Dynatrace Documentation
+
+- Segments - https://docs.dynatrace.com/docs/manage/segments
+
+## Example Usage
+
+```terraform
+data "dynatrace_segment" "example" {
+  name = "Terraform"
+}
+
+output "id" {
+  value = data.dynatrace_segment.example.id
+}
+```
+
+{{ .SchemaMarkdown | trimspace }}

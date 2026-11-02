@@ -64,6 +64,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/remoteenvironments"
 	reqattrds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/requestattributes"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/requestnaming"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/segments"
 	serviceds "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/service"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/slo/objectivetemplates"
@@ -260,6 +261,7 @@ func Provider() *schema.Provider {
 			"dynatrace_dashboard":                       dashboard.DataSource(),
 			"dynatrace_slo":                             slo.DataSource(),
 			"dynatrace_platform_slo":                    platformslo.DataSource(),
+			"dynatrace_segment":                         segments.DataSource(),
 			"dynatrace_azure_supported_services":        azure_supported_services.DataSource(),
 			"dynatrace_aws_supported_services":          aws_supported_services.DataSource(),
 			"dynatrace_failure_detection_parameters":    failure_detection_parameters.DataSource(),
