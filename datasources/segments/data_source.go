@@ -19,7 +19,6 @@ package segments
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	segmentservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
@@ -75,7 +74,8 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 		stub := findStubByName(stubs, name)
 		if stub == nil {
-			return diag.FromErr(fmt.Errorf("no segment found with name '%s'", name))
+			d.SetId("")
+			return diag.Diagnostics{}
 		}
 		id = stub.ID
 	}
