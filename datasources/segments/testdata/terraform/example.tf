@@ -63,5 +63,5 @@ data "dynatrace_segments" "all" {
 }
 
 output "segment_names" {
-  value = join(",", data.dynatrace_segments.all.values[*].name)
+  value = join(",", data.dynatrace_segments.all.items[*].name)
 }

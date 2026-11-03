@@ -19,36 +19,39 @@ package segments
 
 import (
 	"context"
+	"encoding/json"
 
-	segmentservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
+	segmentsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
+	segmentsclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/segments"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func DataSourceMulti() *schema.Resource {
+	itemSchema := hcl.SetComputedSchema(new(segmentsettings.Segment).Schema())
+	itemSchema["id"] = &schema.Schema{
+		Type:        schema.TypeString,
+		Computed:    true,
+		Description: "The unique identifier of the segment.",
+	}
+
 	return &schema.Resource{
 		Description: "Retrieve a list of all segments.",
 		ReadContext: logging.EnableDSCtx(DataSourceMultipleRead),
 		Schema: map[string]*schema.Schema{
-			"values": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The unique identifier of the segment.",
-						},
-						"name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The name of the segment.",
-						},
-					},
-				},
+			"name": {
+				Type:        schema.TypeString,
+				Description: "Only return segments with exactly this name",
+				Optional:    true,
+			},
+			"items": {
+				Type:        schema.TypeList,
+				Description: "An array of the found segments",
+				Computed:    true,
+				Elem:        &schema.Resource{Schema: itemSchema},
 			},
 		},
 	}
@@ -60,24 +63,56 @@ func DataSourceMultipleRead(ctx context.Context, d *schema.ResourceData, m any) 
 		return diag.FromErr(err)
 	}
 
-	service, err := segmentservice.Service(clientSet)
+	platformClient, err := clientSet.PlatformClient()
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	stubs, err := service.List(ctx)
+	responses, err := segmentsclient.NewClient(platformClient).GetAll(ctx)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	values := make([]map[string]any, 0, len(stubs))
-	for _, stub := range stubs {
-		values = append(values, map[string]any{"id": stub.ID, "name": stub.Name})
+	name, filterByName := d.GetOk("name")
+
+	items := make([]any, 0, len(responses))
+	for _, response := range responses {
+		var meta struct {
+			UID         string `json:"uid"`
+			IsReadyMade bool   `json:"isReadyMade"`
+		}
+		if err = json.Unmarshal(response.Data, &meta); err != nil {
+			return diag.FromErr(err)
+		}
+		// Ready-made segments are unmodifiable, so they are skipped
+		if meta.IsReadyMade {
+			continue
+		}
+
+		var segment segmentsettings.Segment
+		if err = json.Unmarshal(response.Data, &segment); err != nil {
+			return diag.FromErr(err)
+		}
+		if filterByName && segment.Name != name.(string) {
+			continue
+		}
+
+		item := hcl.Properties{}
+		if err = segment.MarshalHCL(item); err != nil {
+			return diag.FromErr(err)
+		}
+		item["id"] = meta.UID
+		items = append(items, item)
 	}
 
-	if err = d.Set("values", values); err != nil {
+	if err = d.Set("items", items); err != nil {
 		return diag.FromErr(err)
 	}
-	d.SetId("segments")
+
+	if filterByName {
+		d.SetId(name.(string))
+	} else {
+		d.SetId("segments")
+	}
 	return diag.Diagnostics{}
 }

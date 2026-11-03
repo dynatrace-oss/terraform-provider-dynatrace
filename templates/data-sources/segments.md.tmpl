@@ -12,7 +12,7 @@ description: |-
 
 -> This data source requires the OAuth permission **View Filter-Segments** (`storage:filter-segments:read`)
 
-The `dynatrace_segments` data source lists the ID and name of all segments. Ready-made segments are not returned.
+The `dynatrace_segments` data source lists all segments with their whole configuration. Ready-made segments are not returned. The segments can optionally be filtered by `name`. As the `name` of a segment isn't unique, multiple segments can be returned.
 
 ## Dynatrace Documentation
 
@@ -24,7 +24,11 @@ The `dynatrace_segments` data source lists the ID and name of all segments. Read
 data "dynatrace_segments" "all" {}
 
 output "segment_names" {
-  value = data.dynatrace_segments.all.values[*].name
+  value = data.dynatrace_segments.all.items[*].name
+}
+
+data "dynatrace_segments" "by_name" {
+  name = "Terraform"
 }
 ```
 
