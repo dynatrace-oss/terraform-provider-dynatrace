@@ -47,6 +47,11 @@ func DataSourceMulti() *schema.Resource {
 				Description: "Only return segments with exactly this name",
 				Optional:    true,
 			},
+			"include_ready_made": {
+				Type:        schema.TypeBool,
+				Description: "If `true`, ready-made segments are also returned. Defaults to `false`",
+				Optional:    true,
+			},
 			"items": {
 				Type:        schema.TypeList,
 				Description: "An array of the found segments",
@@ -74,6 +79,7 @@ func DataSourceMultipleRead(ctx context.Context, d *schema.ResourceData, m any) 
 	}
 
 	name, filterByName := d.GetOk("name")
+	includeReadyMade := d.Get("include_ready_made").(bool)
 
 	items := make([]any, 0, len(responses))
 	for _, response := range responses {
@@ -84,8 +90,7 @@ func DataSourceMultipleRead(ctx context.Context, d *schema.ResourceData, m any) 
 		if err = json.Unmarshal(response.Data, &meta); err != nil {
 			return diag.FromErr(err)
 		}
-		// Ready-made segments are unmodifiable, so they are skipped
-		if meta.IsReadyMade {
+		if meta.IsReadyMade && !includeReadyMade {
 			continue
 		}
 

@@ -19,13 +19,14 @@ package segments
 
 import (
 	"context"
+	"encoding/json"
 
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	segmentservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	segmentsettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/logging"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
+	segmentsclient "github.com/dynatrace/dynatrace-configuration-as-code-core/clients/segments"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -47,6 +48,12 @@ func DataSource() *schema.Resource {
 		ExactlyOneOf: []string{"name", "id"},
 	}
 
+	scm["include_ready_made"] = &schema.Schema{
+		Type:        schema.TypeBool,
+		Description: "If `true`, ready-made segments are also found when looking up by `name`. Defaults to `false`",
+		Optional:    true,
+	}
+
 	return &schema.Resource{
 		ReadContext: logging.EnableDSCtx(DataSourceRead),
 		Schema:      scm,
@@ -66,18 +73,26 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 
 	id := d.Get("id").(string)
 	if id == "" {
-		name := d.Get("name").(string)
-		stubs, err := service.List(ctx)
+		platformClient, err := clientSet.PlatformClient()
 		if err != nil {
 			return diag.FromErr(err)
 		}
 
-		stub := findStubByName(stubs, name)
-		if stub == nil {
+		listResponse, err := segmentsclient.NewClient(platformClient).List(ctx)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+
+		var stubs []segmentservice.SegmentStub
+		if err = json.Unmarshal(listResponse.Data, &stubs); err != nil {
+			return diag.FromErr(err)
+		}
+
+		id = findIDByName(stubs, d.Get("name").(string), d.Get("include_ready_made").(bool))
+		if id == "" {
 			d.SetId("")
 			return diag.Diagnostics{}
 		}
-		id = stub.ID
 	}
 
 	var v segmentsettings.Segment
@@ -100,11 +115,14 @@ func DataSourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Dia
 	return diag.Diagnostics{}
 }
 
-func findStubByName(stubs api.Stubs, name string) *api.Stub {
+func findIDByName(stubs []segmentservice.SegmentStub, name string, includeReadyMade bool) string {
 	for _, stub := range stubs {
+		if stub.IsReadyMade && !includeReadyMade {
+			continue
+		}
 		if stub.Name == name {
-			return stub
+			return stub.UID
 		}
 	}
-	return nil
+	return ""
 }
