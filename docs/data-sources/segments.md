@@ -10,7 +10,7 @@ description: |-
 
 -> **Dynatrace SaaS only**
 
--> This data source requires the OAuth permission **View Filter-Segments** (`storage:filter-segments:read`)
+-> This data source requires the OAuth permission **View Filter-Segments** (`storage:filter-segments:read`). With the additional permission **Maintain all Filter-Segments on the environment** (`storage:filter-segments:admin`), unlisted segments are listed as well.
 
 The `dynatrace_segments` data source lists all segments with their whole configuration. Ready-made segments are only returned if `include_ready_made` is set to `true`. The segments can optionally be filtered by `name`. As the `name` of a segment isn't unique, multiple segments can be returned.
 
