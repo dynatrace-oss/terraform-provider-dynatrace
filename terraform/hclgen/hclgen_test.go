@@ -32,6 +32,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/zclconf/go-cty/cty"
+	"github.com/zclconf/go-cty/cty/function"
+	"github.com/zclconf/go-cty/cty/function/stdlib"
 )
 
 // fakeMarshaler is a hcl.Marshaler used to drive HCLGen.Export in tests.
@@ -213,34 +216,15 @@ func TestPrimitiveEntryHeredoc(t *testing.T) {
 }
 
 // TestPrimitiveEntryWriteBranches covers the remaining primitiveEntry.Write
-// branches (the "HCL-UNQUOTE-" prefix, string slices, JSON detection, quote-heavy
-// single-line strings, and non-string values).
+// branches (string slices, JSON detection, quote-heavy single-line strings, and
+// non-string values).
 func TestPrimitiveEntryWriteBranches(t *testing.T) {
 	ptr := func(v string) *string { return &v }
-
-	t.Run("HCL-UNQUOTE- prefix renders an unquoted expression", func(t *testing.T) {
-		out := renderPrimitive(t, "HCL-UNQUOTE-var.foo")
-		assertHCLParses(t, out)
-		assert.Contains(t, out, "message = var.foo")
-		assert.NotContains(t, out, `"var.foo"`)
-	})
-
-	t.Run("HCL-UNQUOTE- prefix on a *string renders unquoted", func(t *testing.T) {
-		out := renderPrimitive(t, ptr("HCL-UNQUOTE-var.bar"))
-		assertHCLParses(t, out)
-		assert.Contains(t, out, "message = var.bar")
-	})
 
 	t.Run("string slice renders a list", func(t *testing.T) {
 		out := renderPrimitive(t, []string{"a", "b"})
 		assertHCLParses(t, out)
 		assert.Contains(t, out, `message = [ "a", "b" ]`)
-	})
-
-	t.Run("string slice keeps HCL-UNQUOTE- elements unquoted", func(t *testing.T) {
-		out := renderPrimitive(t, []string{"HCL-UNQUOTE-var.x", "y"})
-		assertHCLParses(t, out)
-		assert.Contains(t, out, `message = [ var.x, "y" ]`)
 	})
 
 	t.Run("JSON string renders via jsonencode", func(t *testing.T) {
@@ -285,6 +269,109 @@ func TestPrimitiveEntryWriteBranches(t *testing.T) {
 		out := renderPrimitive(t, true)
 		assertHCLParses(t, out)
 		assert.Contains(t, out, "message = true")
+	})
+}
+
+// parseMessage parses rendered HCL, requires it to consist of exactly the one
+// resource block with only the "message" attribute, and returns its expression.
+func parseMessage(t *testing.T, out string) hclsyntax.Expression {
+	t.Helper()
+	f, diags := hclsyntax.ParseConfig([]byte(out), "test.tf", hclv2.InitialPos)
+	require.False(t, diags.HasErrors(), diags.Error())
+
+	body := f.Body.(*hclsyntax.Body)
+	require.Len(t, body.Blocks, 1, "injected top-level blocks:\n%s", out)
+	require.Empty(t, body.Blocks[0].Body.Blocks, "injected nested blocks:\n%s", out)
+	require.Len(t, body.Blocks[0].Body.Attributes, 1, "injected attributes:\n%s", out)
+
+	attr, ok := body.Blocks[0].Body.Attributes["message"]
+	require.True(t, ok)
+
+	return attr.Expr
+}
+
+// evalLiteral evaluates expr with only the functions hclgen itself emits. Any
+// reference or other function call (e.g. file()) fails the evaluation.
+func evalLiteral(t *testing.T, expr hclsyntax.Expression) cty.Value {
+	t.Helper()
+	ctx := &hclv2.EvalContext{Functions: map[string]function.Function{
+		"trimsuffix": stdlib.TrimSuffixFunc,
+		"jsonencode": stdlib.JSONEncodeFunc,
+	}}
+	v, diags := expr.Value(ctx)
+	require.False(t, diags.HasErrors(), diags.Error())
+	return v
+}
+
+// TestPrimitiveEntryInjection asserts that exported values from the tenant are
+// always rendered as literal data and can't inject HCL blocks or expressions.
+func TestPrimitiveEntryInjection(t *testing.T) {
+	ptr := func(v string) *string { return &v }
+
+	breakout := "x\nEOT\n}\nresource \"null_resource\" \"pwn\" {\n  provisioner \"local-exec\" {\n    command = \"id\"\n  }\n}\nresource \"dynatrace_x\" \"y\" {\n  a = <<-EOT\nz\n"
+
+	literals := map[string]string{
+		"heredoc terminator line":                       breakout,
+		"heredoc terminator line without final newline": strings.TrimSuffix(breakout, "\n"),
+		"indented heredoc terminator line":              "a\n   EOT  \nb\n",
+		"terminator lines EOT and EOT1":                 "EOT\nEOT1\nb\n",
+		"interpolation behind a data prefix":            `${data.x.y == "" ? file("/etc/passwd") : ""}`,
+		"interpolation behind a dynatrace_ prefix":      `${dynatrace_x.y.id == "" ? file("/etc/passwd") : ""}`,
+		"multiline interpolation":                       "a\n${data.x.y == \"\" ? file(\"/etc/passwd\") : \"\"}\n",
+		"template directive":                            `%{ if true }x%{ endif }`,
+		"already escaped template sequence":             `$${x} and $$${y}`,
+	}
+	for name, value := range literals {
+		t.Run(name+" round-trips as a literal string", func(t *testing.T) {
+			v := evalLiteral(t, parseMessage(t, renderPrimitive(t, value)))
+			assert.Equal(t, value, v.AsString())
+		})
+		t.Run(name+" round-trips as a literal *string", func(t *testing.T) {
+			v := evalLiteral(t, parseMessage(t, renderPrimitive(t, ptr(value))))
+			assert.Equal(t, value, v.AsString())
+		})
+	}
+
+	t.Run("heredoc marker avoids body lines equal to EOT", func(t *testing.T) {
+		out := renderPrimitive(t, "EOT\nEOT1\nb\n")
+		assert.Contains(t, out, "<<-EOT2\n")
+	})
+
+	t.Run("string slice elements round-trip as literals", func(t *testing.T) {
+		value := []string{`${data.x.y == "" ? file("/etc/passwd") : ""}`, `%{ if true }x%{ endif }`}
+		v := evalLiteral(t, parseMessage(t, renderPrimitive(t, value)))
+		require.Equal(t, 2, v.LengthInt())
+		assert.Equal(t, value[0], v.Index(cty.NumberIntVal(0)).AsString())
+		assert.Equal(t, value[1], v.Index(cty.NumberIntVal(1)).AsString())
+	})
+
+	t.Run("JSON string values round-trip as literals", func(t *testing.T) {
+		value := `{"a":"${data.x.y == \"\" ? file(\"/etc/passwd\") : \"\"}","b":"%{ if true }x%{ endif }"}`
+		v := evalLiteral(t, parseMessage(t, renderPrimitive(t, value)))
+		assert.JSONEq(t, value, v.AsString())
+	})
+
+	// Export references are generated by dynatrace/export/dependencies.go and
+	// must stay live interpolations.
+	references := []string{
+		"${data.dynatrace_entity.HOST-1234ABCD5678EFGH.id}",
+		"${dynatrace_management_zone.mz_ä1.name}",
+		"${data.dynatrace_tenant.tenant.id}",
+	}
+	for _, ref := range references {
+		t.Run("reference "+ref+" stays an interpolation", func(t *testing.T) {
+			for _, value := range []string{ref, "prefix " + ref, "line\n" + ref + "\n"} {
+				expr := parseMessage(t, renderPrimitive(t, value))
+				assert.Len(t, expr.Variables(), 1, "value %q", value)
+			}
+		})
+	}
+
+	t.Run("only the reference part of a prefixed interpolation stays live", func(t *testing.T) {
+		out := renderPrimitive(t, `${dynatrace_x.y.id}${file("/etc/passwd")}`)
+		expr := parseMessage(t, out)
+		assert.Len(t, expr.Variables(), 1)
+		assert.Contains(t, out, `$${file(`)
 	})
 }
 
