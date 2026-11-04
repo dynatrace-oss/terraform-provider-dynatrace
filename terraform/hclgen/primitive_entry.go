@@ -20,6 +20,7 @@ package hclgen
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -40,11 +41,6 @@ type primitiveEntry struct {
 	DefValTrue  bool
 }
 
-func unquote(w *hclwrite.Body, key string, val *string) {
-	strVal := strings.TrimPrefix(*val, "HCL-UNQUOTE-")
-	w.SetAttributeRaw(key, hclwrite.Tokens{&hclwrite.Token{Type: hclsyntax.TokenStringLit, Bytes: []byte(" " + strVal)}})
-}
-
 func isJSON(s string) bool {
 	trimmed := strings.TrimSpace(s)
 	if !strings.HasPrefix(trimmed, "{") || !strings.HasSuffix(trimmed, "}") {
@@ -61,25 +57,40 @@ func toJSONencode(s string, indent string) string {
 	return " jsonencode(" + escapeHCLTemplate(string(out), indent) + ")"
 }
 
+// exportReferencePattern matches the resource and data source references the export
+// emits. Any other template sequence is escaped, so exported values can't inject
+// arbitrary expressions.
+var exportReferencePattern = regexp.MustCompile(`^\$\{(?:data\.)?dynatrace_[a-z0-9_]+\.[\p{L}\p{N}_-]+\.[a-z0-9_]+\}`)
+
+// isEscapedIntroducer reports whether the template introducer at s[i] must be doubled.
+func isEscapedIntroducer(s string, i int) bool {
+	if i+1 >= len(s) || s[i+1] != '{' {
+		return false
+	}
+	return s[i] == '%' || !exportReferencePattern.MatchString(s[i:])
+}
+
+func escapeTemplateSequences(s string) string {
+	var sb strings.Builder
+	sb.Grow(len(s))
+
+	for i := 0; i < len(s); i++ {
+		sb.WriteByte(s[i])
+		if (s[i] == '$' || s[i] == '%') && isEscapedIntroducer(s, i) {
+			sb.WriteByte(s[i])
+		}
+	}
+	return sb.String()
+}
+
 // escapeHCLTemplate prepares a multiline raw string for embedding in HCL (heredoc
-// body or jsonencode output): it re-indents every line to match indent, and escapes
-// Terraform interpolation/directive markers (${, %{) while preserving genuine
-// references to data. and dynatrace_ resources.
+// body or jsonencode output): it re-indents every line to match indent and escapes
+// template sequences.
 func escapeHCLTemplate(s string, indent string) string {
 	finalString := strings.ReplaceAll(s, "\r\n", "\n"+indent+"  ")
 	finalString = strings.ReplaceAll(finalString, "\n", "\n"+indent+"  ")
 	finalString = strings.ReplaceAll(finalString, "\r", "\n"+indent+"  ")
-
-	finalString = strings.ReplaceAll(finalString, "${data.", "DOLLAR_DATA_DOT")
-	finalString = strings.ReplaceAll(finalString, "${dynatrace_", "DOLLAR_DYNATRACE")
-
-	finalString = strings.ReplaceAll(finalString, "${", "$${")
-	finalString = strings.ReplaceAll(finalString, "%{", "%%{")
-
-	finalString = strings.ReplaceAll(finalString, "DOLLAR_DATA_DOT", "${data.")
-	finalString = strings.ReplaceAll(finalString, "DOLLAR_DYNATRACE", "${dynatrace_")
-
-	return finalString
+	return escapeTemplateSequences(finalString)
 }
 
 // wantHeredoc returns true if EOT should be used (newline or heavily quoted string)
@@ -88,7 +99,23 @@ func wantHeredoc(s string) bool {
 }
 
 func heredocBody(body string, indent string) string {
-	return "<<-EOT\n" + indent + "  " + escapeHCLTemplate(body, indent) + "\n" + indent + "EOT"
+	escaped := escapeHCLTemplate(body, indent)
+	marker := heredocMarker(escaped)
+	return "<<-" + marker + "\n" + indent + "  " + escaped + "\n" + indent + marker
+}
+
+// heredocMarker returns a marker no body line equals; otherwise that line would
+// terminate the heredoc and the rest of the body would be parsed as HCL.
+func heredocMarker(body string) string {
+	lines := map[string]bool{}
+	for line := range strings.SplitSeq(body, "\n") {
+		lines[strings.TrimSpace(line)] = true
+	}
+	marker := "EOT"
+	for i := 1; lines[marker]; i++ {
+		marker = fmt.Sprintf("EOT%d", i)
+	}
+	return marker
 }
 
 // heredocOrTrimmed renders a multiline s as a heredoc (EOT).
@@ -109,19 +136,11 @@ func (me *primitiveEntry) Write(w *hclwrite.Body, indent string) error {
 	if cv == cty.NilVal {
 		return fmt.Errorf("value of type %T for key %s not supported", me.Value, me.Key)
 	}
-	if strVal, ok := me.Value.(string); ok && strings.HasPrefix(strVal, "HCL-UNQUOTE-") {
-		unquote(w, me.Key, &strVal)
-	} else if strValP, ok := me.Value.(*string); ok && strValP != nil && strings.HasPrefix(*strValP, "HCL-UNQUOTE-") {
-		unquote(w, me.Key, strValP)
-	} else if strSliceVal, ok := me.Value.([]string); ok {
+	if strSliceVal, ok := me.Value.([]string); ok {
 		rawVal := "[ "
 		sep := ""
 		for _, strVal := range strSliceVal {
-			if after, ok0 := strings.CutPrefix(strVal, "HCL-UNQUOTE-"); ok0 {
-				rawVal = rawVal + sep + after
-			} else {
-				rawVal = rawVal + sep + "\"" + string(escapeQuotedStringLit(strVal)) + "\""
-			}
+			rawVal = rawVal + sep + "\"" + string(escapeQuotedStringLit(strVal)) + "\""
 			sep = ", "
 		}
 		rawVal = rawVal + " ]"
@@ -164,13 +183,6 @@ func appendRune(b []byte, r rune) []byte {
 	return b
 }
 func escapeQuotedStringLit(s string) []byte {
-	res := string(escapeQuotedStringLit0(s))
-	res = strings.ReplaceAll(res, "$${data.", "${data.")
-	res = strings.ReplaceAll(res, "$${dynatrace_", "${dynatrace_")
-	return []byte(res)
-}
-
-func escapeQuotedStringLit0(s string) []byte {
 	if len(s) == 0 {
 		return nil
 	}
@@ -189,9 +201,7 @@ func escapeQuotedStringLit0(s string) []byte {
 			buf = append(buf, '\\', '\\')
 		case '$', '%':
 			buf = appendRune(buf, r)
-			remain := s[i+1:]
-			if len(remain) > 0 && remain[0] == '{' {
-				// Double up our template introducer symbol to escape it.
+			if isEscapedIntroducer(s, i) {
 				buf = appendRune(buf, r)
 			}
 		default:
