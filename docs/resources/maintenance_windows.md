@@ -34,7 +34,7 @@ resource "dynatrace_maintenance_windows" "recurring_window" {
 
   object_scopes {
     synthetic_monitors {
-      disable_synthetic_monitor_filter = "monitor.name == \"my-monitor\""
+      disable_synthetic_monitor_filter = "name == \"my-name\""
       disable_synthetic_monitors       = true
     }
   }
