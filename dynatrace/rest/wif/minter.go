@@ -17,23 +17,10 @@
 
 package wif
 
-import (
-	"context"
-	"net/http"
-)
+import "context"
 
-// Vendors differ in how they authenticate to their own token service, so each implementation
-// discovers and validates its own credentials in its constructor.
+// Vendors differ in how they authenticate to their own token service, so each one brings its own
+// minter.
 type minter interface {
 	mint(ctx context.Context) (string, error)
-}
-
-// Reaches no network, so missing credentials surface while the provider is configured.
-func newMinter(config Config, httpClient *http.Client) (minter, error) {
-	switch config.Vendor {
-	case VendorGitHub:
-		return newGitHubMinter(config.Audience, httpClient)
-	default:
-		return nil, unsupportedVendorError(config.Vendor)
-	}
 }

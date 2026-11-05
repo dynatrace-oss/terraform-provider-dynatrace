@@ -8,6 +8,12 @@ on:
 jobs:
   suite:
     uses: ./.github/workflows/_test-suite.yml
+    # A called workflow can only narrow these, so id-token has to be granted here for the Workload
+    # Identity Federation job to be able to request a token.
+    permissions:
+      contents: read
+      id-token: write
+      checks: write # sonar_scan publishes a check run
     # SFM_PLATFORM_URL and SFM_PLATFORM_TOKEN are omitted - this workflow does not collect results.
     secrets:
       DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_ENV_URL }}
