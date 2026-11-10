@@ -15,13 +15,17 @@ on:
         description: 'Collect JUnit results across all test jobs and ingest them to Dynatrace'
         type: boolean
         default: false
+      run-code-quality-checks:
+        description: 'Run unit tests, schema support validation, linting and the Sonar scan'
+        type: boolean
+        default: true
     secrets:
       DYNATRACE_ENV_URL:
         description: 'Environment URL of the Dynatrace tenant the tests run against'
         required: true
       DYNATRACE_API_TOKEN:
         description: 'API token for the Dynatrace tenant the tests run against'
-        required: true
+        required: false
       DT_CLIENT_ID:
         description: 'OAuth client ID used by the platform resources under test'
         required: true
@@ -44,8 +48,8 @@ on:
         description: 'GCP service account that can be impersonated, used by the GCP integration tests'
         required: true
       SONAR_TOKEN:
-        description: 'Token for publishing coverage and lint results to SonarQube'
-        required: true
+        description: 'Token for publishing coverage and lint results to SonarQube. Only required when run-code-quality-checks is true'
+        required: false
       SFM_PLATFORM_URL:
         description: 'Platform URL the collected test results are ingested to. Only required when collect-results is true'
         required: false
@@ -62,6 +66,7 @@ on:
 jobs:
   unit-tests:
     name: Run Unit Tests
+    if: ${{ inputs.run-code-quality-checks }}
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Check out code into the Go module directory
@@ -97,6 +102,7 @@ jobs:
 
   validate-schema-support:
     name: Validate Settings Schema Support
+    if: ${{ inputs.run-code-quality-checks }}
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Check out code into the Go module directory
@@ -112,6 +118,7 @@ jobs:
 
   lint:
     name: Run Static Code Analysis
+    if: ${{ inputs.run-code-quality-checks }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -340,7 +347,7 @@ jobs:
 
   sonar_scan:
     name: SonarQube lint and test coverage
-    if: ${{ always() }} # always runs after lint and test have completed, regardless of whether they were successful
+    if: ${{ always() && inputs.run-code-quality-checks }} # always runs after lint and test have completed, regardless of whether they were successful
     needs: [ unit-tests, lint ]
     permissions:
       contents: read
