@@ -25,6 +25,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
@@ -32,49 +33,57 @@ import (
 const maxTokenResponseSize = 1 << 20
 
 var (
-	errMissingCredential    = errors.New("an OIDC token can only be requested from a GitHub Actions job with `permissions: { id-token: write }`")
 	errResponseNotJSON      = errors.New("failed to get ID token: the response of the token service is not valid JSON")
 	errResponseWithoutToken = errors.New("failed to get ID token: the response of the token service does not contain a token")
 )
 
-type githubMinter struct {
+type gitHubConfig struct {
+	audience          string
+	tokenRequestURL   string
+	tokenRequestToken string
+}
+
+// GitHub injects both credentials of its token service into every job holding the id-token: write
+// permission, and they stay valid for the whole job - which is what lets the provider mint a fresh
+// token whenever it needs one. Their presence is what identifies GitHub as the vendor.
+func inferGitHubConfig(audience string) (gitHubConfig, bool) {
+	tokenRequestURL := strings.TrimSpace(envutils.ActionsIDTokenRequestURL.Get())
+	tokenRequestToken := strings.TrimSpace(envutils.ActionsIDTokenRequestToken.Get())
+	if len(tokenRequestURL) == 0 || len(tokenRequestToken) == 0 {
+		return gitHubConfig{}, false
+	}
+
+	return gitHubConfig{
+		audience:          audience,
+		tokenRequestURL:   tokenRequestURL,
+		tokenRequestToken: tokenRequestToken,
+	}, true
+}
+
+// The URL is parsed once, here, so that a malformed one is reported while the provider is being
+// configured rather than on every mint.
+func (config gitHubConfig) createMinter(httpClient *http.Client) (minter, error) {
+	requestURL, err := url.Parse(config.tokenRequestURL)
+	if err != nil {
+		return nil, fmt.Errorf("the GitHub Actions token request URL is not valid: %w", err)
+	}
+
+	return &gitHubMinter{
+		requestURL:   requestURL,
+		requestToken: config.tokenRequestToken,
+		audience:     config.audience,
+		httpClient:   httpClient,
+	}, nil
+}
+
+type gitHubMinter struct {
 	requestURL   *url.URL
 	requestToken string
 	audience     string
 	httpClient   *http.Client
 }
 
-func missingCredentialError(variableKey string) error {
-	return fmt.Errorf("unable to get %s environment variable: %w", variableKey, errMissingCredential)
-}
-
-// The credentials GitHub injects stay valid for the whole job, which is what lets the provider mint
-// a fresh token whenever it needs one.
-func newGitHubMinter(audience string, httpClient *http.Client) (minter, error) {
-	rawRequestURL := envutils.ActionsIDTokenRequestURL.Get()
-	if len(rawRequestURL) == 0 {
-		return nil, missingCredentialError(envutils.ActionsIDTokenRequestURL.Key)
-	}
-
-	requestURL, err := url.Parse(rawRequestURL)
-	if err != nil {
-		return nil, fmt.Errorf("%s does not hold a valid URL: %w", envutils.ActionsIDTokenRequestURL.Key, err)
-	}
-
-	requestToken := envutils.ActionsIDTokenRequestToken.Get()
-	if len(requestToken) == 0 {
-		return nil, missingCredentialError(envutils.ActionsIDTokenRequestToken.Key)
-	}
-
-	return &githubMinter{
-		requestURL:   requestURL,
-		requestToken: requestToken,
-		audience:     audience,
-		httpClient:   httpClient,
-	}, nil
-}
-
-func (minter *githubMinter) mint(ctx context.Context) (string, error) {
+func (minter *gitHubMinter) mint(ctx context.Context) (string, error) {
 	// Copied, so that setting the audience does not mutate the URL the minter keeps.
 	endpoint := *minter.requestURL
 	query := endpoint.Query()
