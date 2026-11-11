@@ -11,9 +11,10 @@ jobs:
     uses: ./.github/workflows/_test-suite.yml
     with:
       run-code-quality-checks: false
-    # DYNATRACE_API_TOKEN, SONAR_TOKEN, SFM_PLATFORM_URL and SFM_PLATFORM_TOKEN are omitted - they are not used by this run.
+    # SONAR_TOKEN, SFM_PLATFORM_URL and SFM_PLATFORM_TOKEN are omitted - they are not used by this run.
     secrets:
       DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_PLATFORM_ENV_URL }}
+      DYNATRACE_API_TOKEN: ${{ secrets.DYNATRACE_PLATFORM_TOKEN }}
       DT_CLIENT_ID: ${{ secrets.DT_PLATFORM_CLIENT_ID }}
       DT_CLIENT_SECRET: ${{ secrets.DT_PLATFORM_CLIENT_SECRET }}
       DT_CLIENT_ID_SETTINGS_ADMIN: ${{ secrets.DT_CLIENT_ID_SETTINGS_ADMIN }}
