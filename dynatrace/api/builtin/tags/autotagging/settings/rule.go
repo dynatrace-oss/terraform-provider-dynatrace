@@ -50,16 +50,16 @@ type Rule struct {
 	AttributeRule      *AutoTagAttributeRule `json:"attributeRule,omitempty"`
 	Enabled            bool                  `json:"enabled"`                  // This setting is enabled (`true`) or disabled (`false`)
 	EntitySelector     *string               `json:"entitySelector,omitempty"` // Learn more about the [Entity selector](https://dt-url.net/apientityselector).
-	Type               RuleType              `json:"type"`                     // Possible Values: `ME`, `SELECTOR`
-	ValueFormat        *string               `json:"valueFormat,omitempty"`    // Type '{' for placeholder suggestions
-	ValueNormalization Normalization         `json:"valueNormalization"`       // Possible Values: `Leavetextas_is`, `Tolowercase`, `Touppercase`
+	Type               RuleType              `json:"type"`                     // Rule type. Possible values: `ME`, `SELECTOR`
+	ValueFormat        *string               `json:"valueFormat,omitempty"`    // Type '{' for placeholder suggestions.\n\n  Placeholders containing ' /' must be enclosed in quotation marks.\n\n  For example: {\"placeholder/etc\"}
+	ValueNormalization Normalization         `json:"valueNormalization"`       // Value Normalization. Possible values: `Leave text as-is`, `To lower case`, `To upper case`
 }
 
 func (me *Rule) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"attribute_rule": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(AutoTagAttributeRule).Schema()},
 			MinItems:    1,
@@ -77,17 +77,17 @@ func (me *Rule) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `ME`, `SELECTOR`",
+			Description: "Rule type. Possible values: `ME`, `SELECTOR`",
 			Required:    true,
 		},
 		"value_format": {
 			Type:        schema.TypeString,
-			Description: "Optional tag value",
+			Description: "Type '{' for placeholder suggestions.\n\n  Placeholders containing ' /' must be enclosed in quotation marks.\n\n  For example: {\"placeholder/etc\"}",
 			Optional:    true, // nullable
 		},
 		"value_normalization": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `Leave text as-is`, `To lower case`, `To upper case`",
+			Description: "Value Normalization. Possible values: `Leave text as-is`, `To lower case`, `To upper case`",
 			Required:    true,
 		},
 	}
@@ -105,14 +105,17 @@ func (me *Rule) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Rule) HandlePreconditions() error {
-	if me.AttributeRule == nil && string(me.Type) == "ME" {
-		return fmt.Errorf("'attribute_rule' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.AttributeRule != nil) && (string(me.Type) != "ME") {
+		return fmt.Errorf("'attribute_rule' must not be specified unless 'type' is set to 'ME'; got 'type'='%v'", me.Type)
 	}
-	if me.AttributeRule != nil && string(me.Type) != "ME" {
-		return fmt.Errorf("'attribute_rule' must not be specified if 'type' is set to '%v'", me.Type)
+	if (me.AttributeRule == nil) && (string(me.Type) == "ME") {
+		return fmt.Errorf("'attribute_rule' must be specified when 'type' is set to 'ME'; got 'type'='%v'", me.Type)
 	}
-	if me.EntitySelector == nil && string(me.Type) == "SELECTOR" {
-		return fmt.Errorf("'entity_selector' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.EntitySelector != nil) && (string(me.Type) != "SELECTOR") {
+		return fmt.Errorf("'entity_selector' must not be specified unless 'type' is set to 'SELECTOR'; got 'type'='%v'", me.Type)
+	}
+	if (me.EntitySelector == nil) && (string(me.Type) == "SELECTOR") {
+		return fmt.Errorf("'entity_selector' must be specified when 'type' is set to 'SELECTOR'; got 'type'='%v'", me.Type)
 	}
 	return nil
 }
