@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - '**'
+  workflow_dispatch:
 jobs:
   suite:
     uses: ./.github/workflows/_test-suite.yml
