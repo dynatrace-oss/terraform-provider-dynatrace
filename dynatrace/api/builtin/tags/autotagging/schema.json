@@ -216,6 +216,11 @@
 					"value": "PROCESS_GROUP_NAME"
 				},
 				{
+					"description": "Process groups and container groups",
+					"displayName": "Resource attributes",
+					"value": "GROUP_RESOURCE_ATTRIBUTES"
+				},
+				{
 					"description": "Process groups",
 					"displayName": "Process group tags",
 					"value": "PROCESS_GROUP_TAGS"
@@ -369,6 +374,11 @@
 					"description": "Hosts",
 					"displayName": "Custom metadata",
 					"value": "HOST_CUSTOM_METADATA"
+				},
+				{
+					"description": "Hosts",
+					"displayName": "Resource attributes",
+					"value": "RESOURCE_ATTRIBUTES"
 				},
 				{
 					"description": "Hosts",
@@ -1234,6 +1244,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 5000,
 	"metadata": {
 		"addItemButton": "Create tag"
@@ -1374,6 +1385,8 @@
 									"CLOUD_APPLICATION_LABELS",
 									"CLOUD_APPLICATION_NAMESPACE_LABELS",
 									"HOST_KUBERNETES_LABELS",
+									"RESOURCE_ATTRIBUTES",
+									"GROUP_RESOURCE_ATTRIBUTES",
 									"PROCESS_GROUP_PREDEFINED_METADATA",
 									"CUSTOM_DEVICE_METADATA",
 									"ENTERPRISE_APPLICATION_METADATA",
@@ -1548,6 +1561,8 @@
 							"CLOUD_APPLICATION_LABELS",
 							"CLOUD_APPLICATION_NAMESPACE_LABELS",
 							"HOST_KUBERNETES_LABELS",
+							"RESOURCE_ATTRIBUTES",
+							"GROUP_RESOURCE_ATTRIBUTES",
 							"PROCESS_GROUP_PREDEFINED_METADATA",
 							"CUSTOM_DEVICE_METADATA",
 							"ENTERPRISE_APPLICATION_METADATA",
@@ -1844,6 +1859,8 @@
 											"CLOUD_APPLICATION_LABELS",
 											"CLOUD_APPLICATION_NAMESPACE_LABELS",
 											"HOST_KUBERNETES_LABELS",
+											"RESOURCE_ATTRIBUTES",
+											"GROUP_RESOURCE_ATTRIBUTES",
 											"PROCESS_GROUP_PREDEFINED_METADATA",
 											"CUSTOM_DEVICE_METADATA",
 											"ENTERPRISE_APPLICATION_METADATA",
@@ -2404,5 +2421,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.18"
+	"version": "1.0.19"
 }

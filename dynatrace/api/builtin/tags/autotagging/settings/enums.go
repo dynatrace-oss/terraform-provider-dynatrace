@@ -117,6 +117,7 @@ var Attributes = struct {
 	GoogleComputeInstanceProject              Attribute
 	GoogleComputeInstanceProjectId            Attribute
 	GoogleComputeInstancePublicIpAddresses    Attribute
+	GroupResourceAttributes                   Attribute
 	HostAixLogicalCpuCount                    Attribute
 	HostAixSimultaneousThreads                Attribute
 	HostAixVirtualCpuCount                    Attribute
@@ -185,6 +186,7 @@ var Attributes = struct {
 	QueueName                                 Attribute
 	QueueTechnology                           Attribute
 	QueueVendor                               Attribute
+	ResourceAttributes                        Attribute
 	ServiceAkkaActorSystem                    Attribute
 	ServiceCtgServiceName                     Attribute
 	ServiceDatabaseHostName                   Attribute
@@ -316,6 +318,7 @@ var Attributes = struct {
 	"GOOGLE_COMPUTE_INSTANCE_PROJECT",
 	"GOOGLE_COMPUTE_INSTANCE_PROJECT_ID",
 	"GOOGLE_COMPUTE_INSTANCE_PUBLIC_IP_ADDRESSES",
+	"GROUP_RESOURCE_ATTRIBUTES",
 	"HOST_AIX_LOGICAL_CPU_COUNT",
 	"HOST_AIX_SIMULTANEOUS_THREADS",
 	"HOST_AIX_VIRTUAL_CPU_COUNT",
@@ -384,6 +387,7 @@ var Attributes = struct {
 	"QUEUE_NAME",
 	"QUEUE_TECHNOLOGY",
 	"QUEUE_VENDOR",
+	"RESOURCE_ATTRIBUTES",
 	"SERVICE_AKKA_ACTOR_SYSTEM",
 	"SERVICE_CTG_SERVICE_NAME",
 	"SERVICE_DATABASE_HOST_NAME",
@@ -464,9 +468,9 @@ var AutoTagMeTypes = struct {
 type Normalization string
 
 var Normalizations = struct {
-	LeavetextasIs Normalization
-	Tolowercase   Normalization
-	Touppercase   Normalization
+	LeavetextasMinusIs Normalization
+	Tolowercase        Normalization
+	Touppercase        Normalization
 }{
 	"Leave text as-is",
 	"To lower case",
