@@ -18,6 +18,8 @@
 package autotagging
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -26,7 +28,7 @@ type AutoTagAttributeRule struct {
 	AzureToPGPropagation      *bool               `json:"azureToPGPropagation,omitempty"`      // Apply to process groups connected to matching Azure entities
 	AzureToServicePropagation *bool               `json:"azureToServicePropagation,omitempty"` // Apply to services provided by matching Azure entities
 	Conditions                AttributeConditions `json:"conditions"`
-	EntityType                AutoTagMeType       `json:"entityType"`                         // Possible Values: `APPLICATION`, `AWS_APPLICATION_LOAD_BALANCER`, `AWS_CLASSIC_LOAD_BALANCER`, `AWS_NETWORK_LOAD_BALANCER`, `AWS_RELATIONAL_DATABASE_SERVICE`, `AZURE`, `CUSTOM_APPLICATION`, `CUSTOM_DEVICE`, `DCRUM_APPLICATION`, `ESXI_HOST`, `EXTERNAL_SYNTHETIC_TEST`, `HOST`, `HTTP_CHECK`, `MOBILE_APPLICATION`, `PROCESS_GROUP`, `SERVICE`, `SYNTHETIC_TEST`
+	EntityType                AutoTagMeType       `json:"entityType"`                         // Rule applies to. Possible values: `APPLICATION`, `AWS_APPLICATION_LOAD_BALANCER`, `AWS_CLASSIC_LOAD_BALANCER`, `AWS_NETWORK_LOAD_BALANCER`, `AWS_RELATIONAL_DATABASE_SERVICE`, `AZURE`, `CUSTOM_APPLICATION`, `CUSTOM_DEVICE`, `DCRUM_APPLICATION`, `ESXI_HOST`, `EXTERNAL_SYNTHETIC_TEST`, `HOST`, `HTTP_CHECK`, `MOBILE_APPLICATION`, `MULTIPROTOCOL_MONITOR`, `PROCESS_GROUP`, `SERVICE`, `SYNTHETIC_TEST`
 	HostToPGPropagation       *bool               `json:"hostToPGPropagation,omitempty"`      // Apply to processes running on matching hosts
 	PGToHostPropagation       *bool               `json:"pgToHostPropagation,omitempty"`      // Apply to underlying hosts of matching process groups
 	PGToServicePropagation    *bool               `json:"pgToServicePropagation,omitempty"`   // Apply to all services provided by the process groups
@@ -48,7 +50,7 @@ func (me *AutoTagAttributeRule) Schema() map[string]*schema.Schema {
 		},
 		"conditions": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(AttributeConditions).Schema()},
 			MinItems:    1,
@@ -56,7 +58,7 @@ func (me *AutoTagAttributeRule) Schema() map[string]*schema.Schema {
 		},
 		"entity_type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `APPLICATION`, `AWS_APPLICATION_LOAD_BALANCER`, `AWS_CLASSIC_LOAD_BALANCER`, `AWS_NETWORK_LOAD_BALANCER`, `AWS_RELATIONAL_DATABASE_SERVICE`, `AZURE`, `CUSTOM_APPLICATION`, `CUSTOM_DEVICE`, `DCRUM_APPLICATION`, `ESXI_HOST`, `EXTERNAL_SYNTHETIC_TEST`, `HOST`, `HTTP_CHECK`, `MOBILE_APPLICATION`, `PROCESS_GROUP`, `SERVICE`, `SYNTHETIC_TEST`",
+			Description: "Rule applies to. Possible values: `APPLICATION`, `AWS_APPLICATION_LOAD_BALANCER`, `AWS_CLASSIC_LOAD_BALANCER`, `AWS_NETWORK_LOAD_BALANCER`, `AWS_RELATIONAL_DATABASE_SERVICE`, `AZURE`, `CUSTOM_APPLICATION`, `CUSTOM_DEVICE`, `DCRUM_APPLICATION`, `ESXI_HOST`, `EXTERNAL_SYNTHETIC_TEST`, `HOST`, `HTTP_CHECK`, `MOBILE_APPLICATION`, `MULTIPROTOCOL_MONITOR`, `PROCESS_GROUP`, `SERVICE`, `SYNTHETIC_TEST`",
 			Required:    true,
 		},
 		"host_to_pgpropagation": {
@@ -102,26 +104,47 @@ func (me *AutoTagAttributeRule) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *AutoTagAttributeRule) HandlePreconditions() error {
-	if me.AzureToPGPropagation == nil && string(me.EntityType) == "AZURE" {
+	if (me.AzureToPGPropagation == nil) && (string(me.EntityType) == "AZURE") {
 		me.AzureToPGPropagation = new(false)
 	}
-	if me.AzureToServicePropagation == nil && string(me.EntityType) == "AZURE" {
+	if (me.AzureToServicePropagation == nil) && (string(me.EntityType) == "AZURE") {
 		me.AzureToServicePropagation = new(false)
 	}
-	if me.HostToPGPropagation == nil && string(me.EntityType) == "HOST" {
+	if (me.HostToPGPropagation == nil) && (string(me.EntityType) == "HOST") {
 		me.HostToPGPropagation = new(false)
 	}
-	if me.PGToHostPropagation == nil && string(me.EntityType) == "PROCESS_GROUP" {
+	if (me.PGToHostPropagation == nil) && (string(me.EntityType) == "PROCESS_GROUP") {
 		me.PGToHostPropagation = new(false)
 	}
-	if me.PGToServicePropagation == nil && string(me.EntityType) == "PROCESS_GROUP" {
+	if (me.PGToServicePropagation == nil) && (string(me.EntityType) == "PROCESS_GROUP") {
 		me.PGToServicePropagation = new(false)
 	}
-	if me.ServiceToHostPropagation == nil && string(me.EntityType) == "SERVICE" {
+	if (me.ServiceToHostPropagation == nil) && (string(me.EntityType) == "SERVICE") {
 		me.ServiceToHostPropagation = new(false)
 	}
-	if me.ServiceToPGPropagation == nil && string(me.EntityType) == "SERVICE" {
+	if (me.ServiceToPGPropagation == nil) && (string(me.EntityType) == "SERVICE") {
 		me.ServiceToPGPropagation = new(false)
+	}
+	if (me.AzureToPGPropagation != nil) && (string(me.EntityType) != "AZURE") {
+		return fmt.Errorf("'azure_to_pgpropagation' must not be specified unless 'entity_type' is set to 'AZURE'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.AzureToServicePropagation != nil) && (string(me.EntityType) != "AZURE") {
+		return fmt.Errorf("'azure_to_service_propagation' must not be specified unless 'entity_type' is set to 'AZURE'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.HostToPGPropagation != nil) && (string(me.EntityType) != "HOST") {
+		return fmt.Errorf("'host_to_pgpropagation' must not be specified unless 'entity_type' is set to 'HOST'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.PGToHostPropagation != nil) && (string(me.EntityType) != "PROCESS_GROUP") {
+		return fmt.Errorf("'pg_to_host_propagation' must not be specified unless 'entity_type' is set to 'PROCESS_GROUP'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.PGToServicePropagation != nil) && (string(me.EntityType) != "PROCESS_GROUP") {
+		return fmt.Errorf("'pg_to_service_propagation' must not be specified unless 'entity_type' is set to 'PROCESS_GROUP'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.ServiceToHostPropagation != nil) && (string(me.EntityType) != "SERVICE") {
+		return fmt.Errorf("'service_to_host_propagation' must not be specified unless 'entity_type' is set to 'SERVICE'; got 'entity_type'='%v'", me.EntityType)
+	}
+	if (me.ServiceToPGPropagation != nil) && (string(me.EntityType) != "SERVICE") {
+		return fmt.Errorf("'service_to_pgpropagation' must not be specified unless 'entity_type' is set to 'SERVICE'; got 'entity_type'='%v'", me.EntityType)
 	}
 	return nil
 }
