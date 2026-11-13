@@ -19,6 +19,10 @@ on:
         description: 'Run unit tests, schema support validation, linting and the Sonar scan'
         type: boolean
         default: true
+      run-integration-test-setup:
+        description: 'Apply the Terraform integration test setup in ./testsetup before the integration tests'
+        type: boolean
+        default: true
     secrets:
       DYNATRACE_ENV_URL:
         description: 'Environment URL of the Dynatrace tenant the tests run against'
@@ -155,6 +159,7 @@ jobs:
 
   run-setup:
     name: Run Integration Setup
+    if: ${{ inputs.run-integration-test-setup }}
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Check out code into the Go module directory
@@ -178,6 +183,7 @@ jobs:
 
   integration-tests:
     name: Integration Tests - ${{ matrix.config.name }}
+    if: ${{ !cancelled() && !failure() }} # also run when run-setup was skipped
     runs-on: ubuntu-latest
     needs: [ run-setup ]
     strategy:
@@ -255,6 +261,7 @@ jobs:
 
   sequential-integration-tests:
     name: Sequential Integration Tests
+    if: ${{ !cancelled() && !failure() }} # also run when run-setup was skipped
     runs-on: ubuntu-latest
     needs: [ run-setup ]
     concurrency:

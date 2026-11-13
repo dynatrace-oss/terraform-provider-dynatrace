@@ -2,6 +2,7 @@ name: Platform Token Tests
 # Runs the integration tests of the shared test suite on every push, authenticating with a
 # platform token instead of an API token. Unit tests, linting and the Sonar scan are
 # skipped since they don't depend on the token and already run in tests.yml.
+# The integration test setup is skipped as well.
 on:
   push:
     branches:
@@ -11,6 +12,7 @@ jobs:
     uses: ./.github/workflows/_test-suite.yml
     with:
       run-code-quality-checks: false
+      run-integration-test-setup: false
     # SONAR_TOKEN, SFM_PLATFORM_URL and SFM_PLATFORM_TOKEN are omitted - they are not used by this run.
     secrets:
       DYNATRACE_ENV_URL: ${{ secrets.DYNATRACE_PLATFORM_ENV_URL }}
