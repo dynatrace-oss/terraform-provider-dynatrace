@@ -49,6 +49,7 @@ With `RecordAnomalyDetectionAnalyzer` the DQL query is the alert condition, and 
 - `query.expression` is the DQL query.
 - `alertIdentityFields[0]`, `alertIdentityFields[1]`, ... name the result columns that identify one row. A row with the same values on the next evaluation keeps the same alert open, and a row that disappears closes it. Without them, every evaluation raises a new event for every row.
 - `query.filterSegments[0].id` restricts the query to a filter segment.
+- `execution_settings.delay` is the fixed delay between two evaluations, in seconds. With a long window such as `from: -1h`, the same rows come back on every evaluation, which is why `alertIdentityFields[N]` matters.
 - `alertCondition`, `violatingSamples`, `slidingWindow`, `dealertingSamples` and `alertOnMissingData` are not used by this analyzer.
 - In `event_template`, every result column is available as `{column}` in `event.name` and `event.description`. For a column that holds an entity ID, `{dims:column}` gives the entity's display name, for example `dt.source_entity = "{dims:dt.entity.host}"`.
 
@@ -169,6 +170,7 @@ resource "dynatrace_davis_anomaly_detectors" "#name#" {
   }
   execution_settings {
     actor = dynatrace_iam_service_user.user.id
+    delay = 60
   }
 }
 
