@@ -209,17 +209,16 @@ func validateCredentials(conf *ProviderConfiguration, CredentialValidation int) 
 			return fmt.Errorf(" No Cluster URL has been specified. Use either the environment variable `DT_CLUSTER_URL` or the configuration attribute `dt_cluster_url` of the provider for that")
 		}
 	case CredValPlatform:
-		if conf.Platform.ContainsWorkloadIdentityFederation() {
-			return nil
-		}
-		if len(conf.Platform.ClientID) == 0 {
-			return fmt.Errorf(" No OAuth Client ID for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_ID` or the configuration attribute `automation_client_id` of the provider for that")
-		}
-		if len(conf.Platform.ClientSecret) == 0 {
-			return fmt.Errorf(" No OAuth Client Secret for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_SECRET` or the configuration attribute `automation_client_secret` of the provider for that")
-		}
-		if len(conf.Platform.TokenURL) == 0 {
-			return fmt.Errorf(" No Token URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_TOKEN_URL` or the configuration attribute `automation_token_url` of the provider for that")
+		if !conf.Platform.ContainsWorkloadIdentityFederation() {
+			if len(conf.Platform.ClientID) == 0 {
+				return fmt.Errorf(" No OAuth Client ID for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_ID` or the configuration attribute `automation_client_id` of the provider for that")
+			}
+			if len(conf.Platform.ClientSecret) == 0 {
+				return fmt.Errorf(" No OAuth Client Secret for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_CLIENT_SECRET` or the configuration attribute `automation_client_secret` of the provider for that")
+			}
+			if len(conf.Platform.TokenURL) == 0 {
+				return fmt.Errorf(" No Token URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_TOKEN_URL` or the configuration attribute `automation_token_url` of the provider for that")
+			}
 		}
 		if len(conf.Platform.EnvironmentURL) == 0 {
 			return fmt.Errorf(" No Environment URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_ENVIRONMENT_URL` or the configuration attribute `automation_env_url` of the provider for that")

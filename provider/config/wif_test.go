@@ -51,6 +51,14 @@ func TestPlatformValidationAcceptsWIFWithoutOAuth(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestPlatformValidationRejectsWIFWithoutEnvironmentURL(t *testing.T) {
+	cfg := config.ProviderConfigureGeneric(t.Context(), mockResourceData{"wif_audience": "dynatrace"})
+
+	_, err := config.ClientSet(cfg, config.CredValPlatform)
+
+	assert.EqualError(t, err, " No Environment URL for the Automation API has been specified. Use either the environment variable `DT_AUTOMATION_ENVIRONMENT_URL` or the configuration attribute `automation_env_url` of the provider for that")
+}
+
 // The counterpart of the test above, differing only in the absence of the audience: without it there
 // is nothing left to authenticate a platform request with.
 func TestPlatformValidationRejectsMissingCredentials(t *testing.T) {
