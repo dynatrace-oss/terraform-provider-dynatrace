@@ -17,6 +17,7 @@
 package rest
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
@@ -25,12 +26,21 @@ import (
 var defaultRetryOptions = &rest.RetryOptions{
 	MaxRetries:      30,
 	DelayAfterRetry: 10 * time.Second,
-	ShouldRetryFunc: rest.RetryIfTooManyRequestsOrServiceUnavailable,
+	ShouldRetryFunc: RetryIfTemporaryUnavailable,
 }
 
 var eofRetryOptions = &rest.RetryOptions{
 	MaxRetries:             30,
 	DelayAfterRetry:        10 * time.Second,
-	ShouldRetryFunc:        rest.RetryIfTooManyRequestsOrServiceUnavailable,
+	ShouldRetryFunc:        RetryIfTemporaryUnavailable,
 	ShouldRetryOnErrorFunc: rest.RetryOnUnexpectedEOF,
+}
+
+// RetryIfTemporaryUnavailable returns true for responses with status code 429, 502, 503, or 504.
+func RetryIfTemporaryUnavailable(resp *http.Response) bool {
+	switch resp.StatusCode {
+	case http.StatusTooManyRequests, http.StatusBadGateway, http.StatusServiceUnavailable, http.StatusGatewayTimeout:
+		return true
+	}
+	return false
 }
