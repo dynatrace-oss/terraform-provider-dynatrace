@@ -1,0 +1,356 @@
+/**
+* @license
+* Copyright 2026 Dynatrace LLC
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+ */
+
+package vault
+
+import (
+	"encoding/json"
+	"slices"
+	"sort"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/credential-vault/v1/settings/externalvault"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export/sensitive"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
+
+type Credentials struct {
+	Name                     string                `json:"name"`                               // The name of the credentials set.
+	Description              *string               `json:"description,omitempty"`              // A short description of the credentials set..
+	OwnerAccessOnly          bool                  `json:"ownerAccessOnly"`                    // The credentials set is available to every user (`false`) or to owner only (`true`).
+	Scope                    Scope                 `json:"scope,omitempty"`                    // Deprecated(v279), please use `scopes` instead. The scope of the credentials set
+	Scopes                   []Scope               `json:"scopes,omitempty"`                   // The set of scopes of the credentials set.
+	Type                     CredentialsType       `json:"type"`                               // Defines the actual set of fields depending on the value. See one of the following objects: \n\n* `CERTIFICATE` -> CertificateCredentials \n* `PUBLIC_CERTIFICATE` -> PublicCertificateCredentials \n* `USERNAME_PASSWORD` -> UserPasswordCredentials \n* `TOKEN` -> TokenCredentials \n
+	Token                    *string               `json:"token,omitempty"`                    // Token in the string format.
+	Password                 *string               `json:"password,omitempty"`                 // The password of the credential (Base64 encoded).
+	Username                 *string               `json:"user,omitempty"`                     // The username of the credentials set.
+	Certificate              *string               `json:"certificate,omitempty"`              // The certificate in the string (Base64) format.
+	CertificateFormat        *CertificateFormat    `json:"certificateFormat,omitempty"`        // The certificate format.
+	ExternalVault            *externalvault.Config `json:"externalVault,omitempty"`            // Configuration for external vault synchronization
+	AllowContextlessRequests *bool                 `json:"allowContextlessRequests,omitempty"` // Allow ad-hoc functions to access the credential details (requires the APP_ENGINE scope).
+	AllowedEntities          AllowedEntities       `json:"allowedEntities,omitempty"`          // The set of entities allowed to use the credential.
+}
+
+func (me *Credentials) Schema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Description: "The name of the credentials set",
+			Required:    true,
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Description: "A short description of the credentials set",
+			Optional:    true,
+		},
+		"owner_access_only": {
+			Type:        schema.TypeBool,
+			Description: "The credentials set is available to every user (`false`) or to owner only (`true`)",
+			Optional:    true,
+		},
+		"public": {
+			Type:          schema.TypeBool,
+			Description:   "For certificate authentication specifies whether it's public certificate auth (`true`) or not (`false`).",
+			ConflictsWith: []string{"username", "token"},
+			Optional:      true,
+		},
+		"scope": {
+			Type:        schema.TypeString,
+			Description: "The scope of the credentials set. Possible values are `ALL`, `APP_ENGINE`, `EXTENSION` and `SYNTHETIC`",
+			Optional:    true,
+			Deprecated:  "Deprecated(v279), please use `scopes` instead.",
+		},
+		"scopes": {
+			Type:        schema.TypeSet,
+			Description: "The set of scopes of the credentials set. Possible values are `APP_ENGINE` and `SYNTHETIC`",
+			Optional:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+		},
+		"token": {
+			Type:          schema.TypeString,
+			Description:   "Token in the string format. Specifying a token implies `Token Authentication`.",
+			ConflictsWith: []string{"username", "password", "certificate", "format", "public"},
+			Sensitive:     true,
+			Optional:      true,
+		},
+		"username": {
+			Type:          schema.TypeString,
+			Description:   "The username of the credentials set.",
+			ConflictsWith: []string{"token", "public", "certificate"},
+			RequiredWith:  []string{"password"},
+			Sensitive:     true,
+			Optional:      true,
+		},
+		"password": {
+			Type:          schema.TypeString,
+			Description:   "The password of the credential. Note: Terraform treats an empty string for a value as if the attribute was absent. If you want to set an empty password, use the value `--empty--`.",
+			ConflictsWith: []string{"token"},
+			Sensitive:     true,
+			Optional:      true,
+		},
+		"certificate": {
+			Type:          schema.TypeString,
+			Description:   "The certificate in the string format.",
+			ConflictsWith: []string{"token", "username"},
+			RequiredWith:  []string{"format"},
+			Optional:      true,
+		},
+		"format": {
+			Type:          schema.TypeString,
+			Description:   "The certificate format. Possible values are `PEM`, `PKCS12` and `UNKNOWN`.",
+			ConflictsWith: []string{"token", "username"},
+			RequiredWith:  []string{"certificate"},
+			Optional:      true,
+		},
+		"external": {
+			Type:        schema.TypeList,
+			Description: "External Vault Configuration",
+			Optional:    true,
+			MaxItems:    1,
+			Elem:        &schema.Resource{Schema: new(externalvault.Config).Schema()},
+		},
+		"allow_contextless_requests": {
+			Type:        schema.TypeBool,
+			Description: "Allow ad-hoc functions to access the credential details (requires the APP_ENGINE scope).",
+			Optional:    true,
+		},
+		"allowed_entities": {
+			Type:        schema.TypeList,
+			Description: "The set of entities allowed to use the credential.",
+			Optional:    true,
+			Elem:        &schema.Resource{Schema: new(AllowedEntities).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+	}
+}
+
+func (me *Credentials) EnsurePredictableOrder() {
+	conds := AllowedEntities{}
+	condStrings := sort.StringSlice{}
+	for _, entry := range me.AllowedEntities {
+		condBytes, _ := json.Marshal(entry)
+		condStrings = append(condStrings, string(condBytes))
+	}
+	condStrings.Sort()
+	for _, condString := range condStrings {
+		cond := CredentialAccessData{}
+		json.Unmarshal([]byte(condString), &cond)
+		conds = append(conds, &cond)
+	}
+	me.AllowedEntities = conds
+}
+
+func (me *Credentials) PrepareMarshalHCL(decoder hcl.Decoder) error {
+	// LocationForSynchronizationId isn't returned by the API. Therefore, we return the value in the state
+
+	if _, ok := decoder.GetOk("external.#"); !ok {
+		return nil
+	}
+	externalConfigState := new(externalvault.Config)
+	if err := externalConfigState.UnmarshalHCL(hcl.NewDecoder(decoder, "external", 0)); err != nil {
+		return err
+	}
+	if externalConfigState.LocationForSynchronizationId != nil && me.ExternalVault != nil {
+		me.ExternalVault.LocationForSynchronizationId = externalConfigState.LocationForSynchronizationId
+	}
+	return nil
+}
+
+func (me *Credentials) MarshalHCL(properties hcl.Properties) error {
+	if err := properties.Encode("name", me.Name); err != nil {
+		return err
+	}
+	if err := sensitive.ConditionalIgnoreChangesSinglePlus(
+		me.Schema(),
+		&properties,
+		[]string{"certificate", "format"},
+	); err != nil {
+		return err
+	}
+	if me.Description != nil && len(*me.Description) > 0 {
+		if err := properties.Encode("description", me.Description); err != nil {
+			return err
+		}
+	}
+	if me.OwnerAccessOnly {
+		if err := properties.Encode("owner_access_only", me.OwnerAccessOnly); err != nil {
+			return err
+		}
+	}
+	// #431: REST API still returns "scope" instead of "scopes"
+	//       Leads to non-empty plans
+	if len(me.Scope) > 0 {
+		if !slices.Contains(me.Scopes, me.Scope) {
+			me.Scopes = append(me.Scopes, me.Scope)
+		}
+		me.Scope = ""
+	}
+	if err := properties.Encode("scopes", me.Scopes); err != nil {
+		return err
+	}
+	if me.Token != nil && len(*me.Token) > 0 {
+		if err := properties.Encode("token", me.Token); err != nil {
+			return err
+		}
+	}
+	if me.Password != nil && len(*me.Password) > 0 {
+		if err := properties.Encode("password", me.Password); err != nil {
+			return err
+		}
+	}
+	if me.Username != nil && len(*me.Username) > 0 {
+		if err := properties.Encode("username", me.Username); err != nil {
+			return err
+		}
+	}
+	if me.Certificate != nil && len(*me.Certificate) > 0 {
+		if err := properties.Encode("certificate", me.Certificate); err != nil {
+			return err
+		}
+	}
+	if me.CertificateFormat != nil && len(*me.CertificateFormat) > 0 {
+		if err := properties.Encode("format", me.CertificateFormat); err != nil {
+			return err
+		}
+	}
+	if me.ExternalVault != nil {
+		marshalled := hcl.Properties{}
+		err := me.ExternalVault.MarshalHCL(marshalled)
+		if err != nil {
+			return err
+		}
+		properties["external"] = []any{marshalled}
+	}
+
+	switch me.Type {
+	case CredentialsTypes.PublicCertificate:
+		if err := properties.Encode("public", true); err != nil {
+			return err
+		}
+	}
+	if err := properties.Encode("allow_contextless_requests", me.AllowContextlessRequests); err != nil {
+		return err
+	}
+	if len(me.AllowedEntities) > 0 {
+		me.EnsurePredictableOrder()
+		marshalled := hcl.Properties{}
+		err := me.AllowedEntities.MarshalHCL(marshalled)
+		if err != nil {
+			return err
+		}
+		properties["allowed_entities"] = []any{marshalled}
+	}
+
+	return nil
+}
+
+func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
+	if value, ok := decoder.GetOk("external.#"); ok && value.(int) == 1 {
+		me.ExternalVault = new(externalvault.Config)
+		me.ExternalVault.UnmarshalHCL(hcl.NewDecoder(decoder, "external.0"))
+	}
+	if value, ok := decoder.GetOk("name"); ok {
+		me.Name = value.(string)
+	}
+	if value, ok := decoder.GetOk("description"); ok {
+		me.Description = new(value.(string))
+		if len(*me.Description) == 0 {
+			me.Description = nil
+		}
+	}
+	if value, ok := decoder.GetOk("owner_access_only"); ok {
+		me.OwnerAccessOnly = value.(bool)
+	}
+	if value, ok := decoder.GetOk("scope"); ok {
+		me.Scope = Scope(value.(string))
+	}
+	if err := decoder.Decode("scopes", &me.Scopes); err != nil {
+		return err
+	}
+	if value, ok := decoder.GetOk("token"); ok {
+		me.Token = new(value.(string))
+	}
+	if value, ok := decoder.GetOk("password"); ok {
+		me.Password = new(value.(string))
+	}
+	if me.Password != nil && *me.Password == "--empty--" {
+		me.Password = new("")
+	}
+	if value, ok := decoder.GetOk("username"); ok {
+		me.Username = new(value.(string))
+	}
+	if value, ok := decoder.GetOk("certificate"); ok {
+		me.Certificate = new(value.(string))
+	}
+	if value, ok := decoder.GetOk("format"); ok {
+		me.CertificateFormat = CertificateFormat(value.(string)).Ref()
+	}
+
+	if me.Username != nil {
+		me.Type = CredentialsTypes.UsernamePassword
+	} else if me.Token != nil {
+		me.Type = CredentialsTypes.Token
+	} else if me.Certificate != nil || me.CertificateFormat != nil {
+		if me.Password == nil {
+			me.Password = new("")
+		}
+		if value, ok := decoder.GetOk("public"); ok && value.(bool) {
+			me.Type = CredentialsTypes.PublicCertificate
+		} else {
+			me.Type = CredentialsTypes.Certificate
+		}
+	} else if me.ExternalVault != nil {
+		if me.ExternalVault.TokenSecretName != nil {
+			me.Type = CredentialsTypes.Token
+		} else {
+			me.Type = CredentialsTypes.UsernamePassword
+		}
+	}
+	if value, ok := decoder.GetOk("allow_contextless_requests"); ok {
+		me.AllowContextlessRequests = new(value.(bool))
+	}
+	me.AllowedEntities = AllowedEntities{}
+	if _, ok := decoder.GetOk("allowed_entities.#"); ok {
+		if err := me.AllowedEntities.UnmarshalHCL(hcl.NewDecoder(decoder, "allowed_entities", 0)); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+const credsNotProvided = "REST API didn't provide credential data"
+
+func (me *Credentials) FillDemoValues() []string {
+	switch me.Type {
+	case CredentialsTypes.Certificate, CredentialsTypes.PublicCertificate:
+		me.Certificate = new("################")
+		me.CertificateFormat = CertificateFormats.Pkcs12.Ref()
+		me.Password = new("################")
+		return []string{credsNotProvided}
+	case CredentialsTypes.Token:
+		me.Token = new("################")
+		return []string{credsNotProvided}
+	case CredentialsTypes.UsernamePassword:
+		me.Username = new("################")
+		me.Password = new("################")
+		return []string{credsNotProvided}
+	}
+	return nil
+}

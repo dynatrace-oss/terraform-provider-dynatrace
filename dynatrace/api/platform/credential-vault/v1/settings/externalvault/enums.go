@@ -1,0 +1,34 @@
+/**
+* @license
+* Copyright 2026 Dynatrace LLC
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+ */
+
+package externalvault
+
+type SourceAuthMethod string
+
+var SourceAuthMethods = struct {
+	AzureKeyVaultClientSecret     SourceAuthMethod
+	HashicorpVaultAppRole         SourceAuthMethod
+	HashicorpVaultCertificate     SourceAuthMethod
+	CyberarkVaultUsernamePassword SourceAuthMethod
+	CyberarkVaultAllowedLocation  SourceAuthMethod
+}{
+	SourceAuthMethod("AZURE_KEY_VAULT_CLIENT_SECRET"),
+	SourceAuthMethod("HASHICORP_VAULT_APPROLE"),
+	SourceAuthMethod("HASHICORP_VAULT_CERTIFICATE"),
+	SourceAuthMethod("CYBERARK_VAULT_USERNAME_PASSWORD"),
+	SourceAuthMethod("CYBERARK_VAULT_ALLOWED_LOCATION"),
+}
