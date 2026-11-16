@@ -317,6 +317,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/users"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/v2bindings"
 	platformbuckets "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/buckets"
+	platformcredentialvault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/credential-vault/v1"
 	alertingv1 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/alerting"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/customtags"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/dashboards"
@@ -702,6 +703,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.Credentials: NewResourceDescriptor(
 		vault.Service,
 		Dependencies.ID(ResourceTypes.Credentials),
+	),
+	ResourceTypes.CredentialsV2: NewResourceDescriptor(
+		platformcredentialvault.Service,
+		Dependencies.ID(ResourceTypes.CredentialsV2),
 	),
 	ResourceTypes.JSONDashboardBase: NewResourceDescriptorWithFolderOverride(
 		jsondashboardsbase.Service,
@@ -2085,6 +2090,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.AutomationBusinessCalendar, ""},
 			{ResourceTypes.AutomationSchedulingRule, ""},
 			{ResourceTypes.AutomationWorkflow, ""},
+			{ResourceTypes.CredentialsV2, ""},
 			{ResourceTypes.Documents, ""},
 			{ResourceTypes.DirectShares, ""},
 			{ResourceTypes.HubExtensionV2Config, ""},
