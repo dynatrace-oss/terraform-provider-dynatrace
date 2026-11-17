@@ -2032,6 +2032,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.ServiceAnomalies, "Replaced by dynatrace_service_anomalies_v2"},
 			{ResourceTypes.SLO, "Replaced by dynatrace_slo_v2"},
 			{ResourceTypes.Maintenance, "Replaced by dynatrace_maintenance_windows"},
+			{ResourceTypes.Credentials, "Replaced by dynatrace_credentials_v2"},
 		},
 	},
 	{
