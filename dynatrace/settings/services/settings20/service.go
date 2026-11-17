@@ -111,79 +111,16 @@ func (me *service[T]) handleOrdering(ctx context.Context, id string, v T) error 
 		return nil
 	}
 
-	if settings.HasInsertAfter(v) || settings.HasInsertBefore(v) {
-		insertBefore, insertAfter, err := me.getInsertIDs(ctx, id)
-		if err != nil {
-			return err
-		}
-		if insertBefore != nil {
-			settings.SetInsertBefore(v, *insertBefore)
-		}
-		if insertAfter != nil {
-			settings.SetInsertAfter(v, *insertAfter)
-		}
+	if id == "" || !(settings.HasInsertAfter(v) || settings.HasInsertBefore(v)) {
+		return nil
 	}
+
+	order, err := orderForRead(ctx, me.schemaID, me.listOrder)
+	if err != nil {
+		return err
+	}
+	order[id].set(v)
 	return nil
-}
-
-func (me *service[T]) getInsertIDs(ctx context.Context, id string, optIds ...[]string) (*string, *string, error) {
-	if len(id) == 0 {
-		return nil, nil, nil
-	}
-	var ids []string
-	if len(optIds) > 0 {
-		ids = optIds[0]
-	} else {
-		listedIDs, err := me.listIDs(ctx)
-		if err != nil {
-			return nil, nil, nil
-		}
-		ids = listedIDs
-	}
-	insertAfter, err := me.getInsertAfter(ids, id)
-	if err != nil {
-		return nil, nil, nil
-	}
-	insertBefore, err := me.getInsertBefore(ids, id)
-	if err != nil {
-		return nil, nil, nil
-	}
-	return insertBefore, insertAfter, nil
-}
-
-func (me *service[T]) getInsertBefore(ids []string, id string) (*string, error) {
-	if len(id) == 0 {
-		return nil, nil
-	}
-	prevIDWasMatching := false
-	for _, curID := range ids {
-		if prevIDWasMatching {
-			insertBeforeID := curID
-			if len(insertBeforeID) == 0 {
-				return nil, nil
-			}
-			return &insertBeforeID, nil
-		}
-		prevIDWasMatching = (curID == id)
-	}
-	return nil, nil
-}
-
-func (me *service[T]) getInsertAfter(ids []string, id string) (*string, error) {
-	if len(id) == 0 {
-		return nil, nil
-	}
-	prevID := ""
-	for _, curID := range ids {
-		if curID == id {
-			if len(prevID) == 0 {
-				return nil, nil
-			}
-			return &prevID, nil
-		}
-		prevID = curID
-	}
-	return nil, nil
 }
 
 type ContextKey string
@@ -240,7 +177,7 @@ func (me *service[T]) ListIDs(ctx context.Context) (api.Stubs, error) {
 	return stubs, nil
 }
 
-func (me *service[T]) listIDs(ctx context.Context) ([]string, error) {
+func (me *service[T]) listOrder(ctx context.Context) (objectOrder, error) {
 	var err error
 
 	ids := []string{}
@@ -260,7 +197,10 @@ func (me *service[T]) listIDs(ctx context.Context) ([]string, error) {
 			return nil, err
 		}
 		if shutdown.System.Stopped() {
-			return ids, nil
+			if _, refreshing := ctx.Value(refreshOrderKey{}).(*RefreshOrder); refreshing {
+				return nil, context.Canceled
+			}
+			return indexOrder(ids), nil
 		}
 
 		if len(sol.Items) > 0 {
@@ -272,7 +212,7 @@ func (me *service[T]) listIDs(ctx context.Context) ([]string, error) {
 		nextPage = (nextPageKey != nil)
 	}
 
-	return ids, nil
+	return indexOrder(ids), nil
 }
 
 func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
@@ -281,12 +221,12 @@ func (me *service[T]) List(ctx context.Context) (api.Stubs, error) {
 
 func (me *service[T]) ListWithFilter(ctx context.Context, filter string) (api.Stubs, error) {
 	var err error
-	var ids []string
+	var order objectOrder
 
 	// admin access schemas don't support ordering
 	supportsAdminAccess := me.options != nil && me.options.SupportsAdminAccess
 	if !supportsAdminAccess {
-		ids, err = me.listIDs(ctx)
+		order, err = me.listOrder(ctx)
 		if err != nil {
 			return api.Stubs{}, err
 		}
@@ -332,19 +272,7 @@ func (me *service[T]) ListWithFilter(ctx context.Context, filter string) (api.St
 					settings.SetLegacyID(item.ObjectID, me.options.LegacyID, newItem)
 				}
 				settings.SetScope(newItem, item.Scope)
-				// adminAccess doesn't support ordering, that's why we don't need to check any insertAfter/Before here
-				if !supportsAdminAccess {
-					insertBefore, insertAfter, err := me.getInsertIDs(ctx, item.ObjectID, ids)
-					if err != nil {
-						return api.Stubs{}, err
-					}
-					if insertBefore != nil {
-						settings.SetInsertBefore(newItem, *insertBefore)
-					}
-					if insertAfter != nil {
-						settings.SetInsertAfter(newItem, *insertAfter)
-					}
-				}
+				order[item.ObjectID].set(newItem)
 				var itemName string
 				if me.options != nil && me.options.Name != nil {
 					if itemName, err = me.options.Name(ctx, item.ObjectID, newItem); err != nil {
