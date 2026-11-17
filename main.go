@@ -26,7 +26,6 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/export"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
 
@@ -45,10 +44,8 @@ func main() {
 	flag.Parse()
 
 	plugin.Serve(&plugin.ServeOpts{
-		Debug:        debug,
-		ProviderAddr: "registry.terraform.io/dynatrace-oss/dynatrace",
-		ProviderFunc: func() *schema.Provider {
-			return provider.Provider()
-		},
+		Debug:            debug,
+		ProviderAddr:     "registry.terraform.io/dynatrace-oss/dynatrace",
+		GRPCProviderFunc: provider.NewServer,
 	})
 }
