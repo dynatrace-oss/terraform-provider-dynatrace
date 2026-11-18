@@ -18,25 +18,28 @@
 package monitors
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type OutageHandling struct {
-	GlobalConsecutiveOutageCountThreshold int  `json:"globalConsecutiveOutageCountThreshold"`          // Number of consecutive failures for all locations
-	GlobalOutages                         bool `json:"globalOutages"`                                  // Generate a problem and send an alert when the monitor is unavailable at all configured locations
-	LocalConsecutiveOutageCountThreshold  *int `json:"localConsecutiveOutageCountThreshold,omitempty"` // Number of consecutive failures
-	LocalLocationOutageCountThreshold     *int `json:"localLocationOutageCountThreshold,omitempty"`    // Number of failing locations
-	LocalOutages                          bool `json:"localOutages"`                                   // Generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location
+	GlobalConsecutiveOutageCountThreshold *int `json:"globalConsecutiveOutageCountThreshold,omitempty"` // Number of consecutive failures for all locations
+	GlobalOutages                         bool `json:"globalOutages"`                                   // Generate a problem and send an alert when the monitor is unavailable at all configured locations
+	LocalConsecutiveOutageCountThreshold  *int `json:"localConsecutiveOutageCountThreshold,omitempty"`  // Number of consecutive failures
+	LocalLocationOutageCountThreshold     *int `json:"localLocationOutageCountThreshold,omitempty"`     // Number of failing locations
+	LocalOutages                          bool `json:"localOutages"`                                    // Generate a problem and send an alert when the monitor is unavailable for one or more consecutive runs at any location
 }
 
 func (me *OutageHandling) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"global_consecutive_outage_count_threshold": {
-			Type:        schema.TypeInt,
-			Description: "Number of consecutive failures for all locations",
-			Optional:    true,
-			Default:     1,
+			Type:             schema.TypeInt,
+			Description:      "Number of consecutive failures for all locations",
+			Optional:         true,
+			DiffSuppressFunc: suppressDefaultGlobalConsecutiveOutageCountThreshold,
 		},
 		"global_outages": {
 			Type:        schema.TypeBool,
@@ -61,6 +64,33 @@ func (me *OutageHandling) Schema() map[string]*schema.Schema {
 			Default:     false,
 		},
 	}
+}
+
+const defaultGlobalConsecutiveOutageCountThreshold = 1
+
+// suppressDefaultGlobalConsecutiveOutageCountThreshold hides the diff between an unset threshold and the default sent by HandlePreconditions.
+func suppressDefaultGlobalConsecutiveOutageCountThreshold(_, oldValue, newValue string, _ *schema.ResourceData) bool {
+	return (newValue == "" || newValue == "0") && oldValue == strconv.Itoa(defaultGlobalConsecutiveOutageCountThreshold)
+}
+
+func (me *OutageHandling) HandlePreconditions() error {
+	if me.GlobalOutages && me.GlobalConsecutiveOutageCountThreshold == nil {
+		me.GlobalConsecutiveOutageCountThreshold = new(defaultGlobalConsecutiveOutageCountThreshold) // 0 is invalid
+	}
+
+	if !me.LocalOutages && me.LocalLocationOutageCountThreshold != nil {
+		return fmt.Errorf("'local_location_outage_count_threshold' must not be specified unless 'local_outages' is set to 'true'; got 'local_outages'='%v'", me.LocalOutages)
+	}
+
+	if !me.LocalOutages && me.LocalConsecutiveOutageCountThreshold != nil {
+		return fmt.Errorf("'local_consecutive_outage_count_threshold' must not be specified unless 'local_outages' is set to 'true'; got 'local_outages'='%v'", me.LocalOutages)
+	}
+
+	if !me.GlobalOutages && me.GlobalConsecutiveOutageCountThreshold != nil {
+		return fmt.Errorf("'global_consecutive_outage_count_threshold' must not be specified unless 'global_outages' is set to 'true'; got 'global_outages'='%v'", me.GlobalOutages)
+	}
+
+	return nil
 }
 
 func (me *OutageHandling) MarshalHCL(properties hcl.Properties) error {

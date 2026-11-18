@@ -32,8 +32,8 @@ var TagSources = struct {
 	RuleBased TagSource
 	User      TagSource
 }{
-	"AUTO",
-	"RULE_BASED",
+	"AUTO",       // can't be set via PUT/POST. This is set externally, e.g., auto-tagging-rules.
+	"RULE_BASED", // can't be set via PUT/POST. This is set externally, e.g., auto-tagging-rules.
 	"USER",
 }
 

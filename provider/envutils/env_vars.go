@@ -506,16 +506,6 @@ var Migration = BoolEnvVar{
 	DefaultValue: false,
 }
 
-// --- Synthetic Monitors ---
-
-// DynatraceCreateConfirmSyntheticMonitorsV2 is the number of confirmation retries when creating synthetic monitors v2. Falls back to the default if the value is outside [Min, Max].
-var DynatraceCreateConfirmSyntheticMonitorsV2 = BoundedIntEnvVar{
-	Key:          "DYNATRACE_CREATE_CONFIRM_SYNTHETIC_MONITORS_V2",
-	DefaultValue: 8,
-	Min:          1,
-	Max:          50,
-}
-
 // --- Web Application ---
 
 // DynatraceCreateConfirmWebApplication is the number of confirmation retries when creating web applications. Falls back to the default if the value is outside [Min, Max].

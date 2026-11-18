@@ -57,3 +57,15 @@ func (me *GenericCRUDService[T]) Delete(ctx context.Context, id string) error {
 func (me *GenericCRUDService[T]) SchemaID() string {
 	return me.Service.SchemaID()
 }
+
+// ReadAfterWriteSkipper defines if a resource should skip a Read after create and update
+type ReadAfterWriteSkipper interface {
+	SkipReadAfterWrite() bool
+}
+
+func (me *GenericCRUDService[T]) SkipReadAfterWrite() bool {
+	if sk, ok := me.Service.(ReadAfterWriteSkipper); ok {
+		return sk.SkipReadAfterWrite()
+	}
+	return false
+}
