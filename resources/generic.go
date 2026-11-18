@@ -237,7 +237,15 @@ func (me *Generic) Create(ctx context.Context, d *schema.ResourceData, m any) di
 	if isIAMResourceType(me.Type) {
 		return diag.Diagnostics{}
 	}
+	if SkipReadAfterWrite(service) {
+		return diag.Diagnostics{}
+	}
 	return me.Read(context.WithValue(ctx, settings.ContextKeyStateConfig, sttngs), d, m)
+}
+
+func SkipReadAfterWrite[T settings.Settings](service settings.CRUDService[T]) bool {
+	sk, ok := service.(settings.ReadAfterWriteSkipper)
+	return ok && sk.SkipReadAfterWrite()
 }
 
 // toDiagError returns a diag.Diagnostics containing a single error with the message "API error: " followed by the violation message of the given error
@@ -262,7 +270,6 @@ func newAPIDiagError(msg string) diag.Diagnostic {
 		Summary:  "API error: " + msg,
 	}
 }
-
 func isIAMResourceType(resourceType export.ResourceType) bool {
 	switch resourceType {
 	case export.ResourceTypes.IAMGroup,
@@ -325,6 +332,10 @@ func (me *Generic) Update(ctx context.Context, d *schema.ResourceData, m any) di
 	// that the results on the remote side are correct
 	// and therefore avoid unnecessary GET calls
 	if me.Type == export.ResourceTypes.IAMGroup || me.Type == export.ResourceTypes.IAMPermission || me.Type == export.ResourceTypes.IAMPolicy || me.Type == export.ResourceTypes.IAMPolicyBindings || me.Type == export.ResourceTypes.IAMPolicyBindingsV2 || me.Type == export.ResourceTypes.IAMUser || me.Type == export.ResourceTypes.WebApplication {
+		return diag.Diagnostics{}
+	}
+
+	if SkipReadAfterWrite(service) {
 		return diag.Diagnostics{}
 	}
 	// dynatrace_hub_extension_config may contain credentials

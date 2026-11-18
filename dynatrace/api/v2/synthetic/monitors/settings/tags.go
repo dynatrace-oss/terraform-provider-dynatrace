@@ -20,6 +20,7 @@ package monitors
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 var (
@@ -66,13 +67,15 @@ func (me *TagWithSourceInfo) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"source": {
 			Type:        schema.TypeString,
-			Description: "The source of the tag, possible values: `AUTO`, `RULE_BASED` or `USER`",
+			Description: "The source of the tag, possible values: `USER`", // other scopes are ignored by the API
 			Optional:    true,
 			Default:     string(defaultTagSource),
+			// Needs to be enforced. The API only allows USER and silently drops other sources.
+			ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{string(defaultTagSource)}, false)),
 		},
 		"context": {
 			Type:        schema.TypeString,
-			Description: "The origin of the tag, such as AWS or Cloud Foundry.\n\nCustom tags use the CONTEXTLESS value",
+			Description: "The origin of the tag, such as AWS or Cloud Foundry.\n  \n  Custom tags use the CONTEXTLESS value",
 			Optional:    true,
 			Default:     defaultTagContext,
 		},

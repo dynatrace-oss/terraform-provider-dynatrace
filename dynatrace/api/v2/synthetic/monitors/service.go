@@ -21,17 +21,17 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	monitors "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/synthetic/monitors/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
-	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 )
 
 const SchemaID = "v2:synthetic:monitors:network"
 const BasePath = "/api/v2/synthetic/monitors"
+
+var _ settings.ReadAfterWriteSkipper = new(service)
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*monitors.Settings], error) {
 	return &service{clientSet: clientSet}, nil
@@ -39,6 +39,11 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*monitors.Settings]
 
 type service struct {
 	clientSet rest.ClientSet
+}
+
+func (me *service) SkipReadAfterWrite() bool {
+	// There is a huge eventual consistency time. Therefore, we ignore and skip the GET after create/update
+	return true
 }
 
 func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub, error) {
@@ -52,41 +57,6 @@ func (me *service) Create(ctx context.Context, v *monitors.Settings) (*api.Stub,
 		return nil, err
 	}
 
-	// The code below validates that the resource is fully created and available
-	// First loop: There could be a small delay until the API returns a successful GET after create
-	// Second loop: Tag configuration takes a while to propagate across the cluster
-	successes := 0
-	for {
-		if err = client.Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(resp.EntityId))).Finish(); err == nil {
-			successes = successes + 1
-			if successes >= envutils.DynatraceCreateConfirmSyntheticMonitorsV2.Get() {
-				break
-			}
-			time.Sleep(time.Millisecond * 100)
-		} else {
-			successes = 0
-			time.Sleep(time.Millisecond * 500)
-		}
-	}
-
-	if len(v.Tags) > 0 {
-		successes = 0
-		for {
-			validateMonitor := monitors.Settings{}
-			if err = client.Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(resp.EntityId))).Finish(&validateMonitor); err == nil {
-				if len(v.Tags) == len(validateMonitor.Tags) {
-					successes = successes + 1
-					if successes >= envutils.DynatraceCreateConfirmSyntheticMonitorsV2.Get() {
-						break
-					}
-				} else {
-					successes = 0
-				}
-				time.Sleep(time.Millisecond * 100)
-			}
-		}
-	}
-
 	return &api.Stub{ID: resp.EntityId, Name: v.Name}, nil
 }
 
@@ -94,8 +64,25 @@ func (me *service) Get(ctx context.Context, id string, v *monitors.Settings) err
 	if err := rest.APITokenClient(me.clientSet).Get(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id))).Finish(v); err != nil {
 		return err
 	}
+	me.filterRuleBasedTags(v)
 
 	return nil
+}
+
+// filterRuleBasedTags filters out tags coming from auto-tagging-rules and other sources
+// Only USER can be modified and should be returned
+func (me *service) filterRuleBasedTags(v *monitors.Settings) {
+	if len(v.Tags) == 0 {
+		return
+	}
+
+	tags := make(monitors.TagsWithSourceInfo, 0, len(v.Tags))
+	for _, t := range v.Tags {
+		if t.Source == nil || *t.Source == monitors.TagSources.User {
+			tags = append(tags, t)
+		}
+	}
+	v.Tags = tags
 }
 
 type monitorList struct {
@@ -126,12 +113,7 @@ func (me *service) Validate(v *monitors.Settings) error {
 }
 
 func (me *service) Update(ctx context.Context, id string, v *monitors.Settings) error {
-	err := rest.APITokenClient(me.clientSet).Put(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), v).Finish()
-	if err != nil {
-		return err
-	}
-	time.Sleep(3 * time.Second) // GET after update is eventually consistent
-	return nil
+	return rest.APITokenClient(me.clientSet).Put(ctx, fmt.Sprintf("%s/%s", BasePath, url.PathEscape(id)), v).Finish()
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {

@@ -10,6 +10,8 @@ description: |-
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
+~> The network availability monitor API is eventually consistent. For a short time after `terraform apply` (typically less than a minute), the API may still return the previous values. A `terraform plan` executed within that timeframe can therefore show a diff, which disappears once the changes have propagated.
+
 ## Dynatrace Documentation
 
 - Network availability monitors - https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/general-information/network-availability-monitors

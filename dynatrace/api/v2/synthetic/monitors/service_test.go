@@ -21,14 +21,31 @@ package monitors_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/stretchr/testify/require"
 )
 
+var eventualConsistencyTime = 50 * time.Second
+
 func TestAccNetworkAvailabilityMonitors(t *testing.T) {
-	api.TestAcc(t)
+	api.TestAcc(t, api.TestAccOptions{Check: waitForTagsToBeInSync(t)})
 }
 
 func TestAccTestCasesNetworkMonitors(t *testing.T) {
-	api.TestAccTestCases(t)
+	api.TestAccTestCases(t, api.TestCaseAccOptions{Check: waitForTagsToBeInSync(t)})
+}
+
+// waitForTagsToBeInSync waits a fixed duration for the API to be consistent (eventual consistency)
+func waitForTagsToBeInSync(t *testing.T) func(s *terraform.State) error {
+	return func(s *terraform.State) error {
+		res := api.GetFirstResource(s)
+		require.NotNil(t, res)
+		if val, ok := res.Primary.Attributes["tags.#"]; ok && val != "" && val != "0" {
+			time.Sleep(eventualConsistencyTime)
+		}
+		return nil
+	}
 }
