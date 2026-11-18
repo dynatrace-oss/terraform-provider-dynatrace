@@ -20,10 +20,15 @@ package vault
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/credential-vault/v1/settings"
+	smservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http"
+	http "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 
@@ -36,12 +41,22 @@ func Service(clientSet rest.ClientSet) (settings.CRUDService[*vault.Credentials]
 		return nil, err
 	}
 
-	return &service{client: credentialvault.NewClient(platformClient), envURL: clientSet.Credentials().Platform.EnvironmentURL}, nil
+	smService, err := smservice.ServiceSynchronized(clientSet)
+	if err != nil {
+		return nil, err
+	}
+
+	return &service{
+		client:    credentialvault.NewClient(platformClient),
+		smService: smService,
+		envURL:    clientSet.Credentials().Platform.EnvironmentURL,
+	}, nil
 }
 
 type service struct {
-	client *credentialvault.Client
-	envURL string
+	client    *credentialvault.Client
+	smService settings.CRUDService[*http.SyntheticMonitor]
+	envURL    string
 }
 
 type entryReference struct {
@@ -54,10 +69,6 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) Create(ctx context.Context, v *vault.Credentials) (*api.Stub, error) {
-	if v.ExternalVault != nil && v.ExternalVault.Certificate != nil {
-		v.ExternalVault.Certificate = new(strings.Replace(*v.ExternalVault.Certificate, "CREDENTIAL_VAULT_ENTRY", "CREDENTIALS_VAULT", -1))
-	}
-
 	data, err := json.Marshal(v)
 
 	if err != nil {
@@ -119,9 +130,36 @@ func (me *service) List(ctx context.Context) (api.Stubs, error) {
 }
 
 func (me *service) Delete(ctx context.Context, id string) error {
-	_, err := me.client.Delete(ctx, id)
+	// Corner case (delete right after create): The monitor may not be available right after creation
+	syntheticErr := me.deleteSyntheticMonitor(ctx, id)
+	if syntheticErr != nil {
+		syntheticErr = fmt.Errorf("associated HTTP monitor couldn't be deleted: %w", syntheticErr)
+	}
 
-	// add synth monitor cleanup
+	if _, err := me.client.Delete(ctx, id); err != nil {
+		return errors.Join(err, syntheticErr)
+	}
+	if syntheticErr != nil {
+		return rest.Warning{Message: syntheticErr.Error()}
+	}
+	return nil
+}
 
-	return err
+// deleteSyntheticMonitor deletes the Synthetic HTTP monitor that external vault synchronization creates.
+// Its name ends with " (<credential-id>)"
+func (me *service) deleteSyntheticMonitor(ctx context.Context, id string) error {
+	nameSuffixes := []string{fmt.Sprintf(" (%s)", id), fmt.Sprintf(" (%s)", id)}
+	monitors, err := me.smService.List(ctx)
+	if err != nil {
+		return err
+	}
+	for _, monitor := range monitors {
+		if slices.ContainsFunc(nameSuffixes, func(suffix string) bool { return strings.HasSuffix(monitor.Name, suffix) }) {
+			if err = me.smService.Delete(ctx, monitor.ID); err != nil && !rest.IsNotFoundError(err) {
+				return err
+			}
+			return nil
+		}
+	}
+	return nil
 }
