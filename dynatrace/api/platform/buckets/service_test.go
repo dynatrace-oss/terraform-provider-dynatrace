@@ -21,10 +21,10 @@ package buckets_test
 
 import (
 	"testing"
-	// "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/testing/api"
 )
 
 func TestAccPlatformBuckets(t *testing.T) {
-	t.Skip("#548")
-	// api.TestAcc(t)
+	api.TestAcc(t)
 }
