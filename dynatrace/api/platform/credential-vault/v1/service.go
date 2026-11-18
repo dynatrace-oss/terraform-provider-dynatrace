@@ -27,6 +27,7 @@ import (
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api"
 	vault "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/credential-vault/v1/settings"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/credential-vault/v1/settings/externalvault"
 	smservice "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http"
 	http "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/synthetic/monitors/http/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
@@ -69,6 +70,8 @@ func (me *service) SchemaID() string {
 }
 
 func (me *service) Create(ctx context.Context, v *vault.Credentials) (*api.Stub, error) {
+	convertCredentialReferences(v, externalvault.ToClassicID)
+
 	data, err := json.Marshal(v)
 
 	if err != nil {
@@ -89,6 +92,8 @@ func (me *service) Create(ctx context.Context, v *vault.Credentials) (*api.Stub,
 }
 
 func (me *service) Update(ctx context.Context, id string, v *vault.Credentials) error {
+	convertCredentialReferences(v, externalvault.ToClassicID)
+
 	data, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -110,6 +115,7 @@ func (me *service) Get(ctx context.Context, id string, v *vault.Credentials) err
 		return err
 	}
 
+	convertCredentialReferences(v, externalvault.ToPlatformID)
 	return nil
 }
 
@@ -146,9 +152,9 @@ func (me *service) Delete(ctx context.Context, id string) error {
 }
 
 // deleteSyntheticMonitor deletes the Synthetic HTTP monitor that external vault synchronization creates.
-// Its name ends with " (<credential-id>)"
+// Its name ends with " (<credential-id>)"; the ID may appear in either the platform or the classic format.
 func (me *service) deleteSyntheticMonitor(ctx context.Context, id string) error {
-	nameSuffixes := []string{fmt.Sprintf(" (%s)", id), fmt.Sprintf(" (%s)", id)}
+	nameSuffixes := []string{fmt.Sprintf(" (%s)", id), fmt.Sprintf(" (%s)", externalvault.ToClassicID(id))}
 	monitors, err := me.smService.List(ctx)
 	if err != nil {
 		return err
@@ -162,4 +168,11 @@ func (me *service) deleteSyntheticMonitor(ctx context.Context, id string) error 
 		}
 	}
 	return nil
+}
+
+// convertCredentialReferences exists because the API expects and returns external vault credential references in the classic ID format.
+func convertCredentialReferences(v *vault.Credentials, convert func(string) string) {
+	if v.ExternalVault != nil {
+		v.ExternalVault.ConvertCredentialReferences(convert)
+	}
 }
