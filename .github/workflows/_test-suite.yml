@@ -261,7 +261,14 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { name: "platform (documents)", slug: "platform", path: "./dynatrace/api/documents/document/..." }
+          # We only need to test one resource per API
+          - { name: "automation", slug: "automation", path: "./dynatrace/api/automation/business_calendars/..." }
+          - { name: "documents", slug: "documents", path: "./dynatrace/api/documents/document/..." }
+          - { name: "extensions", slug: "extensions", path: "./dynatrace/api/extensions/..." }
+          - { name: "segments", slug: "segments", path: "./dynatrace/api/grail/segments/..." }
+          - { name: "buckets", slug: "buckets", path: "./dynatrace/api/platform/buckets/..." }
+          - { name: "slo", slug: "slo", path: "./dynatrace/api/slo/..." }
+          - { name: "Grail DQL", slug: "dql", path: "./datasources/dql/..." }
           - { name: "config v1 (request attributes)", slug: "config_v1", path: "./dynatrace/api/v1/config/requestattributes/..." }
           - { name: "environment v2 (activegatetokens)", slug: "env_v2_classic_hybrid", path: "./dynatrace/api/v2/activegatetokens/..." }
           - { name: "environment v2 (github connector)", slug: "env_v2_hybrid", path: "./dynatrace/api/app/dynatrace/github/connector/connection/..." }
