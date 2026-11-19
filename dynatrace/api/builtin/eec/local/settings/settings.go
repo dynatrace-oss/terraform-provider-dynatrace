@@ -18,6 +18,8 @@
 package local
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -25,9 +27,9 @@ import (
 type Settings struct {
 	Enabled            bool                `json:"enabled"`                      // This setting is enabled (`true`) or disabled (`false`)
 	IngestActive       *bool               `json:"ingestActive,omitempty"`       // Enable local HTTP Metric, Log and Event Ingest API
-	PerformanceProfile *PerformanceProfile `json:"performanceProfile,omitempty"` // Possible Values: `DEFAULT`, `HIGH`
+	PerformanceProfile *PerformanceProfile `json:"performanceProfile,omitempty"` // Select performance profile for Extension Execution Controller [Documentation](https://www.dynatrace.com/support/help/shortlink/extensions-concepts#resource-consumption \"More about performance profiles\"). Possible values: `DEFAULT`, `HIGH`
 	Scope              *string             `json:"-" scope:"scope"`              // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
-	StatsdActive       *bool               `json:"statsdActive,omitempty"`       // Enable Dynatrace StatsD
+	StatsdActive       *bool               `json:"statsdActive,omitempty"`       // This is applicable only to non-containerized Linux and Windows hosts
 }
 
 func (me *Settings) Name() string {
@@ -44,24 +46,24 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"ingest_active": {
 			Type:        schema.TypeBool,
 			Description: "Enable local HTTP Metric, Log and Event Ingest API",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 		"performance_profile": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `DEFAULT`, `HIGH`",
-			Optional:    true,
+			Description: "Select performance profile for Extension Execution Controller [Documentation](https://www.dynatrace.com/support/help/shortlink/extensions-concepts#resource-consumption \"More about performance profiles\"). Possible values: `DEFAULT`, `HIGH`",
+			Optional:    true, // precondition
 		},
 		"scope": {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.",
+			ForceNew:    true,
 			Optional:    true,
 			Default:     "environment",
-			ForceNew:    true,
 		},
 		"statsd_active": {
 			Type:        schema.TypeBool,
-			Description: "Enable Dynatrace StatsD",
-			Optional:    true,
+			Description: "This is applicable only to non-containerized Linux and Windows hosts",
+			Optional:    true, // precondition
 		},
 	}
 }
@@ -76,19 +78,34 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	})
 }
 
+func (me *Settings) HandlePreconditions() error {
+	if (me.IngestActive == nil) && (me.Enabled) {
+		me.IngestActive = new(false)
+	}
+	if (me.StatsdActive == nil) && (me.Enabled) {
+		me.StatsdActive = new(false)
+	}
+	if (me.IngestActive != nil) && (!me.Enabled) {
+		return fmt.Errorf("'ingest_active' must not be specified unless 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	if (me.PerformanceProfile != nil) && (!me.Enabled) {
+		return fmt.Errorf("'performance_profile' must not be specified unless 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	if (me.PerformanceProfile == nil) && (me.Enabled) {
+		return fmt.Errorf("'performance_profile' must be specified when 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	if (me.StatsdActive != nil) && (!me.Enabled) {
+		return fmt.Errorf("'statsd_active' must not be specified unless 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	return nil
+}
+
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
-	err := decoder.DecodeAll(map[string]any{
+	return decoder.DecodeAll(map[string]any{
 		"enabled":             &me.Enabled,
 		"ingest_active":       &me.IngestActive,
 		"performance_profile": &me.PerformanceProfile,
 		"scope":               &me.Scope,
 		"statsd_active":       &me.StatsdActive,
 	})
-	if me.IngestActive == nil && me.Enabled {
-		me.IngestActive = new(false)
-	}
-	if me.StatsdActive == nil && me.Enabled {
-		me.StatsdActive = new(false)
-	}
-	return err
 }
