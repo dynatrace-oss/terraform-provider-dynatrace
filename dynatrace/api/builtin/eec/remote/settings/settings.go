@@ -41,8 +41,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"scope": {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (ENVIRONMENT_ACTIVE_GATE)",
-			Required:    true,
 			ForceNew:    true,
+			Required:    true,
 		},
 	}
 }
