@@ -38,6 +38,8 @@ import (
 
 type TestCaseAccOptions struct {
 	ExternalProviders map[string]resource.ExternalProvider
+	// optional Check function that can be provided to run additional checks on the configuration
+	Check func(s *terraform.State) error
 }
 type TestAccOptions struct {
 	ExpectNonEmptyPlan bool
@@ -182,7 +184,7 @@ type testCaseExecution struct {
 	Name      string
 }
 
-func getTestCase(t *testing.T, folder string, testName string) testCaseExecution {
+func getTestCase(t *testing.T, folder string, testName string, opts TestCaseAccOptions) testCaseExecution {
 	configCreate, identifier := ReadTfConfig(t, path.Join(folder, "create.tf"))
 	configUpdate := ReadTfConfigWithIdentifier(t, path.Join(folder, "update.tf"), identifier)
 
@@ -190,16 +192,18 @@ func getTestCase(t *testing.T, folder string, testName string) testCaseExecution
 		TestCases: []resource.TestStep{
 			{
 				Config: configCreate,
+				Check:  opts.Check,
 			},
 			{
 				Config: configUpdate,
+				Check:  opts.Check,
 			},
 		},
 		Name: testName,
 	}
 }
 
-func getTestCases(t *testing.T) []testCaseExecution {
+func getTestCases(t *testing.T, opts TestCaseAccOptions) []testCaseExecution {
 	testDataFolders, _ := os.ReadDir("testcases")
 	testCases := make([]testCaseExecution, 0)
 
@@ -209,7 +213,7 @@ func getTestCases(t *testing.T) []testCaseExecution {
 		}
 		folder := path.Join("testcases", entry.Name())
 
-		testCases = append(testCases, getTestCase(t, folder, entry.Name()))
+		testCases = append(testCases, getTestCase(t, folder, entry.Name(), opts))
 	}
 	return testCases
 }
@@ -230,7 +234,7 @@ func TestAccTestCases(t *testing.T, opts ...TestCaseAccOptions) {
 		options = opts[0]
 	}
 
-	for _, testCase := range getTestCases(t) {
+	for _, testCase := range getTestCases(t, options) {
 		t.Run(testCase.Name, func(t *testing.T) {
 			t.Helper()
 
@@ -262,7 +266,7 @@ func TestAccTestCase(t *testing.T, folder string, opts ...TestCaseAccOptions) {
 	resource.Test(t, resource.TestCase{
 		ProviderFactories: GetProviderFactories(),
 		ExternalProviders: options.ExternalProviders,
-		Steps:             getTestCase(t, folder, "").TestCases,
+		Steps:             getTestCase(t, folder, "", options).TestCases,
 	})
 }
 
@@ -324,4 +328,14 @@ func GetProviderFactories() map[string]func() (*schema.Provider, error) {
 			return provider.Provider(), nil
 		},
 	}
+}
+
+// GetFirstResource returns the first "resource" of the state value
+func GetFirstResource(s *terraform.State) *terraform.ResourceState {
+	for name, res := range s.RootModule().Resources {
+		if !strings.HasPrefix(name, "data.") {
+			return res
+		}
+	}
+	return nil
 }
