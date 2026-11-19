@@ -31,8 +31,8 @@ type Predicate struct {
 	ManagementZones []string       `json:"managementZones,omitempty"` // A set of management zone references. The rule matches if the service belongs to all specified management zones. Only applicable for predicate type `MANAGEMENT_ZONES_CONTAINS_ALL`.
 	PredicateType   string         `json:"predicateType"`             // The type of predicate to apply. Available types depend on the condition attribute:\n * `SERVICE_NAME` and `PG_NAME` support `STRING_EQUALS`, `STARTS_WITH`, `ENDS_WITH`, `CONTAINS`;\n * `SERVICE_TYPE` supports `SERVICE_TYPE_EQUALS`;\n * `SERVICE_MANAGEMENT_ZONE` supports `MANAGEMENT_ZONES_CONTAINS_ALL`;\n * `SERVICE_TAG` and `PG_TAG` support `TAG_EQUALS` and `TAG_KEY_EQUALS`.
 	ServiceType     []ServiceTypes `json:"serviceType,omitempty"`     // A set of service types to match against. The rule matches if the service type is contained in this set. Only applicable for predicate type `SERVICE_TYPE_EQUALS`. Possible values: `CICS`, `CICSInteraction`, `CustomApplication`, `Database`, `EnterpriseServiceBus`, `External`, `IMS`, `IMSInteraction`, `Messaging`, `Method`, `Mobile`, `Process`, `QueueInteraction`, `QueueListener`, `RMI`, `RemoteCall`, `SaasVendor`, `WebRequest`, `WebService`, `WebSite`, `zOSConnect`
-	TagKeys         []string       `json:"tagKeys,omitempty"`         // A set of tag keys to match. The rule matches if the entity has tags with all specified keys, regardless of tag value. Only applicable for predicate type `TAG_KEY_EQUALS`.
-	Tags            []string       `json:"tags,omitempty"`            // A set of tags to match exactly. The rule matches if the entity has all specified tags (both key and value must match). Only applicable for predicate type `TAG_EQUALS`.
+	TagKeys         []string       `json:"tagKeys,omitempty"`         // Tag keys to match; the entity must have a tag with any of these keys, regardless of tag value. Each entry is a string (e.g. `environment`). Only applicable for predicate type `TAG_KEY_EQUALS`.
+	Tags            []string       `json:"tags,omitempty"`            // Tags to match; the entity must have any of these tags with exact key and value. Each tag is a single `key:value` string (e.g. `environment:production`); for tags defined without a value, use just the key (e.g. `owner`). Only applicable for predicate type `TAG_EQUALS`.
 	TextValues      []string       `json:"textValues,omitempty"`      // A list of text values to match against. The rule matches if the attribute value matches any of these values according to the predicate type.
 }
 
@@ -62,13 +62,13 @@ func (me *Predicate) Schema() map[string]*schema.Schema {
 		},
 		"tag_keys": {
 			Type:        schema.TypeSet,
-			Description: "A set of tag keys to match. The rule matches if the entity has tags with all specified keys, regardless of tag value. Only applicable for predicate type `TAG_KEY_EQUALS`.",
+			Description: "Tag keys to match; the entity must have a tag with any of these keys, regardless of tag value. Each entry is a string (e.g. `environment`). Only applicable for predicate type `TAG_KEY_EQUALS`.",
 			Optional:    true, // precondition
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"tags": {
 			Type:        schema.TypeSet,
-			Description: "A set of tags to match exactly. The rule matches if the entity has all specified tags (both key and value must match). Only applicable for predicate type `TAG_EQUALS`.",
+			Description: "Tags to match; the entity must have any of these tags with exact key and value. Each tag is a single `key:value` string (e.g. `environment:production`); for tags defined without a value, use just the key (e.g. `owner`). Only applicable for predicate type `TAG_EQUALS`.",
 			Optional:    true, // precondition
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},

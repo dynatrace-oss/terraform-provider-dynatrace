@@ -265,7 +265,7 @@
 					}
 				},
 				"predicate": {
-					"description": "The predicate that tests the value of the attribute.\n\nThe actual set of fields depends on the type of the predicate. Find the list of actual objects in the description of the type field or see [Failure detection API - JSON models](https://dt-url.net/9sg3swf).",
+					"description": "The predicate that tests the value of the attribute.\n\nThe actual set of fields depends on the type of the predicate. Find the list of actual objects in the description of the type field.",
 					"displayName": "Condition to check the attribute against",
 					"documentation": "",
 					"maxObjects": 1,
@@ -387,7 +387,7 @@
 					"type": "set"
 				},
 				"tagKeys": {
-					"description": "A set of tag keys to match. The rule matches if the entity has tags with all specified keys, regardless of tag value. Only applicable for predicate type `TAG_KEY_EQUALS`.",
+					"description": "Tag keys to match; the entity must have a tag with any of these keys, regardless of tag value. Each entry is a string (e.g. `environment`). Only applicable for predicate type `TAG_KEY_EQUALS`.",
 					"displayName": "Tag keys",
 					"documentation": "",
 					"items": {
@@ -420,7 +420,7 @@
 					"type": "set"
 				},
 				"tags": {
-					"description": "A set of tags to match exactly. The rule matches if the entity has all specified tags (both key and value must match). Only applicable for predicate type `TAG_EQUALS`.",
+					"description": "Tags to match; the entity must have any of these tags with exact key and value. Each tag is a single `key:value` string (e.g. `environment:production`); for tags defined without a value, use just the key (e.g. `owner`). Only applicable for predicate type `TAG_EQUALS`.",
 					"displayName": "Tags (exact match)",
 					"documentation": "",
 					"items": {
@@ -499,5 +499,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.12"
+	"version": "1.0.13"
 }
