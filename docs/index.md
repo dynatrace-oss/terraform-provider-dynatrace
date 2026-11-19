@@ -132,6 +132,55 @@ If `DYNATRACE_PLATFORM_TOKEN` is not defined, the provider will use the configur
 Platform token authentication follows the same selection rules as OAuth credentials:
 When the environment variable `DYNATRACE_HTTP_OAUTH_PREFERENCE` is set to `true`, the provider will favor platform or OAuth tokens over API tokens.
 
+---
+
+### Authenticating with Workload Identity Federation (GitHub Actions OIDC)
+
+Inside a GitHub Actions job the provider can obtain a short-lived OIDC token and use it for the Dynatrace platform APIs. No long-lived secret has to be stored in the repository.
+
+Set the audience:
+
+```
+DYNATRACE_WIF_AUDIENCE=<<AUDIENCE>>
+```
+
+Alternatively, you can use the `wif_audience` attribute in the provider configuration. It has no default: the value has to match the audience that your Dynatrace environment expects.
+For information about how to configure the Dynatrace tenant, have a look at the documentation for [Workload identity federation](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/workload-identity-federation).
+
+Which workload identity provider issues the token is inferred from the environment the provider runs in. GitHub Actions is the only supported one; it is recognized by the `ACTIONS_ID_TOKEN_REQUEST_URL` and `ACTIONS_ID_TOKEN_REQUEST_TOKEN` variables that GitHub injects.
+
+The job needs the `id-token: write` permission, otherwise GitHub does not issue an OIDC token to it:
+
+```yaml
+name: terraform
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write   # required - lets the job request a GitHub OIDC token
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    env:
+      DYNATRACE_ENV_URL: https://########.apps.dynatrace.com
+      DYNATRACE_WIF_AUDIENCE: <<AUDIENCE>>
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform init
+      - run: terraform apply -auto-approve
+```
+
+> **Note:** If the permission is missing, GitHub injects no `ACTIONS_ID_TOKEN_REQUEST_*` variables and the provider fails with `no supported workload identity provider was detected`.
+
+The provider obtains a new token shortly before the current one expires, so a long-running `terraform apply` does not fail halfway through when the token reaches the end of its short lifetime.
+
+Workload Identity Federation applies to the Dynatrace **platform** APIs only. IAM (Account Management) resources still require OAuth credentials, and classic resources still require an API token. When it is configured, it takes precedence over `platform_token` and over OAuth credentials for platform requests.
+
 
 ## Exporting existing configuration from a Dynatrace environment
 In addition to the out-of-the-box functionality of Terraform, the provider has the ability to be executed as a standalone executable to export an existing configuration from a Dynatrace environment. Refer to the [Export Utility](https://dt-url.net/h203qmc) page for more information.
@@ -167,3 +216,4 @@ For assistance, please contact the Dynatrace Support team as described on the [s
 - `iam_endpoint_url` (String, Sensitive) The endpoint URL for the IAM (Account Management) API. Default: `https://api.dynatrace.com`.
 - `iam_token_url` (String, Sensitive) The token URL for obtaining access tokens via OAuth for the IAM (Account Management) API. Default: `https://sso.dynatrace.com/sso/oauth2/token`.
 - `platform_token` (String, Sensitive) The Dynatrace platform token used for platform APIs. When specified, it is used in preference to `client_id`, `client_secret`, `automation_client_id`, `automation_client_secret`, `automation_token_url`, and `automation_env_url` for platform requests. Platform tokens can't be used for IAM (Account Management) or classic resources.
+- `wif_audience` (String) The audience (`aud` claim) to request for the OIDC token. Must match what the Dynatrace environment expects. Specifying it selects Workload Identity Federation as the authentication method for platform APIs, which takes precedence over `platform_token` and OAuth credentials. The workload identity provider issuing the token is inferred from the environment; GitHub Actions is the only supported one. Cannot be used for IAM (Account Management) or classic resources.

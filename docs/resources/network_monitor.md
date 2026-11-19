@@ -10,6 +10,8 @@ description: |-
 
 -> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`)
 
+~> The network availability monitor API is eventually consistent. For a short time after `terraform apply` (typically less than a minute), the API may still return the previous values. A `terraform plan` executed within that timeframe can therefore show a diff, which disappears once the changes have propagated.
+
 ## Dynatrace Documentation
 
 - Network availability monitors - https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/general-information/network-availability-monitors
@@ -254,8 +256,8 @@ Required:
 Optional:
 
 - `context` (String) The origin of the tag, such as AWS or Cloud Foundry.
-
-Custom tags use the CONTEXTLESS value
-- `source` (String) The source of the tag, possible values: `AUTO`, `RULE_BASED` or `USER`
+  
+  Custom tags use the CONTEXTLESS value
+- `source` (String) The source of the tag, possible values: `USER`
 - `value` (String) The value of the tag
  
