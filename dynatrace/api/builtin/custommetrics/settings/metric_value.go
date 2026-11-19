@@ -26,7 +26,7 @@ import (
 
 type MetricValue struct {
 	FieldName *string   `json:"fieldName,omitempty"` // Field name
-	Type      ValueType `json:"type"`                // Possible Values: `COUNTER`, `FIELD`
+	Type      ValueType `json:"type"`                // Possible values: `COUNTER`, `FIELD`
 }
 
 func (me *MetricValue) Schema() map[string]*schema.Schema {
@@ -38,7 +38,7 @@ func (me *MetricValue) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `COUNTER`, `FIELD`",
+			Description: "Possible values: `COUNTER`, `FIELD`",
 			Required:    true,
 		},
 	}
@@ -52,8 +52,11 @@ func (me *MetricValue) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *MetricValue) HandlePreconditions() error {
-	if me.FieldName == nil && string(me.Type) == "FIELD" {
-		return fmt.Errorf("'field_name' must be specified if 'type' is set to '%v'", me.Type)
+	if (me.FieldName != nil) && (string(me.Type) != "FIELD") {
+		return fmt.Errorf("'field_name' must not be specified unless 'type' is set to 'FIELD'; got 'type'='%v'", me.Type)
+	}
+	if (me.FieldName == nil) && (string(me.Type) == "FIELD") {
+		return fmt.Errorf("'field_name' must be specified when 'type' is set to 'FIELD'; got 'type'='%v'", me.Type)
 	}
 	return nil
 }

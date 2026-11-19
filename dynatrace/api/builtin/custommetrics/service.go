@@ -18,15 +18,15 @@
 package custommetrics
 
 import (
-	custommetrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/custommetrics/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/custommetrics/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.8"
+const SchemaVersion = "1.0.9"
 const SchemaID = "builtin:custom-metrics"
 
-func Service(clientSet rest.ClientSet) (settings.CRUDService[*custommetrics.Settings], error) {
-	return settings20.Service[*custommetrics.Settings](clientSet, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }
