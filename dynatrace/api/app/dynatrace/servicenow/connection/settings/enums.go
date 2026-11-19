@@ -20,8 +20,8 @@ package connection
 type Type string
 
 var Types = struct {
-	Basic             Type
-	ClientCredentials Type
+	Basic                  Type
+	ClientMinusCredentials Type
 }{
 	"basic",
 	"client-credentials",

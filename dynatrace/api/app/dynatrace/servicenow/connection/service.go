@@ -18,15 +18,15 @@
 package connection
 
 import (
-	connection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/servicenow/connection/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/servicenow/connection/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "2.1"
+const SchemaVersion = "2.2"
 const SchemaID = "app:dynatrace.servicenow:connection"
 
-func Service(clientSet rest.ClientSet) (settings.CRUDService[*connection.Settings], error) {
-	return settings20.Service[*connection.Settings](clientSet, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }
