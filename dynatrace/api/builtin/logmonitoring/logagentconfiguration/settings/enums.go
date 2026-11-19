@@ -17,6 +17,16 @@
 
 package logagentconfiguration
 
+type BinaryDetectionAlgorithm string
+
+var BinaryDetectionAlgorithms = struct {
+	Findbinaryzeroes            BinaryDetectionAlgorithm
+	Printablecharactersfraction BinaryDetectionAlgorithm
+}{
+	"FindBinaryZeroes",
+	"PrintableCharactersFraction",
+}
+
 type BinaryDetectionMode string
 
 var BinaryDetectionModes = struct {

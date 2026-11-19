@@ -1,4 +1,5 @@
-resource "dynatrace_log_oneagent" "#name#" {
+resource "dynatrace_log_oneagent" "example" {
+  binary_detection_algorithm           = "FindBinaryZeroes"
   container_timezone_heuristic_enabled = true
   containers_logs_detection_enabled    = true
   date_search_limit_bytes              = 64
