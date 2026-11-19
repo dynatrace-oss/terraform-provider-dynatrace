@@ -242,7 +242,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 5,
+					"default": 15,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -327,7 +327,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect stuck deployments",
 					"documentation": "Evaluates workload condition 'Progressing'",
@@ -474,7 +474,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 15,
+					"default": 30,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -494,7 +494,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 10,
+					"default": 20,
 					"description": "",
 					"displayName": "of CPU usage for at least",
 					"documentation": "",
@@ -514,7 +514,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 50,
+					"default": 100,
 					"description": "",
 					"displayName": "amount of CPU throttling is above",
 					"documentation": "",
@@ -805,7 +805,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect job failure events",
 					"documentation": "Alerts on any occurrence of Kubernetes events with reason 'BackoffLimitExceeded', 'DeadlineExceeded', or 'PodFailurePolicy'.\n\nIf 'Filter events' is enabled, make certain that you ingest events with the aforementioned reasons in order to receive alerts.",
@@ -1014,7 +1014,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect out-of-memory kills",
 					"documentation": "",
@@ -1117,7 +1117,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect pods stuck in pending",
 					"documentation": "Number of pods in `Pending` phase",
@@ -1240,7 +1240,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect pod backoff events",
 					"documentation": "Alerts on any occurrence of Kubernetes events with reason 'BackOff', as observed on pod statuses 'ImagePullBackOff', and 'CrashLoopBackOff'.\n\nIf 'Filter events' is enabled, make certain that you ingest events with the aforementioned reasons in order to receive alerts.",
@@ -1346,7 +1346,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect pod eviction events",
 					"documentation": "Eviction is the process of terminating one or more pods on a node to free up resources.\n\nAlerts on any occurrence of Kubernetes events with reason 'Evicted'.\n\nIf 'Filter events' is enabled, make certain that you ingest events with the aforementioned reasons in order to receive alerts.",
@@ -1452,7 +1452,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect pod preemption events",
 					"documentation": "Preemption is the process of terminating pods with lower priority so that pods with higher priority can be scheduled on a node.\n\nAlerts on any occurrence of Kubernetes events with reason 'Preempted', or 'Preempting'.\n\nIf 'Filter events' is enabled, make certain that you ingest events with the aforementioned reasons in order to receive alerts.",
@@ -1558,7 +1558,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect pods stuck in terminating",
 					"documentation": "Deleted pods in 'Running' phase",
@@ -1664,7 +1664,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect workloads without ready pods",
 					"documentation": "As of specific pod life cycles of different workload types, cronjobs and jobs are excluded.",
@@ -1741,5 +1741,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.11"
+	"version": "1.11.1"
 }
