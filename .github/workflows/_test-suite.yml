@@ -303,7 +303,7 @@ jobs:
           gotestsum --junitfile test-results/${{ matrix.config.slug }}/test-results.xml --format testdox --format-icons hivis -- -tags="integration monitored connector" -v -p 1 ${{ matrix.config.path }}
 
       - name: ⬆️ Archive WIF e2e test results - ${{ matrix.config.name }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 #v7.0.2
         if: ${{ always() }}
         # Deliberately outside the junit-results-integration-* pattern that collect-test-results picks
         # up: these results run the same test names as the regular matrix does, and while the job is
