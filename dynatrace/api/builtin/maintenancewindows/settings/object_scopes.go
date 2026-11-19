@@ -24,11 +24,17 @@ import (
 
 // Object scopes. Scopes controlling which objects are affected by the maintenance window.
 type ObjectScopes struct {
-	SyntheticMonitors *SyntheticMonitorSettings `json:"syntheticMonitors"` // Synthetic monitors
+	SuppressProblems  *bool                     `json:"suppressProblems,omitempty"` // When enabled, Davis does not open new problems in the window's scope while the maintenance window is running.
+	SyntheticMonitors *SyntheticMonitorSettings `json:"syntheticMonitors"`          // Synthetic monitors
 }
 
 func (me *ObjectScopes) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"suppress_problems": {
+			Type:        schema.TypeBool,
+			Description: "When enabled, Davis does not open new problems in the window's scope while the maintenance window is running.",
+			Optional:    true, // nullable
+		},
 		"synthetic_monitors": {
 			Type:        schema.TypeList,
 			Description: "Synthetic monitors",
@@ -42,12 +48,14 @@ func (me *ObjectScopes) Schema() map[string]*schema.Schema {
 
 func (me *ObjectScopes) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
+		"suppress_problems":  me.SuppressProblems,
 		"synthetic_monitors": me.SyntheticMonitors,
 	})
 }
 
 func (me *ObjectScopes) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
+		"suppress_problems":  &me.SuppressProblems,
 		"synthetic_monitors": &me.SyntheticMonitors,
 	})
 }
