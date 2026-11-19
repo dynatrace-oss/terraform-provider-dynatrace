@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package infraopssettings
+package settings
 
 import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
@@ -23,6 +23,7 @@ import (
 )
 
 type Settings struct {
+	Host_connections_process_limit int     `json:"host.connections.process.limit"` // Limits the number of processes queried for connections to top N by CPU usage and top N by network traffic.
 	Interface_saturation_threshold float64 `json:"interface.saturation.threshold"` // The threshold at which a network device interface is deemed to be saturated.
 	Invex_dql_query_limit          int     `json:"invex.dql.query.limit"`          // Limit the number of results returned from Grail for Host, Network device, and Extensions entities.
 	Show_monitoring_candidates     bool    `json:"show.monitoring.candidates"`     // When set to true, the app will display monitoring candidates in the Hosts table
@@ -35,6 +36,12 @@ func (me *Settings) Name() string {
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"host_connections_process_limit": {
+			Type:        schema.TypeInt,
+			Description: "Limits the number of processes queried for connections to top N by CPU usage and top N by network traffic.",
+			Optional:    true, // new required value
+			Default:     5,
+		},
 		"interface_saturation_threshold": {
 			Type:        schema.TypeFloat,
 			Description: "The threshold at which a network device interface is deemed to be saturated.",
@@ -60,6 +67,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
+		"host_connections_process_limit": me.Host_connections_process_limit,
 		"interface_saturation_threshold": me.Interface_saturation_threshold,
 		"invex_dql_query_limit":          me.Invex_dql_query_limit,
 		"show_monitoring_candidates":     me.Show_monitoring_candidates,
@@ -69,6 +77,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
+		"host_connections_process_limit": &me.Host_connections_process_limit,
 		"interface_saturation_threshold": &me.Interface_saturation_threshold,
 		"invex_dql_query_limit":          &me.Invex_dql_query_limit,
 		"show_monitoring_candidates":     &me.Show_monitoring_candidates,
