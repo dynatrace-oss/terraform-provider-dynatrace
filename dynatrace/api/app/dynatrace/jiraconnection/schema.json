@@ -30,6 +30,10 @@
 				{
 					"displayName": "Access Token (Jira Cloud)",
 					"value": "cloud-token"
+				},
+				{
+					"displayName": "Scoped Token (Jira Cloud)",
+					"value": "cloud-scoped-token"
 				}
 			],
 			"type": "enum"
@@ -104,7 +108,8 @@
 			"precondition": {
 				"expectedValues": [
 					"pat",
-					"cloud-token"
+					"cloud-token",
+					"cloud-scoped-token"
 				],
 				"property": "type",
 				"type": "IN"
@@ -179,7 +184,8 @@
 			"precondition": {
 				"expectedValues": [
 					"basic",
-					"cloud-token"
+					"cloud-token",
+					"cloud-scoped-token"
 				],
 				"property": "type",
 				"type": "IN"
@@ -199,5 +205,5 @@
 	],
 	"schemaId": "app:dynatrace.jira:connection",
 	"types": {},
-	"version": "1.0.4"
+	"version": "1.1"
 }
