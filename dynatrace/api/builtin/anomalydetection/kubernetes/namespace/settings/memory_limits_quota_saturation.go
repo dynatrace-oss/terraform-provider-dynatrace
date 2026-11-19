@@ -18,6 +18,8 @@
 package namespace
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -32,11 +34,10 @@ func (me *MemoryLimitsQuotaSaturation) Schema() map[string]*schema.Schema {
 		"configuration": {
 			Type:        schema.TypeList,
 			Description: "Alert if",
-			Optional:    true,
-
-			Elem:     &schema.Resource{Schema: new(MemoryLimitsQuotaSaturationConfig).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(MemoryLimitsQuotaSaturationConfig).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"enabled": {
 			Type:        schema.TypeBool,
@@ -51,6 +52,16 @@ func (me *MemoryLimitsQuotaSaturation) MarshalHCL(properties hcl.Properties) err
 		"configuration": me.Configuration,
 		"enabled":       me.Enabled,
 	})
+}
+
+func (me *MemoryLimitsQuotaSaturation) HandlePreconditions() error {
+	if (me.Configuration != nil) && (!me.Enabled) {
+		return fmt.Errorf("'configuration' must not be specified unless 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	if (me.Configuration == nil) && (me.Enabled) {
+		return fmt.Errorf("'configuration' must be specified when 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	return nil
 }
 
 func (me *MemoryLimitsQuotaSaturation) UnmarshalHCL(decoder hcl.Decoder) error {
