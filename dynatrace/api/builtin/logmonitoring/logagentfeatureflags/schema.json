@@ -9,7 +9,24 @@
 	"displayName": "Log module feature flags",
 	"documentation": "",
 	"dynatrace": "1",
-	"enums": {},
+	"enums": {
+		"TurboMode": {
+			"description": "",
+			"displayName": "Turbo mode",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Balanced",
+					"value": "Normal"
+				},
+				{
+					"displayName": "Low latency",
+					"value": "Turbo"
+				}
+			],
+			"type": "enum"
+		}
+	},
 	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
@@ -53,6 +70,21 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"TurboMode": {
+			"default": "Normal",
+			"description": "Configure the log ingest delay of OneAgent. Applies to all log source types in all Log module deployments.\n* **Balanced**: Default log processing. Logs are read every 60s, balancing ingest delay and resource usage.\n* **Low latency**: Lowers typical ingest delay by shortening the read interval from 60s to 5s. CPU usage of the Log module increases, most noticeably on hosts with many log sources or high log volume.",
+			"displayName": "Operation mode",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.351"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/TurboMode"
+			}
+		},
 		"UserAndEventData": {
 			"default": false,
 			"description": "Enable OneAgent to collect data from Event Logs in the User Data and Event Data sections.",
@@ -73,5 +105,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-agent-feature-flags",
 	"types": {},
-	"version": "1.0.4"
+	"version": "1.0.5"
 }
