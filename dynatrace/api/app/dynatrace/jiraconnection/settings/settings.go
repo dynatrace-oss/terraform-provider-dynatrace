@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package connection
+package settings
 
 import (
 	"fmt"
@@ -26,13 +26,12 @@ import (
 )
 
 type Settings struct {
-	Name        string  `json:"name"`               // The name of the Jira connection
-	Password    *string `json:"password,omitempty"` // Password of the Jira user
-	Token       *string `json:"token,omitempty"`    // Token for the selected authentication type
-	Type        Type    `json:"type"`               // Type of authentication method that should be used. Possible values: `basic`, `cloud-token`, `pat`
-	Url         string  `json:"url"`                // URL of the Jira server
-	User        *string `json:"user,omitempty"`     // Username or E-Mail address
-	InsertAfter string  `json:"-"`
+	Name     string  `json:"name"`               // The name of the Jira connection
+	Password *string `json:"password,omitempty"` // Password of the Jira user
+	Token    *string `json:"token,omitempty"`    // Token for the selected authentication type
+	Type     Type    `json:"type"`               // Type of authentication method that should be used. Possible values: `basic`, `cloud-scoped-token`, `cloud-token`, `pat`
+	Url      string  `json:"url"`                // URL of the Jira server
+	User     *string `json:"user,omitempty"`     // Username or E-Mail address
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -56,7 +55,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Type of authentication method that should be used. Possible values: `basic`, `cloud-token`, `pat`",
+			Description: "Type of authentication method that should be used. Possible values: `basic`, `cloud-scoped-token`, `cloud-token`, `pat`",
 			Required:    true,
 		},
 		"url": {
@@ -69,25 +68,17 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Username or E-Mail address",
 			Optional:    true, // precondition
 		},
-		"insert_after": {
-			Type:        schema.TypeString,
-			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
-			Optional:    true,
-			Computed:    true,
-			Deprecated:  "This resource is no longer ordered, please remove this attribute from the configuration",
-		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":         me.Name,
-		"password":     "${state.secret_value}",
-		"token":        "${state.secret_value}",
-		"type":         me.Type,
-		"url":          me.Url,
-		"user":         me.User,
-		"insert_after": me.InsertAfter,
+		"name":     me.Name,
+		"password": "${state.secret_value}",
+		"token":    "${state.secret_value}",
+		"type":     me.Type,
+		"url":      me.Url,
+		"user":     me.User,
 	})
 }
 
@@ -98,30 +89,29 @@ func (me *Settings) HandlePreconditions() error {
 	if (me.Password == nil) && (string(me.Type) == "basic") {
 		return fmt.Errorf("'password' must be specified when 'type' is set to 'basic'; got 'type'='%v'", me.Type)
 	}
-	if (me.Token != nil) && (!slices.Contains([]string{"pat", "cloud-token"}, string(me.Type))) {
-		return fmt.Errorf("'token' must not be specified unless 'type' is one of ['pat', 'cloud-token']; got 'type'='%v'", me.Type)
+	if (me.Token != nil) && (!slices.Contains([]string{"pat", "cloud-token", "cloud-scoped-token"}, string(me.Type))) {
+		return fmt.Errorf("'token' must not be specified unless 'type' is one of ['pat', 'cloud-token', 'cloud-scoped-token']; got 'type'='%v'", me.Type)
 	}
-	if (me.Token == nil) && (slices.Contains([]string{"pat", "cloud-token"}, string(me.Type))) {
-		return fmt.Errorf("'token' must be specified when 'type' is one of ['pat', 'cloud-token']; got 'type'='%v'", me.Type)
+	if (me.Token == nil) && (slices.Contains([]string{"pat", "cloud-token", "cloud-scoped-token"}, string(me.Type))) {
+		return fmt.Errorf("'token' must be specified when 'type' is one of ['pat', 'cloud-token', 'cloud-scoped-token']; got 'type'='%v'", me.Type)
 	}
-	if (me.User != nil) && (!slices.Contains([]string{"basic", "cloud-token"}, string(me.Type))) {
-		return fmt.Errorf("'user' must not be specified unless 'type' is one of ['basic', 'cloud-token']; got 'type'='%v'", me.Type)
+	if (me.User != nil) && (!slices.Contains([]string{"basic", "cloud-token", "cloud-scoped-token"}, string(me.Type))) {
+		return fmt.Errorf("'user' must not be specified unless 'type' is one of ['basic', 'cloud-token', 'cloud-scoped-token']; got 'type'='%v'", me.Type)
 	}
-	if (me.User == nil) && (slices.Contains([]string{"basic", "cloud-token"}, string(me.Type))) {
-		return fmt.Errorf("'user' must be specified when 'type' is one of ['basic', 'cloud-token']; got 'type'='%v'", me.Type)
+	if (me.User == nil) && (slices.Contains([]string{"basic", "cloud-token", "cloud-scoped-token"}, string(me.Type))) {
+		return fmt.Errorf("'user' must be specified when 'type' is one of ['basic', 'cloud-token', 'cloud-scoped-token']; got 'type'='%v'", me.Type)
 	}
 	return nil
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":         &me.Name,
-		"password":     &me.Password,
-		"token":        &me.Token,
-		"type":         &me.Type,
-		"url":          &me.Url,
-		"user":         &me.User,
-		"insert_after": &me.InsertAfter,
+		"name":     &me.Name,
+		"password": &me.Password,
+		"token":    &me.Token,
+		"type":     &me.Type,
+		"url":      &me.Url,
+		"user":     &me.User,
 	})
 }
 
