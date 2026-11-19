@@ -38,7 +38,7 @@ func (me *AllowedHostsList) Schema() map[string]*schema.Schema {
 		"host_list": {
 			Type:        schema.TypeSet,
 			Description: "A host that app backends should be able to connect to.",
-			Optional:    true, // precondition & minobjects == 0
+			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 	}
@@ -49,11 +49,6 @@ func (me *AllowedHostsList) MarshalHCL(properties hcl.Properties) error {
 		"enforced":  me.Enforced,
 		"host_list": me.HostList,
 	})
-}
-
-func (me *AllowedHostsList) HandlePreconditions() error {
-	// ---- HostList []string -> {"expectedValue":true,"property":"enforced","type":"EQUALS"}
-	return nil
 }
 
 func (me *AllowedHostsList) UnmarshalHCL(decoder hcl.Decoder) error {
