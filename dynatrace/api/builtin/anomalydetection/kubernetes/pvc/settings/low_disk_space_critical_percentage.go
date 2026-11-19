@@ -18,6 +18,8 @@
 package pvc
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -53,7 +55,12 @@ func (me *LowDiskSpaceCriticalPercentage) MarshalHCL(properties hcl.Properties) 
 }
 
 func (me *LowDiskSpaceCriticalPercentage) HandlePreconditions() error {
-	// ---- Configuration *LowDiskSpaceCriticalPercentageConfig -> {"expectedValue":true,"property":"enabled","type":"EQUALS"}
+	if (me.Configuration != nil) && (!me.Enabled) {
+		return fmt.Errorf("'configuration' must not be specified unless 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
+	if (me.Configuration == nil) && (me.Enabled) {
+		return fmt.Errorf("'configuration' must be specified when 'enabled' is set to 'true'; got 'enabled'='%v'", me.Enabled)
+	}
 	return nil
 }
 
