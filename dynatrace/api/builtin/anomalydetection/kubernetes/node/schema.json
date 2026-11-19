@@ -3,11 +3,12 @@
 		"KUBERNETES_CLUSTER",
 		"environment"
 	],
-	"description": "Dynatrace automatically detects a wide range of common Kubernetes-related issues. Use these settings to configure alerts relevant to your Kubernetes nodes. Changing thresholds resets the observation period.",
+	"description": "Dynatrace automatically detects a wide range of common Kubernetes-related issues. Use these settings to configure alerts relevant to your Kubernetes nodes. Changing thresholds resets the observation period. Additional information can be found on our [documentation page](https://dt-url.net/wq02okj#node).",
 	"displayName": "Kubernetes node anomaly detection",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"metadata": {
 		"minActiveGateVersion": "1.253"
@@ -141,7 +142,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 5,
+					"default": 30,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -161,7 +162,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 3,
+					"default": 20,
 					"description": "",
 					"displayName": "of node CPU capacity for at least",
 					"documentation": "",
@@ -262,7 +263,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 5,
+					"default": 30,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -282,7 +283,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 3,
+					"default": 20,
 					"description": "",
 					"displayName": "of node memory capacity for at least",
 					"documentation": "",
@@ -345,7 +346,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect problematic node conditions",
 					"documentation": "Evaluates node conditions\n* MemoryPressure\n* DiskPressure\n* PIDPressure\n* OutOfDisk\n* NetworkUnavailable\n* KernelDeadlock\n* ReadonlyFilesystem\n* FrequentKubeletRestart\n* FrequentDockerRestart\n* FrequentContainerdRestart\n* KubeletUnhealthy\n* ContainerRuntimeUnhealthy\n* ContainerRuntimeProblem\n* CorruptDockerOverlay2\n* FilesystemCorruptionProblem\n* FrequentGcfsdRestart\n* FrequentGcfsSnapshotterRestart\n* FrequentUnregisterNetDevice\n* GcfsdUnhealthy\n* GcfsSnapshotterMissingLayer\n* GcfsSnapshotterUnhealthy\n* KubeletProblem",
@@ -383,7 +384,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 5,
+					"default": 20,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -403,7 +404,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 3,
+					"default": 10,
 					"description": "",
 					"displayName": "node has problematic conditions for at least",
 					"documentation": "",
@@ -486,7 +487,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 5,
+					"default": 30,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -506,7 +507,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 3,
+					"default": 20,
 					"description": "",
 					"displayName": "of node capacity for at least",
 					"documentation": "",
@@ -569,7 +570,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect node readiness issues",
 					"documentation": "Evaluates node condition 'Ready'",
@@ -607,7 +608,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 5,
+					"default": 20,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -627,7 +628,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 3,
+					"default": 10,
 					"description": "",
 					"displayName": "node is not ready for at least",
 					"documentation": "",
@@ -646,5 +647,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.3.1"
+	"version": "1.3.2"
 }
