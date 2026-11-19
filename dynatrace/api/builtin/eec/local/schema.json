@@ -28,6 +28,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -98,5 +99,5 @@
 	],
 	"schemaId": "builtin:eec.local",
 	"types": {},
-	"version": "0.0.5"
+	"version": "0.0.6"
 }
