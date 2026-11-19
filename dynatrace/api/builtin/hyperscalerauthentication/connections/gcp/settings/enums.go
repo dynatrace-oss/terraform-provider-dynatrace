@@ -22,10 +22,12 @@ type ConsumersOfServiceAccountImpersonation string
 var ConsumersOfServiceAccountImpersonations = struct {
 	SvcComDynatraceBo           ConsumersOfServiceAccountImpersonation
 	SvcComDynatraceDa           ConsumersOfServiceAccountImpersonation
+	SvcComDynatraceGrail        ConsumersOfServiceAccountImpersonation
 	SvcComDynatraceOpenpipeline ConsumersOfServiceAccountImpersonation
 }{
 	"SVC:com.dynatrace.bo",
 	"SVC:com.dynatrace.da",
+	"SVC:com.dynatrace.grail",
 	"SVC:com.dynatrace.openpipeline",
 }
 
