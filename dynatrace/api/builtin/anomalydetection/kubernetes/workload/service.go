@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.11"
+const SchemaVersion = "1.11.1"
 const SchemaID = "builtin:anomaly-detection.kubernetes.workload"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
