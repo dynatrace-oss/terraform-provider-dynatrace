@@ -17,7 +17,7 @@
 * limitations under the License.
  */
 
-package infraopssettings_test
+package settings_test
 
 import (
 	"testing"

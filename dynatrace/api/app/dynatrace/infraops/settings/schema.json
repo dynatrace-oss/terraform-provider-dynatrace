@@ -14,6 +14,23 @@
 	},
 	"multiObject": false,
 	"properties": {
+		"host.connections.process.limit": {
+			"constraints": [
+				{
+					"maximum": 50,
+					"minimum": 1,
+					"type": "RANGE"
+				}
+			],
+			"default": 5,
+			"description": "Limits the number of processes queried for connections to top N by CPU usage and top N by network traffic.",
+			"displayName": "Host connections process limit",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "integer"
+		},
 		"interface.saturation.threshold": {
 			"constraints": [
 				{
@@ -71,5 +88,5 @@
 	},
 	"schemaId": "app:dynatrace.infraops:settings",
 	"types": {},
-	"version": "2"
+	"version": "3"
 }
