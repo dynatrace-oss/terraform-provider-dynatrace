@@ -28,7 +28,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var eventualConsistencyTime = 50 * time.Second
+// Note: Eventual consistency was still seen with 50s
+var eventualConsistencyTime = 70 * time.Second
 
 func TestAccNetworkAvailabilityMonitors(t *testing.T) {
 	api.TestAcc(t, api.TestAccOptions{Check: waitForTagsToBeInSync(t)})
