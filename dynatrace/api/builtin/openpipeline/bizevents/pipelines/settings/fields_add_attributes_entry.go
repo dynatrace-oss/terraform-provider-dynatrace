@@ -90,10 +90,10 @@ func (me *FieldsAddAttributesEntry) MarshalHCL(properties hcl.Properties) error 
 }
 
 func (me *FieldsAddAttributesEntry) HandlePreconditions() error {
-	if (me.Value == nil) && ((me.ValueType == nil || string(*me.ValueType) != "arrayString") || (me.ValueType == nil)) {
+	if (me.Value == nil) && (me.ValueType == nil || string(*me.ValueType) != "arrayString") {
 		me.Value = new("")
 	}
-	if (me.Value != nil) && ((me.ValueType != nil && string(*me.ValueType) == "arrayString") && (me.ValueType != nil)) {
+	if (me.Value != nil) && (me.ValueType != nil && string(*me.ValueType) == "arrayString") {
 		return fmt.Errorf("'value' must not be specified unless ('value_type' is not set to 'arrayString' or 'value_type' is not set); got 'value_type'='%v'", opt.ValOrNil(me.ValueType))
 	}
 	// ---- MultiValue []string -> {"expectedValue":"arrayString","property":"valueType","type":"EQUALS"}
