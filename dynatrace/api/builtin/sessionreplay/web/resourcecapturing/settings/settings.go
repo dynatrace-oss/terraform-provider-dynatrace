@@ -37,9 +37,9 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"application_id": {
 			Type:        schema.TypeString,
 			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
+			ForceNew:    true,
 			Optional:    true,
 			Default:     "environment",
-			ForceNew:    true,
 		},
 		"enable_resource_capturing": {
 			Type:        schema.TypeBool,
@@ -49,7 +49,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"resource_capture_url_exclusion_pattern_list": {
 			Type:        schema.TypeSet,
 			Description: "(Field has overlap with `dynatrace_web_application`) Add exclusion rules to avoid the capture of resources from certain pages.",
-			Optional:    true,
+			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 	}
