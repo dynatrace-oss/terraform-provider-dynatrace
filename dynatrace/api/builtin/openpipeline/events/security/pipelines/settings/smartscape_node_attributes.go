@@ -25,13 +25,14 @@ import (
 )
 
 type SmartscapeNodeAttributes struct {
-	ExtractNode          bool                                  `json:"extractNode"`                    // Extract node
-	FieldsToExtract      SmartscapeFieldExtractionEntries      `json:"fieldsToExtract,omitempty"`      // Fields to extract
-	IdComponents         SmartscapeIdComponentsEntries         `json:"idComponents"`                   // ID components
-	NodeIdFieldName      string                                `json:"nodeIdFieldName"`                // Node ID field name
-	NodeName             *GenericValueAssignment               `json:"nodeName,omitempty"`             // Node name
-	NodeType             string                                `json:"nodeType"`                       // Node type
-	StaticEdgesToExtract SmartscapeStaticEdgeExtractionEntries `json:"staticEdgesToExtract,omitempty"` // Static edges to extract
+	ExtractNode                 bool                                  `json:"extractNode"`                           // Extract node
+	FieldsToExtract             SmartscapeFieldExtractionEntries      `json:"fieldsToExtract,omitempty"`             // Fields to extract
+	IdComponents                SmartscapeIdComponentsEntries         `json:"idComponents"`                          // ID components
+	NodeIdFieldName             string                                `json:"nodeIdFieldName"`                       // Node ID field name
+	NodeName                    *GenericValueAssignment               `json:"nodeName,omitempty"`                    // Node name
+	NodeType                    string                                `json:"nodeType"`                              // Node type
+	NodeValidityDurationMinutes *int                                  `json:"nodeValidityDurationMinutes,omitempty"` // Node validity duration
+	StaticEdgesToExtract        SmartscapeStaticEdgeExtractionEntries `json:"staticEdgesToExtract,omitempty"`        // Static edges to extract
 }
 
 func (me *SmartscapeNodeAttributes) Schema() map[string]*schema.Schema {
@@ -75,6 +76,11 @@ func (me *SmartscapeNodeAttributes) Schema() map[string]*schema.Schema {
 			Description: "Node type",
 			Required:    true,
 		},
+		"node_validity_duration_minutes": {
+			Type:        schema.TypeInt,
+			Description: "Node validity duration",
+			Optional:    true, // nullable & precondition
+		},
 		"static_edges_to_extract": {
 			Type:        schema.TypeList,
 			Description: "Static edges to extract",
@@ -88,13 +94,14 @@ func (me *SmartscapeNodeAttributes) Schema() map[string]*schema.Schema {
 
 func (me *SmartscapeNodeAttributes) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"extract_node":            me.ExtractNode,
-		"fields_to_extract":       me.FieldsToExtract,
-		"id_components":           me.IdComponents,
-		"node_id_field_name":      me.NodeIdFieldName,
-		"node_name":               me.NodeName,
-		"node_type":               me.NodeType,
-		"static_edges_to_extract": me.StaticEdgesToExtract,
+		"extract_node":                   me.ExtractNode,
+		"fields_to_extract":              me.FieldsToExtract,
+		"id_components":                  me.IdComponents,
+		"node_id_field_name":             me.NodeIdFieldName,
+		"node_name":                      me.NodeName,
+		"node_type":                      me.NodeType,
+		"node_validity_duration_minutes": me.NodeValidityDurationMinutes,
+		"static_edges_to_extract":        me.StaticEdgesToExtract,
 	})
 }
 
@@ -105,6 +112,9 @@ func (me *SmartscapeNodeAttributes) HandlePreconditions() error {
 	if (me.NodeName == nil) && (me.ExtractNode) {
 		return fmt.Errorf("'node_name' must be specified when 'extract_node' is set to 'true'; got 'extract_node'='%v'", me.ExtractNode)
 	}
+	if (me.NodeValidityDurationMinutes != nil) && (!me.ExtractNode) {
+		return fmt.Errorf("'node_validity_duration_minutes' must not be specified unless 'extract_node' is set to 'true'; got 'extract_node'='%v'", me.ExtractNode)
+	}
 	// ---- FieldsToExtract SmartscapeFieldExtractionEntries -> {"expectedValue":true,"property":"extractNode","type":"EQUALS"}
 	// ---- StaticEdgesToExtract SmartscapeStaticEdgeExtractionEntries -> {"expectedValue":true,"property":"extractNode","type":"EQUALS"}
 	return nil
@@ -112,12 +122,13 @@ func (me *SmartscapeNodeAttributes) HandlePreconditions() error {
 
 func (me *SmartscapeNodeAttributes) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"extract_node":            &me.ExtractNode,
-		"fields_to_extract":       &me.FieldsToExtract,
-		"id_components":           &me.IdComponents,
-		"node_id_field_name":      &me.NodeIdFieldName,
-		"node_name":               &me.NodeName,
-		"node_type":               &me.NodeType,
-		"static_edges_to_extract": &me.StaticEdgesToExtract,
+		"extract_node":                   &me.ExtractNode,
+		"fields_to_extract":              &me.FieldsToExtract,
+		"id_components":                  &me.IdComponents,
+		"node_id_field_name":             &me.NodeIdFieldName,
+		"node_name":                      &me.NodeName,
+		"node_type":                      &me.NodeType,
+		"node_validity_duration_minutes": &me.NodeValidityDurationMinutes,
+		"static_edges_to_extract":        &me.StaticEdgesToExtract,
 	})
 }
