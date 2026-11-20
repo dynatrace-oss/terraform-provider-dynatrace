@@ -63,6 +63,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"value": {
 			Type:        schema.TypeList,
 			Description: "Defines the type of value to be extracted from the user action. When using **user action counter**, the number of user actions is counted (similar to count(*) when using USQL). When using **user action field value**, the value of a user action field is extracted.",
+			ForceNew:    true,
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(MetricValue).Schema()},
 			MinItems:    1,

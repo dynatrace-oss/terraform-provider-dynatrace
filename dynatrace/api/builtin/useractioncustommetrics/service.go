@@ -18,15 +18,15 @@
 package useractioncustommetrics
 
 import (
-	useractioncustommetrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/useractioncustommetrics/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.1"
+const SchemaVersion = "1.0.2"
 const SchemaID = "builtin:user-action-custom-metrics"
 
-func Service(clientSet rest.ClientSet) (settings.CRUDService[*useractioncustommetrics.Settings], error) {
-	return settings20.Service[*useractioncustommetrics.Settings](clientSet, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }
