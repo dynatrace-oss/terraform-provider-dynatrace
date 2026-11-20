@@ -18,6 +18,8 @@
 package privacypreferences
 
 import (
+	"fmt"
+
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -47,7 +49,7 @@ func (me *AllowListRules) UnmarshalHCL(decoder hcl.Decoder) error {
 type AllowListRule struct {
 	AttributeExpression *string           `json:"attributeExpression,omitempty"` // Attribute masking can be applied to web applications that store data within attributes, typically data-NAME attributes in HTML5. When you define attributes, their values are masked while recording but not removed.
 	CssExpression       *string           `json:"cssExpression,omitempty"`       // Content masking can be applied to webpages where personal data is displayed. When content masking is applied to parent elements, all child elements are masked by default.
-	Target              MaskingTargetType `json:"target"`                        // Possible Values: `ATTRIBUTE`, `ELEMENT`
+	Target              MaskingTargetType `json:"target"`                        // Choose the masking rule target type. Possible values: `ATTRIBUTE`, `ELEMENT`
 }
 
 func (me *AllowListRule) Schema() map[string]*schema.Schema {
@@ -55,16 +57,16 @@ func (me *AllowListRule) Schema() map[string]*schema.Schema {
 		"attribute_expression": {
 			Type:        schema.TypeString,
 			Description: "Attribute masking can be applied to web applications that store data within attributes, typically data-NAME attributes in HTML5. When you define attributes, their values are masked while recording but not removed.",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 		"css_expression": {
 			Type:        schema.TypeString,
 			Description: "Content masking can be applied to webpages where personal data is displayed. When content masking is applied to parent elements, all child elements are masked by default.",
-			Optional:    true,
+			Optional:    true, // precondition
 		},
 		"target": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `ATTRIBUTE`, `ELEMENT`",
+			Description: "Choose the masking rule target type. Possible values: `ATTRIBUTE`, `ELEMENT`",
 			Required:    true,
 		},
 	}
@@ -76,6 +78,22 @@ func (me *AllowListRule) MarshalHCL(properties hcl.Properties) error {
 		"css_expression":       me.CssExpression,
 		"target":               me.Target,
 	})
+}
+
+func (me *AllowListRule) HandlePreconditions() error {
+	if (me.AttributeExpression != nil) && (string(me.Target) != "ATTRIBUTE") {
+		return fmt.Errorf("'attribute_expression' must not be specified unless 'target' is set to 'ATTRIBUTE'; got 'target'='%v'", me.Target)
+	}
+	if (me.AttributeExpression == nil) && (string(me.Target) == "ATTRIBUTE") {
+		return fmt.Errorf("'attribute_expression' must be specified when 'target' is set to 'ATTRIBUTE'; got 'target'='%v'", me.Target)
+	}
+	if (me.CssExpression != nil) && (string(me.Target) != "ELEMENT") {
+		return fmt.Errorf("'css_expression' must not be specified unless 'target' is set to 'ELEMENT'; got 'target'='%v'", me.Target)
+	}
+	if (me.CssExpression == nil) && (string(me.Target) == "ELEMENT") {
+		return fmt.Errorf("'css_expression' must be specified when 'target' is set to 'ELEMENT'; got 'target'='%v'", me.Target)
+	}
+	return nil
 }
 
 func (me *AllowListRule) UnmarshalHCL(decoder hcl.Decoder) error {
