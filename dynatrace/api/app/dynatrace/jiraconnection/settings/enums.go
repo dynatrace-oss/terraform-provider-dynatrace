@@ -15,16 +15,18 @@
 * limitations under the License.
  */
 
-package connection
+package settings
 
 type Type string
 
 var Types = struct {
-	Basic      Type
-	CloudToken Type
-	Pat        Type
+	Basic                      Type
+	CloudMinusScopedMinusToken Type
+	CloudMinusToken            Type
+	Pat                        Type
 }{
 	"basic",
+	"cloud-scoped-token",
 	"cloud-token",
 	"pat",
 }

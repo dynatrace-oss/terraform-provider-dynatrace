@@ -63,6 +63,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"value": {
 			Type:        schema.TypeList,
 			Description: "Defines the type of value to be extracted from the user session. When using **User session counter**, the number of user sessions is counted (similar to count(*) when using USQL). When using **User session field value**, the value of a user session field is extracted.",
+			ForceNew:    true,
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(MetricValue).Schema()},
 			MinItems:    1,

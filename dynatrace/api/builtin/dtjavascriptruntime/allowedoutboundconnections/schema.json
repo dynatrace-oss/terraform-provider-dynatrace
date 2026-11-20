@@ -70,11 +70,6 @@
 					"minObjects": 0,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
-					"precondition": {
-						"expectedValue": true,
-						"property": "enforced",
-						"type": "EQUALS"
-					},
 					"type": "set"
 				}
 			},
@@ -84,5 +79,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.5"
+	"version": "1.0.6"
 }

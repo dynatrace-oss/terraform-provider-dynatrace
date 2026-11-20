@@ -38,9 +38,9 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"application_id": {
 			Type:        schema.TypeString,
 			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
+			ForceNew:    true,
 			Optional:    true,
 			Default:     "environment",
-			ForceNew:    true,
 		},
 		"enable_opt_in_mode": {
 			Type:        schema.TypeBool,
@@ -58,7 +58,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"url_exclusion_pattern_list": {
 			Type:        schema.TypeSet,
 			Description: "(Field has overlap with `dynatrace_application_data_privacy`) Exclude webpages or views from Session Replay recording by adding [URL exclusion rules](https://dt-url.net/sr-url-exclusion)",
-			Optional:    true,
+			Optional:    true, // minobjects == 0
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 	}

@@ -14,6 +14,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"appName": "Jenkins"
@@ -92,6 +93,7 @@
 			"description": "Base URL of your Jenkins instance (e.g. https://[YOUR_JENKINS_DOMAIN]/)",
 			"displayName": "Jenkins URL",
 			"documentation": "",
+			"forceSecretResubmission": true,
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -113,6 +115,7 @@
 			"description": "The name of your Jenkins user (e.g. jenkins)",
 			"displayName": "Username",
 			"documentation": "",
+			"forceSecretResubmission": true,
 			"maxObjects": 1,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -131,5 +134,5 @@
 	],
 	"schemaId": "app:dynatrace.jenkins.connector:connection",
 	"types": {},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

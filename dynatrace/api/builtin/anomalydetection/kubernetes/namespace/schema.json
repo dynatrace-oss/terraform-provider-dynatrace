@@ -4,11 +4,12 @@
 		"KUBERNETES_CLUSTER",
 		"environment"
 	],
-	"description": "Dynatrace automatically detects a wide range of common Kubernetes-related issues. Use these settings to configure alerts relevant to your Kubernetes namespace. Changing thresholds resets the observation period.",
+	"description": "Dynatrace automatically detects a wide range of common Kubernetes-related issues. Use these settings to configure alerts relevant to your Kubernetes namespace. Changing thresholds resets the observation period. Additional information can be found on our [documentation page](https://dt-url.net/wq02okj#namespace).",
 	"displayName": "Kubernetes namespace anomaly detection",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"metadata": {
 		"minActiveGateVersion": "1.253"
@@ -142,7 +143,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 15,
+					"default": 30,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -162,7 +163,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 10,
+					"default": 20,
 					"description": "",
 					"displayName": "of quota for at least",
 					"documentation": "",
@@ -263,7 +264,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 15,
+					"default": 30,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -283,7 +284,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 10,
+					"default": 20,
 					"description": "",
 					"displayName": "of quota for at least",
 					"documentation": "",
@@ -384,7 +385,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 15,
+					"default": 30,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -404,7 +405,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 10,
+					"default": 20,
 					"description": "",
 					"displayName": "of quota for at least",
 					"documentation": "",
@@ -505,7 +506,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 15,
+					"default": 30,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -525,7 +526,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 10,
+					"default": 20,
 					"description": "",
 					"displayName": "of quota for at least",
 					"documentation": "",
@@ -626,7 +627,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 15,
+					"default": 30,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -646,7 +647,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 10,
+					"default": 20,
 					"description": "",
 					"displayName": "of quota for at least",
 					"documentation": "",
@@ -683,5 +684,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2"
+	"version": "1.2.1"
 }

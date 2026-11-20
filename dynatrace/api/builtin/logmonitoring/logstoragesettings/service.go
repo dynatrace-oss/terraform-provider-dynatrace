@@ -18,15 +18,15 @@
 package logstoragesettings
 
 import (
-	logstoragesettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logstoragesettings/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/logmonitoring/logstoragesettings/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.0.18"
+const SchemaVersion = "1.0.20"
 const SchemaID = "builtin:logmonitoring.log-storage-settings"
 
-func Service(clientSet rest.ClientSet) (settings.CRUDService[*logstoragesettings.Settings], error) {
-	return settings20.Service[*logstoragesettings.Settings](clientSet, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

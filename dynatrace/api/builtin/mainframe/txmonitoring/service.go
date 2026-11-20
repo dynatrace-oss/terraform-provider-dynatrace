@@ -18,15 +18,15 @@
 package txmonitoring
 
 import (
-	txmonitoring "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txmonitoring/settings"
+	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/mainframe/txmonitoring/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.6.3"
+const SchemaVersion = "1.6.4"
 const SchemaID = "builtin:mainframe.txmonitoring"
 
-func Service(clientSet rest.ClientSet) (settings.CRUDService[*txmonitoring.Settings], error) {
-	return settings20.Service[*txmonitoring.Settings](clientSet, SchemaID, SchemaVersion)
+func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
+	return settings20.Service[*service.Settings](clientSet, SchemaID, SchemaVersion)
 }

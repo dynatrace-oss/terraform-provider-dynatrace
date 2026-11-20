@@ -32,7 +32,7 @@
 					"$ref": "#/types/PrimaryGrailTag"
 				}
 			},
-			"maxObjects": 10,
+			"maxObjects": 20,
 			"minObjects": 0,
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -93,5 +93,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }

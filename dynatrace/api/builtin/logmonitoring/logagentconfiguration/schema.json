@@ -10,6 +10,22 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
+		"BinaryDetectionAlgorithm": {
+			"description": "",
+			"displayName": "Binary detection algorithm",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Find binary zeroes",
+					"value": "FindBinaryZeroes"
+				},
+				{
+					"displayName": "Printable characters fraction",
+					"value": "PrintableCharactersFraction"
+				}
+			],
+			"type": "enum"
+		},
 		"BinaryDetectionMode": {
 			"description": "",
 			"displayName": "Binary detection mode",
@@ -31,6 +47,22 @@
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
+		"BinaryDetectionAlgorithm": {
+			"default": "FindBinaryZeroes",
+			"description": "Specifies the algorithm used for binary log file detection. 'Find binary zeroes' checks for null bytes, 'Printable characters fraction' evaluates the ratio of printable characters.",
+			"displayName": "Binary detection algorithm",
+			"documentation": "",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.349",
+				"sortItems": "disabled"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/BinaryDetectionAlgorithm"
+			}
+		},
 		"BinaryDetectionMode": {
 			"default": "BinaryPerLogSource",
 			"description": "Specifies the granularity at which binary log files are detected. 'Per log source' applies binary detection at the log source level, 'Per log file' evaluates each log file individually.",
@@ -269,5 +301,5 @@
 	],
 	"schemaId": "builtin:logmonitoring.log-agent-configuration",
 	"types": {},
-	"version": "1.1.18"
+	"version": "1.1.19"
 }

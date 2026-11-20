@@ -40,7 +40,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"cpu_requests_saturation": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(CpuRequestsSaturation).Schema()},
 			MinItems:    1,
@@ -48,7 +48,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"memory_requests_saturation": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(MemoryRequestsSaturation).Schema()},
 			MinItems:    1,
@@ -65,7 +65,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"pods_saturation": {
 			Type:        schema.TypeList,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(PodsSaturation).Schema()},
 			MinItems:    1,
@@ -82,9 +82,9 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"scope": {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (KUBERNETES_CLUSTER). Omit this property if you want to cover the whole environment.",
+			ForceNew:    true,
 			Optional:    true,
 			Default:     "environment",
-			ForceNew:    true,
 		},
 	}
 }

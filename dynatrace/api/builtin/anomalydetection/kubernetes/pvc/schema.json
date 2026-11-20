@@ -4,11 +4,12 @@
 		"KUBERNETES_CLUSTER",
 		"environment"
 	],
-	"description": "Dynatrace automatically detects a wide range of common Kubernetes-related issues. Use these settings to configure alerts relevant to your Kubernetes persistent volume claims. Changing thresholds resets the observation period.",
+	"description": "Dynatrace automatically detects a wide range of common Kubernetes-related issues. Use these settings to configure alerts relevant to your Kubernetes persistent volume claims. Changing thresholds resets the observation period. Additional information can be found on our [documentation page](https://dt-url.net/wq02okj#persistent-volume-claims).",
 	"displayName": "Kubernetes persistent volume claim anomaly detection",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"metadata": {
 		"minActiveGateVersion": "1.261"
@@ -73,7 +74,7 @@
 				"enabled": {
 					"default": false,
 					"description": "",
-					"displayName": "Detect low disk space (MB)",
+					"displayName": "Detect low disk space (MiB)",
 					"documentation": "",
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
@@ -155,7 +156,7 @@
 					"documentation": "",
 					"maxObjects": 1,
 					"metadata": {
-						"suffix": "MB"
+						"suffix": "MiB"
 					},
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
@@ -194,7 +195,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect low disk space (%)",
 					"documentation": "",
@@ -289,5 +290,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2"
+	"version": "1.2.1"
 }

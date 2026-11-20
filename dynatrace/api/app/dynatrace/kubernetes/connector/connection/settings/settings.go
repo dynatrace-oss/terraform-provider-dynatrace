@@ -23,11 +23,10 @@ import (
 )
 
 type Settings struct {
-	Name        string `json:"name"`      // The name of the EdgeConnect deployment
-	Namespace   string `json:"namespace"` // The namespace where EdgeConnect is deployed
-	Token       string `json:"token"`     // Token
-	Uid         string `json:"uid"`       // A pseudo-ID for the cluster, set to the UID of the kube-system namespace
-	InsertAfter string `json:"-"`
+	Name      string `json:"name"`      // The name of the EdgeConnect deployment
+	Namespace string `json:"namespace"` // The namespace where EdgeConnect is deployed
+	Token     string `json:"token"`     // The token required by EdgeConnect to access the ServiceAccount token.
+	Uid       string `json:"uid"`       // A pseudo-ID for the cluster, set to the UID of the kube-system namespace
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -44,7 +43,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"token": {
 			Type:        schema.TypeString,
-			Description: "Token",
+			Description: "The token required by EdgeConnect to access the ServiceAccount token.",
 			Required:    true,
 			Sensitive:   true,
 		},
@@ -53,33 +52,24 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "A pseudo-ID for the cluster, set to the UID of the kube-system namespace",
 			Required:    true,
 		},
-		"insert_after": {
-			Type:        schema.TypeString,
-			Description: "Because this resource allows for ordering you may specify the ID of the resource instance that comes before this instance regarding order. If not specified when creating the setting will be added to the end of the list. If not specified during update the order will remain untouched",
-			Optional:    true,
-			Computed:    true,
-			Deprecated:  "This resource is no longer ordered, please remove this attribute from the configuration",
-		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":         me.Name,
-		"namespace":    me.Namespace,
-		"token":        "${state.secret_value}",
-		"uid":          me.Uid,
-		"insert_after": me.InsertAfter,
+		"name":      me.Name,
+		"namespace": me.Namespace,
+		"token":     "${state.secret_value}",
+		"uid":       me.Uid,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":         &me.Name,
-		"namespace":    &me.Namespace,
-		"token":        &me.Token,
-		"uid":          &me.Uid,
-		"insert_after": &me.InsertAfter,
+		"name":      &me.Name,
+		"namespace": &me.Namespace,
+		"token":     &me.Token,
+		"uid":       &me.Uid,
 	})
 }
 

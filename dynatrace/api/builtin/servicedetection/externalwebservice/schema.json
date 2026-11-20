@@ -474,7 +474,7 @@
 					"type": "text"
 				},
 				"tagValues": {
-					"description": "If multiple values are specified, at least one of them must match for the condition to match.",
+					"description": "Tags to match; at least one must match. Each tag is a single `key:value` string (e.g. `environment:production`); for tags defined without a value, use just the key (e.g. `owner`).",
 					"displayName": "Values",
 					"documentation": "",
 					"items": {
@@ -967,5 +967,5 @@
 			]
 		}
 	},
-	"version": "2.1.11"
+	"version": "2.1.13"
 }

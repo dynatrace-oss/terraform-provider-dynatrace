@@ -147,6 +147,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "OPT_IN_GENERAL_AVAILABILITY",
 	"maxObjects": 1000,
 	"metadata": {
 		"addItemButton": "Add rule",
@@ -226,6 +227,7 @@
 	},
 	"schemaConstraints": [
 		{
+			"flattenCollections": false,
 			"type": "UNIQUE",
 			"uniqueProperties": [
 				"config-item-title"
@@ -352,5 +354,5 @@
 			}
 		}
 	},
-	"version": "1.0.18"
+	"version": "1.0.20"
 }

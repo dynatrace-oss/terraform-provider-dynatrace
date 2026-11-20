@@ -142,7 +142,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 15,
+					"default": 30,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -162,7 +162,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 10,
+					"default": 20,
 					"description": "",
 					"displayName": "of cluster CPU capacity for at least",
 					"documentation": "",
@@ -263,7 +263,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 15,
+					"default": 30,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -283,7 +283,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 10,
+					"default": 20,
 					"description": "",
 					"displayName": "of cluster memory capacity for at least",
 					"documentation": "",
@@ -346,7 +346,7 @@
 					}
 				},
 				"enabled": {
-					"default": false,
+					"default": true,
 					"description": "",
 					"displayName": "Detect monitoring issues",
 					"documentation": "",
@@ -404,7 +404,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 15,
+					"default": 20,
 					"description": "",
 					"displayName": "monitoring is not available for at least",
 					"documentation": "",
@@ -487,7 +487,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 5,
+					"default": 30,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -507,7 +507,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 3,
+					"default": 20,
 					"description": "",
 					"displayName": "of schedulable pod capacity for at least",
 					"documentation": "",
@@ -608,7 +608,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 5,
+					"default": 15,
 					"description": "",
 					"displayName": "within the last",
 					"documentation": "",
@@ -628,7 +628,7 @@
 							"type": "RANGE"
 						}
 					],
-					"default": 3,
+					"default": 10,
 					"description": "",
 					"displayName": "cluster is not ready for at least",
 					"documentation": "",
@@ -647,5 +647,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.4"
+	"version": "1.4.1"
 }

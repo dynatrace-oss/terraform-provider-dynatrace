@@ -57,7 +57,7 @@ type Condition struct {
 	IntValues            []int           `json:"intValues,omitempty"`   // If multiple values are specified, at least one of them must match for the condition to match.
 	IpRangeFrom          *string         `json:"ipRangeFrom,omitempty"` // The beginning of the IP range. The condition matches if the detected attribute value is greater than or equal to this value (for `IpInRange`) or less than this value (for `NotIpInRange`).
 	IpRangeTo            *string         `json:"ipRangeTo,omitempty"`   // The end of the IP range. The condition matches if the detected attribute value is less than or equal to this value (for `IpInRange`) or greater than this value (for `NotIpInRange`).
-	TagValues            []string        `json:"tagValues,omitempty"`   // If multiple values are specified, at least one of them must match for the condition to match.
+	TagValues            []string        `json:"tagValues,omitempty"`   // Tags to match; at least one must match. Each tag is a single `key:value` string (e.g. `environment:production`); for tags defined without a value, use just the key (e.g. `owner`).
 	TextValues           []string        `json:"textValues,omitempty"`  // If multiple values are specified, at least one of them must match for the condition to match
 }
 
@@ -107,7 +107,7 @@ func (me *Condition) Schema() map[string]*schema.Schema {
 		},
 		"tag_values": {
 			Type:        schema.TypeSet,
-			Description: "If multiple values are specified, at least one of them must match for the condition to match.",
+			Description: "Tags to match; at least one must match. Each tag is a single `key:value` string (e.g. `environment:production`); for tags defined without a value, use just the key (e.g. `owner`).",
 			Optional:    true, // precondition
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},

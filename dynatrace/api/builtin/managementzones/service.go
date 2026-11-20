@@ -29,12 +29,12 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/envutils"
 
 	managementzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/managementzones/settings"
-	slo "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo"
 	slosettings "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/monitoring/slo/settings"
 )
 
+const SchemaVersion = "1.0.14"
 const SchemaID = "builtin:management-zones"
-const SchemaVersion = "1.0.13"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*managementzones.Settings], error) {
 	sloService, err := slo.Service(clientSet)

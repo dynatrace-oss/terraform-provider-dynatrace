@@ -18,6 +18,9 @@
 package dataforwarding
 
 import (
+	"fmt"
+
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/opt"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -45,13 +48,20 @@ func (me *FieldsAddAttributesEntries) UnmarshalHCL(decoder hcl.Decoder) error {
 }
 
 type FieldsAddAttributesEntry struct {
-	Name      string              `json:"name"`                // Fields's name
-	Value     string              `json:"value"`               // Field's value
-	ValueType *FieldsAddValueType `json:"valueType,omitempty"` // Field value type. Possible values: `boolean`, `double`, `long`, `string`
+	MultiValue []string            `json:"multiValue,omitempty"` // Multi value
+	Name       string              `json:"name"`                 // Fields's name
+	Value      *string             `json:"value,omitempty"`      // Field's value
+	ValueType  *FieldsAddValueType `json:"valueType,omitempty"`  // Field value type. Possible values: `arrayString`, `boolean`, `double`, `long`, `string`
 }
 
 func (me *FieldsAddAttributesEntry) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"multi_value": {
+			Type:        schema.TypeList,
+			Description: "Multi value",
+			Optional:    true, // precondition
+			Elem:        &schema.Schema{Type: schema.TypeString},
+		},
 		"name": {
 			Type:        schema.TypeString,
 			Description: "Fields's name",
@@ -60,11 +70,11 @@ func (me *FieldsAddAttributesEntry) Schema() map[string]*schema.Schema {
 		"value": {
 			Type:        schema.TypeString,
 			Description: "Field's value",
-			Required:    true,
+			Optional:    true, // precondition
 		},
 		"value_type": {
 			Type:        schema.TypeString,
-			Description: "Field value type. Possible values: `boolean`, `double`, `long`, `string`",
+			Description: "Field value type. Possible values: `arrayString`, `boolean`, `double`, `long`, `string`",
 			Optional:    true, // nullable
 		},
 	}
@@ -72,16 +82,29 @@ func (me *FieldsAddAttributesEntry) Schema() map[string]*schema.Schema {
 
 func (me *FieldsAddAttributesEntry) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"name":       me.Name,
-		"value":      me.Value,
-		"value_type": me.ValueType,
+		"multi_value": me.MultiValue,
+		"name":        me.Name,
+		"value":       me.Value,
+		"value_type":  me.ValueType,
 	})
+}
+
+func (me *FieldsAddAttributesEntry) HandlePreconditions() error {
+	if (me.Value == nil) && (me.ValueType == nil || string(*me.ValueType) != "arrayString") {
+		me.Value = new("")
+	}
+	if (me.Value != nil) && (me.ValueType != nil && string(*me.ValueType) == "arrayString") {
+		return fmt.Errorf("'value' must not be specified unless ('value_type' is not set to 'arrayString' or 'value_type' is not set); got 'value_type'='%v'", opt.ValOrNil(me.ValueType))
+	}
+	// ---- MultiValue []string -> {"expectedValue":"arrayString","property":"valueType","type":"EQUALS"}
+	return nil
 }
 
 func (me *FieldsAddAttributesEntry) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"name":       &me.Name,
-		"value":      &me.Value,
-		"value_type": &me.ValueType,
+		"multi_value": &me.MultiValue,
+		"name":        &me.Name,
+		"value":       &me.Value,
+		"value_type":  &me.ValueType,
 	})
 }

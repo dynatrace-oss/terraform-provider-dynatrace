@@ -106,6 +106,7 @@ type Settings struct {
 	RuleID84    bool    `json:"-84"`                   // Rule id: 84 - Do not monitor processes if command line arguments contain 'forever/bin/monitor'
 	RuleID85    bool    `json:"-85"`                   // Rule id: 85 - Do not monitor process if Java Main class contains 'ActiveGateCommandLineTool'
 	RuleID86    bool    `json:"-86"`                   // Rule id: 86 - Do not monitor processes if Python script contains 'supervisord'
+	RuleID87    bool    `json:"-87"`                   // Rule id: 87 - Do not monitor processes if EXE name equals 'flexctl'
 }
 
 func (me *Settings) Name() string {
@@ -613,6 +614,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Optional:    true, // new required field
 			Default:     true,
 		},
+		"exe_flexctl": {
+			Type:        schema.TypeBool,
+			Description: "Rule id: 87 - Do not monitor processes if EXE name equals 'flexctl'",
+			Optional:    true, // new required field
+			Default:     true,
+		},
 	}
 }
 
@@ -701,6 +708,7 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"cmd_foreverbinmonitor":                 me.RuleID84,
 		"jmc_activegatecommandlinetool":         me.RuleID85,
 		"py_supervisord":                        me.RuleID86,
+		"exe_flexctl":                           me.RuleID87,
 	})
 }
 
@@ -789,5 +797,6 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"cmd_foreverbinmonitor":                 &me.RuleID84,
 		"jmc_activegatecommandlinetool":         &me.RuleID85,
 		"py_supervisord":                        &me.RuleID86,
+		"exe_flexctl":                           &me.RuleID87,
 	})
 }

@@ -15,7 +15,7 @@
 * limitations under the License.
  */
 
-package infraopssettings
+package settings
 
 import (
 	service "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/app/dynatrace/infraops/settings/settings"
@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "2"
+const SchemaVersion = "3"
 const SchemaID = "app:dynatrace.infraops:settings"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {

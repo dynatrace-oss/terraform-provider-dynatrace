@@ -9,8 +9,8 @@
 			"type": "SECRET_RESUBMISSION"
 		}
 	],
-	"description": "Connections allow you to integrate into ServiceNow.",
-	"displayName": "ServiceNow Connections",
+	"description": "Connections for the ServiceNow Tables API. Supports direct instances, MID Servers, and custom proxies.",
+	"displayName": "ServiceNow Tables API Connections",
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {
@@ -31,6 +31,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 100,
 	"metadata": {
 		"appName": "ServiceNow"
@@ -163,8 +164,8 @@
 					"type": "NO_WHITESPACE"
 				},
 				{
-					"customMessage": "The ServiceNow URL must be secure (https://) and must not contain a trailing slash.",
-					"pattern": "^https://.*[^/]$",
+					"customMessage": "The ServiceNow URL must start with http(s):// and must not contain a trailing slash.",
+					"pattern": "^https?://.*[^/]$",
 					"type": "PATTERN"
 				},
 				{
@@ -234,5 +235,5 @@
 	],
 	"schemaId": "app:dynatrace.servicenow:connection",
 	"types": {},
-	"version": "2.1"
+	"version": "2.2"
 }

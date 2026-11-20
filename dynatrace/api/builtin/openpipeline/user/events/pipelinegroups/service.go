@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "1.75"
+const SchemaVersion = "1.85.1"
 const SchemaID = "builtin:openpipeline.user.events.pipeline-groups"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {

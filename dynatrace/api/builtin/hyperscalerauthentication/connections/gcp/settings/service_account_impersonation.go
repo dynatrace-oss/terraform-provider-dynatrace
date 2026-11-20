@@ -23,7 +23,7 @@ import (
 )
 
 type ServiceAccountImpersonation struct {
-	Consumers        []ConsumersOfServiceAccountImpersonation `json:"consumers,omitempty"`        // Dynatrace integrations that can use this connection. Possible values: `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`
+	Consumers        []ConsumersOfServiceAccountImpersonation `json:"consumers,omitempty"`        // Dynatrace integrations that can use this connection. Possible values: `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`
 	ServiceAccountID *string                                  `json:"serviceAccountId,omitempty"` // Id of your Service Account
 }
 
@@ -31,7 +31,7 @@ func (me *ServiceAccountImpersonation) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"consumers": {
 			Type:        schema.TypeList,
-			Description: "Dynatrace integrations that can use this connection. Possible values: `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.openpipeline`",
+			Description: "Dynatrace integrations that can use this connection. Possible values: `SVC:com.dynatrace.bo`, `SVC:com.dynatrace.da`, `SVC:com.dynatrace.grail`, `SVC:com.dynatrace.openpipeline`",
 			Optional:    true, // minobjects == 0
 			ForceNew:    true, // Changing consumers after creation would lead to validation errors on the API side
 			Elem:        &schema.Schema{Type: schema.TypeString},

@@ -47,7 +47,7 @@ func (me *Conditions) UnmarshalHCL(decoder hcl.Decoder) error {
 // condition. A condition that checks a service or process group attribute using a predicate. All conditions of a rule must be fulfilled for the rule to match.
 type Condition struct {
 	Attribute Attributes `json:"attribute"` // The attribute to be checked. Possible values: `PG_NAME`, `PG_TAG`, `SERVICE_MANAGEMENT_ZONE`, `SERVICE_NAME`, `SERVICE_TAG`, `SERVICE_TYPE`
-	Predicate *Predicate `json:"predicate"` // The predicate that tests the value of the attribute.\n\n  The actual set of fields depends on the type of the predicate. Find the list of actual objects in the description of the type field or see [Failure detection API - JSON models](https://dt-url.net/9sg3swf).
+	Predicate *Predicate `json:"predicate"` // The predicate that tests the value of the attribute.\n\n  The actual set of fields depends on the type of the predicate. Find the list of actual objects in the description of the type field.
 }
 
 func (me *Condition) Schema() map[string]*schema.Schema {
@@ -59,7 +59,7 @@ func (me *Condition) Schema() map[string]*schema.Schema {
 		},
 		"predicate": {
 			Type:        schema.TypeList,
-			Description: "The predicate that tests the value of the attribute.\n\n  The actual set of fields depends on the type of the predicate. Find the list of actual objects in the description of the type field or see [Failure detection API - JSON models](https://dt-url.net/9sg3swf).",
+			Description: "The predicate that tests the value of the attribute.\n\n  The actual set of fields depends on the type of the predicate. Find the list of actual objects in the description of the type field.",
 			Required:    true,
 			Elem:        &schema.Resource{Schema: new(Predicate).Schema()},
 			MinItems:    1,

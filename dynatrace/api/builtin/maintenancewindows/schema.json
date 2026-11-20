@@ -73,8 +73,10 @@
 					"type": "CUSTOM_VALIDATOR_REF"
 				},
 				{
-					"maxLength": 500,
-					"minLength": 1,
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 4096,
 					"type": "LENGTH"
 				}
 			],
@@ -143,6 +145,15 @@
 			"displayName": "Object scopes",
 			"documentation": "",
 			"properties": {
+				"suppressProblems": {
+					"description": "When enabled, Davis does not open new problems in the window's scope while the maintenance window is running.",
+					"displayName": "Suppress problems",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": "boolean"
+				},
 				"syntheticMonitors": {
 					"default": {
 						"disableSyntheticMonitors": false
@@ -265,12 +276,15 @@
 							"type": "CUSTOM_VALIDATOR_REF"
 						},
 						{
-							"maxLength": 500,
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 4096,
 							"minLength": 1,
 							"type": "LENGTH"
 						}
 					],
-					"description": "DQL filter selecting which synthetic monitors to pause. Required when synthetic monitors are disabled. Supported fields: monitor.id, monitor.name, pg.tag, security.context.",
+					"description": "DQL filter selecting which synthetic monitors to pause. Required when synthetic monitors are disabled. Supported fields: id, name, primary_tags.\u003ckey\u003e, dt.security_context.",
 					"displayName": "Synthetic monitor filter",
 					"documentation": "",
 					"maxObjects": 1,
@@ -416,5 +430,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.2"
+	"version": "1.4"
 }

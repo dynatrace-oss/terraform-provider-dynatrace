@@ -26,17 +26,28 @@ import (
 )
 
 type Settings struct {
-	Name         string  `json:"name"`                   // A unique and clearly identifiable connection name to your ServiceNow instance.
-	Password     *string `json:"password,omitempty"`     // Password of the ServiceNow user.
-	Type         Type    `json:"type"`                   // Possible Values: `basic`, `client-credentials`
-	Url          string  `json:"url"`                    // URL of the ServiceNow instance.
-	User         *string `json:"user,omitempty"`         // Username or Email address.
 	ClientID     *string `json:"clientId,omitempty"`     // Client ID of the ServiceNow OAuth server
 	ClientSecret *string `json:"clientSecret,omitempty"` // Client secret of the ServiceNow OAuth server
+	Name         string  `json:"name"`                   // A unique and clearly identifiable connection name to your ServiceNow instance.
+	Password     *string `json:"password,omitempty"`     // Password of the ServiceNow user.
+	Type         Type    `json:"type"`                   // Type of authentication method that should be used. Possible values: `basic`, `client-credentials`
+	Url          string  `json:"url"`                    // URL of the ServiceNow instance.
+	User         *string `json:"user,omitempty"`         // Username or Email address.
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"client_id": {
+			Type:        schema.TypeString,
+			Description: "Client ID of the ServiceNow OAuth server",
+			Optional:    true, // precondition
+		},
+		"client_secret": {
+			Type:        schema.TypeString,
+			Description: "Client secret of the ServiceNow OAuth server",
+			Optional:    true, // precondition
+			Sensitive:   true,
+		},
 		"name": {
 			Type:        schema.TypeString,
 			Description: "A unique and clearly identifiable connection name to your ServiceNow instance.",
@@ -50,7 +61,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `basic`, `client-credentials`",
+			Description: "Type of authentication method that should be used. Possible values: `basic`, `client-credentials`",
 			Required:    true,
 		},
 		"url": {
@@ -63,57 +74,58 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Description: "Username or Email address.",
 			Optional:    true, // precondition
 		},
-		"client_id": {
-			Type:        schema.TypeString,
-			Description: "Client ID of the ServiceNow OAuth server",
-			Optional:    true, // precondition
-		},
-		"client_secret": {
-			Type:        schema.TypeString,
-			Description: "Client secret of the ServiceNow OAuth server",
-			Optional:    true, // precondition
-			Sensitive:   true,
-		},
 	}
 }
 
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
+		"client_id":     me.ClientID,
+		"client_secret": "${state.secret_value}",
 		"name":          me.Name,
 		"password":      "${state.secret_value}",
 		"type":          me.Type,
 		"url":           me.Url,
 		"user":          me.User,
-		"client_id":     me.ClientID,
-		"client_secret": "${state.secret_value}",
 	})
 }
 
 func (me *Settings) HandlePreconditions() error {
+	if (me.ClientID != nil) && (!slices.Contains([]string{"client-credentials"}, string(me.Type))) {
+		return fmt.Errorf("'client_id' must not be specified unless 'type' is one of ['client-credentials']; got 'type'='%v'", me.Type)
+	}
 	if (me.ClientID == nil) && (slices.Contains([]string{"client-credentials"}, string(me.Type))) {
-		return fmt.Errorf("'client_id' must be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'client_id' must be specified when 'type' is one of ['client-credentials']; got 'type'='%v'", me.Type)
+	}
+	if (me.ClientSecret != nil) && (!slices.Contains([]string{"client-credentials"}, string(me.Type))) {
+		return fmt.Errorf("'client_secret' must not be specified unless 'type' is one of ['client-credentials']; got 'type'='%v'", me.Type)
 	}
 	if (me.ClientSecret == nil) && (slices.Contains([]string{"client-credentials"}, string(me.Type))) {
-		return fmt.Errorf("'client_secret' must be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'client_secret' must be specified when 'type' is one of ['client-credentials']; got 'type'='%v'", me.Type)
+	}
+	if (me.Password != nil) && (!slices.Contains([]string{"basic"}, string(me.Type))) {
+		return fmt.Errorf("'password' must not be specified unless 'type' is one of ['basic']; got 'type'='%v'", me.Type)
 	}
 	if (me.Password == nil) && (slices.Contains([]string{"basic"}, string(me.Type))) {
-		return fmt.Errorf("'password' must be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'password' must be specified when 'type' is one of ['basic']; got 'type'='%v'", me.Type)
+	}
+	if (me.User != nil) && (!slices.Contains([]string{"basic"}, string(me.Type))) {
+		return fmt.Errorf("'user' must not be specified unless 'type' is one of ['basic']; got 'type'='%v'", me.Type)
 	}
 	if (me.User == nil) && (slices.Contains([]string{"basic"}, string(me.Type))) {
-		return fmt.Errorf("'user' must be specified if 'type' is set to '%v'", me.Type)
+		return fmt.Errorf("'user' must be specified when 'type' is one of ['basic']; got 'type'='%v'", me.Type)
 	}
 	return nil
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
+		"client_id":     &me.ClientID,
+		"client_secret": &me.ClientSecret,
 		"name":          &me.Name,
 		"password":      &me.Password,
 		"type":          &me.Type,
 		"url":           &me.Url,
 		"user":          &me.User,
-		"client_id":     &me.ClientID,
-		"client_secret": &me.ClientSecret,
 	})
 }
 

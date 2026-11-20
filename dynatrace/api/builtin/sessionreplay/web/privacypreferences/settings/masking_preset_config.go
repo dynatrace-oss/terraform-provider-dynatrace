@@ -26,10 +26,10 @@ import (
 type MaskingPresetConfig struct {
 	PlaybackMaskingAllowListRules  AllowListRules `json:"playbackMaskingAllowListRules,omitempty"`  // (Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.
 	PlaybackMaskingBlockListRules  BlockListRules `json:"playbackMaskingBlockListRules,omitempty"`  // (Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.
-	PlaybackMaskingPreset          MaskingPreset  `json:"playbackMaskingPreset"`                    // (Field has overlap with `dynatrace_application_data_privacy`) Possible Values: `MASK_ALL`, `MASK_USER_INPUT`, `ALLOW_LIST`, `BLOCK_LIST`
+	PlaybackMaskingPreset          MaskingPreset  `json:"playbackMaskingPreset"`                    // (Field has overlap with `dynatrace_application_data_privacy`) Playback masking settings are applied during playback of recorded sessions, including playback of sessions that were recorded before these settings were applied. Possible values: `ALLOW_LIST`, `BLOCK_LIST`, `MASK_ALL`, `MASK_USER_INPUT`
 	RecordingMaskingAllowListRules AllowListRules `json:"recordingMaskingAllowListRules,omitempty"` // (Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.
 	RecordingMaskingBlockListRules BlockListRules `json:"recordingMaskingBlockListRules,omitempty"` // (Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.
-	RecordingMaskingPreset         MaskingPreset  `json:"recordingMaskingPreset"`                   // (Field has overlap with `dynatrace_application_data_privacy`) Possible Values: `MASK_USER_INPUT`, `ALLOW_LIST`, `BLOCK_LIST`, `MASK_ALL`
+	RecordingMaskingPreset         MaskingPreset  `json:"recordingMaskingPreset"`                   // (Field has overlap with `dynatrace_application_data_privacy`) Recording masking settings are applied at record time. When you set these settings to a more restrictive option, the same option is also enabled for the playback masking settings. Possible values: `ALLOW_LIST`, `BLOCK_LIST`, `MASK_ALL`, `MASK_USER_INPUT`
 }
 
 func (me *MaskingPresetConfig) Schema() map[string]*schema.Schema {
@@ -37,7 +37,7 @@ func (me *MaskingPresetConfig) Schema() map[string]*schema.Schema {
 		"playback_masking_allow_list_rules": {
 			Type:        schema.TypeList,
 			Description: "(Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.",
-			Optional:    true,
+			Optional:    true, // precondition & minobjects == 0
 			Elem:        &schema.Resource{Schema: new(AllowListRules).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -45,20 +45,20 @@ func (me *MaskingPresetConfig) Schema() map[string]*schema.Schema {
 		"playback_masking_block_list_rules": {
 			Type:        schema.TypeList,
 			Description: "(Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.",
-			Optional:    true,
+			Optional:    true, // precondition & minobjects == 0
 			Elem:        &schema.Resource{Schema: new(BlockListRules).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
 		"playback_masking_preset": {
 			Type:        schema.TypeString,
-			Description: "(Field has overlap with `dynatrace_application_data_privacy`) Possible Values: `MASK_ALL`, `MASK_USER_INPUT`, `ALLOW_LIST`, `BLOCK_LIST`",
+			Description: "(Field has overlap with `dynatrace_application_data_privacy`) Playback masking settings are applied during playback of recorded sessions, including playback of sessions that were recorded before these settings were applied. Possible values: `ALLOW_LIST`, `BLOCK_LIST`, `MASK_ALL`, `MASK_USER_INPUT`",
 			Required:    true,
 		},
 		"recording_masking_allow_list_rules": {
 			Type:        schema.TypeList,
 			Description: "(Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.",
-			Optional:    true,
+			Optional:    true, // precondition & minobjects == 0
 			Elem:        &schema.Resource{Schema: new(AllowListRules).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
@@ -66,14 +66,14 @@ func (me *MaskingPresetConfig) Schema() map[string]*schema.Schema {
 		"recording_masking_block_list_rules": {
 			Type:        schema.TypeList,
 			Description: "(Field has overlap with `dynatrace_application_data_privacy`) The elements are defined by the CSS selector or attribute name.",
-			Optional:    true,
+			Optional:    true, // precondition & minobjects == 0
 			Elem:        &schema.Resource{Schema: new(BlockListRules).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
 		"recording_masking_preset": {
 			Type:        schema.TypeString,
-			Description: "(Field has overlap with `dynatrace_application_data_privacy`) Possible Values: `MASK_USER_INPUT`, `ALLOW_LIST`, `BLOCK_LIST`, `MASK_ALL`",
+			Description: "(Field has overlap with `dynatrace_application_data_privacy`) Recording masking settings are applied at record time. When you set these settings to a more restrictive option, the same option is also enabled for the playback masking settings. Possible values: `ALLOW_LIST`, `BLOCK_LIST`, `MASK_ALL`, `MASK_USER_INPUT`",
 			Required:    true,
 		},
 	}
@@ -88,6 +88,14 @@ func (me *MaskingPresetConfig) MarshalHCL(properties hcl.Properties) error {
 		"recording_masking_block_list_rules": me.RecordingMaskingBlockListRules,
 		"recording_masking_preset":           me.RecordingMaskingPreset,
 	})
+}
+
+func (me *MaskingPresetConfig) HandlePreconditions() error {
+	// ---- PlaybackMaskingAllowListRules AllowListRules -> {"expectedValue":"ALLOW_LIST","property":"playbackMaskingPreset","type":"EQUALS"}
+	// ---- PlaybackMaskingBlockListRules BlockListRules -> {"expectedValue":"BLOCK_LIST","property":"playbackMaskingPreset","type":"EQUALS"}
+	// ---- RecordingMaskingAllowListRules AllowListRules -> {"expectedValue":"ALLOW_LIST","property":"recordingMaskingPreset","type":"EQUALS"}
+	// ---- RecordingMaskingBlockListRules BlockListRules -> {"expectedValue":"BLOCK_LIST","property":"recordingMaskingPreset","type":"EQUALS"}
+	return nil
 }
 
 func (me *MaskingPresetConfig) UnmarshalHCL(decoder hcl.Decoder) error {

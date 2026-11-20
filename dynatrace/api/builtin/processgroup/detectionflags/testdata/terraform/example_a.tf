@@ -1,5 +1,6 @@
-resource "dynatrace_process_group_detection_flags" "#name#" {
+resource "dynatrace_process_group_detection_flags" "example" {
   scope                                       = "environment"
+  add_ruby_bundle_exec_command_to_pg          = true
   add_node_js_script_name                     = false
   auto_detect_cassandra_clusters              = true
   auto_detect_spring_boot                     = true

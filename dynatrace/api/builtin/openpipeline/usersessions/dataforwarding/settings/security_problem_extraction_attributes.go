@@ -23,9 +23,11 @@ import (
 )
 
 type SecurityProblemExtractionAttributes struct {
-	Category     string                        `json:"category"`
-	IdComponents SmartscapeIdComponentsEntries `json:"idComponents"`       // ID components
-	NodeName     *GenericValueAssignment       `json:"nodeName,omitempty"` // Node name
+	Category               string                          `json:"category"`
+	FieldsCopiedFromRecord []string                        `json:"fieldsCopiedFromRecord,omitempty"` // Record fields copied verbatim onto the extracted security problem.
+	IdComponents           SmartscapeIdComponentsEntries   `json:"idComponents"`                     // ID components
+	NodeName               *GenericValueAssignment         `json:"nodeName,omitempty"`               // Node name
+	SecurityContext        *SecurityProblemSecurityContext `json:"securityContext,omitempty"`        // Security context written on the extracted security problem. It controls who is allowed to read the security problem. If not set, no security context is written.
 }
 
 func (me *SecurityProblemExtractionAttributes) Schema() map[string]*schema.Schema {
@@ -34,6 +36,12 @@ func (me *SecurityProblemExtractionAttributes) Schema() map[string]*schema.Schem
 			Type:        schema.TypeString,
 			Description: "No documentation available",
 			Required:    true,
+		},
+		"fields_copied_from_record": {
+			Type:        schema.TypeList,
+			Description: "Record fields copied verbatim onto the extracted security problem.",
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"id_components": {
 			Type:        schema.TypeList,
@@ -51,21 +59,33 @@ func (me *SecurityProblemExtractionAttributes) Schema() map[string]*schema.Schem
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"security_context": {
+			Type:        schema.TypeList,
+			Description: "Security context written on the extracted security problem. It controls who is allowed to read the security problem. If not set, no security context is written.",
+			Optional:    true, // nullable
+			Elem:        &schema.Resource{Schema: new(SecurityProblemSecurityContext).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 	}
 }
 
 func (me *SecurityProblemExtractionAttributes) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
-		"category":      me.Category,
-		"id_components": me.IdComponents,
-		"node_name":     me.NodeName,
+		"category":                  me.Category,
+		"fields_copied_from_record": me.FieldsCopiedFromRecord,
+		"id_components":             me.IdComponents,
+		"node_name":                 me.NodeName,
+		"security_context":          me.SecurityContext,
 	})
 }
 
 func (me *SecurityProblemExtractionAttributes) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
-		"category":      &me.Category,
-		"id_components": &me.IdComponents,
-		"node_name":     &me.NodeName,
+		"category":                  &me.Category,
+		"fields_copied_from_record": &me.FieldsCopiedFromRecord,
+		"id_components":             &me.IdComponents,
+		"node_name":                 &me.NodeName,
+		"security_context":          &me.SecurityContext,
 	})
 }
