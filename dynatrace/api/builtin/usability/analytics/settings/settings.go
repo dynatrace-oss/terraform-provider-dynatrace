@@ -24,7 +24,7 @@ import (
 
 type Settings struct {
 	ApplicationID    *string `json:"-" scope:"applicationId"` // The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.
-	DetectRageClicks bool    `json:"detectRageClicks"`        // Three or more rapid clicks within the same area of a web page are considered to be rage clicks. Rage clicks commonly reflect slow-loading or failed page resources. Rage click counts are compiled for each session and considered in the [User Experience Score](https://dt-url.net/39034wt) .\nWith this setting enabled, a rage click count is compiled for each monitored user session.
+	DetectRageClicks bool    `json:"detectRageClicks"`        // Three or more rapid clicks within the same area of a web page are considered to be rage clicks. Rage clicks commonly reflect slow-loading or failed page resources. Rage click counts are compiled for each session and considered in the [User Experience Score](https://dt-url.net/39034wt) .\n With this setting enabled, a rage click count is compiled for each monitored user session.
 }
 
 func (me *Settings) Name() string {
@@ -36,13 +36,13 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"application_id": {
 			Type:        schema.TypeString,
 			Description: "The scope of this settings. If the settings should cover the whole environment, just don't specify any scope.",
+			ForceNew:    true,
 			Optional:    true,
 			Default:     "environment",
-			ForceNew:    true,
 		},
 		"detect_rage_clicks": {
 			Type:        schema.TypeBool,
-			Description: "Three or more rapid clicks within the same area of a web page are considered to be rage clicks. Rage clicks commonly reflect slow-loading or failed page resources. Rage click counts are compiled for each session and considered in the [User Experience Score](https://dt-url.net/39034wt) .\nWith this setting enabled, a rage click count is compiled for each monitored user session.",
+			Description: "Three or more rapid clicks within the same area of a web page are considered to be rage clicks. Rage clicks commonly reflect slow-loading or failed page resources. Rage click counts are compiled for each session and considered in the [User Experience Score](https://dt-url.net/39034wt) .\n With this setting enabled, a rage click count is compiled for each monitored user session.",
 			Required:    true,
 		},
 	}
