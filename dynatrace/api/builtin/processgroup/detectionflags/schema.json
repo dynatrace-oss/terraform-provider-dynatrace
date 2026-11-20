@@ -9,6 +9,7 @@
 	"documentation": "",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -20,6 +21,19 @@
 			"maxObjects": 1,
 			"metadata": {
 				"minAgentVersion": "1.141"
+			},
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"addRubyBundleExecCommandToPG": {
+			"default": false,
+			"description": "",
+			"displayName": "Group Ruby bundle exec processes by executed command",
+			"documentation": "Enable to group and separately analyze the processes started by each Ruby `bundle exec` command. Each process group receives a unique name based on the command passed to `bundle exec`, for example `rails` or `sidekiq`. When disabled, all `bundle exec` processes are grouped together based on the bundler executable instead. Applies to both CRuby and JRuby.",
+			"maxObjects": 1,
+			"metadata": {
+				"minAgentVersion": "1.349"
 			},
 			"modificationPolicy": "DEFAULT",
 			"nullable": false,
@@ -231,5 +245,5 @@
 	],
 	"schemaId": "builtin:process-group.detection-flags",
 	"types": {},
-	"version": "0.0.15"
+	"version": "0.0.16"
 }

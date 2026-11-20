@@ -24,6 +24,7 @@ import (
 
 type Settings struct {
 	AddNodeJsScriptName                    bool    `json:"addNodeJsScriptName"`                    // In older versions, Node.js applications were distinguished based on their directory name, omitting the script name. Changing this setting may change the general handling of Node.js process groups. Leave unchanged if in doubt.
+	AddRubyBundleExecCommandToPG           bool    `json:"addRubyBundleExecCommandToPG"`           // Enable to group and separately analyze the processes started by each Ruby `bundle exec` command. Each process group receives a unique name based on the command passed to `bundle exec`, for example `rails` or `sidekiq`. When disabled, all `bundle exec` processes are grouped together based on the bundler executable instead. Applies to both CRuby and JRuby.
 	AutoDetectCassandraClusters            bool    `json:"autoDetectCassandraClusters"`            // Enabling this flag will detect separate Cassandra process groups based on the configured Cassandra cluster name.
 	AutoDetectSpringBoot                   bool    `json:"autoDetectSpringBoot"`                   // Enabling this flag will detect Spring Boot process groups based on command line and applications' configuration files.
 	AutoDetectTibcoContainerEditionEngines bool    `json:"autoDetectTibcoContainerEditionEngines"` // Enabling this flag will detect separate TIBCO BusinessWorks process groups per engine property file.
@@ -34,13 +35,13 @@ type Settings struct {
 	IdentifyJbossServerBySystemProperty    bool    `json:"identifyJbossServerBySystemProperty"`    // Enabling this flag will detect the JBoss server name from the system property jboss.server.name=<server-name>, only if -D[Server:<server-name>] is not set.
 	IgnoreUniqueIdentifiers                bool    `json:"ignoreUniqueIdentifiers"`                // To determine the unique identity of each detected process, and to generate a unique name for each detected process, Dynatrace evaluates the name of the directory that each process binary is contained within. For application containers like Tomcat and JBoss, Dynatrace evaluates important directories like CATALINA_HOME and JBOSS_HOME for this information. In some automated deployment scenarios such directory names are updated automatically with new version numbers, build numbers, dates, or GUIDs. Enable this setting to ensure that automated directory name changes don't result in Dynatrace registering pre-existing processes as new processes.
 	Scope                                  *string `json:"-" scope:"scope"`                        // The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.
-	ShortLivedProcessesMonitoring          bool    `json:"shortLivedProcessesMonitoring"`          // Enable to monitor CPU and memory usage of short lived processes, otherwise being lost by traditional monitoring. Disabling this flag blocks passing data to cluster only, it does not stop data collection and has no effect on performance.
+	SecuritySoftwareDetectionEnabled       bool    `json:"securitySoftwareDetectionEnabled"`       // This flag enables the detection of security software, such as anti-malware protection. The currently detected utilities are Carbon Black EDR (on Windows only), CrowdStrike Falcon XDR and Trellix Endpoint Security (former McAfee).
+	ShortLivedProcessesMonitoring          bool    `json:"shortLivedProcessesMonitoring"`          // Enable to monitor CPU and memory usage of short lived processes, otherwise being lost by traditional monitoring.
+	SplitDb2GroupingByInstances            bool    `json:"splitDb2GroupingByInstances"`            // Enable to group and separately analyze the processes of each DB2 Instance. Each process receives a unique name based on the DB2 Instance name.
 	SplitOracleDatabasePG                  bool    `json:"splitOracleDatabasePG"`                  // Enable to group and separately analyze the processes of each Oracle DB. Each process group receives a unique name based on the Oracle DB SID.
-	SplitOracleListenerPG                  bool    `json:"splitOracleListenerPG"`                  // Enable to group and separately analyze the processes of each Oracle Listener. Each process group receives a unique name based on the Oracle Listener name.
+	SplitOracleListenerPG                  bool    `json:"splitOracleListenerPG"`                  // Enable to group and separately analyze the processes of each Oracle Listener. Each process group receives a unique name based on the Oracle Listener name. On Windows, this option supports listeners launched manually or running on a Windows virtual account.
 	UseCatalinaBase                        bool    `json:"useCatalinaBase"`                        // By default, Tomcat clusters are identified and named based on the CATALINA_HOME directory name. This setting results in the use of the CATALINA_BASE directory name to identify multiple Tomcat nodes within each Tomcat cluster. If this setting is not enabled, each CATALINA_HOME+CATALINA_BASE combination will be considered a separate Tomcat cluster. In other words, Tomcat clusters can't have multiple nodes on a single host.
-	UseDockerContainerName                 bool    `json:"useDockerContainerName"`                 // By default, Dynatrace uses image names as identifiers for individual process groups, with one process-group instance per host. Normally Docker container names can't serve as stable identifiers of process group instances because they are variable and auto-generated. You can however manually assign proper container names to their Docker instances. Such manually-assigned container names can serve as reliable process-group instance identifiers. This flag instructs Dynatrace to use Docker-provided names to distinguish between multiple instances of the same image. If this flag is not applied and you run multiple containers of the same image on the same host, the resulting processes will be consolidated into a single process view. Use this flag with caution!
-	SecuritySoftwareDetectionEnabled       bool    `json:"securitySoftwareDetectionEnabled"`       // This flag enables the detection of security software such as anti-malware protection.
-	SplitDb2GroupingByInstances            bool    `json:"splitDb2GroupingByInstances,omitempty"`  // Enable to group and separately analyze the processes of each DB2 Instance. Each process receives a unique name based on the DB2 Instance name.
+	UseDockerContainerName                 bool    `json:"useDockerContainerName"`                 // **For Docker outside container platforms only.** By default, Dynatrace uses image names as identifiers for individual process groups, with one process-group instance per host. Normally Docker container names can't serve as stable identifiers of process group instances because they are variable and auto-generated. You can however manually assign proper container names to their Docker instances. Such manually-assigned container names can serve as reliable process-group instance identifiers. This flag instructs Dynatrace to use Docker-provided names to distinguish between multiple instances of the same image. If this flag is not applied and you run multiple containers of the same image on the same host, the resulting processes will be consolidated into a single process view. **Use this flag with caution!**
 }
 
 func (me *Settings) Name() string {
@@ -53,6 +54,12 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 			Type:        schema.TypeBool,
 			Description: "In older versions, Node.js applications were distinguished based on their directory name, omitting the script name. Changing this setting may change the general handling of Node.js process groups. Leave unchanged if in doubt.",
 			Required:    true,
+		},
+		"add_ruby_bundle_exec_command_to_pg": {
+			Type:        schema.TypeBool,
+			Description: "Enable to group and separately analyze the processes started by each Ruby `bundle exec` command. Each process group receives a unique name based on the command passed to `bundle exec`, for example `rails` or `sidekiq`. When disabled, all `bundle exec` processes are grouped together based on the bundler executable instead. Applies to both CRuby and JRuby.",
+			// new required field
+			Optional: true,
 		},
 		"auto_detect_cassandra_clusters": {
 			Type:        schema.TypeBool,
@@ -102,14 +109,26 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"scope": {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (HOST, HOST_GROUP). Omit this property if you want to cover the whole environment.",
+			ForceNew:    true,
 			Optional:    true,
 			Default:     "environment",
-			ForceNew:    true,
+		},
+		"security_software_detection_enabled": {
+			Type:        schema.TypeBool,
+			Description: "This flag enables the detection of security software, such as anti-malware protection. The currently detected utilities are Carbon Black EDR (on Windows only), CrowdStrike Falcon XDR and Trellix Endpoint Security (former McAfee).",
+			// new required field
+			Optional: true,
 		},
 		"short_lived_processes_monitoring": {
 			Type:        schema.TypeBool,
-			Description: "Enable to monitor CPU and memory usage of short lived processes, otherwise being lost by traditional monitoring. Disabling this flag blocks passing data to cluster only, it does not stop data collection and has no effect on performance.",
+			Description: "Enable to monitor CPU and memory usage of short lived processes, otherwise being lost by traditional monitoring.",
 			Required:    true,
+		},
+		"split_db_2_grouping_by_instances": {
+			Type:        schema.TypeBool,
+			Description: "Enable to group and separately analyze the processes of each DB2 Instance. Each process receives a unique name based on the DB2 Instance name.",
+			// new required field
+			Optional: true,
 		},
 		"split_oracle_database_pg": {
 			Type:        schema.TypeBool,
@@ -118,7 +137,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"split_oracle_listener_pg": {
 			Type:        schema.TypeBool,
-			Description: "Enable to group and separately analyze the processes of each Oracle Listener. Each process group receives a unique name based on the Oracle Listener name.",
+			Description: "Enable to group and separately analyze the processes of each Oracle Listener. Each process group receives a unique name based on the Oracle Listener name. On Windows, this option supports listeners launched manually or running on a Windows virtual account.",
 			Required:    true,
 		},
 		"use_catalina_base": {
@@ -128,18 +147,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"use_docker_container_name": {
 			Type:        schema.TypeBool,
-			Description: "By default, Dynatrace uses image names as identifiers for individual process groups, with one process-group instance per host. Normally Docker container names can't serve as stable identifiers of process group instances because they are variable and auto-generated. You can however manually assign proper container names to their Docker instances. Such manually-assigned container names can serve as reliable process-group instance identifiers. This flag instructs Dynatrace to use Docker-provided names to distinguish between multiple instances of the same image. If this flag is not applied and you run multiple containers of the same image on the same host, the resulting processes will be consolidated into a single process view. Use this flag with caution!",
+			Description: "**For Docker outside container platforms only.** By default, Dynatrace uses image names as identifiers for individual process groups, with one process-group instance per host. Normally Docker container names can't serve as stable identifiers of process group instances because they are variable and auto-generated. You can however manually assign proper container names to their Docker instances. Such manually-assigned container names can serve as reliable process-group instance identifiers. This flag instructs Dynatrace to use Docker-provided names to distinguish between multiple instances of the same image. If this flag is not applied and you run multiple containers of the same image on the same host, the resulting processes will be consolidated into a single process view. **Use this flag with caution!**",
 			Required:    true,
-		},
-		"security_software_detection_enabled": {
-			Type:        schema.TypeBool,
-			Description: "This flag enables the detection of security software such as anti-malware protection.",
-			Optional:    true,
-		},
-		"split_db_2_grouping_by_instances": {
-			Type:        schema.TypeBool,
-			Description: "Enable to group and separately analyze the processes of each DB2 Instance. Each process receives a unique name based on the DB2 Instance name.",
-			Optional:    true,
 		},
 	}
 }
@@ -147,6 +156,7 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 	return properties.EncodeAll(map[string]any{
 		"add_node_js_script_name":                     me.AddNodeJsScriptName,
+		"add_ruby_bundle_exec_command_to_pg":          me.AddRubyBundleExecCommandToPG,
 		"auto_detect_cassandra_clusters":              me.AutoDetectCassandraClusters,
 		"auto_detect_spring_boot":                     me.AutoDetectSpringBoot,
 		"auto_detect_tibco_container_edition_engines": me.AutoDetectTibcoContainerEditionEngines,
@@ -157,19 +167,20 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"identify_jboss_server_by_system_property":    me.IdentifyJbossServerBySystemProperty,
 		"ignore_unique_identifiers":                   me.IgnoreUniqueIdentifiers,
 		"scope":                                       me.Scope,
+		"security_software_detection_enabled":         me.SecuritySoftwareDetectionEnabled,
 		"short_lived_processes_monitoring":            me.ShortLivedProcessesMonitoring,
+		"split_db_2_grouping_by_instances":            me.SplitDb2GroupingByInstances,
 		"split_oracle_database_pg":                    me.SplitOracleDatabasePG,
 		"split_oracle_listener_pg":                    me.SplitOracleListenerPG,
 		"use_catalina_base":                           me.UseCatalinaBase,
 		"use_docker_container_name":                   me.UseDockerContainerName,
-		"security_software_detection_enabled":         me.SecuritySoftwareDetectionEnabled,
-		"split_db_2_grouping_by_instances":            me.SplitDb2GroupingByInstances,
 	})
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 	return decoder.DecodeAll(map[string]any{
 		"add_node_js_script_name":                     &me.AddNodeJsScriptName,
+		"add_ruby_bundle_exec_command_to_pg":          &me.AddRubyBundleExecCommandToPG,
 		"auto_detect_cassandra_clusters":              &me.AutoDetectCassandraClusters,
 		"auto_detect_spring_boot":                     &me.AutoDetectSpringBoot,
 		"auto_detect_tibco_container_edition_engines": &me.AutoDetectTibcoContainerEditionEngines,
@@ -180,12 +191,12 @@ func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
 		"identify_jboss_server_by_system_property":    &me.IdentifyJbossServerBySystemProperty,
 		"ignore_unique_identifiers":                   &me.IgnoreUniqueIdentifiers,
 		"scope":                                       &me.Scope,
+		"security_software_detection_enabled":         &me.SecuritySoftwareDetectionEnabled,
 		"short_lived_processes_monitoring":            &me.ShortLivedProcessesMonitoring,
+		"split_db_2_grouping_by_instances":            &me.SplitDb2GroupingByInstances,
 		"split_oracle_database_pg":                    &me.SplitOracleDatabasePG,
 		"split_oracle_listener_pg":                    &me.SplitOracleListenerPG,
 		"use_catalina_base":                           &me.UseCatalinaBase,
 		"use_docker_container_name":                   &me.UseDockerContainerName,
-		"security_software_detection_enabled":         &me.SecuritySoftwareDetectionEnabled,
-		"split_db_2_grouping_by_instances":            &me.SplitDb2GroupingByInstances,
 	})
 }
