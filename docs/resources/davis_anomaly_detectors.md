@@ -27,7 +27,35 @@ Please set the environment variables `DT_CLIENT_ID` and `DT_CLIENT_SECRET`, or a
 
 The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
+## Analyzers
+
+The `analyzer` block chooses how the detector is evaluated. `analyzer.name` is the fully qualified analyzer name, and `analyzer.input` holds its settings as `analyzer_input_field` key/value pairs. Values are always strings (`"5"`, `"false"`). The provider does not check the keys; Dynatrace validates them on create and update.
+
+| Analyzer name | Evaluates | Input keys |
+|---|---|---|
+| `dt.statistics.ui.anomaly_detection.StaticThresholdAnomalyDetectionAnalyzer` | a timeseries against a fixed value | `query`, `threshold`, `alertCondition` (`ABOVE`, `BELOW`), `alertOnMissingData`, `violatingSamples`, `slidingWindow`, `dealertingSamples` |
+| `dt.statistics.ui.anomaly_detection.AutoAdaptiveAnomalyDetectionAnalyzer` | a timeseries against a threshold Davis learns | `query`, `numberOfSignalFluctuations`, `alertCondition` (`ABOVE`, `BELOW`, `OUTSIDE`), `alertOnMissingData`, `violatingSamples`, `slidingWindow`, `dealertingSamples` |
+| `dt.statistics.ui.anomaly_detection.SeasonalBaselineAnomalyDetectionAnalyzer` | a timeseries against a seasonal confidence band | `query`, `tolerance`, `alertCondition` (`ABOVE`, `BELOW`, `OUTSIDE`), `alertOnMissingData`, `violatingSamples`, `slidingWindow`, `dealertingSamples` |
+| `dt.statistics.anomaly_detection.RecordAnomalyDetectionAnalyzer` | any DQL result, one row per violation | `query.expression`, `alertIdentityFields[N]`, `query.filterSegments[0].id` |
+
+-> The three timeseries analyzers live under `dt.statistics.ui.anomaly_detection`. The record analyzer does not have `.ui` in its name.
+
+-> The timeseries analyzers accept the DQL in `query` or in `query.expression`.
+
+### Record analyzer
+
+With `RecordAnomalyDetectionAnalyzer` the DQL query is the alert condition, and it can be any query (`fetch logs`, `fetch events`, a `timeseries` flattened with `arrayAvg`), not just a timeseries. Put the condition in a `filter`: no row means no alert, and each row raises one Davis event.
+
+- `query.expression` is the DQL query.
+- `alertIdentityFields[0]`, `alertIdentityFields[1]`, ... name the result columns that identify one row. A row with the same values on the next evaluation keeps the same alert open, and a row that disappears closes it. Without them, every evaluation raises a new event for every row.
+- `query.filterSegments[0].id` restricts the query to a filter segment.
+- `execution_settings.delay` is the fixed delay between two evaluations, in seconds. With a long window such as `from: -1h`, the same rows come back on every evaluation, which is why `alertIdentityFields[N]` matters.
+- `alertCondition`, `violatingSamples`, `slidingWindow`, `dealertingSamples` and `alertOnMissingData` are not used by this analyzer.
+- In `event_template`, every result column is available as `{column}` in `event.name` and `event.description`. For a column that holds an entity ID, `{dims:column}` gives the entity's display name, for example `dt.source_entity = "{dims:dt.entity.host}"`.
+
 ## Resource Example Usage
+
+### Static threshold
 
 ```terraform
 resource "dynatrace_davis_anomaly_detectors" "#name#" {
@@ -90,6 +118,59 @@ resource "dynatrace_davis_anomaly_detectors" "#name#" {
   }
   execution_settings {
     actor = dynatrace_iam_service_user.user.id
+  }
+}
+
+resource "dynatrace_iam_service_user" "user" {
+  name = "#name#"
+}
+```
+
+### Record analyzer
+
+```terraform
+resource "dynatrace_davis_anomaly_detectors" "#name#" {
+  title       = "#name#"
+  description = "Raises one event per service with more than 100 ERROR logs in the last hour"
+  enabled     = false
+  source      = "Davis Anomaly Detection"
+  analyzer {
+    name = "dt.statistics.anomaly_detection.RecordAnomalyDetectionAnalyzer"
+    input {
+      analyzer_input_field {
+        key   = "query.expression"
+        value = <<-EOT
+          fetch logs, from: -1h
+          | filter loglevel == "ERROR"
+          | summarize error_count = count(), by:{service.name}
+          | filter error_count > 100
+        EOT
+      }
+      analyzer_input_field {
+        key   = "alertIdentityFields[0]"
+        value = "service.name"
+      }
+    }
+  }
+  event_template {
+    properties {
+      property {
+        key   = "event.type"
+        value = "ERROR_EVENT"
+      }
+      property {
+        key   = "event.name"
+        value = "{error_count} errors on {service.name}"
+      }
+      property {
+        key   = "event.description"
+        value = "Service {service.name} logged {error_count} ERROR lines in the last hour"
+      }
+    }
+  }
+  execution_settings {
+    actor = dynatrace_iam_service_user.user.id
+    delay = 60
   }
 }
 
