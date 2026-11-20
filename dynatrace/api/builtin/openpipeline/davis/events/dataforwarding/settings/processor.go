@@ -65,6 +65,7 @@ type Processor struct {
 	HistogramMetric              *HistogramMetricAttributes              `json:"histogramMetric,omitempty"`              // Histogram metric processor attributes
 	ID                           string                                  `json:"id"`                                     // Processor identifier
 	InlineLookup                 *InlineLookupAttributes                 `json:"inlineLookup,omitempty"`                 // Inline lookup processor attributes
+	JsonExtraction               *JsonExtractionAttributes               `json:"jsonExtraction,omitempty"`               // JSON extraction processor attributes
 	Matcher                      *string                                 `json:"matcher,omitempty"`                      // [See our documentation](https://dt-url.net/bp234rv)
 	ProductAllocation            *ProductAllocationAttributes            `json:"productAllocation,omitempty"`            // Product allocation processor attributes
 	SampleData                   *string                                 `json:"sampleData,omitempty"`                   // Sample data
@@ -78,8 +79,9 @@ type Processor struct {
 	SmartscapeEdge               *SmartscapeEdgeAttributes               `json:"smartscapeEdge,omitempty"`               // Smartscape edge extraction processor attributes
 	SmartscapeNode               *SmartscapeNodeAttributes               `json:"smartscapeNode,omitempty"`               // Smartscape node extraction processor attributes
 	Technology                   *TechnologyAttributes                   `json:"technology,omitempty"`                   // Technology processor attributes
-	Type                         ProcessorType                           `json:"type"`                                   // Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `dataMasking`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `securityProblemExtraction`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`
+	Type                         ProcessorType                           `json:"type"`                                   // Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `dataMasking`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `jsonExtraction`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `securityProblemExtraction`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`, `vulnerabilitySecurityProblem`
 	ValueMetric                  *ValueMetricAttributes                  `json:"valueMetric,omitempty"`                  // Value metric processor attributes
+	VulnerabilitySecurityProblem *VulnerabilitySecurityProblemAttributes `json:"vulnerabilitySecurityProblem,omitempty"` // Vulnerability security problem processor attributes
 }
 
 func (me *Processor) Schema() map[string]*schema.Schema {
@@ -211,6 +213,14 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 			MinItems:    1,
 			MaxItems:    1,
 		},
+		"json_extraction": {
+			Type:        schema.TypeList,
+			Description: "JSON extraction processor attributes",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(JsonExtractionAttributes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
 		"matcher": {
 			Type:        schema.TypeString,
 			Description: "[See our documentation](https://dt-url.net/bp234rv)",
@@ -311,7 +321,7 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 		},
 		"type": {
 			Type:        schema.TypeString,
-			Description: "Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `dataMasking`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `securityProblemExtraction`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`",
+			Description: "Processor type. Possible values: `azureLogForwarding`, `bizevent`, `bucketAssignment`, `costAllocation`, `counterMetric`, `dataMasking`, `davis`, `dql`, `drop`, `fieldsAdd`, `fieldsRemove`, `fieldsRename`, `geoLookup`, `histogramMetric`, `inlineLookup`, `jsonExtraction`, `noStorage`, `productAllocation`, `samplingAwareCounterMetric`, `samplingAwareHistogramMetric`, `samplingAwareValueMetric`, `sdlcEvent`, `securityContext`, `securityEvent`, `securityProblemExtraction`, `smartscapeEdge`, `smartscapeNode`, `technology`, `valueMetric`, `vulnerabilitySecurityProblem`",
 			Required:    true,
 		},
 		"value_metric": {
@@ -319,6 +329,14 @@ func (me *Processor) Schema() map[string]*schema.Schema {
 			Description: "Value metric processor attributes",
 			Optional:    true, // precondition
 			Elem:        &schema.Resource{Schema: new(ValueMetricAttributes).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
+		},
+		"vulnerability_security_problem": {
+			Type:        schema.TypeList,
+			Description: "Vulnerability security problem processor attributes",
+			Optional:    true, // precondition
+			Elem:        &schema.Resource{Schema: new(VulnerabilitySecurityProblemAttributes).Schema()},
 			MinItems:    1,
 			MaxItems:    1,
 		},
@@ -344,6 +362,7 @@ func (me *Processor) MarshalHCL(properties hcl.Properties) error {
 		"histogram_metric":                me.HistogramMetric,
 		"id":                              me.ID,
 		"inline_lookup":                   me.InlineLookup,
+		"json_extraction":                 me.JsonExtraction,
 		"matcher":                         me.Matcher,
 		"product_allocation":              me.ProductAllocation,
 		"sample_data":                     me.SampleData,
@@ -359,6 +378,7 @@ func (me *Processor) MarshalHCL(properties hcl.Properties) error {
 		"technology":                      me.Technology,
 		"type":                            me.Type,
 		"value_metric":                    me.ValueMetric,
+		"vulnerability_security_problem":  me.VulnerabilitySecurityProblem,
 	})
 }
 
@@ -447,6 +467,12 @@ func (me *Processor) HandlePreconditions() error {
 	if (me.InlineLookup == nil) && (string(me.Type) == "inlineLookup") {
 		return fmt.Errorf("'inline_lookup' must be specified when 'type' is set to 'inlineLookup'; got 'type'='%v'", me.Type)
 	}
+	if (me.JsonExtraction != nil) && (string(me.Type) != "jsonExtraction") {
+		return fmt.Errorf("'json_extraction' must not be specified unless 'type' is set to 'jsonExtraction'; got 'type'='%v'", me.Type)
+	}
+	if (me.JsonExtraction == nil) && (string(me.Type) == "jsonExtraction") {
+		return fmt.Errorf("'json_extraction' must be specified when 'type' is set to 'jsonExtraction'; got 'type'='%v'", me.Type)
+	}
 	if (me.Matcher != nil) && (string(me.Type) == "technology") {
 		return fmt.Errorf("'matcher' must not be specified unless 'type' is not set to 'technology'; got 'type'='%v'", me.Type)
 	}
@@ -525,6 +551,12 @@ func (me *Processor) HandlePreconditions() error {
 	if (me.ValueMetric == nil) && (string(me.Type) == "valueMetric") {
 		return fmt.Errorf("'value_metric' must be specified when 'type' is set to 'valueMetric'; got 'type'='%v'", me.Type)
 	}
+	if (me.VulnerabilitySecurityProblem != nil) && (string(me.Type) != "vulnerabilitySecurityProblem") {
+		return fmt.Errorf("'vulnerability_security_problem' must not be specified unless 'type' is set to 'vulnerabilitySecurityProblem'; got 'type'='%v'", me.Type)
+	}
+	if (me.VulnerabilitySecurityProblem == nil) && (string(me.Type) == "vulnerabilitySecurityProblem") {
+		return fmt.Errorf("'vulnerability_security_problem' must be specified when 'type' is set to 'vulnerabilitySecurityProblem'; got 'type'='%v'", me.Type)
+	}
 	return nil
 }
 
@@ -547,6 +579,7 @@ func (me *Processor) UnmarshalHCL(decoder hcl.Decoder) error {
 		"histogram_metric":                &me.HistogramMetric,
 		"id":                              &me.ID,
 		"inline_lookup":                   &me.InlineLookup,
+		"json_extraction":                 &me.JsonExtraction,
 		"matcher":                         &me.Matcher,
 		"product_allocation":              &me.ProductAllocation,
 		"sample_data":                     &me.SampleData,
@@ -562,5 +595,6 @@ func (me *Processor) UnmarshalHCL(decoder hcl.Decoder) error {
 		"technology":                      &me.Technology,
 		"type":                            &me.Type,
 		"value_metric":                    &me.ValueMetric,
+		"vulnerability_security_problem":  &me.VulnerabilitySecurityProblem,
 	})
 }
