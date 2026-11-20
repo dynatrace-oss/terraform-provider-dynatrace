@@ -74,11 +74,13 @@ var FieldValueExtractionTypes = struct {
 type FieldsAddValueType string
 
 var FieldsAddValueTypes = struct {
-	Boolean FieldsAddValueType
-	Double  FieldsAddValueType
-	Long    FieldsAddValueType
-	String  FieldsAddValueType
+	Arraystring FieldsAddValueType
+	Boolean     FieldsAddValueType
+	Double      FieldsAddValueType
+	Long        FieldsAddValueType
+	String      FieldsAddValueType
 }{
+	"arrayString",
 	"boolean",
 	"double",
 	"long",
@@ -151,6 +153,7 @@ var ProcessorTypes = struct {
 	Geolookup                    ProcessorType
 	Histogrammetric              ProcessorType
 	Inlinelookup                 ProcessorType
+	Jsonextraction               ProcessorType
 	Nostorage                    ProcessorType
 	Productallocation            ProcessorType
 	Samplingawarecountermetric   ProcessorType
@@ -164,6 +167,7 @@ var ProcessorTypes = struct {
 	Smartscapenode               ProcessorType
 	Technology                   ProcessorType
 	Valuemetric                  ProcessorType
+	Vulnerabilitysecurityproblem ProcessorType
 }{
 	"azureLogForwarding",
 	"bizevent",
@@ -180,6 +184,7 @@ var ProcessorTypes = struct {
 	"geoLookup",
 	"histogramMetric",
 	"inlineLookup",
+	"jsonExtraction",
 	"noStorage",
 	"productAllocation",
 	"samplingAwareCounterMetric",
@@ -193,6 +198,7 @@ var ProcessorTypes = struct {
 	"smartscapeNode",
 	"technology",
 	"valueMetric",
+	"vulnerabilitySecurityProblem",
 }
 
 type Routing string
@@ -213,4 +219,14 @@ var Samplings = struct {
 }{
 	"disabled",
 	"enabled",
+}
+
+type SecurityContextType string
+
+var SecurityContextTypes = struct {
+	Custom  SecurityContextType
+	Default SecurityContextType
+}{
+	"custom",
+	"default",
 }
