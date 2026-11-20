@@ -55,6 +55,7 @@
 			"type": "enum"
 		}
 	},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -110,12 +111,17 @@
 			"items": {
 				"constraints": [
 					{
+						"disallowDangerousRegex": false,
 						"type": "REGEX"
 					},
 					{
 						"maxLength": 50,
 						"minLength": 1,
 						"type": "LENGTH"
+					},
+					{
+						"disallowDangerousRegex": false,
+						"type": "REGEX"
 					}
 				],
 				"description": "",
@@ -452,5 +458,5 @@
 			"versionInfo": ""
 		}
 	},
-	"version": "1.0.8"
+	"version": "1.0.9"
 }
