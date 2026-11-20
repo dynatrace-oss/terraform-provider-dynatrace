@@ -19,10 +19,10 @@ package useractioncustommetrics
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/terraform/hcl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"golang.org/x/exp/slices"
 )
 
 type Filters []*Filter
@@ -49,7 +49,7 @@ func (me *Filters) UnmarshalHCL(decoder hcl.Decoder) error {
 
 type Filter struct {
 	FieldName string   `json:"fieldName"` // Field name
-	Operator  Operator `json:"operator"`  // Possible Values: `EQUALS`, `GREATER_THAN`, `GREATER_THAN_OR_EQUAL_TO`, `IN`, `IS_NOT_NULL`, `IS_NULL`, `LESS_THAN`, `LESS_THAN_OR_EQUAL_TO`, `LIKE`, `NOT_EQUAL`, `NOT_LIKE`, `STARTS_WITH`
+	Operator  Operator `json:"operator"`  // Possible values: `EQUALS`, `GREATER_THAN`, `GREATER_THAN_OR_EQUAL_TO`, `IN`, `IS_NOT_NULL`, `IS_NULL`, `LESS_THAN`, `LESS_THAN_OR_EQUAL_TO`, `LIKE`, `NOT_EQUAL`, `NOT_LIKE`, `STARTS_WITH`
 	Value     *string  `json:"value,omitempty"`
 	ValueIn   []string `json:"valueIn,omitempty"` // Values
 }
@@ -63,12 +63,12 @@ func (me *Filter) Schema() map[string]*schema.Schema {
 		},
 		"operator": {
 			Type:        schema.TypeString,
-			Description: "Possible Values: `EQUALS`, `GREATER_THAN`, `GREATER_THAN_OR_EQUAL_TO`, `IN`, `IS_NOT_NULL`, `IS_NULL`, `LESS_THAN`, `LESS_THAN_OR_EQUAL_TO`, `LIKE`, `NOT_EQUAL`, `NOT_LIKE`, `STARTS_WITH`",
+			Description: "Possible values: `EQUALS`, `GREATER_THAN`, `GREATER_THAN_OR_EQUAL_TO`, `IN`, `IS_NOT_NULL`, `IS_NULL`, `LESS_THAN`, `LESS_THAN_OR_EQUAL_TO`, `LIKE`, `NOT_EQUAL`, `NOT_LIKE`, `STARTS_WITH`",
 			Required:    true,
 		},
 		"value": {
 			Type:        schema.TypeString,
-			Description: "no documentation available",
+			Description: "No documentation available",
 			Optional:    true, // precondition
 		},
 		"value_in": {
@@ -90,8 +90,11 @@ func (me *Filter) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *Filter) HandlePreconditions() error {
-	if me.Value == nil && slices.Contains([]string{"EQUALS", "NOT_EQUAL", "LIKE", "LESS_THAN", "LESS_THAN_OR_EQUAL_TO", "GREATER_THAN", "GREATER_THAN_OR_EQUAL_TO", "NOT_LIKE", "STARTS_WITH"}, string(me.Operator)) {
-		return fmt.Errorf("'value' must be specified if 'operator' is set to '%v'", me.Operator)
+	if (me.Value != nil) && (!slices.Contains([]string{"EQUALS", "NOT_EQUAL", "LIKE", "LESS_THAN", "LESS_THAN_OR_EQUAL_TO", "GREATER_THAN", "GREATER_THAN_OR_EQUAL_TO", "NOT_LIKE", "STARTS_WITH"}, string(me.Operator))) {
+		return fmt.Errorf("'value' must not be specified unless 'operator' is one of ['EQUALS', 'NOT_EQUAL', 'LIKE', 'LESS_THAN', 'LESS_THAN_OR_EQUAL_TO', 'GREATER_THAN', 'GREATER_THAN_OR_EQUAL_TO', 'NOT_LIKE', 'STARTS_WITH']; got 'operator'='%v'", me.Operator)
+	}
+	if (me.Value == nil) && (slices.Contains([]string{"EQUALS", "NOT_EQUAL", "LIKE", "LESS_THAN", "LESS_THAN_OR_EQUAL_TO", "GREATER_THAN", "GREATER_THAN_OR_EQUAL_TO", "NOT_LIKE", "STARTS_WITH"}, string(me.Operator))) {
+		return fmt.Errorf("'value' must be specified when 'operator' is one of ['EQUALS', 'NOT_EQUAL', 'LIKE', 'LESS_THAN', 'LESS_THAN_OR_EQUAL_TO', 'GREATER_THAN', 'GREATER_THAN_OR_EQUAL_TO', 'NOT_LIKE', 'STARTS_WITH']; got 'operator'='%v'", me.Operator)
 	}
 	// ---- ValueIn []string -> {"expectedValue":"IN","property":"operator","type":"EQUALS"}
 	return nil
