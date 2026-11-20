@@ -88,11 +88,11 @@ func (me *DimensionCondition) MarshalHCL(properties hcl.Properties) error {
 }
 
 func (me *DimensionCondition) HandlePreconditions() error {
-	if (me.Key == nil) && (string(me.ConditionType) == "DIMENSION") {
-		return fmt.Errorf("'key' must be specified when 'condition_type' is set to 'DIMENSION'; got 'condition_type'='%v'", me.ConditionType)
-	}
 	if (me.Key != nil) && (string(me.ConditionType) != "DIMENSION") {
 		return fmt.Errorf("'key' must not be specified unless 'condition_type' is set to 'DIMENSION'; got 'condition_type'='%v'", me.ConditionType)
+	}
+	if (me.Key == nil) && (string(me.ConditionType) == "DIMENSION") {
+		return fmt.Errorf("'key' must be specified when 'condition_type' is set to 'DIMENSION'; got 'condition_type'='%v'", me.ConditionType)
 	}
 	return nil
 }
