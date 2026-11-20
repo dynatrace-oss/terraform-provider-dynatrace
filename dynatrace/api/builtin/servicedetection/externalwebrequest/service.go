@@ -24,7 +24,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/settings/services/settings20"
 )
 
-const SchemaVersion = "2.1.15"
+const SchemaVersion = "2.1.17"
 const SchemaID = "builtin:service-detection.external-web-request"
 
 func Service(clientSet rest.ClientSet) (settings.CRUDService[*service.Settings], error) {
