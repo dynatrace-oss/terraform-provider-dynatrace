@@ -822,6 +822,16 @@
 			"nullable": false,
 			"type": "boolean"
 		},
+		"-87": {
+			"default": true,
+			"description": "Rule id: 87",
+			"displayName": "Do not monitor processes if EXE name equals 'flexctl'",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
 		"-9": {
 			"default": true,
 			"description": "Rule id: 9",
@@ -839,5 +849,5 @@
 	],
 	"schemaId": "builtin:process.built-in-process-monitoring-rule",
 	"types": {},
-	"version": "0.4.8"
+	"version": "0.4.9"
 }
