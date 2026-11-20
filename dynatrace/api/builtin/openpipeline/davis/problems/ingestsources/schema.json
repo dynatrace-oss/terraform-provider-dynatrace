@@ -123,6 +123,10 @@
 				{
 					"displayName": "double",
 					"value": "double"
+				},
+				{
+					"displayName": "arrayString",
+					"value": "arrayString"
 				}
 			],
 			"type": "enum"
@@ -333,12 +337,20 @@
 					"value": "dataMasking"
 				},
 				{
+					"displayName": "jsonExtraction",
+					"value": "jsonExtraction"
+				},
+				{
 					"displayName": "inlineLookup",
 					"value": "inlineLookup"
 				},
 				{
 					"displayName": "securityProblemExtraction",
 					"value": "securityProblemExtraction"
+				},
+				{
+					"displayName": "vulnerabilitySecurityProblem",
+					"value": "vulnerabilitySecurityProblem"
 				}
 			],
 			"type": "enum"
@@ -355,6 +367,22 @@
 				{
 					"displayName": "enabled",
 					"value": "enabled"
+				}
+			],
+			"type": "enum"
+		},
+		"SecurityContextType": {
+			"description": "",
+			"displayName": "SecurityContextType",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Dynatrace-defined default security context",
+					"value": "default"
+				},
+				{
+					"displayName": "Custom security context",
+					"value": "custom"
 				}
 			],
 			"type": "enum"
@@ -541,7 +569,7 @@
 			]
 		},
 		{
-			"byteLimit": 31457280,
+			"byteLimit": 1048576,
 			"type": "BYTE_SIZE_LIMIT"
 		}
 	],
@@ -1320,6 +1348,36 @@
 			"displayName": "FieldsAddAttributesEntry",
 			"documentation": "",
 			"properties": {
+				"multiValue": {
+					"description": "",
+					"displayName": "Multi value",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"type": "NOT_BLANK"
+							},
+							{
+								"maxLength": 512,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 50,
+					"minObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "arrayString",
+						"property": "valueType",
+						"type": "EQUALS"
+					},
+					"type": "list"
+				},
 				"name": {
 					"constraints": [
 						{
@@ -1350,6 +1408,23 @@
 					"maxObjects": 1,
 					"modificationPolicy": "DEFAULT",
 					"nullable": false,
+					"precondition": {
+						"preconditions": [
+							{
+								"precondition": {
+									"expectedValue": "arrayString",
+									"property": "valueType",
+									"type": "EQUALS"
+								},
+								"type": "NOT"
+							},
+							{
+								"property": "valueType",
+								"type": "NULL"
+							}
+						],
+						"type": "OR"
+					},
 					"type": "text"
 				},
 				"valueType": {
@@ -1828,6 +1903,51 @@
 			"version": "0",
 			"versionInfo": ""
 		},
+		"JsonExtractionAttributes": {
+			"description": "",
+			"displayName": "JsonExtractionAttributes",
+			"documentation": "",
+			"properties": {
+				"maxNestingDepth": {
+					"constraints": [
+						{
+							"maximum": 5,
+							"minimum": 2,
+							"type": "RANGE"
+						}
+					],
+					"default": 2,
+					"description": "Maximum depth of nested JSON that is unwrapped.",
+					"displayName": "Maximum nesting depth",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				},
+				"maxObjectsToUnwrap": {
+					"constraints": [
+						{
+							"maximum": 10000,
+							"minimum": 0,
+							"type": "RANGE"
+						}
+					],
+					"default": 1000,
+					"description": "Maximum number of JSON objects that are unwrapped.",
+					"displayName": "Maximum objects to unwrap",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "integer"
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
 		"MaskingRule": {
 			"description": "",
 			"displayName": "MaskingRule",
@@ -2229,6 +2349,22 @@
 						"$ref": "#/types/InlineLookupAttributes"
 					}
 				},
+				"jsonExtraction": {
+					"description": "",
+					"displayName": "JSON extraction processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "jsonExtraction",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/JsonExtractionAttributes"
+					}
+				},
 				"matcher": {
 					"constraints": [
 						{
@@ -2475,6 +2611,22 @@
 					},
 					"type": {
 						"$ref": "#/types/ValueMetricAttributes"
+					}
+				},
+				"vulnerabilitySecurityProblem": {
+					"description": "",
+					"displayName": "Vulnerability security problem processor attributes",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "vulnerabilitySecurityProblem",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": {
+						"$ref": "#/types/VulnerabilitySecurityProblemAttributes"
 					}
 				}
 			},
@@ -3055,6 +3207,31 @@
 					"nullable": false,
 					"type": "text"
 				},
+				"fieldsCopiedFromRecord": {
+					"description": "Record fields copied verbatim onto the extracted security problem.",
+					"displayName": "Fields copied from record",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"type": "NOT_BLANK"
+							},
+							{
+								"maxLength": 256,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 50,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "list"
+				},
 				"idComponents": {
 					"constraints": [
 						{
@@ -3091,6 +3268,70 @@
 					"type": {
 						"$ref": "#/types/GenericValueAssignment"
 					}
+				},
+				"securityContext": {
+					"description": "Security context written on the extracted security problem. It controls who is allowed to read the security problem. If not set, no security context is written.",
+					"displayName": "Security context",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"type": {
+						"$ref": "#/types/SecurityProblemSecurityContext"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		},
+		"SecurityProblemSecurityContext": {
+			"description": "",
+			"displayName": "SecurityProblemSecurityContext",
+			"documentation": "",
+			"properties": {
+				"type": {
+					"default": "default",
+					"description": "Whether the Dynatrace-defined default security context or a custom one is applied.",
+					"displayName": "Security context type",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/enums/SecurityContextType"
+					}
+				},
+				"values": {
+					"description": "",
+					"displayName": "Security context",
+					"documentation": "",
+					"items": {
+						"constraints": [
+							{
+								"type": "NOT_BLANK"
+							},
+							{
+								"maxLength": 256,
+								"type": "LENGTH"
+							}
+						],
+						"description": "",
+						"displayName": "",
+						"documentation": "",
+						"type": "text"
+					},
+					"maxObjects": 10,
+					"minObjects": 0,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"precondition": {
+						"expectedValue": "custom",
+						"property": "type",
+						"type": "EQUALS"
+					},
+					"type": "list"
 				}
 			},
 			"summaryPattern": "",
@@ -3513,6 +3754,27 @@
 					"nullable": false,
 					"type": "text"
 				},
+				"nodeValidityDurationMinutes": {
+					"constraints": [
+						{
+							"maximum": 1440,
+							"minimum": 60,
+							"type": "RANGE"
+						}
+					],
+					"description": "",
+					"displayName": "Node validity duration",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": true,
+					"precondition": {
+						"expectedValue": true,
+						"property": "extractNode",
+						"type": "EQUALS"
+					},
+					"type": "integer"
+				},
 				"staticEdgesToExtract": {
 					"description": "",
 					"displayName": "Static edges to extract",
@@ -3922,7 +4184,29 @@
 			"type": "object",
 			"version": "0",
 			"versionInfo": ""
+		},
+		"VulnerabilitySecurityProblemAttributes": {
+			"description": "",
+			"displayName": "VulnerabilitySecurityProblemAttributes",
+			"documentation": "",
+			"properties": {
+				"securityContext": {
+					"description": "Security context written on the extracted security problem. It controls who is allowed to read the security problem.",
+					"displayName": "Security context",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": {
+						"$ref": "#/types/SecurityProblemSecurityContext"
+					}
+				}
+			},
+			"summaryPattern": "",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
 		}
 	},
-	"version": "1.75"
+	"version": "1.85.1"
 }
