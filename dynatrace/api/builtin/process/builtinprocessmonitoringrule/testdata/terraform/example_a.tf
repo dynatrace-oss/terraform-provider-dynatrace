@@ -8,6 +8,7 @@ resource "dynatrace_builtin_process_monitoring" "monitoring" {
   exe_caddy                     = false
   exe_schedular                 = false
   exe_silkdaemon                = false
+  exe_flexctl                   = false
   go_static                     = false
   node_nodegyp                  = false
   cmd_foreverbinmonitor         = false
