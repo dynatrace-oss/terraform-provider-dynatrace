@@ -8,6 +8,7 @@
 	"documentation": "User action types that commonly reflect user frustration include dead clicks, rage clicks, rage rotates, and page refreshes.",
 	"dynatrace": "1",
 	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
 	"maxObjects": 1,
 	"multiObject": false,
 	"properties": {
@@ -28,5 +29,5 @@
 	],
 	"schemaId": "builtin:usability-analytics",
 	"types": {},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }
