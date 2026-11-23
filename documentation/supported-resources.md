@@ -394,6 +394,19 @@ Dynatrace Configuration as Code via Terraform supports the following resources, 
 | dynatrace_openpipeline_v2_usersessions_dataforwarding    | /api/v2/settings/objects (schema: builtin:openpipeline.usersessions.data-forwarding)                                                                                                           | settings.read, settings.write                                                                           |
 | dynatrace_synthetic_primary_grail_tags                   | /api/v2/settings/objects (schema: builtin:synthetic.primary-grail-tags)                                                                                                                        | settings.read, settings.write                                                                           |
 | dynatrace_network_zone_v2                                | /api/v2/settings/objects (schema: builtin:networkzones.zones)                                                                                                                                  | settings.read, settings.write                                                                           |
+| dynatrace_eventcorrelationrules | /api/v2/settings/objects (schema: builtin:event-correlation-rules) | settings.read, settings.write |
+| dynatrace_ingest_enrichment_config | /api/v2/settings/objects (schema: builtin:ingest.enrichment.config) | settings.read, settings.write |
+| dynatrace_openpipeline_v2_application_snapshots_dataforwarding | /api/v2/settings/objects (schema: builtin:openpipeline.application.snapshots.data-forwarding) | settings.read, settings.write |
+| dynatrace_openpipeline_v2_application_snapshots_ingestsources | /api/v2/settings/objects (schema: builtin:openpipeline.application.snapshots.ingest-sources) | settings.read, settings.write |
+| dynatrace_openpipeline_v2_application_snapshots_pipelinegroups | /api/v2/settings/objects (schema: builtin:openpipeline.application.snapshots.pipeline-groups) | settings.read, settings.write |
+| dynatrace_openpipeline_v2_application_snapshots_pipelines | /api/v2/settings/objects (schema: builtin:openpipeline.application.snapshots.pipelines) | settings.read, settings.write |
+| dynatrace_openpipeline_v2_application_snapshots_routing | /api/v2/settings/objects (schema: builtin:openpipeline.application.snapshots.routing) | settings.read, settings.write |
+| dynatrace_openpipeline_v2_primarygrailtag | /api/v2/settings/objects (schema: builtin:openpipeline.primary-grail-tag) | settings.read, settings.write |
+| dynatrace_openpipeline_v2_smartscape_events_dataforwarding | /api/v2/settings/objects (schema: builtin:openpipeline.smartscape.events.data-forwarding) | settings.read, settings.write |
+| dynatrace_openpipeline_v2_smartscape_events_ingestsources | /api/v2/settings/objects (schema: builtin:openpipeline.smartscape.events.ingest-sources) | settings.read, settings.write |
+| dynatrace_openpipeline_v2_smartscape_events_pipelinegroups | /api/v2/settings/objects (schema: builtin:openpipeline.smartscape.events.pipeline-groups) | settings.read, settings.write |
+| dynatrace_openpipeline_v2_smartscape_events_pipelines | /api/v2/settings/objects (schema: builtin:openpipeline.smartscape.events.pipelines) | settings.read, settings.write |
+| dynatrace_openpipeline_v2_smartscape_events_routing | /api/v2/settings/objects (schema: builtin:openpipeline.smartscape.events.routing) | settings.read, settings.write |
 
 ## OAuth Resources
 | Resource name                             | API endpoint                                                                                              | OAuth permissions                                                                                                                                                                                     |
