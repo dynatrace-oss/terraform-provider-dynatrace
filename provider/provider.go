@@ -735,6 +735,7 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_usersessions_dataforwarding":    resources.NewGeneric(export.ResourceTypes.OpenpipelineUsersessionsDataforwarding).Resource(),
 			"dynatrace_synthetic_primary_grail_tags":                   resources.NewGeneric(export.ResourceTypes.SyntheticPrimarygrailtags).Resource(),
 			"dynatrace_network_zone_v2":                                resources.NewGeneric(export.ResourceTypes.NetworkzonesZones).Resource(),
+			"dynatrace_event_correlation_rules":                              resources.NewGeneric(export.ResourceTypes.Eventcorrelationrules).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

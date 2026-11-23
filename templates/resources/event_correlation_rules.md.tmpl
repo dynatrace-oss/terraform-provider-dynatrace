@@ -1,0 +1,28 @@
+---
+layout: ""
+page_title: "dynatrace_event_correlation_rules Resource - terraform-provider-dynatrace"
+subcategory: "Dynatrace Intelligence"
+description: |-
+  The resource `dynatrace_event_correlation_rules` covers configuration of rules for correlating events
+---
+
+# dynatrace_event_correlation_rules (Resource)
+
+-> This resource requires the API token scopes **Read settings** (`settings.read`) and **Write settings** (`settings.write`) or the OAuth scopes **Read settings** (`settings:objects:read`) and **Write settings** (`settings:objects:write`)
+
+## Dynatrace Documentation
+
+- Event analysis and correlation - https://docs.dynatrace.com/docs/dynatrace-intelligence/root-cause-analysis/event-analysis-and-correlation
+- Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:event-correlation-rules`)
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_event_correlation_rules` downloads all existing event correlation rules
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/builtin/eventcorrelationrules/testdata/terraform/example.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

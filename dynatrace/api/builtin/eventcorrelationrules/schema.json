@@ -1,0 +1,323 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"description": "Allows you to define rules for correlating events.",
+	"displayName": "Event correlation rule",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"SourceType": {
+			"description": "Where the rule comes from.",
+			"displayName": "Source type",
+			"documentation": "",
+			"items": [
+				{
+					"description": "The rule was created by a user.",
+					"displayName": "User",
+					"value": "USER"
+				},
+				{
+					"description": "The rule is provided by an extension.",
+					"displayName": "Extension",
+					"value": "EXTENSION"
+				},
+				{
+					"description": "The rule is provided by Dynatrace.",
+					"displayName": "Built-in",
+					"value": "BUILTIN"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maturity": "EARLY_ADOPTER",
+	"maxObjects": 100,
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"causalityRules": {
+			"description": "Defines which correlated events cause which other events.",
+			"displayName": "Causality rules",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/CausalityRule"
+				}
+			},
+			"maxObjects": 100,
+			"metadata": {
+				"addItemButton": "Add causality rule",
+				"featureFlag": "com.compuware.fdi.EnableCausalityRulesInEventCorrelationRules.feature",
+				"maturity": "IN_DEVELOPMENT"
+			},
+			"minObjects": 0,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		},
+		"correlationNamespace": {
+			"constraints": [
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "Optional namespace for cross-rule correlation. Rules sharing the same namespace produce compatible grouping keys, enabling events matched by different rules to correlate to the same problem.",
+			"displayName": "Correlation namespace",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"type": "text"
+		},
+		"displayName": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 100,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Name of the rule",
+			"displayName": "Display name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"enabled": {
+			"default": true,
+			"description": "If this is true, the rule is used when correlating events",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "ALWAYS",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"groupingFields": {
+			"description": "Fields used to group events. Groups are created based on the values of the grouping fields.",
+			"displayName": "Grouping fields",
+			"documentation": "",
+			"items": {
+				"constraints": [
+					{
+						"maxLength": 256,
+						"minLength": 1,
+						"type": "LENGTH"
+					},
+					{
+						"type": "NOT_BLANK"
+					},
+					{
+						"type": "TRIMMED"
+					}
+				],
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": "text"
+			},
+			"maxObjects": 10,
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "set"
+		},
+		"matchingCondition": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"maxLength": 4096,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "matching-condition-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"default": "",
+			"description": "Matching condition to check if an event matches the correlation rule.",
+			"displayName": "Matching condition",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"source": {
+			"constraints": [
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "Name of the source that provides the rule.",
+			"displayName": "Source",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "NEVER",
+			"nullable": true,
+			"precondition": {
+				"expectedValues": [
+					"EXTENSION",
+					"BUILTIN"
+				],
+				"property": "sourceType",
+				"type": "IN"
+			},
+			"type": "text"
+		},
+		"sourceType": {
+			"description": "Where the rule comes from. Extension-provided and built-in rules are maintained by their source.",
+			"displayName": "Source type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "NEVER",
+			"nullable": true,
+			"type": {
+				"$ref": "#/enums/SourceType"
+			}
+		},
+		"timeWindow": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"type": "TRIMMED"
+				},
+				{
+					"customMessage": "Only a positive duration is allowed",
+					"pattern": "^[0-9]+\\s?[smhd]$",
+					"type": "PATTERN"
+				},
+				{
+					"customValidatorId": "time-window-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "2m",
+			"description": "Other events within this time window are considered for correlation.",
+			"displayName": "Time window",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customValidatorId": "causality-matcher-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customValidatorId": "rule-source-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"schemaId": "builtin:event-correlation-rules",
+	"types": {
+		"CausalityRule": {
+			"description": "",
+			"displayName": "CausalityRule",
+			"documentation": "",
+			"properties": {
+				"causeEventMatcher": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 4096,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "matching-condition-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "Matching condition selecting the events that cause the effect events.",
+					"displayName": "Cause event matcher",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				},
+				"effectEventMatcher": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"type": "TRIMMED"
+						},
+						{
+							"maxLength": 4096,
+							"minLength": 1,
+							"type": "LENGTH"
+						},
+						{
+							"customValidatorId": "matching-condition-validator",
+							"skipAsyncValidation": false,
+							"type": "CUSTOM_VALIDATOR_REF"
+						}
+					],
+					"default": "",
+					"description": "Matching condition selecting the events caused by the cause events.",
+					"displayName": "Effect event matcher",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{causeEventMatcher} causes {effectEventMatcher}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "2.10.1"
+}
