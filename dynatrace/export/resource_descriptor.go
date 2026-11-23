@@ -388,6 +388,7 @@ import (
 	calculated_synthetic_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/synthetic"
 	calculated_web_metrics "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/metrics/calculated/web"
 
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eventcorrelationrules"
 	azureconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure"
 	azureconnectionauthentication "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure/authentication"
 	networkzoneszones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/networkzones/zones"
@@ -1982,6 +1983,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.SyntheticPrimarygrailtags: NewResourceDescriptor(syntheticprimarygrailtags.Service),
 	ResourceTypes.NetworkzonesZones:         NewResourceDescriptor(networkzoneszones.Service),
+	ResourceTypes.Eventcorrelationrules:     NewResourceDescriptor(eventcorrelationrules.Service),
 }
 
 type ResourceExclusion struct {
