@@ -1,0 +1,161 @@
+{
+	"allowedScopes": [
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "primary-grail-tag-validator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Global rules for primary Grail tag extraction and processing during ingest",
+	"displayName": "Ingest primary Grail tag processing rules",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {},
+	"maturity": "GENERAL_AVAILABILITY",
+	"maxObjects": 20,
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"enabled": {
+			"default": true,
+			"description": "Whether this rule is active",
+			"displayName": "Enabled",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"keepFields": {
+			"default": false,
+			"description": "Whether to keep (true) or drop (false) the source field",
+			"displayName": "Keep fields",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "boolean"
+		},
+		"matchingCondition": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 4096,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "A DQL expression that determines which records this rule applies to",
+			"displayName": "Matching condition",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"primaryTagFieldName": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 256,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The unique target identifier within the primary_tags namespace. Must be unique across all rules.",
+			"displayName": "Primary tag field name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"ruleName": {
+			"constraints": [
+				{
+					"type": "NOT_BLANK"
+				},
+				{
+					"maxLength": 256,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "A descriptive name for this rule",
+			"displayName": "Rule name",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"sourceFields": {
+			"description": "Ordered list of source fields to consider. The first field that exist should be considered a source value for the primary tag",
+			"displayName": "Source fields",
+			"documentation": "",
+			"items": {
+				"description": "",
+				"displayName": "",
+				"documentation": "",
+				"type": {
+					"$ref": "#/types/PrimaryGrailTagSourceField"
+				}
+			},
+			"maxObjects": 10,
+			"minObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "list"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"flattenCollections": false,
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"primaryTagFieldName"
+			]
+		}
+	],
+	"schemaId": "builtin:openpipeline.primary-grail-tag",
+	"types": {
+		"PrimaryGrailTagSourceField": {
+			"description": "",
+			"displayName": "PrimaryGrailTagSourceField",
+			"documentation": "",
+			"properties": {
+				"fieldExpression": {
+					"constraints": [
+						{
+							"type": "NOT_BLANK"
+						},
+						{
+							"maxLength": 256,
+							"type": "LENGTH"
+						}
+					],
+					"default": "",
+					"description": "A DQL field access expression identifying the source field",
+					"displayName": "Field expression",
+					"documentation": "",
+					"maxObjects": 1,
+					"modificationPolicy": "DEFAULT",
+					"nullable": false,
+					"type": "text"
+				}
+			},
+			"summaryPattern": "{fieldExpression}",
+			"type": "object",
+			"version": "0",
+			"versionInfo": ""
+		}
+	},
+	"version": "1"
+}

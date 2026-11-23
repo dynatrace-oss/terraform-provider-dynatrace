@@ -742,6 +742,7 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_application_snapshots_pipelinegroups": resources.NewGeneric(export.ResourceTypes.OpenpipelineApplicationSnapshotsPipelinegroups).Resource(),
 			"dynatrace_openpipeline_v2_application_snapshots_pipelines":      resources.NewGeneric(export.ResourceTypes.OpenpipelineApplicationSnapshotsPipelines).Resource(),
 			"dynatrace_openpipeline_v2_application_snapshots_routing":        resources.NewGeneric(export.ResourceTypes.OpenpipelineApplicationSnapshotsRouting).Resource(),
+			"dynatrace_openpipeline_v2_primary_grail_tag":                    resources.NewGeneric(export.ResourceTypes.OpenpipelinePrimarygrailtag).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
