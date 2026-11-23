@@ -1,0 +1,209 @@
+{
+	"allowedScopes": [
+		"HOST",
+		"KUBERNETES_CLUSTER",
+		"HOST_GROUP",
+		"AWS_ACCOUNT",
+		"AZURE_MICROSOFT_RESOURCES_SUBSCRIPTIONS",
+		"GCP_PROJECT",
+		"environment"
+	],
+	"constraints": [
+		{
+			"customValidatorId": "ingestEnrichmentConfigValidator",
+			"skipAsyncValidation": false,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"description": "Map labels, annotations, tags and resource properties from your existing infrastructure to primary Grail tags and fields.\nLearn more in our [documentation](https://dt-url.net/qat0256).",
+	"displayName": "Ingest Enrichment Configuration",
+	"documentation": "",
+	"dynatrace": "1",
+	"enums": {
+		"Type": {
+			"description": "Defines the enrichment type.",
+			"displayName": "Type",
+			"documentation": "",
+			"items": [
+				{
+					"displayName": "Kubernetes namespace label",
+					"value": "K8S_NAMESPACE_LABEL"
+				},
+				{
+					"displayName": "Kubernetes namespace annotation",
+					"value": "K8S_NAMESPACE_ANNOTATION"
+				},
+				{
+					"displayName": "Kubernetes workload label",
+					"value": "K8S_WORKLOAD_LABEL"
+				},
+				{
+					"displayName": "Kubernetes workload annotation",
+					"value": "K8S_WORKLOAD_ANNOTATION"
+				},
+				{
+					"displayName": "Kubernetes pod label",
+					"value": "K8S_POD_LABEL"
+				},
+				{
+					"displayName": "Kubernetes pod annotation",
+					"value": "K8S_POD_ANNOTATION"
+				},
+				{
+					"displayName": "AWS tag",
+					"value": "AWS_TAG"
+				},
+				{
+					"displayName": "GCP label",
+					"value": "GCP_LABEL"
+				},
+				{
+					"displayName": "GCP tag",
+					"value": "GCP_TAG"
+				},
+				{
+					"displayName": "Azure tag",
+					"value": "AZURE_TAG"
+				},
+				{
+					"displayName": "Host/process property",
+					"value": "HOST_PROCESS_PROPERTY"
+				},
+				{
+					"displayName": "Custom",
+					"value": "CUSTOM"
+				}
+			],
+			"type": "enum"
+		}
+	},
+	"maturity": "GENERAL_AVAILABILITY",
+	"maxObjects": 50,
+	"multiObject": true,
+	"ordered": true,
+	"properties": {
+		"condition": {
+			"constraints": [
+				{
+					"customValidatorId": "dql-matcher-openpipeline-syntax-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				},
+				{
+					"maxLength": 500,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"description": "Optional DQL condition to filter signals.",
+			"displayName": "Condition",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"subType": "code/dql-matcher-openpipeline",
+			"type": "text"
+		},
+		"target": {
+			"constraints": [
+				{
+					"customMessage": "The target must be at least 1 and at most 350 characters.",
+					"maxLength": 350,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "The field or tag to populate with the source value.",
+			"displayName": "Target",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		},
+		"type": {
+			"default": "K8S_NAMESPACE_LABEL",
+			"description": "Defines the enrichment type for this rule.",
+			"displayName": "Type",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": {
+				"$ref": "#/enums/Type"
+			}
+		},
+		"valueExtraction": {
+			"constraints": [
+				{
+					"customMessage": "The value extraction must be at least 1 and at most 2048 characters.",
+					"maxLength": 2048,
+					"minLength": 1,
+					"type": "LENGTH"
+				},
+				{
+					"customValidatorId": "dpl-syntax-validator",
+					"skipAsyncValidation": false,
+					"type": "CUSTOM_VALIDATOR_REF"
+				}
+			],
+			"description": "An optional DPL expression to extract the enrichment value. This is only allowed when the enrichment type is set to 'Host/process property'.",
+			"displayName": "Value extraction",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": true,
+			"subType": "code/dpl",
+			"type": "text"
+		},
+		"valueSource": {
+			"constraints": [
+				{
+					"customMessage": "The value source must be at least 1 and at most 2048 characters.",
+					"maxLength": 2048,
+					"minLength": 1,
+					"type": "LENGTH"
+				}
+			],
+			"default": "",
+			"description": "Defines the value source for the enrichment. Depending on the enrichment type, this is a key (for Kubernetes labels/annotations, cloud tags/labels, and host process properties) or a literal (for type 'Custom').",
+			"displayName": "Value source",
+			"documentation": "",
+			"maxObjects": 1,
+			"modificationPolicy": "DEFAULT",
+			"nullable": false,
+			"type": "text"
+		}
+	},
+	"schemaConstraints": [
+		{
+			"customValidatorId": "ingestEnrichmentCloudRuleCountValidator",
+			"skipAsyncValidation": true,
+			"type": "CUSTOM_VALIDATOR_REF"
+		},
+		{
+			"customMessage": "Unique constraint violation. A rule with the same type, value source, value extraction, target, and condition already exists on this scope.",
+			"flattenCollections": false,
+			"type": "UNIQUE",
+			"uniqueProperties": [
+				"type",
+				"valueSource",
+				"valueExtraction",
+				"target",
+				"condition"
+			]
+		},
+		{
+			"customValidatorId": "ingestEnrichmentConfigScopeValidator",
+			"skipAsyncValidation": true,
+			"type": "CUSTOM_VALIDATOR_REF"
+		}
+	],
+	"schemaGroups": [
+		"group:preferences"
+	],
+	"schemaId": "builtin:ingest.enrichment.config",
+	"types": {},
+	"version": "1.2.1"
+}

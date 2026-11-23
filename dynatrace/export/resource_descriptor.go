@@ -391,6 +391,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/eventcorrelationrules"
 	azureconnection "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure"
 	azureconnectionauthentication "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure/authentication"
+	ingestenrichmentconfig "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ingest/enrichment/config"
 	networkzoneszones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/networkzones/zones"
 	openpipelinebizeventsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/dataforwarding"
 	openpipelinebizeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/ingestsources"
@@ -1984,6 +1985,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.SyntheticPrimarygrailtags: NewResourceDescriptor(syntheticprimarygrailtags.Service),
 	ResourceTypes.NetworkzonesZones:         NewResourceDescriptor(networkzoneszones.Service),
 	ResourceTypes.Eventcorrelationrules:     NewResourceDescriptor(eventcorrelationrules.Service),
+	ResourceTypes.IngestEnrichmentConfig:    NewResourceDescriptor(ingestenrichmentconfig.Service),
 }
 
 type ResourceExclusion struct {

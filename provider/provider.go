@@ -736,6 +736,7 @@ func Provider() *schema.Provider {
 			"dynatrace_synthetic_primary_grail_tags":                   resources.NewGeneric(export.ResourceTypes.SyntheticPrimarygrailtags).Resource(),
 			"dynatrace_network_zone_v2":                                resources.NewGeneric(export.ResourceTypes.NetworkzonesZones).Resource(),
 			"dynatrace_event_correlation_rules":                              resources.NewGeneric(export.ResourceTypes.Eventcorrelationrules).Resource(),
+			"dynatrace_ingest_enrichment_config":                             resources.NewGeneric(export.ResourceTypes.IngestEnrichmentConfig).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}

@@ -546,6 +546,7 @@ var ResourceTypes = struct {
 	SyntheticPrimarygrailtags                ResourceType
 	NetworkzonesZones                        ResourceType
 	Eventcorrelationrules                          ResourceType
+	IngestEnrichmentConfig                         ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -970,6 +971,7 @@ var ResourceTypes = struct {
 	"dynatrace_synthetic_primary_grail_tags",
 	"dynatrace_network_zone_v2",
 	"dynatrace_event_correlation_rules",
+	"dynatrace_ingest_enrichment_config",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
