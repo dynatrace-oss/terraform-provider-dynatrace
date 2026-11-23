@@ -173,7 +173,6 @@ var ResourceTypes = struct {
 	CloudFoundryCredentials                  ResourceType
 	KubernetesCredentials                    ResourceType
 	Credentials                              ResourceType
-	CredentialsV2                            ResourceType
 	Dashboard                                ResourceType
 	JSONDashboard                            ResourceType
 	Documents                                ResourceType
@@ -597,7 +596,6 @@ var ResourceTypes = struct {
 	"dynatrace_cloudfoundry_credentials",
 	"dynatrace_k8s_credentials",
 	"dynatrace_credentials",
-	"dynatrace_credentials_v2",
 	"dynatrace_dashboard",
 	"dynatrace_json_dashboard",
 	"dynatrace_document",

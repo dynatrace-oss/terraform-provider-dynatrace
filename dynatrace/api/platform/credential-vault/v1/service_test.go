@@ -26,11 +26,15 @@ import (
 )
 
 func TestAccCredentials(t *testing.T) {
+	t.Skip("Test is skipped until the API accepts IDs with CREDENTIAL_VAULT_ENTRY- prefix")
+
 	t.Setenv("TF_VAR_credentials_username", "terraform-acceptance-test-user")
 	t.Setenv("TF_VAR_credentials_password", "terraform-acceptance-test-password")
 	api.TestAcc(t)
 }
 
 func TestAccTestCasesCredentials(t *testing.T) {
+	t.Skip("Test is skipped until the API accepts IDs with CREDENTIAL_VAULT_ENTRY- prefix")
+
 	api.TestAccTestCases(t)
 }

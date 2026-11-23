@@ -59,16 +59,14 @@ type Config struct {
 func (me *Config) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"client_secret": {
-			Type:             schema.TypeString,
-			Description:      "Required for Azure Client Secret. No further documentation available",
-			Optional:         true,
-			DiffSuppressFunc: suppressEquivalentCredentialID,
+			Type:        schema.TypeString,
+			Description: "Required for Azure Client Secret. No further documentation available",
+			Optional:    true,
 		},
 		"clientid": {
-			Type:             schema.TypeString,
-			Description:      "Required for Azure Client Secret. No further documentation available",
-			Optional:         true,
-			DiffSuppressFunc: suppressEquivalentCredentialID,
+			Type:        schema.TypeString,
+			Description: "Required for Azure Client Secret. No further documentation available",
+			Optional:    true,
 		},
 		"tenantid": {
 			Type:        schema.TypeString,
@@ -76,10 +74,9 @@ func (me *Config) Schema() map[string]*schema.Schema {
 			Optional:    true,
 		},
 		"certificate": {
-			Type:             schema.TypeString,
-			Description:      "Required for Hashicorp Certificate, CyberArk username and password authentication, and CyberArk host-based authentication. The ID of Credentials within the Credentials Vault holding the certificate.",
-			Optional:         true,
-			DiffSuppressFunc: suppressEquivalentCredentialID,
+			Type:        schema.TypeString,
+			Description: "Required for Hashicorp Certificate, CyberArk username and password authentication, and CyberArk host-based authentication. The ID of Credentials within the Credentials Vault holding the certificate.",
+			Optional:    true,
 		},
 		"vault_namespace": {
 			Type:        schema.TypeString,
@@ -87,10 +84,9 @@ func (me *Config) Schema() map[string]*schema.Schema {
 			Optional:    true,
 		},
 		"secretid": {
-			Type:             schema.TypeString,
-			Description:      "Required for Hashicorp App Role. The ID of Credentials within the Certificate Vault holding the secret id",
-			Optional:         true,
-			DiffSuppressFunc: suppressEquivalentCredentialID,
+			Type:        schema.TypeString,
+			Description: "Required for Hashicorp App Role. The ID of Credentials within the Certificate Vault holding the secret id",
+			Optional:    true,
 		},
 		"roleid": {
 			Type:        schema.TypeString,
@@ -129,10 +125,9 @@ func (me *Config) Schema() map[string]*schema.Schema {
 			Optional:    true,
 		},
 		"username_password_for_cpm": {
-			Type:             schema.TypeString,
-			Description:      "Dynatrace credential ID of the username-password pair used for authentication to the CyberArk Central Credential Provider",
-			Optional:         true,
-			DiffSuppressFunc: suppressEquivalentCredentialID,
+			Type:        schema.TypeString,
+			Description: "Dynatrace credential ID of the username-password pair used for authentication to the CyberArk Central Credential Provider",
+			Optional:    true,
 		},
 		"application_id": {
 			Type:        schema.TypeString,
@@ -300,13 +295,4 @@ func (me *Config) UnmarshalHCL(decoder hcl.Decoder) error {
 		me.SourceAuthMethod = SourceAuthMethods.HashicorpVaultCertificate
 	}
 	return nil
-}
-
-// ConvertCredentialReferences applies convert to every attribute that references another credential by ID.
-func (me *Config) ConvertCredentialReferences(convert func(string) string) {
-	for _, reference := range []*string{me.Certificate, me.UsernamePasswordForCPM, me.SecretID, me.ClientSecret, me.ClientID} {
-		if reference != nil {
-			*reference = convert(*reference)
-		}
-	}
 }
