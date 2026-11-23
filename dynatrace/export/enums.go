@@ -552,6 +552,7 @@ var ResourceTypes = struct {
 	OpenpipelineApplicationSnapshotsPipelinegroups ResourceType
 	OpenpipelineApplicationSnapshotsPipelines      ResourceType
 	OpenpipelineApplicationSnapshotsRouting        ResourceType
+	OpenpipelinePrimarygrailtag                    ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -982,6 +983,7 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v2_application_snapshots_pipelinegroups",
 	"dynatrace_openpipeline_v2_application_snapshots_pipelines",
 	"dynatrace_openpipeline_v2_application_snapshots_routing",
+	"dynatrace_openpipeline_v2_primary_grail_tag",
 }
 
 func (me ResourceType) GetFolderName(override string) string {
