@@ -393,6 +393,11 @@ import (
 	azureconnectionauthentication "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/hyperscalerauthentication/connections/azure/authentication"
 	ingestenrichmentconfig "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/ingest/enrichment/config"
 	networkzoneszones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/networkzones/zones"
+	openpipelineapplicationsnapshotsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/application/snapshots/dataforwarding"
+	openpipelineapplicationsnapshotsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/application/snapshots/ingestsources"
+	openpipelineapplicationsnapshotspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/application/snapshots/pipelinegroups"
+	openpipelineapplicationsnapshotspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/application/snapshots/pipelines"
+	openpipelineapplicationsnapshotsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/application/snapshots/routing"
 	openpipelinebizeventsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/dataforwarding"
 	openpipelinebizeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/ingestsources"
 	openpipelinebizeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/bizevents/pipelinegroups"
@@ -1718,6 +1723,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineSystemEventsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineUserEventsDataforwarding),
 		Dependencies.ID(ResourceTypes.OpenpipelineUsersessionsDataforwarding),
+		Dependencies.ID(ResourceTypes.OpenpipelineApplicationSnapshotsDataforwarding),
+		Dependencies.ID(ResourceTypes.OpenpipelineApplicationSnapshotsIngestsources),
+		Dependencies.ID(ResourceTypes.OpenpipelineApplicationSnapshotsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineApplicationSnapshotsPipelines),
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
 	),
@@ -1986,6 +1995,23 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	ResourceTypes.NetworkzonesZones:         NewResourceDescriptor(networkzoneszones.Service),
 	ResourceTypes.Eventcorrelationrules:     NewResourceDescriptor(eventcorrelationrules.Service),
 	ResourceTypes.IngestEnrichmentConfig:    NewResourceDescriptor(ingestenrichmentconfig.Service),
+	ResourceTypes.OpenpipelineApplicationSnapshotsDataforwarding: NewResourceDescriptor(
+		openpipelineapplicationsnapshotsdataforwarding.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineApplicationSnapshotsPipelines),
+	),
+	ResourceTypes.OpenpipelineApplicationSnapshotsIngestsources: NewResourceDescriptor(
+		openpipelineapplicationsnapshotsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineApplicationSnapshotsPipelines),
+	),
+	ResourceTypes.OpenpipelineApplicationSnapshotsPipelinegroups: NewResourceDescriptor(
+		openpipelineapplicationsnapshotspipelinegroups.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineApplicationSnapshotsPipelines),
+	),
+	ResourceTypes.OpenpipelineApplicationSnapshotsPipelines: NewResourceDescriptor(openpipelineapplicationsnapshotspipelines.Service),
+	ResourceTypes.OpenpipelineApplicationSnapshotsRouting: NewResourceDescriptor(
+		openpipelineapplicationsnapshotsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineApplicationSnapshotsPipelines),
+	),
 }
 
 type ResourceExclusion struct {
