@@ -48,10 +48,6 @@ type Credentials struct {
 	AllowedEntities          AllowedEntities       `json:"allowedEntities,omitempty"`          // The set of entities allowed to use the credential.
 }
 
-func (me *Credentials) Deprecated() string {
-	return "This resource API endpoint has been deprecated, please use `dynatrace_credentials_v2` instead."
-}
-
 func (me *Credentials) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
