@@ -444,6 +444,11 @@ import (
 	openpipelinesecurityeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelinegroups"
 	openpipelinesecurityeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/pipelines"
 	openpipelinesecurityeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/security/events/routing"
+	openpipelinesmartscapeeventsdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/smartscape/events/dataforwarding"
+	openpipelinesmartscapeeventsingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/smartscape/events/ingestsources"
+	openpipelinesmartscapeeventspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/smartscape/events/pipelinegroups"
+	openpipelinesmartscapeeventspipelines "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/smartscape/events/pipelines"
+	openpipelinesmartscapeeventsrouting "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/smartscape/events/routing"
 	openpipelinespansdataforwarding "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/dataforwarding"
 	openpipelinespansingestsources "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/ingestsources"
 	openpipelinespanspipelinegroups "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/builtin/openpipeline/spans/pipelinegroups"
@@ -1728,6 +1733,10 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineApplicationSnapshotsIngestsources),
 		Dependencies.ID(ResourceTypes.OpenpipelineApplicationSnapshotsPipelinegroups),
 		Dependencies.ID(ResourceTypes.OpenpipelineApplicationSnapshotsPipelines),
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsDataforwarding),
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsIngestsources),
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsPipelinegroups),
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsPipelines),
 
 		Dependencies.ID(ResourceTypes.GenericSetting),
 	),
@@ -2014,6 +2023,23 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		Dependencies.ID(ResourceTypes.OpenpipelineApplicationSnapshotsPipelines),
 	),
 	ResourceTypes.OpenpipelinePrimarygrailtag: NewResourceDescriptor(openpipelineprimarygrailtag.Service),
+	ResourceTypes.OpenpipelineSmartscapeEventsDataforwarding: NewResourceDescriptor(
+		openpipelinesmartscapeeventsdataforwarding.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineSmartscapeEventsIngestsources: NewResourceDescriptor(
+		openpipelinesmartscapeeventsingestsources.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineSmartscapeEventsPipelinegroups: NewResourceDescriptor(
+		openpipelinesmartscapeeventspipelinegroups.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsPipelines),
+	),
+	ResourceTypes.OpenpipelineSmartscapeEventsPipelines: NewResourceDescriptor(openpipelinesmartscapeeventspipelines.Service),
+	ResourceTypes.OpenpipelineSmartscapeEventsRouting: NewResourceDescriptor(
+		openpipelinesmartscapeeventsrouting.Service,
+		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsPipelines),
+	),
 }
 
 type ResourceExclusion struct {

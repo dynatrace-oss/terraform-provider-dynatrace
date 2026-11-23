@@ -743,6 +743,11 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_application_snapshots_pipelines":      resources.NewGeneric(export.ResourceTypes.OpenpipelineApplicationSnapshotsPipelines).Resource(),
 			"dynatrace_openpipeline_v2_application_snapshots_routing":        resources.NewGeneric(export.ResourceTypes.OpenpipelineApplicationSnapshotsRouting).Resource(),
 			"dynatrace_openpipeline_v2_primary_grail_tag":                    resources.NewGeneric(export.ResourceTypes.OpenpipelinePrimarygrailtag).Resource(),
+			"dynatrace_openpipeline_v2_smartscape_events_dataforwarding":     resources.NewGeneric(export.ResourceTypes.OpenpipelineSmartscapeEventsDataforwarding).Resource(),
+			"dynatrace_openpipeline_v2_smartscape_events_ingestsources":      resources.NewGeneric(export.ResourceTypes.OpenpipelineSmartscapeEventsIngestsources).Resource(),
+			"dynatrace_openpipeline_v2_smartscape_events_pipelinegroups":     resources.NewGeneric(export.ResourceTypes.OpenpipelineSmartscapeEventsPipelinegroups).Resource(),
+			"dynatrace_openpipeline_v2_smartscape_events_pipelines":          resources.NewGeneric(export.ResourceTypes.OpenpipelineSmartscapeEventsPipelines).Resource(),
+			"dynatrace_openpipeline_v2_smartscape_events_routing":            resources.NewGeneric(export.ResourceTypes.OpenpipelineSmartscapeEventsRouting).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
