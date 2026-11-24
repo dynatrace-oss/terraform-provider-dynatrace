@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ func (me *Dimension) Schema() map[string]*schema.Schema {
 		"display_name": {
 			Type:        schema.TypeString,
 			Description: "Display name",
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 		"key": {
 			Type:        schema.TypeString,

@@ -1,6 +1,6 @@
 /**
 * @license
-* Copyright 2020 Dynatrace LLC
+* Copyright 2026 Dynatrace LLC
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ type Settings struct {
 	SourceEntityType  *string            `json:"sourceEntityType,omitempty"`  // Specifies which entity dimension should be used as the primary dimension. The property can only be configured for metrics ingested with the Metrics API.
 	Tags              []string           `json:"tags,omitempty"`              // Tags
 	Unit              string             `json:"unit"`                        // Unit
-	UnitDisplayFormat *UnitDisplayFormat `json:"unitDisplayFormat,omitempty"` // The raw value is stored in bits or bytes. The user interface can display it in these numeral systems:\n\nBinary: 1 MiB = 1024 KiB = 1,048,576 bytes\n\nDecimal: 1 MB = 1000 kB = 1,000,000 bytes\n\nIf not set, the decimal system is used.
+	UnitDisplayFormat *UnitDisplayFormat `json:"unitDisplayFormat,omitempty"` // The raw value is stored in bits or bytes. The user interface can display it in these numeral systems:\n\n  Binary: 1 MiB = 1024 KiB = 1,048,576 bytes\n\n  Decimal: 1 MB = 1000 kB = 1,000,000 bytes\n\n  If not set, the decimal system is used. Possible values: `binary`, `decimal`
 }
 
 func (me *Settings) Schema() map[string]*schema.Schema {
@@ -39,49 +39,46 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		"description": {
 			Type:             schema.TypeString,
 			Description:      "Description",
-			Optional:         true,
+			Optional:         true, // nullable
 			DiffSuppressFunc: hcl.SuppressEOT,
 		},
 		"dimensions": {
 			Type:        schema.TypeList,
 			Description: "Define metadata per metric dimension.",
-			Optional:    true,
-
-			Elem:     &schema.Resource{Schema: new(Dimensions).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Resource{Schema: new(Dimensions).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"display_name": {
 			Type:        schema.TypeString,
 			Description: "Display name",
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 		"metric_properties": {
 			Type:        schema.TypeList,
 			Description: "Metric properties",
-			Optional:    true,
-
-			Elem:     &schema.Resource{Schema: new(MetricProperties).Schema()},
-			MinItems: 1,
-			MaxItems: 1,
+			Optional:    true, // nullable
+			Elem:        &schema.Resource{Schema: new(MetricProperties).Schema()},
+			MinItems:    1,
+			MaxItems:    1,
 		},
 		"metric_id": {
 			Type:        schema.TypeString,
 			Description: "The scope of this setting (metric)",
-			Required:    true,
 			ForceNew:    true,
+			Required:    true,
 		},
 		"source_entity_type": {
 			Type:        schema.TypeString,
 			Description: "Specifies which entity dimension should be used as the primary dimension. The property can only be configured for metrics ingested with the Metrics API.",
-			Optional:    true,
+			Optional:    true, // nullable
 		},
 		"tags": {
 			Type:        schema.TypeSet,
 			Description: "Tags",
-			Optional:    true,
-
-			Elem: &schema.Schema{Type: schema.TypeString},
+			Optional:    true, // minobjects == 0
+			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
 		"unit": {
 			Type:        schema.TypeString,
@@ -90,8 +87,8 @@ func (me *Settings) Schema() map[string]*schema.Schema {
 		},
 		"unit_display_format": {
 			Type:        schema.TypeString,
-			Description: "The raw value is stored in bits or bytes. The user interface can display it in these numeral systems:\n\nBinary: 1 MiB = 1024 KiB = 1,048,576 bytes\n\nDecimal: 1 MB = 1000 kB = 1,000,000 bytes\n\nIf not set, the decimal system is used.",
-			Optional:    true,
+			Description: "The raw value is stored in bits or bytes. The user interface can display it in these numeral systems:\n\n  Binary: 1 MiB = 1024 KiB = 1,048,576 bytes\n\n  Decimal: 1 MB = 1000 kB = 1,000,000 bytes\n\n  If not set, the decimal system is used. Possible values: `binary`, `decimal`",
+			Optional:    true, // nullable & precondition
 		},
 	}
 }
@@ -108,6 +105,11 @@ func (me *Settings) MarshalHCL(properties hcl.Properties) error {
 		"unit":                me.Unit,
 		"unit_display_format": me.UnitDisplayFormat,
 	})
+}
+
+func (me *Settings) HandlePreconditions() error {
+	// ---- UnitDisplayFormat *UnitDisplayFormat -> {"property":"unit","type":"REGEX_MATCH","pattern":"^[bB][iI][tT]$|^[bB][iI][tT][pP][eE][rR][sS][eE][cC][oO][nN][dD]$|^[bB][iI][tT][pP][eE][rR][mM][iI][nN][uU][tT][eE]$|^[bB][iI][tT][pP][eE][rR][hH][oO][uU][rR]$|^[bB][yY][tT][eE]$|^[bB][yY][tT][eE][pP][eE][rR][sS][eE][cC][oO][nN][dD]$|^[bB][yY][tT][eE][pP][eE][rR][mM][iI][nN][uU][tT][eE]$|^[bB][yY][tT][eE][pP][eE][rR][hH][oO][uU][rR]$"}
+	return nil
 }
 
 func (me *Settings) UnmarshalHCL(decoder hcl.Decoder) error {
