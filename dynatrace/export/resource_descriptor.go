@@ -2003,7 +2003,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 	),
 	ResourceTypes.SyntheticPrimarygrailtags: NewResourceDescriptor(syntheticprimarygrailtags.Service),
 	ResourceTypes.NetworkzonesZones:         NewResourceDescriptor(networkzoneszones.Service),
-	ResourceTypes.Eventcorrelationrules:     NewResourceDescriptor(eventcorrelationrules.Service),
+	ResourceTypes.EventCorrelationRules:     NewResourceDescriptor(eventcorrelationrules.Service),
 	ResourceTypes.IngestEnrichmentConfig:    NewResourceDescriptor(ingestenrichmentconfig.Service),
 	ResourceTypes.OpenpipelineApplicationSnapshotsDataforwarding: NewResourceDescriptor(
 		openpipelineapplicationsnapshotsdataforwarding.Service,

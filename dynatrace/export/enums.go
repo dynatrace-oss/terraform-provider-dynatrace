@@ -545,7 +545,7 @@ var ResourceTypes = struct {
 	OpenpipelineUsersessionsDataforwarding         ResourceType
 	SyntheticPrimarygrailtags                      ResourceType
 	NetworkzonesZones                              ResourceType
-	Eventcorrelationrules                          ResourceType
+	EventCorrelationRules                          ResourceType
 	IngestEnrichmentConfig                         ResourceType
 	OpenpipelineApplicationSnapshotsDataforwarding ResourceType
 	OpenpipelineApplicationSnapshotsIngestsources  ResourceType
