@@ -387,6 +387,7 @@ func Provider() *schema.Provider {
 			"dynatrace_webhook_notification":                                 resources.NewGeneric(export.ResourceTypes.WebHookNotification).Resource(),
 			"dynatrace_xmatters_notification":                                resources.NewGeneric(export.ResourceTypes.XMattersNotification).Resource(),
 			"dynatrace_credentials":                                          resources.NewGeneric(export.ResourceTypes.Credentials).Resource(),
+			"dynatrace_credentials_v2":                                       resources.NewGeneric(export.ResourceTypes.CredentialsV2).Resource(),
 			"dynatrace_synthetic_location":                                   resources.NewGeneric(export.ResourceTypes.SyntheticLocation).Resource(),
 			"dynatrace_network_zone":                                         resources.NewGeneric(export.ResourceTypes.NetworkZone).Resource(),
 			"dynatrace_iam_user":                                             resources.NewGeneric(export.ResourceTypes.IAMUser, resources.CredValIAM).Resource(),
