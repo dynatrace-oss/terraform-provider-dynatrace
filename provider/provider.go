@@ -34,6 +34,7 @@ import (
 	azure_credentials "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/azure"
 	azure_supported_services "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/azure/supported_services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/vault"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentialsv2"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/dashboard"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/deployment/lambdaagent"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/documents/document"
@@ -245,6 +246,7 @@ func Provider() *schema.Provider {
 			"dynatrace_alerting_profiles":               alerting.DataSource(),
 			"dynatrace_alerting_profile":                v2alerting.DataSource(),
 			"dynatrace_credentials":                     vault.DataSource(),
+			"dynatrace_credentials_v2":                  credentialsv2.DataSource(),
 			"dynatrace_synthetic_locations":             locations.DataSource(),
 			"dynatrace_synthetic_location":              locations.UniqueDataSource(),
 			"dynatrace_service":                         serviceds.DataSource(),

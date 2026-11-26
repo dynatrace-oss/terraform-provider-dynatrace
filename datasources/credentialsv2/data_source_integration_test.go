@@ -29,8 +29,6 @@ import (
 )
 
 func TestAccDataSourceCredentialsV2(t *testing.T) {
-	t.Skip("Test is skipped until the dynatrace_credentials_v2 resource, which the examples create credentials with, is enabled again")
-
 	api.TestAcc(t, api.TestAccOptions{Check: matchedIDsEqualExpectedIDs})
 }
 
