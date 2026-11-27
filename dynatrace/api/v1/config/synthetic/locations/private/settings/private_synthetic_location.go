@@ -48,6 +48,10 @@ type PrivateSyntheticLocation struct {
 	FipsMode                         *FipsMode       `json:"fipsMode,omitempty"`              // Containerized location property indicating whether FIPS mode is enabled on this location. Possible values: `DISABLED`, `ENABLED`, `ENABLED_WITH_CORPORATE_PROXY`
 }
 
+func (me *PrivateSyntheticLocation) Deprecated() string {
+	return "This resource API endpoint has been deprecated, please use `dynatrace_synthetic_v2_location` instead."
+}
+
 func (me *PrivateSyntheticLocation) Schema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
