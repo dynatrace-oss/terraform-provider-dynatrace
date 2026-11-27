@@ -19,7 +19,6 @@ package vault
 
 import (
 	"encoding/json"
-	"slices"
 	"sort"
 
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/credential-vault/v1/settings/externalvault"
@@ -34,7 +33,6 @@ type Credentials struct {
 	Name                     string                `json:"name"`                               // The name of the credentials set.
 	Description              *string               `json:"description,omitempty"`              // A short description of the credentials set..
 	OwnerAccessOnly          bool                  `json:"ownerAccessOnly"`                    // The credentials set is available to every user (`false`) or to owner only (`true`).
-	Scope                    Scope                 `json:"scope,omitempty"`                    // Deprecated(v279), please use `scopes` instead. The scope of the credentials set
 	Scopes                   []Scope               `json:"scopes,omitempty"`                   // The set of scopes of the credentials set.
 	Type                     CredentialsType       `json:"type"`                               // Defines the actual set of fields depending on the value. See one of the following objects: \n\n* `CERTIFICATE` -> CertificateCredentials \n* `PUBLIC_CERTIFICATE` -> PublicCertificateCredentials \n* `USERNAME_PASSWORD` -> UserPasswordCredentials \n* `TOKEN` -> TokenCredentials \n
 	Token                    *string               `json:"token,omitempty"`                    // Token in the string format.
@@ -70,15 +68,9 @@ func (me *Credentials) Schema() map[string]*schema.Schema {
 			ConflictsWith: []string{"username", "token"},
 			Optional:      true,
 		},
-		"scope": {
-			Type:        schema.TypeString,
-			Description: "The scope of the credentials set. Possible values are `ALL`, `APP_ENGINE`, `EXTENSION` and `SYNTHETIC`",
-			Optional:    true,
-			Deprecated:  "Deprecated(v279), please use `scopes` instead.",
-		},
 		"scopes": {
 			Type:        schema.TypeSet,
-			Description: "The set of scopes of the credentials set. Possible values are `APP_ENGINE` and `SYNTHETIC`",
+			Description: "The set of scopes of the credentials set. Possible values are `APP_ENGINE`, `EXTENSION`, `EXTENSION_AUTHENTICATION` and `SYNTHETIC`",
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 		},
@@ -194,14 +186,6 @@ func (me *Credentials) MarshalHCL(properties hcl.Properties) error {
 			return err
 		}
 	}
-	// #431: REST API still returns "scope" instead of "scopes"
-	//       Leads to non-empty plans
-	if len(me.Scope) > 0 {
-		if !slices.Contains(me.Scopes, me.Scope) {
-			me.Scopes = append(me.Scopes, me.Scope)
-		}
-		me.Scope = ""
-	}
 	if err := properties.Encode("scopes", me.Scopes); err != nil {
 		return err
 	}
@@ -277,9 +261,6 @@ func (me *Credentials) UnmarshalHCL(decoder hcl.Decoder) error {
 	}
 	if value, ok := decoder.GetOk("owner_access_only"); ok {
 		me.OwnerAccessOnly = value.(bool)
-	}
-	if value, ok := decoder.GetOk("scope"); ok {
-		me.Scope = Scope(value.(string))
 	}
 	if err := decoder.Decode("scopes", &me.Scopes); err != nil {
 		return err

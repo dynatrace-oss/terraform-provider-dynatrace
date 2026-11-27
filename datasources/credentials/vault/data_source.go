@@ -34,7 +34,8 @@ import (
 
 func DataSource() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: logging.EnableDSCtx(DataSourceRead),
+		ReadContext:        logging.EnableDSCtx(DataSourceRead),
+		DeprecationMessage: "This data source has been deprecated, please use `dynatrace_credentials_v2` instead.",
 		Schema: map[string]*schema.Schema{
 			"type": {
 				Type:        schema.TypeString,

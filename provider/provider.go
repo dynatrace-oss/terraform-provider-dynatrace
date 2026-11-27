@@ -34,6 +34,7 @@ import (
 	azure_credentials "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/azure"
 	azure_supported_services "github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/azure/supported_services"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentials/vault"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/credentialsv2"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/dashboard"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/deployment/lambdaagent"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/datasources/documents/document"
@@ -245,6 +246,7 @@ func Provider() *schema.Provider {
 			"dynatrace_alerting_profiles":               alerting.DataSource(),
 			"dynatrace_alerting_profile":                v2alerting.DataSource(),
 			"dynatrace_credentials":                     vault.DataSource(),
+			"dynatrace_credentials_v2":                  credentialsv2.DataSource(),
 			"dynatrace_synthetic_locations":             locations.DataSource(),
 			"dynatrace_synthetic_location":              locations.UniqueDataSource(),
 			"dynatrace_service":                         serviceds.DataSource(),
@@ -387,6 +389,7 @@ func Provider() *schema.Provider {
 			"dynatrace_webhook_notification":                                 resources.NewGeneric(export.ResourceTypes.WebHookNotification).Resource(),
 			"dynatrace_xmatters_notification":                                resources.NewGeneric(export.ResourceTypes.XMattersNotification).Resource(),
 			"dynatrace_credentials":                                          resources.NewGeneric(export.ResourceTypes.Credentials).Resource(),
+			"dynatrace_credentials_v2":                                       resources.NewGeneric(export.ResourceTypes.CredentialsV2).Resource(),
 			"dynatrace_synthetic_location":                                   resources.NewGeneric(export.ResourceTypes.SyntheticLocation).Resource(),
 			"dynatrace_network_zone":                                         resources.NewGeneric(export.ResourceTypes.NetworkZone).Resource(),
 			"dynatrace_iam_user":                                             resources.NewGeneric(export.ResourceTypes.IAMUser, resources.CredValIAM).Resource(),

@@ -102,17 +102,15 @@ var CredentialsTypes = struct {
 type Scope string
 
 var Scopes = struct {
-	All       Scope
-	Extension Scope
-	Synthetic Scope
-	AppEngine Scope
-	Unknown   Scope
+	AppEngine               Scope
+	Extension               Scope
+	ExtensionAuthentication Scope
+	Synthetic               Scope
 }{
-	Scope("ALL"),
-	Scope("EXTENSION"),
-	Scope("SYNTHETIC"),
 	Scope("APP_ENGINE"),
-	Scope("UNKNOWN"),
+	Scope("EXTENSION"),
+	Scope("EXTENSION_AUTHENTICATION"),
+	Scope("SYNTHETIC"),
 }
 
 type EntityType string
