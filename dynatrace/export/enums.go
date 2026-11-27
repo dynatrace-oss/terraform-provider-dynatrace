@@ -558,6 +558,7 @@ var ResourceTypes = struct {
 	OpenpipelineSmartscapeEventsPipelinegroups     ResourceType
 	OpenpipelineSmartscapeEventsPipelines          ResourceType
 	OpenpipelineSmartscapeEventsRouting            ResourceType
+	SyntheticV2Location                            ResourceType
 }{
 	"dynatrace_autotag",
 	"dynatrace_autotag_v2",
@@ -994,6 +995,7 @@ var ResourceTypes = struct {
 	"dynatrace_openpipeline_v2_smartscape_events_pipelinegroups",
 	"dynatrace_openpipeline_v2_smartscape_events_pipelines",
 	"dynatrace_openpipeline_v2_smartscape_events_routing",
+	"dynatrace_synthetic_v2_location",
 }
 
 func (me ResourceType) GetFolderName(override string) string {

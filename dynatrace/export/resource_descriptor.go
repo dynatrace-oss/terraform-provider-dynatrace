@@ -28,6 +28,7 @@ import (
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/extensions/monitoringconfigurations"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/grail/segments"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/iam/permissions"
+	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/synthetic/location"
 	settingsPermissions "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v2/settings/objects/permissions"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/rest"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/provider/config"
@@ -2040,6 +2041,7 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		openpipelinesmartscapeeventsrouting.Service,
 		Dependencies.ID(ResourceTypes.OpenpipelineSmartscapeEventsPipelines),
 	),
+	ResourceTypes.SyntheticV2Location: NewResourceDescriptor(location.Service),
 }
 
 type ResourceExclusion struct {
@@ -2085,6 +2087,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.ServiceAnomalies, "Replaced by dynatrace_service_anomalies_v2"},
 			{ResourceTypes.SLO, "Replaced by dynatrace_slo_v2"},
 			{ResourceTypes.Maintenance, "Replaced by dynatrace_maintenance_windows"},
+			{ResourceTypes.SyntheticLocation, "Replaced by dynatrace_synthetic_v2_location"},
 		},
 	},
 	{
@@ -2150,6 +2153,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.Segments, ""},
 			{ResourceTypes.PlatformSLO, ""},
 			{ResourceTypes.SettingsPermissions, ""},
+			{ResourceTypes.SyntheticV2Location, ""},
 		},
 	},
 	{

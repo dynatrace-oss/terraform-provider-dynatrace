@@ -1,0 +1,31 @@
+---
+layout: ""
+page_title: "dynatrace_synthetic_v2_location Resource - terraform-provider-dynatrace"
+subcategory: "Synthetic"
+description: |-
+  The resource `dynatrace_synthetic_v2_location` covers configuration of private synthetic locations
+---
+
+# dynatrace_synthetic_v2_location (Resource)
+
+-> **Dynatrace SaaS only**
+
+-> This resource requires the OAuth scopes `synthetic:locations:read` and `synthetic:locations:write`
+
+## Dynatrace Documentation
+
+
+- Private Synthetic locations https://docs.dynatrace.com/docs/observe/digital-experience/synthetic/synthetic-app/private-locations
+- Synthetic API https://docs.dynatrace.com/docs/dynatrace-api/platform-api/platform-synthetic-v1
+
+## Export Example Usage
+
+- `terraform-provider-dynatrace -export dynatrace_synthetic_v2_location` downloads the currently configured private synthetic locations
+
+The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/synthetic/location/testdata/terraform/example.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
