@@ -1,0 +1,27 @@
+---
+layout: ""
+page_title: "{{.Type}} - {{.ProviderName}}"
+subcategory: "Synthetic"
+description: |-
+  The resource `{{ .Name }}` covers the tenant-wide synthetic configuration (browser monitor timeout, browser monitor step timeout, and whether maintenance windows are excluded from the availability calculation), using the platform Synthetic API
+---
+
+# {{ .Name }} ({{.Type}})
+
+-> **Dynatrace SaaS only**
+
+-> To utilize this resource, please define the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client, or `DYNATRACE_PLATFORM_TOKEN` with a platform token. Either one needs the permissions **Read synthetic environment configuration** (`synthetic:environment-configuration:read`) and **Write synthetic environment configuration** (`synthetic:environment-configuration:write`). No API token is required.
+
+-> This resource manages the single, tenant-wide synthetic configuration. All fields are optional: fields that are not set keep the current value of the environment. Destroying the resource only removes it from the Terraform state, the values in the environment are left unchanged. Any ID can be used to import it.
+
+-> This resource is excluded by default in the export utility, please explicitly specify the resource to retrieve existing configuration.
+
+-> The underlying Synthetic configuration API is an early adopter API and subject to change.
+
+~> This resource replaces [dynatrace_synthetic_availability](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/synthetic_availability), which requires an API token.
+
+## Resource Example Usage
+
+{{ tffile "dynatrace/api/platform/synthetic/configuration/testdata/terraform/example_a.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}

@@ -304,6 +304,7 @@ import (
 	onprempolicies "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/policies"
 	onpremusers "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v1/users"
 	managednetworkzones "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/cluster/v2/networkzones"
+	configurationv2 "github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/platform/synthetic/configuration"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/service/daviscopilot/dataminingblocklist"
 	"github.com/dynatrace-oss/terraform-provider-dynatrace/dynatrace/api/v1/config/reports"
 
@@ -1066,7 +1067,8 @@ var AllResources = map[ResourceType]ResourceDescriptor{
 		analytics.Service,
 		Dependencies.ID(ResourceTypes.WebApplication),
 	),
-	ResourceTypes.SyntheticAvailability: NewResourceDescriptor(availability.Service),
+	ResourceTypes.SyntheticAvailability:    NewResourceDescriptor(availability.Service),
+	ResourceTypes.SyntheticConfigurationV2: NewResourceDescriptor(configurationv2.Service),
 	ResourceTypes.BrowserMonitorOutageHandling: NewResourceDescriptor(
 		browseroutagehandling.Service,
 		Dependencies.ID(ResourceTypes.BrowserMonitor),
@@ -2085,6 +2087,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.ServiceAnomalies, "Replaced by dynatrace_service_anomalies_v2"},
 			{ResourceTypes.SLO, "Replaced by dynatrace_slo_v2"},
 			{ResourceTypes.Maintenance, "Replaced by dynatrace_maintenance_windows"},
+			{ResourceTypes.SyntheticAvailability, "Replaced by dynatrace_synthetic_v2_configuration"},
 		},
 	},
 	{
@@ -2148,6 +2151,7 @@ var excludeListedResourceGroups = []ResourceExclusionGroup{
 			{ResourceTypes.HubExtensionV2Config, ""},
 			{ResourceTypes.PlatformBucket, ""},
 			{ResourceTypes.Segments, ""},
+			{ResourceTypes.SyntheticConfigurationV2, ""},
 			{ResourceTypes.PlatformSLO, ""},
 			{ResourceTypes.SettingsPermissions, ""},
 		},

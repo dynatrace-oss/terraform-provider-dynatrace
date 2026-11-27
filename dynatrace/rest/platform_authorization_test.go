@@ -35,6 +35,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	coreRest "github.com/dynatrace/dynatrace-configuration-as-code-core/api/rest"
+	"github.com/dynatrace/dynatrace-configuration-as-code-core/clients/synthetic"
 )
 
 // idToken builds a JWT that expires an hour from now.
@@ -222,4 +223,70 @@ func TestCreatePlatformClientReportsNoCredentials(t *testing.T) {
 	_, err := rest.CreatePlatformClient(t.Context(), "https://irrelevant.example", &rest.Credentials{})
 
 	assert.ErrorIs(t, err, rest.ErrNoPlatformCredentials)
+}
+
+// syntheticConfigurationAPI starts a stand-in for the Synthetic configuration endpoint that records the
+// path and Authorization header of the request it receives.
+func syntheticConfigurationAPI(t *testing.T) (serverURL string, path, authorization *string) {
+	t.Helper()
+
+	var receivedPath, receivedAuthorization string
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		receivedPath = request.URL.Path
+		receivedAuthorization = request.Header.Get("Authorization")
+		writer.Header().Set("Content-Type", "application/json")
+		_, _ = writer.Write([]byte(`{"bmMonitorTimeout":60,"bmStepTimeout":30,"maintenanceWindowsExcludedFromAvailability":true}`))
+	}))
+	t.Cleanup(server.Close)
+
+	return server.URL, &receivedPath, &receivedAuthorization
+}
+
+func getSyntheticConfiguration(t *testing.T, serverURL string, platform rest.PlatformCredentials) error {
+	t.Helper()
+
+	platform.EnvironmentURL = serverURL
+	client, err := rest.CreatePlatformClient(t.Context(), serverURL, &rest.Credentials{Platform: platform})
+	require.NoError(t, err)
+
+	_, err = synthetic.NewClient(client).GetConfiguration(t.Context())
+	return err
+}
+
+func TestSyntheticConfigurationWithOAuthUsesTheOAuthAccessToken(t *testing.T) {
+	tokenServer := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		writer.Header().Set("Content-Type", "application/json")
+		_, _ = writer.Write([]byte(`{"access_token":"oauth-access-token","token_type":"Bearer","expires_in":3600}`))
+	}))
+	t.Cleanup(tokenServer.Close)
+	serverURL, path, authorization := syntheticConfigurationAPI(t)
+
+	require.NoError(t, getSyntheticConfiguration(t, serverURL, rest.PlatformCredentials{
+		ClientID:     "dt0s02.CLIENT",
+		ClientSecret: "dt0s02.SECRET",
+		TokenURL:     tokenServer.URL,
+	}))
+
+	assert.Equal(t, "/platform/synthetic/v1/configuration", *path)
+	assert.Equal(t, "Bearer oauth-access-token", *authorization)
+}
+
+func TestSyntheticConfigurationWithPlatformTokenUsesThePlatformToken(t *testing.T) {
+	serverURL, path, authorization := syntheticConfigurationAPI(t)
+
+	require.NoError(t, getSyntheticConfiguration(t, serverURL, rest.PlatformCredentials{PlatformToken: "dt0s16.ABCDEF"}))
+
+	assert.Equal(t, "/platform/synthetic/v1/configuration", *path)
+	assert.Equal(t, "Bearer dt0s16.ABCDEF", *authorization)
+}
+
+func TestSyntheticConfigurationWithWIFUsesTheFederatedToken(t *testing.T) {
+	token := idToken("repo:dynatrace-oss/terraform-provider-dynatrace:ref:refs/heads/main")
+	gitHubActionsTokenService(t, token)
+	serverURL, path, authorization := syntheticConfigurationAPI(t)
+
+	require.NoError(t, getSyntheticConfiguration(t, serverURL, rest.PlatformCredentials{WorkloadIdentityFederationAudience: t.Name()}))
+
+	assert.Equal(t, "/platform/synthetic/v1/configuration", *path)
+	assert.Equal(t, "Bearer "+token, *authorization)
 }

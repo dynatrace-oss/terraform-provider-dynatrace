@@ -252,6 +252,7 @@ var ResourceTypes = struct {
 	SessionReplayResourceCapture                   ResourceType
 	UsabilityAnalytics                             ResourceType
 	SyntheticAvailability                          ResourceType
+	SyntheticConfigurationV2                       ResourceType
 	BrowserMonitorOutageHandling                   ResourceType
 	HttpMonitorOutageHandling                      ResourceType
 	CloudAppWorkloadDetection                      ResourceType
@@ -688,6 +689,7 @@ var ResourceTypes = struct {
 	"dynatrace_session_replay_resource_capture",
 	"dynatrace_usability_analytics",
 	"dynatrace_synthetic_availability",
+	"dynatrace_synthetic_v2_configuration",
 	"dynatrace_browser_monitor_outage",
 	"dynatrace_http_monitor_outage",
 	"dynatrace_cloudapp_workloaddetection",
