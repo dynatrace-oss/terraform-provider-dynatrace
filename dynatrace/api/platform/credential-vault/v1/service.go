@@ -114,7 +114,7 @@ func (me *service) Get(ctx context.Context, id string, v *vault.Credentials) err
 }
 
 func (me *service) List(ctx context.Context) (api.Stubs, error) {
-	result, err := me.client.List(ctx)
+	result, err := me.client.List(ctx, credentialvault.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
