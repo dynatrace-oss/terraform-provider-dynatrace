@@ -748,6 +748,7 @@ func Provider() *schema.Provider {
 			"dynatrace_openpipeline_v2_smartscape_events_pipelinegroups":     resources.NewGeneric(export.ResourceTypes.OpenpipelineSmartscapeEventsPipelinegroups).Resource(),
 			"dynatrace_openpipeline_v2_smartscape_events_pipelines":          resources.NewGeneric(export.ResourceTypes.OpenpipelineSmartscapeEventsPipelines).Resource(),
 			"dynatrace_openpipeline_v2_smartscape_events_routing":            resources.NewGeneric(export.ResourceTypes.OpenpipelineSmartscapeEventsRouting).Resource(),
+			"dynatrace_synthetic_v2_location":                                resources.NewGeneric(export.ResourceTypes.SyntheticV2Location).Resource(),
 		},
 		ConfigureContextFunc: config.ProviderConfigure,
 	}
