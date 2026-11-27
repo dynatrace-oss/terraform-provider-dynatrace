@@ -194,6 +194,7 @@ jobs:
           - { name: "platform", slug: "platform", path: "./dynatrace/api/platform/..." }
           - { name: "service", slug: "service", path: "./dynatrace/api/service/..." }
           - { name: "slo", slug: "slo", path: "./dynatrace/api/slo/..." }
+          - { name: "synthetic", slug: "synthetic", path: "./dynatrace/api/synthetic/..." }
           - { name: "v1 (a-d)", slug: "v1-a-d", path: "$(go list ./dynatrace/api/v1/config/... | grep -E '^.+/dynatrace/api/v1/config/[a-d][^/]*/?')" }
           - { name: "v1 (e-z)", slug: "v1-e-z", path: "$(go list ./dynatrace/api/v1/config/... | grep -E '^.+/dynatrace/api/v1/config/[e-z][^/]*/?')" }
           - { name: "v2", slug: "v2", path: "./dynatrace/api/v2/..." }
@@ -268,6 +269,7 @@ jobs:
           - { name: "segments", slug: "segments", path: "./dynatrace/api/grail/segments/..." }
           - { name: "buckets", slug: "buckets", path: "./dynatrace/api/platform/buckets/..." }
           - { name: "slo", slug: "slo", path: "./dynatrace/api/slo/..." }
+          - { name: "synthetic", slug: "synthetic", path: "./dynatrace/api/synthetic/location/..." }
           - { name: "Grail DQL", slug: "dql", path: "./datasources/dql/..." }
           - { name: "config v1 (request attributes)", slug: "config_v1", path: "./dynatrace/api/v1/config/requestattributes/..." }
           - { name: "environment v2 (activegatetokens)", slug: "env_v2_classic_hybrid", path: "./dynatrace/api/v2/activegatetokens/..." }
