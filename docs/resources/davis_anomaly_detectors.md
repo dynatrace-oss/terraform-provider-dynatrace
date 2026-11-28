@@ -21,6 +21,14 @@ Please set the environment variables `DT_CLIENT_ID` and `DT_CLIENT_SECRET`, or a
 
 - Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:davis.anomaly-detectors`)
 
+- Static thresholds for anomaly detection - https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/static-thresholds
+
+- Auto-adaptive thresholds for anomaly detection - https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/auto-adaptive-threshold
+
+- Anomaly detection configuration (seasonal baseline and record analyzers) - https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/anomaly-detection-configuration
+
+- Davis Analyzers API (available analyzers and their input fields) - https://########.apps.dynatrace.com/platform/davis/analyzers/v1/analyzers
+
 ## Export Example Usage
 
 - `terraform-provider-dynatrace -export dynatrace_davis_anomaly_detectors` downloads all existing Davis anomaly detector configuration
@@ -28,6 +36,8 @@ Please set the environment variables `DT_CLIENT_ID` and `DT_CLIENT_SECRET`, or a
 The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
 ## Resource Example Usage
+
+### Static Threshold
 
 ```terraform
 resource "dynatrace_davis_anomaly_detectors" "#name#" {
@@ -90,6 +100,59 @@ resource "dynatrace_davis_anomaly_detectors" "#name#" {
   }
   execution_settings {
     actor = dynatrace_iam_service_user.user.id
+  }
+}
+
+resource "dynatrace_iam_service_user" "user" {
+  name = "#name#"
+}
+```
+
+### Record Analyzer
+
+```terraform
+resource "dynatrace_davis_anomaly_detectors" "#name#" {
+  title       = "#name#"
+  description = "Raises one event per service with more than 100 ERROR logs in the last hour"
+  enabled     = false
+  source      = "Davis Anomaly Detection"
+  analyzer {
+    name = "dt.statistics.anomaly_detection.RecordAnomalyDetectionAnalyzer"
+    input {
+      analyzer_input_field {
+        key   = "query.expression"
+        value = <<-EOT
+          fetch logs, from: -1h
+          | filter loglevel == "ERROR"
+          | summarize error_count = count(), by:{service.name}
+          | filter error_count > 100
+        EOT
+      }
+      analyzer_input_field {
+        key   = "alertIdentityFields[0]"
+        value = "service.name"
+      }
+    }
+  }
+  event_template {
+    properties {
+      property {
+        key   = "event.type"
+        value = "ERROR_EVENT"
+      }
+      property {
+        key   = "event.name"
+        value = "{error_count} errors on {service.name}"
+      }
+      property {
+        key   = "event.description"
+        value = "Service {service.name} logged {error_count} ERROR lines in the last hour"
+      }
+    }
+  }
+  execution_settings {
+    actor = dynatrace_iam_service_user.user.id
+    delay = 60
   }
 }
 

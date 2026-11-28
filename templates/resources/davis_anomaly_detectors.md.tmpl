@@ -21,6 +21,14 @@ Please set the environment variables `DT_CLIENT_ID` and `DT_CLIENT_SECRET`, or a
 
 - Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:davis.anomaly-detectors`)
 
+- Static thresholds for anomaly detection - https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/static-thresholds
+
+- Auto-adaptive thresholds for anomaly detection - https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/auto-adaptive-threshold
+
+- Anomaly detection configuration (seasonal baseline and record analyzers) - https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/anomaly-detection-configuration
+
+- Davis Analyzers API (available analyzers and their input fields) - https://########.apps.dynatrace.com/platform/davis/analyzers/v1/analyzers
+
 ## Export Example Usage
 
 - `terraform-provider-dynatrace -export dynatrace_davis_anomaly_detectors` downloads all existing Davis anomaly detector configuration
@@ -29,6 +37,12 @@ The full documentation of the export feature is available [here](https://dt-url.
 
 ## Resource Example Usage
 
+### Static Threshold
+
 {{ tffile "dynatrace/api/builtin/davis/anomalydetectors/testdata/terraform/example_a.tf" }}
+
+### Record Analyzer
+
+{{ tffile "dynatrace/api/builtin/davis/anomalydetectors/testdata/terraform/example_record.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
