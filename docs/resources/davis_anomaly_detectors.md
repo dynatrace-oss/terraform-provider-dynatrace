@@ -21,41 +21,23 @@ Please set the environment variables `DT_CLIENT_ID` and `DT_CLIENT_SECRET`, or a
 
 - Settings API - https://www.dynatrace.com/support/help/dynatrace-api/environment-api/settings (schemaId: `builtin:davis.anomaly-detectors`)
 
+- Static thresholds for anomaly detection - https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/static-thresholds
+
+- Auto-adaptive thresholds for anomaly detection - https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/auto-adaptive-threshold
+
+- Anomaly detection configuration (seasonal baseline and record analyzers) - https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/anomaly-detection-configuration
+
+- Davis Analyzers API (available analyzers and their input fields) - https://########.apps.dynatrace.com/platform/davis/analyzers/v1/analyzers
+
 ## Export Example Usage
 
 - `terraform-provider-dynatrace -export dynatrace_davis_anomaly_detectors` downloads all existing Davis anomaly detector configuration
 
 The full documentation of the export feature is available [here](https://dt-url.net/h203qmc).
 
-## Analyzers
-
-The `analyzer` block chooses how the detector is evaluated. `analyzer.name` is the fully qualified analyzer name, and `analyzer.input` holds its settings as `analyzer_input_field` key/value pairs. Values are always strings (`"5"`, `"false"`). The provider does not check the keys; Dynatrace validates them on create and update.
-
-| Analyzer name | Evaluates | Input keys |
-|---|---|---|
-| `dt.statistics.ui.anomaly_detection.StaticThresholdAnomalyDetectionAnalyzer` | a timeseries against a fixed value | `query`, `threshold`, `alertCondition` (`ABOVE`, `BELOW`), `alertOnMissingData`, `violatingSamples`, `slidingWindow`, `dealertingSamples` |
-| `dt.statistics.ui.anomaly_detection.AutoAdaptiveAnomalyDetectionAnalyzer` | a timeseries against a threshold Davis learns | `query`, `numberOfSignalFluctuations`, `alertCondition` (`ABOVE`, `BELOW`, `OUTSIDE`), `alertOnMissingData`, `violatingSamples`, `slidingWindow`, `dealertingSamples` |
-| `dt.statistics.ui.anomaly_detection.SeasonalBaselineAnomalyDetectionAnalyzer` | a timeseries against a seasonal confidence band | `query`, `tolerance`, `alertCondition` (`ABOVE`, `BELOW`, `OUTSIDE`), `alertOnMissingData`, `violatingSamples`, `slidingWindow`, `dealertingSamples` |
-| `dt.statistics.anomaly_detection.RecordAnomalyDetectionAnalyzer` | any DQL result, one row per violation | `query.expression`, `alertIdentityFields[N]`, `query.filterSegments[0].id` |
-
--> The three timeseries analyzers live under `dt.statistics.ui.anomaly_detection`. The record analyzer does not have `.ui` in its name.
-
--> The timeseries analyzers accept the DQL in `query` or in `query.expression`.
-
-### Record analyzer
-
-With `RecordAnomalyDetectionAnalyzer` the DQL query is the alert condition, and it can be any query (`fetch logs`, `fetch events`, a `timeseries` flattened with `arrayAvg`), not just a timeseries. Put the condition in a `filter`: no row means no alert, and each row raises one Davis event.
-
-- `query.expression` is the DQL query.
-- `alertIdentityFields[0]`, `alertIdentityFields[1]`, ... name the result columns that identify one row. A row with the same values on the next evaluation keeps the same alert open, and a row that disappears closes it. Without them, every evaluation raises a new event for every row.
-- `query.filterSegments[0].id` restricts the query to a filter segment.
-- `execution_settings.delay` is the fixed delay between two evaluations, in seconds. With a long window such as `from: -1h`, the same rows come back on every evaluation, which is why `alertIdentityFields[N]` matters.
-- `alertCondition`, `violatingSamples`, `slidingWindow`, `dealertingSamples` and `alertOnMissingData` are not used by this analyzer.
-- In `event_template`, every result column is available as `{column}` in `event.name` and `event.description`. For a column that holds an entity ID, `{dims:column}` gives the entity's display name, for example `dt.source_entity = "{dims:dt.entity.host}"`.
-
 ## Resource Example Usage
 
-### Static threshold
+### Static Threshold
 
 ```terraform
 resource "dynatrace_davis_anomaly_detectors" "#name#" {
@@ -126,7 +108,7 @@ resource "dynatrace_iam_service_user" "user" {
 }
 ```
 
-### Record analyzer
+### Record Analyzer
 
 ```terraform
 resource "dynatrace_davis_anomaly_detectors" "#name#" {
